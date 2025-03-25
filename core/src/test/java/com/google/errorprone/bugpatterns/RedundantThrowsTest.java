@@ -55,7 +55,7 @@ public final class RedundantThrowsTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 interface Test {
   // BUG: Diagnostic contains: IllegalAccessException and NoSuchFieldException are subtypes of
   // ReflectiveOperationException

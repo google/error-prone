@@ -34,7 +34,7 @@ public class ImplementAssertionWithChainingTest {
     compilationHelper
         .addSourceLines(
             "ImplementAssertionWithChainingPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.truth.FailureMetadata;

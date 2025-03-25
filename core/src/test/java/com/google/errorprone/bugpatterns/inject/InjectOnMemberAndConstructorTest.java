@@ -38,7 +38,7 @@ public class InjectOnMemberAndConstructorTest {
     testHelper
         .addInputLines(
             "in/InjectOnMemberAndConstructorPositiveCases.java",
-            """
+"""
 import javax.inject.Inject;
 
 public class InjectOnMemberAndConstructorPositiveCases {
@@ -57,7 +57,7 @@ public class InjectOnMemberAndConstructorPositiveCases {
 """)
         .addOutputLines(
             "out/InjectOnMemberAndConstructorPositiveCases.java",
-            """
+"""
 import javax.inject.Inject;
 
 public class InjectOnMemberAndConstructorPositiveCases {

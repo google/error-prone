@@ -33,7 +33,7 @@ public class ByteBufferBackingArrayTest {
     compilationHelper
         .addSourceLines(
             "ByteBufferBackingArrayPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.bugpatterns.ByteBufferBackingArrayTest;
@@ -114,7 +114,7 @@ public class ByteBufferBackingArrayPositiveCases {
     compilationHelper
         .addSourceLines(
             "ByteBufferBackingArrayNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.bugpatterns.ByteBufferBackingArrayTest;

@@ -103,7 +103,7 @@ public class BoxedPrimitiveEqualityTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test {
   void f() {
     final Long constValue = Long.valueOf(1000L);

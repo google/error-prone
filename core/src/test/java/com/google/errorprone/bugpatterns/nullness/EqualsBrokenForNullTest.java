@@ -226,7 +226,7 @@ public class EqualsBrokenForNullTest {
     compilationHelper
         .addSourceLines(
             "EqualsBrokenForNullNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.nullness.testdata;
 
 /**

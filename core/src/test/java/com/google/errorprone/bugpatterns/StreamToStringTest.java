@@ -57,7 +57,7 @@ public class StreamToStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.util.Arrays;
 import java.util.stream.Collectors;
 

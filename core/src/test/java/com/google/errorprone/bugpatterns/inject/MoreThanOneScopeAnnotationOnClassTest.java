@@ -77,7 +77,7 @@ public class MoreThanOneScopeAnnotationOnClassTest {
     compilationHelper
         .addSourceLines(
             "MoreThanOneScopeAnnotationOnClassNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.Provides;

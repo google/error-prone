@@ -85,7 +85,7 @@ public class ComparableAndComparatorTest {
     compilationHelper
         .addSourceLines(
             "ComparableAndComparatorNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Comparator;

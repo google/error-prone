@@ -37,7 +37,7 @@ public class LambdaFunctionalInterfaceTest {
     compilationHelper
         .addSourceLines(
             "LambdaFunctionalInterfacePositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.ArrayList;
@@ -206,7 +206,7 @@ public class LambdaFunctionalInterfacePositiveCases {
     compilationHelper
         .addSourceLines(
             "LambdaFunctionalInterfaceNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.function.Function;
@@ -304,7 +304,7 @@ public class LambdaFunctionalInterfaceNegativeCases {
     refactoringHelper
         .addInputLines(
             "in/TwoLambdaFunctions.java",
-            """
+"""
 import java.util.function.Function;
 
 public class TwoLambdaFunctions {
@@ -355,7 +355,7 @@ public class TwoLambdaFunctions {
     refactoringHelper
         .addInputLines(
             "in/TwoLambdaFunctions.java",
-            """
+"""
 import java.util.function.Function;
 
 public class TwoLambdaFunctions {
@@ -406,7 +406,7 @@ public class TwoLambdaFunctions {
     refactoringHelper
         .addInputLines(
             "in/NumbertoT.java",
-            """
+"""
 import java.util.function.Function;
 import java.util.ArrayList;
 import java.util.List;
@@ -434,7 +434,7 @@ public class NumbertoT {
 """)
         .addOutputLines(
             "out/NumbertoT.java",
-            """
+"""
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleFunction;

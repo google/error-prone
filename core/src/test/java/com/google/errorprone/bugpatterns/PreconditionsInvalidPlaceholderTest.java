@@ -69,7 +69,7 @@ public class PreconditionsInvalidPlaceholderTest {
     compilationHelper
         .addSourceLines(
             "PreconditionsInvalidPlaceholderNegativeCase1.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.base.Preconditions.checkArgument;

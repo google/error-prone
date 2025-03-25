@@ -35,7 +35,7 @@ public class WaitNotInLoopTest {
     compilationHelper
         .addSourceLines(
             "WaitNotInLoopPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Date;
@@ -120,7 +120,7 @@ public class WaitNotInLoopPositiveCases {
     compilationHelper
         .addSourceLines(
             "WaitNotInLoopNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**

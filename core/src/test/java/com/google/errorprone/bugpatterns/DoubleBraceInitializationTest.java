@@ -298,7 +298,7 @@ public class DoubleBraceInitializationTest {
             """)
         .addOutputLines(
             "out/Test.java",
-            """
+"""
 import com.google.common.collect.ImmutableMap;
 import java.util.Collections;
 import java.util.HashMap;

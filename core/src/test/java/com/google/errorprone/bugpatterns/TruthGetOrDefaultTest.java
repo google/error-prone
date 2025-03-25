@@ -66,7 +66,7 @@ public class TruthGetOrDefaultTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import static com.google.common.truth.Truth.assertThat;
 import java.util.HashMap;
 import java.util.Map;

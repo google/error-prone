@@ -31,7 +31,7 @@ public class PreferJavaTimeOverloadTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            """
+"""
 import com.google.common.cache.CacheBuilder;
 import java.util.concurrent.TimeUnit;
 

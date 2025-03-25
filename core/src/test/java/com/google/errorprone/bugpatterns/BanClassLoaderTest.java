@@ -36,7 +36,7 @@ public class BanClassLoaderTest {
     compilationHelper
         .addSourceLines(
             "BanClassLoaderPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static java.rmi.server.RMIClassLoader.loadClass;
@@ -93,7 +93,7 @@ class BanClassLoaderPositiveCases {
     compilationHelper
         .addSourceLines(
             "BanClassLoaderNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.net.URL;

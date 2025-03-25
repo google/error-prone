@@ -36,7 +36,7 @@ public class BanJNDITest {
     compilationHelper
         .addSourceLines(
             "BanJNDIPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.IOException;
@@ -179,7 +179,7 @@ class BanJNDIPositiveCases {
     compilationHelper
         .addSourceLines(
             "BanJNDINegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import javax.naming.Name;
@@ -208,7 +208,7 @@ class BanJNDIPositiveCases {
     refactoringHelper
         .addInputLines(
             "BanJNDINegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import javax.naming.Name;

@@ -38,7 +38,7 @@ public class ErroneousThreadPoolConstructorCheckerTest {
     compilationHelper
         .addSourceLines(
             "ErroneousThreadPoolConstructorCheckerPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static java.util.Comparator.comparingInt;
@@ -137,7 +137,7 @@ final class ErroneousThreadPoolConstructorCheckerPositiveCases {
     compilationHelper
         .addSourceLines(
             "ErroneousThreadPoolConstructorCheckerNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -326,7 +326,7 @@ final class ErroneousThreadPoolConstructorCheckerNegativeCases {
         .setFixChooser(FixChoosers.FIRST)
         .addInputLines(
             "Test.java",
-            """
+"""
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -342,7 +342,7 @@ class Test {
 """)
         .addOutputLines(
             "Test.java",
-            """
+"""
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -365,7 +365,7 @@ class Test {
         .setFixChooser(FixChoosers.SECOND)
         .addInputLines(
             "Test.java",
-            """
+"""
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -381,7 +381,7 @@ class Test {
 """)
         .addOutputLines(
             "Test.java",
-            """
+"""
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;

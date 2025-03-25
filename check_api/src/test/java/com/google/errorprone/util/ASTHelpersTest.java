@@ -1642,7 +1642,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     replaceExceptionHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.util.concurrent.Callable;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;

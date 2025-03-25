@@ -148,7 +148,7 @@ public final class UnicodeEscapeTest {
         .addInputLines("A.java", "\\u0063\\u006c\\u0061\\u0073\\u0073\\u0020\\u0041\\u007b\\u007d")
         .addOutputLines(
             "A.java",
-            """
+"""
 class A {}
 """)
         .doTest(TEXT_MATCH);

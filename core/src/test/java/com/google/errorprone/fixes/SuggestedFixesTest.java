@@ -1179,7 +1179,7 @@ public class SuggestedFixesTest {
             """)
         .addOutputLines(
             "out/Test.java",
-            """
+"""
 import java.util.List;
 import java.util.Map;
 
@@ -1393,7 +1393,7 @@ class Test {
             """)
         .addOutputLines(
             "out/Test.java",
-            """
+"""
 public class Test {
   // Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
   // labore et dolore magna aliqua.

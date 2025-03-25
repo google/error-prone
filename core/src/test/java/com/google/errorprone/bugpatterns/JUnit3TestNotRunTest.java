@@ -482,7 +482,7 @@ public class JUnit3TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "JUnit3TestNotRunNegativeCase4.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;

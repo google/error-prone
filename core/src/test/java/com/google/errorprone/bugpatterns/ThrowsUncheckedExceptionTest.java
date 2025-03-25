@@ -36,7 +36,7 @@ public final class ThrowsUncheckedExceptionTest {
     compilationHelper
         .addSourceLines(
             "ThrowsUncheckedExceptionPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.IOException;

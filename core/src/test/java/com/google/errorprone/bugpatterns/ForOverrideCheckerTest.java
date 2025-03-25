@@ -92,7 +92,7 @@ public class ForOverrideCheckerTest {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            """
+"""
 package test;
 
 import com.google.errorprone.annotations.ForOverride;
@@ -111,7 +111,7 @@ public class Test {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            """
+"""
 package test;
 
 import com.google.errorprone.annotations.ForOverride;
@@ -130,7 +130,7 @@ public class Test {
     compilationHelper
         .addSourceLines(
             "test/Test.java",
-            """
+"""
 package test;
 
 import com.google.errorprone.annotations.ForOverride;

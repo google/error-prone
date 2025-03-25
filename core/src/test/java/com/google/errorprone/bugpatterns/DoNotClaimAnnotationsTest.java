@@ -34,7 +34,7 @@ public class DoNotClaimAnnotationsTest {
     testHelper
         .addInputLines(
             "Test.java",
-            """
+"""
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -50,7 +50,7 @@ abstract class Test implements Processor {
 """)
         .addOutputLines(
             "Test.java",
-            """
+"""
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -72,7 +72,7 @@ abstract class Test implements Processor {
     testHelper
         .addInputLines(
             "Test.java",
-            """
+"""
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -95,7 +95,7 @@ abstract class Test implements Processor {
     testHelper
         .addInputLines(
             "Test.java",
-            """
+"""
 import java.util.Set;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -116,7 +116,7 @@ abstract class Test {
     CompilationTestHelper.newInstance(DoNotClaimAnnotations.class, getClass())
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;

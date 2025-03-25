@@ -126,7 +126,7 @@ public class NullnessPropagationTest {
     compilationHelper
         .addSourceLines(
             "NullnessPropagationTransferCases1.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation.testdata;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -300,7 +300,7 @@ public class NullnessPropagationTransferCases1 {
     compilationHelper
         .addSourceLines(
             "NullnessPropagationTransferCases2.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation.testdata;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -639,7 +639,7 @@ public class NullnessPropagationTransferCases2 {
     compilationHelper
         .addSourceLines(
             "NullnessPropagationTransferCases3.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation.testdata;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -906,7 +906,7 @@ public class NullnessPropagationTransferCases3 {
     compilationHelper
         .addSourceLines(
             "NullnessPropagationTransferCases4.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation.testdata;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -1173,7 +1173,7 @@ public class NullnessPropagationTransferCases4 {
     compilationHelper
         .addSourceLines(
             "NullnessPropagationTransferCases5.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation.testdata;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -1440,7 +1440,7 @@ public class NullnessPropagationTransferCases5 {
     compilationHelper
         .addSourceLines(
             "NullnessPropagationTransferCases6.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation.testdata;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -1630,7 +1630,7 @@ public class NullnessPropagationTransferCases6 {
     compilationHelper
         .addSourceLines(
             "NullnessPropagationTransferCases7.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation.testdata;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -1799,7 +1799,7 @@ public class NullnessPropagationTransferCases7 {
     compilationHelper
         .addSourceLines(
             "NullnessPropagationTransferCases8.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation.testdata;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -1847,7 +1847,7 @@ public class NullnessPropagationTransferCases8 {
     compilationHelper
         .addSourceLines(
             "ThisNonNullTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -1867,7 +1867,7 @@ public class ThisNonNullTest {
     compilationHelper
         .addSourceLines(
             "ThisEqualsTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -1897,7 +1897,7 @@ public class ThisEqualsTest {
     compilationHelper
         .addSourceLines(
             "InstanceofTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -1924,7 +1924,7 @@ public class InstanceofTest {
     compilationHelper
         .addSourceLines(
             "InstanceofTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -1947,7 +1947,7 @@ public class InstanceofTest {
     compilationHelper
         .addSourceLines(
             "ArrayAccessTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -1988,7 +1988,7 @@ public class ArrayAccessTest {
     compilationHelper
         .addSourceLines(
             "FieldAccessTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2017,7 +2017,7 @@ public class FieldAccessTest {
     compilationHelper
         .addSourceLines(
             "FieldReceiversTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2057,7 +2057,7 @@ public class FieldReceiversTest {
     compilationHelper
         .addSourceLines(
             "FieldPathSensitivityTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2088,7 +2088,7 @@ public class FieldPathSensitivityTest {
     compilationHelper
         .addSourceLines(
             "AccessPathsTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2123,7 +2123,7 @@ public class AccessPathsTest {
     compilationHelper
         .addSourceLines(
             "UntrackableFieldsTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2153,7 +2153,7 @@ public class UntrackableFieldsTest {
     compilationHelper
         .addSourceLines(
             "AnnotatedAtGenericTypeUseTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2223,7 +2223,7 @@ public class AnnotatedAtGenericTypeUseTest {
     compilationHelper
         .addSourceLines(
             "BoundedAtGenericTypeUseTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2257,7 +2257,7 @@ public class BoundedAtGenericTypeUseTest {
     compilationHelper
         .addSourceLines(
             "BoundedAtGenericTypeDefTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2289,7 +2289,7 @@ public class BoundedAtGenericTypeDefTest {
     compilationHelper
         .addSourceLines(
             "AnnotatedMethodTypeParamsTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2353,7 +2353,7 @@ public class AnnotatedMethodTypeParamsTest {
     compilationHelper
         .addSourceLines(
             "LambdaBodyTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2423,7 +2423,7 @@ public class LambdaBodyTest {
             """)
         .addSourceLines(
             "ConstantsFromOtherCompilationUnits.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2466,7 +2466,7 @@ public class ConstantsFromOtherCompilationUnits {
     compilationHelper
         .addSourceLines(
             "PartialCorrectnessTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2488,7 +2488,7 @@ public class PartialCorrectnessTest {
     compilationHelper
         .addSourceLines(
             "CastsTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2512,7 +2512,7 @@ public class CastsTest {
     compilationHelper
         .addSourceLines(
             "AutoValueTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2552,7 +2552,7 @@ public class AutoValueTest {
     compilationHelper
         .addSourceLines(
             "GenericTypeInferenceTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
@@ -2586,7 +2586,7 @@ public class GenericTypeInferenceTest {
     compilationHelper
         .addSourceLines(
             "AnnotatedFormalTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;

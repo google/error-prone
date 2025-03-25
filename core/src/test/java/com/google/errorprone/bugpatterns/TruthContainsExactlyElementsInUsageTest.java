@@ -115,7 +115,7 @@ public final class TruthContainsExactlyElementsInUsageTest {
     compilationHelper
         .addSourceLines(
             "ExampleClassTest.java",
-            """
+"""
 import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
@@ -134,7 +134,7 @@ public class ExampleClassTest {
     compilationHelper
         .addSourceLines(
             "ExampleClassTest.java",
-            """
+"""
 import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -153,7 +153,7 @@ public class ExampleClassTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            """
+"""
 import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
@@ -283,7 +283,7 @@ public class ExampleClassTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            """
+"""
 import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -315,7 +315,7 @@ public class ExampleClassTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            """
+"""
 import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 import java.util.Collections;
@@ -379,7 +379,7 @@ public class ExampleClassTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            """
+"""
 import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 
@@ -409,7 +409,7 @@ public class ExampleClassTest {
     refactoringHelper
         .addInputLines(
             "ExampleClassTest.java",
-            """
+"""
 import static com.google.common.truth.Truth.assertThat;
 import com.google.common.collect.ImmutableList;
 

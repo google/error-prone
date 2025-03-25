@@ -35,7 +35,7 @@ public class FinallyTest {
     compilationHelper
         .addSourceLines(
             "FinallyPositiveCase1.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**

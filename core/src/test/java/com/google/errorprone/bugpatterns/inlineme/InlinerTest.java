@@ -993,7 +993,7 @@ public class InlinerTest {
             "}")
         .addSourceLines(
             "Caller.java",
-            """
+"""
 import foo.Client;
 
 public final class Caller {

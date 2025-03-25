@@ -163,7 +163,7 @@ public final class InconsistentOverloadsTest {
     compilationHelper
         .addSourceLines(
             "InconsistentOverloadsPositiveCasesGenerics.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.overloading.testdata;
 
 import java.util.List;
@@ -280,7 +280,7 @@ public final class InconsistentOverloadsPositiveCasesGenerics {
     compilationHelper
         .addSourceLines(
             "InconsistentOverloadsPositiveCasesOverrides.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.overloading.testdata;
 
 import java.util.List;

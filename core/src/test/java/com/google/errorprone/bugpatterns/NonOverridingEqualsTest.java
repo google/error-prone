@@ -153,7 +153,7 @@ public class NonOverridingEqualsTest {
     compilationHelper
         .addSourceLines(
             "Planet.java",
-            """
+"""
 public enum Planet {
   MERCURY,
   VENUS,

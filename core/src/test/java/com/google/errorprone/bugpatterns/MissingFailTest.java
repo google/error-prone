@@ -269,7 +269,7 @@ public class MissingFailTest {
     compilationHelper
         .addSourceLines(
             "MissingFailNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.HashMap;

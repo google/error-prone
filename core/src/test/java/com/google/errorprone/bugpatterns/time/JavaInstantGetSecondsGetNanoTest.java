@@ -77,7 +77,7 @@ public class JavaInstantGetSecondsGetNanoTest {
     compilationHelper
         .addSourceLines(
             "test/TestCase.java",
-            """
+"""
 package test;
 
 import com.google.common.collect.ImmutableMap;

@@ -1255,7 +1255,7 @@ public class GuardedByCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            """
+"""
 package threadsafety;
 
 import com.google.errorprone.annotations.concurrent.GuardedBy;
@@ -1899,7 +1899,7 @@ class WrongInnerClassInstance {
             """)
         .addSourceLines(
             "threadsafety/Test.java",
-            """
+"""
 package threadsafety;
 
 import com.google.errorprone.annotations.concurrent.GuardedBy;
@@ -2005,7 +2005,7 @@ public class Test {
     CompilationTestHelper.newInstance(GuardedByChecker.class, getClass())
         .addSourceLines(
             "MemoryAllocatedInfoJava.java",
-            """
+"""
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 
 public class MemoryAllocatedInfoJava {
@@ -2238,7 +2238,7 @@ public class MemoryAllocatedInfoJava {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            """
+"""
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 
 class Work {

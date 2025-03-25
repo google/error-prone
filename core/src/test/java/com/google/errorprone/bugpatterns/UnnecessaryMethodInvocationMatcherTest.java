@@ -65,7 +65,7 @@ public class UnnecessaryMethodInvocationMatcherTest {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            """
+"""
 import static com.google.errorprone.matchers.Matchers.*;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
@@ -117,7 +117,7 @@ public class Test {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            """
+"""
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ALL;
 import static com.google.errorprone.matchers.Matchers.*;
 import com.google.errorprone.matchers.Matcher;
@@ -137,7 +137,7 @@ public class Test {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            """
+"""
 import static com.google.errorprone.matchers.Matchers.*;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.StatementTree;

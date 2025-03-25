@@ -166,7 +166,7 @@ public class FloggerRequiredModifiersTest {
             """)
         .addOutputLines(
             "out/Test.java",
-            """
+"""
 import com.google.common.flogger.FluentLogger;
 
 class Test {

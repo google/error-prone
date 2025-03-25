@@ -530,7 +530,7 @@ public class ImmutableCheckerTest {
     compilationHelper
         .addSourceLines(
             "A.java",
-            """
+"""
 import com.google.errorprone.annotations.Immutable;
 import java.util.ArrayList;
 import java.util.List;
@@ -1395,7 +1395,7 @@ class A {
             """)
         .addSourceLines(
             "threadsafety/Test.java",
-            """
+"""
 package threadsafety;
 
 class Test extends Super {
@@ -2174,7 +2174,7 @@ class Test extends Super {
             """)
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test<T> {
   A<T> n() {
     // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type variable
@@ -2201,7 +2201,7 @@ class Test<T> {
             """)
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test {
   static <T> A<T> m() {
     // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type variable
@@ -2254,7 +2254,7 @@ class Test {
             """)
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test {
   <T> A<T> k() {
     // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type variable
@@ -2314,7 +2314,7 @@ class Test {
             """)
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test {
   <T extends MyMutableType> A<T> i() {
     // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type variable
@@ -2881,7 +2881,7 @@ class Test {
             """)
         .addSourceLines(
             "Test.java",
-            """
+"""
 import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.google.errorprone.annotations.Immutable;
 
@@ -3180,7 +3180,7 @@ class T<@ImmutableTypeParameter X> extends S {}
             """)
         .addSourceLines(
             "Invoker.java",
-            """
+"""
 class Invoker {
   public void method() {
     // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type
@@ -3301,7 +3301,7 @@ class Invoker {
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "Clazz.java",
-            """
+"""
 import com.google.errorprone.annotations.ImmutableTypeParameter;
 
 class Clazz {
@@ -3333,7 +3333,7 @@ class Clazz {
         .addSourceLines("MutableClass.java", "class MutableClass {}")
         .addSourceLines(
             "ChildGenericWithImmutableParam.java",
-            """
+"""
 // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type 'MutableClass'
 // is not annotated with @com.google.errorprone.annotations.Immutable
 class ChildGenericWithImmutableParam extends GenericWithImmutableParam<MutableClass> {}
@@ -3353,7 +3353,7 @@ class ChildGenericWithImmutableParam extends GenericWithImmutableParam<MutableCl
             """)
         .addSourceLines(
             "ChildGenericWithImmutableParam.java",
-            """
+"""
 class ChildGenericWithImmutableParam implements GenericWithImmutableParamIface<String> {}
 """)
         .doTest();
@@ -3372,7 +3372,7 @@ class ChildGenericWithImmutableParam implements GenericWithImmutableParamIface<S
         .addSourceLines("MutableClass.java", "class MutableClass {}")
         .addSourceLines(
             "ChildGenericWithImmutableParam.java",
-            """
+"""
 // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type 'MutableClass'
 // is not annotated with @com.google.errorprone.annotations.Immutable
 class ChildGenericWithImmutableParam implements GenericWithImmutableParamIface<MutableClass> {}
@@ -3385,7 +3385,7 @@ class ChildGenericWithImmutableParam implements GenericWithImmutableParamIface<M
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "ChildGenericWithImmutableParam.java",
-            """
+"""
 // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type variable
 class ChildGenericWithImmutableParam<T> extends GenericWithImmutableParam<T> {}
 """)
@@ -3418,7 +3418,7 @@ class ChildGenericWithImmutableParam<T> extends GenericWithImmutableParam<T> {}
             """)
         .addSourceLines(
             "ChildGenericWithImmutableParam.java",
-            """
+"""
 // BUG: Diagnostic contains: instantiation of 'T' is mutable, 'T' is a mutable type variable
 class ChildGenericWithImmutableParam<T> implements GenericWithImmutableParamIface<T> {}
 """)
@@ -3643,7 +3643,7 @@ class ChildGenericWithImmutableParam<T> implements GenericWithImmutableParamIfac
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import com.google.errorprone.annotations.Immutable;
 
 abstract class Test {

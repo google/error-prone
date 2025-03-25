@@ -105,7 +105,7 @@ public final class MoreAnnotationsTest {
     CompilationTestHelper.newInstance(GetDeclarationAndTypeAttributesTester.class, getClass())
         .addSourceLines(
             "Annos.java",
-            """
+"""
 import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Target;
 
@@ -166,7 +166,7 @@ import java.lang.annotation.Target;
     CompilationTestHelper.newInstance(GetTopLevelTypeAttributesTester.class, getClass())
         .addSourceLines(
             "Annos.java",
-            """
+"""
 import static java.lang.annotation.ElementType.*;
 import java.lang.annotation.Target;
 

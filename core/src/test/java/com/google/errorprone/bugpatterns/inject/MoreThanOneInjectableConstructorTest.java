@@ -35,7 +35,7 @@ public class MoreThanOneInjectableConstructorTest {
     compilationHelper
         .addSourceLines(
             "MoreThanOneInjectableConstructorPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.Inject;
@@ -104,7 +104,7 @@ public class MoreThanOneInjectableConstructorPositiveCases {
     compilationHelper
         .addSourceLines(
             "MoreThanOneInjectableConstructorNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.Inject;

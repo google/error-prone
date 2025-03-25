@@ -759,7 +759,7 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test {
   void foo(int... args) {}
 

@@ -67,7 +67,7 @@ public final class NonCanonicalTypeTest {
             """)
         .addSourceLines(
             "D.java",
-            """
+"""
 package bar;
 
 import bar.A;
@@ -293,7 +293,7 @@ public interface D {
             """)
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test {
   // BUG: Diagnostic contains: `Super.Inner` was referred to by the non-canonical name `Sub.Inner`
   Sub<?>.Inner[] x;

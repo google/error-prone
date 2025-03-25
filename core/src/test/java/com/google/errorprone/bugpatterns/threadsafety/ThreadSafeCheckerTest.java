@@ -384,7 +384,7 @@ public class ThreadSafeCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.ThreadSafe;
 import java.util.concurrent.ConcurrentMap;
@@ -1367,7 +1367,7 @@ class Test {
             """)
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test {
   A<String> f() {
     return new A<>();
@@ -1565,7 +1565,7 @@ class Test {
     compilationHelper
         .addSourceLines(
             "Recursive.java",
-            """
+"""
 import com.google.errorprone.annotations.ThreadSafe;
 import java.util.List;
 

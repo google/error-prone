@@ -34,7 +34,7 @@ public final class MalformedInlineTagTest {
     helper
         .addInputLines(
             "Test.java",
-            """
+"""
 /**
  * Here are a list of malformed tags: @{code code} @{docRoot} @{inheritDoc} @{link Test} @{linkplain
  * Test} @{literal literal} @{value Test}
@@ -43,7 +43,7 @@ class Test {}
 """)
         .addOutputLines(
             "Test.java",
-            """
+"""
 /**
  * Here are a list of malformed tags: {@code code} {@docRoot} {@inheritDoc} {@link Test} {@linkplain
  * Test} {@literal literal} {@value Test}

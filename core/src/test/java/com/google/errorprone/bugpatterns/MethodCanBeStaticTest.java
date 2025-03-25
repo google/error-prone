@@ -547,7 +547,7 @@ public class MethodCanBeStaticTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectStreamException;

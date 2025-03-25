@@ -35,7 +35,7 @@ public class SwigMemoryLeakTest {
     compilationHelper
         .addSourceLines(
             "SwigMemoryLeakPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**

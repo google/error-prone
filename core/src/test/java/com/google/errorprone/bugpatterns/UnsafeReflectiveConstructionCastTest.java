@@ -40,7 +40,7 @@ public class UnsafeReflectiveConstructionCastTest {
     testHelper
         .addInputLines(
             "in/Test.java",
-            """
+"""
 class Test {
   private String newInstanceOnGetDeclaredConstructorChained() throws Exception {
     return (String) Class.forName("java.lang.String").getDeclaredConstructor().newInstance();
@@ -106,7 +106,7 @@ class Test {
             """)
         .addOutputLines(
             "out/Test.java",
-            """
+"""
 class Test {
   class Fn<T> {}
   ;
@@ -125,7 +125,7 @@ class Test {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            """
+"""
 import java.io.Serializable;
 
 class Test {
@@ -145,7 +145,7 @@ class Test {
     compilationHelper
         .addSourceLines(
             "UnsafeReflectiveConstructionCastNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**

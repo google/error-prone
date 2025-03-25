@@ -31,7 +31,7 @@ public class DateFormatConstantTest {
     CompilationTestHelper.newInstance(DateFormatConstant.class, getClass())
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -50,7 +50,7 @@ class Test {
     CompilationTestHelper.newInstance(DateFormatConstant.class, getClass())
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.text.SimpleDateFormat;
 
 class Test {
@@ -79,7 +79,7 @@ class Test {
     BugCheckerRefactoringTestHelper.newInstance(DateFormatConstant.class, getClass())
         .addInputLines(
             "in/Test.java",
-            """
+"""
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.util.Date;
@@ -116,7 +116,7 @@ class Test {
     BugCheckerRefactoringTestHelper.newInstance(DateFormatConstant.class, getClass())
         .addInputLines(
             "in/Test.java",
-            """
+"""
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.util.Date;
@@ -131,7 +131,7 @@ class Test {
 """)
         .addOutputLines(
             "out/Test.java",
-            """
+"""
 import java.text.SimpleDateFormat;
 import java.text.DateFormat;
 import java.util.Date;

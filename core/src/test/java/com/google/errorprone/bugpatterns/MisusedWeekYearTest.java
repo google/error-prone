@@ -34,7 +34,7 @@ public class MisusedWeekYearTest {
     compilationHelper
         .addSourceLines(
             "MisusedWeekYearPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.text.DateFormatSymbols;
@@ -138,7 +138,7 @@ public class MisusedWeekYearPositiveCases {
     compilationHelper
         .addSourceLines(
             "MisusedWeekYearPositiveCases2.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.ibm.icu.text.DateFormatSymbols;
@@ -186,7 +186,7 @@ public class MisusedWeekYearPositiveCases2 {
     compilationHelper
         .addSourceLines(
             "MisusedWeekYearNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.text.DateFormatSymbols;

@@ -50,7 +50,7 @@ public class CheckReturnValueTest {
     compilationHelper
         .addSourceLines(
             "CheckReturnValuePositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.CheckReturnValue;
@@ -672,7 +672,7 @@ public class CheckReturnValuePositiveCases {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 @com.google.errorprone.annotations.CanIgnoreReturnValue
 @com.google.errorprone.annotations.CheckReturnValue
 // BUG: Diagnostic contains: @CheckReturnValue and @CanIgnoreReturnValue cannot be applied to the
@@ -687,7 +687,7 @@ class Test {}
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test {
   @com.google.errorprone.annotations.CanIgnoreReturnValue
   @com.google.errorprone.annotations.CheckReturnValue

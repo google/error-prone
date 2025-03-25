@@ -39,7 +39,7 @@ public class LongLiteralLowerCaseSuffixTest {
     compilationHelper
         .addSourceLines(
             "LongLiteralLowerCaseSuffixPositiveCase1.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /** Positive cases for {@link LongLiteralLowerCaseSuffix}. */
@@ -126,7 +126,7 @@ public class LongLiteralLowerCaseSuffixPositiveCase1 {
     compilationHelper
         .addSourceLines(
             "LongLiteralLowerCaseSuffixPositiveCase2.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /** Positive cases for {@link LongLiteralLowerCaseSuffix}. */
@@ -212,7 +212,7 @@ public class LongLiteralLowerCaseSuffixPositiveCase2 {
         .expectNoDiagnostics()
         .addSourceLines(
             "LongLiteralLowerCaseSuffixPositiveCase1.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /** Positive cases for {@link LongLiteralLowerCaseSuffix}. */

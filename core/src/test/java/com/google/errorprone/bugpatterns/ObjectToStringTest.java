@@ -78,7 +78,7 @@ public class ObjectToStringTest {
     compilationHelper
         .addSourceLines(
             "ObjectToStringNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import org.joda.time.Duration;

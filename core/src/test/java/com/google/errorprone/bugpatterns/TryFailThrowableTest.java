@@ -34,7 +34,7 @@ public class TryFailThrowableTest {
     compilationHelper
         .addSourceLines(
             "TryFailThrowablePositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static org.junit.Assert.assertEquals;

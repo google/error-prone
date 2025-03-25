@@ -34,7 +34,7 @@ public class InsecureCipherModeTest {
     compilationHelper
         .addSourceLines(
             "InsecureCipherModePositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.security.KeyFactory;
@@ -267,7 +267,7 @@ public class InsecureCipherModePositiveCases {
     compilationHelper
         .addSourceLines(
             "InsecureCipherModeNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.security.KeyFactory;

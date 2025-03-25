@@ -209,7 +209,7 @@ public class JodaPlusMinusLongTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            """
+"""
 import org.joda.time.DateMidnight;
 import org.joda.time.Duration;
 

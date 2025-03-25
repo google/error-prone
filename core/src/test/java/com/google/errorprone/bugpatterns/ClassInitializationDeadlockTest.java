@@ -286,7 +286,7 @@ public class ClassInitializationDeadlockTest {
     testHelper
         .addSourceLines(
             "A.java",
-            """
+"""
 public class A {
   // BUG: Diagnostic contains: C is a subclass of the containing class A (via B, which can be
   // initialized from outside the current file)

@@ -32,7 +32,7 @@ public class JUnitParameterMethodNotFoundTest {
     compilationHelper
         .addSourceLines(
             "JUnitParameterMethodNotFoundNegativeCase.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Arrays;
@@ -232,7 +232,7 @@ public class JUnitParameterMethodNotFoundNegativeCase {
     compilationHelper
         .addSourceLines(
             "JUnitParameterMethodNotFoundPositiveCase.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import junitparams.JUnitParamsRunner;

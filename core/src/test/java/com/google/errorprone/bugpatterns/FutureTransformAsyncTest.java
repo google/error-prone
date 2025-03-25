@@ -56,7 +56,7 @@ public class FutureTransformAsyncTest {
             """)
         .addOutputLines(
             "out/Test.java",
-            """
+"""
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.Executor;
@@ -325,7 +325,7 @@ class Test {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
-            """
+"""
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.Executor;
@@ -341,7 +341,7 @@ class Test {
 """)
         .addOutputLines(
             "out/Test.java",
-            """
+"""
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.Executor;
@@ -385,7 +385,7 @@ class Test {
             """)
         .addOutputLines(
             "out/Test.java",
-            """
+"""
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.Futures.transform;
 import static com.google.common.util.concurrent.Futures.transformAsync;
@@ -414,7 +414,7 @@ class Test {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
-            """
+"""
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.Executor;
@@ -435,7 +435,7 @@ class Test {
 """)
         .addOutputLines(
             "out/Test.java",
-            """
+"""
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.Executor;
@@ -461,7 +461,7 @@ class Test {
     refactoringHelper
         .addInputLines(
             "in/Test.java",
-            """
+"""
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.Executor;

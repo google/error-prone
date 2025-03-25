@@ -266,7 +266,7 @@ public class OptionalOfRedundantMethodTest {
             """)
         .addOutputLines(
             "Test.java",
-            """
+"""
 import java.util.Optional;
 import com.google.common.collect.ImmutableMap;
 

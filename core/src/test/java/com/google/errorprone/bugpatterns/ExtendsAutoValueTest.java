@@ -109,7 +109,7 @@ public class ExtendsAutoValueTest {
     helper
         .addSourceLines(
             "TestBuilder.java",
-            """
+"""
 import com.google.auto.value.AutoValue;
 
 @AutoValue
@@ -135,7 +135,7 @@ public class TestBuilder extends AutoClass.Builder {
     helper
         .addSourceLines(
             "TestBuilder.java",
-            """
+"""
 import com.google.auto.value.AutoValue;
 
 @AutoValue

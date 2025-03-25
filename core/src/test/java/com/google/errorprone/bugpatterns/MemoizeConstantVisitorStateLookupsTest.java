@@ -52,7 +52,7 @@ public class MemoizeConstantVisitorStateLookupsTest {
             """)
         .addOutputLines(
             "Test.java",
-            """
+"""
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.tools.javac.util.Name;
@@ -175,7 +175,7 @@ class Test {
     refactoringTestHelper
         .addInputLines(
             "Test.java",
-            """
+"""
 import com.google.common.collect.ImmutableSet;
 
 import com.google.errorprone.VisitorState;

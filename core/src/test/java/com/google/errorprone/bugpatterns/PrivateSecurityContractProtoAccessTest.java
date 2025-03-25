@@ -31,7 +31,7 @@ public class PrivateSecurityContractProtoAccessTest {
     compilationHelper
         .addSourceLines(
             "PrivateSecurityContractProtoAccessPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.html.types.SafeHtmlProto;

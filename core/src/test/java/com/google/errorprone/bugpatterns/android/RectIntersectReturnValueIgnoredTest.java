@@ -53,7 +53,7 @@ public class RectIntersectReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "RectIntersectReturnValueIgnoredPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.android.testdata;
 
 import android.graphics.Rect;

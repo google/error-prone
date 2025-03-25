@@ -35,7 +35,7 @@ public class JavaxInjectOnAbstractMethodTest {
     compilationHelper
         .addSourceLines(
             "JavaxInjectOnAbstractMethodPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.testdata;
 
 /**
@@ -109,7 +109,7 @@ public class JavaxInjectOnAbstractMethodPositiveCases {
     compilationHelper
         .addSourceLines(
             "JavaxInjectOnAbstractMethodNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.testdata;
 
 import javax.inject.Inject;

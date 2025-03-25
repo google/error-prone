@@ -36,7 +36,7 @@ public class InconsistentCapitalizationTest {
     compilationHelper
         .addSourceLines(
             "InconsistentCapitalizationNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /** Negative cases for {@link com.google.errorprone.bugpatterns.InconsistentCapitalizationTest}. */

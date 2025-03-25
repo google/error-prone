@@ -100,7 +100,7 @@ public class ProtectedMembersInFinalClassTest {
     compilationHelper
         .addSourceLines(
             "in/Test.java",
-            """
+"""
 final class Test {
   // BUG: Diagnostic contains: Make members of final classes package-private: methodOne, methodTwo,
   // fieldOne, fieldTwo

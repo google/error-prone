@@ -37,7 +37,7 @@ public class DuplicateMapKeysTest {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            """
+"""
 package a;
 
 import static java.util.Map.entry;
@@ -60,7 +60,7 @@ class A {
     compilationHelper
         .addSourceLines(
             "a/A.java",
-            """
+"""
 package a;
 
 import static java.util.Map.entry;

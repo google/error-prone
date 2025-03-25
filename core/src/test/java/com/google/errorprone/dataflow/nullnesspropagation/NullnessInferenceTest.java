@@ -75,7 +75,7 @@ public class NullnessInferenceTest {
     compilationHelper
         .addSourceLines(
             "IdentityTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
@@ -121,7 +121,7 @@ public class IdentityTest {
     compilationHelper
         .addSourceLines(
             "AnnotatedGenericMethodTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
@@ -170,7 +170,7 @@ public class AnnotatedGenericMethodTest {
     compilationHelper
         .addSourceLines(
             "AnnotatedGenericMethodTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
@@ -211,7 +211,7 @@ public class AnnotatedGenericMethodTest {
     compilationHelper
         .addSourceLines(
             "IdentityTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
@@ -297,7 +297,7 @@ public class IdentityTest {
     compilationHelper
         .addSourceLines(
             "ReturnTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
@@ -334,7 +334,7 @@ abstract class List<T> {
     compilationHelper
         .addSourceLines(
             "AssignmentsTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
@@ -373,7 +373,7 @@ abstract class List<T> {
     compilationHelper
         .addSourceLines(
             "VarArgsTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
@@ -408,7 +408,7 @@ public class VarArgsTest {
     compilationHelper
         .addSourceLines(
             "AnnotatedAtGenericTypeUseTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
@@ -514,7 +514,7 @@ public class AnnotatedAtGenericTypeUseTest {
     compilationHelper
         .addSourceLines(
             "BoundedAtGenericTypeUseTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
@@ -544,7 +544,7 @@ public class BoundedAtGenericTypeUseTest {
     compilationHelper
         .addSourceLines(
             "BoundedAtGenericTypeDefTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
@@ -619,7 +619,7 @@ public class BoundedAtGenericTypeDefTest {
     compilationHelper
         .addSourceLines(
             "IntersectionBoundsTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
@@ -645,7 +645,7 @@ public class IntersectionBoundsTest {
     compilationHelper
         .addSourceLines(
             "AnnotatedMethodTypeParamsTest.java",
-            """
+"""
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;

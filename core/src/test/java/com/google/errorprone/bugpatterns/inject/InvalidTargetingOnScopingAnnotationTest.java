@@ -106,7 +106,7 @@ public class InvalidTargetingOnScopingAnnotationTest {
     compilationHelper
         .addSourceLines(
             "InvalidTargetingOnScopingAnnotationNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.testdata;
 
 import static java.lang.annotation.ElementType.METHOD;

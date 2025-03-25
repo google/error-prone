@@ -104,7 +104,7 @@ public class StringSplitterTest {
             """)
         .addOutputLines(
             "Test.java",
-            """
+"""
 import com.google.common.base.Splitter;
 import java.util.regex.Pattern;
 
@@ -411,7 +411,7 @@ class Test {
             """)
         .addOutputLines(
             "Test.java",
-            """
+"""
 import com.google.common.base.Splitter;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -582,7 +582,7 @@ class Test {
             """)
         .addOutputLines(
             "Test.java",
-            """
+"""
 import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import java.util.ArrayList;

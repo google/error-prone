@@ -59,7 +59,7 @@ public final class ProtoTruthMixedDescriptorsTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
@@ -103,7 +103,7 @@ final class Test {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;

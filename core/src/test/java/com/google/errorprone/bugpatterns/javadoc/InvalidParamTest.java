@@ -163,7 +163,7 @@ public final class InvalidParamTest {
     helper
         .addSourceLines(
             "Test.java",
-            """
+"""
 interface Test {
   /**
    * // BUG: Diagnostic contains: `foabar` is very close to the parameter `foobar`

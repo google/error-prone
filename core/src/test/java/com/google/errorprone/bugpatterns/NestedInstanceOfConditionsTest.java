@@ -121,7 +121,7 @@ public class NestedInstanceOfConditionsTest {
     compilationHelper
         .addSourceLines(
             "NestedInstanceOfConditionsNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.ArrayList;

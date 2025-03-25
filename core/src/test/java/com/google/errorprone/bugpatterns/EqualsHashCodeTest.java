@@ -33,7 +33,7 @@ public class EqualsHashCodeTest {
     compilationHelper
         .addSourceLines(
             "EqualsHashCodeTestPositiveCases.java",
-            """
+"""
 public class EqualsHashCodeTestPositiveCases {
 
   public static class EqualsOnly {

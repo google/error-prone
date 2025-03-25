@@ -34,7 +34,7 @@ public class OverridesGuiceInjectableMethodTest {
     compilationHelper
         .addSourceLines(
             "OverridesGuiceInjectableMethodPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 /**
@@ -107,7 +107,7 @@ public class OverridesGuiceInjectableMethodPositiveCases {
     compilationHelper
         .addSourceLines(
             "OverridesGuiceInjectableMethodNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 /**

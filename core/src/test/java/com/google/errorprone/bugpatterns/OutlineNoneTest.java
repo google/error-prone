@@ -33,7 +33,7 @@ public final class OutlineNoneTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates.Template;
 
@@ -56,7 +56,7 @@ interface Test {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.client.SafeHtmlTemplates.Template;
 

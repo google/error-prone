@@ -222,7 +222,7 @@ public class DeeplyNestedTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import com.google.common.collect.ImmutableList;
 
 class Test {

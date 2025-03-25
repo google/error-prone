@@ -551,7 +551,7 @@ public class NoAllocationCheckerTest {
     compilationHelper
         .addSourceLines(
             "NoAllocationCheckerNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.NoAllocation;

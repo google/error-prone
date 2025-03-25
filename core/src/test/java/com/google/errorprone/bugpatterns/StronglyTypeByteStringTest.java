@@ -101,7 +101,7 @@ public final class StronglyTypeByteStringTest {
             """)
         .addOutputLines(
             "Test.java",
-            """
+"""
 import com.google.protobuf.ByteString;
 
 class Test {
@@ -133,7 +133,7 @@ class Test {
             """)
         .addOutputLines(
             "Test.java",
-            """
+"""
 import com.google.protobuf.ByteString;
 
 class Test {

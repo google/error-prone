@@ -588,7 +588,7 @@ public final class FieldCanBeLocalTest {
     helper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.Collections;

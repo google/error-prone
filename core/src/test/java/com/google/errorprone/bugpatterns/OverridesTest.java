@@ -34,7 +34,7 @@ public class OverridesTest {
     compilationHelper
         .addSourceLines(
             "OverridesPositiveCase1.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**
@@ -134,7 +134,7 @@ public class OverridesPositiveCase1 {
     compilationHelper
         .addSourceLines(
             "OverridesPositiveCase2.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**
@@ -176,7 +176,7 @@ public class OverridesPositiveCase2 {
     compilationHelper
         .addSourceLines(
             "OverridesPositiveCase3.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**
@@ -218,7 +218,7 @@ public class OverridesPositiveCase3 {
     compilationHelper
         .addSourceLines(
             "OverridesPositiveCase4.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Map;
@@ -260,7 +260,7 @@ public class OverridesPositiveCase4 {
     compilationHelper
         .addSourceLines(
             "OverridesPositiveCase5.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**
@@ -298,7 +298,7 @@ public class OverridesPositiveCase5 {
     compilationHelper
         .addSourceLines(
             "OverridesNegativeCase1.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**

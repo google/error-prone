@@ -35,7 +35,7 @@ public final class RedundantSetterCallTest {
     compilationHelper
         .addSourceLines(
             "ProtoRedundantSetPositiveCases.java",
-            """
+"""
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
@@ -151,7 +151,7 @@ final class ProtoRedundantSetPositiveCases {
     BugCheckerRefactoringTestHelper.newInstance(RedundantSetterCall.class, getClass())
         .addInputLines(
             "ProtoRedundantSetPositiveCases.java",
-            """
+"""
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
@@ -183,7 +183,7 @@ final class ProtoRedundantSetPositiveCases {
 """)
         .addOutputLines(
             "ProtoRedundantSetExpected.java",
-            """
+"""
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 

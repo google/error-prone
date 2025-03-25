@@ -29,7 +29,7 @@ public class FloatCastTest {
     CompilationTestHelper.newInstance(FloatCast.class, getClass())
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test {
   {
     // BUG: Diagnostic contains:'int x = (int) (0.9f * 42);' or 'int x = ((int) 0.9f) * 42;'

@@ -147,7 +147,7 @@ public class FloggerRedundantIsEnabledTest {
     compilationTestHelper
         .addSourceLines(
             "FloggerRedundantIsEnabledNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.flogger.testdata;
 
 import com.google.common.flogger.FluentLogger;

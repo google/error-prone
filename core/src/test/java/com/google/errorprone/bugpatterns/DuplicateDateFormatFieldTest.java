@@ -213,7 +213,7 @@ public final class DuplicateDateFormatFieldTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.text.SimpleDateFormat;
 
 class Test {

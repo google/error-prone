@@ -137,7 +137,7 @@ public class ModifyCollectionInEnhancedForLoopTest {
     compilationHelper
         .addSourceLines(
             "ModifyCollectionInEnhancedForLoopNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns;
 
 import java.util.ArrayList;

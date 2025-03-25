@@ -113,7 +113,7 @@ public final class InvalidLinkTest {
     helper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.util.List;
 
 interface Test {

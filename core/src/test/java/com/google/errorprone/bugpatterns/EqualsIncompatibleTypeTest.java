@@ -37,7 +37,7 @@ public class EqualsIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "EqualsIncompatibleTypePositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.ImmutableList;
@@ -403,7 +403,7 @@ public class EqualsIncompatibleTypePositiveCases {
     compilationHelper
         .addSourceLines(
             "EqualsIncompatibleTypeRecursiveTypes.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.time.DayOfWeek;
@@ -727,7 +727,7 @@ public class EqualsIncompatibleTypeRecursiveTypes {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
 public class Test {

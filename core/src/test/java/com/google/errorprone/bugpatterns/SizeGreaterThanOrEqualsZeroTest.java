@@ -34,7 +34,7 @@ public class SizeGreaterThanOrEqualsZeroTest {
     compilationHelper
         .addSourceLines(
             "SizeGreaterThanOrEqualsZeroPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.Iterables;
@@ -183,7 +183,7 @@ public class SizeGreaterThanOrEqualsZeroPositiveCases {
     compilationHelper
         .addSourceLines(
             "SizeGreaterThanOrEqualsZeroNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;

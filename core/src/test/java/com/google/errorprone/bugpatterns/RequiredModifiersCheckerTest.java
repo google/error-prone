@@ -65,7 +65,7 @@ public class RequiredModifiersCheckerTest {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
-            """
+"""
 package test;
 
 import test.AbstractRequired;
@@ -83,7 +83,7 @@ public class RequiredModifiersTestCase {}
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
-            """
+"""
 package test;
 
 import test.PublicAndFinalRequired;
@@ -102,7 +102,7 @@ public class RequiredModifiersTestCase {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
-            """
+"""
 package test;
 
 import test.PublicAndFinalRequired;
@@ -121,7 +121,7 @@ public class RequiredModifiersTestCase {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
-            """
+"""
 package test;
 
 import test.PublicAndFinalRequired;
@@ -140,7 +140,7 @@ public class RequiredModifiersTestCase {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
-            """
+"""
 package test;
 
 import test.PublicAndFinalRequired;
@@ -160,7 +160,7 @@ public class RequiredModifiersTestCase {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
-            """
+"""
 package test;
 
 import test.PublicAndFinalRequired;
@@ -180,7 +180,7 @@ public class RequiredModifiersTestCase {
     compilationHelper
         .addSourceLines(
             "test/RequiredModifiersTestCase.java",
-            """
+"""
 package test;
 
 import test.PublicAndFinalRequired;

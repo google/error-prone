@@ -35,7 +35,7 @@ public class ModifySourceCollectionInStreamTest {
     compilationHelper
         .addSourceLines(
             "ModifySourceCollectionInStreamPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.ImmutableList;
@@ -126,7 +126,7 @@ public class ModifySourceCollectionInStreamPositiveCases {
     compilationHelper
         .addSourceLines(
             "ModifySourceCollectionInStreamNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.ArrayList;

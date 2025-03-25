@@ -326,7 +326,7 @@ public class DoNotCallCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test {
   void m() {
     // BUG: Diagnostic contains: com.google.errorprone.bugpatterns.DoNotCallCheckerTest.DNCTest.f()

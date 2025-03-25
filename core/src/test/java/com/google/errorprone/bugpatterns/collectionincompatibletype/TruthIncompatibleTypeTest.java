@@ -640,7 +640,7 @@ public class TruthIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
 import com.google.common.collect.ImmutableList;
 import com.google.common.truth.Correspondence;

@@ -35,7 +35,7 @@ public class NonRuntimeAnnotationTest {
     compilationHelper
         .addSourceLines(
             "NonRuntimeAnnotationPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.lang.annotation.Retention;
@@ -75,7 +75,7 @@ public class NonRuntimeAnnotationPositiveCases {
     compilationHelper
         .addSourceLines(
             "NonRuntimeAnnotationNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.lang.annotation.Retention;

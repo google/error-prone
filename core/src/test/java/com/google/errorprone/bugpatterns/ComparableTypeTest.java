@@ -31,7 +31,7 @@ public class ComparableTypeTest {
     compilationHelper
         .addSourceLines(
             "ComparableTypePositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.Serializable;
@@ -159,7 +159,7 @@ public class ComparableTypePositiveCases {
     compilationHelper
         .addSourceLines(
             "ComparableTypeNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.Serializable;

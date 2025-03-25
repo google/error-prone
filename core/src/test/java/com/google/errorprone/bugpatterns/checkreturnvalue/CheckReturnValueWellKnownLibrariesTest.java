@@ -236,7 +236,7 @@ public class CheckReturnValueWellKnownLibrariesTest {
             """)
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test {
   void f(Foo foo) {
     org.junit.Assert.assertThrows(

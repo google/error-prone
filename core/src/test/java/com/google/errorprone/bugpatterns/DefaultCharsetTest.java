@@ -104,7 +104,7 @@ public class DefaultCharsetTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.io.*;
 
 class Test {
@@ -137,7 +137,7 @@ class Test {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.io.*;
 
 class Test {
@@ -159,7 +159,7 @@ class Test {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.io.*;
 
@@ -432,7 +432,7 @@ class Test {
             """)
         .addOutputLines(
             "out/Test.java",
-            """
+"""
 import static java.nio.charset.StandardCharsets.UTF_8;
 import java.io.BufferedWriter;
 import java.io.File;

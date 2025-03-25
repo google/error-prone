@@ -34,7 +34,7 @@ public class BadComparableTest {
     compilationHelper
         .addSourceLines(
             "BadComparablePositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.File;

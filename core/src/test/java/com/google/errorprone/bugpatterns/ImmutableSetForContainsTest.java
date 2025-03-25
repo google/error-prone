@@ -107,7 +107,7 @@ public final class ImmutableSetForContainsTest {
             """)
         .addOutputLines(
             "Test.java",
-            """
+"""
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -253,7 +253,7 @@ class Test {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            """
+"""
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 

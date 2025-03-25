@@ -1652,7 +1652,7 @@ public class UnusedVariableTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            """
+"""
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -1687,7 +1687,7 @@ public class Test {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            """
+"""
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

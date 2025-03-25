@@ -32,7 +32,7 @@ public final class LockOnNonEnclosingClassLiteralTest {
     compilationHelper
         .addSourceLines(
             "LockOnNonEnclosingClassLiteralPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 public class LockOnNonEnclosingClassLiteralPositiveCases {

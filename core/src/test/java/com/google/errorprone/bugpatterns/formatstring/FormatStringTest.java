@@ -332,7 +332,7 @@ public class FormatStringTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.time.*;
 
 class Test {

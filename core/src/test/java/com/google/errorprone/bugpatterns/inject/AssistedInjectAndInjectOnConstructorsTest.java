@@ -35,7 +35,7 @@ public class AssistedInjectAndInjectOnConstructorsTest {
     compilationHelper
         .addSourceLines(
             "AssistedInjectAndInjectOnConstructorsPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.assistedinject.AssistedInject;
@@ -94,7 +94,7 @@ public class AssistedInjectAndInjectOnConstructorsPositiveCases {
     compilationHelper
         .addSourceLines(
             "AssistedInjectAndInjectOnConstructorsNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.assistedinject.AssistedInject;

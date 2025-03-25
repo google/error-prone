@@ -33,7 +33,7 @@ public class IncompatibleArgumentTypeTest {
     compilationHelper
         .addSourceLines(
             "IncompatibleArgumentTypeGenericMethod.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.collectionincompatibletype.testdata;
 
 import com.google.errorprone.annotations.CompatibleWith;
@@ -91,7 +91,7 @@ public class IncompatibleArgumentTypeGenericMethod {
     compilationHelper
         .addSourceLines(
             "IncompatibleArgumentTypeEnclosingTypes.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.collectionincompatibletype.testdata;
 
 import com.google.errorprone.annotations.CompatibleWith;
@@ -166,7 +166,7 @@ public class IncompatibleArgumentTypeEnclosingTypes {
     compilationHelper
         .addSourceLines(
             "IncompatibleArgumentTypeMultimapIntegration.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.collectionincompatibletype.testdata;
 
 import com.google.errorprone.annotations.CompatibleWith;
@@ -246,7 +246,7 @@ public class IncompatibleArgumentTypeMultimapIntegration {
     compilationHelper
         .addSourceLines(
             "IncompatibleArgumentTypeIntersectionTypes.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.collectionincompatibletype.testdata;
 
 import com.google.errorprone.annotations.CompatibleWith;
@@ -306,7 +306,7 @@ public class IncompatibleArgumentTypeIntersectionTypes {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CompatibleWith;
 import java.util.Map;

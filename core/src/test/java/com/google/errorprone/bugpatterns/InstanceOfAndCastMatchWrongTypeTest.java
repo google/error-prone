@@ -202,7 +202,7 @@ public class InstanceOfAndCastMatchWrongTypeTest {
     compilationHelper
         .addSourceLines(
             "InstanceOfAndCastMatchWrongTypeNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.FilterWriter;

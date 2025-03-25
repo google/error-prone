@@ -39,7 +39,7 @@ public final class ArrayAsKeyOfSetOrMapTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.util.Arrays;
 import java.util.Set;
 import java.util.Map;
@@ -105,7 +105,7 @@ class Test {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.util.Arrays;
 import java.util.Set;
 import java.util.Map;

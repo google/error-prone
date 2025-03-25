@@ -81,7 +81,7 @@ public class ThrowIfUncheckedKnownCheckedTest {
     compilationHelper
         .addSourceLines(
             "ThrowIfUncheckedKnownCheckedTestNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.base.Throwables.propagateIfPossible;

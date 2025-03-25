@@ -101,7 +101,7 @@ public class RxReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "RxReturnValueIgnoredPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;

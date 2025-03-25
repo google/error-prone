@@ -72,7 +72,7 @@ public class DefaultLocaleTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.io.*;
 import java.text.*;
 import java.util.Formattable;
@@ -189,7 +189,7 @@ class Test {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.text.*;
 import java.time.format.*;
 
@@ -234,7 +234,7 @@ class Test {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.text.*;
 
 class Test {
@@ -252,7 +252,7 @@ class Test {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import static java.text.DateFormat.*;
 import java.text.*;
 

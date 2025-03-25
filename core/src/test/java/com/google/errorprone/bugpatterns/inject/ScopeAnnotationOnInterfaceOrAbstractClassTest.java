@@ -36,7 +36,7 @@ public class ScopeAnnotationOnInterfaceOrAbstractClassTest {
     compilationHelper
         .addSourceLines(
             "ScopeAnnotationOnInterfaceOrAbstractClassPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.testdata;
 
 import com.google.inject.Singleton;

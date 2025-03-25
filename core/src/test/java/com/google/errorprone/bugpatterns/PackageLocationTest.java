@@ -33,7 +33,7 @@ public class PackageLocationTest {
     compilationHelper
         .addSourceLines(
             "src/main/java/a/b/A.java",
-            """
+"""
 // BUG: Diagnostic contains: Expected package a to be declared in a directory ending with a, instead
 // found b
 package a;
@@ -48,7 +48,7 @@ class A {}
     compilationHelper
         .addSourceLines(
             "src/main/java/A.java",
-            """
+"""
 // BUG: Diagnostic contains: Expected package a.b.c to be declared in a directory ending with a/b/c,
 // instead found src/main/java
 package a.b.c;
@@ -63,7 +63,7 @@ class A {}
     compilationHelper
         .addSourceLines(
             "java/b/c/d/A.java",
-            """
+"""
 // BUG: Diagnostic contains: Expected package a.b.c.d to be declared in a directory ending with
 // a/b/c/d, instead found java/b/c/d
 package a.b.c.d;
@@ -78,7 +78,7 @@ class A {}
     compilationHelper
         .addSourceLines(
             "panda/b/c/d/A.java",
-            """
+"""
 // BUG: Diagnostic contains: Expected package a.b.c.d to be declared in a directory ending with
 // a/b/c/d, instead found panda/b/c/d
 package a.b.c.d;

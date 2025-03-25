@@ -34,7 +34,7 @@ public class ProvidesNullTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import dagger.Provides;
 
 public class Test {
@@ -154,7 +154,7 @@ public class Test {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.io.IOException;
 import dagger.Provides;
 
@@ -178,7 +178,7 @@ public class Test {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import dagger.Provides;
 
 public class Test {

@@ -369,7 +369,7 @@ public class ArgumentSelectionDefectCheckerTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 abstract class Test {
   abstract void target(Object first, Object second);
 
@@ -389,7 +389,7 @@ abstract class Test {
     testHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test {
   Foo test(String first, String second) {
     // BUG: Diagnostic contains: may have been swapped

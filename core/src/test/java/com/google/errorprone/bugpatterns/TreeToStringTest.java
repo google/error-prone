@@ -111,7 +111,7 @@ public class TreeToStringTest {
     testHelper
         .addSourceLines(
             "TreeToStringPositiveCases.java",
-            """
+"""
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Matcher;

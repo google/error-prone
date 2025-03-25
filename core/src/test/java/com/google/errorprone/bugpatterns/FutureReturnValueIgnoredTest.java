@@ -35,7 +35,7 @@ public class FutureReturnValueIgnoredTest {
     compilationHelper
         .addSourceLines(
             "FutureReturnValueIgnoredPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;
@@ -248,7 +248,7 @@ public class FutureReturnValueIgnoredPositiveCases {
     compilationHelper
         .addSourceLines(
             "FutureReturnValueIgnoredNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.util.concurrent.Futures.immediateFuture;

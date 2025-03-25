@@ -153,7 +153,7 @@ public final class StringFormatWithLiteralTest {
     compilationHelper
         .addSourceLines(
             "ExampleClass.java",
-            """
+"""
 import java.lang.String;
 
 public class ExampleClass {

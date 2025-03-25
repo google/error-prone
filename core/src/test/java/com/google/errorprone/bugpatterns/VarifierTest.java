@@ -240,7 +240,7 @@ public final class VarifierTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            """
+"""
 import static org.junit.Assert.assertThrows;
 
 class Test {

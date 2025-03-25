@@ -34,7 +34,7 @@ public class HidingFieldTest {
     compilationHelper
         .addSourceLines(
             "HidingFieldPositiveCases1.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**
@@ -94,7 +94,7 @@ public class HidingFieldPositiveCases1 {
 """)
         .addSourceLines(
             "HidingFieldPositiveCases2.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**
@@ -130,7 +130,7 @@ public class HidingFieldPositiveCases2 {
     compilationHelper
         .addSourceLines(
             "HidingFieldNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**

@@ -88,7 +88,7 @@ public final class BadImportTest {
     compilationTestHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import static com.google.common.collect.ImmutableList.of;
 import com.google.common.collect.ImmutableList;
 
@@ -184,7 +184,7 @@ class Test {
     compilationTestHelper
         .addSourceLines(
             "BadImportPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.ImmutableList;
@@ -381,7 +381,7 @@ class BadImportPositiveCases {
     refactoringTestHelper
         .addInputLines(
             "BadImportPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.ImmutableList;
@@ -444,7 +444,7 @@ class BadImportPositiveCases {
 """)
         .addOutputLines(
             "BadImportPositiveCases_expected.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.collect.ImmutableList;

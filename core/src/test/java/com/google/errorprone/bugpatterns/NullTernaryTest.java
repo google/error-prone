@@ -133,7 +133,7 @@ public class NullTernaryTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 class Test {
   void conditionalInCondition(Object array, String input) {
     int arrayDimensions =

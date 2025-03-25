@@ -33,7 +33,7 @@ public class IterableAndIteratorTest {
     compilationHelper
         .addSourceLines(
             "IterableAndIteratorPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.Iterator;

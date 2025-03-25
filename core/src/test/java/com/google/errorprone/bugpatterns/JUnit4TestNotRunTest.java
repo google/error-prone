@@ -689,7 +689,7 @@ public class JUnit4TestNotRunTest {
     compilationHelper
         .addSourceLines(
             "JUnit4TestNotRunNegativeCase3.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.*;
@@ -740,7 +740,7 @@ public class JUnit4TestNotRunNegativeCase3 {
     compilationHelper
         .addSourceLines(
             "JUnit4TestNotRunNegativeCase4.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;
@@ -793,7 +793,7 @@ public class JUnit4TestNotRunNegativeCase4 extends TestCase {
             """)
         .addSourceLines(
             "JUnit4TestNotRunNegativeCase5.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.runner.RunWith;

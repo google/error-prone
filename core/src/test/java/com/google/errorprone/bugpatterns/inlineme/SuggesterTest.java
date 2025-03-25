@@ -358,7 +358,7 @@ public class SuggesterTest {
             """)
         .addOutputLines(
             "Client.java",
-            """
+"""
 package com.google.frobber;
 
 import com.google.errorprone.annotations.InlineMe;
@@ -473,7 +473,7 @@ public final class Client {
             """)
         .addOutputLines(
             "Client.java",
-            """
+"""
 package com.google.frobber;
 
 import com.google.errorprone.annotations.InlineMe;
@@ -723,7 +723,7 @@ public final class Client {
             """)
         .addOutputLines(
             "Client.java",
-            """
+"""
 package com.google.frobber;
 
 import com.google.errorprone.annotations.InlineMe;
@@ -860,7 +860,7 @@ public final class Client {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            """
+"""
 package com.google.frobber;
 
 import java.time.Duration;
@@ -875,7 +875,7 @@ public final class Client {
 """)
         .addOutputLines(
             "Client.java",
-            """
+"""
 package com.google.frobber;
 
 import com.google.errorprone.annotations.InlineMe;
@@ -920,7 +920,7 @@ public final class Client {
             """)
         .addOutputLines(
             "Client.java",
-            """
+"""
 package com.google.frobber;
 
 import com.google.errorprone.annotations.InlineMe;
@@ -962,7 +962,7 @@ public final class Client {
             """)
         .addOutputLines(
             "Client.java",
-            """
+"""
 package com.google.frobber;
 
 import static java.lang.String.format;
@@ -1189,7 +1189,7 @@ public final class Client {
             """)
         .addOutputLines(
             "Client.java",
-            """
+"""
 package com.google.frobber;
 
 import com.google.errorprone.annotations.InlineMe;

@@ -172,7 +172,7 @@ public final class AndroidInjectionBeforeSuperTest {
             """)
         .addSourceLines(
             "AndroidInjection.java",
-            """
+"""
 package dagger.android;
 
 import android.app.Activity;
@@ -282,7 +282,7 @@ public final class AndroidInjection {
             """)
         .addSourceLines(
             "AndroidInjection.java",
-            """
+"""
 package dagger.android;
 
 import android.app.Activity;

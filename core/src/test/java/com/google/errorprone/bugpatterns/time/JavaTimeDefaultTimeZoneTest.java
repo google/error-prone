@@ -406,7 +406,7 @@ public class JavaTimeDefaultTimeZoneTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            """
+"""
 import static java.time.ZoneId.systemDefault;
 import java.time.chrono.ThaiBuddhistChronology;
 import java.time.chrono.ThaiBuddhistDate;

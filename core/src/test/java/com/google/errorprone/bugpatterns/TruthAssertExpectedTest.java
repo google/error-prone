@@ -36,7 +36,7 @@ public final class TruthAssertExpectedTest {
     compilationHelper
         .addSourceLines(
             "TruthAssertExpectedPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.truth.Truth.assertThat;

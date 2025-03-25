@@ -219,7 +219,7 @@ public class TooManyParametersTest {
     compilationHelper
         .addSourceLines(
             "ExampleWithTestParametersTest.java",
-            """
+"""
 import com.google.common.collect.ImmutableList;
 import com.google.testing.junit.testparameterinjector.TestParameters;
 import com.google.testing.junit.testparameterinjector.TestParametersValuesProvider;

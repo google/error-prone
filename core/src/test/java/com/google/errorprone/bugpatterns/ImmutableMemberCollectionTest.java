@@ -270,7 +270,7 @@ public final class ImmutableMemberCollectionTest {
             """)
         .addOutputLines(
             "Test.java",
-            """
+"""
 import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.ArrayList;

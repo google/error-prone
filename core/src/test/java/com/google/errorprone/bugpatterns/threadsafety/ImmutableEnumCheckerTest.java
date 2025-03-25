@@ -74,7 +74,7 @@ public class ImmutableEnumCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -273,7 +273,7 @@ enum Enum {
             """)
         .addSourceLines(
             "Test.java",
-            """
+"""
 enum Test {
   ONE;
   // BUG: Diagnostic contains: not annotated with @com.google.errorprone.annotations.Immutable

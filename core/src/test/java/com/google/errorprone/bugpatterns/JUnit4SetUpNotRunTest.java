@@ -41,7 +41,7 @@ public class JUnit4SetUpNotRunTest {
     compilationHelper
         .addSourceLines(
             "JUnit4SetUpNotRunPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import org.junit.After;
@@ -211,7 +211,7 @@ class J4OverriddenSetUpPublic extends BaseTestClass {
     compilationHelper
         .addSourceLines(
             "JUnit4SetUpNotRunNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import junit.framework.TestCase;

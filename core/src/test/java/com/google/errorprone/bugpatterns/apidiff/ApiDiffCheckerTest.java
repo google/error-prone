@@ -473,7 +473,7 @@ public class ApiDiffCheckerTest {
     compilationHelper
         .addSourceLines(
             "Lib.java",
-            """
+"""
 package my.lib;
 
 import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;
@@ -499,7 +499,7 @@ public final class Lib {}
     compilationHelper
         .addSourceLines(
             "Lib.java",
-            """
+"""
 package my.lib;
 
 import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;
@@ -509,7 +509,7 @@ public final class Lib {}
 """)
         .addSourceLines(
             "Test.java",
-            """
+"""
 import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;
 import my.lib.Lib;
 
@@ -525,7 +525,7 @@ class Test {
     compilationHelper
         .addSourceLines(
             "Lib.java",
-            """
+"""
 package my.lib;
 
 import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;
@@ -555,7 +555,7 @@ public final class Lib {
     compilationHelper
         .addSourceLines(
             "Lib.java",
-            """
+"""
 package my.lib;
 
 import com.google.errorprone.bugpatterns.apidiff.ApiDiffCheckerTest.RequiresNewApiVersion;

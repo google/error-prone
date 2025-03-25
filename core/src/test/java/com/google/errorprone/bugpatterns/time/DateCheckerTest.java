@@ -154,7 +154,7 @@ public class DateCheckerTest {
     helper
         .addSourceLines(
             "TestClass.java",
-            """
+"""
 import java.util.Date;
 
 public class TestClass {
@@ -180,7 +180,7 @@ public class TestClass {
     helper
         .addSourceLines(
             "TestClass.java",
-            """
+"""
 import static java.util.Calendar.JULY;
 import java.util.Date;
 
@@ -286,7 +286,7 @@ public class TestClass {
     helper
         .addSourceLines(
             "TestClass.java",
-            """
+"""
 import java.util.Date;
 
 public class TestClass {
@@ -308,7 +308,7 @@ public class TestClass {
     helper
         .addSourceLines(
             "TestClass.java",
-            """
+"""
 import java.util.Date;
 
 public class TestClass {

@@ -35,7 +35,7 @@ public class ArrayHashCodeTest {
     compilationHelper
         .addSourceLines(
             "ArrayHashCodePositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Objects;

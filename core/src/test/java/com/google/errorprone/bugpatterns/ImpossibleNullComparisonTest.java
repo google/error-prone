@@ -258,7 +258,7 @@ public final class ImpossibleNullComparisonTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import com.google.protobuf.ExtensionLite;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;

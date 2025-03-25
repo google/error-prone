@@ -73,7 +73,7 @@ public class IncompatibleModifiersCheckerTest {
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",
-            """
+"""
 package test;
 
 import test.NotAbstract;
@@ -91,7 +91,7 @@ abstract class IncompatibleModifiersTestCase {}
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",
-            """
+"""
 package test;
 
 import test.NotPrivateOrFinal;
@@ -110,7 +110,7 @@ public class IncompatibleModifiersTestCase {
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",
-            """
+"""
 package test;
 
 import test.NotPrivateOrFinal;
@@ -130,7 +130,7 @@ public class IncompatibleModifiersTestCase {
     compilationHelper
         .addSourceLines(
             "test/IncompatibleModifiersTestCase.java",
-            """
+"""
 package test;
 
 import test.NotPublicOrFinal;

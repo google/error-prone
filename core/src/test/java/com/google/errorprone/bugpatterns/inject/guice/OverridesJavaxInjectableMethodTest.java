@@ -34,7 +34,7 @@ public class OverridesJavaxInjectableMethodTest {
     compilationHelper
         .addSourceLines(
             "OverridesJavaxInjectableMethodPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 /**

@@ -30,7 +30,7 @@ public class FuturesGetCheckedIllegalExceptionTypeTest {
     compilationHelper
         .addSourceLines(
             "FuturesGetCheckedIllegalExceptionTypePositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.util.concurrent.Futures.getChecked;
@@ -104,7 +104,7 @@ public class FuturesGetCheckedIllegalExceptionTypePositiveCases {
     compilationHelper
         .addSourceLines(
             "FuturesGetCheckedIllegalExceptionTypeNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.common.util.concurrent.Futures.getChecked;

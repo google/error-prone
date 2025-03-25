@@ -41,7 +41,7 @@ public class UnnecessaryLongToIntConversionTest {
     compilationHelper
         .addSourceLines(
             "UnnecessaryLongToIntConversionPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.primitives.Ints;
@@ -113,7 +113,7 @@ public class UnnecessaryLongToIntConversionPositiveCases {
     compilationHelper
         .addSourceLines(
             "UnnecessaryLongToIntConversionNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.primitives.Ints;

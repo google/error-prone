@@ -36,7 +36,7 @@ public class JUnitAssertSameCheckTest {
     compilationHelper
         .addSourceLines(
             "JUnitAssertSameCheckPositiveCase.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**

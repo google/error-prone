@@ -411,7 +411,7 @@ public final class AnnotationPositionTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-            """
+"""
 interface Test {
   public @EitherUse
   /** Javadoc */

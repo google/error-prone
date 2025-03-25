@@ -111,7 +111,7 @@ public class AssistedInjectScopingTest {
     compilationHelper
         .addSourceLines(
             "AssistedInjectScopingNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.Inject;

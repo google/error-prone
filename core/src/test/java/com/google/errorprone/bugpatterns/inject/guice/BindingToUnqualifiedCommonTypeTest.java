@@ -88,7 +88,7 @@ public class BindingToUnqualifiedCommonTypeTest {
     compilationHelper
         .addSourceLines(
             "BindingToUnqualifiedCommonTypeNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.common.collect.ImmutableList;

@@ -34,7 +34,7 @@ public class ChainingConstructorIgnoresParameterTest {
     compilationHelper
         .addSourceLines(
             "ChainingConstructorIgnoresParameterPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static com.google.errorprone.bugpatterns.testdata.ChainingConstructorIgnoresParameterPositiveCases.Location.TEST_TARGET;
@@ -132,7 +132,7 @@ public class ChainingConstructorIgnoresParameterPositiveCases {
     compilationHelper
         .addSourceLines(
             "ChainingConstructorIgnoresParameterNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.io.File;

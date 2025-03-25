@@ -73,7 +73,7 @@ public final class BadInstanceofTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 class A {
   // BUG: Diagnostic contains: `new C()` is a non-null instance of C which is a subtype of A
   boolean t = new C() instanceof A;

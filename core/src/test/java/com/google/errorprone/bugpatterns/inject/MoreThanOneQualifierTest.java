@@ -35,7 +35,7 @@ public class MoreThanOneQualifierTest {
     compilationHelper
         .addSourceLines(
             "MoreThanOneQualifierPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.testdata;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -175,7 +175,7 @@ public class MoreThanOneQualifierPositiveCases {
     compilationHelper
         .addSourceLines(
             "MoreThanOneQualifierNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.testdata;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

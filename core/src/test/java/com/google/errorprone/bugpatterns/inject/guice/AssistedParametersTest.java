@@ -35,7 +35,7 @@ public class AssistedParametersTest {
     compilationHelper
         .addSourceLines(
             "AssistedParametersPositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.assistedinject.Assisted;
@@ -103,7 +103,7 @@ public class AssistedParametersPositiveCases {
     compilationHelper
         .addSourceLines(
             "AssistedParametersNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
 import com.google.inject.assistedinject.Assisted;

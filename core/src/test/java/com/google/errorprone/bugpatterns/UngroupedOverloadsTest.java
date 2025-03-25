@@ -286,7 +286,7 @@ public final class UngroupedOverloadsTest {
     compilationHelper
         .addSourceLines(
             "UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 /**

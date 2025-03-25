@@ -87,7 +87,7 @@ public class CollectionToArraySafeParameterTest {
     compilationHelper
         .addSourceLines(
             "CollectionToArraySafeParameterNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import java.util.ArrayList;

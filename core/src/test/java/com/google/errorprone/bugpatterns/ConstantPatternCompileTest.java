@@ -192,7 +192,7 @@ public class ConstantPatternCompileTest {
             """)
         .addOutputLines(
             "in/Test.java",
-            """
+"""
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -511,7 +511,7 @@ class Test {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import com.google.common.collect.ImmutableList;
 import java.util.regex.Pattern;
 

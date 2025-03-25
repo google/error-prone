@@ -62,7 +62,7 @@ public class ExpectedExceptionCheckerTest {
             """)
         .addOutputLines(
             "out/ExceptionTest.java",
-            """
+"""
 import static com.google.common.truth.Truth.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertThrows;

@@ -97,7 +97,7 @@ public class ImmutableAnnotationCheckerTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -404,7 +404,7 @@ class Test implements Deprecated {
             """)
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.lang.annotation.Annotation;
 
 class MyAnno implements Annotation {

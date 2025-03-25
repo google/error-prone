@@ -41,7 +41,7 @@ public class CollectionIncompatibleTypeTest {
     compilationHelper
         .addSourceLines(
             "CollectionIncompatibleTypePositiveCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.collectionincompatibletype.testdata;
 
 import com.google.common.collect.ClassToInstanceMap;
@@ -302,7 +302,7 @@ public class CollectionIncompatibleTypePositiveCases {
     compilationHelper
         .addSourceLines(
             "CollectionIncompatibleTypeNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.collectionincompatibletype.testdata;
 
 import com.google.common.base.Optional;
@@ -672,7 +672,7 @@ public class CollectionIncompatibleTypeNegativeCases {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 import java.util.HashMap;
 
 public class Test {

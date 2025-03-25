@@ -372,7 +372,7 @@ public class TypeParameterShadowingTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            """
+"""
 package foo.bar;
 
 import java.util.Map;

@@ -34,7 +34,7 @@ public class MustBeClosedCheckerTest {
       CompilationTestHelper.newInstance(MustBeClosedChecker.class, getClass());
 
   private static final String POSITIVE_CASES =
-      """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static java.io.OutputStream.nullOutputStream;
@@ -309,7 +309,7 @@ class MustBeClosedCheckerPositiveCases {
     compilationHelper
         .addSourceLines(
             "MustBeClosedCheckerNegativeCases.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static java.io.InputStream.nullInputStream;
@@ -518,7 +518,7 @@ public class MustBeClosedCheckerNegativeCases {
         .addInputLines("MustBeClosedCheckerPositiveCases.java", POSITIVE_CASES)
         .addOutputLines(
             "MustBeClosedCheckerPositiveCases_expected.java",
-            """
+"""
 package com.google.errorprone.bugpatterns.testdata;
 
 import static java.io.OutputStream.nullOutputStream;
