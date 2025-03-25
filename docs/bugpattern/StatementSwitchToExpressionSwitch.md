@@ -40,7 +40,7 @@ private void foo(Suit suit) {
       System.out.println("Red diamonds");
       break;
     case SPADES:
-      // Fall through
+    // Fall through
     case CLUBS:
       bar();
       System.out.println("Black suit");
@@ -132,7 +132,7 @@ int score = 0;
 private void updateScore(Suit suit) {
   switch(suit) {
     case HEARTS:
-      // Fall thru
+    // Fall thru
     case DIAMONDS:
       score += -1;
       break;
@@ -175,16 +175,16 @@ private int foo(Suit suit){
       if (bar()) {
         break;
       }
-      // Fall through
+    // Fall through
     case CLUBS:
       if (baz()) {
         return 1;
       } else if (baz2()) {
         throw new AssertionError(...);
       }
-      // Fall through
+    // Fall through
     case SPADES:
-      // Fall through
+    // Fall through
     case DIAMONDS:
       return 0;
   }
