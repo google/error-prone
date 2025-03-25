@@ -16,13 +16,14 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matchers;
@@ -40,26 +41,23 @@ import com.sun.source.tree.MethodTree;
         "To return a custom message with a Throwable class, one should "
             + "override getMessage() instead of toString().",
     severity = WARNING)
-public final class OverrideThrowableToString extends BugChecker implements ClassTreeMatcher {
+public final class OverrideThrowableToString extends BugChecker implements MethodTreeMatcher {
 
   @Override
-  public Description matchClass(ClassTree classTree, VisitorState state) {
-    if (!ASTHelpers.isSubtype(
-        ASTHelpers.getType(classTree), state.getSymtab().throwableType, state)) {
-      return Description.NO_MATCH;
+  public Description matchMethod(MethodTree methodTree, VisitorState state) {
+    if (!Matchers.toStringMethodDeclaration().matches(methodTree, state)) {
+      return NO_MATCH;
     }
-    ImmutableList<MethodTree> methods =
-        classTree.getMembers().stream()
-            .filter(m -> m instanceof MethodTree)
-            .map(m -> (MethodTree) m)
-            .collect(toImmutableList());
-    if (methods.stream().anyMatch(m -> m.getName().contentEquals("getMessage"))) {
-      return Description.NO_MATCH;
+    ClassTree classTree = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
+    if (!isSubtype(getType(classTree), state.getSymtab().throwableType, state)) {
+      return NO_MATCH;
     }
-    return methods.stream()
-        .filter(m -> Matchers.toStringMethodDeclaration().matches(m, state))
-        .findFirst()
-        .map(m -> describeMatch(m, SuggestedFixes.renameMethod(m, "getMessage", state)))
-        .orElse(Description.NO_MATCH);
+    if (classTree.getMembers().stream()
+        .filter(m -> m instanceof MethodTree)
+        .map(m -> (MethodTree) m)
+        .anyMatch(m -> m.getName().contentEquals("getMessage"))) {
+      return NO_MATCH;
+    }
+    return describeMatch(methodTree, SuggestedFixes.renameMethod(methodTree, "getMessage", state));
   }
 }

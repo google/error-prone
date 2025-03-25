@@ -209,4 +209,22 @@ public class OverrideThrowableToStringTest {
             """)
         .doTest(TestMode.AST_MATCH);
   }
+
+  @Test
+  public void suppressionOnMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test extends Throwable {
+
+              @SuppressWarnings("OverrideThrowableToString")
+              @Override
+              public String toString() {
+                return "";
+              }
+            }\
+            """)
+        .doTest();
+  }
 }
