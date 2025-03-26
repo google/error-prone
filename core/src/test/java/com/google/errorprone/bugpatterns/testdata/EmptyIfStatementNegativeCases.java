@@ -15,6 +15,7 @@
  */
 
 package com.google.errorprone.bugpatterns.testdata;
+
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
  */
