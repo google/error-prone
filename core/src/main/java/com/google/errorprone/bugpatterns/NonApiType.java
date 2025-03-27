@@ -89,10 +89,12 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
           // Optionals
           withPublicVisibility(
               isExactType("java.util.Optional"),
+              NON_GRAPH_WRAPPER,
               "Avoid Optional parameters. " + OPTIONAL_AS_PARAM_LINK,
               ApiElementType.PARAMETER),
           withPublicVisibility(
               isExactType("com.google.common.base.Optional"),
+              NON_GRAPH_WRAPPER,
               "Prefer a java.util.Optional instead. " + PREFER_JDK_OPTIONAL_LINK,
               ApiElementType.ANY),
 
