@@ -719,20 +719,7 @@ public final class PatternMatchingInstanceofTest {
               }
             }
             """)
-        .addOutputLines(
-            "Test.java",
-            """
-            class Test<T> {
-              private String val;
-
-              public Class stringify(Object o) {
-                if (o instanceof Class<?> c) {
-                  return c;
-                }
-                return null;
-              }
-            }
-            """)
+        .expectUnchanged()
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 
@@ -826,6 +813,78 @@ public final class PatternMatchingInstanceofTest {
                 }
                 return false;
               }
+            }
+            """)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+
+  // https://github.com/google/error-prone/issues/4921
+  @Test
+  public void castToSupertypeOfInstanceofCheck_noFinding() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.nio.file.Path;
+            import java.util.ArrayList;
+
+            public class Test {
+              void superinterface() {
+                Object o = Path.of(".");
+                if (o instanceof Path) {
+                  f((Iterable<?>) o);
+                }
+              }
+
+              void f(Comparable<?> c) {}
+
+              void f(Iterable<?> c) {}
+
+              void f(Path p) {}
+
+              void rawtypes() {
+                Object o = new ArrayList<Integer>();
+                if (o instanceof ArrayList<?>) {
+                  @SuppressWarnings("rawtypes")
+                  ArrayList list = (ArrayList) o;
+                  rawTypeNecessary(list);
+                }
+              }
+
+              void rawTypeNecessary(ArrayList<Integer> l) {}
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.nio.file.Path;
+            import java.util.ArrayList;
+
+            public class Test {
+              void superinterface() {
+                Object o = Path.of(".");
+                if (o instanceof Path) {
+                  f((Iterable<?>) o);
+                }
+              }
+
+              void f(Comparable<?> c) {}
+
+              void f(Iterable<?> c) {}
+
+              void f(Path p) {}
+
+              void rawtypes() {
+                Object o = new ArrayList<Integer>();
+                if (o instanceof ArrayList<?>) {
+                  @SuppressWarnings("rawtypes")
+                  ArrayList list = (ArrayList) o;
+                  rawTypeNecessary(list);
+                }
+              }
+
+              void rawTypeNecessary(ArrayList<Integer> l) {}
             }
             """)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);

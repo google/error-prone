@@ -142,9 +142,11 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     if (!variableTree.getInitializer().equals(treePath.getLeaf())) {
       return null;
     }
+    // Check that the type is exactly the same (not a subtypes), since refactoring cases where the
+    // instanceof type is a supertype of the cast type could affect overload resolution.
     if (!state
         .getTypes()
-        .isSubtype(getType(instanceOfTree.getType()), getType(variableTree.getType()))) {
+        .isSameType(getType(instanceOfTree.getType()), getType(variableTree.getType()))) {
       return null;
     }
     return variableTree;
@@ -243,7 +245,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
           public Void visitTypeCast(TypeCastTree node, Void unused) {
             if (getSymbol(node.getExpression()) instanceof VarSymbol v) {
               if (v.equals(symbol)
-                  && state.getTypes().isSubtype(targetType, getType(node.getType()))) {
+                  && state.getTypes().isSameType(getType(node.getType()), targetType)) {
                 usages.add(getUsage(getCurrentPath()));
               }
             }
