@@ -440,4 +440,20 @@ public class VarCheckerTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void recordCanonicalConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            // BUG: Diagnostic contains:
+            public record Test(String x) {
+              public Test {
+                x = x.replace('_', ' ');
+              }
+            }
+            """)
+        .doTest();
+  }
 }
