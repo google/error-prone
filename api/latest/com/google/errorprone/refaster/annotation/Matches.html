@@ -75,24 +75,24 @@ loadScripts(document, 'script');</script>
 <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#SOURCE" title="class or interface in java.lang.annotation" class="external-link">SOURCE</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">Matches</span></div>
 <div class="block">Specify an error-prone <a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><code>Matcher</code></a> to further restrict what expressions are matched by the
- annotated parameter.
+annotated parameter.
 
- <p><b>Note:</b> The <code>@Matches</code> annotation should <b>only</b> go on the
- <code>@BeforeTemplate</code>. For example:
+<p><b>Note:</b> The <code>@Matches</code> annotation should <b>only</b> go on the
+<code>@BeforeTemplate</code>. For example:
 
- <pre><code>
- class SingletonList {
-   @BeforeTemplate
-   public &lt;E&gt; List&lt;E&gt; before(@Matches(IsNonNullMatcher.class) E e) {
-     return Collections.singletonList(e);
-   }
+<pre><code>
+class SingletonList {
+  @BeforeTemplate
+  public &lt;E&gt; List&lt;E&gt; before(@Matches(IsNonNullMatcher.class) E e) {
+    return Collections.singletonList(e);
+  }
 
-   @AfterTemplate
-   public &lt;E&gt; List&lt;E&gt; after(E e) {
-     return ImmutableList.of(e);
-   }
- }
- </code></pre></div>
+  @AfterTemplate
+  public &lt;E&gt; List&lt;E&gt; after(E e) {
+    return ImmutableList.of(e);
+  }
+}
+</code></pre></div>
 </div>
 </section>
 <section class="summary">

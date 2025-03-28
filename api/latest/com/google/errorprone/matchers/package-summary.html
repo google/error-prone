@@ -67,7 +67,7 @@ loadScripts(document, 'script');</script>
 <div class="package-signature">package <span class="element-name">com.google.errorprone.matchers</span></div>
 <section class="package-description" id="package-description">
 <div class="block">A predicate DSL for matching javac AST nodes. This allows concise, readable declarative code for
- describing a match, by composing generic-type-safe matchers on the inspected AST subtree.</div>
+describing a match, by composing generic-type-safe matchers on the inspected AST subtree.</div>
 </section>
 </div>
 <section class="summary">
@@ -99,14 +99,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AnnotationDoesNotHaveArgument.html" title="class in com.google.errorprone.matchers">AnnotationDoesNotHaveArgument</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Matches an annotation that does not have a particular argument, possibly because the default
- value is being used.</div>
+value is being used.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="AnnotationHasArgumentWithValue.html" title="class in com.google.errorprone.matchers">AnnotationHasArgumentWithValue</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">&nbsp;</div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AnnotationMatcher.html" title="class in com.google.errorprone.matchers">AnnotationMatcher</a>&lt;T extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Matches if the given annotation matcher matches all of or any of the annotations on the tree
- node.</div>
+node.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="AnnotationMatcherUtils.html" title="class in com.google.errorprone.matchers">AnnotationMatcherUtils</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -139,7 +139,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="Contains.html" title="class in com.google.errorprone.matchers">Contains</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A matcher that recursively inspects a tree, applying the given matcher to all levels of each tree
- and returning <code>true</code> if any match is found.</div>
+and returning <code>true</code> if any match is found.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Description.html" title="class in com.google.errorprone.matchers">Description</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -206,7 +206,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="MethodInvocation.html" title="class in com.google.errorprone.matchers">MethodInvocation</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Matches a method invocation based on a matcher for the method select (receiver + method
- identifier) and one for the arguments.</div>
+identifier) and one for the arguments.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="MethodInvocationArgument.html" title="class in com.google.errorprone.matchers">MethodInvocationArgument</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -227,7 +227,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="MultiMatcher.MultiMatchResult.html" title="class in com.google.errorprone.matchers">MultiMatcher.MultiMatchResult</a>&lt;N extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A result from the call of <a href="MultiMatcher.html#multiMatchResult(T,com.google.errorprone.VisitorState)"><code>MultiMatcher.multiMatchResult(Tree, VisitorState)</code></a>, containing
- information about whether it matched, and if so, what nodes matched.</div>
+information about whether it matched, and if so, what nodes matched.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="NullnessMatcher.html" title="class in com.google.errorprone.matchers">NullnessMatcher</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -252,12 +252,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="UnusedReturnValueMatcher.html" title="class in com.google.errorprone.matchers">UnusedReturnValueMatcher</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Matches expressions that invoke or reference a non-void method or constructor and which do not
- use their return value and are not in a context where non-use of the return value is allowed.</div>
+use their return value and are not in a context where non-use of the return value is allowed.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab3"><a href="UnusedReturnValueMatcher.AllowReason.html" title="enum class in com.google.errorprone.matchers">UnusedReturnValueMatcher.AllowReason</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab3">
 <div class="block">Enumeration of known reasons that an unused return value may be allowed because of the context
- in which the method is used.</div>
+in which the method is used.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="WaitMatchers.html" title="class in com.google.errorprone.matchers">WaitMatchers</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">

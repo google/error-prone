@@ -102,9 +102,9 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a>, <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="BugChecker.CompoundAssignmentTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompoundAssignmentTreeMatcher</a></span></div>
 <div class="block">An abstract matcher for implicit and explicit calls to <code>Object.toString()</code>, for use on
- types that do not have a human-readable <code>toString()</code> implementation.
+types that do not have a human-readable <code>toString()</code> implementation.
 
- <p>See examples in <a href="StreamToString.html" title="class in com.google.errorprone.bugpatterns"><code>StreamToString</code></a> and <a href="ArrayToString.html" title="class in com.google.errorprone.bugpatterns"><code>ArrayToString</code></a>.</div>
+<p>See examples in <a href="StreamToString.html" title="class in com.google.errorprone.bugpatterns"><code>StreamToString</code></a> and <a href="ArrayToString.html" title="class in com.google.errorprone.bugpatterns"><code>ArrayToString</code></a>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -168,7 +168,7 @@ implements <a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.g
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Constructs a fix for an implicit toString call, e.g. from string concatenation or from passing
- an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
+an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchBinary(com.sun.source.tree.BinaryTree,com.google.errorprone.VisitorState)" class="member-name-link">matchBinary</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/BinaryTree.html" title="class or interface in com.sun.source.tree" class="external-link">BinaryTree</a>&nbsp;tree,
@@ -188,7 +188,7 @@ implements <a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.g
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Constructs a fix for an explicit toString call, e.g. from <code>Object.toString()</code> or <code>
- String.valueOf()</code>.</div>
+String.valueOf()</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract <a href="../predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#typePredicate()" class="member-name-link">typePredicate</a>()</code></div>
@@ -250,7 +250,7 @@ implements <a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.g
 <div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</span>&nbsp;<span class="element-name">implicitToStringFix</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Constructs a fix for an implicit toString call, e.g. from string concatenation or from passing
- an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
+an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>tree</code> - the tree node for the expression being converted to a String</dd>
@@ -285,7 +285,7 @@ implements <a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.g
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expression,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Constructs a fix for an explicit toString call, e.g. from <code>Object.toString()</code> or <code>
- String.valueOf()</code>.</div>
+String.valueOf()</code>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>parent</code> - the expression's parent (e.g. <code>String.valueOf(expression)</code>)</dd>

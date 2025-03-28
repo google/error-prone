@@ -87,7 +87,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#RUNTIME" title="class or interface in java.lang.annotation" class="external-link">RUNTIME</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">BugPattern</span></div>
 <div class="block">Describes a bug pattern detected by error-prone. Used to generate compiler error messages, for
- <code>@</code>SuppressWarnings, and to generate the documentation that we host on our web site.</div>
+<code>@</code>SuppressWarnings, and to generate the documentation that we host on our web site.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>eaftan@google.com (Eddie Aftandilian)</dd>
@@ -223,8 +223,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">name</span></div>
 <div class="block">A unique identifier for this bug, used for @SuppressWarnings and in the compiler error message.
 
- <p>If this is not specified (or specified as an empty string), the class name of the check will
- be used instead.</div>
+<p>If this is not specified (or specified as an empty string), the class name of the check will
+be used instead.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>""</code></dd>
@@ -277,13 +277,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="element-name">tags</span></div>
 <div class="block">A list of Stringly-typed tags to apply to this check. These tags can be consumed by tools
- aggregating Error Prone checks (for example: a git pre-commit hook could clean up Java source
- by finding any checks tagged "Style", run an Error Prone compile over the code with those
- checks enabled, collect the fixes suggested and apply them).
+aggregating Error Prone checks (for example: a git pre-commit hook could clean up Java source
+by finding any checks tagged "Style", run an Error Prone compile over the code with those
+checks enabled, collect the fixes suggested and apply them).
 
- <p>To allow for sharing of tags across systems, a number of standard tags are available as
- static constants in <a href="BugPattern.StandardTags.html" title="class in com.google.errorprone"><code>BugPattern.StandardTags</code></a>. It is strongly encouraged to extract any custom tags
- used in annotation property to constants that are shared by your codebase.</div>
+<p>To allow for sharing of tags across systems, a number of standard tags are available as
+static constants in <a href="BugPattern.StandardTags.html" title="class in com.google.errorprone"><code>BugPattern.StandardTags</code></a>. It is strongly encouraged to extract any custom tags
+used in annotation property to constants that are shared by your codebase.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>{}</code></dd>
@@ -297,10 +297,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">summary</span></div>
 <div class="block">A short summary of the problem that this checker detects. Used for the default compiler error
- message and for the short description in the generated docs. Should not end with a period, to
- match javac warning/error style.
+message and for the short description in the generated docs. Should not end with a period, to
+match javac warning/error style.
 
- <p>Markdown syntax is not allowed for this element.</div>
+<p>Markdown syntax is not allowed for this element.</div>
 </div>
 </section>
 </li>
@@ -310,9 +310,9 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">explanation</span></div>
 <div class="block">A longer explanation of the problem that this checker detects. Used as the main content in the
- generated documentation for this checker.
+generated documentation for this checker.
 
- <p>Markdown syntax is allowed for this element.</div>
+<p>Markdown syntax is allowed for this element.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>""</code></dd>
@@ -348,10 +348,10 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</span>&nbsp;<span class="element-name">suppressionAnnotations</span></div>
 <div class="block">A set of annotation types that can be used to suppress the check.
 
- <p>Includes only <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/SuppressWarnings.html" title="class or interface in java.lang" class="external-link"><code>SuppressWarnings</code></a> by default.
+<p>Includes only <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/SuppressWarnings.html" title="class or interface in java.lang" class="external-link"><code>SuppressWarnings</code></a> by default.
 
- <p>To make a check unsuppressible, set <code>suppressionAnnotations</code> to empty. Note that
- unsuppressible checks may still be disabled using command line flags (see <a href="#disableable()"><code>disableable()</code></a>).</div>
+<p>To make a check unsuppressible, set <code>suppressionAnnotations</code> to empty. Note that
+unsuppressible checks may still be disabled using command line flags (see <a href="#disableable()"><code>disableable()</code></a>).</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>{java.lang.SuppressWarnings.class}</code></dd>
@@ -366,9 +366,9 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">documentSuppression</span></div>
 <div class="block">Generate an explanation of how to suppress the check.
 
- <p>This should only be disabled if the check has a non-standard suppression mechanism that
- requires additional explanation. For example, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/SuppressWarnings.html" title="class or interface in java.lang" class="external-link"><code>SuppressWarnings</code></a> cannot be applied to
- packages, so checks that operate at the package level need special treatment.</div>
+<p>This should only be disabled if the check has a non-standard suppression mechanism that
+requires additional explanation. For example, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/SuppressWarnings.html" title="class or interface in java.lang" class="external-link"><code>SuppressWarnings</code></a> cannot be applied to
+packages, so checks that operate at the package level need special treatment.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>true</code></dd>

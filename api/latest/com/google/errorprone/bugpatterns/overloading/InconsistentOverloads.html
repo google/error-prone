@@ -92,16 +92,16 @@ loadScripts(document, 'script');</script>
 implements <a href="../BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a></span></div>
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> that detects inconsistently overloaded methods in Java classes.
 
- <p>The bug checker works in several stages. First, it group the class methods by name. Then each
- group is processed separately (and violations are reported on per-group basis).
+<p>The bug checker works in several stages. First, it group the class methods by name. Then each
+group is processed separately (and violations are reported on per-group basis).
 
- <p>The group is processed by building a <code>ParameterTrie</code>. This trie is an archetype built
- from methods of lower arity used to determine ordering of methods of higher arity. After ordering
- of arguments of particular method has been determined (using the archetype) it is then added to
- the trie and serves as basis for methods of even higher arity.
+<p>The group is processed by building a <code>ParameterTrie</code>. This trie is an archetype built
+from methods of lower arity used to determine ordering of methods of higher arity. After ordering
+of arguments of particular method has been determined (using the archetype) it is then added to
+the trie and serves as basis for methods of even higher arity.
 
- <p>If the determined ordering is different the original parameter ordering a <code>ParameterOrderingViolation</code> is reported. It is essentially a list of expected parameter and list
- of actual parameters then used to build a <a href="../../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes"><code>SuggestedFix</code></a> object.</div>
+<p>If the determined ordering is different the original parameter ordering a <code>ParameterOrderingViolation</code> is reported. It is essentially a list of expected parameter and list
+of actual parameters then used to build a <a href="../../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes"><code>SuggestedFix</code></a> object.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>hanuszczak@google.com (Łukasz Hanuszczak)</dd>

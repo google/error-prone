@@ -88,12 +88,12 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">SuppressionInfo</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Immutable container of "suppression signals" - annotations or other information gathered from
- source - that can be used to determine if a specific <a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a> object should be
- considered suppressed.
+source - that can be used to determine if a specific <a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a> object should be
+considered suppressed.
 
- <p>SuppressionInfo instances are obtained by starting with the <a href="#EMPTY"><code>EMPTY</code></a> instance, then
- getting new instances by calling <a href="#withExtendedSuppressions(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState,java.util.Set)"><code>withExtendedSuppressions(Symbol, VisitorState, Set)</code></a> with symbols discovered as you
- descend a program tree.</div>
+<p>SuppressionInfo instances are obtained by starting with the <a href="#EMPTY"><code>EMPTY</code></a> instance, then
+getting new instances by calling <a href="#withExtendedSuppressions(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState,java.util.Set)"><code>withExtendedSuppressions(Symbol, VisitorState, Set)</code></a> with symbols discovered as you
+descend a program tree.</div>
 </div>
 </section>
 <section class="summary">
@@ -151,7 +151,7 @@ loadScripts(document, 'script');</script>
  <a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns true if this checker should be considered suppressed given the signals present in this
- object.</div>
+object.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#withExtendedSuppressions(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState,java.util.Set)" class="member-name-link">withExtendedSuppressions</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
@@ -159,7 +159,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends com.sun.tools.javac.util.Name&gt;&nbsp;customSuppressionAnnosToLookFor)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns an instance of <code>SuppressionInfo</code> that takes into account any suppression signals
- present on <code>sym</code> as well as those already stored in <code>this</code>.</div>
+present on <code>sym</code> as well as those already stored in <code>this</code>.</div>
 </div>
 </div>
 </div>
@@ -202,7 +202,7 @@ loadScripts(document, 'script');</script>
  boolean&nbsp;suppressedInGeneratedCode,
  <a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Returns true if this checker should be considered suppressed given the signals present in this
- object.</div>
+object.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>suppressible</code> - Holds information about the suppressibilty of a checker</dd>
@@ -218,8 +218,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></span>&nbsp;<span class="element-name">forCompilationUnit</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;tree,
  <a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Generates the <a href="SuppressionInfo.html" title="class in com.google.errorprone"><code>SuppressionInfo</code></a> for a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a>. This differs in that
- <code>isGenerated</code> is determined by inspecting the annotations of the outermost class so that
- matchers on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a> will also be suppressed.</div>
+<code>isGenerated</code> is determined by inspecting the annotations of the outermost class so that
+matchers on <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a> will also be suppressed.</div>
 </div>
 </section>
 </li>
@@ -231,19 +231,19 @@ loadScripts(document, 'script');</script>
  <a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;? extends com.sun.tools.javac.util.Name&gt;&nbsp;customSuppressionAnnosToLookFor)</span></div>
 <div class="block">Returns an instance of <code>SuppressionInfo</code> that takes into account any suppression signals
- present on <code>sym</code> as well as those already stored in <code>this</code>.
+present on <code>sym</code> as well as those already stored in <code>this</code>.
 
- <p>Checks suppressions for any <code>@SuppressWarnings</code>, Android's <code>SuppressLint</code>, and
- custom suppression annotations described by <code>customSuppressionAnnosToLookFor</code>.
+<p>Checks suppressions for any <code>@SuppressWarnings</code>, Android's <code>SuppressLint</code>, and
+custom suppression annotations described by <code>customSuppressionAnnosToLookFor</code>.
 
- <p>We do not modify the existing suppression sets, so they can be restored when moving up the
- tree. We also avoid copying the suppression sets if the next node to explore does not have any
- suppressed warnings or custom suppression annotations. This is the common case.</div>
+<p>We do not modify the existing suppression sets, so they can be restored when moving up the
+tree. We also avoid copying the suppression sets if the next node to explore does not have any
+suppressed warnings or custom suppression annotations. This is the common case.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>sym</code> - The <code>Symbol</code> for the AST node currently being scanned</dd>
 <dd><code>state</code> - VisitorState for checking the current tree, as well as for getting the <code>
-     SuppressWarnings symbol type</code>.</dd>
+    SuppressWarnings symbol type</code>.</dd>
 </dl>
 </div>
 </section>

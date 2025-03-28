@@ -79,12 +79,12 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">NeedlemanWunschEditDistance</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">The Needleman-Wunsch algorithm for finding least-cost string edit distances between pairs of
- strings. Like Levenshtein, but this version allows for a sequence of adjacent
- deletions/insertions to cost less than the total cost of each individual deletion/insertion, so
- that, for example editing <code>Christopher</code> into <code>Chris</code> (dropping 6 characters) is not 6
- times as expensive as editing <code>Christopher</code> into <code>Christophe</code>.
+strings. Like Levenshtein, but this version allows for a sequence of adjacent
+deletions/insertions to cost less than the total cost of each individual deletion/insertion, so
+that, for example editing <code>Christopher</code> into <code>Chris</code> (dropping 6 characters) is not 6
+times as expensive as editing <code>Christopher</code> into <code>Christophe</code>.
 
- <p>See https://en.wikipedia.org/wiki/Needleman-Wunsch_algorithm</div>
+<p>See https://en.wikipedia.org/wiki/Needleman-Wunsch_algorithm</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>alanw@google.com (Alan Wendt)</dd>
@@ -161,12 +161,12 @@ loadScripts(document, 'script');</script>
  int&nbsp;openGapCost,
  int&nbsp;continueGapCost)</span></div>
 <div class="block">Returns the edit distance between two strings. Levenshtein charges the same cost for each
- insertion or deletion. This algorithm is slightly more general in that it charges a sequence of
- adjacent insertions/deletions an up-front cost plus an incremental cost per insert/delete
- operation. The idea is that Christopher -&gt; Chris should be less than 6 times as expensive as
- Christopher -&gt; Christophe. The algorithm used to calculate this distance takes time and
- space proportional to the product of <code>source.length()</code> and <code>target.length()</code> to
- build the 3 arrays.</div>
+insertion or deletion. This algorithm is slightly more general in that it charges a sequence of
+adjacent insertions/deletions an up-front cost plus an incremental cost per insert/delete
+operation. The idea is that Christopher -&gt; Chris should be less than 6 times as expensive as
+Christopher -&gt; Christophe. The algorithm used to calculate this distance takes time and
+space proportional to the product of <code>source.length()</code> and <code>target.length()</code> to
+build the 3 arrays.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>source</code> - source string.</dd>
@@ -205,7 +205,7 @@ loadScripts(document, 'script');</script>
  int&nbsp;openGapCost,
  int&nbsp;continueGapCost)</span></div>
 <div class="block">Returns a normalized edit distance between 0 and 1. This is useful if you are comparing or
- aggregating distances of different pairs of strings</div>
+aggregating distances of different pairs of strings</div>
 </div>
 </section>
 </li>

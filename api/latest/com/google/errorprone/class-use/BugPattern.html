@@ -82,7 +82,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><a href="#com.google.errorprone.bugpatterns.inject">com.google.errorprone.bugpatterns.inject</a></div>
 <div class="col-last odd-row-color">
 <div class="block">Bug patterns related to <a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency
- injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</div>
+injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</div>
 </div>
 <div class="col-first even-row-color"><a href="#com.google.errorprone.bugpatterns.inject.dagger">com.google.errorprone.bugpatterns.inject.dagger</a></div>
 <div class="col-last even-row-color">
@@ -157,7 +157,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/AnnotateFormatMethod.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">AnnotateFormatMethod</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Detects occurrences of pairs of parameters being passed straight through to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html#format(java.lang.String,java.lang.Object...)" title="class or interface in java.lang" class="external-link"><code>String.format(String, Object...)</code></a>
- from a method not annotated with <a href="../annotations/FormatMethod.html" title="annotation interface in com.google.errorprone.annotations"><code>FormatMethod</code></a>.</div>
+from a method not annotated with <a href="../annotations/FormatMethod.html" title="annotation interface in com.google.errorprone.annotations"><code>FormatMethod</code></a>.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/AnnotationMirrorToString.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">AnnotationMirrorToString</a></code></div>
@@ -186,7 +186,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/ArrayFillIncompatibleType.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ArrayFillIncompatibleType</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Checks when Arrays.fill(Object[], Object) is called with object types that are guaranteed to
- result in an ArrayStoreException.</div>
+result in an ArrayStoreException.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/ArrayHashCode.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ArrayHashCode</a></code></div>
@@ -313,7 +313,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/BigDecimalEquals.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">BigDecimalEquals</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Matches use of <code>BigDecimal#equals</code>, which compares scale as well (which is not likely to be
- intended).</div>
+intended).</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/BigDecimalLiteralDouble.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">BigDecimalLiteralDouble</a></code></div>
@@ -344,7 +344,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/ByteBufferBackingArray.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ByteBufferBackingArray</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Checks when ByteBuffer.array() is used without calling .arrayOffset() to know the offset of the
- array, or when the buffer wasn't initialized using ByteBuffer.wrap() or ByteBuffer.allocate().</div>
+array, or when the buffer wasn't initialized using ByteBuffer.wrap() or ByteBuffer.allocate().</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/CacheLoaderNull.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">CacheLoaderNull</a></code></div>
@@ -385,13 +385,13 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/ChainedAssertionLosesContext.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ChainedAssertionLosesContext</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Identifies calls to <code>assertThat</code> and similar methods inside the implementation of a <code>
- Subject</code> assertion method.</div>
+Subject</code> assertion method.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/ChainingConstructorIgnoresParameter.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ChainingConstructorIgnoresParameter</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Checks, if two constructors in a class both accept <code>Foo foo</code> and one calls the other, that
- the caller passes <code>foo</code> as a parameter.</div>
+the caller passes <code>foo</code> as a parameter.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/CharacterGetNumericValue.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">CharacterGetNumericValue</a></code></div>
@@ -497,7 +497,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/ConstantPatternCompile.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ConstantPatternCompile</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Flags variables initialized with <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/regex/Pattern.html#compile(java.lang.String)" title="class or interface in java.util.regex" class="external-link"><code>Pattern.compile(String)</code></a> calls that could
- be constants.</div>
+be constants.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/DangerousLiteralNullChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">DangerousLiteralNullChecker</a></code></div>
@@ -556,7 +556,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/DifferentNameButSame.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">DifferentNameButSame</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Discourages using multiple names to refer to the same type within a file (e.g. both <code>
- OuterClass.InnerClass</code> and <code>InnerClass</code>).</div>
+OuterClass.InnerClass</code> and <code>InnerClass</code>).</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/DirectInvocationOnMock.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">DirectInvocationOnMock</a></code></div>
@@ -572,7 +572,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/DistinctVarargsChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">DistinctVarargsChecker</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">ErrorProne checker to generate warning when method expecting distinct varargs is invoked with
- same variable argument.</div>
+same variable argument.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/DoNotCallChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">DoNotCallChecker</a></code></div>
@@ -583,7 +583,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/DoNotCallSuggester.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">DoNotCallSuggester</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">If a method always throws an exception, consider annotating it with <code>@DoNotCall</code> to prevent
- calls at compile-time instead failing at runtime.</div>
+calls at compile-time instead failing at runtime.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/DoNotClaimAnnotations.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">DoNotClaimAnnotations</a></code></div>
@@ -599,7 +599,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/DoNotMockChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">DoNotMockChecker</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Points out if a Mockito or EasyMock mock is mocking an object that would be better off being
- tested using an alternative instance.</div>
+tested using an alternative instance.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/DoubleBraceInitialization.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">DoubleBraceInitialization</a></code></div>
@@ -645,7 +645,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/EqualsGetClass.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">EqualsGetClass</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Discourages the use of <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link"><code>Object.getClass()</code></a> when implementing <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a>
- for non-final classes.</div>
+for non-final classes.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/EqualsHashCode.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">EqualsHashCode</a></code></div>
@@ -690,8 +690,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/ErroneousThreadPoolConstructorChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ErroneousThreadPoolConstructorChecker</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">ErrorProne checker to generate warning whenever <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html" title="class or interface in java.util.concurrent" class="external-link"><code>ThreadPoolExecutor</code></a>
- is constructed with different <code>corePoolSize</code> and <code>maximumPoolSize</code> using an unbounded
- <code>workQueue</code></div>
+is constructed with different <code>corePoolSize</code> and <code>maximumPoolSize</code> using an unbounded
+<code>workQueue</code></div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/ExpectedExceptionChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ExpectedExceptionChecker</a></code></div>
@@ -743,8 +743,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/FloatingPointAssertionWithinEpsilon.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">FloatingPointAssertionWithinEpsilon</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Detects usages of <code>Float,DoubleSubject.isWithin(TOLERANCE).of(EXPECTED)</code> where there are no
- other floating point values other than <code>EXPECTED</code> with satisfy the assertion, but <code>
- TOLERANCE</code> is not zero.</div>
+other floating point values other than <code>EXPECTED</code> with satisfy the assertion, but <code>
+TOLERANCE</code> is not zero.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/FloatingPointLiteralPrecision.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">FloatingPointLiteralPrecision</a></code></div>
@@ -760,7 +760,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/ForOverrideChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ForOverrideChecker</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Verifies that methods marked <a href="../annotations/ForOverride.html" title="annotation interface in com.google.errorprone.annotations"><code>ForOverride</code></a> are only
- called from the defining class.</div>
+called from the defining class.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/FunctionalInterfaceClash.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">FunctionalInterfaceClash</a></code></div>
@@ -779,7 +779,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/FuturesGetCheckedIllegalExceptionType.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">FuturesGetCheckedIllegalExceptionType</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Checks for calls to Guava's <code>Futures.getChecked</code> method that will always fail because they
- pass an incompatible exception type.</div>
+pass an incompatible exception type.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/FutureTransformAsync.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">FutureTransformAsync</a></code></div>
@@ -859,7 +859,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/ImplementAssertionWithChaining.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ImplementAssertionWithChaining</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Migrates Truth subjects from a manual "test and fail" approach to one using <code>
- Subject.check(...)</code>.</div>
+Subject.check(...)</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/ImpossibleNullComparison.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ImpossibleNullComparison</a></code></div>
@@ -911,7 +911,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/InitializeInline.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">InitializeInline</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Bugpattern to encourage initializing effectively final variables inline with their declaration,
- if possible.</div>
+if possible.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/InjectOnBugCheckers.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">InjectOnBugCheckers</a></code></div>
@@ -943,7 +943,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/InterruptedExceptionSwallowed.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">InterruptedExceptionSwallowed</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Checks for cases where an <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/InterruptedException.html" title="class or interface in java.lang" class="external-link"><code>InterruptedException</code></a> is caught as part of a catch block
- catching a supertype, and not specially handled.</div>
+catching a supertype, and not specially handled.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/Interruption.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">Interruption</a></code></div>
@@ -1024,19 +1024,19 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/JUnit4EmptyMethods.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">JUnit4EmptyMethods</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Deletes empty JUnit4 <code>@Before</code>, <code>@After</code>, <code>@BeforeClass</code>, and
- <code>@AfterClass</code> methods.</div>
+<code>@AfterClass</code> methods.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/JUnit4SetUpNotRun.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">JUnit4SetUpNotRun</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Checks for the existence of a JUnit3 style setUp() method in a JUnit4 test class or methods
- annotated with a non-JUnit4 @Before annotation.</div>
+annotated with a non-JUnit4 @Before annotation.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/JUnit4TearDownNotRun.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">JUnit4TearDownNotRun</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Checks for the existence of a JUnit3 style tearDown() method in a JUnit4 test class or methods
- annotated with a non-JUnit4 @After annotation.</div>
+annotated with a non-JUnit4 @After annotation.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/JUnit4TestNotRun.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">JUnit4TestNotRun</a></code></div>
@@ -1058,7 +1058,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/JUnitParameterMethodNotFound.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">JUnitParameterMethodNotFound</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Checks if the methods specified in <code>junitparams.Parameters</code> annotation to provide
- parameters exists.</div>
+parameters exists.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/LabelledBreakTarget.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">LabelledBreakTarget</a></code></div>
@@ -1090,7 +1090,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/LockNotBeforeTry.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">LockNotBeforeTry</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Suggests that calls to <code>Lock.lock</code> must be immediately followed by a <code>try-finally</code>
- that calls <code>Lock.unlock</code>.</div>
+that calls <code>Lock.unlock</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/LockOnBoxedPrimitive.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">LockOnBoxedPrimitive</a></code></div>
@@ -1101,7 +1101,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/LockOnNonEnclosingClassLiteral.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">LockOnNonEnclosingClassLiteral</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Bug checker to detect the usage of lock on the class other than the enclosing class of the code
- block.</div>
+block.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/LogicalAssignment.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">LogicalAssignment</a></code></div>
@@ -1226,13 +1226,13 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/MixedDescriptors.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MixedDescriptors</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Checks for calls to <code>Descriptor#findFieldByNumber</code> with field numbers from a different
- proto.</div>
+proto.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/MixedMutabilityReturnType.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MixedMutabilityReturnType</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Flags methods which return mutable collections from some code paths, but immutable ones from
- others.</div>
+others.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/MockIllegalThrows.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MockIllegalThrows</a></code></div>
@@ -1269,7 +1269,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/ModifySourceCollectionInStream.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ModifySourceCollectionInStream</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Identify the backing collection source of a stream and reports if the source is mutated during
- the stream operations.</div>
+the stream operations.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/MultimapKeys.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MultimapKeys</a></code></div>
@@ -1296,7 +1296,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/MustBeClosedChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Checks if a constructor or method annotated with <a href="../annotations/MustBeClosed.html" title="annotation interface in com.google.errorprone.annotations"><code>MustBeClosed</code></a> is called within the resource variable
- initializer of a try-with-resources statement.</div>
+initializer of a try-with-resources statement.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/MutableGuiceModule.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MutableGuiceModule</a></code></div>
@@ -1312,7 +1312,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/NamedLikeContextualKeyword.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NamedLikeContextualKeyword</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Warns on classes or methods being named similarly to contextual keywords, or invoking such
- methods.</div>
+methods.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/NarrowCalculation.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NarrowCalculation</a></code></div>
@@ -1409,7 +1409,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/NullableOptional.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NullableOptional</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">A Checker that catches <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>/<code>Optional</code> with
- <code>Nullable</code> annotation.</div>
+<code>Nullable</code> annotation.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/NullableVoid.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NullableVoid</a></code></div>
@@ -1440,7 +1440,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/ObjectToString.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ObjectToString</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Warns against calling toString() on Objects which don't have toString() method overridden and
- won't produce meaningful output.</div>
+won't produce meaningful output.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/OperatorPrecedence.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">OperatorPrecedence</a></code></div>
@@ -1576,7 +1576,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/ProtoTruthMixedDescriptors.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ProtoTruthMixedDescriptors</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Checks that <code>ProtoTruth</code>'s <code>ignoringFields</code> is passed field numbers from the correct
- proto.</div>
+proto.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/PublicApiNamedStreamShouldReturnStream.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">PublicApiNamedStreamShouldReturnStream</a></code></div>
@@ -1646,7 +1646,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/ReturnsNullCollection.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ReturnsNullCollection</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Flags methods with collection return types which return <code>null</code> in some cases but don't
- annotate the method as @Nullable.</div>
+annotate the method as @Nullable.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/ReturnValueIgnored.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ReturnValueIgnored</a></code></div>
@@ -1809,7 +1809,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/SuppressWarningsWithoutExplanation.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">SuppressWarningsWithoutExplanation</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Finds occurrences of <code>@SuppressWarnings</code> where there is definitely no explanation for why
- it is safe.</div>
+it is safe.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/SwigMemoryLeak.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">SwigMemoryLeak</a></code></div>
@@ -2068,8 +2068,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/UnnecessaryMethodInvocationMatcher.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnnecessaryMethodInvocationMatcher</a></code></div>
 <div class="col-last even-row-color">
 <div class="block"><a href="../matchers/Matchers.html#methodInvocation(com.google.errorprone.matchers.Matcher)"><code>Matchers.methodInvocation(Matcher)</code></a> is not exactly deprecated, but it is legacy, and in
- particular is not needed when the argument is a MethodMatcher, since MethodMatcher already does
- the unwrapping that methodInvocation does.</div>
+particular is not needed when the argument is a MethodMatcher, since MethodMatcher already does
+the unwrapping that methodInvocation does.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/UnnecessaryMethodReference.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnnecessaryMethodReference</a></code></div>
@@ -2080,7 +2080,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/UnnecessaryOptionalGet.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnnecessaryOptionalGet</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">A refactoring to replace Optional.get() with lambda arg in expressions passed as arg to member
- functions of Optionals.</div>
+functions of Optionals.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/UnnecessaryParentheses.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnnecessaryParentheses</a></code></div>
@@ -2144,7 +2144,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/UnusedException.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnusedException</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Bugpattern for catch blocks which catch an exception but throw another one without wrapping the
- original.</div>
+original.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/UnusedLabel.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnusedLabel</a></code></div>
@@ -2221,7 +2221,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/WithSignatureDiscouraged.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">WithSignatureDiscouraged</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block"><a href="../matchers/method/MethodMatchers.MethodClassMatcher.html#withSignature(java.lang.String)"><code>MethodMatchers.MethodClassMatcher.withSignature(String)</code></a> is
- discouraged: most usages should use .named and/or .withParameters instead.</div>
+discouraged: most usages should use .named and/or .withParameters instead.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/WrongOneof.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">WrongOneof</a></code></div>
@@ -2271,13 +2271,13 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/android/MislabeledAndroidString.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.android">MislabeledAndroidString</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Replacement of misleading <a href="https://developer.android.com/reference/android/R.string.html">android.R.string</a>
- constants with more intuitive ones.</div>
+constants with more intuitive ones.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/android/ParcelableCreator.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.android">ParcelableCreator</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">BugPattern to detect classes which implement android.os.Parcelable but don't have public static
- CREATOR.</div>
+CREATOR.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/android/RectIntersectReturnValueIgnored.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.android">RectIntersectReturnValueIgnored</a></code></div>
@@ -2303,7 +2303,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/apidiff/AndroidJdkLibsChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.apidiff">AndroidJdkLibsChecker</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Checks for uses of classes, fields, or methods that are not compatible with legacy Android
- devices.</div>
+devices.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/apidiff/Java7ApiChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.apidiff">Java7ApiChecker</a></code></div>
@@ -2335,13 +2335,13 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/argumentselectiondefects/AssertEqualsArgumentOrderChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">AssertEqualsArgumentOrderChecker</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Checker to make sure that assertEquals-like methods are called with the arguments expected and
- actual the right way round.</div>
+actual the right way round.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/argumentselectiondefects/AutoValueConstructorOrderChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">AutoValueConstructorOrderChecker</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Checker to make sure that constructors for AutoValue types are invoked with arguments in the
- correct order.</div>
+correct order.</div>
 </div>
 </div>
 </section>
@@ -2363,8 +2363,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/checkreturnvalue/CanIgnoreReturnValueSuggester.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">CanIgnoreReturnValueSuggester</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Checker that recommends annotating a method with <code>@CanIgnoreReturnValue</code> if the method
- returns <code>this</code>, returns an effectively final input param, or if it looks like a builder
- method (that is likely to return <code>this</code>).</div>
+returns <code>this</code>, returns an effectively final input param, or if it looks like a builder
+method (that is likely to return <code>this</code>).</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/checkreturnvalue/NoCanIgnoreReturnValueOnClasses.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">NoCanIgnoreReturnValueOnClasses</a></code></div>
@@ -2380,7 +2380,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/checkreturnvalue/UsingJsr305CheckReturnValue.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">UsingJsr305CheckReturnValue</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Checker that recommends using ErrorProne's version of <code>@CheckReturnValue</code> over the version
- in JSR305 (which is defunct).</div>
+in JSR305 (which is defunct).</div>
 </div>
 </div>
 </section>
@@ -2397,13 +2397,13 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/collectionincompatibletype/CollectionIncompatibleType.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CollectionIncompatibleType</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Checker for calling Object-accepting methods with types that don't match the type arguments of
- their container types.</div>
+their container types.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/collectionincompatibletype/CollectionUndefinedEquality.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CollectionUndefinedEquality</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Highlights use of <code>Collection#contains</code> (and others) with types that do not have
- well-defined equals.</div>
+well-defined equals.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/collectionincompatibletype/CompatibleWithMisuse.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CompatibleWithMisuse</a></code></div>
@@ -2444,7 +2444,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/flogger/FloggerLogString.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.flogger">FloggerLogString</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Detects invocations of <code>LoggingApi.log(String)</code> for which the argument is not a
- compile-time constant and provides suggested alternatives.</div>
+compile-time constant and provides suggested alternatives.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/flogger/FloggerLogVarargs.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.flogger">FloggerLogVarargs</a></code></div>
@@ -2453,7 +2453,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/flogger/FloggerLogWithCause.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.flogger">FloggerLogWithCause</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Flags cases where there is an exception available that could be set as the cause in a log
- message.</div>
+message.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/flogger/FloggerMessageFormat.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.flogger">FloggerMessageFormat</a></code></div>
@@ -2561,7 +2561,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/inject/MisplacedScopeAnnotations.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject">MisplacedScopeAnnotations</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Bug checker for when a scope annotation is used at injection site, which does not have any effect
- on the injected values.</div>
+on the injected values.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/inject/MissingRuntimeRetention.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject">MissingRuntimeRetention</a></code></div>
@@ -2578,8 +2578,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/inject/MoreThanOneScopeAnnotationOnClass.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject">MoreThanOneScopeAnnotationOnClass</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">This checker matches if a class has more than one annotation that is a scope annotation(that is,
- the annotation is either annotated with Guice's <code>@ScopeAnnotation</code> or Javax's
- <code>@Scope</code>).</div>
+the annotation is either annotated with Guice's <code>@ScopeAnnotation</code> or Javax's
+<code>@Scope</code>).</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/inject/OverlappingQualifierAndScopeAnnotation.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject">OverlappingQualifierAndScopeAnnotation</a></code></div>
@@ -2617,7 +2617,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/inject/dagger/ProvidesNull.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject.dagger">ProvidesNull</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Bug checker for null-returning methods annotated with <code>@Provides</code> but not
- <code>@Nullable</code>.</div>
+<code>@Nullable</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/inject/dagger/RefersToDaggerCodegen.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject.dagger">RefersToDaggerCodegen</a></code></div>
@@ -2647,10 +2647,10 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/inject/guice/AssistedInjectScoping.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject.guice">AssistedInjectScoping</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">This checker matches iff *both* of the following conditions are true: 1) The class is assisted:
- a) If there is a constructor that is annotated with @Inject and that constructor has at least one
- parameter that is annotated with @Assisted. b) If there is no @Inject constructor and at least
- one constructor is annotated with <code>@AssistedInject</code>. 2) There is an annotation on the
- class, and the annotation is itself annotated with <code>@ScopeAnnotation</code>.</div>
+a) If there is a constructor that is annotated with @Inject and that constructor has at least one
+parameter that is annotated with @Assisted. b) If there is no @Inject constructor and at least
+one constructor is annotated with <code>@AssistedInject</code>. 2) There is an annotation on the
+class, and the annotation is itself annotated with <code>@ScopeAnnotation</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/inject/guice/AssistedParameters.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject.guice">AssistedParameters</a></code></div>
@@ -2665,15 +2665,15 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/inject/guice/OverridesGuiceInjectableMethod.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject.guice">OverridesGuiceInjectableMethod</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">This checker matches methods that 1) are not themselves annotated with @Inject (neither
- javax.inject.Inject nor com.google.inject.Inject) 2) descend from a method that is annotated
- with @com.google.inject.Inject</div>
+javax.inject.Inject nor com.google.inject.Inject) 2) descend from a method that is annotated
+with @com.google.inject.Inject</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/inject/guice/OverridesJavaxInjectableMethod.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject.guice">OverridesJavaxInjectableMethod</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">This checker matches methods that 1) are not themselves annotated with @Inject 2) descend from a
- method that is annotated with @javax.inject.Inject 3) do not descent from a method that is
- annotated with @com.google.inject.Inject</div>
+method that is annotated with @javax.inject.Inject 3) do not descent from a method that is
+annotated with @com.google.inject.Inject</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/inject/guice/ProvidesMethodOutsideOfModule.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject.guice">ProvidesMethodOutsideOfModule</a></code></div>
@@ -2693,7 +2693,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/inlineme/Inliner.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inlineme">Inliner</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Checker that performs the inlining at call-sites (where the invoked APIs are annotated as
- <code>@InlineMe</code>).</div>
+<code>@InlineMe</code>).</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/inlineme/Suggester.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inlineme">Suggester</a></code></div>
@@ -2720,13 +2720,13 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/javadoc/AlmostJavadoc.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">AlmostJavadoc</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Flags comments which appear to be intended to be Javadoc, but are not started with an extra
- <code>*</code>.</div>
+<code>*</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/javadoc/EmptyBlockTag.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">EmptyBlockTag</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Matches block tags (@param, @return, @throws,
- @deprecated) with an empty description.</div>
+@deprecated) with an empty description.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/javadoc/EscapedEntity.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">EscapedEntity</a></code></div>
@@ -2828,7 +2828,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/nullness/EqualsBrokenForNull.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.nullness">EqualsBrokenForNull</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block"><a href="../bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> adds a null check to <code>equals()</code> method implementations which don't
- satisfy the null contract of <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a> i.e.</div>
+satisfy the null contract of <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a> i.e.</div>
 </div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/nullness/EqualsMissingNullable.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.nullness">EqualsMissingNullable</a></code></div>
@@ -2969,7 +2969,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/threadsafety/ThreadPriorityCheck.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadPriorityCheck</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Bug checker to detect usage of <code>Thread.stop()</code>, <code>Thread.yield()</code>, and changing thread
- priorities.</div>
+priorities.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/threadsafety/ThreadSafeChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafeChecker</a></code></div>
@@ -3001,49 +3001,49 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/time/DurationGetTemporalUnit.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">DurationGetTemporalUnit</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Bans calls to <code>Duration.get(temporalUnit)</code> where <code>temporalUnit</code> is not <code>
- SECONDS</code> or <code>NANOS</code>.</div>
+SECONDS</code> or <code>NANOS</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/time/DurationTemporalUnit.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">DurationTemporalUnit</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Bans calls to <code>Duration</code> APIs where the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/TemporalUnit.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalUnit</code></a> is not
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/ChronoUnit.html#DAYS" title="class or interface in java.time.temporal" class="external-link"><code>ChronoUnit.DAYS</code></a> or it has an estimated duration (which is guaranteed to throw an <code>
- DateTimeException</code>).</div>
+<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/ChronoUnit.html#DAYS" title="class or interface in java.time.temporal" class="external-link"><code>ChronoUnit.DAYS</code></a> or it has an estimated duration (which is guaranteed to throw an <code>
+DateTimeException</code>).</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/time/DurationToLongTimeUnit.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">DurationToLongTimeUnit</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Reports an error when a Duration or Instant is incorrectly decomposed in order to call an API
- which accepts a <code>&lt;long, TimeUnit&gt;</code> pair.</div>
+which accepts a <code>&lt;long, TimeUnit&gt;</code> pair.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/time/FromTemporalAccessor.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">FromTemporalAccessor</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Bans calls to <code>javaTimeType.from(temporalAmount)</code> where the call is guaranteed to either:
 
- 
-   throw a <code>DateTimeException</code> at runtime (e.g., <code>LocalDate.from(month)</code>)
-   return the same parameter (e.g., <code>Instant.from(instant)</code>)
- </div>
+
+  throw a <code>DateTimeException</code> at runtime (e.g., <code>LocalDate.from(month)</code>)
+  return the same parameter (e.g., <code>Instant.from(instant)</code>)
+</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/time/InstantTemporalUnit.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">InstantTemporalUnit</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Bans calls to <code>Instant</code> APIs where the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/TemporalUnit.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalUnit</code></a> is not one
- of: <code>NANOS</code>, <code>MICROS</code>, <code>MILLIS</code>, <code>SECONDS</code>, <code>MINUTES</code>, <code>
- HOURS</code>, <code>HALF_DAYS</code>, or <code>DAYS</code>.</div>
+of: <code>NANOS</code>, <code>MICROS</code>, <code>MILLIS</code>, <code>SECONDS</code>, <code>MINUTES</code>, <code>
+HOURS</code>, <code>HALF_DAYS</code>, or <code>DAYS</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/time/InvalidJavaTimeConstant.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">InvalidJavaTimeConstant</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">This checker errors on calls to <code>java.time</code> methods using values that are guaranteed to
- throw a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/DateTimeException.html" title="class or interface in java.time" class="external-link"><code>DateTimeException</code></a>.</div>
+throw a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/DateTimeException.html" title="class or interface in java.time" class="external-link"><code>DateTimeException</code></a>.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/time/JavaDurationGetSecondsGetNano.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">JavaDurationGetSecondsGetNano</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">This checker warns about calls to <code>duration.getNano()</code> without a corresponding "nearby"
- call to <code>duration.getSeconds()</code>.</div>
+call to <code>duration.getSeconds()</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/time/JavaDurationGetSecondsToToSeconds.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">JavaDurationGetSecondsToToSeconds</a></code></div>
@@ -3064,25 +3064,25 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/time/JavaInstantGetSecondsGetNano.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">JavaInstantGetSecondsGetNano</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">This checker warns about calls to <code>instant.getNano()</code> without a corresponding "nearby" call
- to <code>instant.getEpochSecond()</code>.</div>
+to <code>instant.getEpochSecond()</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/time/JavaLocalDateTimeGetNano.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">JavaLocalDateTimeGetNano</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">This checker warns about calls to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalDateTime.html#getNano()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getNano()</code></a> without a corresponding "nearby"
- call to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalDateTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getSecond()</code></a>.</div>
+call to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalDateTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getSecond()</code></a>.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/time/JavaLocalTimeGetNano.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">JavaLocalTimeGetNano</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">This checker warns about calls to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalTime.html#getNano()" title="class or interface in java.time" class="external-link"><code>LocalTime.getNano()</code></a> without a corresponding "nearby" call
- to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalTime.getSecond()</code></a>.</div>
+to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalTime.getSecond()</code></a>.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/time/JavaPeriodGetDays.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">JavaPeriodGetDays</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">This checker warns about calls to <code>period.getDays()</code> without a corresponding "nearby" call
- to <code>period.getYears(), period.getMonths(), or period.getTotalMonths()</code>.</div>
+to <code>period.getYears(), period.getMonths(), or period.getTotalMonths()</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/time/JavaTimeDefaultTimeZone.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">JavaTimeDefaultTimeZone</a></code></div>
@@ -3118,7 +3118,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/time/JodaPlusMinusLong.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">JodaPlusMinusLong</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Check for calls to JodaTime's <code>type.plus(long)</code> and <code>type.minus(long)</code> where <code>
- &lt;type&gt; = {Duration,Instant,DateTime,DateMidnight}</code>.</div>
+&lt;type&gt; = {Duration,Instant,DateTime,DateMidnight}</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/time/JodaTimeConverterManager.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">JodaTimeConverterManager</a></code></div>
@@ -3134,13 +3134,13 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/time/JodaWithDurationAddedLong.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">JodaWithDurationAddedLong</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Check for calls to JodaTime's <code>type.withDurationAdded(long, int)</code> where <code>&lt;type&gt; =
- {Duration,Instant,DateTime}</code>.</div>
+{Duration,Instant,DateTime}</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/time/LocalDateTemporalAmount.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">LocalDateTemporalAmount</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Bans calls to <code>LocalDate.plus(TemporalAmount)</code> and <code>LocalDate.minus(TemporalAmount)</code>
- where the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/TemporalAmount.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalAmount</code></a> is a non-zero <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
+where the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/TemporalAmount.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalAmount</code></a> is a non-zero <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/time/PeriodFrom.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">PeriodFrom</a></code></div>
@@ -3151,7 +3151,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/time/PeriodGetTemporalUnit.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">PeriodGetTemporalUnit</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Bans calls to <code>Period.get(temporalUnit)</code> where <code>temporalUnit</code> is not <code>YEARS</code>,
- <code>MONTHS</code>, or <code>DAYS</code>.</div>
+<code>MONTHS</code>, or <code>DAYS</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/time/PeriodTimeMath.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">PeriodTimeMath</a></code></div>
@@ -3167,13 +3167,13 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/time/ProtoDurationGetSecondsGetNano.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">ProtoDurationGetSecondsGetNano</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">This checker warns about accessing the underlying nanosecond-adjustment field of a duration
- without a "nearby" access of the underlying seconds field.</div>
+without a "nearby" access of the underlying seconds field.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/time/ProtoTimestampGetSecondsGetNano.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">ProtoTimestampGetSecondsGetNano</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">This checker warns about accessing the underlying nanosecond-adjustment field of a protobuf
- timestamp without a "nearby" access of the underlying seconds field.</div>
+timestamp without a "nearby" access of the underlying seconds field.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/time/StronglyTypeTime.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">StronglyTypeTime</a></code></div>
@@ -3184,7 +3184,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../bugpatterns/time/TemporalAccessorGetChronoField.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">TemporalAccessorGetChronoField</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Bans calls to <code>TemporalAccessor.get(ChronoField)</code> where the implementation is guaranteed to
- throw an <code>UnsupportedTemporalTypeException</code>.</div>
+throw an <code>UnsupportedTemporalTypeException</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../bugpatterns/time/TimeInStaticInitializer.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.time">TimeInStaticInitializer</a></code></div>

@@ -189,26 +189,26 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Identifies methods with parameters that have a generic argument with Int, Long, or Double. If
- pre-conditions are met, it refactors them to the primitive specializations.
+pre-conditions are met, it refactors them to the primitive specializations.
 
- <pre>PreConditions:
- (1): The method declaration has to be private (to do a safe refactoring)
- (2): Its parameters have to meet the following conditions:
-    2.1 Contain type java.util.function.Function
-    2.2 At least one argument type of the Function must be subtype of Number
- (3): All its invocations in the top-level enclosing class have to meet the following
- conditions as well:
-    3.1: lambda argument of Kind.LAMBDA_EXPRESSION
-    3.2: same as 2.1
-    3.3: same as 2.2
- </pre>
+<pre>PreConditions:
+(1): The method declaration has to be private (to do a safe refactoring)
+(2): Its parameters have to meet the following conditions:
+   2.1 Contain type java.util.function.Function
+   2.2 At least one argument type of the Function must be subtype of Number
+(3): All its invocations in the top-level enclosing class have to meet the following
+conditions as well:
+   3.1: lambda argument of Kind.LAMBDA_EXPRESSION
+   3.2: same as 2.1
+   3.3: same as 2.2
+</pre>
 
- <pre>
- Refactoring Changes for matched methods:
- (1) Add the imports
- (2) Change the method signature to use utility function instead of Function
- (3) Find and change the 'apply' calls to the corresponding applyAsT
- </pre></div>
+<pre>
+Refactoring Changes for matched methods:
+(1) Add the imports
+(2) Change the method signature to use utility function instead of Function
+(3) Find and change the 'apply' calls to the corresponding applyAsT
+</pre></div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.MethodTreeMatcher.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code></dd>

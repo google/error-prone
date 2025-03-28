@@ -113,8 +113,8 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
  <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;expressionMatcher)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates a new compound-assignment operator matcher, which matches a compound assignment
- expression with one of a set of operators and whose receiver and expression match the given
- matchers.</div>
+expression with one of a set of operators and whose receiver and expression match the given
+matchers.</div>
 </div>
 </div>
 </section>
@@ -159,15 +159,15 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
  <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;receiverMatcher,
  <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;expressionMatcher)</span></div>
 <div class="block">Creates a new compound-assignment operator matcher, which matches a compound assignment
- expression with one of a set of operators and whose receiver and expression match the given
- matchers.</div>
+expression with one of a set of operators and whose receiver and expression match the given
+matchers.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>operators</code> - The set of matching compound-assignment operators. These are drawn from the
-     <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.Kind.html" title="class or interface in com.sun.source.tree" class="external-link"><code>Tree.Kind</code></a> enum values which link to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/CompoundAssignmentTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompoundAssignmentTree</code></a> in their javadoc.</dd>
+    <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.Kind.html" title="class or interface in com.sun.source.tree" class="external-link"><code>Tree.Kind</code></a> enum values which link to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/CompoundAssignmentTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompoundAssignmentTree</code></a> in their javadoc.</dd>
 <dd><code>receiverMatcher</code> - The matcher which must match the receiver which will be assigned to.</dd>
 <dd><code>expressionMatcher</code> - The matcher which must match the right-hand expression to the compound
-     assignment.</dd>
+    assignment.</dd>
 </dl>
 </div>
 </section>

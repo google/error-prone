@@ -243,13 +243,13 @@ loadScripts(document, 'script');</script>
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Checks if a method, or any overridden method, is annotated with any annotation from the
- org.junit package.</div>
+org.junit package.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isJUnit4TestRunnerOfType(java.lang.Iterable)" class="member-name-link">isJUnit4TestRunnerOfType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;runnerTypes)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Matches an argument of type <code>Class&lt;T&gt;</code>, where T is a subtype of one of the test runners
- listed in the TEST_RUNNERS field.</div>
+listed in the TEST_RUNNERS field.</div>
 </div>
 </div>
 </div>
@@ -412,8 +412,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</span>&nbsp;<span class="element-name">isConcreteClassWithoutRunWith</span></div>
 <div class="block">Match a class which appears to be missing a @RunWith annotation.
 
- <p>Matches if: 1) The class does not have a JUnit 4 @RunWith annotation. 2) The class is
- concrete. 3) The class is a top-level class.</div>
+<p>Matches if: 1) The class does not have a JUnit 4 @RunWith annotation. 2) The class is
+concrete. 3) The class is a top-level class.</div>
 </div>
 </section>
 </li>
@@ -433,9 +433,9 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</span>&nbsp;<span class="element-name">isJUnit3TestClass</span></div>
 <div class="block">Match a class which appears to be a JUnit 3 test class.
 
- <p>Matches if: 1) The class does inherit from TestCase. 2) The class does not have a JUnit 4
- <code>@RunWith</code> annotation nor any methods annotated <code>@Test</code>. 3) The class is concrete.
- 4) This class is a top-level class.</div>
+<p>Matches if: 1) The class does inherit from TestCase. 2) The class does not have a JUnit 4
+<code>@RunWith</code> annotation nor any methods annotated <code>@Test</code>. 3) The class is concrete.
+4) This class is a top-level class.</div>
 </div>
 </section>
 </li>
@@ -446,8 +446,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</span>&nbsp;<span class="element-name">isJunit3TestCase</span></div>
 <div class="block">Match a method which appears to be a JUnit 3 test case.
 
- <p>Matches if: 1) The method's name begins with "test". 2) The method has no parameters. 3) The
- method is public. 4) The method returns void</div>
+<p>Matches if: 1) The method's name begins with "test". 2) The method has no parameters. 3) The
+method is public. 4) The method returns void</div>
 </div>
 </section>
 </li>
@@ -458,8 +458,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</span>&nbsp;<span class="element-name">looksLikeJUnit3SetUp</span></div>
 <div class="block">Match a method which appears to be a JUnit 3 setUp method
 
- <p>Matches if: 1) The method is named "setUp" 2) The method has no parameters 3) The method is
- a public or protected instance method that is not abstract 4) The method returns void</div>
+<p>Matches if: 1) The method is named "setUp" 2) The method has no parameters 3) The method is
+a public or protected instance method that is not abstract 4) The method returns void</div>
 </div>
 </section>
 </li>
@@ -470,8 +470,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</span>&nbsp;<span class="element-name">looksLikeJUnit4Before</span></div>
 <div class="block">Matches a method which appears to be a JUnit4 @Before method.
 
- <p>Matches if: 1) The method is annotated <code>Before</code> 2) The method has no parameters 3) The
- method is a public or protected instance method that is not abstract 4) The method returns void</div>
+<p>Matches if: 1) The method is annotated <code>Before</code> 2) The method has no parameters 3) The
+method is a public or protected instance method that is not abstract 4) The method returns void</div>
 </div>
 </section>
 </li>
@@ -482,8 +482,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</span>&nbsp;<span class="element-name">looksLikeJUnit3TearDown</span></div>
 <div class="block">Match a method which appears to be a JUnit 3 tearDown method
 
- <p>Matches if: 1) The method is named "tearDown" 2) The method has no parameters 3) The method
- is a public or protected instance method that is not abstract 4) The method returns void</div>
+<p>Matches if: 1) The method is named "tearDown" 2) The method has no parameters 3) The method
+is a public or protected instance method that is not abstract 4) The method returns void</div>
 </div>
 </section>
 </li>
@@ -494,8 +494,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</span>&nbsp;<span class="element-name">looksLikeJUnit4After</span></div>
 <div class="block">Matches a method which appears to be a JUnit4 @After method.
 
- <p>Matches if: 1) The method is annotated <code>After</code> 2) The method has no parameters 3) The
- method is a public or protected instance method that is not abstract 4) The method returns void</div>
+<p>Matches if: 1) The method is annotated <code>After</code> 2) The method has no parameters 3) The
+method is a public or protected instance method that is not abstract 4) The method returns void</div>
 </div>
 </section>
 </li>
@@ -532,9 +532,9 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</span>&nbsp;<span class="element-name">isJUnit4TestClass</span></div>
 <div class="block">Matches classes which have attributes of only JUnit4 test classes.
 
- <p>Matches if 1) the class is non-abstract, 2) the class does not inherit from JUnit3 <code>
- TestCase</code>, and 3) the class is annotated with <code>@RunWith</code> or any method therein is
- annotated with <code>@Test</code>.</div>
+<p>Matches if 1) the class is non-abstract, 2) the class does not inherit from JUnit3 <code>
+TestCase</code>, and 3) the class is annotated with <code>@RunWith</code> or any method therein is
+annotated with <code>@Test</code>.</div>
 </div>
 </section>
 </li>
@@ -545,11 +545,11 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</span>&nbsp;<span class="element-name">isAmbiguousJUnitVersion</span></div>
 <div class="block">Matches classes which have attributes of both JUnit 3 and 4 classes.
 
- <p>Matches if the class 1) inherits from JUnit 3 <code>TestCase</code>, and 2) a) has a JUnit4 test
- runner annotation, or b) has any methods annotated <code>@Test</code>.
+<p>Matches if the class 1) inherits from JUnit 3 <code>TestCase</code>, and 2) a) has a JUnit4 test
+runner annotation, or b) has any methods annotated <code>@Test</code>.
 
- <p>As currently implemented, classes with ambiguous version will match neither <code>
- isJUnit4TestClass</code> nor <code>isJUnit3TestClass</code>.</div>
+<p>As currently implemented, classes with ambiguous version will match neither <code>
+isJUnit4TestClass</code> nor <code>isJUnit3TestClass</code>.</div>
 </div>
 </section>
 </li>
@@ -568,7 +568,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasJUnitAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Checks if a method, or any overridden method, is annotated with any annotation from the
- org.junit package.</div>
+org.junit package.</div>
 </div>
 </section>
 </li>
@@ -578,10 +578,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">isJUnit4TestRunnerOfType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;runnerTypes)</span></div>
 <div class="block">Matches an argument of type <code>Class&lt;T&gt;</code>, where T is a subtype of one of the test runners
- listed in the TEST_RUNNERS field.
+listed in the TEST_RUNNERS field.
 
- <p>TODO(eaftan): Support checking for an annotation that tells us whether this test runner
- expects tests to be annotated with @Test.</div>
+<p>TODO(eaftan): Support checking for an annotation that tells us whether this test runner
+expects tests to be annotated with @Test.</div>
 </div>
 </section>
 </li>

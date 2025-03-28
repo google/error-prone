@@ -91,12 +91,12 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></span></div>
 <div class="block">Checker to make sure that assertEquals-like methods are called with the arguments expected and
- actual the right way round.
+actual the right way round.
 
- <p>Warning: this check relies on recovering parameter names from library class files. These names
- are only included if you compile with debugging symbols (-g) or with -parameters. You also need
- to tell the compiler to read these names from the classfiles and so must compile your project
- with -parameters too.</div>
+<p>Warning: this check relies on recovering parameter names from library class files. These names
+are only included if you compile with debugging symbols (-g) or with -parameters. You also need
+to tell the compiler to read these names from the classfiles and so must compile your project
+with -parameters too.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>andrewrice@google.com (Andrew Rice)</dd>

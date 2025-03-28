@@ -102,14 +102,14 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="MethodInvocationMatcher.TokenType.html" title="enum class in com.google.errorprone.matchers.method">MethodInvocationMatcher.TokenType</a>&gt;</span></div>
 <div class="block">The kinds of properties a matcher can match against.
 
- <p><strong>This is part of the low-level API for constructing Rule objects dynamically.
- Consider using the fluent API from MethodMatcher, and the associated helpers in Matchers, when
- possible.</strong>
+<p><strong>This is part of the low-level API for constructing Rule objects dynamically.
+Consider using the fluent API from MethodMatcher, and the associated helpers in Matchers, when
+possible.</strong>
 
- <p><em>The order of these enum constants is important</em>: it's the order in which we will
- search the graph (because we iterate over values() to decide what order to check predicates).
- Therefore, prefer putting first those properties which are cheap to check, or which will often
- result in a failure to match (so we can prune the search space).</div>
+<p><em>The order of these enum constants is important</em>: it's the order in which we will
+search the graph (because we iterate over values() to decide what order to check predicates).
+Therefore, prefer putting first those properties which are cheap to check, or which will often
+result in a failure to match (so we can prune the search space).</div>
 </div>
 </section>
 <section class="summary">

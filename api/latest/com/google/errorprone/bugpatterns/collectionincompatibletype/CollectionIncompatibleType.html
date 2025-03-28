@@ -87,19 +87,19 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a></span></div>
 <div class="block">Checker for calling Object-accepting methods with types that don't match the type arguments of
- their container types. Currently this checker detects problems with the following methods on all
- their subtypes and subinterfaces:
+their container types. Currently this checker detects problems with the following methods on all
+their subtypes and subinterfaces:
 
- <ul>
-   <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html#contains(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Collection.contains(Object)</code></a>
-   <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html#remove(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Collection.remove(Object)</code></a>
-   <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html#indexOf(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>List.indexOf(Object)</code></a>
-   <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html#lastIndexOf(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>List.lastIndexOf(Object)</code></a>
-   <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html#get(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Map.get(Object)</code></a>
-   <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html#containsKey(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Map.containsKey(Object)</code></a>
-   <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html#remove(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Map.remove(Object)</code></a>
-   <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html#containsValue(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Map.containsValue(Object)</code></a>
- </ul></div>
+<ul>
+  <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html#contains(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Collection.contains(Object)</code></a>
+  <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html#remove(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Collection.remove(Object)</code></a>
+  <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html#indexOf(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>List.indexOf(Object)</code></a>
+  <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html#lastIndexOf(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>List.lastIndexOf(Object)</code></a>
+  <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html#get(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Map.get(Object)</code></a>
+  <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html#containsKey(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Map.containsKey(Object)</code></a>
+  <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html#remove(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Map.remove(Object)</code></a>
+  <li><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html#containsValue(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Map.containsValue(Object)</code></a>
+</ul></div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>

@@ -92,31 +92,31 @@ loadScripts(document, 'script');</script>
 implements <a href="BugChecker.TryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.TryTreeMatcher</a></span></div>
 <div class="block">A bug checker for the following code pattern:
 
- <pre>
- try {
-   // do something
-   Assert.fail(); // or any Assert.assert*
-   // maybe do something more
- } catch (Throwable t) {
-   // empty or only comments
- }
- </pre>
+<pre>
+try {
+  // do something
+  Assert.fail(); // or any Assert.assert*
+  // maybe do something more
+} catch (Throwable t) {
+  // empty or only comments
+}
+</pre>
 
- * Matches all static methods named "fail" and starting with "assert" from the following classes:
+* Matches all static methods named "fail" and starting with "assert" from the following classes:
 
- <ul>
-   <li><code>org.junit.Assert</code>,
-   <li><code>junit.framework.Assert</code>,
-   <li><code>junit.framework.TestCase</code> - which overrides the methods from Assert in order to
-       deprecate them and
-   <li>every class whose name ends with "MoreAsserts".
- </ul>
+<ul>
+  <li><code>org.junit.Assert</code>,
+  <li><code>junit.framework.Assert</code>,
+  <li><code>junit.framework.TestCase</code> - which overrides the methods from Assert in order to
+      deprecate them and
+  <li>every class whose name ends with "MoreAsserts".
+</ul>
 
- Possible improvements/generalizations of this matcher:
+Possible improvements/generalizations of this matcher:
 
- <ul>
-   <li>support multiple catch() blocks
- </ul></div>
+<ul>
+  <li>support multiple catch() blocks
+</ul></div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>adamwos@google.com (Adam Wos)</dd>

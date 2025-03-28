@@ -86,8 +86,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ImportStatements</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Represents a list of import statements. Supports adding and removing import statements and pretty
- printing the result as source code. Sorts and organizes the imports using the given <code>
- importOrganizer</code>.</div>
+printing the result as source code. Sorts and organizes the imports using the given <code>
+importOrganizer</code>.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>eaftan@google.com (Eddie Aftandilian)</dd>
@@ -211,7 +211,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">add</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importToAdd)</span></div>
 <div class="block">Add an import to the list of imports. If the import is already in the list, does nothing. The
- import should be of the form "import foo.bar".</div>
+import should be of the form "import foo.bar".</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>importToAdd</code> - a string representation of the import to add</dd>
@@ -228,7 +228,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">addAll</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;importsToAdd)</span></div>
 <div class="block">Add all imports in a collection to this list of imports. Does not add any imports that are
- already in the list.</div>
+already in the list.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>importsToAdd</code> - a collection of imports to add</dd>
@@ -245,7 +245,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">remove</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importToRemove)</span></div>
 <div class="block">Remove an import from the list of imports. If the import is not in the list, does nothing. The
- import should be of the form "import foo.bar".</div>
+import should be of the form "import foo.bar".</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>importToRemove</code> - a string representation of the import to remove</dd>
@@ -262,7 +262,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">removeAll</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;importsToRemove)</span></div>
 <div class="block">Removes all imports in a collection to this list of imports. Does not remove any imports that
- are not in the list.</div>
+are not in the list.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>importsToRemove</code> - a collection of imports to remove</dd>

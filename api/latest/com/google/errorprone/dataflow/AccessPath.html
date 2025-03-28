@@ -89,19 +89,19 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">AccessPath</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">A sequence of field names or autovalue accessors, along with a receiver: either a variable or a
- reference (explicit or implicit) to <code>this</code>. Fields and autovalue accessors are stored as
- strings, with a "()" appended to accessor names to distinguish them from fields of the same name
+reference (explicit or implicit) to <code>this</code>. Fields and autovalue accessors are stored as
+strings, with a "()" appended to accessor names to distinguish them from fields of the same name
 
- <p>For example:
+<p>For example:
 
- <p><code>x.f.g</code>, the <code>g</code> field of the <code>f</code> field of the local variable <code>x</code> is
- represented by {base = Some x, fields = "g" :: "f" :: nil}
+<p><code>x.f.g</code>, the <code>g</code> field of the <code>f</code> field of the local variable <code>x</code> is
+represented by {base = Some x, fields = "g" :: "f" :: nil}
 
- <p><code>foo.bar</code>, the <code>bar</code> field of the <code>foo</code> field of the implicit <code>this</code>
- is represented by {base = None, fields = "bar" :: "foo" :: nil}
+<p><code>foo.bar</code>, the <code>bar</code> field of the <code>foo</code> field of the implicit <code>this</code>
+is represented by {base = None, fields = "bar" :: "foo" :: nil}
 
- <p><code>x.foo().foo</code>, the <code>foo</code> field of the <code>foo()</code> autovalue accessor of the
- local variable <code>x</code> is represented by {base = Some x, fields = "foo" :: "foo()" :: nil}</div>
+<p><code>x.foo().foo</code>, the <code>foo</code> field of the <code>foo()</code> autovalue accessor of the
+local variable <code>x</code> is represented by {base = Some x, fields = "foo" :: "foo()" :: nil}</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>bennostein@google.com (Benno Stein)</dd>
@@ -143,8 +143,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromFieldAccess(org.checkerframework.errorprone.dataflow.cfg.node.FieldAccessNode)" class="member-name-link">fromFieldAccess</a><wbr>(org.checkerframework.errorprone.dataflow.cfg.node.FieldAccessNode&nbsp;fieldAccess)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Creates an AccessPath from field reads / AutoValue accessor we can track and returns null
- otherwise (for example, when the receiver of the field access contains an array access or
- non-AutoValue method call.</div>
+otherwise (for example, when the receiver of the field access contains an array access or
+non-AutoValue method call.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromLocalVariable(org.checkerframework.errorprone.dataflow.cfg.node.LocalVariableNode)" class="member-name-link">fromLocalVariable</a><wbr>(org.checkerframework.errorprone.dataflow.cfg.node.LocalVariableNode&nbsp;node)</code></div>
@@ -153,7 +153,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromNodeIfTrackable(org.checkerframework.errorprone.dataflow.cfg.node.Node)" class="member-name-link">fromNodeIfTrackable</a><wbr>(org.checkerframework.errorprone.dataflow.cfg.node.Node&nbsp;node)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns an AccessPath representing <code>node</code> if <code>node</code> is representable as an access
- path and null otherwise</div>
+path and null otherwise</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromVariableDecl(org.checkerframework.errorprone.dataflow.cfg.node.VariableDeclarationNode)" class="member-name-link">fromVariableDecl</a><wbr>(org.checkerframework.errorprone.dataflow.cfg.node.VariableDeclarationNode&nbsp;node)</code></div>
@@ -223,14 +223,14 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isAutoValueAccessor</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
 <div class="block">Check whether <code>tree</code> is an AutoValue accessor. A tree is an AutoValue accessor iff:
 
- <ul>
-   <li>it is a method invocation
-   <li>of an abstract method
-   <li>with 0 arguments
-   <li>defined on a class annotated @AutoValue
- </ul>
+<ul>
+  <li>it is a method invocation
+  <li>of an abstract method
+  <li>with 0 arguments
+  <li>defined on a class annotated @AutoValue
+</ul>
 
- <p>Public visibility for use in NullnessPropagationTransfer#returnValueNullness</div>
+<p>Public visibility for use in NullnessPropagationTransfer#returnValueNullness</div>
 </div>
 </section>
 </li>
@@ -240,8 +240,8 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></span>&nbsp;<span class="element-name">fromFieldAccess</span><wbr><span class="parameters">(org.checkerframework.errorprone.dataflow.cfg.node.FieldAccessNode&nbsp;fieldAccess)</span></div>
 <div class="block">Creates an AccessPath from field reads / AutoValue accessor we can track and returns null
- otherwise (for example, when the receiver of the field access contains an array access or
- non-AutoValue method call.</div>
+otherwise (for example, when the receiver of the field access contains an array access or
+non-AutoValue method call.</div>
 </div>
 </section>
 </li>
@@ -267,7 +267,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></span>&nbsp;<span class="element-name">fromNodeIfTrackable</span><wbr><span class="parameters">(org.checkerframework.errorprone.dataflow.cfg.node.Node&nbsp;node)</span></div>
 <div class="block">Returns an AccessPath representing <code>node</code> if <code>node</code> is representable as an access
- path and null otherwise</div>
+path and null otherwise</div>
 </div>
 </section>
 </li>

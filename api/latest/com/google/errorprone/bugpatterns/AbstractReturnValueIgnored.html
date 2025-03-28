@@ -110,12 +110,12 @@ loadScripts(document, 'script');</script>
 implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a>, <a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a>, <a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a>, <a href="checkreturnvalue/ResultUsePolicyAnalyzer.html" title="interface in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyAnalyzer</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>, <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&gt;</span></div>
 <div class="block">An abstract base class to match API usages in which the return value is not used.
 
- <p>In addition to regular contexts in which a return value isn't used (e.g.: the result of <code>
- String.trim()</code> is just ignored), this class has the capacity to determine if the result is cast
- in such a way as to lose important static type information.
+<p>In addition to regular contexts in which a return value isn't used (e.g.: the result of <code>
+String.trim()</code> is just ignored), this class has the capacity to determine if the result is cast
+in such a way as to lose important static type information.
 
- <p>If an analysis extending this base class chooses to care about this circumstance, they can
- override <a href="#lostType(com.google.errorprone.VisitorState)"><code>lostType(VisitorState)</code></a> to define the type information they wish to keep.</div>
+<p>If an analysis extending this base class chooses to care about this circumstance, they can
+override <a href="#lostType(com.google.errorprone.VisitorState)"><code>lostType(VisitorState)</code></a> to define the type information they wish to keep.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>eaftan@google.com (Eddie Aftandilian)</dd>
@@ -172,7 +172,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#allowInExceptionThrowers()" class="member-name-link">allowInExceptionThrowers</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Override this to return false to forbid discarding return values in testers that are testing
- whether an exception is thrown.</div>
+whether an exception is thrown.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#describeReturnValueIgnored(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)" class="member-name-link">describeReturnValueIgnored</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MemberReferenceTree.html" title="class or interface in com.sun.source.tree" class="external-link">MemberReferenceTree</a>&nbsp;memberReferenceTree,
@@ -185,7 +185,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Fixes the error by assigning the result of the call to the receiver reference, or deleting the
- method call.</div>
+method call.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#describeReturnValueIgnored(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)" class="member-name-link">describeReturnValueIgnored</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/NewClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">NewClassTree</a>&nbsp;newClassTree,
@@ -209,7 +209,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns whether this checker makes any determination about whether the given expression's
- return value should be used or not.</div>
+return value should be used or not.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#lostType(com.google.errorprone.VisitorState)" class="member-name-link">lostType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
@@ -242,7 +242,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#specializedMatcher()" class="member-name-link">specializedMatcher</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Match whatever additional conditions concrete subclasses want to match (a list of known
- side-effect-free methods, has a @CheckReturnValue annotation, etc.).</div>
+side-effect-free methods, has a @CheckReturnValue annotation, etc.).</div>
 </div>
 </div>
 </div>
@@ -341,8 +341,8 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html#isCovered(E,C)">ResultUsePolicyAnalyzer</a></code></span></div>
 <div class="block">Returns whether this checker makes any determination about whether the given expression's
- return value should be used or not. Most checkers either determine that an expression is CRV or
- make no determination.</div>
+return value should be used or not. Most checkers either determine that an expression is CRV or
+make no determination.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html#isCovered(E,C)">isCovered</a></code>&nbsp;in interface&nbsp;<code><a href="checkreturnvalue/ResultUsePolicyAnalyzer.html" title="interface in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicyAnalyzer</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>, <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&gt;</code></dd>
@@ -371,7 +371,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type"><a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;? super <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">specializedMatcher</span>()</div>
 <div class="block">Match whatever additional conditions concrete subclasses want to match (a list of known
- side-effect-free methods, has a @CheckReturnValue annotation, etc.).</div>
+side-effect-free methods, has a @CheckReturnValue annotation, etc.).</div>
 </div>
 </section>
 </li>
@@ -399,7 +399,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">allowInExceptionThrowers</span>()</div>
 <div class="block">Override this to return false to forbid discarding return values in testers that are testing
- whether an exception is thrown.</div>
+whether an exception is thrown.</div>
 </div>
 </section>
 </li>
@@ -410,7 +410,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">describeReturnValueIgnored</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;methodInvocationTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Fixes the error by assigning the result of the call to the receiver reference, or deleting the
- method call. Subclasses may override if they prefer a different description.</div>
+method call. Subclasses may override if they prefer a different description.</div>
 </div>
 </section>
 </li>
@@ -421,7 +421,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">describeReturnValueIgnored</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MemberReferenceTree.html" title="class or interface in com.sun.source.tree" class="external-link">MemberReferenceTree</a>&nbsp;memberReferenceTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Uses the default description for results ignored via a method reference. Subclasses may
- override if they prefer a different description.</div>
+override if they prefer a different description.</div>
 </div>
 </section>
 </li>
@@ -432,7 +432,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">describeReturnValueIgnored</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/NewClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">NewClassTree</a>&nbsp;newClassTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Uses the default description for results ignored via a constructor call. Subclasses may
- override if they prefer a different description.</div>
+override if they prefer a different description.</div>
 </div>
 </section>
 </li>
@@ -442,7 +442,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getMessage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.compiler/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;name)</span></div>
 <div class="block">Returns the diagnostic message. Can be overridden by subclasses to provide a customized
- diagnostic that includes the name of the invoked method.</div>
+diagnostic that includes the name of the invoked method.</div>
 </div>
 </section>
 </li>

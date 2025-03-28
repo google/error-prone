@@ -70,21 +70,21 @@ loadScripts(document, 'script');</script>
 <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/ElementType.html#PARAMETER" title="class or interface in java.lang.annotation" class="external-link">PARAMETER</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">FormatString</span></div>
 <div class="block">Annotation for method parameter declarations which denotes that actual parameters will be used as
- a format string in printf-style formatting.
+a format string in printf-style formatting.
 
- <p>This is an optional annotation used along with the <a href="FormatMethod.html" title="annotation interface in com.google.errorprone.annotations"><code>FormatMethod</code></a> annotation to denote
- which parameter in a format method is the format string. All parameters after the format string
- are assumed to be printf-style arguments for the format string. For example, the following
- snippet declares that <code>logMessage</code> will be used as a format string with <code>args</code> passed
- as arguments to the format string:
+<p>This is an optional annotation used along with the <a href="FormatMethod.html" title="annotation interface in com.google.errorprone.annotations"><code>FormatMethod</code></a> annotation to denote
+which parameter in a format method is the format string. All parameters after the format string
+are assumed to be printf-style arguments for the format string. For example, the following
+snippet declares that <code>logMessage</code> will be used as a format string with <code>args</code> passed
+as arguments to the format string:
 
- <pre>
- public class Foo {
-   &#064;FormatMethod void doBarAndLogFailure(&#064;FormatString String logMessage,
-       Object... args) {...}
- }</pre>
+<pre>
+public class Foo {
+  &#064;FormatMethod void doBarAndLogFailure(&#064;FormatString String logMessage,
+      Object... args) {...}
+}</pre>
 
- <p>See <a href="FormatMethod.html" title="annotation interface in com.google.errorprone.annotations"><code>FormatMethod</code></a> for more information.</div>
+<p>See <a href="FormatMethod.html" title="annotation interface in com.google.errorprone.annotations"><code>FormatMethod</code></a> for more information.</div>
 </div>
 </section>
 <section class="details" id="annotation-interface-element-detail"></section>

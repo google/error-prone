@@ -91,10 +91,10 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="BugChecker.EmptyStatementTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.EmptyStatementTreeMatcher</a></span></div>
 <div class="block">This checker finds and fixes empty statements after an if, with no else part. For example: if
- (foo == 10);
+(foo == 10);
 
- <p>It attempts to match javac's -Xlint:empty warning behavior, which can be found in
- com/sun/tools/javac/comp/Check.java.</div>
+<p>It attempts to match javac's -Xlint:empty warning behavior, which can be found in
+com/sun/tools/javac/comp/Check.java.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>eaftan@google.com (Eddie Aftandilian)</dd>
@@ -147,7 +147,7 @@ implements <a href="BugChecker.EmptyStatementTreeMatcher.html" title="interface 
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Match empty statement if: - Parent statement is an if - The then part of the parent if is an
- empty statement, and - The else part of the parent if does not exist</div>
+empty statement, and - The else part of the parent if does not exist</div>
 </div>
 </div>
 </div>
@@ -195,7 +195,7 @@ implements <a href="BugChecker.EmptyStatementTreeMatcher.html" title="interface 
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchEmptyStatement</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/EmptyStatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">EmptyStatementTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Match empty statement if: - Parent statement is an if - The then part of the parent if is an
- empty statement, and - The else part of the parent if does not exist</div>
+empty statement, and - The else part of the parent if does not exist</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.EmptyStatementTreeMatcher.html#matchEmptyStatement(com.sun.source.tree.EmptyStatementTree,com.google.errorprone.VisitorState)">matchEmptyStatement</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.EmptyStatementTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.EmptyStatementTreeMatcher</a></code></dd>

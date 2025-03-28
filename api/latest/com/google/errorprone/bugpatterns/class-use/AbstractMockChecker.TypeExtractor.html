@@ -79,7 +79,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">AbstractMockChecker.</span><code><a href="../AbstractMockChecker.html#MOCKING_METHOD" class="member-name-link">MOCKING_METHOD</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">A TypeExtractor for method invocations that create a mock using Mockito.mock, Mockito.spy, or
- EasyMock.create[...]Mock, extracting the type being mocked.</div>
+EasyMock.create[...]Mock, extracting the type being mocked.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">com.google.errorprone.bugpatterns</a> that return <a href="../AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a></span></div>
@@ -91,25 +91,25 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">AbstractMockChecker.</span><code><a href="../AbstractMockChecker.html#extractClassArg(com.google.errorprone.matchers.Matcher)" class="member-name-link">extractClassArg</a><wbr>(<a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;&nbsp;m)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Produces an extractor which, if the tree matches, extracts the type of the first argument whose
- type is <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> (preserving its <code>&lt;T&gt;</code> type parameter, if it has one}.</div>
+type is <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link"><code>Class</code></a> (preserving its <code>&lt;T&gt;</code> type parameter, if it has one}.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">AbstractMockChecker.</span><code><a href="../AbstractMockChecker.html#extractFirstArg(com.google.errorprone.matchers.Matcher)" class="member-name-link">extractFirstArg</a><wbr>(<a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;&nbsp;m)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Produces an extractor which, if the tree matches, extracts the type of the first argument to
- the method invocation.</div>
+the method invocation.</div>
 </div>
 <div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">AbstractMockChecker.</span><code><a href="../AbstractMockChecker.html#extractType(com.google.errorprone.matchers.Matcher)" class="member-name-link">extractType</a><wbr>(<a href="../../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;&nbsp;m)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Produces an extractor which, if the tree matches, extracts the type of that tree, as given by
- <a href="../../util/ASTHelpers.html#getType(com.sun.source.tree.Tree)"><code>ASTHelpers.getType(Tree)</code></a>.</div>
+<a href="../../util/ASTHelpers.html#getType(com.sun.source.tree.Tree)"><code>ASTHelpers.getType(Tree)</code></a>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">AbstractMockChecker.</span><code><a href="../AbstractMockChecker.html#fieldAnnotatedWithOneOf(java.util.stream.Stream)" class="member-name-link">fieldAnnotatedWithOneOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;annotationClasses)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Creates a TypeExtractor that extracts the type of a class field if that field is annotated with
- any one of the given annotations.</div>
+any one of the given annotations.</div>
 </div>
 <div class="col-first even-row-color"><code>default <a href="../AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a><wbr>&lt;<a href="../AbstractMockChecker.TypeExtractor.html#type-param-T" title="type parameter in AbstractMockChecker.TypeExtractor">T</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">AbstractMockChecker.TypeExtractor.</span><code><a href="../AbstractMockChecker.TypeExtractor.html#or(com.google.errorprone.bugpatterns.AbstractMockChecker.TypeExtractor)" class="member-name-link">or</a><wbr>(<a href="../AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="../AbstractMockChecker.TypeExtractor.html#type-param-T" title="type parameter in AbstractMockChecker.TypeExtractor">T</a>&gt;&nbsp;other)</code></div>

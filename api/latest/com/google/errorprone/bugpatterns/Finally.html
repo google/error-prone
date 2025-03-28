@@ -95,13 +95,13 @@ loadScripts(document, 'script');</script>
 implements <a href="BugChecker.ContinueTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ContinueTreeMatcher</a>, <a href="BugChecker.ThrowTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ThrowTreeMatcher</a>, <a href="BugChecker.BreakTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BreakTreeMatcher</a>, <a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></span></div>
 <div class="block">Matches the behaviour of javac's finally Xlint warning.
 
- <p>1) Any return statement in a finally block is an error 2) An uncaught throw statement in a
- finally block is an error. We can't always know whether a specific exception will be caught, so
- we report errors for throw statements that are not contained in a try with at least one catch
- block. 3) A continue statement in a finally block is an error if it breaks out of a (possibly
- labeled) loop that is outside the enclosing finally. 4) A break statement in a finally block is
- an error if it breaks out of a (possibly labeled) loop or a switch statement that is outside the
- enclosing finally.</div>
+<p>1) Any return statement in a finally block is an error 2) An uncaught throw statement in a
+finally block is an error. We can't always know whether a specific exception will be caught, so
+we report errors for throw statements that are not contained in a try with at least one catch
+block. 3) A continue statement in a finally block is an error if it breaks out of a (possibly
+labeled) loop that is outside the enclosing finally. 4) A break statement in a finally block is
+an error if it breaks out of a (possibly labeled) loop or a switch statement that is outside the
+enclosing finally.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>eaftan@google.com (Eddie Aftandilian), cushon@google.com (Liam Miller-Cushon)</dd>

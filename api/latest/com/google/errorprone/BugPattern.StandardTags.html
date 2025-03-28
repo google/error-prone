@@ -115,20 +115,20 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="#FRAGILE_CODE" class="member-name-link">FRAGILE_CODE</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">This check detects code that may technically be working within a limited domain, but is
- fragile, or violates generally-accepted assumptions of behavior.</div>
+fragile, or violates generally-accepted assumptions of behavior.</div>
 </div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="#LIKELY_ERROR" class="member-name-link">LIKELY_ERROR</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">This check, for reasons of backwards compatibility or difficulty in cleaning up, should be
- considered very likely to represent a real error in the vast majority (<code>&gt;99.9%</code>) of
- cases, but couldn't otherwise be turned on as an ERROR.</div>
+considered very likely to represent a real error in the vast majority (<code>&gt;99.9%</code>) of
+cases, but couldn't otherwise be turned on as an ERROR.</div>
 </div>
 <div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#PERFORMANCE" class="member-name-link">PERFORMANCE</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">This check detects a potential performance issue, where an easily-identifiable replacement
- for the code being made will always result in a net positive performance improvement.</div>
+for the code being made will always result in a net positive performance improvement.</div>
 </div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="#REFACTORING" class="member-name-link">REFACTORING</a></code></div>
@@ -139,14 +139,14 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="#SIMPLIFICATION" class="member-name-link">SIMPLIFICATION</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">This check points out a coding pattern that, while functional, has an easier-to-read or
- faster alternative.</div>
+faster alternative.</div>
 </div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="#STYLE" class="member-name-link">STYLE</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">This check detects a coding pattern that is valid within the Java language and doesn't
- represent a runtime defect, but is otherwise discouraged for reasons of consistency within a
- project or ease of understanding by other programmers.</div>
+represent a runtime defect, but is otherwise discouraged for reasons of consistency within a
+project or ease of understanding by other programmers.</div>
 </div>
 </div>
 </section>
@@ -175,12 +175,12 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">LIKELY_ERROR</span></div>
 <div class="block">This check, for reasons of backwards compatibility or difficulty in cleaning up, should be
- considered very likely to represent a real error in the vast majority (<code>&gt;99.9%</code>) of
- cases, but couldn't otherwise be turned on as an ERROR.
+considered very likely to represent a real error in the vast majority (<code>&gt;99.9%</code>) of
+cases, but couldn't otherwise be turned on as an ERROR.
 
- <p>Systems trying to determine the set of likely errors from a collection of BugPatterns
- should act as if any BugPattern with <a href="BugPattern.html#severity()"><code>BugPattern.severity()</code></a> of <a href="BugPattern.SeverityLevel.html#ERROR"><code>BugPattern.SeverityLevel.ERROR</code></a> also
- has this tag.</div>
+<p>Systems trying to determine the set of likely errors from a collection of BugPatterns
+should act as if any BugPattern with <a href="BugPattern.html#severity()"><code>BugPattern.severity()</code></a> of <a href="BugPattern.SeverityLevel.html#ERROR"><code>BugPattern.SeverityLevel.ERROR</code></a> also
+has this tag.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -198,13 +198,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">STYLE</span></div>
 <div class="block">This check detects a coding pattern that is valid within the Java language and doesn't
- represent a runtime defect, but is otherwise discouraged for reasons of consistency within a
- project or ease of understanding by other programmers.
+represent a runtime defect, but is otherwise discouraged for reasons of consistency within a
+project or ease of understanding by other programmers.
 
- <p>Checks using this tag should limit their replacements to those that don't change the
- behavior of the code (for example: adding clarifying parentheses, reordering modifiers in a
- single declaration, removing implicit modifiers like <code>public</code> for members in an <code>
- interface</code>).</div>
+<p>Checks using this tag should limit their replacements to those that don't change the
+behavior of the code (for example: adding clarifying parentheses, reordering modifiers in a
+single declaration, removing implicit modifiers like <code>public</code> for members in an <code>
+interface</code>).</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -222,7 +222,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">PERFORMANCE</span></div>
 <div class="block">This check detects a potential performance issue, where an easily-identifiable replacement
- for the code being made will always result in a net positive performance improvement.</div>
+for the code being made will always result in a net positive performance improvement.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -240,11 +240,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">FRAGILE_CODE</span></div>
 <div class="block">This check detects code that may technically be working within a limited domain, but is
- fragile, or violates generally-accepted assumptions of behavior.
+fragile, or violates generally-accepted assumptions of behavior.
 
- <p>Examples: DefaultCharset, where code implicitly uses the JVM default charset, will work in
- circumstances where data being fed to the system happens to be compatible with the Charset,
- but breaks down if fed data outside.</div>
+<p>Examples: DefaultCharset, where code implicitly uses the JVM default charset, will work in
+circumstances where data being fed to the system happens to be compatible with the Charset,
+but breaks down if fed data outside.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -263,8 +263,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">CONCURRENCY</span></div>
 <div class="block">This check points out potential issues when operating in a concurrent context
 
- <p>The code may work fine when accessed by 1 thread at a time, but may have some unintended
- behavior when running in multiple threads.</div>
+<p>The code may work fine when accessed by 1 thread at a time, but may have some unintended
+behavior when running in multiple threads.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -282,7 +282,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">SIMPLIFICATION</span></div>
 <div class="block">This check points out a coding pattern that, while functional, has an easier-to-read or
- faster alternative.</div>
+faster alternative.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>

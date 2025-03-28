@@ -148,7 +148,7 @@ loadScripts(document, 'script');</script>
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Suggest replacing <code>input</code> with a qualified reference to a locally declared field with a
- similar or the same name as the <code>input</code> expression.</div>
+similar or the same name as the <code>input</code> expression.</div>
 </div>
 <div class="col-first even-row-color"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="../Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ReplacementVariableFinder.</span><code><a href="../../bugpatterns/ReplacementVariableFinder.html#fixesByReplacingExpressionWithMethodParameter(com.sun.source.tree.ExpressionTree,java.util.function.Predicate,com.google.errorprone.VisitorState)" class="member-name-link">fixesByReplacingExpressionWithMethodParameter</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;input,
@@ -156,14 +156,14 @@ loadScripts(document, 'script');</script>
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Suggest replacing <code>input</code> with a reference to a method parameter in the nearest enclosing
- method declaration with a similar or the same name as the <code>input</code> expression.</div>
+method declaration with a similar or the same name as the <code>input</code> expression.</div>
 </div>
 <div class="col-first odd-row-color"><code>protected abstract <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">AbstractToString.</span><code><a href="../../bugpatterns/AbstractToString.html#implicitToStringFix(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">implicitToStringFix</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Constructs a fix for an implicit toString call, e.g. from string concatenation or from passing
- an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
+an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">AnnotationMirrorToString.</span><code><a href="../../bugpatterns/AnnotationMirrorToString.html#implicitToStringFix(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">implicitToStringFix</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
@@ -210,7 +210,7 @@ loadScripts(document, 'script');</script>
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructs a fix for an explicit toString call, e.g. from <code>Object.toString()</code> or <code>
- String.valueOf()</code>.</div>
+String.valueOf()</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">AnnotationMirrorToString.</span><code><a href="../../bugpatterns/AnnotationMirrorToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">toStringFix</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;parent,
@@ -264,8 +264,8 @@ loadScripts(document, 'script');</script>
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Transforms a try-catch block in the try-fail pattern into a call to JUnit's <code>
- assertThrows</code>, inserting the behavior of the <code>try</code> block into a lambda parameter, and
- assigning the expected exception to a variable, if it is used within the <code>catch</code> block.</div>
+assertThrows</code>, inserting the behavior of the <code>try</code> block into a lambda parameter, and
+assigning the expected exception to a variable, if it is used within the <code>catch</code> block.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../../bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a> with parameters of type <a href="../Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></span></div>
@@ -363,8 +363,8 @@ loadScripts(document, 'script');</script>
  boolean&nbsp;onlyInSameCompilationUnit)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Returns true if the current compilation would succeed with the given fix applied, using the
- given additional compiler options, optionally limiting the checking of compilation failures to
- the compilation unit in which the fix is applied.</div>
+given additional compiler options, optionally limiting the checking of compilation failures to
+the compilation unit in which the fix is applied.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../SuggestedFixes.FixCompiler.html" title="class in com.google.errorprone.fixes">SuggestedFixes.FixCompiler</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.FixCompiler.</span><code><a href="../SuggestedFixes.FixCompiler.html#create(com.google.errorprone.fixes.Fix,com.google.errorprone.VisitorState)" class="member-name-link">create</a><wbr>(<a href="../Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix,
@@ -437,7 +437,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">ExpressionTemplate.</span><code><a href="../../refaster/ExpressionTemplate.html#replace(com.google.errorprone.refaster.ExpressionTemplateMatch)" class="member-name-link">replace</a><wbr>(com.google.errorprone.refaster.ExpressionTemplateMatch&nbsp;match)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Generates a <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes"><code>SuggestedFix</code></a> replacing the specified match (usually of another template)
- with this template.</div>
+with this template.</div>
 </div>
 <div class="col-first odd-row-color"><code>abstract <a href="../Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Template.</span><code><a href="../../refaster/Template.html#replace(M)" class="member-name-link">replace</a><wbr>(<a href="../../refaster/Template.html#type-param-M" title="type parameter in Template">M</a>&nbsp;match)</code></div>

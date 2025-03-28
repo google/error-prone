@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">AnnotationMatcher&lt;T extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>
 <span class="extends-implements">extends <a href="ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">ChildMultiMatcher</a>&lt;T, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</span></div>
 <div class="block">Matches if the given annotation matcher matches all of or any of the annotations on the tree
- node.</div>
+node.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>eaftan@google.com (Eddie Aftandilian)</dd>
@@ -203,8 +203,8 @@ loadScripts(document, 'script');</script>
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="ChildMultiMatcher.html#getChildNodes(T,com.google.errorprone.VisitorState)">ChildMultiMatcher</a></code></span></div>
 <div class="block">Returns the set of child nodes to match. The nodes must be immediate children of the current
- node to ensure the TreePath calculation is correct. MultiMatchers with other requirements
- should not subclass ChildMultiMatcher.</div>
+node to ensure the TreePath calculation is correct. MultiMatchers with other requirements
+should not subclass ChildMultiMatcher.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="ChildMultiMatcher.html#getChildNodes(T,com.google.errorprone.VisitorState)">getChildNodes</a></code>&nbsp;in class&nbsp;<code><a href="ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">ChildMultiMatcher</a>&lt;<a href="#type-param-T" title="type parameter in AnnotationMatcher">T</a> extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</code></dd>

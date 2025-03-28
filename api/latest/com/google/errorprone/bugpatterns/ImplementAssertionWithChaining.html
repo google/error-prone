@@ -91,17 +91,17 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="BugChecker.IfTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.IfTreeMatcher</a></span></div>
 <div class="block">Migrates Truth subjects from a manual "test and fail" approach to one using <code>
- Subject.check(...)</code>. For example:
+Subject.check(...)</code>. For example:
 
- <pre><code>
- // Before:
- if (actual().foo() != expected) {
-   failWithActual("expected to have foo", expected);
- }
+<pre><code>
+// Before:
+if (actual().foo() != expected) {
+  failWithActual("expected to have foo", expected);
+}
 
- // After:
- check("foo()").that(actual().foo()).isEqualTo(expected);
- </code></pre></div>
+// After:
+check("foo()").that(actual().foo()).isEqualTo(expected);
+</code></pre></div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>

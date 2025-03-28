@@ -92,10 +92,10 @@ loadScripts(document, 'script');</script>
 implements <a href="../BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></span></div>
 <div class="block">Bans calls to <code>javaTimeType.from(temporalAmount)</code> where the call is guaranteed to either:
 
- <ul>
-   <li>throw a <code>DateTimeException</code> at runtime (e.g., <code>LocalDate.from(month)</code>)
-   <li>return the same parameter (e.g., <code>Instant.from(instant)</code>)
- </ul></div>
+<ul>
+  <li>throw a <code>DateTimeException</code> at runtime (e.g., <code>LocalDate.from(month)</code>)
+  <li>return the same parameter (e.g., <code>Instant.from(instant)</code>)
+</ul></div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>kak@google.com (Kurt Alfred Kluever)</dd>

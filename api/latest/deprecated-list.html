@@ -146,12 +146,12 @@ loadScripts(document, 'script');</script>
 <div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html#addInput(java.lang.String)">com.google.errorprone.BugCheckerRefactoringTestHelper.addInput<wbr>(String)</a></div>
 <div class="col-last even-row-color">
 <div class="block">prefer <a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html#addInputLines(java.lang.String,java.lang.String...)"><code>BugCheckerRefactoringTestHelper.addInputLines(String, String...)</code></a>. Declaring tests in the same file using text blocks
-     is more readable, as it encourages writing small, focussed tests.</div>
+    is more readable, as it encourages writing small, focussed tests.</div>
 </div>
 <div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.ExpectOutput.html#addOutput(java.lang.String)">com.google.errorprone.BugCheckerRefactoringTestHelper.ExpectOutput.addOutput<wbr>(String)</a></div>
 <div class="col-last odd-row-color">
 <div class="block">prefer <a href="com/google/errorprone/BugCheckerRefactoringTestHelper.ExpectOutput.html#addOutputLines(java.lang.String,java.lang.String...)"><code>BugCheckerRefactoringTestHelper.ExpectOutput.addOutputLines(String, String...)</code></a>. Declaring tests in the same file using text
-     blocks is more readable, as it encourages writing small, focussed tests.</div>
+    blocks is more readable, as it encourages writing small, focussed tests.</div>
 </div>
 <div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html#newInstance(com.google.errorprone.bugpatterns.BugChecker,java.lang.Class)">com.google.errorprone.BugCheckerRefactoringTestHelper.newInstance<wbr>(BugChecker, Class&lt;?&gt;)</a></div>
 <div class="col-last even-row-color">
@@ -174,17 +174,17 @@ loadScripts(document, 'script');</script>
 <div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html#getKnownSafeClasses()">com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability.getKnownSafeClasses()</a></div>
 <div class="col-last odd-row-color">
 <div class="block"><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html#getKnownImmutableClasses()"><code>WellKnownMutability.getKnownImmutableClasses()</code></a> is clearer if you're dealing with this specific
-     class.</div>
+    class.</div>
 </div>
 <div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html#getKnownUnsafeClasses()">com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability.getKnownUnsafeClasses()</a></div>
 <div class="col-last even-row-color">
 <div class="block"><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html#getKnownMutableClasses()"><code>WellKnownMutability.getKnownMutableClasses()</code></a> is clearer if you're dealing with this specific
-     class.</div>
+    class.</div>
 </div>
 <div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/CompilationTestHelper.html#addSourceFile(java.lang.String)">com.google.errorprone.CompilationTestHelper.addSourceFile<wbr>(String)</a></div>
 <div class="col-last odd-row-color">
 <div class="block">prefer <a href="com/google/errorprone/CompilationTestHelper.html#addSourceLines(java.lang.String,java.lang.String...)"><code>CompilationTestHelper.addSourceLines(String, String...)</code></a>. Declaring tests in the same file using text blocks
-     is more readable, as it encourages writing small, focussed tests.</div>
+    is more readable, as it encourages writing small, focussed tests.</div>
 </div>
 <div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/fixes/Replacements.html#descending()">com.google.errorprone.fixes.Replacements.descending()</a></div>
 <div class="col-last even-row-color"></div>
@@ -207,38 +207,38 @@ loadScripts(document, 'script');</script>
 <div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#withSignature(java.lang.String)">com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher.withSignature<wbr>(String)</a></div>
 <div class="col-last odd-row-color">
 <div class="block">The implementation uses javac internals to pretty-print the signatures, and the
-     signature format is not well-specified.</div>
+    signature format is not well-specified.</div>
 </div>
 <div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotation(com.sun.source.tree.Tree,java.lang.Class)">com.google.errorprone.util.ASTHelpers.getAnnotation<wbr>(Tree, Class&lt;T&gt;)</a></div>
 <div class="col-last even-row-color">
 <div class="block">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
-     them, attempting to access that member from the Error Prone checker code will result in a
-     runtime exception. Instead, operate on <code>getSymbol(tree).getAnnotationMirrors()</code> to
-     meta-syntactically inspect the annotation. Note that this method (and the <code>
-     getSymbol</code>-based replacement suggested above) looks for annotations not just on the given
-     tree (such as a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a>) but also on the symbol referred to by the given tree
-     (such as on the <code>Symbol.MethodSymbol</code> that is being called by the given <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodInvocationTree</code></a>). If you want to examine annotations only on the given tree, then use
-     <a href="com/google/errorprone/util/ASTHelpers.html#getAnnotations(com.sun.source.tree.Tree)"><code>ASTHelpers.getAnnotations(Tree)</code></a> (or a direct call to a <code>getAnnotations</code> method declared on a
-     specific <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>Tree</code></a> subclass) instead.</div>
+    them, attempting to access that member from the Error Prone checker code will result in a
+    runtime exception. Instead, operate on <code>getSymbol(tree).getAnnotationMirrors()</code> to
+    meta-syntactically inspect the annotation. Note that this method (and the <code>
+    getSymbol</code>-based replacement suggested above) looks for annotations not just on the given
+    tree (such as a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a>) but also on the symbol referred to by the given tree
+    (such as on the <code>Symbol.MethodSymbol</code> that is being called by the given <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodInvocationTree</code></a>). If you want to examine annotations only on the given tree, then use
+    <a href="com/google/errorprone/util/ASTHelpers.html#getAnnotations(com.sun.source.tree.Tree)"><code>ASTHelpers.getAnnotations(Tree)</code></a> (or a direct call to a <code>getAnnotations</code> method declared on a
+    specific <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>Tree</code></a> subclass) instead.</div>
 </div>
 <div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class)">com.google.errorprone.util.ASTHelpers.getAnnotation<wbr>(Symbol, Class&lt;T&gt;)</a></div>
 <div class="col-last odd-row-color">
 <div class="block">If <code>annotationClass</code> contains a member that is a <code>Class</code> or an array of
-     them, attempting to access that member from the Error Prone checker code will result in a
-     runtime exception. Instead, operate on <code>sym.getAnnotationMirrors()</code> to
-     meta-syntactically inspect the annotation.</div>
+    them, attempting to access that member from the Error Prone checker code will result in a
+    runtime exception. Instead, operate on <code>sym.getAnnotationMirrors()</code> to
+    meta-syntactically inspect the annotation.</div>
 </div>
 <div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,java.lang.Class,com.google.errorprone.VisitorState)">com.google.errorprone.util.ASTHelpers.hasAnnotation<wbr>(Tree, Class&lt;? extends Annotation&gt;, VisitorState)</a></div>
 <div class="col-last even-row-color">
 <div class="block">prefer <a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Symbol, String, VisitorState)</code></a> to avoid needing a
-     runtime dependency on the annotation class, and to prevent issues if there is skew between
-     the definition of the annotation on the runtime and compile-time classpaths</div>
+    runtime dependency on the annotation class, and to prevent issues if there is skew between
+    the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
 <div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class,com.google.errorprone.VisitorState)">com.google.errorprone.util.ASTHelpers.hasAnnotation<wbr>(Symbol, Class&lt;? extends Annotation&gt;, VisitorState)</a></div>
 <div class="col-last odd-row-color">
 <div class="block">prefer <a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Symbol, String, VisitorState)</code></a> to avoid needing a
-     runtime dependency on the annotation class, and to prevent issues if there is skew between
-     the definition of the annotation on the runtime and compile-time classpaths</div>
+    runtime dependency on the annotation class, and to prevent issues if there is skew between
+    the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
 </div>
 </div>
@@ -254,7 +254,7 @@ loadScripts(document, 'script');</script>
 <div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/VisitorState.html#%3Cinit%3E(com.sun.tools.javac.util.Context)">com.google.errorprone.VisitorState<wbr>(Context)</a></div>
 <div class="col-last even-row-color">
 <div class="block">If VisitorState is needed, use <a href="com/google/errorprone/VisitorState.html#createForUtilityPurposes(com.sun.tools.javac.util.Context)"><code>VisitorState.createForUtilityPurposes(Context)</code></a>, otherwise just
-     use utility methods in ASTHelpers that don't need VisitorSate.</div>
+    use utility methods in ASTHelpers that don't need VisitorSate.</div>
 </div>
 <div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/VisitorState.html#%3Cinit%3E(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)">com.google.errorprone.VisitorState<wbr>(Context, DescriptionListener)</a></div>
 <div class="col-last odd-row-color">

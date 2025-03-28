@@ -85,9 +85,9 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
 <div class="block">An interface to the "trusting" nullness analysis. This variant "trusts" <code>Nullable</code>
- annotations, similar to how a modular nullness checker like the checkerframework's would, meaning
- method parameters, fields, and method returns are assumed <a href="Nullness.html#NULLABLE"><code>Nullness.NULLABLE</code></a> only if
- annotated so.</div>
+annotations, similar to how a modular nullness checker like the checkerframework's would, meaning
+method parameters, fields, and method returns are assumed <a href="Nullness.html#NULLABLE"><code>Nullness.NULLABLE</code></a> only if
+annotated so.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -116,7 +116,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  com.sun.tools.javac.util.Context&nbsp;context)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns <a href="Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation"><code>Nullness</code></a> of the initializer of the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>VariableTree</code></a> at the leaf of the
- given <code>fieldDeclPath</code>.</div>
+given <code>fieldDeclPath</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNullness(com.sun.source.util.TreePath,com.sun.tools.javac.util.Context)" class="member-name-link">getNullness</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;exprPath,
@@ -155,8 +155,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="TrustingNullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">TrustingNullnessAnalysis</a></span>&nbsp;<span class="element-name">instance</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context)</span></div>
 <div class="block">Retrieve an instance of <a href="TrustingNullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation"><code>TrustingNullnessAnalysis</code></a> from the <code>context</code>. If there is
- no <a href="TrustingNullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation"><code>TrustingNullnessAnalysis</code></a> currently in the <code>context</code>, create one, insert it,
- and return it.</div>
+no <a href="TrustingNullnessAnalysis.html" title="class in com.google.errorprone.dataflow.nullnesspropagation"><code>TrustingNullnessAnalysis</code></a> currently in the <code>context</code>, create one, insert it,
+and return it.</div>
 </div>
 </section>
 </li>
@@ -168,9 +168,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  com.sun.tools.javac.util.Context&nbsp;context)</span></div>
 <div class="block">Returns the <a href="Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation"><code>Nullness</code></a> of the leaf of <code>exprPath</code>.
 
- <p>If the leaf required the compiler to generate autoboxing or autounboxing calls, <code>
- getNullness</code> returns the <code>Nullness</code> <i>after</i> the boxing/unboxing. This implies that,
- in those cases, it will always return <code>NONNULL</code>.</div>
+<p>If the leaf required the compiler to generate autoboxing or autounboxing calls, <code>
+getNullness</code> returns the <code>Nullness</code> <i>after</i> the boxing/unboxing. This implies that,
+in those cases, it will always return <code>NONNULL</code>.</div>
 </div>
 </section>
 </li>
@@ -181,7 +181,7 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></span>&nbsp;<span class="element-name">getFieldInitializerNullness</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;fieldDeclPath,
  com.sun.tools.javac.util.Context&nbsp;context)</span></div>
 <div class="block">Returns <a href="Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation"><code>Nullness</code></a> of the initializer of the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>VariableTree</code></a> at the leaf of the
- given <code>fieldDeclPath</code>. Returns <a href="Nullness.html#NULL"><code>Nullness.NULL</code></a> should there be no initializer.</div>
+given <code>fieldDeclPath</code>. Returns <a href="Nullness.html#NULL"><code>Nullness.NULL</code></a> should there be no initializer.</div>
 </div>
 </section>
 </li>

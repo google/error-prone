@@ -99,7 +99,7 @@ loadScripts(document, 'script');</script>
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Suggest replacing <code>input</code> with a qualified reference to a locally declared field with a
- similar or the same name as the <code>input</code> expression.</div>
+similar or the same name as the <code>input</code> expression.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fixesByReplacingExpressionWithMethodParameter(com.sun.source.tree.ExpressionTree,java.util.function.Predicate,com.google.errorprone.VisitorState)" class="member-name-link">fixesByReplacingExpressionWithMethodParameter</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;input,
@@ -107,7 +107,7 @@ loadScripts(document, 'script');</script>
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Suggest replacing <code>input</code> with a reference to a method parameter in the nearest enclosing
- method declaration with a similar or the same name as the <code>input</code> expression.</div>
+method declaration with a similar or the same name as the <code>input</code> expression.</div>
 </div>
 </div>
 </div>
@@ -134,12 +134,12 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;com.sun.tools.javac.tree.JCTree.JCVariableDecl&gt;&nbsp;validFieldPredicate,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Suggest replacing <code>input</code> with a qualified reference to a locally declared field with a
- similar or the same name as the <code>input</code> expression.</div>
+similar or the same name as the <code>input</code> expression.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>input</code> - a MEMBER_SELECT or IDENTIFIER expression which should be replaced.</dd>
 <dd><code>validFieldPredicate</code> - Predicate used to decide which locally declared fields are
-     appropriate candidates for replacement (e.g.: is the appropriate type)</dd>
+    appropriate candidates for replacement (e.g.: is the appropriate type)</dd>
 </dl>
 </div>
 </section>
@@ -152,12 +152,12 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;com.sun.tools.javac.tree.JCTree.JCVariableDecl&gt;&nbsp;validParameterPredicate,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Suggest replacing <code>input</code> with a reference to a method parameter in the nearest enclosing
- method declaration with a similar or the same name as the <code>input</code> expression.</div>
+method declaration with a similar or the same name as the <code>input</code> expression.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>input</code> - a MEMBER_SELECT or IDENTIFIER expression which should be replaced.</dd>
 <dd><code>validParameterPredicate</code> - Predicate used to decide which method parameters are appropriate
-     candidates for replacement (e.g.: is the appropriate type)</dd>
+    candidates for replacement (e.g.: is the appropriate type)</dd>
 </dl>
 </div>
 </section>

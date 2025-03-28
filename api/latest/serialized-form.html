@@ -68,14 +68,14 @@ loadScripts(document, 'script');</script>
 <h5>allNames</h5>
 <pre>com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; allNames</pre>
 <div class="block">Additional identifiers for this check, to be checked for in @SuppressWarnings annotations.
- Corresponds to the canonical name plus all <code>altName</code>s from its <code>BugPattern</code>
- annotation.</div>
+Corresponds to the canonical name plus all <code>altName</code>s from its <code>BugPattern</code>
+annotation.</div>
 </li>
 <li class="block-list">
 <h5>canonicalName</h5>
 <pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> canonicalName</pre>
 <div class="block">The canonical name of this check. Corresponds to the <code>name</code> attribute from its <code>
- BugPattern</code> annotation.</div>
+BugPattern</code> annotation.</div>
 </li>
 <li class="block-list">
 <h5>checker</h5>
@@ -86,8 +86,8 @@ loadScripts(document, 'script');</script>
 <h5>customSuppressionAnnotations</h5>
 <pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&gt; customSuppressionAnnotations</pre>
 <div class="block">A set of suppression annotations for this check. Computed from the <code>
- suppressionAnnotations</code> attributes from its <code>BugPattern</code>. May be empty if there are no
- suppression annotations for this check.</div>
+suppressionAnnotations</code> attributes from its <code>BugPattern</code>. May be empty if there are no
+suppression annotations for this check.</div>
 </li>
 <li class="block-list">
 <h5>defaultSeverity</h5>
@@ -103,14 +103,14 @@ loadScripts(document, 'script');</script>
 <h5>linkUrl</h5>
 <pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> linkUrl</pre>
 <div class="block">The link URL to display in the diagnostic message when this check triggers. Computed from the
- <code>link</code> and <code>linkType</code> attributes from its <code>BugPattern</code>. May be null if no
- link should be displayed.</div>
+<code>link</code> and <code>linkType</code> attributes from its <code>BugPattern</code>. May be null if no
+link should be displayed.</div>
 </li>
 <li class="block-list">
 <h5>message</h5>
 <pre><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a> message</pre>
 <div class="block">The error message to print in compiler diagnostics when this check triggers. Corresponds to the
- <code>summary</code> attribute from its <code>BugPattern</code>.</div>
+<code>summary</code> attribute from its <code>BugPattern</code>.</div>
 </li>
 <li class="block-list">
 <h5>supportsSuppressWarnings</h5>
@@ -576,15 +576,15 @@ loadScripts(document, 'script');</script>
 <pre>com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; badEnclosingTypes</pre>
 <div class="block">Enclosing types that their nested type imports are vague.
 
- <p>Some types are meant to provide a namespace; therefore, imports for their nested types can
- be confusing.
+<p>Some types are meant to provide a namespace; therefore, imports for their nested types can
+be confusing.
 
- <p>For instance, unlike its name suggests, <code>org.immutables.value.Value.Immutable</code> is used
- to generate immutable value types, and its import can be misleading. So, importing <code>
- org.immutables.value.Value</code> and using <code>@Value.Immutable</code> is more favorable than importing
- <code>org.immutables.value.Value.Immutable</code> and using <code>@Immutable</code>.
+<p>For instance, unlike its name suggests, <code>org.immutables.value.Value.Immutable</code> is used
+to generate immutable value types, and its import can be misleading. So, importing <code>
+org.immutables.value.Value</code> and using <code>@Value.Immutable</code> is more favorable than importing
+<code>org.immutables.value.Value.Immutable</code> and using <code>@Immutable</code>.
 
- <p>Note that this does not disallow import an enclosing type but its nested types instead.</div>
+<p>Note that this does not disallow import an enclosing type but its nested types instead.</div>
 </li>
 <li class="block-list">
 <h5>warnAboutTruth8AssertThat</h5>
@@ -3167,15 +3167,15 @@ loadScripts(document, 'script');</script>
 <h5>exemptedEnclosingTypes</h5>
 <pre>com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt; exemptedEnclosingTypes</pre>
 <div class="block">Exempted types that fully qualified name usages are acceptable for their nested types when
- importing the enclosing type is ambiguous.
+importing the enclosing type is ambiguous.
 
- <p>Some types are meant to provide a namespace; therefore, imports for their nested types can
- be confusing.
+<p>Some types are meant to provide a namespace; therefore, imports for their nested types can
+be confusing.
 
- <p>For instance, unlike its name suggests, <code>org.immutables.value.Value.Immutable</code> is used
- to generate immutable value types, and its import can be misleading. So, importing <code>
- org.immutables.value.Value</code> and using <code>@Value.Immutable</code> is more favorable than importing
- <code>org.immutables.value.Value.Immutable</code> and using <code>@Immutable</code>.</div>
+<p>For instance, unlike its name suggests, <code>org.immutables.value.Value.Immutable</code> is used
+to generate immutable value types, and its import can be misleading. So, importing <code>
+org.immutables.value.Value</code> and using <code>@Value.Immutable</code> is more favorable than importing
+<code>org.immutables.value.Value.Immutable</code> and using <code>@Immutable</code>.</div>
 </li>
 </ul>
 </section>

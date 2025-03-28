@@ -76,66 +76,66 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">Placeholder</span></div>
 <div class="block">Annotation to indicate a placeholder method.
 
- <p>A placeholder method is an abstract method in a Refaster template class which can represent an
- arbitrary expression (if the return type is nonvoid), or zero or more statements (if the return
- type is void), in terms of its arguments. For example,
+<p>A placeholder method is an abstract method in a Refaster template class which can represent an
+arbitrary expression (if the return type is nonvoid), or zero or more statements (if the return
+type is void), in terms of its arguments. For example,
 
- <pre><code>
- abstract class ComputeIfAbsent&lt;K, V&gt; {
-  @Placeholder abstract V computeValue(K key);
+<pre><code>
+abstract class ComputeIfAbsent&lt;K, V&gt; {
+ @Placeholder abstract V computeValue(K key);
 
-  @BeforeTemplate void getOrCompute(Map&lt;K, V&gt; map, K key) {
-     V value = map.get(key);
-     if (value == null) {
-       map.put(key, value = computeValue(key));
-     }
-   }
+ @BeforeTemplate void getOrCompute(Map&lt;K, V&gt; map, K key) {
+    V value = map.get(key);
+    if (value == null) {
+      map.put(key, value = computeValue(key));
+    }
+  }
 
-  @AfterTemplate void computeIfAbsent(Map&lt;K, V&gt; map, K key) {
-     V value = map.computeIfAbsent(key, (K k) -&gt; computeValue(k));
-   }
- }
- </code></pre>
+ @AfterTemplate void computeIfAbsent(Map&lt;K, V&gt; map, K key) {
+    V value = map.computeIfAbsent(key, (K k) -&gt; computeValue(k));
+  }
+}
+</code></pre>
 
- <p>Here, <code>computeValue</code> represents an arbitrary expression in terms of <code>key</code>, and the
- <code>@AfterTemplate</code> rewrites that same expression in terms of the parameter of a lambda
- expression.
+<p>Here, <code>computeValue</code> represents an arbitrary expression in terms of <code>key</code>, and the
+<code>@AfterTemplate</code> rewrites that same expression in terms of the parameter of a lambda
+expression.
 
- <p>For a multi-line example, consider
+<p>For a multi-line example, consider
 
- <pre><code>
- abstract class TryWithResources&lt;T extends AutoCloseable&gt; {
-  @Placeholder abstract T open();
-  @Placeholder void process(T resource);
+<pre><code>
+abstract class TryWithResources&lt;T extends AutoCloseable&gt; {
+ @Placeholder abstract T open();
+ @Placeholder void process(T resource);
 
-  @BeforeTemplate void tryFinallyClose() {
-     T resource = open();
-     try {
-       process(resource);
-     } finally {
-       resource.close();
-     }
-   }
+ @BeforeTemplate void tryFinallyClose() {
+    T resource = open();
+    try {
+      process(resource);
+    } finally {
+      resource.close();
+    }
+  }
 
-  @AfterTemplate void tryWithResource() {
-     try (T resource = open()) {
-       process(resource);
-     }
-   }
- }
- </code></pre>
+ @AfterTemplate void tryWithResource() {
+    try (T resource = open()) {
+      process(resource);
+    }
+  }
+}
+</code></pre>
 
- <p>Here, <code>process</code> is any block, though it must refer to <code>resource</code> in some way; it
- is not permitted to reassign the contents of <code>resource</code>.
+<p>Here, <code>process</code> is any block, though it must refer to <code>resource</code> in some way; it
+is not permitted to reassign the contents of <code>resource</code>.
 
- <p>Placeholder methods are not permitted to refer to any local variables or parameters of the
- <code>@BeforeTemplate</code> that are not passed to them as arguments. Additionally, they
- <em>must</em> contain references to all arguments that <em>are</em> passed to them -- except
- those corresponding to parameters annotated with <a href="MayOptionallyUse.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>MayOptionallyUse</code></a>.
+<p>Placeholder methods are not permitted to refer to any local variables or parameters of the
+<code>@BeforeTemplate</code> that are not passed to them as arguments. Additionally, they
+<em>must</em> contain references to all arguments that <em>are</em> passed to them -- except
+those corresponding to parameters annotated with <a href="MayOptionallyUse.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>MayOptionallyUse</code></a>.
 
- <p>Note that <a href="Matches.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>Matches</code></a> and <a href="NotMatches.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>NotMatches</code></a> can be applied to placeholder methods, but,
- <strong>and this is a serious health warning</strong>, those predicates will only be matched if
- the placeholder method is used as an <em>expression</em>, not a <em>statement</em>.</div>
+<p>Note that <a href="Matches.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>Matches</code></a> and <a href="NotMatches.html" title="annotation interface in com.google.errorprone.refaster.annotation"><code>NotMatches</code></a> can be applied to placeholder methods, but,
+<strong>and this is a serious health warning</strong>, those predicates will only be matched if
+the placeholder method is used as an <em>expression</em>, not a <em>statement</em>.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>lowasser@google.com (Louis Wasserman)</dd>
@@ -157,7 +157,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="#allowsIdentity()" class="member-name-link">allowsIdentity</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Identifies whether the placeholder is allowed to match an expression which simply returns one
- of the placeholder arguments unchanged.</div>
+of the placeholder arguments unchanged.</div>
 </div>
 </div>
 </section>
@@ -177,7 +177,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">allowsIdentity</span></div>
 <div class="block">Identifies whether the placeholder is allowed to match an expression which simply returns one
- of the placeholder arguments unchanged.</div>
+of the placeholder arguments unchanged.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>false</code></dd>

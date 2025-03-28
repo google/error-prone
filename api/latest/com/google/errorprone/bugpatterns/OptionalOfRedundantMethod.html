@@ -92,20 +92,20 @@ loadScripts(document, 'script');</script>
 implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></span></div>
 <div class="block">Checks if <code>Optional#of</code> is chained with a redundant method.
 
- <p><code>Optional#of</code> will always return a non-empty optional. Using any of the following
- methods:
+<p><code>Optional#of</code> will always return a non-empty optional. Using any of the following
+methods:
 
- <ul>
-   <li><code>isPresent</code>
-   <li><code>ifPresent</code>
-   <li><code>orElse</code>
-   <li><code>orElseGet</code>
-   <li><code>orElseThrow</code>
-   <li><code>or</code> (only for Guava optionals)
-   <li><code>orNull</code> (only for Guava optionals)
- </ul>
+<ul>
+  <li><code>isPresent</code>
+  <li><code>ifPresent</code>
+  <li><code>orElse</code>
+  <li><code>orElseGet</code>
+  <li><code>orElseThrow</code>
+  <li><code>or</code> (only for Guava optionals)
+  <li><code>orNull</code> (only for Guava optionals)
+</ul>
 
- on it is unnecessary and a potential source of bugs.</div>
+on it is unnecessary and a potential source of bugs.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>

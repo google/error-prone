@@ -189,11 +189,11 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Matches if a long or Long is converted to an int for a long parameter in a method invocation.
 
- <p>Does **not** match if the method parameter is a Long, because passing an int or Integer for
- a Long parameter produces an incompatible types error. Does **not** match when a long or Long
- is converted to an Integer because this requires first converting to an int and then to an
- Integer. This is awkwardly complex and out of scope. Does **not** match when the conversion
- occurs in a separate statement prior the method invocation.</div>
+<p>Does **not** match if the method parameter is a Long, because passing an int or Integer for
+a Long parameter produces an incompatible types error. Does **not** match when a long or Long
+is converted to an Integer because this requires first converting to an int and then to an
+Integer. This is awkwardly complex and out of scope. Does **not** match when the conversion
+occurs in a separate statement prior the method invocation.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>

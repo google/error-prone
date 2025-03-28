@@ -76,13 +76,13 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../UTree.html" class="type-name-link" title="class in com.google.errorprone.refaster">UTree</a>&lt;T extends com.sun.tools.javac.tree.JCTree&gt;</code></div>
 <div class="col-last even-row-color">
 <div class="block">A serializable representation of a template syntax tree which can be unified with a target AST
- and inlined based on a set of substitutions.</div>
+and inlined based on a set of substitutions.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../UType.html" class="type-name-link" title="class in com.google.errorprone.refaster">UType</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">A serializable representation of a type template, used for enforcing type constraints on target
- ASTs.</div>
+ASTs.</div>
 </div>
 </div>
 <div class="caption"><span>Subinterfaces with type arguments of type <a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a> in <a href="../package-summary.html">com.google.errorprone.refaster</a></span></div>
@@ -111,7 +111,7 @@ loadScripts(document, 'script');</script>
  T&nbsp;t)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Returns a <code>Choice</code> with <code>t</code> as an option if <code>condition</code>, and no options
- otherwise.</div>
+otherwise.</div>
 </div>
 <div class="col-first even-row-color"><code>protected <a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">UAnyOf.</span><code><a href="../UAnyOf.html#defaultAction(com.sun.source.tree.Tree,com.google.errorprone.refaster.Unifier)" class="member-name-link">defaultAction</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
@@ -146,7 +146,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#flatMap(java.util.function.Function)" class="member-name-link">flatMap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>, <a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from
- the <code>Choice</code> yielded by this function on the result.</div>
+the <code>Choice</code> yielded by this function on the result.</div>
 </div>
 <div class="col-first even-row-color"><code>static &lt;T&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#from(java.util.Collection)" class="member-name-link">from</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;T&gt;&nbsp;choices)</code></div>
@@ -165,7 +165,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#mapIfPresent(java.util.function.Function)" class="member-name-link">mapIfPresent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and yielding a present
- <code>Optional</code>.</div>
+<code>Optional</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static &lt;T&gt;&nbsp;<a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#none()" class="member-name-link">none</a>()</code></div>
@@ -190,7 +190,7 @@ loadScripts(document, 'script');</script>
  <a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Returns all valid unification paths (if any) from this <code>Unifier</code> that unify this with
- <code>target</code>.</div>
+<code>target</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">UTree.</span><code><a href="../UTree.html#unify(com.sun.source.tree.Tree,com.google.errorprone.refaster.Unifier)" class="member-name-link">unify</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;target,
@@ -206,7 +206,7 @@ loadScripts(document, 'script');</script>
  @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends T&gt;&nbsp;targets)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Returns all successful unification paths from the specified <code>Unifier</code> unifying the
- specified lists, disallowing varargs.</div>
+specified lists, disallowing varargs.</div>
 </div>
 <div class="col-first even-row-color"><code>static &lt;T, U extends <a href="../Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br><a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Unifier.</span><code><a href="../Unifier.html#unifyList(com.google.errorprone.refaster.Unifier,java.util.List,java.util.List,boolean)" class="member-name-link">unifyList</a><wbr>(<a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
@@ -215,7 +215,7 @@ loadScripts(document, 'script');</script>
  boolean&nbsp;allowVarargs)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Returns all successful unification paths from the specified <code>Unifier</code> unifying the
- specified lists, allowing varargs if and only if <code>allowVarargs</code> is true.</div>
+specified lists, allowing varargs if and only if <code>allowVarargs</code> is true.</div>
 </div>
 <div class="col-first odd-row-color"><code>static &lt;T, U extends <a href="../Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br><a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Unifier.</span><code><a href="../Unifier.html#unifyNullable(com.google.errorprone.refaster.Unifier,U,T)" class="member-name-link">unifyNullable</a><wbr>(<a href="../Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
@@ -314,7 +314,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">Choice.</span><code><a href="../Choice.html#flatMap(java.util.function.Function)" class="member-name-link">flatMap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="../Choice.html#type-param-T" title="type parameter in Choice">T</a>, <a href="../Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from
- the <code>Choice</code> yielded by this function on the result.</div>
+the <code>Choice</code> yielded by this function on the result.</div>
 </div>
 </div>
 </section>

@@ -91,15 +91,15 @@ loadScripts(document, 'script');</script>
 implements <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span></div>
 <div class="block">A matcher for compile-time-constant expressions.
 
- <p>For the purposes of this matcher, a compile-time constant expression is one of the following:
+<p>For the purposes of this matcher, a compile-time constant expression is one of the following:
 
- <ol>
-   <li>Any expression for which the Java compiler can determine a constant value at compile time.
-   <li>The expression consisting of the literal <code>null</code>.
-   <li>An expression consisting of a single identifier, where the identifier is a formal method
-       parameter that is declared <code>final</code> and has the <a href="../annotations/CompileTimeConstant.html" title="annotation interface in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a>
-       annotation.
- </ol></div>
+<ol>
+  <li>Any expression for which the Java compiler can determine a constant value at compile time.
+  <li>The expression consisting of the literal <code>null</code>.
+  <li>An expression consisting of a single identifier, where the identifier is a formal method
+      parameter that is declared <code>final</code> and has the <a href="../annotations/CompileTimeConstant.html" title="annotation interface in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a>
+      annotation.
+</ol></div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>

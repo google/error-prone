@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="../../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
 implements <a href="../../BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></span></div>
 <div class="block">Bug checker for null-returning methods annotated with <code>@Provides</code> but not
- <code>@Nullable</code>.</div>
+<code>@Nullable</code>.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -142,7 +142,7 @@ implements <a href="../../BugChecker.ReturnTreeMatcher.html" title="interface in
  <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Matches explicit "return null" statements in methods annotated with <code>@Provides</code> but not
- <code>@Nullable</code>.</div>
+<code>@Nullable</code>.</div>
 </div>
 </div>
 </div>
@@ -190,8 +190,8 @@ implements <a href="../../BugChecker.ReturnTreeMatcher.html" title="interface in
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchReturn</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ReturnTree.html" title="class or interface in com.sun.source.tree" class="external-link">ReturnTree</a>&nbsp;returnTree,
  <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Matches explicit "return null" statements in methods annotated with <code>@Provides</code> but not
- <code>@Nullable</code>. Suggests either annotating the method with <code>@Nullable</code> or throwing a
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/RuntimeException.html" title="class or interface in java.lang" class="external-link"><code>RuntimeException</code></a> instead.</div>
+<code>@Nullable</code>. Suggests either annotating the method with <code>@Nullable</code> or throwing a
+<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/RuntimeException.html" title="class or interface in java.lang" class="external-link"><code>RuntimeException</code></a> instead.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../BugChecker.ReturnTreeMatcher.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn</a></code>&nbsp;in interface&nbsp;<code><a href="../../BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></code></dd>

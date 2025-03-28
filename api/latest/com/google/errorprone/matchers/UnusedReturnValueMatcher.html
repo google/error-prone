@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span></div>
 <div class="block">Matches expressions that invoke or reference a non-void method or constructor and which do not
- use their return value and are not in a context where non-use of the return value is allowed.</div>
+use their return value and are not in a context where non-use of the return value is allowed.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -116,7 +116,7 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 <div class="col-second even-row-color"><code><a href="UnusedReturnValueMatcher.AllowReason.html" class="type-name-link" title="enum class in com.google.errorprone.matchers">UnusedReturnValueMatcher.AllowReason</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Enumeration of known reasons that an unused return value may be allowed because of the context
- in which the method is used.</div>
+in which the method is used.</div>
 </div>
 </div>
 </section>
@@ -147,21 +147,21 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a stream of reasons the given expression is allowed to have an unused return value
- based on its context.</div>
+based on its context.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAllowed(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">isAllowed</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns <code>true</code> if the given expression is allowed to have an unused return value based on
- its context.</div>
+its context.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isReturnValueUnused(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">isReturnValueUnused</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to
- a constructor or non-<code>void</code> method for which the return value is considered unused.</div>
+a constructor or non-<code>void</code> method for which the return value is considered unused.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matches</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
@@ -172,7 +172,7 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Don't match the method that is invoked through <code>Mockito.verify(t)</code> or <code>
- doReturn(val).when(t)</code>.</div>
+doReturn(val).when(t)</code>.</div>
 </div>
 </div>
 </div>
@@ -220,7 +220,7 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isReturnValueUnused</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to
- a constructor or non-<code>void</code> method for which the return value is considered unused.</div>
+a constructor or non-<code>void</code> method for which the return value is considered unused.</div>
 </div>
 </section>
 </li>
@@ -231,7 +231,7 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isAllowed</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Returns <code>true</code> if the given expression is allowed to have an unused return value based on
- its context.</div>
+its context.</div>
 </div>
 </section>
 </li>
@@ -242,7 +242,7 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="UnusedReturnValueMatcher.AllowReason.html" title="enum class in com.google.errorprone.matchers">UnusedReturnValueMatcher.AllowReason</a>&gt;</span>&nbsp;<span class="element-name">getAllowReasons</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Returns a stream of reasons the given expression is allowed to have an unused return value
- based on its context.</div>
+based on its context.</div>
 </div>
 </section>
 </li>
@@ -262,7 +262,7 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">mockitoInvocation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Don't match the method that is invoked through <code>Mockito.verify(t)</code> or <code>
- doReturn(val).when(t)</code>.</div>
+doReturn(val).when(t)</code>.</div>
 </div>
 </section>
 </li>

@@ -103,18 +103,18 @@ loadScripts(document, 'script');</script>
 implements <a href="BugChecker.AssignmentTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.AssignmentTreeMatcher</a>, <a href="BugChecker.BinaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.BinaryTreeMatcher</a>, <a href="BugChecker.CompoundAssignmentTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.CompoundAssignmentTreeMatcher</a>, <a href="BugChecker.EnhancedForLoopTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.EnhancedForLoopTreeMatcher</a>, <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a>, <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="BugChecker.NewArrayTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewArrayTreeMatcher</a>, <a href="BugChecker.NewClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.NewClassTreeMatcher</a>, <a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a>, <a href="BugChecker.TypeCastTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.TypeCastTreeMatcher</a>, <a href="BugChecker.UnaryTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.UnaryTreeMatcher</a>, <a href="BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></span></div>
 <div class="block">Checks methods annotated with <code>@NoAllocation</code> to ensure they really do not allocate.
 
- <ol>
-   <li>Calls to new are disallowed.
-   <li>Methods statically determined to be reachable from this method must also be annotated with
-       <code>@NoAllocation</code>.
-   <li>Autoboxing is disallowed.
-   <li>String concatenation and conversions are disallowed.
-   <li>To make it easier to use exceptions, allocations are always allowed within a throw
-       statement. (But not in the methods of nested classes if they are annotated with <code>
-       NoAllocation</code>.)
-   <li>The check is done at the source level. The compiler or runtime may perform optimizations or
-       transformations that add or remove allocations in a way not visible to this check.
- </ol></div>
+<ol>
+  <li>Calls to new are disallowed.
+  <li>Methods statically determined to be reachable from this method must also be annotated with
+      <code>@NoAllocation</code>.
+  <li>Autoboxing is disallowed.
+  <li>String concatenation and conversions are disallowed.
+  <li>To make it easier to use exceptions, allocations are always allowed within a throw
+      statement. (But not in the methods of nested classes if they are annotated with <code>
+      NoAllocation</code>.)
+  <li>The check is done at the source level. The compiler or runtime may perform optimizations or
+      transformations that add or remove allocations in a way not visible to this check.
+</ol></div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>

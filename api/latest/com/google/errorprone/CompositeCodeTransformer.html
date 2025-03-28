@@ -195,18 +195,18 @@ implements <a href="CodeTransformer.html" title="interface in com.google.errorpr
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="CodeTransformer.html#annotations()">CodeTransformer</a></code></span></div>
 <div class="block">Returns a map of annotation data logically applied to this code transformer.
 
- <p>As an example, if a <code>CodeTransformer</code> expressed as a Refaster rule had an annotation
- applied to it:
+<p>As an example, if a <code>CodeTransformer</code> expressed as a Refaster rule had an annotation
+applied to it:
 
- <pre><code>
- @MyCustomAnnotation("value")
- public class AnnotatedRefasterRule {
-    @BeforeTemplate void before(String x) {...}
-    @AfterTemplate void after(String x) {...}
- }
- </code></pre>
+<pre><code>
+@MyCustomAnnotation("value")
+public class AnnotatedRefasterRule {
+   @BeforeTemplate void before(String x) {...}
+   @AfterTemplate void after(String x) {...}
+}
+</code></pre>
 
- You could retrieve the value of <code>@MyCustomAnnotation</code> from this map.</div>
+You could retrieve the value of <code>@MyCustomAnnotation</code> from this map.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="CodeTransformer.html#annotations()">annotations</a></code>&nbsp;in interface&nbsp;<code><a href="CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a></code></dd>

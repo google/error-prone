@@ -72,103 +72,103 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">ThreadSafe</span></div>
 <div class="block">This annotation indicates that the class/interface it is applied to is thread safe
 
- <p>An object is thread safe if no sequences of accesses (like reads and writes to public fields
- or calls to public methods) may put the object into an invalid state, or cause it to violate its
- contract, regardless of the interleaving of those actions at runtime.
+<p>An object is thread safe if no sequences of accesses (like reads and writes to public fields
+or calls to public methods) may put the object into an invalid state, or cause it to violate its
+contract, regardless of the interleaving of those actions at runtime.
 
- <p>This annotation has two related-but-distinct purposes:
+<p>This annotation has two related-but-distinct purposes:
 
- <ul>
-   <li>For humans: it indicates that the class/interface (and subclasses) is thread-safe
-   <li>For machines: it causes the annotated class/interface -- and all of its subtypes -- to be
-       validated by the <code>com.google.errorprone.bugpatterns.threadsafety.ThreadSafeChecker</code>
-       <code>BugChecker</code>.
- </ul>
+<ul>
+  <li>For humans: it indicates that the class/interface (and subclasses) is thread-safe
+  <li>For machines: it causes the annotated class/interface -- and all of its subtypes -- to be
+      validated by the <code>com.google.errorprone.bugpatterns.threadsafety.ThreadSafeChecker</code>
+      <code>BugChecker</code>.
+</ul>
 
- Note that passing the checks performed by the <code>ThreadSafeChecker</code> is neither necessary nor
- sufficient to guarantee the thread safety of a class. In fact, it is not possible to determine
- thread safety through static code analysis alone, and the goal of <code>ThreadSafeChecker</code> is to
- steer the code towards using standard thread-safe patterns, and then to assist the developer in
- avoiding common mistakes. It is not meant as a substitute for diligent code review by a
- knowledgeable developer.
+Note that passing the checks performed by the <code>ThreadSafeChecker</code> is neither necessary nor
+sufficient to guarantee the thread safety of a class. In fact, it is not possible to determine
+thread safety through static code analysis alone, and the goal of <code>ThreadSafeChecker</code> is to
+steer the code towards using standard thread-safe patterns, and then to assist the developer in
+avoiding common mistakes. It is not meant as a substitute for diligent code review by a
+knowledgeable developer.
 
- <p>Also note that the only easy way to guarantee thread-safety of a class is to make it
- immutable, and you should do that whenever possible (or at the least, make as much of the class
- be immutable). Otherwise, writing a thread-safe class is inherently tricky and error prone, and
- keeping it thread-safe is even more so.
+<p>Also note that the only easy way to guarantee thread-safety of a class is to make it
+immutable, and you should do that whenever possible (or at the least, make as much of the class
+be immutable). Otherwise, writing a thread-safe class is inherently tricky and error prone, and
+keeping it thread-safe is even more so.
 
- <p>The remainder of this javadoc describes the heuristics enforced by <code>ThreadSafeChecker</code>
- and the related <code>com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker</code> and
- <code>com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker</code> on which the former
- relies.
+<p>The remainder of this javadoc describes the heuristics enforced by <code>ThreadSafeChecker</code>
+and the related <code>com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker</code> and
+<code>com.google.errorprone.bugpatterns.threadsafety.ImmutableChecker</code> on which the former
+relies.
 
- <p>The <code>ThreadSafeChecker</code> heuristics enforce that every field meets at least one of these
- requirements:
+<p>The <code>ThreadSafeChecker</code> heuristics enforce that every field meets at least one of these
+requirements:
 
- <ul>
-   <li>It is both <code>final</code> and its type is deemed inherently deeply thread-safe; and/or
-   <li>it is annotated with either <a href="concurrent/GuardedBy.html" title="annotation interface in com.google.errorprone.annotations.concurrent"><code>GuardedBy</code></a>
-       (some other annotations named <code>GuardedBy</code> also work, though this the preferred);
- </ul>
+<ul>
+  <li>It is both <code>final</code> and its type is deemed inherently deeply thread-safe; and/or
+  <li>it is annotated with either <a href="concurrent/GuardedBy.html" title="annotation interface in com.google.errorprone.annotations.concurrent"><code>GuardedBy</code></a>
+      (some other annotations named <code>GuardedBy</code> also work, though this the preferred);
+</ul>
 
- Below, more details about what is meant by "deemed inherently deeply thread-safe" are presented,
- and, afterwards, more about <code>GuardedBy</code>.
+Below, more details about what is meant by "deemed inherently deeply thread-safe" are presented,
+and, afterwards, more about <code>GuardedBy</code>.
 
- <p>A type is deemed inherently deeply thread-safe if it meets two requirements. The first
- requirement is that it meets at least one of these four conditions:
+<p>A type is deemed inherently deeply thread-safe if it meets two requirements. The first
+requirement is that it meets at least one of these four conditions:
 
- <ul>
-   <li>it is listed as a well-known immutable type in <code>
-       com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability</code> (e.g. a field of type
-       <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>); and/or
-   <li>it is listed as a well-known thread-safe type in <code>
-       com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety</code> (e.g. a field of type
-       <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicBoolean.html" title="class or interface in java.util.concurrent.atomic" class="external-link"><code>AtomicBoolean</code></a>); and/or
-   <li>it is annotated with <a href="Immutable.html" title="annotation interface in com.google.errorprone.annotations"><code>Immutable</code></a>; and/or
-   <li>it is annotated with <a href="ThreadSafe.html" title="annotation interface in com.google.errorprone.annotations"><code>ThreadSafe</code></a>.
- </ul>
+<ul>
+  <li>it is listed as a well-known immutable type in <code>
+      com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability</code> (e.g. a field of type
+      <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>); and/or
+  <li>it is listed as a well-known thread-safe type in <code>
+      com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety</code> (e.g. a field of type
+      <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/atomic/AtomicBoolean.html" title="class or interface in java.util.concurrent.atomic" class="external-link"><code>AtomicBoolean</code></a>); and/or
+  <li>it is annotated with <a href="Immutable.html" title="annotation interface in com.google.errorprone.annotations"><code>Immutable</code></a>; and/or
+  <li>it is annotated with <a href="ThreadSafe.html" title="annotation interface in com.google.errorprone.annotations"><code>ThreadSafe</code></a>.
+</ul>
 
- <p>This first requirement means the type is at least inherently shallowly thread-safe. For types
- with type parameters to be deemed deeply thread-safe, those of these types that denote
- containment must also be deemed thread-safe. A full explanation of this can be found in the
- <code>ThreadSafeTypeParameter</code> javadoc.
+<p>This first requirement means the type is at least inherently shallowly thread-safe. For types
+with type parameters to be deemed deeply thread-safe, those of these types that denote
+containment must also be deemed thread-safe. A full explanation of this can be found in the
+<code>ThreadSafeTypeParameter</code> javadoc.
 
- <p>Fields annotated with <code>javax.annotation.concurrent.GuardedBy</code> are likely the meat of a
- mutable thread-safe class: these are things that need to be mutated, but should be done so in a
- safe manner -- i.e., (most likely) in critical sections of code that protect their access by
- means of a lock. See more information in that annotation's javadoc.
+<p>Fields annotated with <code>javax.annotation.concurrent.GuardedBy</code> are likely the meat of a
+mutable thread-safe class: these are things that need to be mutated, but should be done so in a
+safe manner -- i.e., (most likely) in critical sections of code that protect their access by
+means of a lock. See more information in that annotation's javadoc.
 
- <p>As stated before, the heuristics above are not sufficient to guarantee the thread safety of a
- class. Also as stated before, thread-safety is tricky, and requires diligent analysis by skilled
- people. That said, we provide here a few examples of common examples of ways to break these
- heuristics, so as to help you avoid them:
+<p>As stated before, the heuristics above are not sufficient to guarantee the thread safety of a
+class. Also as stated before, thread-safety is tricky, and requires diligent analysis by skilled
+people. That said, we provide here a few examples of common examples of ways to break these
+heuristics, so as to help you avoid them:
 
- <ul>
-   <li>a non-private <code>@GuardedBy</code> field -- i.e.if a non-private <code>@GuardedBy</code> field is
-       accessed outside the class, the code that enforces <code>@GuardedBy</code> will not prevent
-       unprotected access and/or modifications to the field;
-   <li>indirect access to the field. There are several ways in which code may access the objects
-       stored in the field indirectly (i.e. not directly referencing the field). In all these
-       cases, <code>@GuardedBy</code> offers no enforcement. Here's some examples:
-       <ul>
-         <li>if the <code>@GuardedBy</code> field instance is part of an object by a method (e.g. a
-             simple getter method or constructor parameter);
-         <li>if a method takes an out-parameter and the method calls a method in that
-             out-parameter passing the instance of the <code>@GuardedBy</code> field, and that instance
-             is stored in the out-parameter (i.e. a simple setter method);
-       </ul>
-   <li>methods that perform multiple operations -- e.g., if a class <code>Foo</code> contains a <code>
-       AtomicInteger</code> (which is an inherently deeply thread-safe data structure), the following
-       code makes this class not thread-safe:
-       <pre><code>
- private void incrementMyAtomicInteger() {
-   myAtomicInteger.set(myAtomicInteger.get() + 1);
- }
+<ul>
+  <li>a non-private <code>@GuardedBy</code> field -- i.e.if a non-private <code>@GuardedBy</code> field is
+      accessed outside the class, the code that enforces <code>@GuardedBy</code> will not prevent
+      unprotected access and/or modifications to the field;
+  <li>indirect access to the field. There are several ways in which code may access the objects
+      stored in the field indirectly (i.e. not directly referencing the field). In all these
+      cases, <code>@GuardedBy</code> offers no enforcement. Here's some examples:
+      <ul>
+        <li>if the <code>@GuardedBy</code> field instance is part of an object by a method (e.g. a
+            simple getter method or constructor parameter);
+        <li>if a method takes an out-parameter and the method calls a method in that
+            out-parameter passing the instance of the <code>@GuardedBy</code> field, and that instance
+            is stored in the out-parameter (i.e. a simple setter method);
+      </ul>
+  <li>methods that perform multiple operations -- e.g., if a class <code>Foo</code> contains a <code>
+      AtomicInteger</code> (which is an inherently deeply thread-safe data structure), the following
+      code makes this class not thread-safe:
+      <pre><code>
+private void incrementMyAtomicInteger() {
+  myAtomicInteger.set(myAtomicInteger.get() + 1);
+}
 
- </code></pre>
- </ul>
+</code></pre>
+</ul>
 
- Also see https://errorprone.info/bugpattern/ThreadSafe</div>
+Also see https://errorprone.info/bugpattern/ThreadSafe</div>
 </div>
 </section>
 <section class="details" id="annotation-interface-element-detail"></section>

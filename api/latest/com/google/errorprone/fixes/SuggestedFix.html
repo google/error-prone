@@ -181,7 +181,7 @@ implements <a href="Fix.html" title="interface in com.google.errorprone.fixes">F
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getShortDescription()" class="member-name-link">getShortDescription</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">A short description which can be attached to the Fix to differentiate multiple fixes provided
- to the user.</div>
+to the user.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
@@ -215,7 +215,7 @@ implements <a href="Fix.html" title="interface in com.google.errorprone.fixes">F
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
- string.</div>
+string.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#replace(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">replace</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
@@ -335,9 +335,9 @@ implements <a href="Fix.html" title="interface in com.google.errorprone.fixes">F
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getShortDescription</span>()</div>
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="Fix.html#getShortDescription()">Fix</a></code></span></div>
 <div class="block">A short description which can be attached to the Fix to differentiate multiple fixes provided
- to the user.
+to the user.
 
- <p>Empty string generates the default description.</div>
+<p>Empty string generates the default description.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="Fix.html#getShortDescription()">getShortDescription</a></code>&nbsp;in interface&nbsp;<code><a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></dd>
@@ -388,7 +388,7 @@ implements <a href="Fix.html" title="interface in com.google.errorprone.fixes">F
  int&nbsp;endPos,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</span></div>
 <div class="block">Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
- string.</div>
+string.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>startPos</code> - The position from which to start replacing, inclusive</dd>
@@ -407,12 +407,12 @@ implements <a href="Fix.html" title="interface in com.google.errorprone.fixes">F
  int&nbsp;startPosAdjustment,
  int&nbsp;endPosAdjustment)</span></div>
 <div class="block">Replace a tree node with a string, but adjust the start and end positions as well. For example,
- if the tree node begins at index 10 and ends at index 30, this call will replace the characters
- at index 15 through 25 with "replacement":
+if the tree node begins at index 10 and ends at index 30, this call will replace the characters
+at index 15 through 25 with "replacement":
 
- <pre>
- <code>fix.replace(node, "replacement", 5, -5)</code>
- </pre></div>
+<pre>
+<code>fix.replace(node, "replacement", 5, -5)</code>
+</pre></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>node</code> - The tree node to replace</dd>

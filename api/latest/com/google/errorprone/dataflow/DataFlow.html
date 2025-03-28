@@ -120,7 +120,7 @@ loadScripts(document, 'script');</script>
  T&nbsp;transfer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Runs the <code>transfer</code> dataflow analysis to compute the abstract value of the expression
- which is the leaf of <code>exprPath</code>.</div>
+which is the leaf of <code>exprPath</code>.</div>
 </div>
 </div>
 </div>
@@ -148,18 +148,18 @@ loadScripts(document, 'script');</script>
  com.sun.tools.javac.util.Context&nbsp;context,
  T&nbsp;transfer)</span></div>
 <div class="block">Runs the <code>transfer</code> dataflow analysis to compute the abstract value of the expression
- which is the leaf of <code>exprPath</code>.
+which is the leaf of <code>exprPath</code>.
 
- <p>The expression must be part of a method, lambda, or initializer (inline field initializer or
- initializer block). Example of an expression outside of such constructs is the identifier in an
- import statement.
+<p>The expression must be part of a method, lambda, or initializer (inline field initializer or
+initializer block). Example of an expression outside of such constructs is the identifier in an
+import statement.
 
- <p>Note that for initializers, each inline field initializer or initializer block is treated
- separately. I.e., we don't merge all initializers into one virtual block for dataflow.</div>
+<p>Note that for initializers, each inline field initializer or initializer block is treated
+separately. I.e., we don't merge all initializers into one virtual block for dataflow.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>dataflow result for the given expression or <code>null</code> if the expression is not part
-     of a method, lambda or initializer</dd>
+    of a method, lambda or initializer</dd>
 </dl>
 </div>
 </section>

@@ -130,7 +130,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findUnusedIdentifiers(com.google.errorprone.VisitorState)" class="member-name-link">findUnusedIdentifiers</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Finds all variable declarations which are unused at this point in the AST (i.e. they might be
- used further on).</div>
+used further on).</div>
 </div>
 </div>
 </div>
@@ -176,13 +176,13 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</span>&nbsp;<span class="element-name">findAllIdents</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Finds the set of all bare variable identifiers in scope at the current location. Identifiers
- are ordered by ascending distance/scope count from the current location to match shadowing
- rules. That is, if two variables with the same simple names appear in the set, the one that
- appears first in iteration order is the one you get if you use the bare name in the source
- code.
+are ordered by ascending distance/scope count from the current location to match shadowing
+rules. That is, if two variables with the same simple names appear in the set, the one that
+appears first in iteration order is the one you get if you use the bare name in the source
+code.
 
- <p>We do not report variables that would require a qualified access. We also do not handle
- wildcard imports.</div>
+<p>We do not report variables that would require a qualified access. We also do not handle
+wildcard imports.</div>
 </div>
 </section>
 </li>
@@ -192,7 +192,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</span>&nbsp;<span class="element-name">findUnusedIdentifiers</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Finds all variable declarations which are unused at this point in the AST (i.e. they might be
- used further on).</div>
+used further on).</div>
 </div>
 </section>
 </li>

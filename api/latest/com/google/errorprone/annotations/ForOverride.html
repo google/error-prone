@@ -71,14 +71,14 @@ loadScripts(document, 'script');</script>
 <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">ForOverride</span></div>
 <div class="block">Indicates that the annotated method is provided only to be overridden: it should not be
- <i>invoked</i> from outside its declaring source file (as if it is <code>private</code>), and
- overriding methods should not be directly invoked at all. Such a method represents a contract
- between a class and its <i>subclasses</i> only, and is not to be considered part of the
- <i>caller</i>-facing API of either class.
+<i>invoked</i> from outside its declaring source file (as if it is <code>private</code>), and
+overriding methods should not be directly invoked at all. Such a method represents a contract
+between a class and its <i>subclasses</i> only, and is not to be considered part of the
+<i>caller</i>-facing API of either class.
 
- <p>The annotated method must have protected or package-private visibility, and must not be <code>
- static</code>, <code>final</code> or declared in a <code>final</code> class. Overriding methods must have either
- protected or package-private visibility, although their effective visibility is actually "none".</div>
+<p>The annotated method must have protected or package-private visibility, and must not be <code>
+static</code>, <code>final</code> or declared in a <code>final</code> class. Overriding methods must have either
+protected or package-private visibility, although their effective visibility is actually "none".</div>
 </div>
 </section>
 <section class="details" id="annotation-interface-element-detail"></section>

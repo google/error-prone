@@ -79,26 +79,26 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">BranchedSuggestedFixes</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Helper class for accumulating a branching tree of alternative fixes designed to help build as set
- of potential fixes with different options in them.
+of potential fixes with different options in them.
 
- <p>Consider building a list of fixes from a set of operations A followed by B or C then D or E.
- The resulting list should be ABD, ACD, ABE, ACE.
+<p>Consider building a list of fixes from a set of operations A followed by B or C then D or E.
+The resulting list should be ABD, ACD, ABE, ACE.
 
- <pre><code>
- BranchedSuggestedFixes a = BranchedSuggestedFixes.builder()
-   .startWith(A)
-   .then()
-   .addOption(B)
-   .addOption(C)
-   .then()
-   .addOption(D)
-   .addOption(E)
-   .build();
- </code></pre>
+<pre><code>
+BranchedSuggestedFixes a = BranchedSuggestedFixes.builder()
+  .startWith(A)
+  .then()
+  .addOption(B)
+  .addOption(C)
+  .then()
+  .addOption(D)
+  .addOption(E)
+  .build();
+</code></pre>
 
- This class assumes that in order to build a valid set of fixes you must make some progress at
- each branch. So two calls to branch with no merges in between will result in an empty list of
- fixes at the end.</div>
+This class assumes that in order to build a valid set of fixes you must make some progress at
+each branch. So two calls to branch with no merges in between will result in an empty list of
+fixes at the end.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>andrewrice@google.com (Andrew Rice)</dd>

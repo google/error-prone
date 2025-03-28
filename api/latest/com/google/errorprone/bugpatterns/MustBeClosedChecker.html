@@ -95,7 +95,7 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a>
 implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a>, <a href="BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a></span></div>
 <div class="block">Checks if a constructor or method annotated with <a href="../annotations/MustBeClosed.html" title="annotation interface in com.google.errorprone.annotations"><code>MustBeClosed</code></a> is called within the resource variable
- initializer of a try-with-resources statement.</div>
+initializer of a try-with-resources statement.</div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
@@ -162,7 +162,7 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Check that the <code>MustBeClosed</code> annotation is only used for constructors of AutoCloseables
- and methods that return an AutoCloseable.</div>
+and methods that return an AutoCloseable.</div>
 </div>
 </div>
 </div>
@@ -213,7 +213,7 @@ implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.g
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Check that the <code>MustBeClosed</code> annotation is only used for constructors of AutoCloseables
- and methods that return an AutoCloseable.</div>
+and methods that return an AutoCloseable.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.MethodTreeMatcher.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code></dd>

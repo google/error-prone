@@ -115,7 +115,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="ThreadSafety.Purpose.html" class="type-name-link" title="enum class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Purpose</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">The <a href="ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety</code></a> utility class can be used by either the bug checker that enforces
- immutability or by the bug checker that enforces thread-safety.</div>
+immutability or by the bug checker that enforces thread-safety.</div>
 </div>
 <div class="col-first even-row-color"><code>static class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="ThreadSafety.Violation.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></div>
@@ -161,23 +161,23 @@ loadScripts(document, 'script');</script>
  com.sun.tools.javac.code.Type&nbsp;type)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Check that the super-type of a <code>@ThreadSafe</code>-annotated type is instantiated with
- threadsafe type arguments where required by its annotation's containerOf element, and that any
- type arguments that correspond to containerOf type parameters on the sub-type are also in the
- super-type's containerOf spec.</div>
+threadsafe type arguments where required by its annotation's containerOf element, and that any
+type arguments that correspond to containerOf type parameters on the sub-type are also in the
+super-type's containerOf spec.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInheritedAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">getInheritedAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the possibly inherited marker annotation on the given symbol, and reverse-propagates
- containerOf spec's from super-classes.</div>
+containerOf spec's from super-classes.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMarkerOrAcceptedAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">getMarkerOrAcceptedAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the <code>Symbol</code>'s annotation info, either from a marker annotation on the symbol, from
- an accepted annotation on the symbol, or from the list of well-known types.</div>
+an accepted annotation on the symbol, or from the list of well-known types.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPrettyName(com.sun.tools.javac.code.Symbol)" class="member-name-link">getPrettyName</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym)</code></div>
@@ -188,7 +188,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasThreadSafeElementAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)" class="member-name-link">hasThreadSafeElementAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns whether the given type parameter's declaration is annotated with <code>containerOfAnnotation</code> indicating its type-safety determines the type-safety of the outer
- class.</div>
+class.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasThreadSafeTypeParameterAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)" class="member-name-link">hasThreadSafeTypeParameterAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</code></div>
@@ -217,7 +217,7 @@ loadScripts(document, 'script');</script>
  com.sun.tools.javac.code.Type&nbsp;type)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Check that a type-use of an <code>@ThreadSafe</code>-annotated type is instantiated with threadsafe
- type arguments where required by its annotation's containerOf element.</div>
+type arguments where required by its annotation's containerOf element.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type,java.util.Set)" class="member-name-link">threadSafeInstantiation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
@@ -271,11 +271,11 @@ loadScripts(document, 'script');</script>
  <a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
  com.sun.tools.javac.code.Type&nbsp;type)</span></div>
 <div class="block">Check that a type-use of an <code>@ThreadSafe</code>-annotated type is instantiated with threadsafe
- type arguments where required by its annotation's containerOf element.</div>
+type arguments where required by its annotation's containerOf element.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>containerTypeParameters</code> - the in-scope threadsafe type parameters, declared on some
-     enclosing class.</dd>
+    enclosing class.</dd>
 <dd><code>annotation</code> - the type's <code>@ThreadSafe</code> info</dd>
 <dd><code>type</code> - the type to check</dd>
 </dl>
@@ -301,13 +301,13 @@ loadScripts(document, 'script');</script>
  <a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
  com.sun.tools.javac.code.Type&nbsp;type)</span></div>
 <div class="block">Check that the super-type of a <code>@ThreadSafe</code>-annotated type is instantiated with
- threadsafe type arguments where required by its annotation's containerOf element, and that any
- type arguments that correspond to containerOf type parameters on the sub-type are also in the
- super-type's containerOf spec.</div>
+threadsafe type arguments where required by its annotation's containerOf element, and that any
+type arguments that correspond to containerOf type parameters on the sub-type are also in the
+super-type's containerOf spec.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>containerTypeParameters</code> - the in-scope threadsafe type parameters, declared on some
-     enclosing class.</dd>
+    enclosing class.</dd>
 <dd><code>annotation</code> - the type's <code>@ThreadSafe</code> info</dd>
 <dd><code>type</code> - the type to check</dd>
 </dl>
@@ -325,10 +325,10 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>allowContainerTypeParameters</code> - true when checking the instantiation of an <code>
-     typeParameterAnnotation</code>-annotated type parameter; indicates that <code>
-     containerTypeParameters</code> should be ignored</dd>
+    typeParameterAnnotation</code>-annotated type parameter; indicates that <code>
+    containerTypeParameters</code> should be ignored</dd>
 <dd><code>containerTypeParameters</code> - type parameters in enclosing elements' containerOf
-     specifications</dd>
+    specifications</dd>
 <dd><code>type</code> - to check for thread-safety</dd>
 </dl>
 </div>
@@ -349,7 +349,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasThreadSafeElementAnnotation</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</span></div>
 <div class="block">Returns whether the given type parameter's declaration is annotated with <code>containerOfAnnotation</code> indicating its type-safety determines the type-safety of the outer
- class.</div>
+class.</div>
 </div>
 </section>
 </li>
@@ -360,7 +360,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></span>&nbsp;<span class="element-name">getMarkerOrAcceptedAnnotation</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Gets the <code>Symbol</code>'s annotation info, either from a marker annotation on the symbol, from
- an accepted annotation on the symbol, or from the list of well-known types.</div>
+an accepted annotation on the symbol, or from the list of well-known types.</div>
 </div>
 </section>
 </li>
@@ -381,14 +381,14 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">threadSafeTypeParametersInScope</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym)</span></div>
 <div class="block">Gets the set of in-scope threadsafe type parameters from the containerOf specs on annotations.
 
- <p>Usually only the immediately enclosing declaration is searched, but it's possible to have
- cases like:
+<p>Usually only the immediately enclosing declaration is searched, but it's possible to have
+cases like:
 
- <pre><code>
- @MarkerAnnotation(containerOf="T") class C&lt;T&gt; {
-   class Inner extends ThreadSafeCollection&lt;T&gt; {}
- }
- </code></pre></div>
+<pre><code>
+@MarkerAnnotation(containerOf="T") class C&lt;T&gt; {
+  class Inner extends ThreadSafeCollection&lt;T&gt; {}
+}
+</code></pre></div>
 </div>
 </section>
 </li>
@@ -399,7 +399,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></span>&nbsp;<span class="element-name">getInheritedAnnotation</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Gets the possibly inherited marker annotation on the given symbol, and reverse-propagates
- containerOf spec's from super-classes.</div>
+containerOf spec's from super-classes.</div>
 </div>
 </section>
 </li>

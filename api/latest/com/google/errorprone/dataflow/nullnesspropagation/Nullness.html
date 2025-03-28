@@ -152,7 +152,7 @@ implements org.checkerframework.errorprone.dataflow.analysis.AbstractValue&lt;<a
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deducedValueWhenNotEqual()" class="member-name-link">deducedValueWhenNotEqual</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the <code>Nullness</code> that corresponds to what you can deduce by knowing that some
- expression is not equal to another expression with this <code>Nullness</code>.</div>
+expression is not equal to another expression with this <code>Nullness</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#greatestLowerBound(com.google.errorprone.dataflow.nullnesspropagation.Nullness)" class="member-name-link">greatestLowerBound</a><wbr>(<a href="Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a>&nbsp;other)</code></div>
@@ -201,13 +201,13 @@ the order they are declared.</div>
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></span>&nbsp;<span class="element-name">NULLABLE</span></div>
 <div class="block">The lattice for nullness looks like:
 
- <pre>
-        Nullable
-       /        \
-   Null          Non-null
-        \      /
-         Bottom
- </pre></div>
+<pre>
+       Nullable
+      /        \
+  Null          Non-null
+       \      /
+        Bottom
+</pre></div>
 </div>
 </section>
 </li>
@@ -304,24 +304,24 @@ not permitted.)</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></span>&nbsp;<span class="element-name">deducedValueWhenNotEqual</span>()</div>
 <div class="block">Returns the <code>Nullness</code> that corresponds to what you can deduce by knowing that some
- expression is not equal to another expression with this <code>Nullness</code>.
+expression is not equal to another expression with this <code>Nullness</code>.
 
- <p>A <code>Nullness</code> represents a set of possible values for a expression. Suppose you have
- two variables <code>var1</code> and <code>var2</code>. If <code>var1 != var2</code>, then <code>var1</code> must be
- an element of the complement of the singleton set containing the value of <code>var2</code>. If you
- union these complement sets over all possible values of <code>var2</code>, the set that results is
- what this method returns, assuming that <code>this</code> is the <code>Nullness</code> of <code>var2</code>.
+<p>A <code>Nullness</code> represents a set of possible values for a expression. Suppose you have
+two variables <code>var1</code> and <code>var2</code>. If <code>var1 != var2</code>, then <code>var1</code> must be
+an element of the complement of the singleton set containing the value of <code>var2</code>. If you
+union these complement sets over all possible values of <code>var2</code>, the set that results is
+what this method returns, assuming that <code>this</code> is the <code>Nullness</code> of <code>var2</code>.
 
- <p>Example 1: Suppose <code>nv2 == NULL</code>. Then <code>var2</code> can have exactly one value, <code>
- null</code>, and <code>var1</code> must have a value in the set of all values except <code>null</code>. That
- set is exactly <code>NONNULL</code>.
+<p>Example 1: Suppose <code>nv2 == NULL</code>. Then <code>var2</code> can have exactly one value, <code>
+null</code>, and <code>var1</code> must have a value in the set of all values except <code>null</code>. That
+set is exactly <code>NONNULL</code>.
 
- <p>Example 2: Suppose <code>nv2 == NONNULL</code>. Then <code>var2</code> can have any value except
- <code>null</code>. Suppose <code>var2</code> has value <code>"foo"</code>. Then <code>var1</code> must have a value
- in the set of all values except <code>"foo"</code>. Now suppose <code>var2</code> has value <code>"bar"</code>
- . Then <code>var1</code> must have a value in set of all values except <code>"bar"</code>. Since we don't
- know which value in the set <code>NONNULL var2</code> has, we union all possible complement sets to
- get the set of all values, or <code>NULLABLE</code>.</div>
+<p>Example 2: Suppose <code>nv2 == NONNULL</code>. Then <code>var2</code> can have any value except
+<code>null</code>. Suppose <code>var2</code> has value <code>"foo"</code>. Then <code>var1</code> must have a value
+in the set of all values except <code>"foo"</code>. Now suppose <code>var2</code> has value <code>"bar"</code>
+. Then <code>var1</code> must have a value in set of all values except <code>"bar"</code>. Since we don't
+know which value in the set <code>NONNULL var2</code> has, we union all possible complement sets to
+get the set of all values, or <code>NULLABLE</code>.</div>
 </div>
 </section>
 </li>

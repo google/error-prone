@@ -88,7 +88,7 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Represents a Java method or constructor.
 
- <p>Provides a method to parse an API from a string format, and emit an API as the same sting.</div>
+<p>Provides a method to parse an API from a string format, and emit an API as the same sting.</div>
 </div>
 </section>
 <section class="summary">
@@ -188,7 +188,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">methodName</span>()</div>
 <div class="block">Returns the simple name of the method. If the API is a constructor (i.e., <code>
- isConstructor() == true</code>), then <code>"&lt;init&gt;"</code> is returned.</div>
+isConstructor() == true</code>), then <code>"&lt;init&gt;"</code> is returned.</div>
 </div>
 </section>
 </li>
@@ -220,14 +220,14 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">Api</a></span>&nbsp;<span class="element-name">parse</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;api)</span></div>
 <div class="block">Parses an API string into an <a href="Api.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>Api</code></a>, ignoring trailing or inner whitespace between names.
 
- <p>Example API strings are:
+<p>Example API strings are:
 
- <ul>
-   <li>a constructor (e.g., <code>java.net.URI#&lt;init&gt;(java.lang.String)</code>)
-   <li>a static method (e.g., <code>java.net.URI#create(java.lang.String)</code>)
-   <li>an instance method (e.g., <code>java.util.List#get(int)</code>)
-   <li>an instance method with types erased (e.g., <code>java.util.List#add(java.lang.Object)</code>)
- </ul></div>
+<ul>
+  <li>a constructor (e.g., <code>java.net.URI#&lt;init&gt;(java.lang.String)</code>)
+  <li>a static method (e.g., <code>java.net.URI#create(java.lang.String)</code>)
+  <li>an instance method (e.g., <code>java.util.List#get(int)</code>)
+  <li>an instance method with types erased (e.g., <code>java.util.List#add(java.lang.Object)</code>)
+</ul></div>
 <dl class="notes">
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - when <code>api</code> is not well-formed</dd>

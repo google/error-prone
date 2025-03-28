@@ -146,7 +146,7 @@ implements <a href="BugChecker.AssignmentTreeMatcher.html" title="interface in c
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">We expect that the lhs is a field and the rhs is an identifier, specifically a parameter to the
- method.</div>
+method.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#describeForVarDecl(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">describeForVarDecl</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
@@ -241,18 +241,18 @@ implements <a href="BugChecker.AssignmentTreeMatcher.html" title="interface in c
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">describeForAssignment</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/AssignmentTree.html" title="class or interface in com.sun.source.tree" class="external-link">AssignmentTree</a>&nbsp;assignmentTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">We expect that the lhs is a field and the rhs is an identifier, specifically a parameter to the
- method. We base our suggested fixes on this expectation.
+method. We base our suggested fixes on this expectation.
 
- <p>Case 1: If lhs is a field and rhs is an identifier, find a method parameter of the same type
- and similar name and suggest it as the rhs. (Guess that they have misspelled the identifier.)
+<p>Case 1: If lhs is a field and rhs is an identifier, find a method parameter of the same type
+and similar name and suggest it as the rhs. (Guess that they have misspelled the identifier.)
 
- <p>Case 2: If lhs is a field and rhs is not an identifier, find a method parameter of the same
- type and similar name and suggest it as the rhs.
+<p>Case 2: If lhs is a field and rhs is not an identifier, find a method parameter of the same
+type and similar name and suggest it as the rhs.
 
- <p>Case 3: If lhs is not a field and rhs is an identifier, find a class field of the same type
- and similar name and suggest it as the lhs.
+<p>Case 3: If lhs is not a field and rhs is an identifier, find a class field of the same type
+and similar name and suggest it as the lhs.
 
- <p>Case 4: Otherwise suggest deleting the assignment.</div>
+<p>Case 4: Otherwise suggest deleting the assignment.</div>
 </div>
 </section>
 </li>

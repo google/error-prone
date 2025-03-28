@@ -159,7 +159,7 @@ loadScripts(document, 'script');</script>
  com.google.errorprone.DiagnosticTestHelper.LookForCheckNameInDiagnostic&nbsp;lookForCheckNameInDiagnostic)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Asserts that the diagnostics contain a diagnostic on each line of the source file that matches
- our bug marker pattern.</div>
+our bug marker pattern.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearDiagnostics()" class="member-name-link">clearDiagnostics</a>()</code></div>
@@ -307,17 +307,17 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">expectErrorMessage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</span></div>
 <div class="block">Expects an error message matching <code>matcher</code> at the line below a comment matching the key.
- For example, given the source
+For example, given the source
 
- <pre>
-   // BUG: Diagnostic matches: X
-   a = b + c;
- </pre>
+<pre>
+  // BUG: Diagnostic matches: X
+  a = b + c;
+</pre>
 
- ... you can use <code>expectErrorMessage("X", Predicates.containsPattern("Can't add b to
- c"));</code>
+... you can use <code>expectErrorMessage("X", Predicates.containsPattern("Can't add b to
+c"));</code>
 
- <p>Error message keys that don't match any diagnostics will cause test to fail.</div>
+<p>Error message keys that don't match any diagnostics will cause test to fail.</div>
 </div>
 </section>
 </li>
@@ -329,8 +329,8 @@ loadScripts(document, 'script');</script>
  com.google.errorprone.DiagnosticTestHelper.LookForCheckNameInDiagnostic&nbsp;lookForCheckNameInDiagnostic)</span>
                                            throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
 <div class="block">Asserts that the diagnostics contain a diagnostic on each line of the source file that matches
- our bug marker pattern. Parses the bug marker pattern for the specific string to look for in
- the diagnostic.</div>
+our bug marker pattern. Parses the bug marker pattern for the specific string to look for in
+the diagnostic.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>source</code> - File in which to find matching lines</dd>

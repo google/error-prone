@@ -119,7 +119,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;otherMembers)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Returns a <a href="../Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a> that adds members defined by <code>firstMember</code> (and optionally <code>
- otherMembers</code>) to the class referenced by <code>classTree</code>.</div>
+otherMembers</code>) to the class referenced by <code>classTree</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#addMembers(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState,java.lang.String,java.lang.String...)" class="member-name-link">addMembers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&nbsp;classTree,
@@ -128,14 +128,14 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;otherMembers)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Returns a <a href="../Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a> that adds members defined by <code>firstMember</code> (and optionally <code>
- otherMembers</code>) to the end of the class referenced by <code>classTree</code>.</div>
+otherMembers</code>) to the end of the class referenced by <code>classTree</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#addSuppressWarnings(com.google.errorprone.VisitorState,java.lang.String)" class="member-name-link">addSuppressWarnings</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToSuppress)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Returns a fix that adds a <code>@SuppressWarnings(warningToSuppress)</code> to the closest
- suppressible element to the node pointed at by <code>state.getPath()</code>.</div>
+suppressible element to the node pointed at by <code>state.getPath()</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#addSuppressWarnings(com.google.errorprone.VisitorState,java.lang.String,java.lang.String)" class="member-name-link">addSuppressWarnings</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
@@ -143,8 +143,8 @@ loadScripts(document, 'script');</script>
  @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lineComment)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Returns a fix that adds a <code>@SuppressWarnings(warningToSuppress)</code> to the closest
- suppressible element to the node pointed at by <code>state.getPath()</code>, optionally suffixing
- the suppression with a comment suffix (e.g. a reason for the suppression).</div>
+suppressible element to the node pointed at by <code>state.getPath()</code>, optionally suffixing
+the suppression with a comment suffix (e.g. a reason for the suppression).</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#build()" class="member-name-link">build</a>()</code></div>
@@ -182,7 +182,7 @@ loadScripts(document, 'script');</script>
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Removes <code>tree</code> from <code>trees</code>, assuming that <code>trees</code> represents a
- comma-separated list of expressions containing <code>tree</code>.</div>
+comma-separated list of expressions containing <code>tree</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameClassWithUses(com.sun.source.tree.ClassTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameClassWithUses</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&nbsp;tree,
@@ -211,7 +211,7 @@ loadScripts(document, 'script');</script>
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Renames the given <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a> and its usages in the current compilation unit to <code>
- replacement</code>.</div>
+replacement</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameTypeParameter(com.sun.source.tree.TypeParameterTree,com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameTypeParameter</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/TypeParameterTree.html" title="class or interface in com.sun.source.tree" class="external-link">TypeParameterTree</a>&nbsp;typeParameter,
@@ -220,7 +220,7 @@ loadScripts(document, 'script');</script>
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Renames a type parameter <code>typeParameter</code> owned by <code>owningTree</code> to <code>
- typeVarReplacement</code>.</div>
+typeVarReplacement</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameVariable(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameVariable</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
@@ -228,7 +228,7 @@ loadScripts(document, 'script');</script>
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Renames the given <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>VariableTree</code></a> and its usages in the current compilation unit to <code>
- replacement</code>.</div>
+replacement</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#renameVariableUsages(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">renameVariableUsages</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
@@ -236,7 +236,7 @@ loadScripts(document, 'script');</script>
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Renames usage of the given <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>VariableTree</code></a> in the current compilation unit to <code>
- replacement</code>.</div>
+replacement</code>.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#replace(int,int,java.lang.String)" class="member-name-link">replace</a><wbr>(int&nbsp;startPos,
@@ -244,7 +244,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
- string.</div>
+string.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#replace(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">replace</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
@@ -287,7 +287,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;members)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Returns a <a href="../Fix.html" title="interface in com.google.errorprone.fixes"><code>Fix</code></a> that adds members defined by <code>members</code> to the class referenced by
- <code>classTree</code>.</div>
+<code>classTree</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#addModifiers(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,javax.lang.model.element.Modifier...)" class="member-name-link">addModifiers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,

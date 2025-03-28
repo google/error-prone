@@ -69,15 +69,15 @@ loadScripts(document, 'script');</script>
 <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/ElementType.html#CONSTRUCTOR" title="class or interface in java.lang.annotation" class="external-link">CONSTRUCTOR</a>,<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>})
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">MustBeClosed</span></div>
 <div class="block">Annotation for constructors of AutoCloseables or methods that return an AutoCloseable and require
- that the resource is closed.
+that the resource is closed.
 
- <p>This is enforced by checking that invocations occur within the resource variable initializer
- of a try-with-resources statement, which guarantees that the resource is always closed. The
- analysis may be improved in the future to recognize other patterns where the resource will always
- be closed.
+<p>This is enforced by checking that invocations occur within the resource variable initializer
+of a try-with-resources statement, which guarantees that the resource is always closed. The
+analysis may be improved in the future to recognize other patterns where the resource will always
+be closed.
 
- <p>Note that Android SDK versions prior to 19 do not support try-with-resources, so the
- annotation should be avoided on APIs that may be used on Android, unless desugaring is used.</div>
+<p>Note that Android SDK versions prior to 19 do not support try-with-resources, so the
+annotation should be avoided on APIs that may be used on Android, unless desugaring is used.</div>
 </div>
 </section>
 <section class="details" id="annotation-interface-element-detail"></section>

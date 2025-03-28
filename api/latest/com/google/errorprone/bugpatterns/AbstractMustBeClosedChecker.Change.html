@@ -83,11 +83,11 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">protected abstract static class </span><span class="element-name type-name-label">AbstractMustBeClosedChecker.Change</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Error Prone's fix application logic doesn't like it when a fix suggests multiple identical
- insertions at the same position. This Change class breaks up a SuggestedFix into two parts: a
- position at which to insert a close brace, and a SuggestedFix of other related changes. We use
- this to aggregate all the suggested changes within a method, so that we can handle adding
- multiple try blocks with the same scope. Instead of emitting N fixes that each add a new
- close-brace at the end of that scope, we emit a single fix that adds N close braces.</div>
+insertions at the same position. This Change class breaks up a SuggestedFix into two parts: a
+position at which to insert a close brace, and a SuggestedFix of other related changes. We use
+this to aggregate all the suggested changes within a method, so that we can handle adding
+multiple try blocks with the same scope. Instead of emitting N fixes that each add a new
+close-brace at the end of that scope, we emit a single fix that adds N close braces.</div>
 </div>
 </section>
 <section class="summary">

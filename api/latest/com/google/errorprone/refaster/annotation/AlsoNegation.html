@@ -69,12 +69,12 @@ loadScripts(document, 'script');</script>
 <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#SOURCE" title="class or interface in java.lang.annotation" class="external-link">SOURCE</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">AlsoNegation</span></div>
 <div class="block">Indicates that Refaster should, additionally, refactor the negation of this rule and its
- corresponding before templates. For example, given a <code>BeforeTemplate</code> with the code <code>
- str.length() == 0</code> and an <code>@AfterTemplate @AlsoNegation</code> with the code <code>
- str.isEmpty()</code>, Refaster would also rewrite <code>str.length() != 0</code> as <code>!str.isEmpty()</code>.
+corresponding before templates. For example, given a <code>BeforeTemplate</code> with the code <code>
+str.length() == 0</code> and an <code>@AfterTemplate @AlsoNegation</code> with the code <code>
+str.isEmpty()</code>, Refaster would also rewrite <code>str.length() != 0</code> as <code>!str.isEmpty()</code>.
 
- <p>If this annotation is applied, all <code>BeforeTemplate</code> and <code>AfterTemplate</code> templates
- must be expression templates with boolean return type.</div>
+<p>If this annotation is applied, all <code>BeforeTemplate</code> and <code>AfterTemplate</code> templates
+must be expression templates with boolean return type.</div>
 </div>
 </section>
 <section class="details" id="annotation-interface-element-detail"></section>

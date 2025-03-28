@@ -142,8 +142,8 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Wraps identity hashcode computations in calls to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Arrays.html#hashCode(long%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.hashCode(long[])</code></a> if the array
- is single dimensional or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Arrays.html#deepHashCode(java.lang.Object%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.deepHashCode(Object[])</code></a> if the array is
- multidimensional.</div>
+is single dimensional or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Arrays.html#deepHashCode(java.lang.Object%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.deepHashCode(Object[])</code></a> if the array is
+multidimensional.</div>
 </div>
 </div>
 </div>
@@ -191,12 +191,12 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchMethodInvocation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Wraps identity hashcode computations in calls to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Arrays.html#hashCode(long%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.hashCode(long[])</code></a> if the array
- is single dimensional or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Arrays.html#deepHashCode(java.lang.Object%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.deepHashCode(Object[])</code></a> if the array is
- multidimensional.
+is single dimensional or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Arrays.html#deepHashCode(java.lang.Object%5B%5D)" title="class or interface in java.util" class="external-link"><code>Arrays.deepHashCode(Object[])</code></a> if the array is
+multidimensional.
 
- <p>If there is only one argument to the hashcode method or the instance hashcode method is
- used, replaces the whole method invocation. If there are multiple arguments, wraps any that are
- of array type with the appropriate <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Arrays.html" title="class or interface in java.util" class="external-link"><code>Arrays</code></a> hashcode method.</div>
+<p>If there is only one argument to the hashcode method or the instance hashcode method is
+used, replaces the whole method invocation. If there are multiple arguments, wraps any that are
+of array type with the appropriate <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Arrays.html" title="class or interface in java.util" class="external-link"><code>Arrays</code></a> hashcode method.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>

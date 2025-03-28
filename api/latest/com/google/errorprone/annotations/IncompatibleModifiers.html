@@ -77,18 +77,18 @@ loadScripts(document, 'script');</script>
 <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/ElementType.html#ANNOTATION_TYPE" title="class or interface in java.lang.annotation" class="external-link">ANNOTATION_TYPE</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">IncompatibleModifiers</span></div>
 <div class="block">Annotation declaring that the target annotation is incompatible with any one of the provided
- modifiers. For example, an annotation declared as:
+modifiers. For example, an annotation declared as:
 
- <pre><code>
- @IncompatibleModifiers(modifier = Modifier.PUBLIC)
- @interface MyAnnotation {}
- &lt;/pre&gt;
+<pre><code>
+@IncompatibleModifiers(modifier = Modifier.PUBLIC)
+@interface MyAnnotation {}
+&lt;/pre&gt;
 
- &lt;p&gt;will be considered illegal when used as:
+&lt;p&gt;will be considered illegal when used as:
 
- &lt;pre&gt;
- @MyAnnotation public void foo() {}
- </code></pre></div>
+&lt;pre&gt;
+@MyAnnotation public void foo() {}
+</code></pre></div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>benyu@google.com (Jige Yu)</dd>
@@ -152,10 +152,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type"><a href="Modifier.html" title="enum class in com.google.errorprone.annotations">Modifier</a>[]</span>&nbsp;<span class="element-name">modifier</span></div>
 <div class="block">The incompatible modifiers. The annotated element is illegal with the presence of any one or
- more of these modifiers.
+more of these modifiers.
 
- <p>Empty array has the same effect as not applying this annotation at all; duplicates are
- allowed but have no effect.</div>
+<p>Empty array has the same effect as not applying this annotation at all; duplicates are
+allowed but have no effect.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>{}</code></dd>

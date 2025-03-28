@@ -92,7 +92,7 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></span></div>
 <div class="block">A representation of an entire Refaster rule, corresponding to a class with @BeforeTemplates
- and @AfterTemplates.</div>
+and @AfterTemplates.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>lowasser@google.com (Louis Wasserman)</dd>
@@ -203,18 +203,18 @@ implements <a href="../CodeTransformer.html" title="interface in com.google.erro
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../CodeTransformer.html#annotations()">CodeTransformer</a></code></span></div>
 <div class="block">Returns a map of annotation data logically applied to this code transformer.
 
- <p>As an example, if a <code>CodeTransformer</code> expressed as a Refaster rule had an annotation
- applied to it:
+<p>As an example, if a <code>CodeTransformer</code> expressed as a Refaster rule had an annotation
+applied to it:
 
- <pre><code>
- @MyCustomAnnotation("value")
- public class AnnotatedRefasterRule {
-    @BeforeTemplate void before(String x) {...}
-    @AfterTemplate void after(String x) {...}
- }
- </code></pre>
+<pre><code>
+@MyCustomAnnotation("value")
+public class AnnotatedRefasterRule {
+   @BeforeTemplate void before(String x) {...}
+   @AfterTemplate void after(String x) {...}
+}
+</code></pre>
 
- You could retrieve the value of <code>@MyCustomAnnotation</code> from this map.</div>
+You could retrieve the value of <code>@MyCustomAnnotation</code> from this map.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../CodeTransformer.html#annotations()">annotations</a></code>&nbsp;in interface&nbsp;<code><a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a></code></dd>

@@ -98,43 +98,43 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="DurationGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">DurationGetTemporalUnit</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Bans calls to <code>Duration.get(temporalUnit)</code> where <code>temporalUnit</code> is not <code>
- SECONDS</code> or <code>NANOS</code>.</div>
+SECONDS</code> or <code>NANOS</code>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DurationTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">DurationTemporalUnit</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Bans calls to <code>Duration</code> APIs where the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/TemporalUnit.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalUnit</code></a> is not
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/ChronoUnit.html#DAYS" title="class or interface in java.time.temporal" class="external-link"><code>ChronoUnit.DAYS</code></a> or it has an estimated duration (which is guaranteed to throw an <code>
- DateTimeException</code>).</div>
+<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/ChronoUnit.html#DAYS" title="class or interface in java.time.temporal" class="external-link"><code>ChronoUnit.DAYS</code></a> or it has an estimated duration (which is guaranteed to throw an <code>
+DateTimeException</code>).</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="DurationToLongTimeUnit.html" title="class in com.google.errorprone.bugpatterns.time">DurationToLongTimeUnit</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Reports an error when a Duration or Instant is incorrectly decomposed in order to call an API
- which accepts a <code>&lt;long, TimeUnit&gt;</code> pair.</div>
+which accepts a <code>&lt;long, TimeUnit&gt;</code> pair.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="FromTemporalAccessor.html" title="class in com.google.errorprone.bugpatterns.time">FromTemporalAccessor</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Bans calls to <code>javaTimeType.from(temporalAmount)</code> where the call is guaranteed to either:
 
- 
-   throw a <code>DateTimeException</code> at runtime (e.g., <code>LocalDate.from(month)</code>)
-   return the same parameter (e.g., <code>Instant.from(instant)</code>)
- </div>
+
+  throw a <code>DateTimeException</code> at runtime (e.g., <code>LocalDate.from(month)</code>)
+  return the same parameter (e.g., <code>Instant.from(instant)</code>)
+</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="InstantTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">InstantTemporalUnit</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Bans calls to <code>Instant</code> APIs where the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/TemporalUnit.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalUnit</code></a> is not one
- of: <code>NANOS</code>, <code>MICROS</code>, <code>MILLIS</code>, <code>SECONDS</code>, <code>MINUTES</code>, <code>
- HOURS</code>, <code>HALF_DAYS</code>, or <code>DAYS</code>.</div>
+of: <code>NANOS</code>, <code>MICROS</code>, <code>MILLIS</code>, <code>SECONDS</code>, <code>MINUTES</code>, <code>
+HOURS</code>, <code>HALF_DAYS</code>, or <code>DAYS</code>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="InvalidJavaTimeConstant.html" title="class in com.google.errorprone.bugpatterns.time">InvalidJavaTimeConstant</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">This checker errors on calls to <code>java.time</code> methods using values that are guaranteed to
- throw a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/DateTimeException.html" title="class or interface in java.time" class="external-link"><code>DateTimeException</code></a>.</div>
+throw a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/DateTimeException.html" title="class or interface in java.time" class="external-link"><code>DateTimeException</code></a>.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="JavaDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationGetSecondsGetNano</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">This checker warns about calls to <code>duration.getNano()</code> without a corresponding "nearby"
- call to <code>duration.getSeconds()</code>.</div>
+call to <code>duration.getSeconds()</code>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JavaDurationGetSecondsToToSeconds.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationGetSecondsToToSeconds</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -151,22 +151,22 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="JavaInstantGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaInstantGetSecondsGetNano</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">This checker warns about calls to <code>instant.getNano()</code> without a corresponding "nearby" call
- to <code>instant.getEpochSecond()</code>.</div>
+to <code>instant.getEpochSecond()</code>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JavaLocalDateTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalDateTimeGetNano</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">This checker warns about calls to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalDateTime.html#getNano()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getNano()</code></a> without a corresponding "nearby"
- call to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalDateTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getSecond()</code></a>.</div>
+call to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalDateTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getSecond()</code></a>.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="JavaLocalTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalTimeGetNano</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">This checker warns about calls to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalTime.html#getNano()" title="class or interface in java.time" class="external-link"><code>LocalTime.getNano()</code></a> without a corresponding "nearby" call
- to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalTime.getSecond()</code></a>.</div>
+to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalTime.getSecond()</code></a>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JavaPeriodGetDays.html" title="class in com.google.errorprone.bugpatterns.time">JavaPeriodGetDays</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">This checker warns about calls to <code>period.getDays()</code> without a corresponding "nearby" call
- to <code>period.getYears(), period.getMonths(), or period.getTotalMonths()</code>.</div>
+to <code>period.getYears(), period.getMonths(), or period.getTotalMonths()</code>.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="JavaTimeDefaultTimeZone.html" title="class in com.google.errorprone.bugpatterns.time">JavaTimeDefaultTimeZone</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -195,7 +195,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="JodaPlusMinusLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaPlusMinusLong</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Check for calls to JodaTime's <code>type.plus(long)</code> and <code>type.minus(long)</code> where <code>
- &lt;type&gt; = {Duration,Instant,DateTime,DateMidnight}</code>.</div>
+&lt;type&gt; = {Duration,Instant,DateTime,DateMidnight}</code>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JodaTimeConverterManager.html" title="class in com.google.errorprone.bugpatterns.time">JodaTimeConverterManager</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -208,12 +208,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JodaWithDurationAddedLong.html" title="class in com.google.errorprone.bugpatterns.time">JodaWithDurationAddedLong</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Check for calls to JodaTime's <code>type.withDurationAdded(long, int)</code> where <code>&lt;type&gt; =
- {Duration,Instant,DateTime}</code>.</div>
+{Duration,Instant,DateTime}</code>.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="LocalDateTemporalAmount.html" title="class in com.google.errorprone.bugpatterns.time">LocalDateTemporalAmount</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Bans calls to <code>LocalDate.plus(TemporalAmount)</code> and <code>LocalDate.minus(TemporalAmount)</code>
- where the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/TemporalAmount.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalAmount</code></a> is a non-zero <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
+where the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/TemporalAmount.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalAmount</code></a> is a non-zero <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="NearbyCallers.html" title="class in com.google.errorprone.bugpatterns.time">NearbyCallers</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -226,7 +226,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PeriodGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">PeriodGetTemporalUnit</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Bans calls to <code>Period.get(temporalUnit)</code> where <code>temporalUnit</code> is not <code>YEARS</code>,
- <code>MONTHS</code>, or <code>DAYS</code>.</div>
+<code>MONTHS</code>, or <code>DAYS</code>.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="PeriodTimeMath.html" title="class in com.google.errorprone.bugpatterns.time">PeriodTimeMath</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -239,12 +239,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="ProtoDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoDurationGetSecondsGetNano</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">This checker warns about accessing the underlying nanosecond-adjustment field of a duration
- without a "nearby" access of the underlying seconds field.</div>
+without a "nearby" access of the underlying seconds field.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ProtoTimestampGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">ProtoTimestampGetSecondsGetNano</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">This checker warns about accessing the underlying nanosecond-adjustment field of a protobuf
- timestamp without a "nearby" access of the underlying seconds field.</div>
+timestamp without a "nearby" access of the underlying seconds field.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="StronglyTypeTime.html" title="class in com.google.errorprone.bugpatterns.time">StronglyTypeTime</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -253,7 +253,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="TemporalAccessorGetChronoField.html" title="class in com.google.errorprone.bugpatterns.time">TemporalAccessorGetChronoField</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Bans calls to <code>TemporalAccessor.get(ChronoField)</code> where the implementation is guaranteed to
- throw an <code>UnsupportedTemporalTypeException</code>.</div>
+throw an <code>UnsupportedTemporalTypeException</code>.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="TimeInStaticInitializer.html" title="class in com.google.errorprone.bugpatterns.time">TimeInStaticInitializer</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">

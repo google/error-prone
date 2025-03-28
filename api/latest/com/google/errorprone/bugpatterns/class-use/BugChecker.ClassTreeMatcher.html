@@ -71,7 +71,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><a href="#com.google.errorprone.bugpatterns.inject">com.google.errorprone.bugpatterns.inject</a></div>
 <div class="col-last odd-row-color">
 <div class="block">Bug patterns related to <a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency
- injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</div>
+injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</div>
 </div>
 <div class="col-first even-row-color"><a href="#com.google.errorprone.bugpatterns.inject.dagger">com.google.errorprone.bugpatterns.inject.dagger</a></div>
 <div class="col-last even-row-color">
@@ -164,7 +164,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../ConstantPatternCompile.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ConstantPatternCompile</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Flags variables initialized with <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/regex/Pattern.html#compile(java.lang.String)" title="class or interface in java.util.regex" class="external-link"><code>Pattern.compile(String)</code></a> calls that could
- be constants.</div>
+be constants.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../DepAnn.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">DepAnn</a></code></div>
@@ -260,13 +260,13 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="../MustBeClosedChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Checks if a constructor or method annotated with <a href="../../annotations/MustBeClosed.html" title="annotation interface in com.google.errorprone.annotations"><code>MustBeClosed</code></a> is called within the resource variable
- initializer of a try-with-resources statement.</div>
+initializer of a try-with-resources statement.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../NamedLikeContextualKeyword.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NamedLikeContextualKeyword</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Warns on classes or methods being named similarly to contextual keywords, or invoking such
- methods.</div>
+methods.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../ParametersButNotParameterized.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ParametersButNotParameterized</a></code></div>
@@ -328,7 +328,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../android/ParcelableCreator.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.android">ParcelableCreator</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">BugPattern to detect classes which implement android.os.Parcelable but don't have public static
- CREATOR.</div>
+CREATOR.</div>
 </div>
 </div>
 </section>
@@ -375,8 +375,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../inject/MoreThanOneScopeAnnotationOnClass.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject">MoreThanOneScopeAnnotationOnClass</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">This checker matches if a class has more than one annotation that is a scope annotation(that is,
- the annotation is either annotated with Guice's <code>@ScopeAnnotation</code> or Javax's
- <code>@Scope</code>).</div>
+the annotation is either annotated with Guice's <code>@ScopeAnnotation</code> or Javax's
+<code>@Scope</code>).</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../inject/OverlappingQualifierAndScopeAnnotation.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject">OverlappingQualifierAndScopeAnnotation</a></code></div>
@@ -418,10 +418,10 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../inject/guice/AssistedInjectScoping.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject.guice">AssistedInjectScoping</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">This checker matches iff *both* of the following conditions are true: 1) The class is assisted:
- a) If there is a constructor that is annotated with @Inject and that constructor has at least one
- parameter that is annotated with @Assisted. b) If there is no @Inject constructor and at least
- one constructor is annotated with <code>@AssistedInject</code>. 2) There is an annotation on the
- class, and the annotation is itself annotated with <code>@ScopeAnnotation</code>.</div>
+a) If there is a constructor that is annotated with @Inject and that constructor has at least one
+parameter that is annotated with @Assisted. b) If there is no @Inject constructor and at least
+one constructor is annotated with <code>@AssistedInject</code>. 2) There is an annotation on the
+class, and the annotation is itself annotated with <code>@ScopeAnnotation</code>.</div>
 </div>
 </div>
 </section>
@@ -438,7 +438,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../javadoc/EmptyBlockTag.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">EmptyBlockTag</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Matches block tags (@param, @return, @throws,
- @deprecated) with an empty description.</div>
+@deprecated) with an empty description.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../javadoc/EscapedEntity.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">EscapedEntity</a></code></div>

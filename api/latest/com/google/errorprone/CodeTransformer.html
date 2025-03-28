@@ -141,18 +141,18 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="return-type">com.google.common.collect.ImmutableClassToInstanceMap&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</span>&nbsp;<span class="element-name">annotations</span>()</div>
 <div class="block">Returns a map of annotation data logically applied to this code transformer.
 
- <p>As an example, if a <code>CodeTransformer</code> expressed as a Refaster rule had an annotation
- applied to it:
+<p>As an example, if a <code>CodeTransformer</code> expressed as a Refaster rule had an annotation
+applied to it:
 
- <pre><code>
- @MyCustomAnnotation("value")
- public class AnnotatedRefasterRule {
-    @BeforeTemplate void before(String x) {...}
-    @AfterTemplate void after(String x) {...}
- }
- </code></pre>
+<pre><code>
+@MyCustomAnnotation("value")
+public class AnnotatedRefasterRule {
+   @BeforeTemplate void before(String x) {...}
+   @AfterTemplate void after(String x) {...}
+}
+</code></pre>
 
- You could retrieve the value of <code>@MyCustomAnnotation</code> from this map.</div>
+You could retrieve the value of <code>@MyCustomAnnotation</code> from this map.</div>
 </div>
 </section>
 </li>

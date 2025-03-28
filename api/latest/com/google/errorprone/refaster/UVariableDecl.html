@@ -108,13 +108,13 @@ loadScripts(document, 'script');</script>
 implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a></span></div>
 <div class="block">A <a href="UTree.html" title="class in com.google.errorprone.refaster"><code>UTree</code></a> representation of a local variable declaration.
 
- <p>A <code>UVariableDecl</code> can be unified with any variable declaration which has a matching type
- and initializer. Annotations and modifiers are preserved for the corresponding replacement, as
- well as the variable name. <code>ULocalVarIdent</code> instances are used to represent references to
- local variables.
+<p>A <code>UVariableDecl</code> can be unified with any variable declaration which has a matching type
+and initializer. Annotations and modifiers are preserved for the corresponding replacement, as
+well as the variable name. <code>ULocalVarIdent</code> instances are used to represent references to
+local variables.
 
- <p>As a result, we can modify variable declarations and initializations in target code while
- preserving variable names and other contextual information.</div>
+<p>As a result, we can modify variable declarations and initializations in target code while
+preserving variable names and other contextual information.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>lowasser@google.com (Louis Wasserman)</dd>

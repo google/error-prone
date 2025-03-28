@@ -102,7 +102,7 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="Visibility.html" title="enum class in com.google.errorprone.util">Visibility</a>&gt;
 implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Comparable.html" title="class or interface in java.lang" class="external-link">Comparable</a>&lt;<a href="Visibility.html" title="enum class in com.google.errorprone.util">Visibility</a>&gt;</span></div>
 <div class="block">Describes visibilities available via VisibleForTesting annotations, and provides methods to
- establish whether a given <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>Tree</code></a> should be visible.</div>
+establish whether a given <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>Tree</code></a> should be visible.</div>
 </div>
 </section>
 <section class="summary">
@@ -167,14 +167,14 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Whether <code>tree</code> should be visible from the path in <code>state</code> assuming we're in prod
- code.</div>
+code.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#shouldBeVisible(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">shouldBeVisible</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Whether <code>symbol</code> should be visible from the path in <code>state</code> assuming we're in prod
- code.</div>
+code.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Visibility.html" title="enum class in com.google.errorprone.util">Visibility</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
@@ -300,7 +300,7 @@ not permitted.)</div>
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">shouldBeVisible</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Whether <code>tree</code> should be visible from the path in <code>state</code> assuming we're in prod
- code.</div>
+code.</div>
 </div>
 </section>
 </li>
@@ -311,7 +311,7 @@ not permitted.)</div>
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">shouldBeVisible</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Whether <code>symbol</code> should be visible from the path in <code>state</code> assuming we're in prod
- code.</div>
+code.</div>
 </div>
 </section>
 </li>
@@ -346,7 +346,7 @@ not permitted.)</div>
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">description</span>()</div>
 <div class="block">A fragment describing this visibility, to fit in a phrase like "restricted to [...]".
 
- <p>This is complicated by <code>NONE</code>, which doesn't describe a Java visibility.</div>
+<p>This is complicated by <code>NONE</code>, which doesn't describe a Java visibility.</div>
 </div>
 </section>
 </li>

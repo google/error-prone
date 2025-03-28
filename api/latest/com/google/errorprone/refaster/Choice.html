@@ -89,9 +89,9 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">Choice&lt;T&gt;</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">A representation of a choice with zero or more options, which may be evaluated lazily or
- strictly.
+strictly.
 
- <p>This resembles the list monad in Haskell.</div>
+<p>This resembles the list monad in Haskell.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>lowasser@google.com (Louis Wasserman)</dd>
@@ -121,7 +121,7 @@ loadScripts(document, 'script');</script>
  T&nbsp;t)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a <code>Choice</code> with <code>t</code> as an option if <code>condition</code>, and no options
- otherwise.</div>
+otherwise.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="#type-param-T" title="type parameter in Choice">T</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#filter(java.util.function.Predicate)" class="member-name-link">filter</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>&gt;&nbsp;predicate)</code></div>
@@ -137,7 +137,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#flatMap(java.util.function.Function)" class="member-name-link">flatMap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, <a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from
- the <code>Choice</code> yielded by this function on the result.</div>
+the <code>Choice</code> yielded by this function on the result.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;<a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#from(java.util.Collection)" class="member-name-link">from</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;T&gt;&nbsp;choices)</code></div>
@@ -159,7 +159,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mapIfPresent(java.util.function.Function)" class="member-name-link">mapIfPresent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;R&gt;&gt;&nbsp;function)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and yielding a present
- <code>Optional</code>.</div>
+<code>Optional</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;<a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#none()" class="member-name-link">none</a>()</code></div>
@@ -216,7 +216,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;T&gt;</span>&nbsp;<span class="element-name">condition</span><wbr><span class="parameters">(boolean&nbsp;condition,
  T&nbsp;t)</span></div>
 <div class="block">Returns a <code>Choice</code> with <code>t</code> as an option if <code>condition</code>, and no options
- otherwise.</div>
+otherwise.</div>
 </div>
 </section>
 </li>
@@ -273,9 +273,9 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;R&gt;</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;</span>&nbsp;<span class="element-name">flatMap</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, <a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;&gt;&nbsp;function)</span></div>
 <div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and then choosing from
- the <code>Choice</code> yielded by this function on the result.
+the <code>Choice</code> yielded by this function on the result.
 
- <p>The function may be applied lazily or immediately, at the discretion of the implementation.</div>
+<p>The function may be applied lazily or immediately, at the discretion of the implementation.</div>
 </div>
 </section>
 </li>
@@ -285,9 +285,9 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;R&gt;</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;R&gt;</span>&nbsp;<span class="element-name">mapIfPresent</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;? super <a href="#type-param-T" title="type parameter in Choice">T</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;R&gt;&gt;&nbsp;function)</span></div>
 <div class="block">Returns all the choices obtained by choosing from this <code>Choice</code> and yielding a present
- <code>Optional</code>.
+<code>Optional</code>.
 
- <p>The function may be applied lazily or immediately, at the discretion of the implementation.</div>
+<p>The function may be applied lazily or immediately, at the discretion of the implementation.</div>
 </div>
 </section>
 </li>

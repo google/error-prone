@@ -162,7 +162,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">If VisitorState is needed, use <a href="#createForUtilityPurposes(com.sun.tools.javac.util.Context)"><code>createForUtilityPurposes(Context)</code></a>, otherwise just
-     use utility methods in ASTHelpers that don't need VisitorSate.</div>
+    use utility methods in ASTHelpers that don't need VisitorSate.</div>
 </div>
 </div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)" class="member-name-link">VisitorState</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context,
@@ -204,7 +204,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#binaryNameFromClassname(java.lang.String)" class="member-name-link">binaryNameFromClassname</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the Name object corresponding to the named class, converting it to binary form along
- the way if necessary (i.e., replacing Foo.Bar with Foo$Bar).</div>
+the way if necessary (i.e., replacing Foo.Bar with Foo$Bar).</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableMultiset<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#counters()" class="member-name-link">counters</a>()</code></div>
@@ -224,7 +224,7 @@ loadScripts(document, 'script');</script>
  <a href="DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Return a VisitorState that has no Error Prone configuration, but can report findings to <code>
- listener</code>.</div>
+listener</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createForUtilityPurposes(com.sun.tools.javac.util.Context)" class="member-name-link">createForUtilityPurposes</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context)</code></div>
@@ -271,13 +271,13 @@ loadScripts(document, 'script');</script>
  int&nbsp;end)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the list of <code>Tokens.Token</code>s for source code between the given positions, offset by the
- start position.</div>
+start position.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableList<wbr>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOffsetTokensForNode(com.sun.source.tree.Tree)" class="member-name-link">getOffsetTokensForNode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>, offset by the start position
- of the tree within the overall source.</div>
+of the tree within the overall source.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPath()" class="member-name-link">getPath</a>()</code></div>
@@ -335,7 +335,7 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Increment the counter for a combination of <code>bugChecker</code>'s canonical name and <code>key</code>
- by 1.</div>
+by 1.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#incrementCounter(com.google.errorprone.bugpatterns.BugChecker,java.lang.String,int)" class="member-name-link">incrementCounter</a><wbr>(<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
@@ -343,7 +343,7 @@ loadScripts(document, 'script');</script>
  int&nbsp;count)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Increment the counter for a combination of <code>bugChecker</code>'s canonical name and <code>key</code>
- by <code>count</code>.</div>
+by <code>count</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAndroidCompatible()" class="member-name-link">isAndroidCompatible</a>()</code></div>
@@ -354,7 +354,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#memoize(com.google.errorprone.suppliers.Supplier)" class="member-name-link">memoize</a><wbr>(<a href="suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;T&gt;&nbsp;f)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Produces a cache for a function that is expected to return the same result throughout a
- compilation, but requires a <a href="VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a> to compute that result.</div>
+compilation, but requires a <a href="VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a> to compute that result.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reportMatch(com.google.errorprone.matchers.Description)" class="member-name-link">reportMatch</a><wbr>(<a href="matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description)</code></div>
@@ -414,7 +414,7 @@ loadScripts(document, 'script');</script>
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">VisitorState</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">If VisitorState is needed, use <a href="#createForUtilityPurposes(com.sun.tools.javac.util.Context)"><code>createForUtilityPurposes(Context)</code></a>, otherwise just
-     use utility methods in ASTHelpers that don't need VisitorSate.</div>
+    use utility methods in ASTHelpers that don't need VisitorSate.</div>
 </div>
 <div class="block">Return a VisitorState that has no Error Prone configuration, and can't report results.</div>
 </div>
@@ -431,7 +431,7 @@ loadScripts(document, 'script');</script>
 <div class="deprecation-comment">Use the equivalent factory method <a href="#createForCustomFindingCollection(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)"><code>createForCustomFindingCollection(Context, DescriptionListener)</code></a>.</div>
 </div>
 <div class="block">Return a VisitorState that has no Error Prone configuration, but can report findings to <code>
- listener</code>.</div>
+listener</code>.</div>
 </div>
 </section>
 </li>
@@ -466,7 +466,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span>&nbsp;<span class="element-name">createForUtilityPurposes</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context)</span></div>
 <div class="block">Return a VisitorState that has no Error Prone configuration, and can't report results.
 
- <p>If using this method, consider moving to using utility methods not needing VisitorSate</div>
+<p>If using this method, consider moving to using utility methods not needing VisitorSate</div>
 </div>
 </section>
 </li>
@@ -477,7 +477,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span>&nbsp;<span class="element-name">createForCustomFindingCollection</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context,
  <a href="DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</span></div>
 <div class="block">Return a VisitorState that has no Error Prone configuration, but can report findings to <code>
- listener</code>.</div>
+listener</code>.</div>
 </div>
 </section>
 </li>
@@ -596,9 +596,9 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">incrementCounter</span><wbr><span class="parameters">(<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</span></div>
 <div class="block">Increment the counter for a combination of <code>bugChecker</code>'s canonical name and <code>key</code>
- by 1.
+by 1.
 
- <p>e.g.: a key of <code>foo</code> becomes <code>FooChecker-foo</code>.</div>
+<p>e.g.: a key of <code>foo</code> becomes <code>FooChecker-foo</code>.</div>
 </div>
 </section>
 </li>
@@ -610,9 +610,9 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
  int&nbsp;count)</span></div>
 <div class="block">Increment the counter for a combination of <code>bugChecker</code>'s canonical name and <code>key</code>
- by <code>count</code>.
+by <code>count</code>.
 
- <p>e.g.: a key of <code>foo</code> becomes <code>FooChecker-foo</code>.</div>
+<p>e.g.: a key of <code>foo</code> becomes <code>FooChecker-foo</code>.</div>
 </div>
 </section>
 </li>
@@ -640,15 +640,15 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">getTypeFromString</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeStr)</span></div>
 <div class="block">Given the binary name of a class, returns the <code>Type</code>.
 
- <p>Prefer not to use this method for constant strings, or strings otherwise known at compile
- time. Instead, save the result of <a href="suppliers/Suppliers.html#typeFromString(java.lang.String)"><code>Suppliers.typeFromString(String)</code></a> as a class constant, and use its
- <a href="suppliers/Supplier.html#get(com.google.errorprone.VisitorState)"><code>Supplier.get(VisitorState)</code></a> method to look up the Type when needed. This lookup will be faster,
- improving Error Prone's analysis time.
+<p>Prefer not to use this method for constant strings, or strings otherwise known at compile
+time. Instead, save the result of <a href="suppliers/Suppliers.html#typeFromString(java.lang.String)"><code>Suppliers.typeFromString(String)</code></a> as a class constant, and use its
+<a href="suppliers/Supplier.html#get(com.google.errorprone.VisitorState)"><code>Supplier.get(VisitorState)</code></a> method to look up the Type when needed. This lookup will be faster,
+improving Error Prone's analysis time.
 
- <p>If this method returns null, the compiler doesn't have access to this type, which means that
- if you are comparing other types to this for equality or the subtype relation, your result
- would always be false even if it could create the type. Thus it might be best to bail out early
- in your matcher if this method returns null on your type of interest.</div>
+<p>If this method returns null, the compiler doesn't have access to this type, which means that
+if you are comparing other types to this for equality or the subtype relation, your result
+would always be false even if it could create the type. Thus it might be best to bail out early
+in your matcher if this method returns null on your type of interest.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>typeStr</code> - the JLS 13.1 binary name of the class, e.g. <code>"java.util.Map$Entry"</code></dd>
@@ -678,8 +678,8 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.util.Name</span>&nbsp;<span class="element-name">binaryNameFromClassname</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className)</span></div>
 <div class="block">Returns the Name object corresponding to the named class, converting it to binary form along
- the way if necessary (i.e., replacing Foo.Bar with Foo$Bar). To get the Name corresponding to
- some string that is not a class name, see the more general <a href="#getName(java.lang.String)"><code>getName(String)</code></a>.</div>
+the way if necessary (i.e., replacing Foo.Bar with Foo$Bar). To get the Name corresponding to
+some string that is not a class name, see the more general <a href="#getName(java.lang.String)"><code>getName(String)</code></a>.</div>
 </div>
 </section>
 </li>
@@ -732,7 +732,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/SafeVarargs.html" title="class or interface in java.lang" class="external-link">@SafeVarargs</a>
 </span><span class="modifiers">public final</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a></span>&nbsp;<span class="element-name">findPathToEnclosing</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;...&nbsp;classes)</span></div>
 <div class="block">Returns the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> to the nearest tree node of one of the given types. To instead
- retrieve the element directly, use <a href="#findEnclosing(java.lang.Class...)"><code>findEnclosing(Class...)</code></a>.</div>
+retrieve the element directly, use <a href="#findEnclosing(java.lang.Class...)"><code>findEnclosing(Class...)</code></a>.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the path, or <code>null</code> if there is no match</dd>
@@ -774,13 +774,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getSourceForNode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
 <div class="block">Gets the original source code that represents the given node.
 
- <p>Note that this may be different from what is returned by calling .toString() on the node.
- This returns exactly what is in the source code, whereas .toString() pretty-prints the node
- from its AST representation.</div>
+<p>Note that this may be different from what is returned by calling .toString() on the node.
+This returns exactly what is in the source code, whereas .toString() pretty-prints the node
+from its AST representation.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the source code that represents the node, or <code>null</code> if the source code is
-     unavailable (e.g. for generated or desugared AST nodes)</dd>
+    unavailable (e.g. for generated or desugared AST nodes)</dd>
 </dl>
 </div>
 </section>
@@ -792,8 +792,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</span>&nbsp;<span class="element-name">getTokensForNode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.
 
- <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
- be used if a fix is already going to be emitted.</div>
+<p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
+be used if a fix is already going to be emitted.</div>
 </div>
 </section>
 </li>
@@ -803,10 +803,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</span>&nbsp;<span class="element-name">getOffsetTokensForNode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>, offset by the start position
- of the tree within the overall source.
+of the tree within the overall source.
 
- <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
- be used if a fix is already going to be emitted.</div>
+<p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
+be used if a fix is already going to be emitted.</div>
 </div>
 </section>
 </li>
@@ -817,10 +817,10 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</span>&nbsp;<span class="element-name">getOffsetTokens</span><wbr><span class="parameters">(int&nbsp;start,
  int&nbsp;end)</span></div>
 <div class="block">Returns the list of <code>Tokens.Token</code>s for source code between the given positions, offset by the
- start position.
+start position.
 
- <p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
- be used if a fix is already going to be emitted.</div>
+<p>This is moderately expensive (the source of the node has to be re-lexed), so it should only
+be used if a fix is already going to be emitted.</div>
 </div>
 </section>
 </li>
@@ -857,11 +857,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;T&gt;</span>&nbsp;<span class="element-name">memoize</span><wbr><span class="parameters">(<a href="suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;T&gt;&nbsp;f)</span></div>
 <div class="block">Produces a cache for a function that is expected to return the same result throughout a
- compilation, but requires a <a href="VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a> to compute that result.
+compilation, but requires a <a href="VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a> to compute that result.
 
- <p><b>Note:</b> Do not use this method for a function that depends on the varying state of a
- <a href="VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a> (e.g. <a href="#getPath()"><code>getPath()</code></a>—including the compilation
- unit itself!).</div>
+<p><b>Note:</b> Do not use this method for a function that depends on the varying state of a
+<a href="VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a> (e.g. <a href="#getPath()"><code>getPath()</code></a>—including the compilation
+unit itself!).</div>
 </div>
 </section>
 </li>
@@ -871,7 +871,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getConstantExpression</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</span></div>
 <div class="block">Returns the Java source code for a constant expression representing the given constant value.
- Like <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.compiler/javax/lang/model/util/Elements.html#getConstantExpression(java.lang.Object)" title="class or interface in javax.lang.model.util" class="external-link"><code>Elements.getConstantExpression(Object)</code></a>, but doesn't over-escape single quotes in strings.</div>
+Like <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.compiler/javax/lang/model/util/Elements.html#getConstantExpression(java.lang.Object)" title="class or interface in javax.lang.model.util" class="external-link"><code>Elements.getConstantExpression(Object)</code></a>, but doesn't over-escape single quotes in strings.</div>
 </div>
 </section>
 </li>

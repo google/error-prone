@@ -106,8 +106,8 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="MultiMatcher.html" title="interface in com.google.errorprone.matchers">MultiMatcher</a>&lt;T,<wbr>N&gt;</span></div>
 <div class="block">A <a href="MultiMatcher.html" title="interface in com.google.errorprone.matchers"><code>MultiMatcher</code></a> that applies a matcher across multiple children of a single ancestor node.
- Configurable to return true if any of, all of, or the last node matches. In the any or last of
- cases, provides access to the node that matched.</div>
+Configurable to return true if any of, all of, or the last node matches. In the any or last of
+cases, provides access to the node that matched.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>eaftan@google.com (Eddie Aftandilian)</dd>
@@ -285,8 +285,8 @@ implements <a href="MultiMatcher.html" title="interface in com.google.errorprone
 </span><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="#type-param-N" title="type parameter in ChildMultiMatcher">N</a>&gt;</span>&nbsp;<span class="element-name">getChildNodes</span><wbr><span class="parameters">(<a href="#type-param-T" title="type parameter in ChildMultiMatcher">T</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Returns the set of child nodes to match. The nodes must be immediate children of the current
- node to ensure the TreePath calculation is correct. MultiMatchers with other requirements
- should not subclass ChildMultiMatcher.</div>
+node to ensure the TreePath calculation is correct. MultiMatchers with other requirements
+should not subclass ChildMultiMatcher.</div>
 </div>
 </section>
 </li>

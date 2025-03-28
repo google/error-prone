@@ -84,14 +84,14 @@ loadScripts(document, 'script');</script>
  <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Gets the possibly inherited marker annotation on the given symbol, and reverse-propagates
- containerOf spec's from super-classes.</div>
+containerOf spec's from super-classes.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ThreadSafety.</span><code><a href="../ThreadSafety.html#getMarkerOrAcceptedAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">getMarkerOrAcceptedAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Gets the <code>Symbol</code>'s annotation info, either from a marker annotation on the symbol, from
- an accepted annotation on the symbol, or from the list of well-known types.</div>
+an accepted annotation on the symbol, or from the list of well-known types.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a> that return types with arguments of type <a href="../AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></span></div>
@@ -115,7 +115,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment"><a href="../WellKnownMutability.html#getKnownImmutableClasses()"><code>WellKnownMutability.getKnownImmutableClasses()</code></a> is clearer if you're dealing with this specific
-     class.</div>
+    class.</div>
 </div>
 </div>
 <div class="col-first even-row-color"><code>com.google.common.collect.ImmutableMap<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, <a href="../AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&gt;</code></div>
@@ -136,9 +136,9 @@ loadScripts(document, 'script');</script>
  com.sun.tools.javac.code.Type&nbsp;type)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Check that the super-type of a <code>@ThreadSafe</code>-annotated type is instantiated with
- threadsafe type arguments where required by its annotation's containerOf element, and that any
- type arguments that correspond to containerOf type parameters on the sub-type are also in the
- super-type's containerOf spec.</div>
+threadsafe type arguments where required by its annotation's containerOf element, and that any
+type arguments that correspond to containerOf type parameters on the sub-type are also in the
+super-type's containerOf spec.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ThreadSafety.</span><code><a href="../ThreadSafety.html#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type)" class="member-name-link">threadSafeInstantiation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
@@ -146,7 +146,7 @@ loadScripts(document, 'script');</script>
  com.sun.tools.javac.code.Type&nbsp;type)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Check that a type-use of an <code>@ThreadSafe</code>-annotated type is instantiated with threadsafe
- type arguments where required by its annotation's containerOf element.</div>
+type arguments where required by its annotation's containerOf element.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ThreadSafety.</span><code><a href="../ThreadSafety.html#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type,java.util.Set)" class="member-name-link">threadSafeInstantiation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,

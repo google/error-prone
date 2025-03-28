@@ -77,18 +77,18 @@ loadScripts(document, 'script');</script>
 <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/ElementType.html#ANNOTATION_TYPE" title="class or interface in java.lang.annotation" class="external-link">ANNOTATION_TYPE</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">RequiredModifiers</span></div>
 <div class="block">Annotation declaring that the target annotation requires all the specified modifiers. For
- example, an annotation declared as:
+example, an annotation declared as:
 
- <pre><code>
- @RequiredModifiers(modifier = Modifier.PUBLIC)
- @interface MyAnnotation {}
- </code></pre>
+<pre><code>
+@RequiredModifiers(modifier = Modifier.PUBLIC)
+@interface MyAnnotation {}
+</code></pre>
 
- <p>will be considered illegal when used on non-public elements such as:
+<p>will be considered illegal when used on non-public elements such as:
 
- <pre><code>
- @MyAnnotation void foo() {}
- </code></pre></div>
+<pre><code>
+@MyAnnotation void foo() {}
+</code></pre></div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>benyu@google.com (Jige Yu)</dd>
@@ -152,10 +152,10 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type"><a href="Modifier.html" title="enum class in com.google.errorprone.annotations">Modifier</a>[]</span>&nbsp;<span class="element-name">modifier</span></div>
 <div class="block">The required modifiers. The annotated element is illegal if any one or more of these modifiers
- are absent.
+are absent.
 
- <p>Empty array has the same effect as not applying this annotation at all; duplicates are
- allowed but have no effect.</div>
+<p>Empty array has the same effect as not applying this annotation at all; duplicates are
+allowed but have no effect.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>{}</code></dd>

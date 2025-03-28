@@ -86,7 +86,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">AbstractCollectionIncompatibleTypeMatcher</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Extracts the necessary information from a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodInvocationTree</code></a> to check whether calls to
- a method are using incompatible types and to emit a helpful error message.</div>
+a method are using incompatible types and to emit a helpful error message.</div>
 </div>
 </section>
 <section class="summary">
@@ -104,7 +104,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Encapsulates the result of matching a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html#contains(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Collection.contains(Object)</code></a>-like call, including the
- source and target types.</div>
+source and target types.</div>
 </div>
 </div>
 </section>
@@ -201,8 +201,8 @@ loadScripts(document, 'script');</script>
  int&nbsp;typeArgIndex,
  com.sun.tools.javac.code.Types&nbsp;types)</span></div>
 <div class="block">Extracts the appropriate type argument from a specific supertype of the given <code>type</code>.
- This handles the case when a subtype has different type arguments than the expected type. For
- example, <code>ClassToInstanceMap&lt;T&gt;</code> implements <code>Map&lt;Class&lt;? extends T&gt;, T&gt;</code>.</div>
+This handles the case when a subtype has different type arguments than the expected type. For
+example, <code>ClassToInstanceMap&lt;T&gt;</code> implements <code>Map&lt;Class&lt;? extends T&gt;, T&gt;</code>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>type</code> - the (sub)type from which to extract the type argument</dd>

@@ -87,21 +87,21 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">SideEffectAnalysis</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/util/TreeScanner.html" title="class or interface in com.sun.source.util" class="external-link">TreeScanner</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Void.html" title="class or interface in java.lang" class="external-link">Void</a>&gt;</span></div>
 <div class="block">This class is responsible for analyzing an expression and telling if the expression can have side
- effects. This class is used by calling the static <a href="#hasSideEffect(com.sun.source.tree.ExpressionTree)"><code>hasSideEffect(ExpressionTree)</code></a> method.
+effects. This class is used by calling the static <a href="#hasSideEffect(com.sun.source.tree.ExpressionTree)"><code>hasSideEffect(ExpressionTree)</code></a> method.
 
- <p>A side-effect is what that would change the state of the program. Here are examples of
- expressions that could possibly change the state of a program.
+<p>A side-effect is what that would change the state of the program. Here are examples of
+expressions that could possibly change the state of a program.
 
- <ul>
-   <li>Any function call: toString(), hashCode(), setX(value), etc.
-   <li>Unary expression: i += 1, i++, --j
-   <li>New expression: new SomeClass()
- </ul>
+<ul>
+  <li>Any function call: toString(), hashCode(), setX(value), etc.
+  <li>Unary expression: i += 1, i++, --j
+  <li>New expression: new SomeClass()
+</ul>
 
- <p>Everything besides the above examples is considered side-effect free.
+<p>Everything besides the above examples is considered side-effect free.
 
- <p>The analysis in this class initially assumes that the expression is side-effect free and then
- tries to prove it wrong.</div>
+<p>The analysis in this class initially assumes that the expression is side-effect free and then
+tries to prove it wrong.</div>
 </div>
 </section>
 <section class="summary">
@@ -164,7 +164,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasSideEffect</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expression)</span></div>
 <div class="block">Tries to establish whether <code>expression</code> is side-effect free. The heuristics here are very
- conservative.</div>
+conservative.</div>
 </div>
 </section>
 </li>
