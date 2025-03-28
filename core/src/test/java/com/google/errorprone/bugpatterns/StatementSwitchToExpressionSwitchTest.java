@@ -2169,7 +2169,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
 
     // Check correct generated code
@@ -2230,7 +2232,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2288,7 +2292,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2360,7 +2366,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -2438,7 +2446,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -2489,7 +2499,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -2528,7 +2540,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
 
     refactoringHelper
@@ -2591,7 +2605,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -2631,7 +2647,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -2669,7 +2687,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -2724,7 +2744,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
 
     refactoringHelper
@@ -2813,7 +2835,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -2892,7 +2916,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -3000,7 +3026,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -3092,7 +3120,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(FixChoosers.FIRST)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
 
@@ -3175,7 +3205,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(FixChoosers.SECOND)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -3228,7 +3260,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
 
     refactoringHelper
@@ -3314,7 +3348,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -3370,7 +3406,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
 
     refactoringHelper
@@ -3469,7 +3507,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -3540,7 +3580,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -3576,7 +3618,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -3614,7 +3658,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -3652,7 +3698,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -3691,7 +3739,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -3726,7 +3776,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -3802,7 +3854,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -3937,7 +3991,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -4005,7 +4061,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -4075,7 +4133,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -4152,7 +4212,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -4229,7 +4291,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -4275,7 +4339,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
 
     // Check correct generated code.
@@ -4350,7 +4416,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -4394,7 +4462,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -4437,7 +4507,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -4478,7 +4550,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
 
     // Check correct generated code
@@ -4546,7 +4620,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4592,7 +4668,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -4635,7 +4713,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -4678,7 +4758,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -4724,7 +4806,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -4771,7 +4855,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -4819,7 +4905,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -4865,7 +4953,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -4903,7 +4993,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -4949,7 +5041,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
 
     refactoringHelper
@@ -5011,7 +5105,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         // There should be no second fix that attempts to remove the default case because there is
         // no default case.
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
@@ -5090,7 +5186,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
 
     refactoringHelper2
@@ -5155,7 +5253,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(FixChoosers.SECOND)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -5194,7 +5294,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
 
     refactoringHelper
@@ -5252,7 +5354,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -5297,7 +5401,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
 
     refactoringHelper
@@ -5375,7 +5481,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -5417,7 +5525,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
 
     refactoringHelper
@@ -5477,7 +5587,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
@@ -5513,7 +5625,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
 
     refactoringHelper
@@ -5567,7 +5681,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -5604,7 +5720,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -5732,7 +5850,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
@@ -5763,7 +5883,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .doTest();
   }
 
