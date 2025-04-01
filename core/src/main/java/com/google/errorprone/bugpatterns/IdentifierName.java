@@ -17,6 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Ascii.isUpperCase;
+import static com.google.common.base.Ascii.toLowerCase;
+import static com.google.common.base.Ascii.toUpperCase;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
@@ -32,12 +34,13 @@ import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
+import static java.lang.Character.isDigit;
 import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
 import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
 import static javax.lang.model.element.ElementKind.RESOURCE_VARIABLE;
 
-import com.google.common.base.Ascii;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
@@ -284,20 +287,38 @@ public final class IdentifierName extends BugChecker
     return isConformantLowerCamelName(name);
   }
 
-  private static boolean isConformantStaticVariableName(String name) {
+  @VisibleForTesting
+  static boolean isConformantStaticVariableName(String name) {
     return UPPER_UNDERSCORE_PATTERN.matcher(name).matches();
   }
 
-  private static boolean isConformantLowerCamelName(String name) {
-    return !name.contains("_")
+  @VisibleForTesting
+  static boolean isConformantLowerCamelName(String name) {
+    return underscoresAreFlankedByDigits(name)
         && !isUpperCase(name.charAt(0))
         && !PROBABLE_INITIALISM.matcher(name).find();
   }
 
-  private boolean isConformantTypeName(String name) {
-    return !name.contains("_")
+  @VisibleForTesting
+  boolean isConformantTypeName(String name) {
+    return underscoresAreFlankedByDigits(name)
         && isUpperCase(name.charAt(0))
         && (allowInitialismsInTypeName || !PROBABLE_INITIALISM.matcher(name).find());
+  }
+
+  private static boolean underscoresAreFlankedByDigits(String name) {
+    if (name.startsWith("_") || name.endsWith("_")) {
+      return false;
+    }
+    for (int i = 1; i < name.length() - 1; i++) {
+      if (name.charAt(i) == '_') {
+        boolean flankedByDigits = isDigit(name.charAt(i - 1)) && isDigit(name.charAt(i + 1));
+        if (!flankedByDigits) {
+          return false;
+        }
+      }
+    }
+    return true;
   }
 
   private static boolean isStaticVariable(Symbol symbol) {
@@ -309,8 +330,8 @@ public final class IdentifierName extends BugChecker
   }
 
   private static String titleCase(String input) {
-    var lower = Ascii.toLowerCase(input);
-    return Ascii.toUpperCase(lower.charAt(0)) + lower.substring(1);
+    String lower = toLowerCase(input);
+    return toUpperCase(lower.charAt(0)) + lower.substring(1);
   }
 
   private static final Pattern LOWER_UNDERSCORE_PATTERN = Pattern.compile("[a-z0-9_]+");

@@ -17,9 +17,14 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.TruthJUnit.assume;
+import static com.google.errorprone.bugpatterns.IdentifierName.isConformantLowerCamelName;
+import static com.google.errorprone.bugpatterns.IdentifierName.isConformantStaticVariableName;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.ErrorProneFlags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -695,6 +700,51 @@ public class IdentifierNameTest {
             }
             """)
         .setArgs("--enable-preview", "--release", Integer.toString(Runtime.version().feature()))
+        .doTest();
+  }
+
+  @Test
+  public void versionNumbers() {
+    assertTrue(isConformantLowerCamelName("murmur3_32"));
+    assertFalse(isConformantLowerCamelName("murmur3__32"));
+    assertFalse(isConformantLowerCamelName("murmur3_d"));
+    assertFalse(isConformantLowerCamelName("murmur_3_32"));
+    assertFalse(isConformantLowerCamelName("murmur3_32_"));
+    assertFalse(isConformantLowerCamelName("_murmur3_32"));
+
+    // These examples are copied from InetAddressesTest.java.
+    assertTrue(isConformantLowerCamelName("addressV6_66_0"));
+    assertFalse(isConformantLowerCamelName("address_66_255"));
+    assertFalse(isConformantLowerCamelName("addressV6_66_ff"));
+    assertFalse(isConformantLowerCamelName("addressV6_ffffff"));
+
+    assertTrue(isConformantStaticVariableName("GUAVA33_4_6"));
+
+    IdentifierName identifierName = new IdentifierName(ErrorProneFlags.empty());
+    assertTrue(identifierName.isConformantTypeName("Murmur3_32"));
+    assertFalse(identifierName.isConformantTypeName("Murmur3__32"));
+    assertFalse(identifierName.isConformantTypeName("Murmur3_32_"));
+    assertFalse(identifierName.isConformantTypeName("Murmur3_d"));
+    assertFalse(identifierName.isConformantTypeName("Murmur_32"));
+    assertFalse(identifierName.isConformantTypeName("_Murmur3_32"));
+  }
+
+  @Test
+  public void versionNumbersInCode() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final int GUAVA33_4_6 = 42;
+
+              void murmur3_32() {
+                int murmur3_64 = 42;
+              }
+
+              class Murmur3_32 {}
+            }
+            """)
         .doTest();
   }
 }
