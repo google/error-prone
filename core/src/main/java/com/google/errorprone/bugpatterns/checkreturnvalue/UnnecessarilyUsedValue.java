@@ -57,8 +57,8 @@ public final class UnnecessarilyUsedValue extends BugChecker
 
     ExpressionTree expressionTree = assignmentTree.getExpression();
     if (isMethodInvocationLike(expressionTree)
-        && assignmentTree.getVariable() instanceof IdentifierTree
-        && isIgnorable(expressionTree, ((IdentifierTree) assignmentTree.getVariable()).getName())) {
+        && assignmentTree.getVariable() instanceof IdentifierTree identifierTree
+        && isIgnorable(expressionTree, identifierTree.getName())) {
       return describeMatch(
           assignmentTree,
           SuggestedFix.replace(assignmentTree, state.getSourceForNode(expressionTree)));

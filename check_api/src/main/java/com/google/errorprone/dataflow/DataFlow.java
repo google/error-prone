@@ -106,12 +106,10 @@ public final class DataFlow {
                       break;
                     }
                   }
-                  if (methodPath.getLeaf() instanceof LambdaExpressionTree) {
-                    ast =
-                        new UnderlyingAST.CFGLambda(
-                            (LambdaExpressionTree) methodPath.getLeaf(), classTree, methodTree);
-                  } else if (methodPath.getLeaf() instanceof MethodTree) {
-                    methodTree = (MethodTree) methodPath.getLeaf();
+                  if (methodPath.getLeaf() instanceof LambdaExpressionTree lambdaExpressionTree) {
+                    ast = new UnderlyingAST.CFGLambda(lambdaExpressionTree, classTree, methodTree);
+                  } else if (methodPath.getLeaf() instanceof MethodTree mt) {
+                    methodTree = mt;
                     ast = new UnderlyingAST.CFGMethod(methodTree, classTree);
                   } else {
                     // must be an initializer per findEnclosingMethodOrLambdaOrInitializer

@@ -212,8 +212,8 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
       }
 
       if (tree instanceof IdentifierTree
-          && getCurrentPath().getLeaf() instanceof AssignmentTree
-          && ((AssignmentTree) getCurrentPath().getLeaf()).getVariable().equals(tree)) {
+          && getCurrentPath().getLeaf() instanceof AssignmentTree assignmentTree
+          && assignmentTree.getVariable().equals(tree)) {
         return super.scan(tree, null);
       }
 

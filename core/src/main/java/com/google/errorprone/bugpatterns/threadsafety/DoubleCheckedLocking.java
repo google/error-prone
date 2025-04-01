@@ -154,10 +154,9 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     if (expr.getStartPosition() > getStartPosition(info.innerIf())) {
       return Description.NO_MATCH;
     }
-    if (!(expr.getExpression() instanceof JCAssign)) {
+    if (!(expr.getExpression() instanceof JCAssign assign)) {
       return Description.NO_MATCH;
     }
-    JCAssign assign = (JCAssign) expr.getExpression();
     if (!Objects.equals(ASTHelpers.getSymbol(assign.getVariable()), info.sym())) {
       return Description.NO_MATCH;
     }

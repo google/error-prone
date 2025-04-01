@@ -64,8 +64,8 @@ public class ComplexBooleanConstant extends BugChecker implements BinaryTreeMatc
         new SimpleTreeVisitor<Boolean, Void>() {
           @Override
           public @Nullable Boolean visitLiteral(LiteralTree node, Void unused) {
-            if (node.getValue() instanceof Boolean) {
-              return (Boolean) node.getValue();
+            if (node.getValue() instanceof Boolean b) {
+              return b;
             }
             return null;
           }

@@ -336,10 +336,9 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
                     allUsageSites.stream()
                         .noneMatch(
                             tp ->
-                                tp.getLeaf() instanceof ExpressionStatementTree
-                                    && ((ExpressionStatementTree) tp.getLeaf())
-                                        .getExpression()
-                                        .equals(a)))
+                                tp.getLeaf()
+                                        instanceof ExpressionStatementTree expressionStatementTree
+                                    && expressionStatementTree.getExpression().equals(a)))
             .findFirst();
     if (removedVariableTree.isPresent() && reassignment.isPresent()) {
       return SuggestedFix.prefixWith( // not needed if top-level statement
@@ -986,8 +985,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (assignmentSite.getParentPath().getLeaf() instanceof EnhancedForLoopTree) {
         return Iterables.size(assignmentSite) + 1;
       }
-      if (assignmentSite.getLeaf() instanceof VariableTree) {
-        VarSymbol symbol = getSymbol((VariableTree) assignmentSite.getLeaf());
+      if (assignmentSite.getLeaf() instanceof VariableTree variableTree) {
+        VarSymbol symbol = getSymbol(variableTree);
         if (symbol.getKind() == ElementKind.PARAMETER) {
           return Iterables.size(assignmentSite) + 1;
         }

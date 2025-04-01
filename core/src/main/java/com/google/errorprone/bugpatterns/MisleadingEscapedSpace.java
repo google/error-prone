@@ -44,10 +44,9 @@ public final class MisleadingEscapedSpace extends BugChecker implements LiteralT
         return describeMatch(tree);
       }
     }
-    if (tree.getValue() instanceof String) {
+    if (tree.getValue() instanceof String value) {
       // Fast path out and avoid scanning through source code if there are simply no spaces in the
       // literal.
-      String value = (String) tree.getValue();
       if (!value.contains(" ")) {
         return NO_MATCH;
       }

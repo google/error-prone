@@ -1724,9 +1724,8 @@ public class ASTHelpers {
             tree ->
                 (tree instanceof VariableTree && variableIsStaticFinal((VarSymbol) getSymbol(tree)))
                     || (tree instanceof AssignmentTree assignmentTree
-                        && getSymbol(assignmentTree.getVariable()) instanceof VarSymbol
-                        && variableIsStaticFinal(
-                            (VarSymbol) getSymbol(assignmentTree.getVariable()))));
+                        && getSymbol(assignmentTree.getVariable()) instanceof VarSymbol varSymbol
+                        && variableIsStaticFinal(varSymbol)));
   }
 
   /**

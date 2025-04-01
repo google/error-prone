@@ -166,11 +166,10 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
       String replacement;
       if (immutableType.equals("ImmutableMap") && args.size() > 5) {
         String typeArguments =
-            tree.getIdentifier() instanceof ParameterizedTypeTree
-                ? ((ParameterizedTypeTree) tree.getIdentifier())
-                    .getTypeArguments().stream()
-                        .map(state::getSourceForNode)
-                        .collect(joining(", ", "<", ">"))
+            tree.getIdentifier() instanceof ParameterizedTypeTree parameterizedTypeTree
+                ? parameterizedTypeTree.getTypeArguments().stream()
+                    .map(state::getSourceForNode)
+                    .collect(joining(", ", "<", ">"))
                 : "";
         replacement =
             "ImmutableMap."

@@ -68,13 +68,13 @@ public class IterablePathParameter extends BugChecker implements VariableTreeMat
     }
     Description.Builder description = buildDescription(tree);
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (tree.getType() instanceof ParameterizedTypeTree
+    if (tree.getType() instanceof ParameterizedTypeTree parameterizedTypeTree
         && (!(parent instanceof JCLambda jCLambda)
             || jCLambda.paramKind == ParameterKind.EXPLICIT)) {
       description.addFix(
           SuggestedFix.builder()
               .addImport("java.util.Collection")
-              .replace(((ParameterizedTypeTree) tree.getType()).getType(), "Collection")
+              .replace(parameterizedTypeTree.getType(), "Collection")
               .build());
     }
     return description.build();

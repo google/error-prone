@@ -72,10 +72,9 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
     if (tree.getInitializer() == null) {
       return NO_MATCH;
     }
-    if (!(tree.getInitializer() instanceof NewClassTree)) {
+    if (!(tree.getInitializer() instanceof NewClassTree classTree)) {
       return NO_MATCH;
     }
-    NewClassTree classTree = (NewClassTree) tree.getInitializer();
     if (classTree.getClassBody() == null) {
       return NO_MATCH;
     }

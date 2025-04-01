@@ -82,8 +82,7 @@ public class IncrementInForLoopAndHeader extends BugChecker implements ForLoopTr
 
   private static Optional<Symbol> returnUnarySym(StatementTree s) {
     if (s instanceof ExpressionStatementTree expressionStatementTree) {
-      if (expressionStatementTree.getExpression() instanceof UnaryTree) {
-        UnaryTree unaryTree = (UnaryTree) expressionStatementTree.getExpression();
+      if (expressionStatementTree.getExpression() instanceof UnaryTree unaryTree) {
         return Optional.ofNullable(ASTHelpers.getSymbol(unaryTree.getExpression()));
       }
     }

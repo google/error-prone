@@ -89,8 +89,7 @@ public class EqualsReference extends BugChecker implements MethodTreeMatcher {
             && hasParameterAndSameSymbol) {
           hasIllegalEquals = true;
         }
-      } else if (methodInvocationTree.getMethodSelect() instanceof IdentifierTree) {
-        IdentifierTree methodSelect = (IdentifierTree) methodInvocationTree.getMethodSelect();
+      } else if (methodInvocationTree.getMethodSelect() instanceof IdentifierTree methodSelect) {
         if (Objects.equals(ASTHelpers.getSymbol(methodTree), ASTHelpers.getSymbol(methodSelect))
             && hasParameterAndSameSymbol) {
           hasIllegalEquals = true;

@@ -79,8 +79,7 @@ abstract class ULambda extends UExpression implements LambdaExpressionTree {
   }
 
   JCTree inlineBody(Inliner inliner) throws CouldNotResolveImportException {
-    if (getBody() instanceof UPlaceholderExpression) {
-      UPlaceholderExpression body = (UPlaceholderExpression) getBody();
+    if (getBody() instanceof UPlaceholderExpression body) {
       Optional<List<JCStatement>> blockBinding =
           inliner.getOptionalBinding(body.placeholder().blockKey());
       if (blockBinding.isPresent()) {
@@ -89,10 +88,10 @@ abstract class ULambda extends UExpression implements LambdaExpressionTree {
             UPlaceholderExpression.copier(body.arguments(), inliner)
                 .copy(blockBinding.get(), inliner);
         if (blockInlined.size() == 1) {
-          if (blockInlined.get(0) instanceof JCReturn) {
-            return ((JCReturn) blockInlined.get(0)).getExpression();
-          } else if (blockInlined.get(0) instanceof JCExpressionStatement) {
-            return ((JCExpressionStatement) blockInlined.get(0)).getExpression();
+          if (blockInlined.get(0) instanceof JCReturn jCReturn) {
+            return jCReturn.getExpression();
+          } else if (blockInlined.get(0) instanceof JCExpressionStatement jCExpressionStatement) {
+            return jCExpressionStatement.getExpression();
           }
         }
         return inliner.maker().Block(0, blockInlined);

@@ -123,8 +123,8 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
 
         @Override
         public ComparisonResult visitLiteral(LiteralTree node, VisitorState state) {
-          if (node.getValue() instanceof Integer) {
-            return forInt((Integer) node.getValue());
+          if (node.getValue() instanceof Integer i) {
+            return forInt(i);
           }
           return super.visitLiteral(node, state);
         }

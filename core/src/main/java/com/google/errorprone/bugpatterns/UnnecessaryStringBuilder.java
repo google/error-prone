@@ -93,10 +93,9 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
         break;
       }
       TreePath grandParent = parentPath.getParentPath();
-      if (!(grandParent.getLeaf() instanceof MethodInvocationTree)) {
+      if (!(grandParent.getLeaf() instanceof MethodInvocationTree methodInvocationTree)) {
         break;
       }
-      MethodInvocationTree methodInvocationTree = (MethodInvocationTree) grandParent.getLeaf();
       if (!methodInvocationTree.getMethodSelect().equals(parentPath.getLeaf())) {
         break;
       }

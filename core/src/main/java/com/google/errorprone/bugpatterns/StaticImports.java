@@ -95,10 +95,9 @@ public final class StaticImports {
     if (!tree.isStatic()) {
       return null;
     }
-    if (!(tree.getQualifiedIdentifier() instanceof JCTree.JCFieldAccess)) {
+    if (!(tree.getQualifiedIdentifier() instanceof JCTree.JCFieldAccess access)) {
       return null;
     }
-    JCTree.JCFieldAccess access = (JCTree.JCFieldAccess) tree.getQualifiedIdentifier();
     Name identifier = access.getIdentifier();
     if (identifier.contentEquals("*")) {
       // Java doesn't allow non-canonical types inside wildcard imports,

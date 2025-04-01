@@ -121,9 +121,9 @@ public class UnsafeWildcard extends BugChecker
 
   @Override
   public Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
-    if (tree.getBody() instanceof ExpressionTree) {
+    if (tree.getBody() instanceof ExpressionTree expressionTree) {
       Type targetType = ((JCLambda) tree).getDescriptorType(state.getTypes()).getReturnType();
-      return checkForUnsafeNullAssignment(targetType, (ExpressionTree) tree.getBody(), state);
+      return checkForUnsafeNullAssignment(targetType, expressionTree, state);
     } // else covered by matchReturn
     return Description.NO_MATCH;
   }

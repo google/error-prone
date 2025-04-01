@@ -330,16 +330,14 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     // Trivial factory method must have one argument for each getter and a single return statement.
     if (params.size() != gettersCount
         || statements.size() != 1
-        || !(statements.get(0) instanceof ReturnTree)) {
+        || !(statements.get(0) instanceof ReturnTree returnTree)) {
       return false;
     }
     // Trivial factory method must return a new instance.
-    ReturnTree returnTree = (ReturnTree) statements.get(0);
-    if (!(returnTree.getExpression() instanceof NewClassTree)) {
+    if (!(returnTree.getExpression() instanceof NewClassTree newClassTree)) {
       return false;
     }
     // Trivial factory method must pass all the arguments to the constructor.
-    NewClassTree newClassTree = (NewClassTree) returnTree.getExpression();
     if (newClassTree.getArguments().stream().anyMatch(r -> !(r instanceof IdentifierTree))) {
       return false;
     }

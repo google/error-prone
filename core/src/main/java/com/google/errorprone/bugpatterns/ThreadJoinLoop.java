@@ -61,10 +61,8 @@ public class ThreadJoinLoop extends BugChecker implements MethodInvocationTreeMa
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     String threadString;
-    if (methodInvocationTree.getMethodSelect() instanceof MemberSelectTree) {
-      threadString =
-          state.getSourceForNode(
-              ((MemberSelectTree) methodInvocationTree.getMethodSelect()).getExpression());
+    if (methodInvocationTree.getMethodSelect() instanceof MemberSelectTree memberSelectTree) {
+      threadString = state.getSourceForNode(memberSelectTree.getExpression());
     } else {
       threadString = "this";
     }

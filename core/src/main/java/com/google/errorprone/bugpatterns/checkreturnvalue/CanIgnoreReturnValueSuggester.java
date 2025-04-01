@@ -323,8 +323,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
       private boolean isIgnorableMethodCallOnSameInstance(
           ReturnTree returnTree, VisitorState state) {
-        if (returnTree.getExpression() instanceof MethodInvocationTree) {
-          MethodInvocationTree mit = (MethodInvocationTree) returnTree.getExpression();
+        if (returnTree.getExpression() instanceof MethodInvocationTree mit) {
           ExpressionTree receiver = getReceiver(mit);
           MethodSymbol calledMethod = getSymbol(mit);
           if ((receiver == null && !calledMethod.isStatic())

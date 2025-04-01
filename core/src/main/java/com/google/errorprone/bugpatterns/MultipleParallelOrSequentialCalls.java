@@ -67,9 +67,7 @@ public class MultipleParallelOrSequentialCalls extends BugChecker
             .anyMatch(m -> m.contains(state.getSourceForNode(t)))) {
           break;
         }
-        if (methodInvocationTree.getMethodSelect() instanceof MemberSelectTree) {
-          MemberSelectTree memberSelectTree =
-              (MemberSelectTree) methodInvocationTree.getMethodSelect();
+        if (methodInvocationTree.getMethodSelect() instanceof MemberSelectTree memberSelectTree) {
           String memberSelectIdentifier = memberSelectTree.getIdentifier().toString();
           // checks for the first instance of parallel / sequential
           if (toReplace.equals("empty")

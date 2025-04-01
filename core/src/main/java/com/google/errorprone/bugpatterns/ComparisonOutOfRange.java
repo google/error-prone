@@ -82,8 +82,8 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
           Tree constant = binaryTreeMatches.get(0);
 
           Number numericConstantValue =
-              constValue(constant) instanceof Character
-                  ? Long.valueOf(((Character) constValue(constant)).charValue())
+              constValue(constant) instanceof Character c
+                  ? Long.valueOf(c.charValue())
                   : (Number) constValue(constant);
 
           // We define a class whose first method we'll call immediately.

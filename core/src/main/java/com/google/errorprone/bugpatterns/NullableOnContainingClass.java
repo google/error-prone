@@ -52,10 +52,10 @@ public final class NullableOnContainingClass extends BugChecker
     implements MemberSelectTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
   @Override
   public Description matchMemberSelect(MemberSelectTree tree, VisitorState state) {
-    if (!(tree.getExpression() instanceof AnnotatedTypeTree)) {
+    if (!(tree.getExpression() instanceof AnnotatedTypeTree annotatedTypeTree)) {
       return NO_MATCH;
     }
-    return handle(((AnnotatedTypeTree) tree.getExpression()).getAnnotations(), tree, state);
+    return handle(annotatedTypeTree.getAnnotations(), tree, state);
   }
 
   @Override

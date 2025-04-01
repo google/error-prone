@@ -174,10 +174,10 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
           if (value == null) {
             return null;
           }
-          if (!(node.getType() instanceof PrimitiveTypeTree)) {
+          if (!(node.getType() instanceof PrimitiveTypeTree primitiveTypeTree)) {
             return null;
           }
-          TypeKind kind = ((PrimitiveTypeTree) node.getType()).getPrimitiveTypeKind();
+          TypeKind kind = primitiveTypeTree.getPrimitiveTypeKind();
           return cast(kind, value);
         }
 

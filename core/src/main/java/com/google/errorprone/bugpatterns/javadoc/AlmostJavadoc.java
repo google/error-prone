@@ -160,8 +160,8 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
         // For enum constants, skip past the desugared class declaration.
         if (kind == ElementKind.ENUM_CONSTANT) {
           javadoccablePositions.put(startPos(variableTree), variableTree);
-          if (variableTree.getInitializer() instanceof NewClassTree) {
-            ClassTree classBody = ((NewClassTree) variableTree.getInitializer()).getClassBody();
+          if (variableTree.getInitializer() instanceof NewClassTree newClassTree) {
+            ClassTree classBody = newClassTree.getClassBody();
             if (classBody != null) {
               scan(classBody.getMembers(), null);
             }

@@ -123,8 +123,8 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
         // For enum constants, skip past the desugared class declaration.
         if (kind == ElementKind.ENUM_CONSTANT) {
           javadoccablePositions.put(getStartPosition(variableTree), variableTree);
-          if (variableTree.getInitializer() instanceof NewClassTree) {
-            ClassTree classBody = ((NewClassTree) variableTree.getInitializer()).getClassBody();
+          if (variableTree.getInitializer() instanceof NewClassTree newClassTree) {
+            ClassTree classBody = newClassTree.getClassBody();
             if (classBody != null) {
               scan(classBody.getMembers(), null);
             }

@@ -439,9 +439,9 @@ public class ImmutableChecker extends BugChecker
         // If we're only seeing a field access, don't complain about the fact we closed around
         // `this`. This is special-case as it would otherwise be vexing to complain about accessing
         // a field of type ImmutableList.
-        if (tree.getExpression() instanceof IdentifierTree
+        if (tree.getExpression() instanceof IdentifierTree identifierTree
             && getSymbol(tree) instanceof VarSymbol
-            && ((IdentifierTree) tree.getExpression()).getName().contentEquals("this")) {
+            && identifierTree.getName().contentEquals("this")) {
           handleIdentifier(getSymbol(tree));
           return null;
         }

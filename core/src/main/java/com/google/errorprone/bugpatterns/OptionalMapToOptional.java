@@ -74,9 +74,9 @@ public final class OptionalMapToOptional extends BugChecker implements MethodInv
     // Heuristic: if another Optional instance method is invoked on this, it's usually clear what's
     // going on, unless that method is `isPresent()`.
     if (path.getParentPath().getLeaf() instanceof MemberSelectTree
-        && path.getParentPath().getParentPath().getLeaf() instanceof MethodInvocationTree
-        && ANYTHING_BUT_ISPRESENT.matches(
-            (MethodInvocationTree) path.getParentPath().getParentPath().getLeaf(), state)) {
+        && path.getParentPath().getParentPath().getLeaf()
+            instanceof MethodInvocationTree methodInvocationTree
+        && ANYTHING_BUT_ISPRESENT.matches(methodInvocationTree, state)) {
       return NO_MATCH;
     }
     TargetType targetType =

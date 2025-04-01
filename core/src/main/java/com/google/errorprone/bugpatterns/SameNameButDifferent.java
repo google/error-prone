@@ -201,12 +201,12 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
   }
 
   private static boolean shadowsClass(VisitorState state, TreePath treePath) {
-    if (!(treePath.getLeaf() instanceof IdentifierTree)) {
+    if (!(treePath.getLeaf() instanceof IdentifierTree identifierTree)) {
       return true;
     }
 
     TreePath enclosingClass = findPathFromEnclosingNodeToTopLevel(treePath, ClassTree.class);
-    String name = ((IdentifierTree) treePath.getLeaf()).getName().toString();
+    String name = identifierTree.getName().toString();
     return findIdent(name, state.withPath(enclosingClass), KindSelector.VAL_TYP) != null;
   }
 

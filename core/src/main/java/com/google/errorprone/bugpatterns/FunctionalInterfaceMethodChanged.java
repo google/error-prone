@@ -129,10 +129,9 @@ public class FunctionalInterfaceMethodChanged extends BugChecker implements Meth
         }
 
         // And the second one is "return null;"
-        if (node.getStatements().get(1) instanceof ReturnTree) {
-          ReturnTree returnTree = (ReturnTree) node.getStatements().get(1);
-          if (returnTree.getExpression() instanceof LiteralTree) {
-            Object returnValue = ((LiteralTree) returnTree.getExpression()).getValue();
+        if (node.getStatements().get(1) instanceof ReturnTree returnTree) {
+          if (returnTree.getExpression() instanceof LiteralTree literalTree) {
+            Object returnValue = literalTree.getValue();
             return returnValue == null;
           }
         }

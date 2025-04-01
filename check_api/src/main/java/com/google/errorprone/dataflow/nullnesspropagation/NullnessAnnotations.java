@@ -170,12 +170,12 @@ public class NullnessAnnotations {
   public static Optional<Nullness> getUpperBound(TypeVariable typeVar) {
     // Annotations on bounds at type variable declaration
     Optional<Nullness> result;
-    if (typeVar.getUpperBound() instanceof IntersectionType) {
+    if (typeVar.getUpperBound() instanceof IntersectionType intersectionType) {
       // For intersection types, use the lower bound of any annotations on the individual bounds
       result =
           fromAnnotationStream(
-              ((IntersectionType) typeVar.getUpperBound())
-                  .getBounds().stream().flatMap(t -> t.getAnnotationMirrors().stream()));
+              intersectionType.getBounds().stream()
+                  .flatMap(t -> t.getAnnotationMirrors().stream()));
     } else {
       result = fromAnnotationsOn(typeVar.getUpperBound());
     }

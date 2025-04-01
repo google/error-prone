@@ -105,12 +105,12 @@ abstract class UIf implements UStatement, IfTree {
                             .apply(
                                 UnifierWithUnconsumedStatements.create(
                                     unifierAfterThen.fork(), unconsumedStatementsTail));
-                    if (getElseStatement() instanceof UBlock) {
+                    if (getElseStatement() instanceof UBlock uBlock) {
                       Choice<UnifierWithUnconsumedStatements> alternative =
                           Choice.of(
                               UnifierWithUnconsumedStatements.create(
                                   unifierAfterThen.fork(), unconsumedStatementsTail));
-                      for (UStatement stmt : ((UBlock) getElseStatement()).getStatements()) {
+                      for (UStatement stmt : uBlock.getStatements()) {
                         alternative = alternative.flatMap(stmt);
                       }
                       result = result.concat(alternative);
@@ -155,12 +155,12 @@ abstract class UIf implements UStatement, IfTree {
                             .apply(
                                 UnifierWithUnconsumedStatements.create(
                                     unifierAfterThen.fork(), unconsumedStatementsTail));
-                    if (getThenStatement() instanceof UBlock) {
+                    if (getThenStatement() instanceof UBlock uBlock) {
                       Choice<UnifierWithUnconsumedStatements> alternative =
                           Choice.of(
                               UnifierWithUnconsumedStatements.create(
                                   unifierAfterThen.fork(), unconsumedStatementsTail));
-                      for (UStatement stmt : ((UBlock) getThenStatement()).getStatements()) {
+                      for (UStatement stmt : uBlock.getStatements()) {
                         alternative = alternative.flatMap(stmt);
                       }
                       result = result.concat(alternative);

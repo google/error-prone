@@ -66,10 +66,8 @@ public class PreconditionsInvalidPlaceholder extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (PRECONDITIONS_CHECK.matches(tree, state)
-        && tree.getArguments().get(1) instanceof LiteralTree) {
-      LiteralTree formatStringTree = (LiteralTree) tree.getArguments().get(1);
-      if (formatStringTree.getValue() instanceof String) {
-        String formatString = (String) formatStringTree.getValue();
+        && tree.getArguments().get(1) instanceof LiteralTree formatStringTree) {
+      if (formatStringTree.getValue() instanceof String formatString) {
         int expectedArgs = expectedArguments(formatString);
         if (expectedArgs < tree.getArguments().size() - 2
             && BAD_PLACEHOLDER_REGEX.matcher(formatString).find()) {

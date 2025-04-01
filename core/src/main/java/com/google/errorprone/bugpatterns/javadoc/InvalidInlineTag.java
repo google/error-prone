@@ -374,10 +374,10 @@ public final class InvalidInlineTag extends BugChecker
       if (fixedTags.contains(docTree)) {
         return null;
       }
-      if (!(docTree instanceof DCInlineTag)) {
+      if (!(docTree instanceof DCInlineTag<?> dCInlineTag)) {
         return null;
       }
-      JavadocTag tag = inlineTag(((DCInlineTag) docTree).getTagName());
+      JavadocTag tag = inlineTag(dCInlineTag.getTagName());
       if (context.validTags.contains(tag) || JavadocTag.KNOWN_OTHER_TAGS.contains(tag)) {
         return null;
       }

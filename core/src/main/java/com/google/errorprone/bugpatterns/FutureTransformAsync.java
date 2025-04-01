@@ -164,8 +164,8 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
   private Description handleTransformAsync(
       Method method, MethodInvocationTree tree, LambdaExpressionTree lambda, VisitorState state) {
     HashSet<ExpressionTree> returnExpressions = new HashSet<>();
-    if (lambda.getBody() instanceof ExpressionTree) {
-      returnExpressions.add((ExpressionTree) lambda.getBody());
+    if (lambda.getBody() instanceof ExpressionTree expressionTree) {
+      returnExpressions.add(expressionTree);
     } else if (lambda.getBody() instanceof BlockTree) {
       new TreePathScanner<Void, Void>() {
         @Override

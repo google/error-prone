@@ -73,11 +73,8 @@ public final class StaticAssignmentInConstructor extends BugChecker implements M
       }
 
       private boolean shouldEmitFinding(AssignmentTree assignmentTree) {
-        if (!(assignmentTree.getExpression() instanceof IdentifierTree)) {
-          return true;
-        }
-        IdentifierTree identifierTree = ((IdentifierTree) assignmentTree.getExpression());
-        return !identifierTree.getName().contentEquals("this");
+        return !(assignmentTree.getExpression() instanceof IdentifierTree identifierTree)
+            || !identifierTree.getName().contentEquals("this");
       }
     }.scan(tree.getBody(), null);
     return NO_MATCH;

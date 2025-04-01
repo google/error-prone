@@ -160,9 +160,7 @@ public final class PreferJavaTimeOverload extends BugChecker
             String replacement = null;
 
             // rewrite foo(javaDuration.getSeconds(), SECONDS) -> foo(javaDuration)
-            if (arguments.get(0) instanceof MethodInvocationTree) {
-              MethodInvocationTree maybeDurationDecomposition =
-                  (MethodInvocationTree) arguments.get(0);
+            if (arguments.get(0) instanceof MethodInvocationTree maybeDurationDecomposition) {
               if (JAVA_DURATION_DECOMPOSITION_MATCHER.matches(maybeDurationDecomposition, state)) {
                 if (isSameType(
                     ASTHelpers.getReceiverType(maybeDurationDecomposition),

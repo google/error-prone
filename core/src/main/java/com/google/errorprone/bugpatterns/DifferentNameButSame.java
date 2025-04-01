@@ -94,8 +94,7 @@ public final class DifferentNameButSame extends BugChecker implements Compilatio
 
       @Override
       public Void visitMemberSelect(MemberSelectTree memberSelectTree, Void unused) {
-        if (getCurrentPath().getParentPath().getLeaf() instanceof MemberSelectTree) {
-          MemberSelectTree tree = (MemberSelectTree) getCurrentPath().getParentPath().getLeaf();
+        if (getCurrentPath().getParentPath().getLeaf() instanceof MemberSelectTree tree) {
           Symbol superSymbol = getSymbol(tree);
           if (superSymbol instanceof ClassSymbol) {
             return super.visitMemberSelect(memberSelectTree, null);

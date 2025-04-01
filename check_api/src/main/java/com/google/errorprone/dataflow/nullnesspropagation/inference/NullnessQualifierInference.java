@@ -263,8 +263,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
     // If return type is parameterized by a generic type on receiver, collate references to that
     // generic between the receiver and the result/argument types.
-    if (!callee.isStatic() && node.getMethodSelect() instanceof JCFieldAccess) {
-      JCFieldAccess fieldAccess = ((JCFieldAccess) node.getMethodSelect());
+    if (!callee.isStatic() && node.getMethodSelect() instanceof JCFieldAccess fieldAccess) {
       for (TypeVariableSymbol tvs : fieldAccess.selected.type.tsym.getTypeParameters()) {
         Type rcvrtype = fieldAccess.selected.type.tsym.type;
         // Note this should be a singleton set, one for each type parameter

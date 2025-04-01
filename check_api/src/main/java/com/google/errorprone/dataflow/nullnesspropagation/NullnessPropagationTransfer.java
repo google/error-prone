@@ -86,7 +86,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeVariable;
 import org.checkerframework.errorprone.dataflow.analysis.Analysis;
 import org.checkerframework.errorprone.dataflow.analysis.ForwardAnalysisImpl;
@@ -672,11 +671,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   private static boolean hasNonNullConstantValue(LocalVariableNode node) {
-    if (node.getElement() instanceof VariableElement) {
-      VariableElement element = (VariableElement) node.getElement();
-      return (element.getConstantValue() != null);
-    }
-    return false;
+    return node.getElement() != null && node.getElement().getConstantValue() != null;
   }
 
   private static @Nullable ClassAndField tryGetFieldSymbol(Tree tree) {
@@ -810,11 +805,11 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       // missing types.
       if (fieldDeclPath == null
           || fieldDeclPath.getCompilationUnit() != compilationUnit
-          || !(fieldDeclPath.getLeaf() instanceof VariableTree)) {
+          || !(fieldDeclPath.getLeaf() instanceof VariableTree variableTree)) {
         return null;
       }
 
-      ExpressionTree initializer = ((VariableTree) fieldDeclPath.getLeaf()).getInitializer();
+      ExpressionTree initializer = variableTree.getInitializer();
       if (initializer == null) {
         return null;
       }
@@ -907,10 +902,10 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     if (!calleeName.member.equals("equals") || arguments.size() != 1) {
       return false;
     }
-    if (!(getOnlyElement(arguments).getTree() instanceof JCIdent)) {
+    if (!(getOnlyElement(arguments).getTree() instanceof JCIdent jCIdent)) {
       return false;
     }
-    Symbol sym = ((JCIdent) getOnlyElement(arguments).getTree()).sym;
+    Symbol sym = jCIdent.sym;
     if (sym == null || sym.type == null) {
       return false;
     }

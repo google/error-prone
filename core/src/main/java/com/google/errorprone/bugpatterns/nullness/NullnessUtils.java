@@ -648,8 +648,8 @@ class NullnessUtils {
     // Skip fields declared in other compilation units since we can't make a fix for them here.
     if (declPath != null
         && declPath.getCompilationUnit() == state.getPath().getCompilationUnit()
-        && (declPath.getLeaf() instanceof VariableTree)) {
-      return (VariableTree) declPath.getLeaf();
+        && (declPath.getLeaf() instanceof VariableTree variableTree)) {
+      return variableTree;
     }
     return null;
   }
