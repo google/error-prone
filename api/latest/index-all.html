@@ -7058,6 +7058,10 @@ member that is part of a record's state vector.</div>
 <div class="block">Returns <code>true</code> if and only if the given <code>tree</code> is an invocation of or reference to
 a constructor or non-<code>void</code> method for which the return value is considered unused.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html#isSame(com.sun.source.tree.ExpressionTree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">isSame(ExpressionTree, ExpressionTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions</a></dt>
+<dd>
+<div class="block">Returns whether <code>aTree</code> and <code>bTree</code> seem to correspond to the same expression.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#isSame(com.sun.source.tree.Tree)" class="member-name-link">isSame(Tree)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches an AST node which is the same object reference as the given node.</div>
@@ -9137,6 +9141,8 @@ multidimensional.</div>
 <dt><a href="com/google/errorprone/bugpatterns/SelfComparison.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SelfComparison.html" title="class in com.google.errorprone.bugpatterns">SelfComparison</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/SelfEquals.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SelfEquals.html" title="class in com.google.errorprone.bugpatterns">SelfEquals</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/SelfSet.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SelfSet.html" title="class in com.google.errorprone.bugpatterns">SelfSet</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/SetUnrecognized.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SetUnrecognized.html" title="class in com.google.errorprone.bugpatterns">SetUnrecognized</a></dt>
 <dd>&nbsp;</dd>
@@ -12361,6 +12367,10 @@ enabled <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/SelfEquals.html#%3Cinit%3E()" class="member-name-link">SelfEquals()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SelfEquals.html" title="class in com.google.errorprone.bugpatterns">SelfEquals</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/SelfSet.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">SelfSet</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">A BugPattern; see the summary.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/SerializableReads.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">SerializableReads</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">List of banned methods for <a href="com/google/errorprone/bugpatterns/BanSerializableRead.html" title="class in com.google.errorprone.bugpatterns"><code>BanSerializableRead</code></a>.</div>
