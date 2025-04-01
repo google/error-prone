@@ -263,6 +263,16 @@ public final class ConstantExpressions {
     return symbolizeImmutableExpression(tree, state).map(ConstantExpression::pureMethod);
   }
 
+  /** Returns whether {@code aTree} and {@code bTree} seem to correspond to the same expression. */
+  public boolean isSame(ExpressionTree aTree, ExpressionTree bTree, VisitorState state) {
+    var a = constantExpression(aTree, state);
+    if (a.isEmpty()) {
+      return false;
+    }
+    var b = constantExpression(bTree, state);
+    return b.isPresent() && a.get().equals(b.get());
+  }
+
   /** Represents a binary equals call on two constant expressions. */
   @AutoValue
   public abstract static class ConstantEquals {

@@ -351,6 +351,7 @@ import com.google.errorprone.bugpatterns.SelfAssertion;
 import com.google.errorprone.bugpatterns.SelfAssignment;
 import com.google.errorprone.bugpatterns.SelfComparison;
 import com.google.errorprone.bugpatterns.SelfEquals;
+import com.google.errorprone.bugpatterns.SelfSet;
 import com.google.errorprone.bugpatterns.SetUnrecognized;
 import com.google.errorprone.bugpatterns.ShortCircuitBoolean;
 import com.google.errorprone.bugpatterns.ShouldHaveEvenArgs;
@@ -1087,6 +1088,7 @@ public class BuiltInCheckerSuppliers {
           SameNameButDifferent.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           SelfAlwaysReturnsThis.class,
+          SelfSet.class,
           ShortCircuitBoolean.class,
           StatementSwitchToExpressionSwitch.class,
           StaticAssignmentInConstructor.class,
