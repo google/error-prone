@@ -752,6 +752,64 @@ public final class PatternMatchingInstanceofTest {
         .doTest();
   }
 
+  @Test
+  public void constantExpression() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              int f(ImmutableList<Object> xs) {
+                if (xs.get(0) instanceof Integer) {
+                  return (Integer) xs.get(0);
+                }
+                return 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              int f(ImmutableList<Object> xs) {
+                if (xs.get(0) instanceof Integer i) {
+                  return i;
+                }
+                return 0;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nonFinalIdentifier() {
+    // NOTE(ghm): Ideally we could match this, but ConstantExpressions won't regard a non-final
+    // identifier as a constant (correctly!)
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              String f(Object o) {
+                o = o.toString();
+                if (o instanceof String) {
+                  return (String) o;
+                }
+                return null;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
   // https://github.com/google/error-prone/issues/4923
   @Test
   public void requiredParentheses_retainedInFix() {
