@@ -330,6 +330,9 @@ Math.round(Integer) results in truncation
 __[MislabeledAndroidString](bugpattern/MislabeledAndroidString)__<br>
 Certain resources in &#96;android.R.string&#96; have names that do not match their content
 
+__[MisleadingEmptyVarargs](bugpattern/MisleadingEmptyVarargs)__<br>
+&#96;thenThrow&#96; with no arguments is a no-op, despite reading like it makes the mock throw.
+
 __[MisleadingEscapedSpace](bugpattern/MisleadingEscapedSpace)__<br>
 Using \s anywhere except at the end of a line in a text block is potentially misleading.
 
