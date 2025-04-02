@@ -239,6 +239,7 @@ import com.google.errorprone.bugpatterns.MathRoundIntLong;
 import com.google.errorprone.bugpatterns.MemoizeConstantVisitorStateLookups;
 import com.google.errorprone.bugpatterns.MethodCanBeStatic;
 import com.google.errorprone.bugpatterns.MisformattedTestData;
+import com.google.errorprone.bugpatterns.MisleadingEmptyVarargs;
 import com.google.errorprone.bugpatterns.MisleadingEscapedSpace;
 import com.google.errorprone.bugpatterns.MissingBraces;
 import com.google.errorprone.bugpatterns.MissingCasesInEnumSwitch;
@@ -781,6 +782,7 @@ public class BuiltInCheckerSuppliers {
           LossyPrimitiveCompare.class,
           MathRoundIntLong.class,
           MislabeledAndroidString.class,
+          MisleadingEmptyVarargs.class,
           MisleadingEscapedSpace.class,
           MisplacedScopeAnnotations.class,
           MissingSuperCall.class,
