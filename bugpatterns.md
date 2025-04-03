@@ -1349,6 +1349,9 @@ Variables which are initialized and do not escape the current scope do not need 
 __[UnnecessaryBreakInSwitch](bugpattern/UnnecessaryBreakInSwitch)__<br>
 This break is unnecessary, fallthrough does not occur in -&gt; switches
 
+__[UnnecessaryCopy](bugpattern/UnnecessaryCopy)__<br>
+This collection is already immutable (just not ImmutableList/ImmutableMap); copying it is unnecessary.
+
 __[UnnecessaryLambda](bugpattern/UnnecessaryLambda)__<br>
 Returning a lambda from a helper method or saving it in a constant is unnecessary; prefer to implement the functional interface method directly and use a method reference instead.
 
