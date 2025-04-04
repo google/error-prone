@@ -276,4 +276,55 @@ public final class UnnecessaryAssignmentTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void inject_assignedElsewhere_assignmentDeleted() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.inject.Inject;
+
+            class Test {
+              @Inject boolean myFoo;
+
+              void sin() {
+                myFoo = false;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.inject.Inject;
+
+            class Test {
+              @Inject boolean myFoo;
+
+              void sin() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void inject_assignedElsewhereButOptional_noFinding() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.inject.Inject;
+
+            class Test {
+              @Inject(optional = true)
+              boolean myFoo;
+
+              void sin() {
+                myFoo = false;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }

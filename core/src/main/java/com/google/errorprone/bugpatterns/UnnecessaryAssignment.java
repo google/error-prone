@@ -25,12 +25,12 @@ import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestRunnerOfT
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ErrorProneTokens.getTokens;
@@ -47,17 +47,21 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneToken;
+import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -82,19 +86,29 @@ public final class UnnecessaryAssignment extends BugChecker
           "jakarta.inject.Inject",
           "javax.inject.Inject");
 
-  private static final Matcher<Tree> HAS_MOCK_ANNOTATION = hasAnnotation("org.mockito.Mock");
+  private static final Matcher<Tree> HAS_MOCK_ANNOTATION = symbolHasAnnotation("org.mockito.Mock");
 
   private static final Matcher<Tree> HAS_NON_MOCK_FRAMEWORK_ANNOTATION =
       allOf(
           anyOf(
               FRAMEWORK_ANNOTATIONS.stream()
-                  .map(Matchers::hasAnnotation)
+                  .map(Matchers::symbolHasAnnotation)
                   .collect(toImmutableList())),
-          not(
-              annotations(
-                  AT_LEAST_ONE,
-                  hasArgumentWithValue(
-                      "optional", (t, s) -> Objects.equals(constValue(t), true)))));
+          not(UnnecessaryAssignment::isOptionalInject));
+
+  private static boolean isOptionalInject(Tree tree, VisitorState state) {
+    var symbol = getSymbol(tree);
+    var compound = symbol.attribute(INJECT.get(state));
+    if (compound == null) {
+      return false;
+    }
+    return MoreAnnotations.getValue(compound, "optional")
+        .map(a -> Objects.equals(a.getValue(), true))
+        .orElse(false);
+  }
+
+  private static final Supplier<Symbol> INJECT =
+      VisitorState.memoize(state -> state.getSymbolFromString("com.google.inject.Inject"));
 
   private static final Matcher<ExpressionTree> MOCK_FACTORY =
       staticMethod().onClass("org.mockito.Mockito").named("mock");
@@ -116,7 +130,12 @@ public final class UnnecessaryAssignment extends BugChecker
       return NO_MATCH;
     }
 
-    return describeMatch(tree, SuggestedFix.delete(tree));
+    SuggestedFix fix =
+        state.getPath().getParentPath().getLeaf() instanceof ExpressionStatementTree est
+            ? SuggestedFix.delete(est)
+            : SuggestedFix.emptyFix();
+
+    return describeMatch(tree, fix);
   }
 
   @Override
