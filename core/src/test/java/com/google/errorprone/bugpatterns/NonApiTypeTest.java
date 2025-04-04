@@ -50,6 +50,26 @@ public final class NonApiTypeTest {
   }
 
   @Test
+  public void protoListImplementations() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            public class Test {
+              // BUG: Diagnostic contains: java.util.List
+              private void test1(com.google.protobuf.ProtocolStringList value) {}
+
+              // BUG: Diagnostic contains: java.util.List
+              private void test1(com.google.protobuf.LazyStringList value) {}
+
+              // BUG: Diagnostic contains: java.util.List
+              private void test1(com.google.protobuf.LazyStringArrayList value) {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void setImplementations() {
     helper
         .addSourceLines(

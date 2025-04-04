@@ -196,6 +196,15 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
               ApiElementType.ANY),
           // TODO(kak): consider com.google.type.Interval -> Range<Instant>
 
+          // ProtocolStringList subtypes (see b/408025632)
+          // Ideally, we also would flag local variables, but NonApiType is a method-level check.
+          withAnyVisibility(
+              anyOf(isDescendantOf("com.google.protobuf.ProtocolStringList")),
+              "Unless you need methods declared on the subtypes, prefer a java.util.List<String>"
+                  + " instead. "
+                  + INTERFACES_NOT_IMPLS_LINK,
+              ApiElementType.ANY),
+
           // Flogger
           withAnyVisibility(
               anyOf(
