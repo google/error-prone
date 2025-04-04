@@ -60,7 +60,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -136,11 +135,6 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
                   specializedMatcher()));
 
   private final ConstantExpressions constantExpressions;
-
-  // TODO(ghm): Remove once possible.
-  protected AbstractReturnValueIgnored() {
-    this(ConstantExpressions.fromFlags(ErrorProneFlags.empty()));
-  }
 
   protected AbstractReturnValueIgnored(ConstantExpressions constantExpressions) {
     this.constantExpressions = constantExpressions;
