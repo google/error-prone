@@ -994,6 +994,11 @@ public class Matchers {
     return (classTree, state) -> getSymbol(classTree).getKind() == ElementKind.ENUM;
   }
 
+  /** Matches if a {@link ClassTree} is a {@code record} declaration. */
+  public static Matcher<ClassTree> isRecord() {
+    return (classTree, state) -> getSymbol(classTree).getKind() == ElementKind.RECORD;
+  }
+
   /**
    * Matches an class based on whether it is nested in another class or method.
    *
