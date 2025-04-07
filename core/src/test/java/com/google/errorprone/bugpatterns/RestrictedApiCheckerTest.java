@@ -474,4 +474,101 @@ public class RestrictedApiCheckerTest {
         .expectResult(Result.OK)
         .doTest();
   }
+
+  @Test
+  public void restrictedApiOnRecordComponent() {
+    helper
+        .addSourceLines(
+            "Allowlist.java",
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+            @interface Allowlist {}
+            """)
+        .addSourceLines(
+            "User.java",
+            """
+            import com.google.errorprone.annotations.RestrictedApi;
+
+            public record User(
+                String name,
+                @RestrictedApi(
+                        explanation = "test",
+                        allowlistAnnotations = {Allowlist.class},
+                        link = "foo")
+                    String password) {}
+            """)
+        .addSourceLines(
+            "Testcase.java",
+            """
+            class Testcase {
+              void ctorAllowed() {
+                new User("kak", "Hunter2");
+              }
+
+              @Allowlist
+              void accessorAllowed(User user) {
+                user.password();
+              }
+
+              void accessorRestricted(User user) {
+                // BUG: Diagnostic contains: RestrictedApi
+                user.password();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void restrictedApiOnRecordConstructor() {
+    helper
+        .addSourceLines(
+            "Allowlist.java",
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            @Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
+            @interface Allowlist {}
+            """)
+        .addSourceLines(
+            "User.java",
+            """
+            import com.google.errorprone.annotations.RestrictedApi;
+
+            public record User(String name, String password) {
+
+              @RestrictedApi(
+                  explanation = "test",
+                  allowlistAnnotations = {Allowlist.class},
+                  link = "foo")
+              public User {}
+            }
+            """)
+        .addSourceLines(
+            "Testcase.java",
+            """
+            class Testcase {
+              void ctorRestricted() {
+                // BUG: Diagnostic contains: RestrictedApi
+                new User("kak", "Hunter2");
+              }
+
+              @Allowlist
+              void ctorAllowed(User user) {
+                new User("kak", "Hunter2");
+              }
+
+              void accessorAllowed(User user) {
+                user.password();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  // NOTE: @RestrictedApi cannot be applied to an entire record declaration
 }
