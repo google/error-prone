@@ -78,7 +78,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>({<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/ElementType.html#CONSTRUCTOR" title="class or interface in java.lang.annotation" class="external-link">CONSTRUCTOR</a>,<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>})
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">RestrictedApi</span></div>
-<div class="block">Restrict this method to callsites with a allowlist annotation.
+<div class="block">Restrict access to this API element to callers with an allowlist annotation or a specific path.
 
 <p>Callers that are not allowlisted will cause a configurable compiler diagnostic. Allowlisting
 can either allow the call outright, or make the compiler emit a warning when the API is called.
@@ -134,7 +134,23 @@ public class Foo {
      // ...
   }
 }
-</code></pre></div>
+</code></pre>
+
+<p>The <code>@RestrictedApi</code> annotation can also be used on a record's component to restrict the
+visibility of the record's accessor methods. For example:
+
+<pre><code>
+public record User(
+    String name,
+    @RestrictedApi(
+        explanation = "Only allow safe accessors to the password",
+        allowlistAnnotations = {ReviewedFooBar.class},
+        link = "")
+        String password) {}
+</code></pre>
+
+<p>All users will be able to call the record's constructor, but only users annotated with
+<code>@ReviewedFooBar</code> will be able to call the <code>password()</code> accessor method.</div>
 </div>
 </section>
 <section class="summary">
