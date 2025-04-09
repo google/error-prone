@@ -228,14 +228,18 @@ loadScripts(document, 'script');</script>
     runtime exception. Instead, operate on <code>sym.getAnnotationMirrors()</code> to
     meta-syntactically inspect the annotation.</div>
 </div>
-<div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,java.lang.Class,com.google.errorprone.VisitorState)">com.google.errorprone.util.ASTHelpers.hasAnnotation<wbr>(Tree, Class&lt;? extends Annotation&gt;, VisitorState)</a></div>
+<div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#getGeneratedBy(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)">com.google.errorprone.util.ASTHelpers.getGeneratedBy<wbr>(Symbol, VisitorState)</a></div>
 <div class="col-last even-row-color">
+<div class="block">TODO(ghm): delete after a JavaBuilder release</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,java.lang.Class,com.google.errorprone.VisitorState)">com.google.errorprone.util.ASTHelpers.hasAnnotation<wbr>(Tree, Class&lt;? extends Annotation&gt;, VisitorState)</a></div>
+<div class="col-last odd-row-color">
 <div class="block">prefer <a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Symbol, String, VisitorState)</code></a> to avoid needing a
     runtime dependency on the annotation class, and to prevent issues if there is skew between
     the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
-<div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class,com.google.errorprone.VisitorState)">com.google.errorprone.util.ASTHelpers.hasAnnotation<wbr>(Symbol, Class&lt;? extends Annotation&gt;, VisitorState)</a></div>
-<div class="col-last odd-row-color">
+<div class="col-summary-item-name even-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class,com.google.errorprone.VisitorState)">com.google.errorprone.util.ASTHelpers.hasAnnotation<wbr>(Symbol, Class&lt;? extends Annotation&gt;, VisitorState)</a></div>
+<div class="col-last even-row-color">
 <div class="block">prefer <a href="com/google/errorprone/util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Symbol, String, VisitorState)</code></a> to avoid needing a
     runtime dependency on the annotation class, and to prevent issues if there is skew between
     the definition of the annotation on the runtime and compile-time classpaths</div>
