@@ -71,7 +71,7 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
     if (symbol.isAnnotationType() || !WellKnownMutability.isAnnotation(state, symbol.type)) {
       return NO_MATCH;
     }
-    if (!Collections.disjoint(getGeneratedBy(symbol, state), IGNORED_PROCESSORS)) {
+    if (!Collections.disjoint(getGeneratedBy(symbol), IGNORED_PROCESSORS)) {
       return NO_MATCH;
     }
 

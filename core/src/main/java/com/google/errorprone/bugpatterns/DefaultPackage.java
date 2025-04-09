@@ -45,7 +45,7 @@ public final class DefaultPackage extends BugChecker implements CompilationUnitT
     if (tree.getTypeDecls().stream()
         .map(ASTHelpers::getSymbol)
         .filter(x -> x != null)
-        .anyMatch(s -> !ASTHelpers.getGeneratedBy(s, state).isEmpty())) {
+        .anyMatch(s -> !ASTHelpers.getGeneratedBy(s).isEmpty())) {
       return Description.NO_MATCH;
     }
     if (tree.getPackageName() != null) {

@@ -75,7 +75,7 @@ public final class AutoValueSubclassLeaked extends BugChecker
 
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
-        if (!ASTHelpers.getGeneratedBy(getSymbol(classTree), state).isEmpty()) {
+        if (!ASTHelpers.getGeneratedBy(getSymbol(classTree)).isEmpty()) {
           return null;
         }
         return super.visitClass(classTree, null);

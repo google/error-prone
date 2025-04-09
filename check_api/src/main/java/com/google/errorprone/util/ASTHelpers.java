@@ -1679,7 +1679,7 @@ public class ASTHelpers {
   public static ImmutableSet<String> getGeneratedBy(VisitorState state) {
     return stream(state.getPath())
         .filter(ClassTree.class::isInstance)
-        .flatMap(enclosing -> getGeneratedBy(getSymbol(enclosing), state).stream())
+        .flatMap(enclosing -> getGeneratedBy(getSymbol(enclosing)).stream())
         .collect(toImmutableSet());
   }
 
@@ -1687,12 +1687,20 @@ public class ASTHelpers {
    * Returns the values of the given symbol's {@code Generated} annotations, if present. If the
    * annotation doesn't have {@code values} set, returns the string name of the annotation itself.
    */
-  public static ImmutableSet<String> getGeneratedBy(Symbol symbol, VisitorState state) {
+  public static ImmutableSet<String> getGeneratedBy(Symbol symbol) {
     checkNotNull(symbol);
     return symbol.getRawAttributes().stream()
         .filter(attribute -> attribute.type.tsym.getSimpleName().contentEquals("Generated"))
         .flatMap(ASTHelpers::generatedValues)
         .collect(toImmutableSet());
+  }
+
+  /**
+   * @deprecated TODO(ghm): delete after a JavaBuilder release
+   */
+  @Deprecated
+  public static ImmutableSet<String> getGeneratedBy(Symbol symbol, VisitorState state) {
+    return getGeneratedBy(symbol);
   }
 
   private static Stream<String> generatedValues(Attribute.Compound attribute) {

@@ -96,8 +96,7 @@ public final class UnnecessarilyFullyQualified extends BugChecker
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     if (tree.getTypeDecls().stream()
-        .anyMatch(
-            t -> getSymbol(tree) != null && !getGeneratedBy(getSymbol(tree), state).isEmpty())) {
+        .anyMatch(t -> getSymbol(tree) != null && !getGeneratedBy(getSymbol(tree)).isEmpty())) {
       return NO_MATCH;
     }
     if (isPackageInfo(tree)) {

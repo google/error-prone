@@ -109,7 +109,7 @@ public final class RefersToDaggerCodegen extends BugChecker implements MethodInv
       return true;
     }
 
-    ImmutableSet<String> generatedBy = getGeneratedBy(rootCallingClass, state);
+    ImmutableSet<String> generatedBy = getGeneratedBy(rootCallingClass);
     if (!generatedBy.isEmpty()) {
       return generatedBy.contains("dagger.internal.codegen.ComponentProcessor");
     }
