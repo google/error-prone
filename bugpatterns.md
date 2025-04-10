@@ -884,6 +884,9 @@ Casting inside an if block should be plausibly consistent with the instanceof ty
 __[IntFloatConversion](bugpattern/IntFloatConversion)__<br>
 Conversion from int to float may lose precision; use an explicit cast to float if this was intentional
 
+__[IntLiteralCast](bugpattern/IntLiteralCast)__<br>
+Consider using a literal of the desired type instead of casting an int literal
+
 __[IntLongMath](bugpattern/IntLongMath)__<br>
 Expression of type int may overflow before being assigned to a long
 
