@@ -37,7 +37,6 @@ import static org.mockito.Mockito.verify;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Verify;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -46,7 +45,6 @@ import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
-import com.google.errorprone.bugpatterns.BugChecker.IdentifierTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -57,16 +55,13 @@ import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.scanner.Scanner;
-import com.google.errorprone.util.ASTHelpers.TargetType;
-import com.google.errorprone.util.ASTHelpers.TargetTypeVisitor;
+import com.google.errorprone.util.TargetType.TargetTypeVisitor;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -104,7 +99,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
 import org.junit.After;
@@ -1204,52 +1198,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} that prints the target type of matched method invocations. */
-  @BugPattern(severity = SeverityLevel.ERROR, summary = "Prints the target type")
-  public static class TargetTypeChecker extends BugChecker
-      implements MethodInvocationTreeMatcher, IdentifierTreeMatcher {
-    private static final Matcher<ExpressionTree> METHOD_MATCHER =
-        MethodMatchers.staticMethod().anyClass().withNameMatching(Pattern.compile("^detect.*"));
-
-    private static final Matcher<IdentifierTree> LOCAL_VARIABLE_MATCHER =
-        ((identifierTree, state) -> {
-          Symbol symbol = ASTHelpers.getSymbol(identifierTree);
-          return symbol != null
-              && symbol.getKind() == ElementKind.LOCAL_VARIABLE
-              && identifierTree.getName().toString().matches("detect.*");
-        });
-
-    @Override
-    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-      if (!METHOD_MATCHER.matches(tree, state)) {
-        return Description.NO_MATCH;
-      }
-      TargetType targetType = ASTHelpers.targetType(state);
-      return buildDescription(tree)
-          .setMessage(String.valueOf(targetType != null ? targetType.type() + "$" : null))
-          .build();
-    }
-
-    @Override
-    public Description matchIdentifier(IdentifierTree tree, VisitorState state) {
-      if (!LOCAL_VARIABLE_MATCHER.matches(tree, state)) {
-        return Description.NO_MATCH;
-      }
-      TargetType targetType = ASTHelpers.targetType(state);
-      return buildDescription(tree)
-          .setMessage(String.valueOf(targetType != null ? targetType.type() + "$" : null))
-          .build();
-    }
-  }
-
-  @Test
-  public void targetType() {
-    CompilationTestHelper.newInstance(TargetTypeChecker.class, getClass())
-        .addSourceFile("testdata/TargetTypeTest.java")
-        .setArgs(ImmutableList.of("-Xmaxerrs", "200", "-Xmaxwarns", "200"))
-        .doTest();
-  }
-
   /** A {@link BugChecker} that prints the target type of a parameterized type. */
   @BugPattern(
       severity = SeverityLevel.ERROR,
@@ -1260,7 +1208,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
     @Override
     public Description matchParameterizedType(ParameterizedTypeTree tree, VisitorState state) {
-      TargetType targetType = ASTHelpers.targetType(state);
+      TargetType targetType = TargetType.targetType(state);
       return buildDescription(tree)
           .setMessage(
               "Target type of "

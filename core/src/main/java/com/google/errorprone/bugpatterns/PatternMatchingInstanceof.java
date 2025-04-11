@@ -21,8 +21,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.targetType;
 import static com.google.errorprone.util.SourceVersion.supportsPatternMatchingInstanceof;
+import static com.google.errorprone.util.TargetType.targetType;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.joining;
 
