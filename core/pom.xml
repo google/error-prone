@@ -431,8 +431,17 @@
                   <include>com.google.protobuf:protobuf-java</include>
                   <include>javax.inject:javax.inject</include>
                   <include>com.google.googlejavaformat:google-java-format</include>
+                  <include>org.jspecify:jspecify</include>
                 </includes>
               </artifactSet>
+              <filters>
+                <filter>
+                  <artifact>org.jspecify:jspecify</artifact>
+                  <excludes>
+                    <exclude>META-INF/versions/9/OSGI-INF/MANIFEST.MF</exclude>
+                  </excludes>
+                </filter>
+              </filters>
             </configuration>
           </execution>
         </executions>
