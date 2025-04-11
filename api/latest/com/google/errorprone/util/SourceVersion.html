@@ -63,6 +63,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#supportsEffectivelyFinal(com.sun.tools.javac.util.Context)" tabindex="0">supportsEffectivelyFinal(Context)</a></li>
 <li><a href="#supportsPatternMatchingInstanceof(com.sun.tools.javac.util.Context)" tabindex="0">supportsPatternMatchingInstanceof(Context)</a></li>
 <li><a href="#supportsStaticInnerClass(com.sun.tools.javac.util.Context)" tabindex="0">supportsStaticInnerClass(Context)</a></li>
+<li><a href="#supportsPatternMatchingSwitch(com.sun.tools.javac.util.Context)" tabindex="0">supportsPatternMatchingSwitch(Context)</a></li>
 </ol>
 </li>
 </ol>
@@ -107,18 +108,23 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns whether the compiler supports pattern-matching instanceofs.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportsStaticInnerClass(com.sun.tools.javac.util.Context)" class="member-name-link">supportsStaticInnerClass</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportsPatternMatchingSwitch(com.sun.tools.javac.util.Context)" class="member-name-link">supportsPatternMatchingSwitch</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns true if the compiler source version level supports static inner classes.</div>
+<div class="block">Returns true if the compiler source version level supports pattern-matching switches.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportsSwitchExpressions(com.sun.tools.javac.util.Context)" class="member-name-link">supportsSwitchExpressions</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportsStaticInnerClass(com.sun.tools.javac.util.Context)" class="member-name-link">supportsStaticInnerClass</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns true if the compiler source version level supports switch expressions.</div>
+<div class="block">Returns true if the compiler source version level supports static inner classes.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportsTextBlocks(com.sun.tools.javac.util.Context)" class="member-name-link">supportsTextBlocks</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportsSwitchExpressions(com.sun.tools.javac.util.Context)" class="member-name-link">supportsSwitchExpressions</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns true if the compiler source version level supports switch expressions.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#supportsTextBlocks(com.sun.tools.javac.util.Context)" class="member-name-link">supportsTextBlocks</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns true if the compiler source version level supports text blocks.</div>
 </div>
 </div>
@@ -180,6 +186,15 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">supportsStaticInnerClass</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context)</span></div>
 <div class="block">Returns true if the compiler source version level supports static inner classes.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="supportsPatternMatchingSwitch(com.sun.tools.javac.util.Context)">
+<h3>supportsPatternMatchingSwitch</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">supportsPatternMatchingSwitch</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context)</span></div>
+<div class="block">Returns true if the compiler source version level supports pattern-matching switches.</div>
 </div>
 </section>
 </li>
