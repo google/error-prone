@@ -75,12 +75,16 @@ public final class ConstantExpressions {
   private final Supplier<ThreadSafety> threadSafety;
 
   @Inject
-  ConstantExpressions(WellKnownMutability wellKnownMutability) {
+  ConstantExpressions(WellKnownMutability wellKnownMutability, ErrorProneFlags flags) {
+    boolean considerAllMethodsPure =
+        flags.getBoolean("ConstantExpressions:ConsiderAllMethodsPure").orElse(false);
     this.pureMethods =
-        anyOf(
-            basePureMethods,
-            instanceMethod()
-                .onDescendantOfAny(wellKnownMutability.getKnownImmutableClasses().keySet()));
+        considerAllMethodsPure
+            ? anyMethod()
+            : anyOf(
+                basePureMethods,
+                instanceMethod()
+                    .onDescendantOfAny(wellKnownMutability.getKnownImmutableClasses().keySet()));
     this.threadSafety =
         memoize(
             s ->
@@ -93,7 +97,7 @@ public final class ConstantExpressions {
   }
 
   public static ConstantExpressions fromFlags(ErrorProneFlags flags) {
-    return new ConstantExpressions(WellKnownMutability.fromFlags(flags));
+    return new ConstantExpressions(WellKnownMutability.fromFlags(flags), flags);
   }
 
   /** Represents sets of things known to be true and false if a boolean statement evaluated true. */
