@@ -28,7 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static com.google.errorprone.util.TargetType.targetType;
+import static com.google.errorprone.util.ASTHelpers.targetType;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 

@@ -46,8 +46,8 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.type.DescendantOf;
 import com.google.errorprone.predicates.type.DescendantOfAny;
 import com.google.errorprone.suppliers.Suppliers;
+import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.SideEffectAnalysis;
-import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -256,7 +256,7 @@ public class ModifiedButNotUsed extends BugChecker
         || !(path.getParentPath().getParentPath().getLeaf()
             instanceof MethodInvocationTree methodInvocationTree)
         || !COLLECTION_SETTER.matches(methodInvocationTree, state)
-        || TargetType.targetType(state.withPath(path.getParentPath().getParentPath())) != null;
+        || ASTHelpers.targetType(state.withPath(path.getParentPath().getParentPath())) != null;
   }
 
   private static boolean fluentBuilderUsed(VisitorState state) {

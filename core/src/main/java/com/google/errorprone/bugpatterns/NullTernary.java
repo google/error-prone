@@ -23,7 +23,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ConditionalExpressionTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.TargetType;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.Tree.Kind;
 
@@ -42,7 +42,7 @@ public class NullTernary extends BugChecker implements ConditionalExpressionTree
         && conditionalExpression.getTrueExpression().getKind() != Kind.NULL_LITERAL) {
       return NO_MATCH;
     }
-    TargetType targetType = TargetType.targetType(state);
+    ASTHelpers.TargetType targetType = ASTHelpers.targetType(state);
     if (targetType == null || !targetType.type().isPrimitive()) {
       return NO_MATCH;
     }

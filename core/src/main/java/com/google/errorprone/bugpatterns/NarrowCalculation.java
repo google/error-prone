@@ -22,7 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
-import static com.google.errorprone.util.TargetType.targetType;
+import static com.google.errorprone.util.ASTHelpers.targetType;
 import static java.lang.String.format;
 
 import com.google.errorprone.BugPattern;

@@ -34,7 +34,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.TargetType;
+import com.google.errorprone.util.ASTHelpers.TargetType;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -179,7 +179,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
       checkArgument(pathForTree.getLeaf() instanceof MethodInvocationTree);
       MethodInvocationTree methodInvocation = (MethodInvocationTree) pathForTree.getLeaf();
 
-      TargetType targetType = TargetType.targetType(state.withPath(pathForTree));
+      TargetType targetType = ASTHelpers.targetType(state.withPath(pathForTree));
       if (targetType == null) {
         // If the check is the only thing in a statement, remove the statement.
         StatementTree statementTree =
@@ -373,7 +373,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
       if (isBoxed(nodeSymbol, state)) {
         dereferenced.add((VarSymbol) nodeSymbol);
         VisitorState identifierState = state.withPath(getCurrentPath());
-        TargetType targetType = TargetType.targetType(identifierState);
+        TargetType targetType = ASTHelpers.targetType(identifierState);
         if (targetType != null && !targetType.type().isPrimitive()) {
           boxedUsageFound.add((VarSymbol) nodeSymbol);
           return null;

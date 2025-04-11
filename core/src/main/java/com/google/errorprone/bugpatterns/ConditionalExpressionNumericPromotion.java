@@ -28,7 +28,7 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.TargetType;
+import com.google.errorprone.util.ASTHelpers.TargetType;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
@@ -66,7 +66,7 @@ public class ConditionalExpressionNumericPromotion extends BugChecker
       return NO_MATCH;
     }
 
-    TargetType targetType = TargetType.targetType(state);
+    TargetType targetType = ASTHelpers.targetType(state);
     if (targetType == null) {
       return NO_MATCH;
     }

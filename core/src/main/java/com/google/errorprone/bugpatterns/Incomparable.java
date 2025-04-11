@@ -30,7 +30,6 @@ import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Type;
@@ -72,7 +71,7 @@ public class Incomparable extends BugChecker implements NewClassTreeMatcher {
       return NO_MATCH;
     }
     Type type;
-    TargetType targetType = TargetType.targetType(state);
+    ASTHelpers.TargetType targetType = ASTHelpers.targetType(state);
     if (targetType != null) {
       type = targetType.type();
     } else {

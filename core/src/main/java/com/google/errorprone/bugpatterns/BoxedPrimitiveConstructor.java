@@ -34,7 +34,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.NewClassTree;
@@ -207,7 +206,7 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     }
     // primitive widening conversions can't be combined with autoboxing, so add a
     // explicit widening cast unless we're sure the expression doesn't get autoboxed
-    TargetType targetType = TargetType.targetType(state);
+    ASTHelpers.TargetType targetType = ASTHelpers.targetType(state);
     if (targetType != null
         && !isSameType(type, argType, state)
         && !isSameType(targetType.type(), type, state)) {

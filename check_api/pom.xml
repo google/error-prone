@@ -170,7 +170,6 @@
             <testExclude>**/FindIdentifiersTest.java</testExclude>
             <testExclude>**/MoreAnnotationsTest.java</testExclude>
             <testExclude>**/ReachabilityTest.java</testExclude>
-            <testExclude>**/TargetTypeTest.java</testExclude>
           </testExcludes>
         </configuration>
         <executions>

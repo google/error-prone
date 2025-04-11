@@ -39,7 +39,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Signatures;
-import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -94,7 +93,7 @@ public class EqualsIncompatibleType extends BugChecker
           state);
     }
     if (IS_EQUAL_MATCHER.matches(invocationTree, state)) {
-      Type targetType = TargetType.targetType(state).type();
+      Type targetType = ASTHelpers.targetType(state).type();
       if (targetType.getTypeArguments().size() != 1) {
         return NO_MATCH;
       }

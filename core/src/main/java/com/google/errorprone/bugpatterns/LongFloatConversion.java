@@ -19,14 +19,14 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.TargetType.targetType;
+import static com.google.errorprone.util.ASTHelpers.targetType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.TargetType;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreePath;
@@ -46,7 +46,8 @@ public class LongFloatConversion extends BugChecker implements MethodInvocationT
       if (!getType(arg).getKind().equals(TypeKind.LONG)) {
         continue;
       }
-      TargetType targetType = targetType(state.withPath(new TreePath(state.getPath(), arg)));
+      ASTHelpers.TargetType targetType =
+          targetType(state.withPath(new TreePath(state.getPath(), arg)));
       if (targetType == null) {
         continue;
       }

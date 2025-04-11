@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
-import static com.google.errorprone.util.TargetType.targetType;
+import static com.google.errorprone.util.ASTHelpers.targetType;
 import static com.sun.source.tree.Tree.Kind.UNARY_MINUS;
 import static com.sun.tools.javac.code.TypeTag.DOUBLE;
 import static com.sun.tools.javac.code.TypeTag.FLOAT;
