@@ -2300,6 +2300,172 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
+  public void switchByEnum_middleNullCase_noError() {
+    // The HEART case cannot be grouped with the null case per Java syntax
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public Test(int foo) {}
+
+              public int invoke() {
+                return 123;
+              }
+
+              public int foo(Side side) {
+                switch (side) {
+                  case HEART:
+                  case null:
+                  case DIAMOND:
+                    return invoke();
+                  case SPADE:
+                    throw new RuntimeException();
+                  case CLUB:
+                    throw new NullPointerException();
+                }
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_nullGroupedWithDefault_error() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+    // Null can be grouped with default
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public int foo(Side side) {
+                switch (side) {
+                  case HEART:
+                  case DIAMOND:
+                    return 1;
+                  case SPADE:
+                    System.out.println("hello");
+                    throw new RuntimeException();
+                  case null:
+                  default:
+                    throw new NullPointerException();
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public int foo(Side side) {
+                return switch (side) {
+                  case HEART, DIAMOND -> 1;
+                  case SPADE -> {
+                    System.out.println("hello");
+                    throw new RuntimeException();
+                  }
+                  case null, default -> throw new NullPointerException();
+                };
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_middleNullCase3_error() {
+    // null case is converted without being grouped with default
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public int foo(Side side) {
+                switch (side) {
+                  case HEART:
+                  case DIAMOND:
+                    return 1;
+                  case SPADE:
+                    System.out.println("hello");
+                    throw new RuntimeException();
+                  case null:
+                    throw new RuntimeException("single null case");
+                  default:
+                    throw new NullPointerException();
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public int foo(Side side) {
+                return switch (side) {
+                  case HEART, DIAMOND -> 1;
+                  case SPADE -> {
+                    System.out.println("hello");
+                    throw new RuntimeException();
+                  }
+                  case null -> throw new RuntimeException("single null case");
+                  default -> throw new NullPointerException();
+                };
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
   public void switchByEnum_returnSwitchWithShouldNeverHappen_error() {
 
     // Check correct generated code
@@ -2373,7 +2539,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_returnSwitchCommentsBeforeFirstCase_errorAndRetained() {
-
     // Check correct generated code
     refactoringHelper
         .addInputLines(
@@ -5832,6 +5997,115 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_nullDefaultFallsOut_error() {
+    // Null can be grouped with default
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public int foo(Side side) {
+                switch (side) {
+                  case HEART:
+                  case DIAMOND:
+                    return 1;
+                  case SPADE:
+                    System.out.println("hello");
+                    throw new RuntimeException();
+                  case null:
+                  default:
+                    System.out.println("fall out");
+                }
+                return 2;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public int foo(Side side) {
+                switch (side) {
+                  case HEART, DIAMOND -> {
+                    return 1;
+                  }
+                  case SPADE -> {
+                    System.out.println("hello");
+                    throw new RuntimeException();
+                  }
+                  case null, default -> System.out.println("fall out");
+                }
+                return 2;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_onlyDefault_error() {
+    // Default can be the only case
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public int foo(Side side) {
+                switch (side) {
+                  default:
+                    throw new NullPointerException();
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              enum Side {
+                HEART,
+                SPADE,
+                DIAMOND,
+                CLUB
+              };
+
+              public int foo(Side side) {
+                switch (side) {
+                  default -> throw new NullPointerException();
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
 

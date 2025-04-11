@@ -56,6 +56,21 @@ public class SourceVersionTest {
         .isEqualTo(Runtime.version().feature() >= 15);
   }
 
+  @Test
+  public void supportsPatternMatchingSwitch_notSupported() {
+    Context context = contextWithSourceVersion("17");
+
+    assertThat(SourceVersion.supportsPatternMatchingSwitch(context)).isFalse();
+  }
+
+  @Test
+  public void supportsPatternMatchingSwitch_supported() {
+    Context context = contextWithSourceVersion("21");
+
+    assertThat(SourceVersion.supportsPatternMatchingSwitch(context))
+        .isEqualTo(Runtime.version().feature() >= 21);
+  }
+
   private static Context contextWithSourceVersion(String versionString) {
     Context context = new Context();
 
