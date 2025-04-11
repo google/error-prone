@@ -1226,7 +1226,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
       }
       TargetType targetType = ASTHelpers.targetType(state);
       return buildDescription(tree)
-          .setMessage(String.valueOf(targetType != null ? targetType.type() : null))
+          .setMessage(String.valueOf(targetType != null ? targetType.type() + "$" : null))
           .build();
     }
 
@@ -1237,7 +1237,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
       }
       TargetType targetType = ASTHelpers.targetType(state);
       return buildDescription(tree)
-          .setMessage(String.valueOf(targetType != null ? targetType.type() : null))
+          .setMessage(String.valueOf(targetType != null ? targetType.type() + "$" : null))
           .build();
     }
   }

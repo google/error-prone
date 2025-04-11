@@ -18,6 +18,7 @@ package com.google.errorprone.util.testdata;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 abstract class TargetTypeTest {
@@ -315,7 +316,7 @@ abstract class TargetTypeTest {
     // BUG: Diagnostic contains: java.lang.Boolean
     Boolean b = TargetTypeTest.detectWrappedBoolean();
 
-    // BUG: Diagnostic contains: java.lang.Integer
+    // BUG: Diagnostic contains: java.lang.Object
     return detectWrappedInteger().toString();
   }
 
@@ -568,4 +569,62 @@ abstract class TargetTypeTest {
   // Not called the obvious "ExtendsHasInner" in order to avoid erroneously matching the "HasInner"
   // part of it.
   class DifferentName extends HasInner {}
+
+  interface A<T> {
+    void foo();
+  }
+
+  class B<T> implements A<T> {
+    @Override
+    public void foo() {}
+  }
+
+  class C<T> extends B<T> {}
+
+  class D implements A<Long> {
+    @Override
+    public void foo() {}
+  }
+
+  void overrides() {
+    C detectMe = new C();
+    // BUG: Diagnostic contains: TargetTypeTest.A$
+    detectMe.foo();
+
+    B detectMeAlso = new B();
+    // BUG: Diagnostic contains: TargetTypeTest.A$
+    detectMeAlso.foo();
+
+    // NOTE(ghm): I think we ought to be resolving the type arguments here, but if no callers
+    // care...
+
+    B<Integer> detectMeAlso2 = new B<Integer>();
+    // BUG: Diagnostic contains: TargetTypeTest.A<T>$
+    detectMeAlso2.foo();
+
+    D detectMeAlso3 = new D();
+    // BUG: Diagnostic contains: TargetTypeTest.A<T>$
+    detectMeAlso3.foo();
+  }
+
+  interface AA {
+    List<Integer> bar();
+  }
+
+  final class BB implements AA {
+    @Override
+    public ArrayList<Integer> bar() {
+      return null;
+    }
+  }
+
+  void covariantReturnTypes() {
+    BB detectMe = new BB();
+
+    // BUG: Diagnostic contains: AA
+    detectMe.bar().get(0);
+
+    // BUG: Diagnostic contains: BB
+    detectMe.bar().ensureCapacity(1);
+  }
 }

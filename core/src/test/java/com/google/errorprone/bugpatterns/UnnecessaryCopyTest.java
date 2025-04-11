@@ -65,6 +65,42 @@ public final class UnnecessaryCopyTest {
   }
 
   @Test
+  public void positiveViaVariable_usageIsMethodInvocation() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import java.util.List;
+
+            class Test {
+              List<TestFieldProtoMessage> f(TestProtoMessage m) {
+                ImmutableList<TestFieldProtoMessage> l = ImmutableList.copyOf(m.getMultiFieldList());
+                return l.stream().map(x -> x).collect(ImmutableList.toImmutableList());
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import java.util.List;
+
+            class Test {
+              List<TestFieldProtoMessage> f(TestProtoMessage m) {
+                List<TestFieldProtoMessage> l = m.getMultiFieldList();
+                return l.stream().map(x -> x).collect(ImmutableList.toImmutableList());
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void positiveViaVariable_map() {
     refactoringHelper
         .addInputLines(

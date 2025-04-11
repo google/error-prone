@@ -21,8 +21,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Verify.verify;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.MoreCollectors.onlyElement;
+import static com.google.common.collect.Streams.findLast;
 import static com.google.common.collect.Streams.stream;
 import static com.google.common.collect.Streams.zip;
 import static com.google.errorprone.VisitorState.memoize;
@@ -1807,6 +1809,9 @@ public class ASTHelpers {
    *
    * <p>For example, the target type of an assignment expression is the variable's type, and the
    * target type of a return statement is the enclosing method's type.
+   *
+   * <p>A general mental model is that the target type of an expression where the value is used is
+   * the highest supertype that you could cast to and still have this compile.
    */
   public static @Nullable TargetType targetType(VisitorState state) {
     if (!canHaveTargetType(state.getPath().getLeaf())) {
@@ -2007,11 +2012,6 @@ public class ASTHelpers {
     @Override
     public Type visitMethod(MethodTree node, Void unused) {
       return null;
-    }
-
-    @Override
-    public Type visitParenthesized(ParenthesizedTree node, Void unused) {
-      return visit(node.getExpression(), null);
     }
 
     @Override
@@ -2228,10 +2228,47 @@ public class ASTHelpers {
 
     @Override
     public @Nullable Type visitMemberSelect(MemberSelectTree node, Void unused) {
-      if (current.equals(node.getExpression())) {
-        return ASTHelpers.getType(node.getExpression());
+      if (!current.equals(node.getExpression())) {
+        return null;
       }
-      return null;
+
+      if (!(getSymbol(node) instanceof MethodSymbol ms)) {
+        return getType(node.getExpression());
+      }
+      Type typeDeclaringMethod = getEffectiveReceiverType(node, ms);
+      return getType(node.getExpression()).isRaw()
+          ? state.getTypes().erasure(typeDeclaringMethod)
+          : typeDeclaringMethod;
+    }
+
+    private Type getEffectiveReceiverType(MemberSelectTree node, MethodSymbol ms) {
+      // Warning: finicky logic. With an expression `like foo.bar().baz()`, we want the target
+      // type of `foo` to be the supermost overload of `bar` which returns something on which we can
+      // actually call `baz`, hence the recursion.
+      ImmutableSet<MethodSymbol> superMethods =
+          Stream.concat(
+                  Stream.of(ms),
+                  findSuperMethods(ms, state.getTypes(), /* skipInterfaces= */ false))
+              .collect(toImmutableSet());
+
+      // Performance win: if there are no covariant return types to worry about, fast-path out.
+      var superMethodReturnTypes =
+          superMethods.stream()
+              .map(sm -> state.getTypes().erasure(sm.getReturnType()))
+              .collect(toImmutableSet());
+      if (superMethodReturnTypes.size() == 1) {
+        // All are compatible, so pick the last.
+        return getLast(superMethods).owner.type;
+      }
+      var invocationTarget = targetType(state.withPath(parent.getParentPath()));
+      return findLast(
+              superMethods.stream()
+                  .filter(
+                      sms ->
+                          invocationTarget == null
+                              || isSubtype(sms.getReturnType(), invocationTarget.type(), state)))
+          .map(m -> m.owner.type)
+          .orElse(getType(node.getExpression()));
     }
 
     @Override
