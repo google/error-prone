@@ -43,6 +43,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Range;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -997,7 +998,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       AnalysisResult analysisResult,
       boolean removeDefault) {
 
-    List<StatementTree> statementsToDelete = new ArrayList<>();
+    List<Range<Integer>> regionsToDelete = new ArrayList<>();
     List<? extends CaseTree> cases = switchTree.getCases();
     ImmutableList<ErrorProneComment> allSwitchComments =
         state.getTokensForNode(switchTree).stream()
@@ -1110,8 +1111,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
         // If the next statement is not reachable, then none of the following statements in this
         // block are either.  So, we need to delete them all.
-        statementsToDelete.addAll(
-            blockTree.getStatements().subList(indexInBlock + 1, blockTree.getStatements().size()));
+        regionsToDelete.add(
+            Range.closed(
+                state.getEndPosition(blockTree.getStatements().get(indexInBlock)),
+                state.getEndPosition(blockTree)));
       }
     }
 
@@ -1121,7 +1124,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
     suggestedFixBuilder.replace(switchTree, replacementCodeBuilder.toString());
     // Delete dead code, leaving comments where feasible
-    statementsToDelete.forEach(deleteMe -> suggestedFixBuilder.replace(deleteMe, ""));
+    regionsToDelete.forEach(
+        r -> suggestedFixBuilder.replace(r.lowerEndpoint(), r.upperEndpoint(), "}"));
     return suggestedFixBuilder.build();
   }
 

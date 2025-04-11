@@ -2361,8 +2361,6 @@ public final class StatementSwitchToExpressionSwitchTest {
                   case SPADE -> throw new RuntimeException();
                   case CLUB -> throw new NullPointerException();
                 };
-                // This should never happen
-
               }
             }
             """)
@@ -2441,8 +2439,6 @@ public final class StatementSwitchToExpressionSwitchTest {
                   case SPADE -> throw new RuntimeException();
                   case CLUB -> throw new NullPointerException();
                 };
-                // This should never happen
-
               }
             }
             """)
@@ -2825,10 +2821,6 @@ public final class StatementSwitchToExpressionSwitchTest {
                     case SPADE -> throw new RuntimeException();
                     case CLUB -> throw new NullPointerException();
                   };
-                  // Custom comment - should never happen
-
-                  // Custom comment 2
-
                 }
                 System.out.println("don't delete 2");
                 return 0;
@@ -2906,13 +2898,9 @@ public final class StatementSwitchToExpressionSwitchTest {
                     case HEART, DIAMOND, SPADE -> 1;
                     case CLUB -> throw new NullPointerException();
                   };
-
                 } catch (Throwable e) {
                   throw new RuntimeException("rethrew");
                 }
-
-                // Becomes unreachable
-
               }
             }
             """)
@@ -3007,19 +2995,13 @@ public final class StatementSwitchToExpressionSwitchTest {
                           case HEART, DIAMOND, SPADE -> 1;
                           case CLUB -> throw new NullPointerException();
                         };
-
                       } catch (Throwable e) {
                         throw new RuntimeException("rethrew");
                       }
                     }
-
-                    // Becomes unreachable
-
                   } catch (Throwable e) {
                     throw new RuntimeException("rethrew");
                   }
-                  // Also becomes unreachable
-
                 }
                 System.out.println("I'm always reachable");
                 return 4;
@@ -3113,7 +3095,6 @@ public final class StatementSwitchToExpressionSwitchTest {
                     case CLUB -> throw new NullPointerException();
                     default -> throw new NullPointerException();
                   };
-                  // Unreachable - no "should never happen" code
                 }
                 System.out.println("don't delete 2");
                 return 0;
@@ -3161,7 +3142,6 @@ public final class StatementSwitchToExpressionSwitchTest {
                     default:
                       throw new NullPointerException();
                   }
-                  // Unreachable - no "should never happen" code
                 }
                 System.out.println("don't delete 2");
                 return 0;
@@ -3198,7 +3178,6 @@ public final class StatementSwitchToExpressionSwitchTest {
                     case SPADE -> throw new RuntimeException();
                     case CLUB -> throw new NullPointerException();
                   };
-                  // Unreachable - no "should never happen" code
                 }
                 System.out.println("don't delete 2");
                 return 0;
