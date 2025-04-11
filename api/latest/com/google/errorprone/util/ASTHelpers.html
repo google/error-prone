@@ -2042,7 +2042,10 @@ number of instances tied to an (effectively) static final enum value.</div>
 null</code>.
 
 <p>For example, the target type of an assignment expression is the variable's type, and the
-target type of a return statement is the enclosing method's type.</div>
+target type of a return statement is the enclosing method's type.
+
+<p>A general mental model is that the target type of an expression where the value is used is
+the highest supertype that you could cast to and still have this compile.</div>
 </div>
 </section>
 </li>
