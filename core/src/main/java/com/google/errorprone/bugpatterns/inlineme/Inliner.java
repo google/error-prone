@@ -360,23 +360,8 @@ public final class Inliner extends BugChecker
           });
     }
 
-    EndPosTable endPosTable =
-        new EndPosTable() {
-          @Override
-          public int getEndPos(JCTree tree) {
-            return parser.getEndPos(tree);
-          }
-
-          @Override
-          public void storeEnd(JCTree tree, int endpos) {}
-
-          @Override
-          public int replaceTree(JCTree oldtree, JCTree newtree) {
-            return 0;
-          }
-        };
     String fixedReplacement =
-        AppliedFix.applyReplacements(replacement, endPosTable, replacementFixes.build());
+        AppliedFix.applyReplacements(replacement, asEndPosTable(parser), replacementFixes.build());
 
     fixBuilder.replace(
         replacementStart,
@@ -592,5 +577,24 @@ public final class Inliner extends BugChecker
       }
     }
     return false;
+  }
+
+  private static EndPosTable asEndPosTable(JavacParser parser) {
+    return new EndPosTable() {
+      @Override
+      public int getEndPos(JCTree tree) {
+        return parser.getEndPos(tree);
+      }
+
+      @Override
+      public void storeEnd(JCTree tree, int endpos) {
+        throw new AssertionError();
+      }
+
+      @Override
+      public int replaceTree(JCTree oldtree, JCTree newtree) {
+        throw new AssertionError();
+      }
+    };
   }
 }
