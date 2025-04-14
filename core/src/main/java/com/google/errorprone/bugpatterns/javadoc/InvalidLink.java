@@ -24,6 +24,7 @@ import static com.google.errorprone.bugpatterns.javadoc.Utils.getDocTreePath;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getStartPosition;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ErrorProneLog.deferredDiagnosticHandler;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -148,8 +149,7 @@ public final class InvalidLink extends BugChecker
       Log log = Log.instance(state.context);
       // Install a deferred diagnostic handler before calling DocTrees.getElement(DocTreePath)
       // TODO(cushon): revert if https://bugs.openjdk.java.net/browse/JDK-8248117 is fixed
-      Log.DeferredDiagnosticHandler deferredDiagnosticHandler =
-          new Log.DeferredDiagnosticHandler(log);
+      Log.DeferredDiagnosticHandler deferredDiagnosticHandler = deferredDiagnosticHandler(log);
       try {
         element =
             JavacTrees.instance(state.context)
