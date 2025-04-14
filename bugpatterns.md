@@ -1712,6 +1712,9 @@ The non-constant portion of a comparison generally comes first. For equality, pr
 
 ## Experimental : SUGGESTION
 
+__[AddNullMarkedToPackageInfo](bugpattern/AddNullMarkedToPackageInfo)__<br>
+Apply @NullMarked to this package
+
 __[AnnotationMirrorToString](bugpattern/AnnotationMirrorToString)__<br>
 AnnotationMirror#toString doesn&#39;t use fully qualified type names, prefer auto-common&#39;s AnnotationMirrors#toString
 
