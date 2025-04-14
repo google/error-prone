@@ -24,6 +24,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.targetType;
+import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -80,7 +81,8 @@ public final class UnnecessaryCopy extends BugChecker implements CompilationUnit
             state.reportMatch(describe(mit, state));
           } else {
             if (getCurrentPath().getParentPath().getLeaf() instanceof VariableTree vt
-                && vt.getInitializer() == mit) {
+                && vt.getInitializer() == mit
+                && getSymbol(vt).getKind().equals(LOCAL_VARIABLE)) {
               suspiciousVariables.put(getSymbol(vt), new Offender(vt, mit));
             }
           }

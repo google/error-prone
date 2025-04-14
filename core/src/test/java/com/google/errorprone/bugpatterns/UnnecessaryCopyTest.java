@@ -225,4 +225,26 @@ public final class UnnecessaryCopyTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void field_noFinding() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import java.util.List;
+
+            class Test {
+              private static final TestProtoMessage PROTO = TestProtoMessage.getDefaultInstance();
+
+              private static final ImmutableList<TestFieldProtoMessage> FIELDS =
+                  ImmutableList.copyOf(PROTO.getMultiFieldList());
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }
