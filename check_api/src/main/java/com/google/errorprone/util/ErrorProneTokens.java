@@ -57,7 +57,7 @@ public class ErrorProneTokens {
   }
 
   public ImmutableList<ErrorProneToken> getTokens() {
-    Log.DiagnosticHandler diagHandler = new Log.DiscardDiagnosticHandler(log);
+    Log.DiagnosticHandler diagHandler = ErrorProneLog.discardDiagnosticHandler(log);
     try {
       Scanner scanner = new AccessibleScanner(scannerFactory, commentSavingTokenizer);
       ImmutableList.Builder<ErrorProneToken> tokens = ImmutableList.builder();

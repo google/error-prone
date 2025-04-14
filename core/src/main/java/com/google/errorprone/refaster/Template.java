@@ -16,6 +16,8 @@
 
 package com.google.errorprone.refaster;
 
+import static com.google.errorprone.util.ErrorProneLog.deferredDiagnosticHandler;
+import static com.google.errorprone.util.ErrorProneLog.getDiagnostics;
 import static java.util.logging.Level.FINE;
 
 import com.google.common.collect.ImmutableClassToInstanceMap;
@@ -474,12 +476,13 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     // Type inference sometimes produces diagnostics, so we need to catch them to avoid interfering
     // with the enclosing compilation.
     Log.DeferredDiagnosticHandler handler =
-        new Log.DeferredDiagnosticHandler(Log.instance(inliner.getContext()));
+        deferredDiagnosticHandler(Log.instance(inliner.getContext()));
     try {
       MethodType result =
           callCheckMethod(warner, inliner, resultInfo, actualArgTypes, methodSymbol, site, env);
-      if (!handler.getDiagnostics().isEmpty()) {
-        throw new InferException(handler.getDiagnostics());
+      Collection<JCDiagnostic> diagnostics = getDiagnostics(handler);
+      if (!diagnostics.isEmpty()) {
+        throw new InferException(diagnostics);
       }
       return result;
     } finally {

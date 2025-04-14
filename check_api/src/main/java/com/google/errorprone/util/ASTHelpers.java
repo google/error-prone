@@ -155,7 +155,6 @@ import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.FatalError;
 import com.sun.tools.javac.util.Log;
-import com.sun.tools.javac.util.Log.DeferredDiagnosticHandler;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Position;
 import java.io.IOException;
@@ -1655,7 +1654,7 @@ public class ASTHelpers {
     Resolve resolve = Resolve.instance(state.context);
     Enter enter = Enter.instance(state.context);
     Log log = Log.instance(state.context);
-    DeferredDiagnosticHandler handler = new DeferredDiagnosticHandler(log);
+    Log.DiagnosticHandler handler = ErrorProneLog.deferredDiagnosticHandler(log);
     try {
       return resolve.resolveInternalMethod(
           /*pos*/ null,
