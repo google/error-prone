@@ -84,8 +84,7 @@ of potential fixes with different options in them.
 <p>Consider building a list of fixes from a set of operations A followed by B or C then D or E.
 The resulting list should be ABD, ACD, ABE, ACE.
 
-<pre><code>
-BranchedSuggestedFixes a = BranchedSuggestedFixes.builder()
+<pre><code>BranchedSuggestedFixes a = BranchedSuggestedFixes.builder()
   .startWith(A)
   .then()
   .addOption(B)

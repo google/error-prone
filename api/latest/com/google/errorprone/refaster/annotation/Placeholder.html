@@ -80,8 +80,7 @@ loadScripts(document, 'script');</script>
 arbitrary expression (if the return type is nonvoid), or zero or more statements (if the return
 type is void), in terms of its arguments. For example,
 
-<pre><code>
-abstract class ComputeIfAbsent&lt;K, V&gt; {
+<pre><code>abstract class ComputeIfAbsent&lt;K, V&gt; {
  @Placeholder abstract V computeValue(K key);
 
  @BeforeTemplate void getOrCompute(Map&lt;K, V&gt; map, K key) {
@@ -103,8 +102,7 @@ expression.
 
 <p>For a multi-line example, consider
 
-<pre><code>
-abstract class TryWithResources&lt;T extends AutoCloseable&gt; {
+<pre><code>abstract class TryWithResources&lt;T extends AutoCloseable&gt; {
  @Placeholder abstract T open();
  @Placeholder void process(T resource);
 

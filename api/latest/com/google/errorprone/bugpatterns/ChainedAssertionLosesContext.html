@@ -93,8 +93,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="block">Identifies calls to <code>assertThat</code> and similar methods inside the implementation of a <code>
 Subject</code> assertion method. These calls should instead use <code>check(...)</code>.
 
-<pre><code>
-// Before:
+<pre><code>// Before:
 public void hasFoo() {
   assertThat(actual().foo()).isEqualTo(expected);
 }

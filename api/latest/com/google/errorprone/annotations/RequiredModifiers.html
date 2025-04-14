@@ -79,15 +79,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Annotation declaring that the target annotation requires all the specified modifiers. For
 example, an annotation declared as:
 
-<pre><code>
-@RequiredModifiers(modifier = Modifier.PUBLIC)
+<pre><code>@RequiredModifiers(modifier = Modifier.PUBLIC)
 @interface MyAnnotation {}
 </code></pre>
 
 <p>will be considered illegal when used on non-public elements such as:
 
-<pre><code>
-@MyAnnotation void foo() {}
+<pre><code>@MyAnnotation void foo() {}
 </code></pre></div>
 <dl class="notes">
 <dt>Author:</dt>

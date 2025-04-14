@@ -142,8 +142,7 @@ expression with the same base as the original guarded member access.
 
 <p>For example:
 
-<pre><code>
-class MyClass {
+<pre><code>class MyClass {
   final Object mu = new Object();
   @GuardedBy("mu")
   int x;

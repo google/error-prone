@@ -160,8 +160,7 @@ heuristics, so as to help you avoid them:
   <li>methods that perform multiple operations -- e.g., if a class <code>Foo</code> contains a <code>
       AtomicInteger</code> (which is an inherently deeply thread-safe data structure), the following
       code makes this class not thread-safe:
-      <pre><code>
-private void incrementMyAtomicInteger() {
+      <pre><code>private void incrementMyAtomicInteger() {
   myAtomicInteger.set(myAtomicInteger.get() + 1);
 }
 

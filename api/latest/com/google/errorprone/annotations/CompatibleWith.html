@@ -81,8 +81,7 @@ method's enclosing class, or on the method itself. "Compatible with" means that 
 
 <p>For example, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html#contains(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Collection.contains(Object)</code></a> would be annotated as follows:
 
-<pre><code>
-interface Collection&lt;E&gt; {
+<pre><code>interface Collection&lt;E&gt; {
   boolean contains(@CompatibleWith("E") Object o);
 }
 </code></pre>
@@ -90,8 +89,7 @@ interface Collection&lt;E&gt; {
 <p>To indicate that invocations of <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Collection.html#contains(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Collection.contains(Object)</code></a> must be passed an argument whose
 type is compatible with the generic type argument of the Collection instance:
 
-<pre><code>
-Collection&lt;String&gt; stringCollection = ...;
+<pre><code>Collection&lt;String&gt; stringCollection = ...;
 boolean shouldBeFalse = stringCollection.contains(42); // BUG! int isn't compatible with String
 </code></pre>
 

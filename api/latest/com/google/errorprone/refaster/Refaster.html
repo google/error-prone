@@ -174,8 +174,7 @@ argument.
 
 <p>For example, you might write
 
-<pre><code>
-@BeforeTemplate void something(@Repeated T arg) {
+<pre><code>@BeforeTemplate void something(@Repeated T arg) {
  Stream.of(asVarargs(arg)); // doesn't use the Stream.of(T) overload, but Stream.of(T...)
 }
 </code></pre></div>
@@ -196,8 +195,7 @@ specified template expressions, in order, and succeed at the first match.
 
 <p>For example, instead of writing
 
-<pre><code>
-@BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfSingleton(E element) {
+<pre><code>@BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfSingleton(E element) {
   return ImmutableList.copyOf(Collections.singletonList(element));
 }
 @BeforeTemplate &lt;E&gt; List&lt;E&gt; copyOfArrayList(E element) {
@@ -207,8 +205,7 @@ specified template expressions, in order, and succeed at the first match.
 
 <p>one could alternately write
 
-<pre><code>
-@BeforeTemplate &lt;E&gt; List&lt;E&gt; singleton(E element) {
+<pre><code>@BeforeTemplate &lt;E&gt; List&lt;E&gt; singleton(E element) {
   return ImmutableList.copyOf(Refaster.anyOf(
     Collections.singletonList(element),
     Lists.newArrayList(element)));
@@ -228,16 +225,14 @@ Refaster.&lt;String&gt;isInstance(o)</code>.
 
 <p>For example, instead of writing the broken
 
-<pre><code>
-@AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
+<pre><code>@AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
   return o instanceof T; // you want to match this, but it won't compile
 }
 </code></pre>
 
 <p>you would instead write
 
-<pre><code>
-@AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
+<pre><code>@AfterTemplate &lt;T&gt; boolean instanceOf(Object o) {
   return Refaster.&lt;T&gt;isInstance(o); // generates the replacement "o instanceof T"
 }
 </code></pre></div>
@@ -258,16 +253,14 @@ explicitly, e.g. <code>Refaster.&lt;String&gt;newArray(10)</code>.
 
 <p>For example, instead of writing the broken
 
-<pre><code>
-@AfterTemplate &lt;T&gt; T[] newTArray(int size) {
+<pre><code>@AfterTemplate &lt;T&gt; T[] newTArray(int size) {
   return new T[size]; // you want to generate this code, but it won't compile
 }
 </code></pre>
 
 <p>you would instead write
 
-<pre><code>
-@AfterTemplate &lt;T&gt; T[] newTArray(int size) {
+<pre><code>@AfterTemplate &lt;T&gt; T[] newTArray(int size) {
   return Refaster.&lt;T&gt;newArray(size);
 }
 </code></pre></div>
@@ -288,16 +281,14 @@ explicitly, e.g. <code>Refaster.&lt;String&gt;clazz()</code>.
 
 <p>For example, instead of writing the broken
 
-<pre><code>
-@AfterTemplate &lt;T&gt; T[] getEnumConstants() {
+<pre><code>@AfterTemplate &lt;T&gt; T[] getEnumConstants() {
   return T.class.getEnumConstants(); // you want to inline this, but it won't compile
 }
 </code></pre>
 
 you would instead write
 
-<pre><code>
-@AfterTemplate &lt;T&gt; T[] getEnumConstants() {
+<pre><code>@AfterTemplate &lt;T&gt; T[] getEnumConstants() {
   return Refaster.&lt;T&gt;clazz().getEnumConstants();
 }
 </code></pre></div>
@@ -318,16 +309,14 @@ specified explicitly, e.g. <code>Refaster.&lt;RoundingMode&gt;valueOf(string)</c
 
 <p>For example, instead of writing the broken
 
-<pre><code>
-@BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
+<pre><code>@BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
   return E.valueOf(str);
 }
 </code></pre>
 
 <p>you would instead write
 
-<pre><code>
-@BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
+<pre><code>@BeforeTemplate &lt;E extends Enum&lt;E&gt;&gt; E valueOf(String str) {
   return Refaster.&lt;E&gt;enumValueOf(str);
 }
 </code></pre></div>
@@ -349,16 +338,14 @@ always be a string literal. This method cannot be static imported.
 
 <p>For example, instead of writing
 
-<pre><code>
-@AfterTemplate int lengthWithComment(String str) {
+<pre><code>@AfterTemplate int lengthWithComment(String str) {
   return /* comment \*\/ str.length();
 }
 </code></pre>
 
 <p>you would instead write
 
-<pre><code>
-@AfterTemplate int lengthWithComment(String str) {
+<pre><code>@AfterTemplate int lengthWithComment(String str) {
   return Refaster.emitCommentBefore("comment", str.length());
 }
 </code></pre></div>
@@ -375,8 +362,7 @@ string literal. This method cannot be static imported.
 
 <p>For example, instead of writing
 
-<pre><code>
-@AfterTemplate void printWithComment(String str) {
+<pre><code>@AfterTemplate void printWithComment(String str) {
   // comment
   System.out.println(str);
 }
@@ -384,8 +370,7 @@ string literal. This method cannot be static imported.
 
 <p>you would instead write
 
-<pre><code>
-@AfterTemplate void printWithComment(String str) {
+<pre><code>@AfterTemplate void printWithComment(String str) {
   Refaster.emitComment("comment");
   System.out.println(str);
 }

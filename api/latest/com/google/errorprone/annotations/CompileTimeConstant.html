@@ -90,8 +90,7 @@ that satisfies one of the following conditions:
 
 <p>For example, the following code snippet is legal:
 
-<pre><code>
-public class C {
+<pre><code>public class C {
   private static final String S = "Hello";
   void m(@CompileTimeConstant final String s) {}
   void n(@CompileTimeConstant final String t) {
@@ -107,8 +106,7 @@ public class C {
 
 <p>In contrast, the following is illegal:
 
-<pre><code>
-public class C {
+<pre><code>public class C {
   void m(@CompileTimeConstant final String s) {}
   void n(String t) {
     m(t);
@@ -122,8 +120,7 @@ an expression that satisfies the conditions above.
 
 <p>For example, the following code snippet is legal:
 
-<pre><code>
-public class C {
+<pre><code>public class C {
   @CompileTimeConstant final String s;
   public C(@CompileTimeConstant String s) {
     this.s = s;
@@ -137,8 +134,7 @@ public class C {
 
 <p>In contrast, the following are illegal:
 
-<pre><code>
-public class C {
+<pre><code>public class C {
   @CompileTimeConstant String S;
   public C(@CompileTimeConstant String s) {
     this.S = s;
@@ -150,8 +146,7 @@ public class C {
 }
 </code></pre>
 
-<pre><code>
-public class C {
+<pre><code>public class C {
   @CompileTimeConstant final String S;
   public C(String s) {
     this.S = s;

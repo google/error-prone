@@ -93,8 +93,7 @@ silently allows the call.
 are refactored, while prohibiting new call-sites. Call-sites determined to be acceptable, for
 example through code review, could be marked <code>@ReviewedFooBar</code>.
 
-<pre><code>
-public @interface LegacyUnsafeFooBar{}
+<pre><code>public @interface LegacyUnsafeFooBar{}
 
 public @interface ReviewedFooBar{
  public string reviewer();
@@ -139,8 +138,7 @@ public class Foo {
 <p>The <code>@RestrictedApi</code> annotation can also be used on a record's component to restrict the
 visibility of the record's accessor methods. For example:
 
-<pre><code>
-public record User(
+<pre><code>public record User(
     String name,
     @RestrictedApi(
         explanation = "Only allow safe accessors to the password",

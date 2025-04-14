@@ -80,8 +80,7 @@ annotated parameter.
 <p><b>Note:</b> The <code>@Matches</code> annotation should <b>only</b> go on the
 <code>@BeforeTemplate</code>. For example:
 
-<pre><code>
-class SingletonList {
+<pre><code>class SingletonList {
   @BeforeTemplate
   public &lt;E&gt; List&lt;E&gt; before(@Matches(IsNonNullMatcher.class) E e) {
     return Collections.singletonList(e);

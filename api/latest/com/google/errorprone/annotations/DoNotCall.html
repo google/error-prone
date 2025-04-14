@@ -82,8 +82,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Indicates that the annotated method should not be called under any normal circumstances, yet is
 either <i>impossible</i> to remove, or <i>should not</i> ever be removed. Example:
 
-<pre><code>
-public class ImmutableList&lt;E&gt; implements List&lt;E&gt; {
+<pre><code>public class ImmutableList&lt;E&gt; implements List&lt;E&gt; {
   @DoNotCall("guaranteed to throw an exception")
   @Override public add(E e) {
     throw new UnsupportedOperationException();

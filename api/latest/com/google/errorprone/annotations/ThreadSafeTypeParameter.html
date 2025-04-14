@@ -78,8 +78,7 @@ be used as field types that are not <a href="concurrent/GuardedBy.html" title="a
 
 <p>In more detail, consider this (valid) class:
 
-<pre><code>
-@ThreadSafe class MyThreadSafeClass&lt;A, B, @ThreadSafeTypeParameter C&gt; {
+<pre><code>@ThreadSafe class MyThreadSafeClass&lt;A, B, @ThreadSafeTypeParameter C&gt; {
 
   @GuardedBy("this") B b;
 

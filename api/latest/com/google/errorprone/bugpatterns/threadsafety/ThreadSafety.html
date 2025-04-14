@@ -384,8 +384,7 @@ an accepted annotation on the symbol, or from the list of well-known types.</div
 <p>Usually only the immediately enclosing declaration is searched, but it's possible to have
 cases like:
 
-<pre><code>
-@MarkerAnnotation(containerOf="T") class C&lt;T&gt; {
+<pre><code>@MarkerAnnotation(containerOf="T") class C&lt;T&gt; {
   class Inner extends ThreadSafeCollection&lt;T&gt; {}
 }
 </code></pre></div>
