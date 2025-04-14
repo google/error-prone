@@ -1184,6 +1184,9 @@ This code can be simplified to use a pattern-matching instanceof.
 __[PreconditionsCheckNotNullRepeated](bugpattern/PreconditionsCheckNotNullRepeated)__<br>
 Including the first argument of checkNotNull in the failure message is not useful, as it will always be &#96;null&#96;.
 
+__[PreconditionsExpensiveString](bugpattern/PreconditionsExpensiveString)__<br>
+Second argument to Preconditions.* is a call to String.format(), which can be unwrapped
+
 __[PrimitiveAtomicReference](bugpattern/PrimitiveAtomicReference)__<br>
 Using compareAndSet with boxed primitives is dangerous, as reference rather than value equality is used. Consider using AtomicInteger, AtomicLong, AtomicBoolean from JDK or AtomicDouble from Guava instead.
 
