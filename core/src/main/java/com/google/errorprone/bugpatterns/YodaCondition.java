@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.FieldMatchers.staticField;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.util.ASTHelpers.constValue;
@@ -36,6 +37,7 @@ import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -96,7 +98,7 @@ public final class YodaCondition extends BugChecker
       ExpressionTree rhs,
       boolean provideNullSafeFix,
       VisitorState state) {
-    if (!yodaCondition(lhs, rhs)) {
+    if (!yodaCondition(lhs, rhs, state)) {
       return NO_MATCH;
     }
     if (isInequality(tree) && hasAdjacentComparison(state)) {
@@ -134,8 +136,8 @@ public final class YodaCondition extends BugChecker
   private static boolean hasAdjacentComparison(VisitorState state) {
     BinaryTree tree = (BinaryTree) state.getPath().getLeaf();
 
-    ConstantKind l = seemsConstant(tree.getLeftOperand());
-    ConstantKind r = seemsConstant(tree.getRightOperand());
+    ConstantKind l = seemsConstant(tree.getLeftOperand(), state);
+    ConstantKind r = seemsConstant(tree.getRightOperand(), state);
     boolean putativeVariableOnRight = l.constness > r.constness;
     if (putativeVariableOnRight) {
       ExpressionTree right = expressionToRight(state);
@@ -180,9 +182,9 @@ public final class YodaCondition extends BugChecker
     };
   }
 
-  private static boolean yodaCondition(ExpressionTree lhs, ExpressionTree rhs) {
-    ConstantKind l = seemsConstant(lhs);
-    ConstantKind r = seemsConstant(rhs);
+  private static boolean yodaCondition(ExpressionTree lhs, ExpressionTree rhs, VisitorState state) {
+    ConstantKind l = seemsConstant(lhs, state);
+    ConstantKind r = seemsConstant(rhs, state);
     return l.constness > r.constness;
   }
 
@@ -199,7 +201,13 @@ public final class YodaCondition extends BugChecker
     }
   }
 
-  private static ConstantKind seemsConstant(Tree tree) {
+  private static final Matcher<ExpressionTree> IGNORELIST =
+      staticField("android.os.Build.VERSION", "SDK_INT");
+
+  private static ConstantKind seemsConstant(ExpressionTree tree, VisitorState state) {
+    if (IGNORELIST.matches(tree, state)) {
+      return ConstantKind.NON_CONSTANT;
+    }
     if (constValue(tree) != null) {
       return ConstantKind.CONSTANT;
     }
