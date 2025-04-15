@@ -128,7 +128,9 @@ public final class CheckedExceptionNotThrown extends BugChecker implements Metho
                 state.getEndPosition(getLast(tree.getThrows())),
                 canActuallyBeThrown.stream().map(state::getSourceForNode).collect(joining(", ")));
     SuggestedFix fix = fixJavadoc(thrownTypes, state).toBuilder().merge(throwsFix).build();
-    return buildDescription(tree.getThrows().get(0)).setMessage(description).addFix(fix).build();
+    ExpressionTree firstUnthrown =
+        tree.getThrows().stream().filter(x -> !canActuallyBeThrown.contains(x)).findFirst().get();
+    return buildDescription(firstUnthrown).setMessage(description).addFix(fix).build();
   }
 
   private static Stream<Tree> treesToScanForCheckedExceptions(MethodTree tree, VisitorState state) {
