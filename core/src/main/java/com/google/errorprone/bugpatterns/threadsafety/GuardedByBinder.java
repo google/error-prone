@@ -264,18 +264,14 @@ public final class GuardedByBinder {
           Symbol symbol = context.resolver.resolveIdentifier(node);
           checkGuardedBy(symbol != null, "Could not resolve %s", node);
           if (symbol instanceof Symbol.VarSymbol varSymbol) {
-            switch (varSymbol.getKind()) {
-              case LOCAL_VARIABLE, PARAMETER -> {
-                return F.localVariable(varSymbol);
-              }
-              case FIELD -> {
-                if (symbol.name.contentEquals("this")) {
-                  return F.thisliteral();
-                }
-                return F.select(computeBase(context, varSymbol), varSymbol);
-              }
+            return switch (varSymbol.getKind()) {
+              case LOCAL_VARIABLE, PARAMETER, BINDING_VARIABLE -> F.localVariable(varSymbol);
+              case FIELD ->
+                  symbol.name.contentEquals("this")
+                      ? F.thisliteral()
+                      : F.select(computeBase(context, varSymbol), varSymbol);
               default -> throw new IllegalGuardedBy(varSymbol.getKind().toString());
-            }
+            };
           } else if (symbol instanceof Symbol.MethodSymbol methodSymbol) {
             return F.select(computeBase(context, symbol), methodSymbol);
           } else if (symbol instanceof Symbol.ClassSymbol) {

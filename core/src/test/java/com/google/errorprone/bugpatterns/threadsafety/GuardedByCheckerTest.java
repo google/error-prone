@@ -2485,4 +2485,30 @@ abstract class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void bindingVariable() {
+    compilationHelper
+        .addSourceLines(
+            "I.java",
+            """
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+
+            interface I {
+              class Impl implements I {
+                @GuardedBy("this")
+                private int number = 42;
+              }
+
+              public static void t(I other) {
+                if (other instanceof Impl otherImpl) {
+                  synchronized (otherImpl) {
+                    int a = otherImpl.number;
+                  }
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }
