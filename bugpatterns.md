@@ -1486,6 +1486,9 @@ A static variable or method should be qualified with a class name, not expressio
 __[SystemExitOutsideMain](bugpattern/SystemExitOutsideMain)__<br>
 Code that contains System.exit() is untestable.
 
+__[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
+Using @Test(expected&#61;...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
+
 __[ThreadSafe](bugpattern/ThreadSafe)__<br>
 Type declaration annotated with @ThreadSafe is not thread safe
 
@@ -1640,9 +1643,6 @@ Use of @SuppressWarnings should be accompanied by a comment describing why the w
 
 __[SystemOut](bugpattern/SystemOut)__<br>
 Printing to standard output should only be used for debugging, not in production code
-
-__[TestExceptionChecker](bugpattern/TestExceptionChecker)__<br>
-Using @Test(expected&#61;...) is discouraged, since the test will pass if *any* statement in the test method throws the expected exception
 
 __[ThrowSpecificExceptions](bugpattern/ThrowSpecificExceptions)__<br>
 Base exception classes should be treated as abstract. If the exception is intended to be caught, throw a domain-specific exception. Otherwise, prefer a more specific exception for clarity. Common alternatives include: AssertionError, IllegalArgumentException, IllegalStateException, and (Guava&#39;s) VerifyException.
