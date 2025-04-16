@@ -20,7 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.targetType;
+import static com.google.errorprone.util.TargetType.targetType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -28,7 +28,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreePath;
@@ -58,8 +58,7 @@ public final class LongDoubleConversion extends BugChecker implements MethodInvo
     if (constant instanceof Long l && constant.equals((long) l.doubleValue())) {
       return;
     }
-    ASTHelpers.TargetType targetType =
-        targetType(state.withPath(new TreePath(state.getPath(), argument)));
+    TargetType targetType = targetType(state.withPath(new TreePath(state.getPath(), argument)));
     if (targetType != null && targetType.type().getKind().equals(TypeKind.DOUBLE)) {
       String replacement = SuggestedFixes.castTree(argument, "double", state);
       state.reportMatch(describeMatch(argument, SuggestedFix.replace(argument, replacement)));

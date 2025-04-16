@@ -30,6 +30,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
@@ -174,7 +175,7 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
       if (tree.getArguments().size() >= 1) {
         return Optional.ofNullable(ASTHelpers.getType(tree.getArguments().get(0)));
       }
-      return Optional.ofNullable(ASTHelpers.targetType(state)).map(t -> t.type());
+      return Optional.ofNullable(TargetType.targetType(state)).map(t -> t.type());
     };
   }
 

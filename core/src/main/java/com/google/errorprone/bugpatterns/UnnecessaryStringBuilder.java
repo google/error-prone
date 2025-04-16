@@ -24,7 +24,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.requiresParentheses;
-import static com.google.errorprone.util.ASTHelpers.targetType;
+import static com.google.errorprone.util.TargetType.targetType;
 import static java.util.stream.Collectors.joining;
 
 import com.google.errorprone.BugPattern;
@@ -35,7 +35,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.ASTHelpers.TargetType;
+import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -115,7 +115,7 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
         return NO_MATCH;
       }
     }
-    ASTHelpers.TargetType target = ASTHelpers.targetType(state.withPath(path));
+    TargetType target = TargetType.targetType(state.withPath(path));
     if (target == null) {
       return NO_MATCH;
     }

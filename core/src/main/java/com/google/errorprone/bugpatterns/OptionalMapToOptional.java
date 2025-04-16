@@ -29,8 +29,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
-import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.ASTHelpers.TargetType;
+import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -80,7 +79,7 @@ public final class OptionalMapToOptional extends BugChecker implements MethodInv
       return NO_MATCH;
     }
     TargetType targetType =
-        ASTHelpers.targetType(
+        TargetType.targetType(
             state.withPath(new TreePath(state.getPath(), tree.getArguments().get(0))));
     if (targetType == null) {
       return NO_MATCH;

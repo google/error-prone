@@ -23,7 +23,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static com.google.errorprone.util.ASTHelpers.targetType;
+import static com.google.errorprone.util.TargetType.targetType;
 import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
 
 import com.google.errorprone.BugPattern;
