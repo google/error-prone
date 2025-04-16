@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.TruthJUnit.assume;
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
@@ -31,14 +32,40 @@ import org.junit.runners.JUnit4;
 /** Tests for {@link StatementSwitchToExpressionSwitch}. */
 @RunWith(JUnit4.class)
 public final class StatementSwitchToExpressionSwitchTest {
+  private static final String SIDE =
+      """
+      enum Side {
+        OBVERSE,
+        REVERSE
+      };
+      """;
+  private static final String SUIT =
+      """
+      enum Suit {
+        HEART,
+        SPADE,
+        DIAMOND,
+        CLUB
+      };
+      """;
   private final CompilationTestHelper helper =
-      CompilationTestHelper.newInstance(StatementSwitchToExpressionSwitch.class, getClass());
+      CompilationTestHelper.newInstance(StatementSwitchToExpressionSwitch.class, getClass())
+          .addSourceLines("Suit.java", SUIT)
+          .addSourceLines("Side.java", SIDE);
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(
-          StatementSwitchToExpressionSwitch.class, getClass());
+              StatementSwitchToExpressionSwitch.class, getClass())
+          .addInputLines("Suit.java", SUIT)
+          .expectUnchanged()
+          .addInputLines("Side.java", SIDE)
+          .expectUnchanged();
   private final BugCheckerRefactoringTestHelper refactoringHelper2 =
       BugCheckerRefactoringTestHelper.newInstance(
-          StatementSwitchToExpressionSwitch.class, getClass());
+              StatementSwitchToExpressionSwitch.class, getClass())
+          .addInputLines("Suit.java", SUIT)
+          .expectUnchanged()
+          .addInputLines("Side.java", SIDE)
+          .expectUnchanged();
 
   @Test
   public void switchByEnum_removesRedundantBreak_error() {
@@ -47,15 +74,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (side) {
                   case OBVERSE:
                     // Explanatory comment
@@ -80,11 +102,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
@@ -108,11 +125,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
@@ -135,7 +147,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -145,15 +157,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (side) {
                   // Comment before first case
                   case OBVERSE:
@@ -177,11 +184,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
@@ -203,11 +205,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
@@ -227,7 +224,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -239,15 +236,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (side) {
                   // Comment before first case
                   case OBVERSE:
@@ -274,11 +266,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
@@ -303,11 +290,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
@@ -328,18 +310,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(FixChoosers.FIRST)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
 
     refactoringHelper2
         .addInputLines(
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
@@ -364,11 +341,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
@@ -388,7 +360,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(FixChoosers.SECOND)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -398,18 +370,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public void foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                     System.out.println("heart2");
                     break;
@@ -435,17 +400,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                switch (side) {
+              public void foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                     System.out.println("heart2");
                     break;
@@ -466,17 +424,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                switch (side) {
+              public void foo(Suit suit) {
+                switch (suit) {
                   case HEART -> System.out.println("heart2");
                   case DIAMOND, SPADE, CLUB -> {
                     /* sparkly */
@@ -493,7 +444,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -503,18 +454,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public void foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                     System.out.println("heart");
                     // Pre break comment
@@ -539,18 +483,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public void foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                     System.out.println("heart");
                     // Pre break comment
@@ -570,18 +507,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public void foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART -> System.out.println("heart");
                   // Pre break comment
                   // Post break comment
@@ -595,7 +525,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -605,19 +535,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
+              public void foo(Suit suit) {
                 for (; ; ) {
-                  // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                  switch (side) {
+                  // BUG: Diagnostic contains:
+                  switch (suit) {
                     case HEART:
                       System.out.println("heart");
                       break;
@@ -641,18 +564,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
+              public void foo(Suit suit) {
                 for (; ; ) {
-                  switch (side) {
+                  switch (suit) {
                     case HEART:
                       System.out.println("heart");
                       break;
@@ -671,18 +587,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
+              public void foo(Suit suit) {
                 for (; ; ) {
-                  switch (side) {
+                  switch (suit) {
                     case HEART -> System.out.println("heart");
                     case DIAMOND -> {
                       continue;
@@ -708,17 +617,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                switch (side) {
+              public void foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                     System.out.println("heart");
                     break;
@@ -744,17 +646,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                switch (side) {
+              public void foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                     System.out.println("heart");
                     break;
@@ -781,18 +676,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public void foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                     System.out.println("heart");
                     break;
@@ -818,17 +706,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                switch (side) {
+              public void foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                     System.out.println("heart");
                     break;
@@ -848,17 +729,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                switch (side) {
+              public void foo(Suit suit) {
+                switch (suit) {
                   case HEART -> System.out.println("heart");
                   case DIAMOND -> {
                     System.out.println("diamond");
@@ -874,7 +748,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -884,20 +758,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
+              public void foo(Suit suit) {
                 outer:
                 for (; ; ) {
-                  // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                  switch (side) {
+                  // BUG: Diagnostic contains:
+                  switch (suit) {
                     case HEART:
                       System.out.println("will return");
                       return;
@@ -920,19 +787,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
+              public void foo(Suit suit) {
                 outer:
                 for (; ; ) {
-                  switch (side) {
+                  switch (suit) {
                     case HEART:
                       System.out.println("will return");
                       return;
@@ -950,19 +810,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
+              public void foo(Suit suit) {
                 outer:
                 for (; ; ) {
-                  switch (side) {
+                  switch (suit) {
                     case HEART -> {
                       System.out.println("will return");
                       return;
@@ -988,18 +841,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public void foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                     System.out.println("will return");
                     return;
@@ -1019,18 +865,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public void foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                     System.out.println("will return");
                     return;
@@ -1045,18 +884,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public void foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART -> {
                     System.out.println("will return");
                     return;
@@ -1078,18 +910,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public void foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                     System.out.println("will return");
                     return;
@@ -1114,20 +939,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public void foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
-                    switch (side) {
+                    switch (suit) {
                       case HEART:
                       case SPADE:
                         System.out.println("non-default");
@@ -1156,18 +974,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public void foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                     System.out.println("heart");
                     break;
@@ -1192,17 +1003,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                switch (side) {
+              public void foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                     System.out.println("heart");
                     break;
@@ -1222,17 +1026,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                switch (side) {
+              public void foo(Suit suit) {
+                switch (suit) {
                   case HEART -> System.out.println("heart");
                   case DIAMOND -> System.out.println("nested1");
                   case SPADE, CLUB -> System.out.println("everything else");
@@ -1252,18 +1049,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public void foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                     System.out.println("heart");
                     break;
@@ -1293,17 +1083,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                switch (side) {
+              public void foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                     System.out.println("heart");
                     if (true) {
@@ -1329,12 +1112,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             " import java.util.function.Function;",
             "class Test {",
-            "  enum Side {HEART, SPADE, DIAMOND, CLUB};",
             "  public Test(int foo) {",
             "  }",
             " ",
-            "  public void foo(Side side) { ",
-            "    switch(side) {",
+            "  public void foo(Suit suit) { ",
+            "    switch(suit) {",
             "       case HEART:",
             "          System.out.println(\"heart\");",
             // "Last" statement in the HEART block is a return, but we don't want to conclude that
@@ -1359,18 +1141,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public void foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                     System.out.println("heart");
                     break;
@@ -1448,27 +1223,20 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEARTS,
-                CLUBS,
-                SPADES,
-                DIAMONDS
-              };
-
               public Test() {}
 
               private void foo(Suit suit) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (suit) {
-                  case HEARTS:
+                  case HEART:
                     System.out.println("Red hearts");
                     break;
-                  case DIAMONDS:
+                  case DIAMOND:
                     System.out.println("Red diamonds");
                     break;
-                  case SPADES:
+                  case SPADE:
                   // Fall through
-                  case CLUBS:
+                  case CLUB:
                     bar();
                     System.out.println("Black suit");
                 }
@@ -1485,26 +1253,19 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEARTS,
-                CLUBS,
-                SPADES,
-                DIAMONDS
-              };
-
               public Test() {}
 
               private void foo(Suit suit) {
                 switch (suit) {
-                  case HEARTS:
+                  case HEART:
                     System.out.println("Red hearts");
                     break;
-                  case DIAMONDS:
+                  case DIAMOND:
                     System.out.println("Red diamonds");
                     break;
-                  case SPADES:
+                  case SPADE:
                   // Fall through
-                  case CLUBS:
+                  case CLUB:
                     bar();
                     System.out.println("Black suit");
                 }
@@ -1517,20 +1278,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEARTS,
-                CLUBS,
-                SPADES,
-                DIAMONDS
-              };
-
               public Test() {}
 
               private void foo(Suit suit) {
                 switch (suit) {
-                  case HEARTS -> System.out.println("Red hearts");
-                  case DIAMONDS -> System.out.println("Red diamonds");
-                  case SPADES, CLUBS -> {
+                  case HEART -> System.out.println("Red hearts");
+                  case DIAMOND -> System.out.println("Red diamonds");
+                  case SPADE, CLUB -> {
                     bar();
                     System.out.println("Black suit");
                   }
@@ -1542,7 +1296,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -1554,28 +1308,21 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEARTS,
-                CLUBS,
-                SPADES,
-                DIAMONDS
-              };
-
               public Test() {}
 
               private void foo(Suit suit) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (suit) {
-                  case HEARTS:
+                  case HEART:
                   // A comment here
                   // more comments.
-                  case DIAMONDS:
+                  case DIAMOND:
                     // Diamond comment
                     System.out.println("Red diamonds");
                     break;
-                  case SPADES:
+                  case SPADE:
                   // Fall through
-                  case CLUBS:
+                  case CLUB:
                     bar();
                     System.out.println("Black suit");
                 }
@@ -1592,27 +1339,20 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEARTS,
-                CLUBS,
-                SPADES,
-                DIAMONDS
-              };
-
               public Test() {}
 
               private void foo(Suit suit) {
                 switch (suit) {
-                  case HEARTS:
+                  case HEART:
                   // A comment here
                   // more comments.
-                  case DIAMONDS:
+                  case DIAMOND:
                     // Diamond comment
                     System.out.println("Heart or diamond");
                     break;
-                  case SPADES:
+                  case SPADE:
                   // Fall through
-                  case CLUBS:
+                  case CLUB:
                     bar();
                     System.out.println("Black suit");
                 }
@@ -1625,23 +1365,16 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEARTS,
-                CLUBS,
-                SPADES,
-                DIAMONDS
-              };
-
               public Test() {}
 
               private void foo(Suit suit) {
                 switch (suit) {
-                  case HEARTS, DIAMONDS ->
+                  case HEART, DIAMOND ->
                       // A comment here
                       // more comments.
                       // Diamond comment
                       System.out.println("Heart or diamond");
-                  case SPADES, CLUBS -> {
+                  case SPADE, CLUB -> {
                     bar();
                     System.out.println("Black suit");
                   }
@@ -1653,7 +1386,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -1664,26 +1397,19 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEARTS,
-                CLUBS,
-                SPADES,
-                DIAMONDS
-              };
-
               public Test() {}
 
               private void foo(Suit suit) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (suit) {
-                  case /* red */ HEARTS:
+                  case /* red */ HEART:
                   // A comment here
                   // more comments.
-                  case /* red */ DIAMONDS:
+                  case /* red */ DIAMOND:
                   // Diamonds comment
-                  case /* black */ SPADES:
+                  case /* black */ SPADE:
                   // Spades comment
-                  case /* black */ CLUBS:
+                  case /* black */ CLUB:
                     bar();
                     System.out.println("Any suit");
                 }
@@ -1700,26 +1426,19 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEARTS,
-                CLUBS,
-                SPADES,
-                DIAMONDS
-              };
-
               public Test() {}
 
               private void foo(Suit suit) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (suit) {
-                  case /* red */ HEARTS:
+                  case /* red */ HEART:
                   // A comment here
                   // more comments.
-                  case /* red */ DIAMONDS:
+                  case /* red */ DIAMOND:
                   // Diamonds comment
-                  case /* black */ SPADES:
+                  case /* black */ SPADE:
                   // Spades comment
-                  case /* black */ CLUBS:
+                  case /* black */ CLUB:
                     bar();
                     System.out.println("Any suit");
                 }
@@ -1732,19 +1451,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEARTS,
-                CLUBS,
-                SPADES,
-                DIAMONDS
-              };
-
               public Test() {}
 
               private void foo(Suit suit) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (suit) {
-                  case HEARTS, DIAMONDS, SPADES, CLUBS -> {
+                  case HEART, DIAMOND, SPADE, CLUB -> {
                     /* red */
                     // A comment here
                     // more comments.
@@ -1764,7 +1476,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -1776,15 +1488,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (side) {
                   case OBVERSE:
                     {
@@ -1809,11 +1516,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
@@ -1836,11 +1538,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
@@ -1855,7 +1552,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -1868,15 +1565,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (side) {
                   case OBVERSE:
                     {
@@ -1900,11 +1592,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
@@ -1926,11 +1613,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                OBVERSE,
-                REVERSE
-              };
-
               public Test(int foo) {}
 
               public void foo(Side side) {
@@ -1945,7 +1627,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -1955,17 +1637,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int foo(Suit suit) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (suit) {
                   case HEART:
                     // before return comment
@@ -1986,17 +1661,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int foo(Suit suit) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (suit) {
                   case HEART:
                     // before return comment
@@ -2014,17 +1682,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int foo(Suit suit) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (suit) {
                   case HEART -> {
                     // before return comment
@@ -2042,7 +1703,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -2087,7 +1748,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -2126,7 +1787,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   /**********************************
@@ -2142,22 +1803,15 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public int foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     return invoke();
@@ -2180,21 +1834,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     return invoke();
@@ -2210,21 +1857,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
-                return switch (side) {
+              public int foo(Suit suit) {
+                return switch (suit) {
                   case HEART, DIAMOND -> invoke();
                   case SPADE -> throw new RuntimeException();
                   default -> throw new NullPointerException();
@@ -2248,15 +1888,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     return 1;
@@ -2273,15 +1906,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
-              public int foo(Side side) {
-                return switch (side) {
+              public int foo(Suit suit) {
+                return switch (suit) {
                   case HEART, DIAMOND -> 1;
                   case SPADE -> {
                     System.out.println("hello");
@@ -2308,21 +1934,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                   case null:
                   case DIAMOND:
@@ -2350,15 +1967,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     return 1;
@@ -2376,15 +1986,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
-              public int foo(Side side) {
-                return switch (side) {
+              public int foo(Suit suit) {
+                return switch (suit) {
                   case HEART, DIAMOND -> 1;
                   case SPADE -> {
                     System.out.println("hello");
@@ -2411,15 +2014,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     return 1;
@@ -2438,15 +2034,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
-              public int foo(Side side) {
-                return switch (side) {
+              public int foo(Suit suit) {
+                return switch (suit) {
                   case HEART, DIAMOND -> 1;
                   case SPADE -> {
                     System.out.println("hello");
@@ -2474,21 +2063,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     return invoke();
@@ -2508,21 +2090,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
-                return switch (side) {
+              public int foo(Suit suit) {
+                return switch (suit) {
                   case HEART, DIAMOND -> invoke();
                   case SPADE -> throw new RuntimeException();
                   case CLUB -> throw new NullPointerException();
@@ -2534,7 +2109,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -2545,21 +2120,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   // Abracadabra
                   /* foo */ case HEART:
                   // Card trick
@@ -2581,21 +2149,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
-                return switch (side) {
+              public int foo(Suit suit) {
+                return switch (suit) {
                   case HEART, DIAMOND ->
                       // Abracadabra
                       /* foo */
@@ -2611,7 +2172,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -2622,24 +2183,17 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                     System.out.println("hi");
-                    switch (side) {
+                    switch (suit) {
                       case HEART:
                       case DIAMOND:
                         return invoke();
@@ -2673,22 +2227,15 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 String z = "dkfj";
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (z) {
                   case "":
                   case "DIAMOND":
@@ -2711,20 +2258,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 String z = "dkfj";
                 switch (z) {
                   case "":
@@ -2742,20 +2282,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 String z = "dkfj";
                 return switch (z) {
                   case "", "DIAMOND", "SPADE" ->
@@ -2770,7 +2303,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -2781,21 +2314,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     return invoke();
@@ -2822,21 +2348,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     throw new NullPointerException();
@@ -2863,26 +2382,19 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                  switch (side) {
+                  // BUG: Diagnostic contains:
+                  switch (suit) {
                     case HEART:
                     // Fall through
                     case DIAMOND:
@@ -2915,25 +2427,18 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  switch (side) {
+                  switch (suit) {
                     case HEART /* lhs comment */: // rhs comment
                     // Fall through
                     case DIAMOND:
@@ -2960,25 +2465,18 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  return switch (side) {
+                  return switch (suit) {
                     case HEART, DIAMOND ->
                         /* lhs comment */
                         // rhs comment
@@ -2996,7 +2494,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -3008,21 +2506,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 try {
                   System.out.println("don't delete 1");
                   System.out.println("don't delete 11");
-                  switch (side) {
+                  switch (suit) {
                     case HEART:
                     case DIAMOND:
                     case SPADE:
@@ -3045,21 +2536,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 try {
                   System.out.println("don't delete 1");
                   System.out.println("don't delete 11");
-                  return switch (side) {
+                  return switch (suit) {
                     case HEART, DIAMOND, SPADE -> 1;
                     case CLUB -> throw new NullPointerException();
                   };
@@ -3073,7 +2557,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -3085,18 +2569,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               int x = 3;
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 if (x < 4) {
                   try {
                     System.out.println("don't delete 0");
@@ -3104,7 +2581,7 @@ public final class StatementSwitchToExpressionSwitchTest {
                       try {
                         System.out.println("don't delete 1");
                         System.out.println("don't delete 11");
-                        switch (side) {
+                        switch (suit) {
                           case HEART:
                           case DIAMOND:
                           case SPADE:
@@ -3137,18 +2614,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               int x = 3;
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 if (x < 4) {
                   try {
                     System.out.println("don't delete 0");
@@ -3156,7 +2626,7 @@ public final class StatementSwitchToExpressionSwitchTest {
                       try {
                         System.out.println("don't delete 1");
                         System.out.println("don't delete 11");
-                        return switch (side) {
+                        return switch (suit) {
                           case HEART, DIAMOND, SPADE -> 1;
                           case CLUB -> throw new NullPointerException();
                         };
@@ -3177,7 +2647,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -3192,25 +2662,18 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  switch (side) {
+                  switch (suit) {
                     case HEART /* lhs comment */: // rhs comment
                     // Fall through
                     case DIAMOND:
@@ -3233,25 +2696,18 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  return switch (side) {
+                  return switch (suit) {
                     case HEART, DIAMOND ->
                         /* lhs comment */
                         // rhs comment
@@ -3270,32 +2726,25 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(FixChoosers.FIRST)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
 
     refactoringHelper2
         .addInputLines(
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  switch (side) {
+                  switch (suit) {
                     case HEART /* lhs comment */: // rhs comment
                     // Fall through
                     case DIAMOND:
@@ -3317,25 +2766,18 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  return switch (side) {
+                  return switch (suit) {
                     case HEART, DIAMOND ->
                         /* lhs comment */
                         // rhs comment
@@ -3353,7 +2795,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(FixChoosers.SECOND)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -3365,26 +2807,19 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                  switch (side) {
+                  // BUG: Diagnostic contains:
+                  switch (suit) {
                     case HEART /* lhs comment */: // rhs comment
                     // Fall through
                     case DIAMOND:
@@ -3414,25 +2849,18 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  switch (side) {
+                  switch (suit) {
                     case HEART /* lhs comment */: // rhs comment
                     // Fall through
                     case DIAMOND:
@@ -3456,25 +2884,18 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  return switch (side) {
+                  return switch (suit) {
                     case HEART, DIAMOND ->
                         /* lhs comment */
                         // rhs comment
@@ -3496,7 +2917,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -3508,26 +2929,19 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                  switch (side) {
+                  // BUG: Diagnostic contains:
+                  switch (suit) {
                     case HEART /* lhs comment */: // rhs comment
                     // Another comment
                     case /* sparkly */ DIAMOND /* Sparkly */:
@@ -3560,26 +2974,19 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                  switch (side) {
+                  // BUG: Diagnostic contains:
+                  switch (suit) {
                     case HEART /* lhs comment */: // rhs comment
                     // Another comment
                     case /* sparkly */ DIAMOND /* Sparkly */:
@@ -3607,26 +3014,19 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               public int invoke() {
                 return 123;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                  return switch (side) {
+                  // BUG: Diagnostic contains:
+                  return switch (suit) {
                     case HEART, DIAMOND, SPADE ->
                         /* lhs comment */
                         // rhs comment
@@ -3655,7 +3055,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -3665,16 +3065,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
+              public int foo(Suit suit) {
 
-              public int foo(Side side) {
-
-                switch (side) {
+                switch (suit) {
                   case HEART:
                     {
                       return 0;
@@ -3702,16 +3095,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
+              public int foo(Suit suit) {
 
-              public int foo(Side side) {
-
-                return switch (side) {
+                return switch (suit) {
                   case HEART -> 0;
                   case SPADE -> 1;
                   case DIAMOND -> 2;
@@ -3728,7 +3114,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -3739,17 +3125,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public void foo(Side side) {
-                switch (side) {
+              public void foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                   // Fall through
                   case DIAMOND:
@@ -3776,19 +3155,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 before:
                 for (; ; ) {
-                  switch (side) {
+                  switch (suit) {
                     case HEART:
                       continue before;
                     case DIAMOND:
@@ -3816,19 +3188,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 before:
                 for (; ; ) {
-                  switch (side) {
+                  switch (suit) {
                     case HEART:
                       continue;
                     case DIAMOND:
@@ -3856,19 +3221,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 before:
                 for (; ; ) {
-                  switch (side) {
+                  switch (suit) {
                     case HEART:
                       break before;
                     case DIAMOND:
@@ -3897,17 +3255,10 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
-                return switch (side) {
+              public int foo(Suit suit) {
+                return switch (suit) {
                   case HEART:
                     yield 2;
                   case DIAMOND:
@@ -3944,20 +3295,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 var a = 0;
                 String b = "b";
                 int y = 0, x;
-                switch (side) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     x = ((y + 1) * (y * y)) << 1;
@@ -3975,21 +3319,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 var a = 0;
                 String b = "b";
                 int y = 0, x;
                 x =
-                    switch (side) {
+                    switch (suit) {
                       case HEART, DIAMOND -> ((y + 1) * (y * y)) << 1;
                       case SPADE -> throw new RuntimeException();
                       default -> throw new NullPointerException();
@@ -4002,7 +3339,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -4022,13 +3359,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             import java.util.Set;
 
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               @interface MyAnnos {
                 Test.MyAnno[] value();
               }
@@ -4044,14 +3374,14 @@ public final class StatementSwitchToExpressionSwitchTest {
 
               public int y = 0;
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 @MyAnno(v = "foo")
                 // alpha
                 /* beta */ @MyOtherAnno
                 @MyAnno
                 final /* chi */ int /* gamma */ x /* delta */; // epsilon
                 // zeta
-                switch (side) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     x = ((y + 1) * (y * y)) << 1;
@@ -4062,7 +3392,7 @@ public final class StatementSwitchToExpressionSwitchTest {
                     throw new NullPointerException();
                 }
                 Map<? extends String, ? super Test> map = null;
-                switch (side) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     map = new HashMap<>();
@@ -4085,13 +3415,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             import java.util.Set;
 
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               @interface MyAnnos {
                 Test.MyAnno[] value();
               }
@@ -4107,7 +3430,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
               public int y = 0;
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 // epsilon
                 // zeta
                 // alpha
@@ -4119,14 +3442,14 @@ public final class StatementSwitchToExpressionSwitchTest {
                 @MyOtherAnno
                 @MyAnno
                 final int x =
-                    switch (side) {
+                    switch (suit) {
                       case HEART, DIAMOND -> ((y + 1) * (y * y)) << 1;
                       case SPADE -> throw new RuntimeException();
                       default -> throw new NullPointerException();
                     };
 
                 Map<? extends String, ? super Test> map =
-                    switch (side) {
+                    switch (suit) {
                       case HEART, DIAMOND -> new HashMap<>();
                       case SPADE -> throw new RuntimeException();
                       default -> throw new NullPointerException();
@@ -4139,7 +3462,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -4153,19 +3476,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int y = 0;
                 var x = 999;
-                switch (side) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     x = ((y + 1) * (y * y)) << 1;
@@ -4183,20 +3499,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int y = 0;
 
                 var x =
-                    switch (side) {
+                    switch (suit) {
                       case HEART, DIAMOND -> ((y + 1) * (y * y)) << 1;
                       case SPADE -> throw new RuntimeException();
                       default -> throw new NullPointerException();
@@ -4209,7 +3518,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -4223,20 +3532,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int z = 3;
                 int x;
                 int y;
-                switch (side) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     x = ((z + 1) * (z * z)) << 1;
@@ -4254,21 +3556,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int z = 3;
                 int x;
                 int y;
                 x =
-                    switch (side) {
+                    switch (suit) {
                       case HEART, DIAMOND -> ((z + 1) * (z * z)) << 1;
                       case SPADE -> throw new RuntimeException();
                       default -> throw new NullPointerException();
@@ -4281,7 +3576,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -4296,21 +3591,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int z = 3;
                 int x;
                 {
                   {
-                    switch (side) {
+                    switch (suit) {
                       case HEART:
                       case DIAMOND:
                         x = ((z + 1) * (z * z)) << 1;
@@ -4330,22 +3618,15 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int z = 3;
                 int x;
                 {
                   {
                     x =
-                        switch (side) {
+                        switch (suit) {
                           case HEART, DIAMOND -> ((z + 1) * (z * z)) << 1;
                           case SPADE -> throw new RuntimeException();
                           default -> throw new NullPointerException();
@@ -4360,7 +3641,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -4379,21 +3660,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               volatile int v = 0;
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int z = 3;
                 int x = v;
-                switch (side) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     x = ((z + 1) * (z * z)) << 1;
@@ -4411,22 +3685,15 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
               volatile int v = 0;
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int z = 3;
                 int x = v;
                 x =
-                    switch (side) {
+                    switch (suit) {
                       case HEART, DIAMOND -> ((z + 1) * (z * z)) << 1;
                       case SPADE -> throw new RuntimeException();
                       default -> throw new NullPointerException();
@@ -4439,7 +3706,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -4450,22 +3717,15 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int x;
 
               public Test(int foo) {
                 x = -1;
               }
 
-              public int foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public int foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   /* Comment before first case */
                   case /* LHS comment */ HEART:
                     // Inline comment
@@ -4495,21 +3755,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int x;
 
               public Test(int foo) {
                 x = -1;
               }
 
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   /* Comment before first case */
                   case /* LHS comment */ HEART:
                     // Inline comment
@@ -4531,22 +3784,15 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int x;
 
               public Test(int foo) {
                 x = -1;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 this.x <<=
-                    switch (side) {
+                    switch (suit) {
                       case HEART ->
                           /* Comment before first case */
                           /* LHS comment */
@@ -4564,7 +3810,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -4575,13 +3821,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int x, y;
 
               public Test(int foo) {
@@ -4589,8 +3828,8 @@ public final class StatementSwitchToExpressionSwitchTest {
                 y = -1;
               }
 
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                     x = 2;
                     break;
@@ -4620,21 +3859,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int x;
 
               public Test(int foo) {
                 x = -1;
               }
 
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                     x = 2;
                     x = 3;
@@ -4664,22 +3896,15 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int[] x;
 
               public Test(int foo) {
                 x = null;
               }
 
-              public int[] foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public int[] foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                     throw new RuntimeException();
                   case DIAMOND:
@@ -4705,22 +3930,15 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int[] x;
 
               public Test(int foo) {
                 x = null;
               }
 
-              public int[] foo(Side side) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+              public int[] foo(Suit suit) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                     throw new RuntimeException();
                   case DIAMOND:
@@ -4739,22 +3957,15 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int[] x;
 
               public Test(int foo) {
                 x = null;
               }
 
-              public int[] foo(Side side) {
+              public int[] foo(Suit suit) {
                 x[6] <<=
-                    switch (side) {
+                    switch (suit) {
                       case HEART -> throw new RuntimeException();
                       case DIAMOND -> (((x[6] + 1) * (x[6] * x[5]) << 1));
                       case SPADE -> throw new RuntimeException();
@@ -4773,7 +3984,7 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_assignmentSwitchToMultipleArray_noError() {
-    // Multiple array dereferences or other non-variable left-hand-side expressions may (in
+    // Multiple array dereferences or other non-variable left-hand-suit expressions may (in
     // principle) be convertible to assignment switches, but this feature is not supported at this
     // time
     helper
@@ -4781,21 +3992,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int[] x;
 
               public Test(int foo) {
                 x = null;
               }
 
-              public int[] foo(Side side) {
-                switch (side) {
+              public int[] foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                     // Inline comment
                     x[6] <<= 2;
@@ -4826,21 +4030,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int[] x;
 
               public Test(int foo) {
                 x = null;
               }
 
-              public int[] foo(Side side) {
-                switch (side) {
+              public int[] foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                     // Inline comment
                     x[6] <<= 2;
@@ -4872,21 +4069,14 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int x;
 
               public Test(int foo) {
                 x = -1;
               }
 
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                     x += 2;
                     break;
@@ -4915,23 +4105,16 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int x;
 
               public Test(int foo) {
                 x = -1;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 before:
                 for (; ; ) {
-                  switch (side) {
+                  switch (suit) {
                     case HEART:
                       x = 2;
                       break;
@@ -4964,23 +4147,16 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int x;
 
               public Test(int foo) {
                 x = -1;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 before:
                 for (; ; ) {
-                  switch (side) {
+                  switch (suit) {
                     case HEART:
                       x = 2;
                       break;
@@ -5013,23 +4189,16 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int x;
 
               public Test(int foo) {
                 x = -1;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 before:
                 for (; ; ) {
-                  switch (side) {
+                  switch (suit) {
                     case HEART:
                       x = 2;
                       break;
@@ -5062,23 +4231,16 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               int x;
 
               public Test(int foo) {
                 x = -1;
               }
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 before:
                 for (; ; ) {
-                  switch (side) {
+                  switch (suit) {
                     case HEART:
                       x = 2;
                       break;
@@ -5111,18 +4273,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x =
-                    switch (side) {
+                    switch (suit) {
                       case HEART:
                         yield 2;
                       case DIAMOND:
@@ -5149,7 +4304,7 @@ public final class StatementSwitchToExpressionSwitchTest {
     // (say there is a new JOKER suit), then nothing would happen.  But the transformed source,
     // would throw.
 
-    // Note also that the initial value of {@code x} is used in the computation inside the switch,
+    // Note also that the initial value of {@code x} is used in the computation insuit the switch,
     // thus its definition is not eligible to be combined with the switch (e.g. {@code int x =
     // switch (...)}).
     helper
@@ -5157,19 +4312,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                   // Heart comment
                   // Fall through
@@ -5195,18 +4343,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
-                switch (side) {
+                switch (suit) {
                   case HEART:
                   // Heart comment
                   // Fall through
@@ -5226,19 +4367,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
                 x =
-                    switch (side) {
+                    switch (suit) {
                       case HEART, DIAMOND ->
                           // Heart comment
                           (((x + 1) * (x * x)) << 2);
@@ -5255,7 +4389,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         // There should be no second fix that attempts to remove the default case because there is
         // no default case.
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -5270,18 +4404,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
-                switch (side) {
+                switch (suit) {
                   case HEART:
                   // Heart comment
                   // Fall through
@@ -5304,19 +4431,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
                 x =
-                    switch (side) {
+                    switch (suit) {
                       case HEART, DIAMOND ->
                           // Heart comment
                           (((x + 1) * (x * x)) << 2);
@@ -5333,25 +4453,18 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
 
     refactoringHelper2
         .addInputLines(
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
-                switch (side) {
+                switch (suit) {
                   case HEART:
                   // Heart comment
                   // Fall through
@@ -5374,19 +4487,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
                 x =
-                    switch (side) {
+                    switch (suit) {
                       case HEART, DIAMOND ->
                           // Heart comment
                           (((x + 1) * (x * x)) << 2);
@@ -5401,7 +4507,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(FixChoosers.SECOND)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -5412,19 +4518,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     x += (((x + 1) * (x * x)) << 1);
@@ -5448,18 +4547,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
-                switch (side) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     x += (((x + 1) * (x * x)) << 1);
@@ -5477,19 +4569,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
                 x +=
-                    switch (side) {
+                    switch (suit) {
                       case HEART, DIAMOND -> (((x + 1) * (x * x)) << 1);
                       case SPADE -> throw new RuntimeException();
                       case CLUB -> throw new NullPointerException();
@@ -5513,19 +4598,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case /* red suit */ HEART:
                   // Heart comment
                   case /* red suit */ DIAMOND: // sparkles
@@ -5555,19 +4633,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case /* red suit */ HEART:
                   // Heart comment
                   case /* red suit */ DIAMOND: // sparkles
@@ -5591,20 +4662,13 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 x *=
-                    switch (side) {
+                    switch (suit) {
                       case HEART, DIAMOND, SPADE ->
                           /* red suit */
                           // Heart comment
@@ -5629,7 +4693,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -5640,29 +4704,22 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEARTS,
-                CLUBS,
-                SPADES,
-                DIAMONDS
-              };
-
               int score = 0;
 
               public Test() {}
 
               private void updateScore(Suit suit) {
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
+                // BUG: Diagnostic contains:
                 switch (suit) {
-                  case HEARTS:
+                  case HEART:
                   // Fall through
-                  case DIAMONDS:
+                  case DIAMOND:
                     score += -1;
                     break;
-                  case SPADES:
+                  case SPADE:
                     score += 2;
                     break;
-                  case CLUBS:
+                  case CLUB:
                     score += 3;
                     break;
                 }
@@ -5679,28 +4736,21 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEARTS,
-                CLUBS,
-                SPADES,
-                DIAMONDS
-              };
-
               int score = 0;
 
               public Test() {}
 
               private void updateScore(Suit suit) {
                 switch (suit) {
-                  case HEARTS:
+                  case HEART:
                   // Fall through
-                  case DIAMONDS:
+                  case DIAMOND:
                     score += -1;
                     break;
-                  case SPADES:
+                  case SPADE:
                     score += 2;
                     break;
-                  case CLUBS:
+                  case CLUB:
                     score += 3;
                 }
               }
@@ -5710,13 +4760,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Suit {
-                HEARTS,
-                CLUBS,
-                SPADES,
-                DIAMONDS
-              };
-
               int score = 0;
 
               public Test() {}
@@ -5724,9 +4767,9 @@ public final class StatementSwitchToExpressionSwitchTest {
               private void updateScore(Suit suit) {
                 score +=
                     switch (suit) {
-                      case HEARTS, DIAMONDS -> -1;
-                      case SPADES -> 2;
-                      case CLUBS -> 3;
+                      case HEART, DIAMOND -> -1;
+                      case SPADE -> 2;
+                      case CLUB -> 3;
                     };
               }
             }
@@ -5735,7 +4778,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -5746,19 +4789,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
-                // BUG: Diagnostic contains: [StatementSwitchToExpressionSwitch]
-                switch (side) {
+                // BUG: Diagnostic contains:
+                switch (suit) {
                   case HEART, DIAMOND:
                     x = (((x + 1) * (x * x)) << 1);
                     break;
@@ -5779,18 +4815,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
-                switch (side) {
+                switch (suit) {
                   case HEART, DIAMOND:
                     x = (((x + 1) * (x * x)) << 1);
                     break;
@@ -5805,19 +4834,12 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
                 x =
-                    switch (side) {
+                    switch (suit) {
                       case HEART, DIAMOND -> (((x + 1) * (x * x)) << 1);
                       case SPADE, CLUB -> throw new NullPointerException();
                     };
@@ -5840,18 +4862,11 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
               public Test(int foo) {}
 
-              public int foo(Side side) {
+              public int foo(Suit suit) {
                 int x = 0;
-                switch (side) {
+                switch (suit) {
                   case DIAMOND:
                     x = (((x + 1) * (x * x)) << 1);
                     break;
@@ -5921,7 +4936,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion=true")
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -5959,7 +4974,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion=true")
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -6009,15 +5024,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART:
                   case DIAMOND:
                     return 1;
@@ -6036,15 +5044,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   case HEART, DIAMOND -> {
                     return 1;
                   }
@@ -6071,15 +5072,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   default:
                     throw new NullPointerException();
                 }
@@ -6090,15 +5084,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              enum Side {
-                HEART,
-                SPADE,
-                DIAMOND,
-                CLUB
-              };
-
-              public int foo(Side side) {
-                switch (side) {
+              public int foo(Suit suit) {
+                switch (suit) {
                   default -> throw new NullPointerException();
                 }
               }
@@ -6200,7 +5187,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -6334,7 +5321,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -6460,7 +5447,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -6522,7 +5509,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest(TEXT_MATCH);
   }
 
   /**
