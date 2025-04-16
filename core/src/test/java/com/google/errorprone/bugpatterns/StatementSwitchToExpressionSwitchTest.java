@@ -69,41 +69,11 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_removesRedundantBreak_error() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public void foo(Side side) {
-                // BUG: Diagnostic contains:
-                switch (side) {
-                  case OBVERSE:
-                    // Explanatory comment
-                    System.out.println("the front is called the");
-                    // Middle comment
-                    System.out.println("obverse");
-                    // Break comment
-                    break;
-                  // End comment
-                  case REVERSE:
-                    System.out.println("reverse");
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Side side) {
                 switch (side) {
                   case OBVERSE /* left comment */ /* and there is more: */ // to end of line
@@ -125,8 +95,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Side side) {
                 switch (side) {
                   case OBVERSE -> {
@@ -151,41 +119,12 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
-  public void switchByEnumWithCompletionAnalsis_removesRedundantBreak_error() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public void foo(Side side) {
-                // BUG: Diagnostic contains:
-                switch (side) {
-                  // Comment before first case
-                  case OBVERSE:
-                    // Explanatory comment
-                    System.out.println("this block cannot complete normally");
-                    {
-                      throw new NullPointerException();
-                    }
-                  case REVERSE:
-                    System.out.println("reverse");
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
-    // Check correct generated code
+  public void switchByEnumWithCompletionAnalysis_removesRedundantBreak_error() {
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Side side) {
                 switch (side) {
                   // Comment before first case
@@ -205,8 +144,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Side side) {
                 switch (side) {
                   case OBVERSE -> {
@@ -231,43 +168,11 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnumExhaustiveWithoutDefault_removesDefault_error() {
     // The switch covers all enum values and also includes a default clause, so assert that a
     // secondary fix is generated to remove the default clause.
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public void foo(Side side) {
-                // BUG: Diagnostic contains:
-                switch (side) {
-                  // Comment before first case
-                  case OBVERSE:
-                    // Explanatory comment
-                    System.out.println("this block cannot complete normally");
-                    {
-                      throw new NullPointerException();
-                    }
-                  case REVERSE:
-                    System.out.println("reverse");
-                    break;
-                  default:
-                    System.out.println("default");
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Side side) {
                 switch (side) {
                   // Comment before first case
@@ -290,8 +195,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Side side) {
                 switch (side) {
                   case OBVERSE -> {
@@ -317,8 +220,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Side side) {
                 switch (side) {
                   // Comment before first case
@@ -341,8 +242,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Side side) {
                 switch (side) {
                   case OBVERSE -> {
@@ -365,43 +264,11 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumCard_combinesCaseComments_error() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public void foo(Suit suit) {
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART:
-                    System.out.println("heart2");
-                    break;
-                  case /* sparkly */ DIAMOND /* Sparkly */:
-                  // Empty block comment 1
-                  // Fall through
-                  case SPADE:
-                  // Empty block comment 2
-                  case CLUB:
-                    // Start of block comment 1
-                    System.out.println("what's not a heart is ");
-                    System.out.println("everything else");
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 switch (suit) {
                   case HEART:
@@ -424,8 +291,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 switch (suit) {
                   case HEART -> System.out.println("heart2");
@@ -449,44 +314,12 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumCard2_removesRedundantBreaks_error() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public void foo(Suit suit) {
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART:
-                    System.out.println("heart");
-                    // Pre break comment
-                    break;
-                  // Post break comment
-                  case DIAMOND:
-                    // Diamond break comment
-                    break;
-                  case SPADE:
-                  case CLUB:
-                    System.out.println("everything else");
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
-                // BUG: Diagnostic contains:
                 switch (suit) {
                   case HEART:
                     System.out.println("heart");
@@ -507,10 +340,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
-                // BUG: Diagnostic contains:
                 switch (suit) {
                   case HEART -> System.out.println("heart");
                   // Pre break comment
@@ -530,42 +360,11 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumCard_onlyExpressionsAndThrowAreBraceless_error() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public void foo(Suit suit) {
-                for (; ; ) {
-                  // BUG: Diagnostic contains:
-                  switch (suit) {
-                    case HEART:
-                      System.out.println("heart");
-                      break;
-                    case DIAMOND:
-                      continue;
-                    case SPADE:
-                      return;
-                    case CLUB:
-                      throw new AssertionError();
-                  }
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 for (; ; ) {
                   switch (suit) {
@@ -587,8 +386,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 for (; ; ) {
                   switch (suit) {
@@ -617,8 +414,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 switch (suit) {
                   case HEART:
@@ -639,15 +434,12 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchFallsThruFromDefault_noError() {
-
     // Placing default in the middle of the switch is not recommended, but is valid Java
     helper
         .addSourceLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 switch (suit) {
                   case HEART:
@@ -671,34 +463,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchWithDefaultInMiddle_error() {
     // Placing default in the middle of the switch is not recommended, but is valid Java
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public void foo(Suit suit) {
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART:
-                    System.out.println("heart");
-                    break;
-                  case DIAMOND:
-                    System.out.println("diamond");
-                    return;
-                  default:
-                    System.out.println("club");
-                    break;
-                  case SPADE:
-                    System.out.println("spade");
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
     // This check does not attempt to re-order cases, for example to move the default to the end, as
     // this scope is delegated to other tests e.g. SwitchDefault
     refactoringHelper
@@ -706,8 +470,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 switch (suit) {
                   case HEART:
@@ -729,8 +491,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 switch (suit) {
                   case HEART -> System.out.println("heart");
@@ -753,42 +513,11 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchWithLabelledBreak_error() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public void foo(Suit suit) {
-                outer:
-                for (; ; ) {
-                  // BUG: Diagnostic contains:
-                  switch (suit) {
-                    case HEART:
-                      System.out.println("will return");
-                      return;
-                    case DIAMOND:
-                      break outer;
-                    case SPADE:
-                    case CLUB:
-                      System.out.println("everything else");
-                  }
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 outer:
                 for (; ; ) {
@@ -810,8 +539,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 outer:
                 for (; ; ) {
@@ -836,39 +563,12 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_statementSwitchWithMultipleExpressions_error() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public void foo(Suit suit) {
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART:
-                    System.out.println("will return");
-                    return;
-                  case DIAMOND:
-                  case SPADE, CLUB:
-                    System.out.println("everything else");
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
-                // BUG: Diagnostic contains:
                 switch (suit) {
                   case HEART:
                     System.out.println("will return");
@@ -884,10 +584,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
-                // BUG: Diagnostic contains:
                 switch (suit) {
                   case HEART -> {
                     System.out.println("will return");
@@ -910,8 +607,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 // BUG: Diagnostic contains:
                 switch (suit) {
@@ -939,8 +634,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 // BUG: Diagnostic contains:
                 switch (suit) {
@@ -969,42 +662,11 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumCardWithReturnNested1_error() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public void foo(Suit suit) {
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART:
-                    System.out.println("heart");
-                    break;
-                  case DIAMOND:
-                    {
-                      System.out.println("nested1");
-                      break;
-                    }
-                  case SPADE:
-                  case CLUB:
-                    System.out.println("everything else");
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 switch (suit) {
                   case HEART:
@@ -1026,8 +688,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 switch (suit) {
                   case HEART -> System.out.println("heart");
@@ -1049,8 +709,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 // BUG: Diagnostic contains:
                 switch (suit) {
@@ -1083,8 +741,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 switch (suit) {
                   case HEART:
@@ -1110,26 +766,32 @@ public final class StatementSwitchToExpressionSwitchTest {
     helper
         .addSourceLines(
             "Test.java",
-            " import java.util.function.Function;",
-            "class Test {",
-            "  public Test(int foo) {",
-            "  }",
-            " ",
-            "  public void foo(Suit suit) { ",
-            "    switch(suit) {",
-            "       case HEART:",
-            "          System.out.println(\"heart\");",
-            // "Last" statement in the HEART block is a return, but we don't want to conclude that
-            // the block has definite control flow based on that
-            "          Function<Integer,Integer> x = (i) -> {while(true) {break;} return i;};",
-            "       case DIAMOND:",
-            "          break;",
-            "       case SPADE:",
-            "       case CLUB:",
-            "          System.out.println(\"everything else\");",
-            "    }",
-            "  }",
-            "}")
+            """
+            import java.util.function.Function;
+
+            class Test {
+              public void foo(Suit suit) {
+                switch (suit) {
+                  case HEART:
+                    System.out.println("heart");
+                    // Last statement in the HEART block is a return, but we don't want to conclude that
+                    // the block has definite control flow based on that
+                    Function<Integer, Integer> x =
+                        (i) -> {
+                          while (true) {
+                            break;
+                          }
+                          return i;
+                        };
+                  case DIAMOND:
+                    break;
+                  case SPADE:
+                  case CLUB:
+                    System.out.println("everything else");
+                }
+              }
+            }
+            """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .doTest();
   }
@@ -1141,8 +803,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 // BUG: Diagnostic contains:
                 switch (suit) {
@@ -1204,8 +864,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             class Test {
               Throwable foo = bar();
 
-              public Test(int foo) {}
-
               private static Throwable bar() {
                 return new NullPointerException("initialized with return value");
               }
@@ -1217,44 +875,11 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_exampleInDocumentation_error() {
-    // This code appears as an example in the documentation (added surrounding class)
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test() {}
-
-              private void foo(Suit suit) {
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART:
-                    System.out.println("Red hearts");
-                    break;
-                  case DIAMOND:
-                    System.out.println("Red diamonds");
-                    break;
-                  case SPADE:
-                  // Fall through
-                  case CLUB:
-                    bar();
-                    System.out.println("Black suit");
-                }
-              }
-
-              private void bar() {}
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test() {}
-
               private void foo(Suit suit) {
                 switch (suit) {
                   case HEART:
@@ -1278,8 +903,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test() {}
-
               private void foo(Suit suit) {
                 switch (suit) {
                   case HEART -> System.out.println("Red hearts");
@@ -1303,44 +926,11 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_caseHasOnlyComments_error() {
     // When a case is solely comments, we should still try to convert the switch using braceless
     // syntax
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test() {}
-
-              private void foo(Suit suit) {
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART:
-                  // A comment here
-                  // more comments.
-                  case DIAMOND:
-                    // Diamond comment
-                    System.out.println("Red diamonds");
-                    break;
-                  case SPADE:
-                  // Fall through
-                  case CLUB:
-                    bar();
-                    System.out.println("Black suit");
-                }
-              }
-
-              private void bar() {}
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test() {}
-
               private void foo(Suit suit) {
                 switch (suit) {
                   case HEART:
@@ -1365,8 +955,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test() {}
-
               private void foo(Suit suit) {
                 switch (suit) {
                   case HEART, DIAMOND ->
@@ -1392,44 +980,12 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_accumulatedComments_error() {
     // Comments should be aggregated across multiple cases
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test() {}
-
-              private void foo(Suit suit) {
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case /* red */ HEART:
-                  // A comment here
-                  // more comments.
-                  case /* red */ DIAMOND:
-                  // Diamonds comment
-                  case /* black */ SPADE:
-                  // Spades comment
-                  case /* black */ CLUB:
-                    bar();
-                    System.out.println("Any suit");
-                }
-              }
-
-              private void bar() {}
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test() {}
-
               private void foo(Suit suit) {
-                // BUG: Diagnostic contains:
                 switch (suit) {
                   case /* red */ HEART:
                   // A comment here
@@ -1451,10 +1007,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test() {}
-
               private void foo(Suit suit) {
-                // BUG: Diagnostic contains:
                 switch (suit) {
                   case HEART, DIAMOND, SPADE, CLUB -> {
                     /* red */
@@ -1483,41 +1036,11 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_surroundingBracesCannotRemove_error() {
     // Can't remove braces around OBVERSE because break statements are not a member of
     // KINDS_CONVERTIBLE_WITHOUT_BRACES
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public void foo(Side side) {
-                // BUG: Diagnostic contains:
-                switch (side) {
-                  case OBVERSE:
-                    {
-                      // The quick brown fox, jumps over the lazy dog, etc.
-                      break;
-                    }
-
-                  default:
-                    {
-                      throw new RuntimeException("Invalid type.");
-                    }
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Side side) {
                 switch (side) {
                   case OBVERSE:
@@ -1538,8 +1061,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Side side) {
                 switch (side) {
                   case OBVERSE -> {
@@ -1559,41 +1080,11 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_surroundingBracesEmpty_error() {
     // Test handling of cases with surrounding braces that are empty.  The braces around OBVERSE
     // can be removed because throw is a member of KINDS_CONVERTIBLE_WITHOUT_BRACES.
-
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public void foo(Side side) {
-                // BUG: Diagnostic contains:
-                switch (side) {
-                  case OBVERSE:
-                    {
-                      // The quick brown fox, jumps over the lazy dog, etc.
-                      throw new RuntimeException("Invalid.");
-                    }
-
-                  default:
-                    {
-                    }
-                }
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Side side) {
                 switch (side) {
                   case OBVERSE:
@@ -1613,8 +1104,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Side side) {
                 switch (side) {
                   case OBVERSE ->
@@ -1632,39 +1121,12 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_afterReturnComments_error() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public int foo(Suit suit) {
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART:
-                    // before return comment
-                    return 123;
-                  // after return comment
-                  /* more comments */
-                  default:
-                }
-                return 0;
-              }
-            }
-            """)
-        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
-        .doTest();
-
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
-                // BUG: Diagnostic contains:
                 switch (suit) {
                   case HEART:
                     // before return comment
@@ -1682,10 +1144,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
-                // BUG: Diagnostic contains:
                 switch (suit) {
                   case HEART -> {
                     // before return comment
@@ -1798,44 +1257,11 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_returnSwitch_error() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public int invoke() {
-                return 123;
-              }
-
-              public int foo(Suit suit) {
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART:
-                  case DIAMOND:
-                    return invoke();
-                  case SPADE:
-                    throw new RuntimeException();
-                  default:
-                    throw new NullPointerException();
-                }
-              }
-            }
-            """)
-        .setArgs(
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest();
-
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -1857,8 +1283,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -1882,7 +1306,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_multipleStatementsAndTheLastNotReturn_error() {
 
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -2057,14 +1480,11 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_returnSwitchWithShouldNeverHappen_error() {
 
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2090,8 +1510,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2114,14 +1532,11 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_returnSwitchCommentsBeforeFirstCase_errorAndRetained() {
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2149,8 +1564,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2183,8 +1596,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2222,44 +1633,11 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_exhaustiveWithDefault_error() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public int invoke() {
-                return 123;
-              }
-
-              public int foo(Suit suit) {
-                String z = "dkfj";
-                // BUG: Diagnostic contains:
-                switch (z) {
-                  case "":
-                  case "DIAMOND":
-                  // Custom comment
-                  case "SPADE":
-                    return invoke();
-                  default:
-                    return 2;
-                }
-              }
-            }
-            """)
-        .setArgs(
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest();
-
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2282,8 +1660,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2314,8 +1690,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2348,8 +1722,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2377,58 +1749,11 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_returnSwitchWithShouldNeverHappen_errorAndRemoveShouldNeverHappen() {
     // The switch has a case for each enum and "should never happen" error handling for code after
     // the switch in the same block. The "should never happen" code should be removed.
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public int invoke() {
-                return 123;
-              }
-
-              public int foo(Suit suit) {
-                System.out.println("don't delete 0");
-                if (invoke() > 0) {
-                  System.out.println("don't delete 1");
-                  // Preceding comment
-                  // BUG: Diagnostic contains:
-                  switch (suit) {
-                    case HEART:
-                    // Fall through
-                    case DIAMOND:
-                      return invoke();
-                    case SPADE:
-                      throw new RuntimeException();
-                    case CLUB:
-                      throw new NullPointerException();
-                  }
-                  // Custom comment - should never happen
-                  int z = invoke(/* block comment 0 */ );
-                  // Custom comment 2
-                  {
-                    z++;
-                  }
-                  throw new RuntimeException("Switch was not exhaustive at runtime " + z);
-                }
-                System.out.println("don't delete 2");
-                return 0;
-              }
-            }
-            """)
-        .setArgs(
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest();
-
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2465,8 +1790,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2506,8 +1829,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 try {
@@ -2536,8 +1857,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 System.out.println("don't delete 0");
                 try {
@@ -2569,8 +1888,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               int x = 3;
 
               public int foo(Suit suit) {
@@ -2614,8 +1931,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               int x = 3;
 
               public int foo(Suit suit) {
@@ -2662,8 +1977,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2696,8 +2009,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2733,8 +2044,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2766,8 +2075,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2802,55 +2109,11 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_returnSwitchNoFollowingStatementsInBlock_errorAndNoRemoval() {
     // The switch is exhaustive but doesn't have any statements immediately following it in the
     // lowest ancestor statement block
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public int invoke() {
-                return 123;
-              }
-
-              public int foo(Suit suit) {
-                System.out.println("don't delete 0");
-                if (invoke() > 0) {
-                  System.out.println("don't delete 1");
-                  // Preceding comment
-                  // BUG: Diagnostic contains:
-                  switch (suit) {
-                    case HEART /* lhs comment */: // rhs comment
-                    // Fall through
-                    case DIAMOND:
-                      return invoke();
-                    case SPADE:
-                      throw new RuntimeException();
-                    case CLUB:
-                      throw new NullPointerException();
-                  }
-                }
-                // Custom comment - should never happen because invoke returns 123
-                int z = invoke(/* block comment 0 */ );
-                {
-                  z++;
-                }
-                throw new RuntimeException("Invoke <= 0 at runtime ");
-              }
-            }
-            """)
-        .setArgs(
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest();
-
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2884,8 +2147,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2924,58 +2185,11 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_groupedComments_errorAndNoRemoval() {
     // The switch is exhaustive but doesn't have any statements immediately following it in the
     // lowest ancestor statement block
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public int invoke() {
-                return 123;
-              }
-
-              public int foo(Suit suit) {
-                System.out.println("don't delete 0");
-                if (invoke() > 0) {
-                  System.out.println("don't delete 1");
-                  // Preceding comment
-                  // BUG: Diagnostic contains:
-                  switch (suit) {
-                    case HEART /* lhs comment */: // rhs comment
-                    // Another comment
-                    case /* sparkly */ DIAMOND /* Sparkly */:
-                    // Diamond
-                    case SPADE:
-                      // Before invoke
-                      return invoke();
-                    // After invoke
-                    case CLUB:
-                      throw new NullPointerException();
-                      // After last case
-                  }
-                }
-                // Custom comment - should never happen because invoke returns 123 or throws
-                int z = invoke(/* block comment 0 */ );
-                {
-                  z++;
-                }
-                throw new RuntimeException("Invoke <= 0 at runtime ");
-              }
-            }
-            """)
-        .setArgs(
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest();
-
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -2985,7 +2199,6 @@ public final class StatementSwitchToExpressionSwitchTest {
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  // BUG: Diagnostic contains:
                   switch (suit) {
                     case HEART /* lhs comment */: // rhs comment
                     // Another comment
@@ -3014,8 +2227,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int invoke() {
                 return 123;
               }
@@ -3025,7 +2236,6 @@ public final class StatementSwitchToExpressionSwitchTest {
                 if (invoke() > 0) {
                   System.out.println("don't delete 1");
                   // Preceding comment
-                  // BUG: Diagnostic contains:
                   return switch (suit) {
                     case HEART, DIAMOND, SPADE ->
                         /* lhs comment */
@@ -3125,8 +2335,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public void foo(Suit suit) {
                 switch (suit) {
                   case HEART:
@@ -3155,8 +2363,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 before:
                 for (; ; ) {
@@ -3188,8 +2394,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 before:
                 for (; ; ) {
@@ -3221,8 +2425,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 before:
                 for (; ; ) {
@@ -3255,8 +2457,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 return switch (suit) {
                   case HEART:
@@ -3289,14 +2489,11 @@ public final class StatementSwitchToExpressionSwitchTest {
     // do not combine the variable declaration for x with the switch block.  (There is a separate
     // Error Prone check that suggests a fix for this.)
 
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 var a = 0;
                 String b = "b";
@@ -3319,8 +2516,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 var a = 0;
                 String b = "b";
@@ -3348,7 +2543,6 @@ public final class StatementSwitchToExpressionSwitchTest {
     // variable declaration contains an unusual variation of comments, annotations, etc., which
     // should all be preserved, though possibly reordered.  Also has test of wildcards.
 
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -3369,8 +2563,6 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
 
               @interface MyOtherAnno {}
-
-              public Test(int foo) {}
 
               public int y = 0;
 
@@ -3426,8 +2618,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
               @interface MyOtherAnno {}
 
-              public Test(int foo) {}
-
               public int y = 0;
 
               public int foo(Suit suit) {
@@ -3470,14 +2660,11 @@ public final class StatementSwitchToExpressionSwitchTest {
     // Dead store of a compile-time constant to local variable {@code x} can be elided.  Also tests
     // that the type of a "var" declaration is handled correctly.
 
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int y = 0;
                 var x = 999;
@@ -3499,8 +2686,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int y = 0;
 
@@ -3526,14 +2711,11 @@ public final class StatementSwitchToExpressionSwitchTest {
     // The switch block cannot be combined with the variable declaration for {@code x} because the
     // variable declaration is nearby, but not immediately preceding the switch block.
 
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int z = 3;
                 int x;
@@ -3556,8 +2738,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int z = 3;
                 int x;
@@ -3585,14 +2765,11 @@ public final class StatementSwitchToExpressionSwitchTest {
     // block scope than the switch block.  Therefore, it should not be combined with the switch
     // assignment.
 
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int z = 3;
                 int x;
@@ -3618,8 +2795,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int z = 3;
                 int x;
@@ -3654,14 +2829,11 @@ public final class StatementSwitchToExpressionSwitchTest {
     // 2022). Leibniz International Proceedings in Informatics (LIPIcs), Volume 222, pp. 6:1-6:26,
     // Schloss Dagstuhl – Leibniz-Zentrum für Informatik (2022)
 
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               volatile int v = 0;
 
               public int foo(Suit suit) {
@@ -3685,8 +2857,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               volatile int v = 0;
 
               public int foo(Suit suit) {
@@ -3712,43 +2882,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_assignmentSwitchMixedReferences_error() {
     // Must deduce that "x" and "this.x" refer to same thing
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              int x;
-
-              public Test(int foo) {
-                x = -1;
-              }
-
-              public int foo(Suit suit) {
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  /* Comment before first case */
-                  case /* LHS comment */ HEART:
-                    // Inline comment
-                    x <<= 2;
-                    break;
-                  case DIAMOND:
-                    this.x <<= (((x + 1) * (x * x)) << 1);
-                    break;
-                  case SPADE:
-                    throw new RuntimeException();
-                  default:
-                    throw new NullPointerException();
-                }
-                return x;
-              }
-            }
-            """)
-        .setArgs(
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest();
-
-    // Check correct generated code.
     // Note that suggested fix uses the style of the first case (in source order).
     refactoringHelper
         .addInputLines(
@@ -3891,40 +3024,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_assignmentSwitchToSingleArray_error() {
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              int[] x;
-
-              public Test(int foo) {
-                x = null;
-              }
-
-              public int[] foo(Suit suit) {
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART:
-                    throw new RuntimeException();
-                  case DIAMOND:
-                    x[6] <<= (((x[6] + 1) * (x[6] * x[5]) << 1));
-                    break;
-                  case SPADE:
-                    throw new RuntimeException();
-                  default:
-                    throw new NullPointerException();
-                }
-                return x;
-              }
-            }
-            """)
-        .setArgs(
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest();
-
-    // Check correct generated code
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -3937,7 +3036,6 @@ public final class StatementSwitchToExpressionSwitchTest {
               }
 
               public int[] foo(Suit suit) {
-                // BUG: Diagnostic contains:
                 switch (suit) {
                   case HEART:
                     throw new RuntimeException();
@@ -4273,8 +3371,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x =
                     switch (suit) {
@@ -4307,44 +3403,11 @@ public final class StatementSwitchToExpressionSwitchTest {
     // Note also that the initial value of {@code x} is used in the computation insuit the switch,
     // thus its definition is not eligible to be combined with the switch (e.g. {@code int x =
     // switch (...)}).
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public int foo(Suit suit) {
-                int x = 0;
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART:
-                  // Heart comment
-                  // Fall through
-                  case DIAMOND:
-                    x = (((x + 1) * (x * x)) << 1);
-                    break;
-                  case SPADE:
-                    throw new RuntimeException();
-                  case CLUB:
-                    throw new NullPointerException();
-                }
-                return x;
-              }
-            }
-            """)
-        .setArgs(
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest();
-
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x = 0;
                 switch (suit) {
@@ -4367,8 +3430,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x = 0;
                 x =
@@ -4404,8 +3465,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x = 0;
                 switch (suit) {
@@ -4431,8 +3490,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x = 0;
                 x =
@@ -4460,8 +3517,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x = 0;
                 switch (suit) {
@@ -4487,8 +3542,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x = 0;
                 x =
@@ -4513,42 +3566,11 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_exhaustiveCompoundAssignmentSwitch_error() {
     // Verify compound assignments (here, +=)
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public int foo(Suit suit) {
-                int x = 0;
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART:
-                  case DIAMOND:
-                    x += (((x + 1) * (x * x)) << 1);
-                    break;
-                  case SPADE:
-                    throw new RuntimeException();
-                  case CLUB:
-                    throw new NullPointerException();
-                }
-                return x;
-              }
-            }
-            """)
-        .setArgs(
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest();
-
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x = 0;
                 switch (suit) {
@@ -4569,8 +3591,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x = 0;
                 x +=
@@ -4593,51 +3613,13 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_groupedComments_error() {
     // Verify compound assignments (here, *=) with grouped comments
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public int foo(Suit suit) {
-                int x = 0;
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case /* red suit */ HEART:
-                  // Heart comment
-                  case /* red suit */ DIAMOND: // sparkles
-                  // Diamond comment
-                  // Fall through
-                  case /* black suit */ SPADE:
-                    x *= 2;
-                    // Before break comment
-                    break;
-                  // After break comment
-                  case /* black suit */ CLUB:
-                    // Club comment
-                    throw new NullPointerException();
-                    // Club after throw comment
-                }
-                return x;
-              }
-            }
-            """)
-        .setArgs(
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest();
-
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x = 0;
-                // BUG: Diagnostic contains:
                 switch (suit) {
                   case /* red suit */ HEART:
                   // Heart comment
@@ -4662,11 +3644,8 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x = 0;
-                // BUG: Diagnostic contains:
                 x *=
                     switch (suit) {
                       case HEART, DIAMOND, SPADE ->
@@ -4699,46 +3678,12 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_compoundAssignmentExampleInDocumentation_error() {
     // This code appears as an example in the documentation (added surrounding class)
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              int score = 0;
-
-              public Test() {}
-
-              private void updateScore(Suit suit) {
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART:
-                  // Fall through
-                  case DIAMOND:
-                    score += -1;
-                    break;
-                  case SPADE:
-                    score += 2;
-                    break;
-                  case CLUB:
-                    score += 3;
-                    break;
-                }
-              }
-            }
-            """)
-        .setArgs(
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest();
-
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
               int score = 0;
-
-              public Test() {}
 
               private void updateScore(Suit suit) {
                 switch (suit) {
@@ -4761,8 +3706,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             """
             class Test {
               int score = 0;
-
-              public Test() {}
 
               private void updateScore(Suit suit) {
                 score +=
@@ -4784,39 +3727,11 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_exhaustiveAssignmentSwitchCaseList_error() {
     // Statement switch has cases with multiple values
-    helper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public Test(int foo) {}
-
-              public int foo(Suit suit) {
-                int x = 0;
-                // BUG: Diagnostic contains:
-                switch (suit) {
-                  case HEART, DIAMOND:
-                    x = (((x + 1) * (x * x)) << 1);
-                    break;
-                  case SPADE, CLUB:
-                    throw new NullPointerException();
-                }
-                return x;
-              }
-            }
-            """)
-        .setArgs(
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
-            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest();
-
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x = 0;
                 switch (suit) {
@@ -4834,8 +3749,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x = 0;
                 x =
@@ -4862,8 +3775,6 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public Test(int foo) {}
-
               public int foo(Suit suit) {
                 int x = 0;
                 switch (suit) {
@@ -5136,12 +4047,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-
-              int[] x;
-
-              public Test(int foo) {
-                x = null;
-              }
+              int[] x = null;
 
               public int[] foo() {
                 int z = 0;
@@ -5162,12 +4068,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-
-              int[] x;
-
-              public Test(int foo) {
-                x = null;
-              }
+              int[] x = null;
 
               public int[] foo() {
                 int z = 0;
