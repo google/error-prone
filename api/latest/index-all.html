@@ -1080,10 +1080,6 @@ class, and the annotation is itself annotated with <code>@ScopeAnnotation</code>
 <dd>
 <div class="block">Scanner for determining what types are thrown by a tree.</div>
 </dd>
-<dt><a href="com/google/errorprone/util/ASTHelpers.TargetType.html" class="type-name-link" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
-<dd>
-<div class="block">An expression's target type, see <a href="com/google/errorprone/util/ASTHelpers.html#targetType(com.google.errorprone.VisitorState)"><code>ASTHelpers.targetType(VisitorState)</code></a>.</div>
-</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ASTHelpersSuggestions.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ASTHelpersSuggestions</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A BugPattern; see the summary</div>
@@ -11395,7 +11391,7 @@ suggested changes.</div>
 </dd>
 <dt><a href="com/google/errorprone/dataflow/AccessPath.html#path()" class="member-name-link">path()</a> - Method in class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPath.html" title="class in com.google.errorprone.dataflow">AccessPath</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/util/ASTHelpers.TargetType.html#path()" class="member-name-link">path()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.TargetType.html" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a></dt>
+<dt><a href="com/google/errorprone/util/TargetType.html#path()" class="member-name-link">path()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/TargetType.html" title="class in com.google.errorprone.util">TargetType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/PatternMatchingInstanceof.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">PatternMatchingInstanceof</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -13237,10 +13233,20 @@ variable if needed.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#targetType(com.google.errorprone.VisitorState)" class="member-name-link">targetType(VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use TargetType.targetType directly</div>
+</div>
+</dd>
+<dt><a href="com/google/errorprone/util/TargetType.html#targetType(com.google.errorprone.VisitorState)" class="member-name-link">targetType(VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/TargetType.html" title="class in com.google.errorprone.util">TargetType</a></dt>
+<dd>
 <div class="block">Returns the target type of the tree at the given <a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s path, or else <code>
 null</code>.</div>
 </dd>
-<dt><a href="com/google/errorprone/util/ASTHelpers.TargetType.html#%3Cinit%3E()" class="member-name-link">TargetType()</a> - Constructor for class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.TargetType.html" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a></dt>
+<dt><a href="com/google/errorprone/util/TargetType.html" class="type-name-link" title="class in com.google.errorprone.util">TargetType</a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
+<dd>
+<div class="block">An expression's target type, see <a href="com/google/errorprone/util/TargetType.html#targetType(com.google.errorprone.VisitorState)"><code>TargetType.targetType(VisitorState)</code></a>.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/TargetType.html#%3Cinit%3E()" class="member-name-link">TargetType()</a> - Constructor for class com.google.errorprone.util.<a href="com/google/errorprone/util/TargetType.html" title="class in com.google.errorprone.util">TargetType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UTemplater.html#template(com.sun.source.tree.ExpressionTree)" class="member-name-link">template(ExpressionTree)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
@@ -13715,7 +13721,7 @@ assigning the expected exception to a variable, if it is used within the <code>c
 </dd>
 <dt><a href="com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html#type()" class="member-name-link">type()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html" title="class in com.google.errorprone.refaster">UTypeVar.TypeWithExpression</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/util/ASTHelpers.TargetType.html#type()" class="member-name-link">type()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.TargetType.html" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a></dt>
+<dt><a href="com/google/errorprone/util/TargetType.html#type()" class="member-name-link">type()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/TargetType.html" title="class in com.google.errorprone.util">TargetType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Kind.html#TYPE_LITERAL" class="member-name-link">TYPE_LITERAL</a> - Enum constant in enum class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Kind.html" title="enum class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Kind</a></dt>
 <dd>&nbsp;</dd>

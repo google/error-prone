@@ -152,8 +152,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#getGeneratedBy(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" tabindex="0">getGeneratedBy(Symbol, VisitorState)</a></li>
 <li><a href="#isSuper(com.sun.source.tree.Tree)" tabindex="0">isSuper(Tree)</a></li>
 <li><a href="#isInStaticInitializer(com.google.errorprone.VisitorState)" tabindex="0">isInStaticInitializer(VisitorState)</a></li>
-<li><a href="#variableIsStaticFinal(com.sun.tools.javac.code.Symbol.VarSymbol)" tabindex="0">variableIsStaticFinal(Symbol.VarSymbol)</a></li>
 <li><a href="#targetType(com.google.errorprone.VisitorState)" tabindex="0">targetType(VisitorState)</a></li>
+<li><a href="#variableIsStaticFinal(com.sun.tools.javac.code.Symbol.VarSymbol)" tabindex="0">variableIsStaticFinal(Symbol.VarSymbol)</a></li>
 <li><a href="#getDeclarationAndTypeAttributes(com.sun.tools.javac.code.Symbol)" tabindex="0">getDeclarationAndTypeAttributes(Symbol)</a></li>
 <li><a href="#getAnnotationMirror(com.sun.source.tree.AnnotationTree)" tabindex="0">getAnnotationMirror(AnnotationTree)</a></li>
 <li><a href="#containsComments(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" tabindex="0">containsComments(Tree, VisitorState)</a></li>
@@ -210,11 +210,6 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="ASTHelpers.ScanThrownTypes.html" class="type-name-link" title="class in com.google.errorprone.util">ASTHelpers.ScanThrownTypes</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Scanner for determining what types are thrown by a tree.</div>
-</div>
-<div class="col-first odd-row-color"><code>static class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="ASTHelpers.TargetType.html" class="type-name-link" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">An expression's target type, see <a href="#targetType(com.google.errorprone.VisitorState)"><code>targetType(VisitorState)</code></a>.</div>
 </div>
 </div>
 </section>
@@ -885,11 +880,12 @@ an annotation with that simple name.</div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Removes any enclosing parentheses from the tree.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="ASTHelpers.TargetType.html" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#targetType(com.google.errorprone.VisitorState)" class="member-name-link">targetType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the target type of the tree at the given <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s path, or else <code>
-null</code>.</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static @Nullable <a href="TargetType.html" title="class in com.google.errorprone.util">TargetType</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#targetType(com.google.errorprone.VisitorState)" class="member-name-link">targetType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use TargetType.targetType directly</div>
+</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#variableIsStaticFinal(com.sun.tools.javac.code.Symbol.VarSymbol)" class="member-name-link">variableIsStaticFinal</a><wbr>(com.sun.tools.javac.code.Symbol.VarSymbol&nbsp;var)</code></div>
@@ -2018,6 +2014,18 @@ which is ultimately assigned to a static field.
 </section>
 </li>
 <li>
+<section class="detail" id="targetType(com.google.errorprone.VisitorState)">
+<h3>targetType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="TargetType.html" title="class in com.google.errorprone.util">TargetType</a></span>&nbsp;<span class="element-name">targetType</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use TargetType.targetType directly</div>
+</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="variableIsStaticFinal(com.sun.tools.javac.code.Symbol.VarSymbol)">
 <h3>variableIsStaticFinal</h3>
 <div class="horizontal-scroll">
@@ -2026,22 +2034,6 @@ which is ultimately assigned to a static field.
 
 <p>We regard instance fields within enums as "static final", as they will only have a finite
 number of instances tied to an (effectively) static final enum value.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="targetType(com.google.errorprone.VisitorState)">
-<h3>targetType</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="ASTHelpers.TargetType.html" title="class in com.google.errorprone.util">ASTHelpers.TargetType</a></span>&nbsp;<span class="element-name">targetType</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<div class="block">Returns the target type of the tree at the given <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s path, or else <code>
-null</code>.
-
-<p>For example, the target type of an assignment expression is the variable's type, and the
-target type of a return statement is the enclosing method's type.
-
-<p>A general mental model is that the target type of an expression where the value is used is
-the highest supertype that you could cast to and still have this compile.</div>
 </div>
 </section>
 </li>
