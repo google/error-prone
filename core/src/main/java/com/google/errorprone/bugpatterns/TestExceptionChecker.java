@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -51,7 +51,7 @@ import org.jspecify.annotations.Nullable;
     summary =
         "Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in"
             + " the test method throws the expected exception",
-    severity = WARNING)
+    severity = ERROR)
 public class TestExceptionChecker extends BugChecker implements MethodTreeMatcher {
 
   @Override
