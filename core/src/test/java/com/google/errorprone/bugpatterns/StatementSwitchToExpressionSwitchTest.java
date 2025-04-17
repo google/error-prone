@@ -32,13 +32,6 @@ import org.junit.runners.JUnit4;
 /** Tests for {@link StatementSwitchToExpressionSwitch}. */
 @RunWith(JUnit4.class)
 public final class StatementSwitchToExpressionSwitchTest {
-  private static final String SIDE =
-      """
-      enum Side {
-        OBVERSE,
-        REVERSE
-      };
-      """;
   private static final String SUIT =
       """
       enum Suit {
@@ -50,21 +43,16 @@ public final class StatementSwitchToExpressionSwitchTest {
       """;
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(StatementSwitchToExpressionSwitch.class, getClass())
-          .addSourceLines("Suit.java", SUIT)
-          .addSourceLines("Side.java", SIDE);
+          .addSourceLines("Suit.java", SUIT);
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(
               StatementSwitchToExpressionSwitch.class, getClass())
           .addInputLines("Suit.java", SUIT)
-          .expectUnchanged()
-          .addInputLines("Side.java", SIDE)
           .expectUnchanged();
   private final BugCheckerRefactoringTestHelper refactoringHelper2 =
       BugCheckerRefactoringTestHelper.newInstance(
               StatementSwitchToExpressionSwitch.class, getClass())
           .addInputLines("Suit.java", SUIT)
-          .expectUnchanged()
-          .addInputLines("Side.java", SIDE)
           .expectUnchanged();
 
   @Test
@@ -74,19 +62,21 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public void foo(Side side) {
-                switch (side) {
-                  case OBVERSE /* left comment */ /* and there is more: */ // to end of line
+              public void foo(Suit suit) {
+                switch (suit) {
+                  case HEART /* left comment */ /* and there is more: */ // to end of line
                   :
                     // Explanatory comment
-                    System.out.println("the front is called the");
+                    System.out.println("the best suit is called the");
                     // Middle comment
-                    System.out.println("obverse");
+                    System.out.println("heart");
                     // Break comment
                     break;
                   // End comment
-                  case REVERSE:
-                    System.out.println("reverse");
+                  case SPADE:
+                  case CLUB:
+                  case DIAMOND:
+                    System.out.println("non-heart");
                 }
               }
             }
@@ -95,20 +85,20 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public void foo(Side side) {
-                switch (side) {
-                  case OBVERSE -> {
+              public void foo(Suit suit) {
+                switch (suit) {
+                  case HEART -> {
                     /* left comment */
                     /* and there is more: */
                     // to end of line
                     // Explanatory comment
-                    System.out.println("the front is called the");
+                    System.out.println("the best suit is called the");
                     // Middle comment
-                    System.out.println("obverse");
+                    System.out.println("heart");
                     // Break comment
                     // End comment
                   }
-                  case REVERSE -> System.out.println("reverse");
+                  case SPADE, CLUB, DIAMOND -> System.out.println("non-heart");
                 }
               }
             }
@@ -125,17 +115,19 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public void foo(Side side) {
-                switch (side) {
+              public void foo(Suit suit) {
+                switch (suit) {
                   // Comment before first case
-                  case OBVERSE:
+                  case HEART:
                     // Explanatory comment
                     System.out.println("this block cannot complete normally");
                     {
                       throw new NullPointerException();
                     }
-                  case REVERSE:
-                    System.out.println("reverse");
+                  case CLUB:
+                  case DIAMOND:
+                  case SPADE:
+                    System.out.println("non-heart");
                 }
               }
             }
@@ -144,9 +136,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public void foo(Side side) {
-                switch (side) {
-                  case OBVERSE -> {
+              public void foo(Suit suit) {
+                switch (suit) {
+                  case HEART -> {
                     // Comment before first case
                     // Explanatory comment
                     System.out.println("this block cannot complete normally");
@@ -154,7 +146,7 @@ public final class StatementSwitchToExpressionSwitchTest {
                       throw new NullPointerException();
                     }
                   }
-                  case REVERSE -> System.out.println("reverse");
+                  case CLUB, DIAMOND, SPADE -> System.out.println("non-heart");
                 }
               }
             }
@@ -173,17 +165,19 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public void foo(Side side) {
-                switch (side) {
+              public void foo(Suit suit) {
+                switch (suit) {
                   // Comment before first case
-                  case OBVERSE:
+                  case HEART:
                     // Explanatory comment
                     System.out.println("this block cannot complete normally");
                     {
                       throw new NullPointerException();
                     }
-                  case REVERSE:
-                    System.out.println("reverse");
+                  case CLUB:
+                  case SPADE:
+                  case DIAMOND:
+                    System.out.println("non-heart");
                     break;
                   default:
                     System.out.println("default");
@@ -195,9 +189,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public void foo(Side side) {
-                switch (side) {
-                  case OBVERSE -> {
+              public void foo(Suit suit) {
+                switch (suit) {
+                  case HEART -> {
                     // Comment before first case
                     // Explanatory comment
                     System.out.println("this block cannot complete normally");
@@ -205,7 +199,7 @@ public final class StatementSwitchToExpressionSwitchTest {
                       throw new NullPointerException();
                     }
                   }
-                  case REVERSE -> System.out.println("reverse");
+                  case CLUB, SPADE, DIAMOND -> System.out.println("non-heart");
                   default -> System.out.println("default");
                 }
               }
@@ -220,17 +214,19 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public void foo(Side side) {
-                switch (side) {
+              public void foo(Suit suit) {
+                switch (suit) {
                   // Comment before first case
-                  case OBVERSE:
+                  case HEART:
                     // Explanatory comment
                     System.out.println("this block cannot complete normally");
                     {
                       throw new NullPointerException();
                     }
-                  case REVERSE:
-                    System.out.println("reverse");
+                  case CLUB:
+                  case SPADE:
+                  case DIAMOND:
+                    System.out.println("non-heart");
                     break;
                   default:
                     System.out.println("default");
@@ -242,9 +238,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public void foo(Side side) {
-                switch (side) {
-                  case OBVERSE -> {
+              public void foo(Suit suit) {
+                switch (suit) {
+                  case HEART -> {
                     // Comment before first case
                     // Explanatory comment
                     System.out.println("this block cannot complete normally");
@@ -252,7 +248,7 @@ public final class StatementSwitchToExpressionSwitchTest {
                       throw new NullPointerException();
                     }
                   }
-                  case REVERSE -> System.out.println("reverse");
+                  case CLUB, SPADE, DIAMOND -> System.out.println("non-heart");
                 }
               }
             }
@@ -1034,16 +1030,16 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_surroundingBracesCannotRemove_error() {
-    // Can't remove braces around OBVERSE because break statements are not a member of
+    // Can't remove braces around HEART because break statements are not a member of
     // KINDS_CONVERTIBLE_WITHOUT_BRACES
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public void foo(Side side) {
-                switch (side) {
-                  case OBVERSE:
+              public void foo(Suit suit) {
+                switch (suit) {
+                  case HEART:
                     {
                       // The quick brown fox, jumps over the lazy dog, etc.
                       break;
@@ -1061,9 +1057,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public void foo(Side side) {
-                switch (side) {
-                  case OBVERSE -> {
+              public void foo(Suit suit) {
+                switch (suit) {
+                  case HEART -> {
                     // The quick brown fox, jumps over the lazy dog, etc.
                   }
                   default -> throw new RuntimeException("Invalid type.");
@@ -1078,16 +1074,16 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnum_surroundingBracesEmpty_error() {
-    // Test handling of cases with surrounding braces that are empty.  The braces around OBVERSE
+    // Test handling of cases with surrounding braces that are empty.  The braces around HEART
     // can be removed because throw is a member of KINDS_CONVERTIBLE_WITHOUT_BRACES.
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
             class Test {
-              public void foo(Side side) {
-                switch (side) {
-                  case OBVERSE:
+              public void foo(Suit suit) {
+                switch (suit) {
+                  case HEART:
                     {
                       // The quick brown fox, jumps over the lazy dog, etc.
                       throw new RuntimeException("Invalid.");
@@ -1104,9 +1100,9 @@ public final class StatementSwitchToExpressionSwitchTest {
             "Test.java",
             """
             class Test {
-              public void foo(Side side) {
-                switch (side) {
-                  case OBVERSE ->
+              public void foo(Suit suit) {
+                switch (suit) {
+                  case HEART ->
                       // The quick brown fox, jumps over the lazy dog, etc.
                       throw new RuntimeException("Invalid.");
                   default -> {}
