@@ -22,9 +22,9 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static java.lang.String.format;
 import static java.util.Collections.nCopies;
+import static java.util.regex.Pattern.compile;
 import static java.util.stream.Collectors.joining;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -36,7 +36,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
-import java.util.regex.Pattern;
 
 /** A BugPattern; see the summary. */
 @BugPattern(
@@ -49,39 +48,37 @@ public final class LenientFormatStringValidation extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    for (LenientFormatMethod method : METHODS) {
-      if (!method.matcher().matches(tree, state)) {
-        continue;
-      }
-      var args = tree.getArguments();
-      if (args.size() <= method.formatStringPosition()) {
-        continue;
-      }
-      ExpressionTree formatStringArgument = args.get(method.formatStringPosition());
-      Object formatString = ASTHelpers.constValue(formatStringArgument);
-      if (!(formatString instanceof String string)) {
-        continue;
-      }
-      int expected = occurrences(string, "%s");
-      int actual = args.size() - method.formatStringPosition() - 1;
-      if (expected == actual) {
-        continue;
-      }
-      var builder =
-          buildDescription(tree)
-              .setMessage(format("Expected %s positional arguments, but saw %s", expected, actual));
-      if (expected < actual) {
-        String extraArgs =
-            nCopies(actual - expected, "%s").stream().collect(joining(", ", " (", ")"));
-        int endPos = state.getEndPosition(formatStringArgument);
-        builder.addFix(
-            formatStringArgument instanceof LiteralTree
-                ? SuggestedFix.replace(endPos - 1, endPos, extraArgs + "\"")
-                : SuggestedFix.postfixWith(formatStringArgument, format("+ \"%s\"", extraArgs)));
-      }
-      return builder.build();
+    int formatStringPosition = getFormatStringPosition(tree, state);
+    if (formatStringPosition < 0) {
+      return NO_MATCH;
     }
-    return NO_MATCH;
+    var args = tree.getArguments();
+    if (args.size() <= formatStringPosition) {
+      return NO_MATCH;
+    }
+    ExpressionTree formatStringArgument = args.get(formatStringPosition);
+    Object formatString = ASTHelpers.constValue(formatStringArgument);
+    if (!(formatString instanceof String string)) {
+      return NO_MATCH;
+    }
+    int expected = occurrences(string, "%s");
+    int actual = args.size() - formatStringPosition - 1;
+    if (expected == actual) {
+      return NO_MATCH;
+    }
+    var builder =
+        buildDescription(tree)
+            .setMessage(format("Expected %s positional arguments, but saw %s", expected, actual));
+    if (expected < actual) {
+      String extraArgs =
+          nCopies(actual - expected, "%s").stream().collect(joining(", ", " (", ")"));
+      int endPos = state.getEndPosition(formatStringArgument);
+      builder.addFix(
+          formatStringArgument instanceof LiteralTree
+              ? SuggestedFix.replace(endPos - 1, endPos, extraArgs + "\"")
+              : SuggestedFix.postfixWith(formatStringArgument, format("+ \"%s\"", extraArgs)));
+    }
+    return builder.build();
   }
 
   private static int occurrences(String haystack, String needle) {
@@ -97,43 +94,43 @@ public final class LenientFormatStringValidation extends BugChecker
     }
   }
 
-  // TODO(ghm): Consider replacing this with an annotation-based approach (@LenientFormatString?)
+  private static int getFormatStringPosition(ExpressionTree tree, VisitorState state) {
+    for (LenientFormatMethod method : METHODS) {
+      if (method.matcher().matches(tree, state)) {
+        return method.formatStringPosition;
+      }
+    }
+    return -1;
+  }
+
   private static final ImmutableList<LenientFormatMethod> METHODS =
       ImmutableList.of(
-          LenientFormatMethod.create(
+          new LenientFormatMethod(
               staticMethod()
                   .onClass("com.google.common.base.Preconditions")
-                  .withNameMatching(Pattern.compile("^check.*")),
+                  .withNameMatching(compile("^check.*")),
               1),
-          LenientFormatMethod.create(
+          new LenientFormatMethod(
               staticMethod()
                   .onClass("com.google.common.base.Verify")
-                  .withNameMatching(Pattern.compile("^verify.*")),
+                  .withNameMatching(compile("^verify.*")),
               1),
-          LenientFormatMethod.create(
+          new LenientFormatMethod(
               staticMethod().onClass("com.google.common.base.Strings").named("lenientFormat"), 0),
-          LenientFormatMethod.create(
+          new LenientFormatMethod(
               staticMethod().onClass("com.google.common.truth.Truth").named("assertWithMessage"),
               0),
-          LenientFormatMethod.create(
+          new LenientFormatMethod(
               instanceMethod().onDescendantOf("com.google.common.truth.Subject").named("check"), 0),
-          LenientFormatMethod.create(
+          new LenientFormatMethod(
               instanceMethod()
                   .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
                   .named("withMessage"),
               0));
 
-  @AutoValue
-  abstract static class LenientFormatMethod {
-    abstract Matcher<ExpressionTree> matcher();
-
-    /** Position of the format string; we assume every argument afterwards is a format argument. */
-    abstract int formatStringPosition();
-
-    public static LenientFormatMethod create(
-        Matcher<ExpressionTree> matcher, int formatStringPosition) {
-      return new AutoValue_LenientFormatStringValidation_LenientFormatMethod(
-          matcher, formatStringPosition);
-    }
-  }
+  /**
+   * @param formatStringPosition position of the format string; we assume every argument afterwards
+   *     is a format argument.
+   */
+  private record LenientFormatMethod(Matcher<ExpressionTree> matcher, int formatStringPosition) {}
 }
