@@ -829,6 +829,181 @@ public class FindIdentifiersTest {
         .doTest();
   }
 
+  @Test
+  public void findAllIdents_bindingVariables() {
+    CompilationTestHelper.newInstance(PrintIdents.class, getClass())
+        .addSourceLines(
+            "pkg/MyInterface.java",
+            """
+            package pkg;
+
+            public interface MyInterface {
+              static void test(Object o) {
+                if (o instanceof MyInterface mi && o instanceof MyInterface mi2) {
+                  // BUG: Diagnostic contains: [mi, mi2, o]
+                  String.format("");
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void findAllIdents_bindingVariablesNeitherVisible() {
+    CompilationTestHelper.newInstance(PrintIdents.class, getClass())
+        .addSourceLines(
+            "pkg/MyInterface.java",
+            """
+            package pkg;
+
+            public interface MyInterface {
+              static void test(Object o) {
+                if (o instanceof MyInterface mi || o instanceof MyInterface mi2) {
+                  // BUG: Diagnostic contains: [o]
+                  String.format("");
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void findAllIdents_bindingVariablesNegated() {
+    CompilationTestHelper.newInstance(PrintIdents.class, getClass())
+        .addSourceLines(
+            "pkg/MyInterface.java",
+            """
+            package pkg;
+
+            public interface MyInterface {
+              static void test(Object o) {
+                if (!(o instanceof MyInterface mi)) {
+                  return;
+                }
+                // BUG: Diagnostic contains: [mi, o]
+                String.format("");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void findAllIdents_bindingVariablesNegatedWithExplicitElse() {
+    CompilationTestHelper.newInstance(PrintIdents.class, getClass())
+        .addSourceLines(
+            "pkg/MyInterface.java",
+            """
+            package pkg;
+
+            public interface MyInterface {
+              static void test(Object o) {
+                if (!(o instanceof MyInterface mi)) {
+                  // BUG: Diagnostic contains: [o]
+                  String.format("");
+                } else {
+                  // BUG: Diagnostic contains: [mi, o]
+                  String.format("");
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void findAllIdents_bindingVariablesNegatedButMayFallThrough() {
+    CompilationTestHelper.newInstance(PrintIdents.class, getClass())
+        .addSourceLines(
+            "pkg/MyInterface.java",
+            """
+            package pkg;
+
+            public interface MyInterface {
+              static void test(Object o) {
+                if (!(o instanceof MyInterface mi)) {
+                }
+                // BUG: Diagnostic contains: [o]
+                String.format("");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void findAllIdents_bindingVariableWithTernary() {
+    CompilationTestHelper.newInstance(PrintIdents.class, getClass())
+        .addSourceLines(
+            "pkg/MyInterface.java",
+            """
+            package pkg;
+
+            public interface MyInterface {
+              static boolean test(Object o) {
+                return o instanceof MyInterface mi
+                    ?
+                    // BUG: Diagnostic contains: [mi, o]
+                    String.format("").isEmpty()
+                    :
+                    // BUG: Diagnostic contains: [o]
+                    String.format("").isEmpty();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void findAllIdents_bindingVariableWithComplexConditions() {
+    CompilationTestHelper.newInstance(PrintIdents.class, getClass())
+        .addSourceLines(
+            "pkg/MyInterface.java",
+            """
+            package pkg;
+
+            public interface MyInterface {
+              static boolean test(Object o) {
+                // BUG: Diagnostic contains: [s, o]
+                return o instanceof String s && String.format(s).isEmpty();
+              }
+
+              static boolean test2(Object o) {
+                // BUG: Diagnostic contains: [o]
+                return o instanceof String s || String.format("").isEmpty();
+              }
+
+              static boolean test3(Object o) {
+                // BUG: Diagnostic contains: [s, o]
+                return !(o instanceof String s) || String.format(s).isEmpty();
+              }
+
+              static boolean test4(Object o) {
+                // BUG: Diagnostic contains: [s, o]
+                return o instanceof String s && true && String.format(s).isEmpty();
+              }
+
+              static boolean test5(Object o) {
+                // BUG: Diagnostic contains: [s, o]
+                return !(o instanceof String s && true) || (true && String.format(s).isEmpty());
+              }
+
+              static boolean test6(Object o) {
+                // BUG: Diagnostic contains: [o]
+                return !(o instanceof String s && true) && (true && String.format("").isEmpty());
+              }
+
+              static boolean test7(Object o) {
+                // BUG: Diagnostic contains: [o]
+                return o instanceof String s && true || true && String.format("").isEmpty();
+              }
+            }
+            """)
+        .doTest();
+  }
+
   /** A {@link BugChecker} that prints all identifiers in scope at a method declaration. */
   @BugPattern(
       severity = SeverityLevel.ERROR,

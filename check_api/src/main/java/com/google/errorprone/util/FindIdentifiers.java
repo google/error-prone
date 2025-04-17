@@ -20,29 +20,39 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
+import static com.google.errorprone.util.Reachability.canCompleteNormally;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.VisitorState;
+import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.IfTree;
 import com.sun.source.tree.ImportTree;
+import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
+import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Kinds.KindSelector;
@@ -157,7 +167,35 @@ public final class FindIdentifiers {
    */
   public static ImmutableSet<VarSymbol> findAllIdents(VisitorState state) {
     ImmutableSet.Builder<VarSymbol> result = new ImmutableSet.Builder<>();
+
+    // If we're in a binary tree, scan up separately to find anything to the left that implies us.
     Tree prev = state.getPath().getLeaf();
+    loop:
+    for (Tree curr : state.getPath().getParentPath()) {
+      switch (curr.getKind()) {
+        case CONDITIONAL_AND -> {
+          BinaryTree binaryTree = (BinaryTree) curr;
+          if (prev == binaryTree.getRightOperand()) {
+            findBindingVariables(binaryTree.getLeftOperand(), result, /* startNegated= */ false);
+          }
+        }
+        case CONDITIONAL_OR -> {
+          BinaryTree binaryTree = (BinaryTree) curr;
+          if (prev == binaryTree.getRightOperand()) {
+            findBindingVariables(binaryTree.getLeftOperand(), result, /* startNegated= */ true);
+          }
+        }
+        default -> {
+          if (!(curr instanceof ExpressionTree)) {
+            break loop;
+          }
+        }
+      }
+
+      prev = curr;
+    }
+
+    prev = state.getPath().getLeaf();
     for (Tree curr : state.getPath().getParentPath()) {
       switch (curr.getKind()) {
         case BLOCK -> {
@@ -166,6 +204,9 @@ public final class FindIdentifiers {
               break;
             }
             addIfVariable(stmt, result);
+            if (stmt instanceof IfTree ifTree && !canCompleteNormally(ifTree.getThenStatement())) {
+              findBindingVariables(ifTree.getCondition(), result, /* startNegated= */ true);
+            }
           }
         }
         case LAMBDA_EXPRESSION -> {
@@ -231,6 +272,26 @@ public final class FindIdentifiers {
             addAllIfVariable(tryTree.getResources(), result);
           }
         }
+        case IF -> {
+          var ifTree = (IfTree) curr;
+          if (prev == ifTree.getThenStatement()) {
+            findBindingVariables(ifTree.getCondition(), result, /* startNegated= */ false);
+          }
+          if (prev == ifTree.getElseStatement()) {
+            findBindingVariables(ifTree.getCondition(), result, /* startNegated= */ true);
+          }
+        }
+        case CONDITIONAL_EXPRESSION -> {
+          ConditionalExpressionTree conditionalExpressionTree = (ConditionalExpressionTree) curr;
+          if (prev == conditionalExpressionTree.getTrueExpression()) {
+            findBindingVariables(
+                conditionalExpressionTree.getCondition(), result, /* startNegated= */ false);
+          }
+          if (prev == conditionalExpressionTree.getFalseExpression()) {
+            findBindingVariables(
+                conditionalExpressionTree.getCondition(), result, /* startNegated= */ true);
+          }
+        }
         case COMPILATION_UNIT -> {
           for (ImportTree importTree : ((CompilationUnitTree) curr).getImports()) {
             if (importTree.isStatic()
@@ -264,6 +325,48 @@ public final class FindIdentifiers {
     return result.build().stream()
         .filter(variable -> isVisible(variable, state.getPath()))
         .collect(toImmutableSet());
+  }
+
+  private static void findBindingVariables(
+      Tree tree, ImmutableSet.Builder<VarSymbol> result, boolean startNegated) {
+    new SimpleTreeVisitor<Void, Void>() {
+      boolean negated = startNegated;
+
+      @Override
+      public Void visitInstanceOf(InstanceOfTree node, Void unused) {
+        if (!negated && node.getPattern() instanceof BindingPatternTree bpt) {
+          addIfVariable(bpt.getVariable(), result);
+        }
+        return null;
+      }
+
+      @Override
+      public Void visitParenthesized(ParenthesizedTree node, Void unused) {
+        return visit(node.getExpression(), null);
+      }
+
+      @Override
+      public Void visitUnary(UnaryTree node, Void unused) {
+        if (node.getKind().equals(Kind.LOGICAL_COMPLEMENT)) {
+          negated = !negated;
+          return visit(node.getExpression(), null);
+        }
+        return null;
+      }
+
+      @Override
+      public Void visitBinary(BinaryTree node, Void unused) {
+        if (node.getKind().equals(Kind.CONDITIONAL_AND) && !negated) {
+          visit(node.getLeftOperand(), null);
+          visit(node.getRightOperand(), null);
+        }
+        if (node.getKind().equals(Kind.CONDITIONAL_OR) && negated) {
+          visit(node.getLeftOperand(), null);
+          visit(node.getRightOperand(), null);
+        }
+        return null;
+      }
+    }.visit(tree, null);
   }
 
   /**
@@ -419,7 +522,7 @@ public final class FindIdentifiers {
         // in the enclosing class or a superclass).
         return modifiers.contains(Modifier.PUBLIC) || modifiers.contains(Modifier.PROTECTED);
       }
-      case PARAMETER, LOCAL_VARIABLE -> {
+      case PARAMETER, LOCAL_VARIABLE, BINDING_VARIABLE -> {
         // If we are in an anonymous inner class, lambda, or local class, any local variable or
         // method parameter we access that is defined outside the anonymous class/lambda must be
         // final or effectively final (JLS 8.1.3).
