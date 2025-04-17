@@ -18,11 +18,12 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
+import static com.google.errorprone.bugpatterns.Switches.isDefaultCaseForSkew;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -32,8 +33,10 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -41,8 +44,15 @@ import javax.lang.model.element.ElementKind;
     summary = "Switches on enum types should either handle all values, or have a default case.",
     severity = WARNING)
 public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
-
   public static final int MAX_CASES_TO_PRINT = 5;
+
+  private final boolean checkSwitchesWithDefaultForSkew;
+
+  @Inject
+  MissingCasesInEnumSwitch(ErrorProneFlags flags) {
+    checkSwitchesWithDefaultForSkew =
+        flags.getBoolean("MissingCasesInEnumSwitch:CheckSwitchesWithDefaultForSkew").orElse(true);
+  }
 
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {
@@ -52,8 +62,14 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
     if (switchType.asElement().getKind() != ElementKind.ENUM) {
       return Description.NO_MATCH;
     }
-    // default case is present
-    if (cases.stream().anyMatch(c -> isSwitchDefault(c))) {
+    Optional<? extends CaseTree> defaultCase =
+        cases.stream().filter(ASTHelpers::isSwitchDefault).findFirst();
+    // Continue to perform the check only if:
+    //  - there is no default case present or
+    //  - the default case only exists for potential version.
+    if (defaultCase.isPresent()
+        && (!checkSwitchesWithDefaultForSkew
+            || !isDefaultCaseForSkew(tree, defaultCase.get(), state))) {
       return Description.NO_MATCH;
     }
     ImmutableSet<String> handled =

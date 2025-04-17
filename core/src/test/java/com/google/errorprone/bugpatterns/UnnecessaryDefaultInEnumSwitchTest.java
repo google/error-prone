@@ -822,6 +822,144 @@ public class UnnecessaryDefaultInEnumSwitchTest {
   }
 
   @Test
+  public void defaultForSkew_switchStatement() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              boolean m(Case c) {
+                switch (c) {
+                  case ONE:
+                  case TWO:
+                  case THREE:
+                    return true;
+                  default: // in case of library skew
+                    return false;
+                }
+              }
+
+              boolean o(Case c) {
+                switch (c) {
+                  // in case of library skew
+                  default:
+                    return false;
+                  case ONE:
+                  case TWO:
+                  case THREE:
+                    return true;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void defaultForSkew_switchStatement_body() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              boolean m(Case c) {
+                switch (c) {
+                  case ONE, TWO, THREE -> {
+                    return true;
+                  }
+                  // in case of library skew
+                  default -> {
+                    return false;
+                  }
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void defaultForSkew_switchStatement_noFollowingStatement() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                switch (c) {
+                  case ONE:
+                  case TWO:
+                  case THREE:
+                    break;
+                  default: // skew
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void defaultForSkew_switchExpression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                boolean unused;
+                unused =
+                    switch (c) {
+                      case ONE, TWO -> true;
+                      case THREE -> false;
+                      // present for skew
+                      default -> false;
+                    };
+                unused =
+                    switch (c) {
+                      case ONE, TWO -> true;
+                      case THREE -> false;
+                      default -> // present for skew
+                          false;
+                    };
+                unused =
+                    switch (c) {
+                      // present for skew
+                      default -> false;
+                      case ONE, TWO -> true;
+                      case THREE -> false;
+                    };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void unrecognizedIgnore() {
     BugCheckerRefactoringTestHelper.newInstance(UnnecessaryDefaultInEnumSwitch.class, getClass())
         .addInputLines(

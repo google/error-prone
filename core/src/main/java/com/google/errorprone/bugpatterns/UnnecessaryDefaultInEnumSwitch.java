@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.Switches.isDefaultCaseForSkew;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -31,6 +32,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
@@ -46,6 +48,7 @@ import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import java.util.List;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -72,6 +75,14 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
           + "to `UNRECOGNIZED` to enable compile-time enforcement that the switch statement is "
           + "exhaustive";
 
+  private final boolean allowDefaultForSkew;
+
+  @Inject
+  UnnecessaryDefaultInEnumSwitch(ErrorProneFlags flags) {
+    allowDefaultForSkew =
+        flags.getBoolean("UnnecessaryDefaultInEnumSwitch:AllowDefaultForSkew").orElse(true);
+  }
+
   @Override
   public Description matchSwitchExpression(SwitchExpressionTree tree, VisitorState state) {
     TypeSymbol switchType = getType(tree.getExpression()).asElement();
@@ -81,6 +92,10 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
     CaseTree defaultCase =
         tree.getCases().stream().filter(c -> isSwitchDefault(c)).findFirst().orElse(null);
     if (defaultCase == null) {
+      return NO_MATCH;
+    }
+    if (allowDefaultForSkew && isDefaultCaseForSkew(tree, defaultCase, state)) {
+      // default is explicitly commented as being present for skew, it can stay.
       return NO_MATCH;
     }
     SetView<String> unhandledCases = unhandledCases(tree.getCases(), switchType);
@@ -134,12 +149,19 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
       // switch handles all values of a proto-generated enum except for 'UNRECOGNIZED'.
       return fixUnrecognized(switchTree, defaultCase, state);
     }
-    if (unhandledCases.isEmpty()) {
-      // switch is exhaustive, remove the default if we can.
-      return fixDefault(switchTree, caseBeforeDefault, defaultCase, state);
+
+    if (!unhandledCases.isEmpty()) {
+      // switch is non-exhaustive, default can stay.
+      return NO_MATCH;
     }
-    // switch is non-exhaustive, default can stay.
-    return NO_MATCH;
+
+    if (allowDefaultForSkew && isDefaultCaseForSkew(switchTree, defaultCase, state)) {
+      // default is explicitly commented as being present for skew, it can stay.
+      return NO_MATCH;
+    }
+
+    // switch is exhaustive, remove the default if we can.
+    return fixDefault(switchTree, caseBeforeDefault, defaultCase, state);
   }
 
   private Description fixDefault(

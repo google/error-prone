@@ -135,6 +135,35 @@ public class MissingCasesInEnumSwitchTest {
   }
 
   @Test
+  public void nonExhaustive_withDefaultForSkew() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                // BUG: Diagnostic contains: THREE
+                switch (c) {
+                  case ONE:
+                  case TWO:
+                    System.err.println("found it!");
+                    break;
+                  default: // fallback for library skew
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void nonExhaustive() {
     compilationHelper
         .addSourceLines(
