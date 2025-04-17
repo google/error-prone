@@ -352,6 +352,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       case FIELD -> "field";
       case LOCAL_VARIABLE -> "local variable";
       case PARAMETER -> "parameter";
+      case BINDING_VARIABLE -> "binding variable";
       default -> "variable";
     };
   }

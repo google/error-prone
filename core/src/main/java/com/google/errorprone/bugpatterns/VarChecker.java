@@ -79,7 +79,7 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
       return Description.NO_MATCH;
     }
     return switch (sym.getKind()) {
-      case PARAMETER, LOCAL_VARIABLE, EXCEPTION_PARAMETER, RESOURCE_VARIABLE ->
+      case PARAMETER, LOCAL_VARIABLE, EXCEPTION_PARAMETER, RESOURCE_VARIABLE, BINDING_VARIABLE ->
           handleLocalOrParam(tree, state, sym);
       default -> Description.NO_MATCH;
     };

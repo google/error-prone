@@ -36,6 +36,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static java.lang.Character.isDigit;
 import static java.util.stream.Collectors.joining;
+import static javax.lang.model.element.ElementKind.BINDING_VARIABLE;
 import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
 import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
 import static javax.lang.model.element.ElementKind.RESOURCE_VARIABLE;
@@ -275,7 +276,7 @@ public final class IdentifierName extends BugChecker
   }
 
   private static final ImmutableSet<ElementKind> LOCAL_VARIABLE_KINDS =
-      ImmutableSet.of(LOCAL_VARIABLE, RESOURCE_VARIABLE, EXCEPTION_PARAMETER);
+      ImmutableSet.of(LOCAL_VARIABLE, RESOURCE_VARIABLE, EXCEPTION_PARAMETER, BINDING_VARIABLE);
 
   private static boolean isConformant(Symbol symbol, String name) {
     if (isStaticVariable(symbol) && isConformantStaticVariableName(name)) {

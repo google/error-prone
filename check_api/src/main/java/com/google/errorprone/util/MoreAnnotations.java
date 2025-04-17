@@ -121,7 +121,7 @@ public final class MoreAnnotations {
 
   private static boolean targetTypeMatches(Symbol sym, TypeAnnotationPosition position) {
     switch (sym.getKind()) {
-      case LOCAL_VARIABLE -> {
+      case LOCAL_VARIABLE, BINDING_VARIABLE -> {
         return position.type == TargetType.LOCAL_VARIABLE;
       }
       case FIELD, ENUM_CONSTANT -> {

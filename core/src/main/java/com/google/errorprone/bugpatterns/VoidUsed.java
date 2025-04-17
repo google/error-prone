@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_VOID_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static javax.lang.model.element.ElementKind.BINDING_VARIABLE;
 import static javax.lang.model.element.ElementKind.FIELD;
 import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
 import static javax.lang.model.element.ElementKind.PARAMETER;
@@ -73,5 +74,5 @@ public final class VoidUsed extends BugChecker
   }
 
   private static final ImmutableSet<ElementKind> KINDS =
-      immutableEnumSet(PARAMETER, LOCAL_VARIABLE, FIELD);
+      immutableEnumSet(PARAMETER, LOCAL_VARIABLE, FIELD, BINDING_VARIABLE);
 }

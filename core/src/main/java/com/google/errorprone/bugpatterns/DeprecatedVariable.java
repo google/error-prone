@@ -43,7 +43,7 @@ public class DeprecatedVariable extends BugChecker implements VariableTreeMatche
       return NO_MATCH;
     }
     switch (sym.getKind()) {
-      case LOCAL_VARIABLE, PARAMETER -> {}
+      case LOCAL_VARIABLE, PARAMETER, BINDING_VARIABLE -> {}
       default -> {
         return NO_MATCH;
       }

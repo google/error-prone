@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +51,32 @@ public class DeprecatedVariableTest {
 
               void f(int x) {
                 int y;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void refactorBindingVariables() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+
+    testHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                if (toString() instanceof @Deprecated String s) {}
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                if (toString() instanceof String s) {}
               }
             }
             """)

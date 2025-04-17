@@ -704,6 +704,22 @@ public class IdentifierNameTest {
   }
 
   @Test
+  public void bindingVariables() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                // BUG: Diagnostic contains: badName
+                if (o instanceof Test BadName) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void versionNumbers() {
     assertTrue(isConformantLowerCamelName("murmur3_32"));
     assertFalse(isConformantLowerCamelName("murmur3__32"));

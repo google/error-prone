@@ -115,7 +115,7 @@ public class LoopConditionChecker extends BugChecker
       Symbol sym = ASTHelpers.getSymbol(tree);
       if (sym instanceof Symbol.VarSymbol varSymbol) {
         switch (sym.getKind()) {
-          case LOCAL_VARIABLE, PARAMETER -> {
+          case LOCAL_VARIABLE, PARAMETER, BINDING_VARIABLE -> {
             conditionVars.add(varSymbol);
             return true;
           }

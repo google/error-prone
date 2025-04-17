@@ -211,6 +211,7 @@ public class CompileTimeConstantChecker extends BugChecker
       case FIELD:
         break; // continue below
       case LOCAL_VARIABLE: // disallowed by @Target meta-annotation
+      case BINDING_VARIABLE:
       default: // impossible
         throw new AssertionError(symbol.getKind());
     }

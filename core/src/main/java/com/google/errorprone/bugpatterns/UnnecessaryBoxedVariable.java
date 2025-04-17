@@ -114,6 +114,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
           return Optional.empty();
         }
         break;
+      case BINDING_VARIABLE: // Revisit if https://openjdk.org/jeps/488 happens.
       default:
         return Optional.empty();
     }
