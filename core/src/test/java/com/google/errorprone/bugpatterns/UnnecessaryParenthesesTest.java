@@ -295,4 +295,30 @@ public class UnnecessaryParenthesesTest {
         .expectNoDiagnostics()
         .doTest();
   }
+
+  @Test
+  public void unaryMinus() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void f() {
+                Double d = (Double) (-1.0);
+                d = (double) (-1.0);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void f() {
+                Double d = (Double) (-1.0);
+                d = (double) -1.0;
+              }
+            }
+            """)
+        .doTest();
+  }
 }

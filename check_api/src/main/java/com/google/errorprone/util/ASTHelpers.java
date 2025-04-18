@@ -81,6 +81,7 @@ import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
+import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
@@ -395,8 +396,19 @@ public class ASTHelpers {
       return state.getOffsetTokensForNode(expression).stream()
           .anyMatch(t -> t.kind() == TokenKind.PLUS);
     }
-    if (expression instanceof UnaryTree) {
+    if (expression instanceof UnaryTree unaryTree) {
       Tree parent = state.getPath().getParentPath().getLeaf();
+      if (parent instanceof TypeCastTree castTree
+          && !castTree.getType().getKind().equals(Kind.PRIMITIVE_TYPE)) {
+        // unary plus and minus require parens when used with non-primitive casts
+        // see https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html#jls-15.16
+        switch (unaryTree.getKind()) {
+          case UNARY_PLUS, UNARY_MINUS -> {
+            return true;
+          }
+          default -> {}
+        }
+      }
       if (!(parent instanceof MemberSelectTree memberSelectTree)) {
         return false;
       }
