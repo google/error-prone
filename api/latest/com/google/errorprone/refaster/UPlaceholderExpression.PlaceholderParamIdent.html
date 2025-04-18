@@ -59,6 +59,35 @@ loadScripts(document, 'script');</script>
 <li><a href="#nested-class-summary" tabindex="0">Nested Class Summary</a></li>
 <li><a href="#field-summary" tabindex="0">Field Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
+<li><a href="#field-detail" tabindex="0">Field Details</a>
+<ol class="toc-list">
+<li><a href="#name" tabindex="0">name</a></li>
+<li><a href="#sym" tabindex="0">sym</a></li>
+<li><a href="#pos" tabindex="0">pos</a></li>
+<li><a href="#type" tabindex="0">type</a></li>
+</ol>
+</li>
+<li><a href="#method-detail" tabindex="0">Method Details</a>
+<ol class="toc-list">
+<li><a href="#accept(com.sun.tools.javac.tree.JCTree.Visitor)" tabindex="0">accept(JCTree.Visitor)</a></li>
+<li><a href="#getKind()" tabindex="0">getKind()</a></li>
+<li><a href="#getName()" tabindex="0">getName()</a></li>
+<li><a href="#accept(com.sun.source.tree.TreeVisitor,D)" tabindex="0">accept(TreeVisitor, D)</a></li>
+<li><a href="#getTag()" tabindex="0">getTag()</a></li>
+<li><a href="#setType(com.sun.tools.javac.code.Type)" tabindex="0">setType(Type)</a></li>
+<li><a href="#setPos(int)" tabindex="0">setPos(int)</a></li>
+<li><a href="#isPoly()" tabindex="0">isPoly()</a></li>
+<li><a href="#isStandalone()" tabindex="0">isStandalone()</a></li>
+<li><a href="#hasTag(com.sun.tools.javac.tree.JCTree.Tag)" tabindex="0">hasTag(JCTree.Tag)</a></li>
+<li><a href="#toString()" tabindex="0">toString()</a></li>
+<li><a href="#clone()" tabindex="0">clone()</a></li>
+<li><a href="#pos()" tabindex="0">pos()</a></li>
+<li><a href="#getTree()" tabindex="0">getTree()</a></li>
+<li><a href="#getStartPosition()" tabindex="0">getStartPosition()</a></li>
+<li><a href="#getPreferredPosition()" tabindex="0">getPreferredPosition()</a></li>
+<li><a href="#getEndPosition(com.sun.tools.javac.tree.EndPosTable)" tabindex="0">getEndPosition(EndPosTable)</a></li>
+</ol>
+</li>
 </ol>
 <button class="hide-sidebar"><span>Hide sidebar&nbsp;</span><img src="../../../../resource-files/left.svg" alt="Hide sidebar"></button><button class="show-sidebar"><img src="../../../../resource-files/right.svg" alt="Show sidebar"><span>&nbsp;Show sidebar</span></button></nav>
 <main role="main">
@@ -67,18 +96,12 @@ loadScripts(document, 'script');</script>
 <h1 title="Class UPlaceholderExpression.PlaceholderParamIdent" class="title">Class UPlaceholderExpression.PlaceholderParamIdent</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">com.sun.tools.javac.tree.JCTree
-<div class="inheritance">com.sun.tools.javac.tree.JCTree.JCExpression
-<div class="inheritance">com.sun.tools.javac.tree.JCTree.JCIdent
 <div class="inheritance">com.google.errorprone.refaster.UPlaceholderExpression.PlaceholderParamIdent</div>
-</div>
-</div>
-</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/IdentifierTree.html" title="class or interface in com.sun.source.tree" class="external-link">IdentifierTree</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>, com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Cloneable.html" title="class or interface in java.lang" class="external-link">Cloneable</a></code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/IdentifierTree.html" title="class or interface in com.sun.source.tree" class="external-link">IdentifierTree</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Cloneable.html" title="class or interface in java.lang" class="external-link">Cloneable</a></code></dd>
 </dl>
 <dl class="notes">
 <dt>Enclosing class:</dt>
@@ -87,7 +110,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public static final class </span><span class="element-name type-name-label">UPlaceholderExpression.PlaceholderParamIdent</span>
-<span class="extends-implements">extends com.sun.tools.javac.tree.JCTree.JCIdent</span></div>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>lowasser@google.com (Louis Wasserman)</dd>
@@ -101,9 +124,6 @@ loadScripts(document, 'script');</script>
 <section class="nested-class-summary" id="nested-class-summary">
 <h2>Nested Class Summary</h2>
 <div class="inherited-list">
-<h3 id="nested-classes-inherited-from-class-com.sun.tools.javac.tree.JCTree">Nested classes/interfaces inherited from class&nbsp;com.sun.tools.javac.tree.JCTree</h3>
-<code>com.sun.tools.javac.tree.JCTree.Factory, com.sun.tools.javac.tree.JCTree.JCAnnotatedType, com.sun.tools.javac.tree.JCTree.JCAnnotation, com.sun.tools.javac.tree.JCTree.JCAnyPattern, com.sun.tools.javac.tree.JCTree.JCArrayAccess, com.sun.tools.javac.tree.JCTree.JCArrayTypeTree, com.sun.tools.javac.tree.JCTree.JCAssert, com.sun.tools.javac.tree.JCTree.JCAssign, com.sun.tools.javac.tree.JCTree.JCAssignOp, com.sun.tools.javac.tree.JCTree.JCBinary, com.sun.tools.javac.tree.JCTree.JCBindingPattern, com.sun.tools.javac.tree.JCTree.JCBlock, com.sun.tools.javac.tree.JCTree.JCBreak, com.sun.tools.javac.tree.JCTree.JCCase, com.sun.tools.javac.tree.JCTree.JCCaseLabel, com.sun.tools.javac.tree.JCTree.JCCatch, com.sun.tools.javac.tree.JCTree.JCClassDecl, com.sun.tools.javac.tree.JCTree.JCCompilationUnit, com.sun.tools.javac.tree.JCTree.JCConditional, com.sun.tools.javac.tree.JCTree.JCConstantCaseLabel, com.sun.tools.javac.tree.JCTree.JCContinue, com.sun.tools.javac.tree.JCTree.JCDefaultCaseLabel, com.sun.tools.javac.tree.JCTree.JCDirective, com.sun.tools.javac.tree.JCTree.JCDoWhileLoop, com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop, com.sun.tools.javac.tree.JCTree.JCErroneous, com.sun.tools.javac.tree.JCTree.JCExports, com.sun.tools.javac.tree.JCTree.JCExpression, com.sun.tools.javac.tree.JCTree.JCExpressionStatement, com.sun.tools.javac.tree.JCTree.JCFieldAccess, com.sun.tools.javac.tree.JCTree.JCForLoop, com.sun.tools.javac.tree.JCTree.JCFunctionalExpression, com.sun.tools.javac.tree.JCTree.JCIdent, com.sun.tools.javac.tree.JCTree.JCIf, com.sun.tools.javac.tree.JCTree.JCImport, com.sun.tools.javac.tree.JCTree.JCImportBase, com.sun.tools.javac.tree.JCTree.JCInstanceOf, com.sun.tools.javac.tree.JCTree.JCLabeledStatement, com.sun.tools.javac.tree.JCTree.JCLambda, com.sun.tools.javac.tree.JCTree.JCLiteral, com.sun.tools.javac.tree.JCTree.JCMemberReference, com.sun.tools.javac.tree.JCTree.JCMethodDecl, com.sun.tools.javac.tree.JCTree.JCMethodInvocation, com.sun.tools.javac.tree.JCTree.JCModifiers, com.sun.tools.javac.tree.JCTree.JCModuleDecl, com.sun.tools.javac.tree.JCTree.JCModuleImport, com.sun.tools.javac.tree.JCTree.JCNewArray, com.sun.tools.javac.tree.JCTree.JCNewClass, com.sun.tools.javac.tree.JCTree.JCOpens, com.sun.tools.javac.tree.JCTree.JCOperatorExpression, com.sun.tools.javac.tree.JCTree.JCPackageDecl, com.sun.tools.javac.tree.JCTree.JCParens, com.sun.tools.javac.tree.JCTree.JCPattern, com.sun.tools.javac.tree.JCTree.JCPatternCaseLabel, com.sun.tools.javac.tree.JCTree.JCPolyExpression, com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree, com.sun.tools.javac.tree.JCTree.JCProvides, com.sun.tools.javac.tree.JCTree.JCRecordPattern, com.sun.tools.javac.tree.JCTree.JCRequires, com.sun.tools.javac.tree.JCTree.JCReturn, com.sun.tools.javac.tree.JCTree.JCSkip, com.sun.tools.javac.tree.JCTree.JCStatement, com.sun.tools.javac.tree.JCTree.JCSwitch, com.sun.tools.javac.tree.JCTree.JCSwitchExpression, com.sun.tools.javac.tree.JCTree.JCSynchronized, com.sun.tools.javac.tree.JCTree.JCThrow, com.sun.tools.javac.tree.JCTree.JCTry, com.sun.tools.javac.tree.JCTree.JCTypeApply, com.sun.tools.javac.tree.JCTree.JCTypeCast, com.sun.tools.javac.tree.JCTree.JCTypeIntersection, com.sun.tools.javac.tree.JCTree.JCTypeParameter, com.sun.tools.javac.tree.JCTree.JCTypeUnion, com.sun.tools.javac.tree.JCTree.JCUnary, com.sun.tools.javac.tree.JCTree.JCUses, com.sun.tools.javac.tree.JCTree.JCVariableDecl, com.sun.tools.javac.tree.JCTree.JCWhileLoop, com.sun.tools.javac.tree.JCTree.JCWildcard, com.sun.tools.javac.tree.JCTree.JCYield, com.sun.tools.javac.tree.JCTree.LetExpr, com.sun.tools.javac.tree.JCTree.Tag, com.sun.tools.javac.tree.JCTree.TypeBoundKind, com.sun.tools.javac.tree.JCTree.Visitor</code></div>
-<div class="inherited-list">
 <h3 id="nested-classes-inherited-from-class-com.sun.source.tree.Tree">Nested classes/interfaces inherited from interface&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html#nested-class-summary" title="class or interface in com.sun.source.tree" class="external-link">Tree</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.Kind.html" title="class or interface in com.sun.source.tree" class="external-link">Tree.Kind</a></code></div>
 </section>
@@ -112,30 +132,304 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
-<div class="inherited-list">
-<h3 id="fields-inherited-from-class-com.sun.tools.javac.tree.JCTree.JCIdent">Fields inherited from class&nbsp;com.sun.tools.javac.tree.JCTree.JCIdent</h3>
-<code>name, sym</code></div>
-<div class="inherited-list">
-<h3 id="fields-inherited-from-class-com.sun.tools.javac.tree.JCTree">Fields inherited from class&nbsp;com.sun.tools.javac.tree.JCTree</h3>
-<code>pos, type</code></div>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>com.sun.tools.javac.util.Name</code></div>
+<div class="col-second even-row-color"><code><a href="#name" class="member-name-link">name</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>int</code></div>
+<div class="col-second odd-row-color"><code><a href="#pos" class="member-name-link">pos</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>com.sun.tools.javac.code.Symbol</code></div>
+<div class="col-second even-row-color"><code><a href="#sym" class="member-name-link">sym</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>com.sun.tools.javac.code.Type</code></div>
+<div class="col-second odd-row-color"><code><a href="#type" class="member-name-link">type</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+</div>
 </section>
 </li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.sun.tools.javac.tree.JCTree.JCIdent">Methods inherited from class&nbsp;com.sun.tools.javac.tree.JCTree.JCIdent</h3>
-<code>accept, accept, getKind, getName, getTag</code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.sun.tools.javac.tree.JCTree.JCExpression">Methods inherited from class&nbsp;com.sun.tools.javac.tree.JCTree.JCExpression</h3>
-<code>isPoly, isStandalone, setPos, setType</code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.sun.tools.javac.tree.JCTree">Methods inherited from class&nbsp;com.sun.tools.javac.tree.JCTree</h3>
-<code>clone, getEndPosition, getPreferredPosition, getStartPosition, getTree, hasTag, pos, toString</code></div>
+<div id="method-summary-table">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;R,<wbr>D&gt;&nbsp;R</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#accept(com.sun.source.tree.TreeVisitor,D)" class="member-name-link">accept</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/TreeVisitor.html" title="class or interface in com.sun.source.tree" class="external-link">TreeVisitor</a>&lt;R,<wbr>D&gt;&nbsp;arg0,
+ D&nbsp;arg1)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#accept(com.sun.tools.javac.tree.JCTree.Visitor)" class="member-name-link">accept</a><wbr>(com.sun.tools.javac.tree.JCTree.Visitor&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clone()" class="member-name-link">clone</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEndPosition(com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">getEndPosition</a><wbr>(com.sun.tools.javac.tree.EndPosTable&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.Kind.html" title="class or interface in com.sun.source.tree" class="external-link">Tree.Kind</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getKind()" class="member-name-link">getKind</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.util.Name</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getName()" class="member-name-link">getName</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPreferredPosition()" class="member-name-link">getPreferredPosition</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStartPosition()" class="member-name-link">getStartPosition</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.JCTree.Tag</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTag()" class="member-name-link">getTag</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.JCTree</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTree()" class="member-name-link">getTree</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasTag(com.sun.tools.javac.tree.JCTree.Tag)" class="member-name-link">hasTag</a><wbr>(com.sun.tools.javac.tree.JCTree.Tag&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isPoly()" class="member-name-link">isPoly</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isStandalone()" class="member-name-link">isStandalone</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#pos()" class="member-name-link">pos</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.JCTree.JCExpression</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPos(int)" class="member-name-link">setPos</a><wbr>(int&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.JCTree.JCExpression</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setType(com.sun.tools.javac.code.Type)" class="member-name-link">setType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+</div>
+</div>
+</div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
+</section>
+</li>
+</ul>
+</section>
+<section class="details">
+<ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="name">
+<h3>name</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.util.Name</span>&nbsp;<span class="element-name">name</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="sym">
+<h3>sym</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="element-name">sym</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="pos">
+<h3>pos</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">pos</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="type">
+<h3>type</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">type</span></div>
+</div>
+</section>
+</li>
+</ul>
+</section>
+</li>
+<!-- ============ METHOD DETAIL ========== -->
+<li>
+<section class="method-details" id="method-detail">
+<h2>Method Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="accept(com.sun.tools.javac.tree.JCTree.Visitor)">
+<h3>accept</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">accept</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.Visitor&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getKind()">
+<h3>getKind</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.Kind.html" title="class or interface in com.sun.source.tree" class="external-link">Tree.Kind</a></span>&nbsp;<span class="element-name">getKind</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html#getKind()" title="class or interface in com.sun.source.tree" class="external-link">getKind</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a></code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getName()">
+<h3>getName</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.util.Name</span>&nbsp;<span class="element-name">getName</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/IdentifierTree.html#getName()" title="class or interface in com.sun.source.tree" class="external-link">getName</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/IdentifierTree.html" title="class or interface in com.sun.source.tree" class="external-link">IdentifierTree</a></code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="accept(com.sun.source.tree.TreeVisitor,D)">
+<h3 id="accept(com.sun.source.tree.TreeVisitor,java.lang.Object)">accept</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;R,<wbr>D&gt;</span>&nbsp;<span class="return-type">R</span>&nbsp;<span class="element-name">accept</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/TreeVisitor.html" title="class or interface in com.sun.source.tree" class="external-link">TreeVisitor</a>&lt;R,<wbr>D&gt;&nbsp;arg0,
+ D&nbsp;arg1)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html#accept(com.sun.source.tree.TreeVisitor,D)" title="class or interface in com.sun.source.tree" class="external-link">accept</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a></code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getTag()">
+<h3>getTag</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.tree.JCTree.Tag</span>&nbsp;<span class="element-name">getTag</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setType(com.sun.tools.javac.code.Type)">
+<h3>setType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.tree.JCTree.JCExpression</span>&nbsp;<span class="element-name">setType</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setPos(int)">
+<h3>setPos</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.tree.JCTree.JCExpression</span>&nbsp;<span class="element-name">setPos</span><wbr><span class="parameters">(int&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isPoly()">
+<h3>isPoly</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isPoly</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isStandalone()">
+<h3>isStandalone</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isStandalone</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="hasTag(com.sun.tools.javac.tree.JCTree.Tag)">
+<h3>hasTag</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasTag</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.Tag&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="toString()">
+<h3>toString</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="clone()">
+<h3>clone</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">clone</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="pos()">
+<h3>pos</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition</span>&nbsp;<span class="element-name">pos</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getTree()">
+<h3>getTree</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.tree.JCTree</span>&nbsp;<span class="element-name">getTree</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getStartPosition()">
+<h3>getStartPosition</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getStartPosition</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getPreferredPosition()">
+<h3>getPreferredPosition</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getPreferredPosition</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getEndPosition(com.sun.tools.javac.tree.EndPosTable)">
+<h3>getEndPosition</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getEndPosition</span><wbr><span class="parameters">(com.sun.tools.javac.tree.EndPosTable&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+</ul>
 </section>
 </li>
 </ul>

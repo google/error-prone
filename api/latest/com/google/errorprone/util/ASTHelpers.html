@@ -452,7 +452,7 @@ including :
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;com.sun.tools.javac.code.Symbol&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEnclosedElements(com.sun.tools.javac.code.Symbol)" class="member-name-link">getEnclosedElements</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">A wrapper for <code>Symbol.getEnclosedElements()</code> to avoid binary compatibility issues for
+<div class="block">A wrapper for <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.compiler/javax/lang/model/element/Element.html#getEnclosedElements()" title="class or interface in javax.lang.model.element" class="external-link"><code>Element.getEnclosedElements()</code></a> to avoid binary compatibility issues for
 covariant overrides in subtypes of <code>Symbol</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a></code></div>
@@ -1650,7 +1650,7 @@ code) and should not be removed.</div>
 <h3>getEnclosedElements</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.sun.tools.javac.code.Symbol&gt;</span>&nbsp;<span class="element-name">getEnclosedElements</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;symbol)</span></div>
-<div class="block">A wrapper for <code>Symbol.getEnclosedElements()</code> to avoid binary compatibility issues for
+<div class="block">A wrapper for <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.compiler/javax/lang/model/element/Element.html#getEnclosedElements()" title="class or interface in javax.lang.model.element" class="external-link"><code>Element.getEnclosedElements()</code></a> to avoid binary compatibility issues for
 covariant overrides in subtypes of <code>Symbol</code>.</div>
 </div>
 </section>
@@ -2050,7 +2050,7 @@ including :
   <li>Type annotations on the type of a formal parameter or field.
 </ul>
 
-<p>One might expect this to be equivalent to information returned by <code>Type.getAnnotationMirrors()</code>, but javac doesn't associate type annotation information with types
+<p>One might expect this to be equivalent to information returned by <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html#getAnnotationMirrors()" title="class or interface in javax.lang.model.type" class="external-link"><code>TypeMirror.getAnnotationMirrors()</code></a>, but javac doesn't associate type annotation information with types
 for symbols completed from class files, so that approach doesn't work across compilation
 boundaries.</div>
 </div>

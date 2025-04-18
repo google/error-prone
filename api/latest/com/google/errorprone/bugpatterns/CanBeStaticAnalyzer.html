@@ -66,6 +66,74 @@ loadScripts(document, 'script');</script>
 <li><a href="#visitNewClass(com.sun.tools.javac.tree.JCTree.JCNewClass)" tabindex="0">visitNewClass(JCTree.JCNewClass)</a></li>
 <li><a href="#visitReference(com.sun.tools.javac.tree.JCTree.JCMemberReference)" tabindex="0">visitReference(JCTree.JCMemberReference)</a></li>
 <li><a href="#visitAnnotation(com.sun.tools.javac.tree.JCTree.JCAnnotation)" tabindex="0">visitAnnotation(JCTree.JCAnnotation)</a></li>
+<li><a href="#scan(com.sun.tools.javac.tree.JCTree)" tabindex="0">scan(JCTree)</a></li>
+<li><a href="#scan(com.sun.tools.javac.util.List)" tabindex="0">scan(List)</a></li>
+<li><a href="#visitTopLevel(com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" tabindex="0">visitTopLevel(JCTree.JCCompilationUnit)</a></li>
+<li><a href="#visitPackageDef(com.sun.tools.javac.tree.JCTree.JCPackageDecl)" tabindex="0">visitPackageDef(JCTree.JCPackageDecl)</a></li>
+<li><a href="#visitModuleDef(com.sun.tools.javac.tree.JCTree.JCModuleDecl)" tabindex="0">visitModuleDef(JCTree.JCModuleDecl)</a></li>
+<li><a href="#visitExports(com.sun.tools.javac.tree.JCTree.JCExports)" tabindex="0">visitExports(JCTree.JCExports)</a></li>
+<li><a href="#visitModuleImport(com.sun.tools.javac.tree.JCTree.JCModuleImport)" tabindex="0">visitModuleImport(JCTree.JCModuleImport)</a></li>
+<li><a href="#visitOpens(com.sun.tools.javac.tree.JCTree.JCOpens)" tabindex="0">visitOpens(JCTree.JCOpens)</a></li>
+<li><a href="#visitProvides(com.sun.tools.javac.tree.JCTree.JCProvides)" tabindex="0">visitProvides(JCTree.JCProvides)</a></li>
+<li><a href="#visitRequires(com.sun.tools.javac.tree.JCTree.JCRequires)" tabindex="0">visitRequires(JCTree.JCRequires)</a></li>
+<li><a href="#visitUses(com.sun.tools.javac.tree.JCTree.JCUses)" tabindex="0">visitUses(JCTree.JCUses)</a></li>
+<li><a href="#visitImport(com.sun.tools.javac.tree.JCTree.JCImport)" tabindex="0">visitImport(JCTree.JCImport)</a></li>
+<li><a href="#visitClassDef(com.sun.tools.javac.tree.JCTree.JCClassDecl)" tabindex="0">visitClassDef(JCTree.JCClassDecl)</a></li>
+<li><a href="#visitMethodDef(com.sun.tools.javac.tree.JCTree.JCMethodDecl)" tabindex="0">visitMethodDef(JCTree.JCMethodDecl)</a></li>
+<li><a href="#visitVarDef(com.sun.tools.javac.tree.JCTree.JCVariableDecl)" tabindex="0">visitVarDef(JCTree.JCVariableDecl)</a></li>
+<li><a href="#visitSkip(com.sun.tools.javac.tree.JCTree.JCSkip)" tabindex="0">visitSkip(JCTree.JCSkip)</a></li>
+<li><a href="#visitBlock(com.sun.tools.javac.tree.JCTree.JCBlock)" tabindex="0">visitBlock(JCTree.JCBlock)</a></li>
+<li><a href="#visitDoLoop(com.sun.tools.javac.tree.JCTree.JCDoWhileLoop)" tabindex="0">visitDoLoop(JCTree.JCDoWhileLoop)</a></li>
+<li><a href="#visitWhileLoop(com.sun.tools.javac.tree.JCTree.JCWhileLoop)" tabindex="0">visitWhileLoop(JCTree.JCWhileLoop)</a></li>
+<li><a href="#visitForLoop(com.sun.tools.javac.tree.JCTree.JCForLoop)" tabindex="0">visitForLoop(JCTree.JCForLoop)</a></li>
+<li><a href="#visitForeachLoop(com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop)" tabindex="0">visitForeachLoop(JCTree.JCEnhancedForLoop)</a></li>
+<li><a href="#visitLabelled(com.sun.tools.javac.tree.JCTree.JCLabeledStatement)" tabindex="0">visitLabelled(JCTree.JCLabeledStatement)</a></li>
+<li><a href="#visitSwitch(com.sun.tools.javac.tree.JCTree.JCSwitch)" tabindex="0">visitSwitch(JCTree.JCSwitch)</a></li>
+<li><a href="#visitCase(com.sun.tools.javac.tree.JCTree.JCCase)" tabindex="0">visitCase(JCTree.JCCase)</a></li>
+<li><a href="#visitSwitchExpression(com.sun.tools.javac.tree.JCTree.JCSwitchExpression)" tabindex="0">visitSwitchExpression(JCTree.JCSwitchExpression)</a></li>
+<li><a href="#visitSynchronized(com.sun.tools.javac.tree.JCTree.JCSynchronized)" tabindex="0">visitSynchronized(JCTree.JCSynchronized)</a></li>
+<li><a href="#visitTry(com.sun.tools.javac.tree.JCTree.JCTry)" tabindex="0">visitTry(JCTree.JCTry)</a></li>
+<li><a href="#visitCatch(com.sun.tools.javac.tree.JCTree.JCCatch)" tabindex="0">visitCatch(JCTree.JCCatch)</a></li>
+<li><a href="#visitConditional(com.sun.tools.javac.tree.JCTree.JCConditional)" tabindex="0">visitConditional(JCTree.JCConditional)</a></li>
+<li><a href="#visitIf(com.sun.tools.javac.tree.JCTree.JCIf)" tabindex="0">visitIf(JCTree.JCIf)</a></li>
+<li><a href="#visitExec(com.sun.tools.javac.tree.JCTree.JCExpressionStatement)" tabindex="0">visitExec(JCTree.JCExpressionStatement)</a></li>
+<li><a href="#visitBreak(com.sun.tools.javac.tree.JCTree.JCBreak)" tabindex="0">visitBreak(JCTree.JCBreak)</a></li>
+<li><a href="#visitYield(com.sun.tools.javac.tree.JCTree.JCYield)" tabindex="0">visitYield(JCTree.JCYield)</a></li>
+<li><a href="#visitContinue(com.sun.tools.javac.tree.JCTree.JCContinue)" tabindex="0">visitContinue(JCTree.JCContinue)</a></li>
+<li><a href="#visitReturn(com.sun.tools.javac.tree.JCTree.JCReturn)" tabindex="0">visitReturn(JCTree.JCReturn)</a></li>
+<li><a href="#visitThrow(com.sun.tools.javac.tree.JCTree.JCThrow)" tabindex="0">visitThrow(JCTree.JCThrow)</a></li>
+<li><a href="#visitAssert(com.sun.tools.javac.tree.JCTree.JCAssert)" tabindex="0">visitAssert(JCTree.JCAssert)</a></li>
+<li><a href="#visitApply(com.sun.tools.javac.tree.JCTree.JCMethodInvocation)" tabindex="0">visitApply(JCTree.JCMethodInvocation)</a></li>
+<li><a href="#visitNewArray(com.sun.tools.javac.tree.JCTree.JCNewArray)" tabindex="0">visitNewArray(JCTree.JCNewArray)</a></li>
+<li><a href="#visitLambda(com.sun.tools.javac.tree.JCTree.JCLambda)" tabindex="0">visitLambda(JCTree.JCLambda)</a></li>
+<li><a href="#visitParens(com.sun.tools.javac.tree.JCTree.JCParens)" tabindex="0">visitParens(JCTree.JCParens)</a></li>
+<li><a href="#visitAssign(com.sun.tools.javac.tree.JCTree.JCAssign)" tabindex="0">visitAssign(JCTree.JCAssign)</a></li>
+<li><a href="#visitAssignop(com.sun.tools.javac.tree.JCTree.JCAssignOp)" tabindex="0">visitAssignop(JCTree.JCAssignOp)</a></li>
+<li><a href="#visitUnary(com.sun.tools.javac.tree.JCTree.JCUnary)" tabindex="0">visitUnary(JCTree.JCUnary)</a></li>
+<li><a href="#visitBinary(com.sun.tools.javac.tree.JCTree.JCBinary)" tabindex="0">visitBinary(JCTree.JCBinary)</a></li>
+<li><a href="#visitTypeCast(com.sun.tools.javac.tree.JCTree.JCTypeCast)" tabindex="0">visitTypeCast(JCTree.JCTypeCast)</a></li>
+<li><a href="#visitTypeTest(com.sun.tools.javac.tree.JCTree.JCInstanceOf)" tabindex="0">visitTypeTest(JCTree.JCInstanceOf)</a></li>
+<li><a href="#visitBindingPattern(com.sun.tools.javac.tree.JCTree.JCBindingPattern)" tabindex="0">visitBindingPattern(JCTree.JCBindingPattern)</a></li>
+<li><a href="#visitDefaultCaseLabel(com.sun.tools.javac.tree.JCTree.JCDefaultCaseLabel)" tabindex="0">visitDefaultCaseLabel(JCTree.JCDefaultCaseLabel)</a></li>
+<li><a href="#visitConstantCaseLabel(com.sun.tools.javac.tree.JCTree.JCConstantCaseLabel)" tabindex="0">visitConstantCaseLabel(JCTree.JCConstantCaseLabel)</a></li>
+<li><a href="#visitPatternCaseLabel(com.sun.tools.javac.tree.JCTree.JCPatternCaseLabel)" tabindex="0">visitPatternCaseLabel(JCTree.JCPatternCaseLabel)</a></li>
+<li><a href="#visitAnyPattern(com.sun.tools.javac.tree.JCTree.JCAnyPattern)" tabindex="0">visitAnyPattern(JCTree.JCAnyPattern)</a></li>
+<li><a href="#visitRecordPattern(com.sun.tools.javac.tree.JCTree.JCRecordPattern)" tabindex="0">visitRecordPattern(JCTree.JCRecordPattern)</a></li>
+<li><a href="#visitIndexed(com.sun.tools.javac.tree.JCTree.JCArrayAccess)" tabindex="0">visitIndexed(JCTree.JCArrayAccess)</a></li>
+<li><a href="#visitLiteral(com.sun.tools.javac.tree.JCTree.JCLiteral)" tabindex="0">visitLiteral(JCTree.JCLiteral)</a></li>
+<li><a href="#visitTypeIdent(com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree)" tabindex="0">visitTypeIdent(JCTree.JCPrimitiveTypeTree)</a></li>
+<li><a href="#visitTypeArray(com.sun.tools.javac.tree.JCTree.JCArrayTypeTree)" tabindex="0">visitTypeArray(JCTree.JCArrayTypeTree)</a></li>
+<li><a href="#visitTypeApply(com.sun.tools.javac.tree.JCTree.JCTypeApply)" tabindex="0">visitTypeApply(JCTree.JCTypeApply)</a></li>
+<li><a href="#visitTypeUnion(com.sun.tools.javac.tree.JCTree.JCTypeUnion)" tabindex="0">visitTypeUnion(JCTree.JCTypeUnion)</a></li>
+<li><a href="#visitTypeIntersection(com.sun.tools.javac.tree.JCTree.JCTypeIntersection)" tabindex="0">visitTypeIntersection(JCTree.JCTypeIntersection)</a></li>
+<li><a href="#visitTypeParameter(com.sun.tools.javac.tree.JCTree.JCTypeParameter)" tabindex="0">visitTypeParameter(JCTree.JCTypeParameter)</a></li>
+<li><a href="#visitWildcard(com.sun.tools.javac.tree.JCTree.JCWildcard)" tabindex="0">visitWildcard(JCTree.JCWildcard)</a></li>
+<li><a href="#visitTypeBoundKind(com.sun.tools.javac.tree.JCTree.TypeBoundKind)" tabindex="0">visitTypeBoundKind(JCTree.TypeBoundKind)</a></li>
+<li><a href="#visitModifiers(com.sun.tools.javac.tree.JCTree.JCModifiers)" tabindex="0">visitModifiers(JCTree.JCModifiers)</a></li>
+<li><a href="#visitAnnotatedType(com.sun.tools.javac.tree.JCTree.JCAnnotatedType)" tabindex="0">visitAnnotatedType(JCTree.JCAnnotatedType)</a></li>
+<li><a href="#visitErroneous(com.sun.tools.javac.tree.JCTree.JCErroneous)" tabindex="0">visitErroneous(JCTree.JCErroneous)</a></li>
+<li><a href="#visitLetExpr(com.sun.tools.javac.tree.JCTree.LetExpr)" tabindex="0">visitLetExpr(JCTree.LetExpr)</a></li>
+<li><a href="#visitTree(com.sun.tools.javac.tree.JCTree)" tabindex="0">visitTree(JCTree)</a></li>
 </ol>
 </li>
 </ol>
@@ -76,17 +144,13 @@ loadScripts(document, 'script');</script>
 <h1 title="Class CanBeStaticAnalyzer" class="title">Class CanBeStaticAnalyzer</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">com.sun.tools.javac.tree.JCTree.Visitor
-<div class="inheritance">com.sun.tools.javac.tree.TreeScanner
 <div class="inheritance">com.google.errorprone.bugpatterns.CanBeStaticAnalyzer</div>
-</div>
-</div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CanBeStaticAnalyzer</span>
-<span class="extends-implements">extends com.sun.tools.javac.tree.TreeScanner</span></div>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Analyzes trees for references to their enclosing instance.</div>
 </div>
 </section>
@@ -133,26 +197,227 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns true if the tree references its enclosing class.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitAnnotation(com.sun.tools.javac.tree.JCTree.JCAnnotation)" class="member-name-link">visitAnnotation</a><wbr>(com.sun.tools.javac.tree.JCTree.JCAnnotation&nbsp;tree)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scan(com.sun.tools.javac.tree.JCTree)" class="member-name-link">scan</a><wbr>(com.sun.tools.javac.tree.JCTree&nbsp;arg0)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitIdent(com.sun.tools.javac.tree.JCTree.JCIdent)" class="member-name-link">visitIdent</a><wbr>(com.sun.tools.javac.tree.JCTree.JCIdent&nbsp;tree)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#scan(com.sun.tools.javac.util.List)" class="member-name-link">scan</a><wbr>(com.sun.tools.javac.util.List&lt;? extends com.sun.tools.javac.tree.JCTree&gt;&nbsp;arg0)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitNewClass(com.sun.tools.javac.tree.JCTree.JCNewClass)" class="member-name-link">visitNewClass</a><wbr>(com.sun.tools.javac.tree.JCTree.JCNewClass&nbsp;tree)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitAnnotatedType(com.sun.tools.javac.tree.JCTree.JCAnnotatedType)" class="member-name-link">visitAnnotatedType</a><wbr>(com.sun.tools.javac.tree.JCTree.JCAnnotatedType&nbsp;arg0)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitReference(com.sun.tools.javac.tree.JCTree.JCMemberReference)" class="member-name-link">visitReference</a><wbr>(com.sun.tools.javac.tree.JCTree.JCMemberReference&nbsp;tree)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitAnnotation(com.sun.tools.javac.tree.JCTree.JCAnnotation)" class="member-name-link">visitAnnotation</a><wbr>(com.sun.tools.javac.tree.JCTree.JCAnnotation&nbsp;tree)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitSelect(com.sun.tools.javac.tree.JCTree.JCFieldAccess)" class="member-name-link">visitSelect</a><wbr>(com.sun.tools.javac.tree.JCTree.JCFieldAccess&nbsp;tree)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitAnyPattern(com.sun.tools.javac.tree.JCTree.JCAnyPattern)" class="member-name-link">visitAnyPattern</a><wbr>(com.sun.tools.javac.tree.JCTree.JCAnyPattern&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitApply(com.sun.tools.javac.tree.JCTree.JCMethodInvocation)" class="member-name-link">visitApply</a><wbr>(com.sun.tools.javac.tree.JCTree.JCMethodInvocation&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitAssert(com.sun.tools.javac.tree.JCTree.JCAssert)" class="member-name-link">visitAssert</a><wbr>(com.sun.tools.javac.tree.JCTree.JCAssert&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitAssign(com.sun.tools.javac.tree.JCTree.JCAssign)" class="member-name-link">visitAssign</a><wbr>(com.sun.tools.javac.tree.JCTree.JCAssign&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitAssignop(com.sun.tools.javac.tree.JCTree.JCAssignOp)" class="member-name-link">visitAssignop</a><wbr>(com.sun.tools.javac.tree.JCTree.JCAssignOp&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitBinary(com.sun.tools.javac.tree.JCTree.JCBinary)" class="member-name-link">visitBinary</a><wbr>(com.sun.tools.javac.tree.JCTree.JCBinary&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitBindingPattern(com.sun.tools.javac.tree.JCTree.JCBindingPattern)" class="member-name-link">visitBindingPattern</a><wbr>(com.sun.tools.javac.tree.JCTree.JCBindingPattern&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitBlock(com.sun.tools.javac.tree.JCTree.JCBlock)" class="member-name-link">visitBlock</a><wbr>(com.sun.tools.javac.tree.JCTree.JCBlock&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitBreak(com.sun.tools.javac.tree.JCTree.JCBreak)" class="member-name-link">visitBreak</a><wbr>(com.sun.tools.javac.tree.JCTree.JCBreak&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitCase(com.sun.tools.javac.tree.JCTree.JCCase)" class="member-name-link">visitCase</a><wbr>(com.sun.tools.javac.tree.JCTree.JCCase&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitCatch(com.sun.tools.javac.tree.JCTree.JCCatch)" class="member-name-link">visitCatch</a><wbr>(com.sun.tools.javac.tree.JCTree.JCCatch&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitClassDef(com.sun.tools.javac.tree.JCTree.JCClassDecl)" class="member-name-link">visitClassDef</a><wbr>(com.sun.tools.javac.tree.JCTree.JCClassDecl&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitConditional(com.sun.tools.javac.tree.JCTree.JCConditional)" class="member-name-link">visitConditional</a><wbr>(com.sun.tools.javac.tree.JCTree.JCConditional&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitConstantCaseLabel(com.sun.tools.javac.tree.JCTree.JCConstantCaseLabel)" class="member-name-link">visitConstantCaseLabel</a><wbr>(com.sun.tools.javac.tree.JCTree.JCConstantCaseLabel&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitContinue(com.sun.tools.javac.tree.JCTree.JCContinue)" class="member-name-link">visitContinue</a><wbr>(com.sun.tools.javac.tree.JCTree.JCContinue&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitDefaultCaseLabel(com.sun.tools.javac.tree.JCTree.JCDefaultCaseLabel)" class="member-name-link">visitDefaultCaseLabel</a><wbr>(com.sun.tools.javac.tree.JCTree.JCDefaultCaseLabel&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitDoLoop(com.sun.tools.javac.tree.JCTree.JCDoWhileLoop)" class="member-name-link">visitDoLoop</a><wbr>(com.sun.tools.javac.tree.JCTree.JCDoWhileLoop&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitErroneous(com.sun.tools.javac.tree.JCTree.JCErroneous)" class="member-name-link">visitErroneous</a><wbr>(com.sun.tools.javac.tree.JCTree.JCErroneous&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitExec(com.sun.tools.javac.tree.JCTree.JCExpressionStatement)" class="member-name-link">visitExec</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExpressionStatement&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitExports(com.sun.tools.javac.tree.JCTree.JCExports)" class="member-name-link">visitExports</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExports&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitForeachLoop(com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop)" class="member-name-link">visitForeachLoop</a><wbr>(com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitForLoop(com.sun.tools.javac.tree.JCTree.JCForLoop)" class="member-name-link">visitForLoop</a><wbr>(com.sun.tools.javac.tree.JCTree.JCForLoop&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitIdent(com.sun.tools.javac.tree.JCTree.JCIdent)" class="member-name-link">visitIdent</a><wbr>(com.sun.tools.javac.tree.JCTree.JCIdent&nbsp;tree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitIf(com.sun.tools.javac.tree.JCTree.JCIf)" class="member-name-link">visitIf</a><wbr>(com.sun.tools.javac.tree.JCTree.JCIf&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitImport(com.sun.tools.javac.tree.JCTree.JCImport)" class="member-name-link">visitImport</a><wbr>(com.sun.tools.javac.tree.JCTree.JCImport&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitIndexed(com.sun.tools.javac.tree.JCTree.JCArrayAccess)" class="member-name-link">visitIndexed</a><wbr>(com.sun.tools.javac.tree.JCTree.JCArrayAccess&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitLabelled(com.sun.tools.javac.tree.JCTree.JCLabeledStatement)" class="member-name-link">visitLabelled</a><wbr>(com.sun.tools.javac.tree.JCTree.JCLabeledStatement&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitLambda(com.sun.tools.javac.tree.JCTree.JCLambda)" class="member-name-link">visitLambda</a><wbr>(com.sun.tools.javac.tree.JCTree.JCLambda&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitLetExpr(com.sun.tools.javac.tree.JCTree.LetExpr)" class="member-name-link">visitLetExpr</a><wbr>(com.sun.tools.javac.tree.JCTree.LetExpr&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitLiteral(com.sun.tools.javac.tree.JCTree.JCLiteral)" class="member-name-link">visitLiteral</a><wbr>(com.sun.tools.javac.tree.JCTree.JCLiteral&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitMethodDef(com.sun.tools.javac.tree.JCTree.JCMethodDecl)" class="member-name-link">visitMethodDef</a><wbr>(com.sun.tools.javac.tree.JCTree.JCMethodDecl&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitModifiers(com.sun.tools.javac.tree.JCTree.JCModifiers)" class="member-name-link">visitModifiers</a><wbr>(com.sun.tools.javac.tree.JCTree.JCModifiers&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitModuleDef(com.sun.tools.javac.tree.JCTree.JCModuleDecl)" class="member-name-link">visitModuleDef</a><wbr>(com.sun.tools.javac.tree.JCTree.JCModuleDecl&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitModuleImport(com.sun.tools.javac.tree.JCTree.JCModuleImport)" class="member-name-link">visitModuleImport</a><wbr>(com.sun.tools.javac.tree.JCTree.JCModuleImport&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitNewArray(com.sun.tools.javac.tree.JCTree.JCNewArray)" class="member-name-link">visitNewArray</a><wbr>(com.sun.tools.javac.tree.JCTree.JCNewArray&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitNewClass(com.sun.tools.javac.tree.JCTree.JCNewClass)" class="member-name-link">visitNewClass</a><wbr>(com.sun.tools.javac.tree.JCTree.JCNewClass&nbsp;tree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitOpens(com.sun.tools.javac.tree.JCTree.JCOpens)" class="member-name-link">visitOpens</a><wbr>(com.sun.tools.javac.tree.JCTree.JCOpens&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitPackageDef(com.sun.tools.javac.tree.JCTree.JCPackageDecl)" class="member-name-link">visitPackageDef</a><wbr>(com.sun.tools.javac.tree.JCTree.JCPackageDecl&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitParens(com.sun.tools.javac.tree.JCTree.JCParens)" class="member-name-link">visitParens</a><wbr>(com.sun.tools.javac.tree.JCTree.JCParens&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitPatternCaseLabel(com.sun.tools.javac.tree.JCTree.JCPatternCaseLabel)" class="member-name-link">visitPatternCaseLabel</a><wbr>(com.sun.tools.javac.tree.JCTree.JCPatternCaseLabel&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitProvides(com.sun.tools.javac.tree.JCTree.JCProvides)" class="member-name-link">visitProvides</a><wbr>(com.sun.tools.javac.tree.JCTree.JCProvides&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitRecordPattern(com.sun.tools.javac.tree.JCTree.JCRecordPattern)" class="member-name-link">visitRecordPattern</a><wbr>(com.sun.tools.javac.tree.JCTree.JCRecordPattern&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitReference(com.sun.tools.javac.tree.JCTree.JCMemberReference)" class="member-name-link">visitReference</a><wbr>(com.sun.tools.javac.tree.JCTree.JCMemberReference&nbsp;tree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitRequires(com.sun.tools.javac.tree.JCTree.JCRequires)" class="member-name-link">visitRequires</a><wbr>(com.sun.tools.javac.tree.JCTree.JCRequires&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitReturn(com.sun.tools.javac.tree.JCTree.JCReturn)" class="member-name-link">visitReturn</a><wbr>(com.sun.tools.javac.tree.JCTree.JCReturn&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitSelect(com.sun.tools.javac.tree.JCTree.JCFieldAccess)" class="member-name-link">visitSelect</a><wbr>(com.sun.tools.javac.tree.JCTree.JCFieldAccess&nbsp;tree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitSkip(com.sun.tools.javac.tree.JCTree.JCSkip)" class="member-name-link">visitSkip</a><wbr>(com.sun.tools.javac.tree.JCTree.JCSkip&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitSwitch(com.sun.tools.javac.tree.JCTree.JCSwitch)" class="member-name-link">visitSwitch</a><wbr>(com.sun.tools.javac.tree.JCTree.JCSwitch&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitSwitchExpression(com.sun.tools.javac.tree.JCTree.JCSwitchExpression)" class="member-name-link">visitSwitchExpression</a><wbr>(com.sun.tools.javac.tree.JCTree.JCSwitchExpression&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitSynchronized(com.sun.tools.javac.tree.JCTree.JCSynchronized)" class="member-name-link">visitSynchronized</a><wbr>(com.sun.tools.javac.tree.JCTree.JCSynchronized&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitThrow(com.sun.tools.javac.tree.JCTree.JCThrow)" class="member-name-link">visitThrow</a><wbr>(com.sun.tools.javac.tree.JCTree.JCThrow&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitTopLevel(com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" class="member-name-link">visitTopLevel</a><wbr>(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitTree(com.sun.tools.javac.tree.JCTree)" class="member-name-link">visitTree</a><wbr>(com.sun.tools.javac.tree.JCTree&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitTry(com.sun.tools.javac.tree.JCTree.JCTry)" class="member-name-link">visitTry</a><wbr>(com.sun.tools.javac.tree.JCTree.JCTry&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitTypeApply(com.sun.tools.javac.tree.JCTree.JCTypeApply)" class="member-name-link">visitTypeApply</a><wbr>(com.sun.tools.javac.tree.JCTree.JCTypeApply&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitTypeArray(com.sun.tools.javac.tree.JCTree.JCArrayTypeTree)" class="member-name-link">visitTypeArray</a><wbr>(com.sun.tools.javac.tree.JCTree.JCArrayTypeTree&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitTypeBoundKind(com.sun.tools.javac.tree.JCTree.TypeBoundKind)" class="member-name-link">visitTypeBoundKind</a><wbr>(com.sun.tools.javac.tree.JCTree.TypeBoundKind&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitTypeCast(com.sun.tools.javac.tree.JCTree.JCTypeCast)" class="member-name-link">visitTypeCast</a><wbr>(com.sun.tools.javac.tree.JCTree.JCTypeCast&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitTypeIdent(com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree)" class="member-name-link">visitTypeIdent</a><wbr>(com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitTypeIntersection(com.sun.tools.javac.tree.JCTree.JCTypeIntersection)" class="member-name-link">visitTypeIntersection</a><wbr>(com.sun.tools.javac.tree.JCTree.JCTypeIntersection&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitTypeParameter(com.sun.tools.javac.tree.JCTree.JCTypeParameter)" class="member-name-link">visitTypeParameter</a><wbr>(com.sun.tools.javac.tree.JCTree.JCTypeParameter&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitTypeTest(com.sun.tools.javac.tree.JCTree.JCInstanceOf)" class="member-name-link">visitTypeTest</a><wbr>(com.sun.tools.javac.tree.JCTree.JCInstanceOf&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitTypeUnion(com.sun.tools.javac.tree.JCTree.JCTypeUnion)" class="member-name-link">visitTypeUnion</a><wbr>(com.sun.tools.javac.tree.JCTree.JCTypeUnion&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitUnary(com.sun.tools.javac.tree.JCTree.JCUnary)" class="member-name-link">visitUnary</a><wbr>(com.sun.tools.javac.tree.JCTree.JCUnary&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitUses(com.sun.tools.javac.tree.JCTree.JCUses)" class="member-name-link">visitUses</a><wbr>(com.sun.tools.javac.tree.JCTree.JCUses&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitVarDef(com.sun.tools.javac.tree.JCTree.JCVariableDecl)" class="member-name-link">visitVarDef</a><wbr>(com.sun.tools.javac.tree.JCTree.JCVariableDecl&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitWhileLoop(com.sun.tools.javac.tree.JCTree.JCWhileLoop)" class="member-name-link">visitWhileLoop</a><wbr>(com.sun.tools.javac.tree.JCTree.JCWhileLoop&nbsp;arg0)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitWildcard(com.sun.tools.javac.tree.JCTree.JCWildcard)" class="member-name-link">visitWildcard</a><wbr>(com.sun.tools.javac.tree.JCTree.JCWildcard&nbsp;arg0)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitYield(com.sun.tools.javac.tree.JCTree.JCYield)" class="member-name-link">visitYield</a><wbr>(com.sun.tools.javac.tree.JCTree.JCYield&nbsp;arg0)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.sun.tools.javac.tree.TreeScanner">Methods inherited from class&nbsp;com.sun.tools.javac.tree.TreeScanner</h3>
-<code>scan, scan, visitAnnotatedType, visitAnyPattern, visitApply, visitAssert, visitAssign, visitAssignop, visitBinary, visitBindingPattern, visitBlock, visitBreak, visitCase, visitCatch, visitClassDef, visitConditional, visitConstantCaseLabel, visitContinue, visitDefaultCaseLabel, visitDoLoop, visitErroneous, visitExec, visitExports, visitForeachLoop, visitForLoop, visitIf, visitImport, visitIndexed, visitLabelled, visitLambda, visitLetExpr, visitLiteral, visitMethodDef, visitModifiers, visitModuleDef, visitModuleImport, visitNewArray, visitOpens, visitPackageDef, visitParens, visitPatternCaseLabel, visitProvides, visitRecordPattern, visitRequires, visitReturn, visitSkip, visitSwitch, visitSwitchExpression, visitSynchronized, visitThrow, visitTopLevel, visitTree, visitTry, visitTypeApply, visitTypeArray, visitTypeBoundKind, visitTypeCast, visitTypeIdent, visitTypeIntersection, visitTypeParameter, visitTypeTest, visitTypeUnion, visitUnary, visitUses, visitVarDef, visitWhileLoop, visitWildcard, visitYield</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -193,10 +458,6 @@ loadScripts(document, 'script');</script>
 <h3>visitIdent</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitIdent</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCIdent&nbsp;tree)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>visitIdent</code>&nbsp;in class&nbsp;<code>com.sun.tools.javac.tree.TreeScanner</code></dd>
-</dl>
 </div>
 </section>
 </li>
@@ -205,10 +466,6 @@ loadScripts(document, 'script');</script>
 <h3>visitSelect</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitSelect</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCFieldAccess&nbsp;tree)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>visitSelect</code>&nbsp;in class&nbsp;<code>com.sun.tools.javac.tree.TreeScanner</code></dd>
-</dl>
 </div>
 </section>
 </li>
@@ -217,10 +474,6 @@ loadScripts(document, 'script');</script>
 <h3>visitNewClass</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitNewClass</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCNewClass&nbsp;tree)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>visitNewClass</code>&nbsp;in class&nbsp;<code>com.sun.tools.javac.tree.TreeScanner</code></dd>
-</dl>
 </div>
 </section>
 </li>
@@ -229,10 +482,6 @@ loadScripts(document, 'script');</script>
 <h3>visitReference</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitReference</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCMemberReference&nbsp;tree)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>visitReference</code>&nbsp;in class&nbsp;<code>com.sun.tools.javac.tree.TreeScanner</code></dd>
-</dl>
 </div>
 </section>
 </li>
@@ -241,10 +490,550 @@ loadScripts(document, 'script');</script>
 <h3>visitAnnotation</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitAnnotation</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCAnnotation&nbsp;tree)</span></div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code>visitAnnotation</code>&nbsp;in class&nbsp;<code>com.sun.tools.javac.tree.TreeScanner</code></dd>
-</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="scan(com.sun.tools.javac.tree.JCTree)">
+<h3>scan</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">scan</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="scan(com.sun.tools.javac.util.List)">
+<h3>scan</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">scan</span><wbr><span class="parameters">(com.sun.tools.javac.util.List&lt;? extends com.sun.tools.javac.tree.JCTree&gt;&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitTopLevel(com.sun.tools.javac.tree.JCTree.JCCompilationUnit)">
+<h3>visitTopLevel</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitTopLevel</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitPackageDef(com.sun.tools.javac.tree.JCTree.JCPackageDecl)">
+<h3>visitPackageDef</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitPackageDef</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCPackageDecl&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitModuleDef(com.sun.tools.javac.tree.JCTree.JCModuleDecl)">
+<h3>visitModuleDef</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitModuleDef</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCModuleDecl&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitExports(com.sun.tools.javac.tree.JCTree.JCExports)">
+<h3>visitExports</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitExports</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCExports&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitModuleImport(com.sun.tools.javac.tree.JCTree.JCModuleImport)">
+<h3>visitModuleImport</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitModuleImport</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCModuleImport&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitOpens(com.sun.tools.javac.tree.JCTree.JCOpens)">
+<h3>visitOpens</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitOpens</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCOpens&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitProvides(com.sun.tools.javac.tree.JCTree.JCProvides)">
+<h3>visitProvides</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitProvides</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCProvides&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitRequires(com.sun.tools.javac.tree.JCTree.JCRequires)">
+<h3>visitRequires</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitRequires</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCRequires&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitUses(com.sun.tools.javac.tree.JCTree.JCUses)">
+<h3>visitUses</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitUses</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCUses&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitImport(com.sun.tools.javac.tree.JCTree.JCImport)">
+<h3>visitImport</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitImport</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCImport&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitClassDef(com.sun.tools.javac.tree.JCTree.JCClassDecl)">
+<h3>visitClassDef</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitClassDef</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCClassDecl&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitMethodDef(com.sun.tools.javac.tree.JCTree.JCMethodDecl)">
+<h3>visitMethodDef</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitMethodDef</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCMethodDecl&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitVarDef(com.sun.tools.javac.tree.JCTree.JCVariableDecl)">
+<h3>visitVarDef</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitVarDef</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCVariableDecl&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitSkip(com.sun.tools.javac.tree.JCTree.JCSkip)">
+<h3>visitSkip</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitSkip</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCSkip&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitBlock(com.sun.tools.javac.tree.JCTree.JCBlock)">
+<h3>visitBlock</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitBlock</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCBlock&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitDoLoop(com.sun.tools.javac.tree.JCTree.JCDoWhileLoop)">
+<h3>visitDoLoop</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitDoLoop</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCDoWhileLoop&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitWhileLoop(com.sun.tools.javac.tree.JCTree.JCWhileLoop)">
+<h3>visitWhileLoop</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitWhileLoop</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCWhileLoop&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitForLoop(com.sun.tools.javac.tree.JCTree.JCForLoop)">
+<h3>visitForLoop</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitForLoop</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCForLoop&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitForeachLoop(com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop)">
+<h3>visitForeachLoop</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitForeachLoop</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCEnhancedForLoop&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitLabelled(com.sun.tools.javac.tree.JCTree.JCLabeledStatement)">
+<h3>visitLabelled</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitLabelled</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCLabeledStatement&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitSwitch(com.sun.tools.javac.tree.JCTree.JCSwitch)">
+<h3>visitSwitch</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitSwitch</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCSwitch&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitCase(com.sun.tools.javac.tree.JCTree.JCCase)">
+<h3>visitCase</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitCase</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCCase&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitSwitchExpression(com.sun.tools.javac.tree.JCTree.JCSwitchExpression)">
+<h3>visitSwitchExpression</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitSwitchExpression</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCSwitchExpression&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitSynchronized(com.sun.tools.javac.tree.JCTree.JCSynchronized)">
+<h3>visitSynchronized</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitSynchronized</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCSynchronized&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitTry(com.sun.tools.javac.tree.JCTree.JCTry)">
+<h3>visitTry</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitTry</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCTry&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitCatch(com.sun.tools.javac.tree.JCTree.JCCatch)">
+<h3>visitCatch</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitCatch</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCCatch&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitConditional(com.sun.tools.javac.tree.JCTree.JCConditional)">
+<h3>visitConditional</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitConditional</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCConditional&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitIf(com.sun.tools.javac.tree.JCTree.JCIf)">
+<h3>visitIf</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitIf</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCIf&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitExec(com.sun.tools.javac.tree.JCTree.JCExpressionStatement)">
+<h3>visitExec</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitExec</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCExpressionStatement&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitBreak(com.sun.tools.javac.tree.JCTree.JCBreak)">
+<h3>visitBreak</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitBreak</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCBreak&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitYield(com.sun.tools.javac.tree.JCTree.JCYield)">
+<h3>visitYield</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitYield</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCYield&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitContinue(com.sun.tools.javac.tree.JCTree.JCContinue)">
+<h3>visitContinue</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitContinue</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCContinue&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitReturn(com.sun.tools.javac.tree.JCTree.JCReturn)">
+<h3>visitReturn</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitReturn</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCReturn&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitThrow(com.sun.tools.javac.tree.JCTree.JCThrow)">
+<h3>visitThrow</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitThrow</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCThrow&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitAssert(com.sun.tools.javac.tree.JCTree.JCAssert)">
+<h3>visitAssert</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitAssert</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCAssert&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitApply(com.sun.tools.javac.tree.JCTree.JCMethodInvocation)">
+<h3>visitApply</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitApply</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCMethodInvocation&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitNewArray(com.sun.tools.javac.tree.JCTree.JCNewArray)">
+<h3>visitNewArray</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitNewArray</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCNewArray&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitLambda(com.sun.tools.javac.tree.JCTree.JCLambda)">
+<h3>visitLambda</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitLambda</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCLambda&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitParens(com.sun.tools.javac.tree.JCTree.JCParens)">
+<h3>visitParens</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitParens</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCParens&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitAssign(com.sun.tools.javac.tree.JCTree.JCAssign)">
+<h3>visitAssign</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitAssign</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCAssign&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitAssignop(com.sun.tools.javac.tree.JCTree.JCAssignOp)">
+<h3>visitAssignop</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitAssignop</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCAssignOp&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitUnary(com.sun.tools.javac.tree.JCTree.JCUnary)">
+<h3>visitUnary</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitUnary</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCUnary&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitBinary(com.sun.tools.javac.tree.JCTree.JCBinary)">
+<h3>visitBinary</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitBinary</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCBinary&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitTypeCast(com.sun.tools.javac.tree.JCTree.JCTypeCast)">
+<h3>visitTypeCast</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitTypeCast</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCTypeCast&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitTypeTest(com.sun.tools.javac.tree.JCTree.JCInstanceOf)">
+<h3>visitTypeTest</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitTypeTest</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCInstanceOf&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitBindingPattern(com.sun.tools.javac.tree.JCTree.JCBindingPattern)">
+<h3>visitBindingPattern</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitBindingPattern</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCBindingPattern&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitDefaultCaseLabel(com.sun.tools.javac.tree.JCTree.JCDefaultCaseLabel)">
+<h3>visitDefaultCaseLabel</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitDefaultCaseLabel</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCDefaultCaseLabel&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitConstantCaseLabel(com.sun.tools.javac.tree.JCTree.JCConstantCaseLabel)">
+<h3>visitConstantCaseLabel</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitConstantCaseLabel</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCConstantCaseLabel&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitPatternCaseLabel(com.sun.tools.javac.tree.JCTree.JCPatternCaseLabel)">
+<h3>visitPatternCaseLabel</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitPatternCaseLabel</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCPatternCaseLabel&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitAnyPattern(com.sun.tools.javac.tree.JCTree.JCAnyPattern)">
+<h3>visitAnyPattern</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitAnyPattern</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCAnyPattern&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitRecordPattern(com.sun.tools.javac.tree.JCTree.JCRecordPattern)">
+<h3>visitRecordPattern</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitRecordPattern</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCRecordPattern&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitIndexed(com.sun.tools.javac.tree.JCTree.JCArrayAccess)">
+<h3>visitIndexed</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitIndexed</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCArrayAccess&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitLiteral(com.sun.tools.javac.tree.JCTree.JCLiteral)">
+<h3>visitLiteral</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitLiteral</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCLiteral&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitTypeIdent(com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree)">
+<h3>visitTypeIdent</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitTypeIdent</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCPrimitiveTypeTree&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitTypeArray(com.sun.tools.javac.tree.JCTree.JCArrayTypeTree)">
+<h3>visitTypeArray</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitTypeArray</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCArrayTypeTree&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitTypeApply(com.sun.tools.javac.tree.JCTree.JCTypeApply)">
+<h3>visitTypeApply</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitTypeApply</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCTypeApply&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitTypeUnion(com.sun.tools.javac.tree.JCTree.JCTypeUnion)">
+<h3>visitTypeUnion</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitTypeUnion</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCTypeUnion&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitTypeIntersection(com.sun.tools.javac.tree.JCTree.JCTypeIntersection)">
+<h3>visitTypeIntersection</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitTypeIntersection</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCTypeIntersection&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitTypeParameter(com.sun.tools.javac.tree.JCTree.JCTypeParameter)">
+<h3>visitTypeParameter</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitTypeParameter</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCTypeParameter&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitWildcard(com.sun.tools.javac.tree.JCTree.JCWildcard)">
+<h3>visitWildcard</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitWildcard</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCWildcard&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitTypeBoundKind(com.sun.tools.javac.tree.JCTree.TypeBoundKind)">
+<h3>visitTypeBoundKind</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitTypeBoundKind</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.TypeBoundKind&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitModifiers(com.sun.tools.javac.tree.JCTree.JCModifiers)">
+<h3>visitModifiers</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitModifiers</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCModifiers&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitAnnotatedType(com.sun.tools.javac.tree.JCTree.JCAnnotatedType)">
+<h3>visitAnnotatedType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitAnnotatedType</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCAnnotatedType&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitErroneous(com.sun.tools.javac.tree.JCTree.JCErroneous)">
+<h3>visitErroneous</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitErroneous</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.JCErroneous&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitLetExpr(com.sun.tools.javac.tree.JCTree.LetExpr)">
+<h3>visitLetExpr</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitLetExpr</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree.LetExpr&nbsp;arg0)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitTree(com.sun.tools.javac.tree.JCTree)">
+<h3>visitTree</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">visitTree</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree&nbsp;arg0)</span></div>
 </div>
 </section>
 </li>

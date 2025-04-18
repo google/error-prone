@@ -193,7 +193,7 @@ including :
   <li>Type annotations on the type of a formal parameter or field.
 </ul>
 
-<p>One might expect this to be equivalent to information returned by <code>Type.getAnnotationMirrors()</code>, but javac doesn't associate type
+<p>One might expect this to be equivalent to information returned by <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html#getAnnotationMirrors()" title="class or interface in javax.lang.model.type" class="external-link"><code>TypeMirror.getAnnotationMirrors()</code></a>, but javac doesn't associate type
 annotation information with types for symbols completed from class files, so that approach
 doesn't work across compilation boundaries.</div>
 </div>
@@ -211,7 +211,7 @@ doesn't work across compilation boundaries.</div>
   <li>Type annotations on the type of a formal parameter or field.
 </ul>
 
-<p>These annotations are not always included in those returned by <code>Type.getAnnotationMirrors()</code> because javac doesn't associate type
+<p>These annotations are not always included in those returned by <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html#getAnnotationMirrors()" title="class or interface in javax.lang.model.type" class="external-link"><code>TypeMirror.getAnnotationMirrors()</code></a> because javac doesn't associate type
 annotation information with types for symbols completed from class files. These type
 annotations won't be included when the symbol is not in the current compilation.</div>
 </div>

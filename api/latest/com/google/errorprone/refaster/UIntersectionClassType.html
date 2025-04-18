@@ -66,6 +66,17 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#inline(com.google.errorprone.refaster.Inliner)" tabindex="0">inline(Inliner)</a></li>
 <li><a href="#visitClassType(com.sun.tools.javac.code.Type.ClassType,com.google.errorprone.refaster.Unifier)" tabindex="0">visitClassType(Type.ClassType, Unifier)</a></li>
+<li><a href="#visitCapturedType(com.sun.tools.javac.code.Type.CapturedType,S)" tabindex="0">visitCapturedType(Type.CapturedType, Unifier)</a></li>
+<li><a href="#visitForAll(com.sun.tools.javac.code.Type.ForAll,S)" tabindex="0">visitForAll(Type.ForAll, Unifier)</a></li>
+<li><a href="#visitUndetVar(com.sun.tools.javac.code.Type.UndetVar,S)" tabindex="0">visitUndetVar(Type.UndetVar, Unifier)</a></li>
+<li><a href="#visit(com.sun.tools.javac.code.Type,S)" tabindex="0">visit(Type, Unifier)</a></li>
+<li><a href="#visitWildcardType(com.sun.tools.javac.code.Type.WildcardType,S)" tabindex="0">visitWildcardType(Type.WildcardType, Unifier)</a></li>
+<li><a href="#visitArrayType(com.sun.tools.javac.code.Type.ArrayType,S)" tabindex="0">visitArrayType(Type.ArrayType, Unifier)</a></li>
+<li><a href="#visitMethodType(com.sun.tools.javac.code.Type.MethodType,S)" tabindex="0">visitMethodType(Type.MethodType, Unifier)</a></li>
+<li><a href="#visitPackageType(com.sun.tools.javac.code.Type.PackageType,S)" tabindex="0">visitPackageType(Type.PackageType, Unifier)</a></li>
+<li><a href="#visitModuleType(com.sun.tools.javac.code.Type.ModuleType,S)" tabindex="0">visitModuleType(Type.ModuleType, Unifier)</a></li>
+<li><a href="#visitTypeVar(com.sun.tools.javac.code.Type.TypeVar,S)" tabindex="0">visitTypeVar(Type.TypeVar, Unifier)</a></li>
+<li><a href="#visitErrorType(com.sun.tools.javac.code.Type.ErrorType,S)" tabindex="0">visitErrorType(Type.ErrorType, Unifier)</a></li>
 </ol>
 </li>
 </ol>
@@ -76,18 +87,14 @@ loadScripts(document, 'script');</script>
 <h1 title="Class UIntersectionClassType" class="title">Class UIntersectionClassType</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">com.sun.tools.javac.code.Types.DefaultTypeVisitor&lt;<a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;, <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;
-<div class="inheritance">com.sun.tools.javac.code.Types.SimpleVisitor&lt;<a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;, <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;
 <div class="inheritance"><a href="UType.html" title="class in com.google.errorprone.refaster">com.google.errorprone.refaster.UType</a>
 <div class="inheritance">com.google.errorprone.refaster.UIntersectionClassType</div>
-</div>
-</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;com.sun.tools.javac.code.Type&gt;, com.sun.tools.javac.code.Type.Visitor&lt;<a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;, <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;com.sun.tools.javac.code.Type&gt;, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
@@ -135,22 +142,60 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Type.IntersectionClassType</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#inline(com.google.errorprone.refaster.Inliner)" class="member-name-link">inline</a><wbr>(<a href="Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitClassType(com.sun.tools.javac.code.Type.ClassType,com.google.errorprone.refaster.Unifier)" class="member-name-link">visitClassType</a><wbr>(com.sun.tools.javac.code.Type.ClassType&nbsp;t,
- <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visit(com.sun.tools.javac.code.Type,S)" class="member-name-link">visit</a><wbr>(com.sun.tools.javac.code.Type&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitArrayType(com.sun.tools.javac.code.Type.ArrayType,S)" class="member-name-link">visitArrayType</a><wbr>(com.sun.tools.javac.code.Type.ArrayType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitCapturedType(com.sun.tools.javac.code.Type.CapturedType,S)" class="member-name-link">visitCapturedType</a><wbr>(com.sun.tools.javac.code.Type.CapturedType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitClassType(com.sun.tools.javac.code.Type.ClassType,com.google.errorprone.refaster.Unifier)" class="member-name-link">visitClassType</a><wbr>(com.sun.tools.javac.code.Type.ClassType&nbsp;t,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitErrorType(com.sun.tools.javac.code.Type.ErrorType,S)" class="member-name-link">visitErrorType</a><wbr>(com.sun.tools.javac.code.Type.ErrorType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitForAll(com.sun.tools.javac.code.Type.ForAll,S)" class="member-name-link">visitForAll</a><wbr>(com.sun.tools.javac.code.Type.ForAll&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitMethodType(com.sun.tools.javac.code.Type.MethodType,S)" class="member-name-link">visitMethodType</a><wbr>(com.sun.tools.javac.code.Type.MethodType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitModuleType(com.sun.tools.javac.code.Type.ModuleType,S)" class="member-name-link">visitModuleType</a><wbr>(com.sun.tools.javac.code.Type.ModuleType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitPackageType(com.sun.tools.javac.code.Type.PackageType,S)" class="member-name-link">visitPackageType</a><wbr>(com.sun.tools.javac.code.Type.PackageType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitTypeVar(com.sun.tools.javac.code.Type.TypeVar,S)" class="member-name-link">visitTypeVar</a><wbr>(com.sun.tools.javac.code.Type.TypeVar&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitUndetVar(com.sun.tools.javac.code.Type.UndetVar,S)" class="member-name-link">visitUndetVar</a><wbr>(com.sun.tools.javac.code.Type.UndetVar&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visitWildcardType(com.sun.tools.javac.code.Type.WildcardType,S)" class="member-name-link">visitWildcardType</a><wbr>(com.sun.tools.javac.code.Type.WildcardType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.google.errorprone.refaster.UType">Methods inherited from class&nbsp;<a href="UType.html#method-summary" title="class in com.google.errorprone.refaster">UType</a></h3>
 <code><a href="UType.html#unify(com.sun.tools.javac.code.Type,com.google.errorprone.refaster.Unifier)" title="unify(Type, Unifier)">unify</a>, <a href="UType.html#visitType(com.sun.tools.javac.code.Type,com.google.errorprone.refaster.Unifier)" title="visitType(Type, Unifier)">visitType</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.sun.tools.javac.code.Types.SimpleVisitor">Methods inherited from class&nbsp;com.sun.tools.javac.code.Types.SimpleVisitor</h3>
-<code>visitCapturedType, visitForAll, visitUndetVar</code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.sun.tools.javac.code.Types.DefaultTypeVisitor">Methods inherited from class&nbsp;com.sun.tools.javac.code.Types.DefaultTypeVisitor</h3>
-<code>visit, visitArrayType, visitErrorType, visitMethodType, visitModuleType, visitPackageType, visitTypeVar, visitWildcardType</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -200,12 +245,105 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visitClassType</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type.ClassType&nbsp;t,
  <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>visitClassType</code>&nbsp;in interface&nbsp;<code>com.sun.tools.javac.code.Type.Visitor&lt;<a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;, <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></dd>
-<dt>Overrides:</dt>
-<dd><code>visitClassType</code>&nbsp;in class&nbsp;<code>com.sun.tools.javac.code.Types.DefaultTypeVisitor&lt;<a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;, <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></dd>
-</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitCapturedType(com.sun.tools.javac.code.Type.CapturedType,S)">
+<h3 id="visitCapturedType(com.sun.tools.javac.code.Type.CapturedType,java.lang.Object)">visitCapturedType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visitCapturedType</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type.CapturedType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitForAll(com.sun.tools.javac.code.Type.ForAll,S)">
+<h3 id="visitForAll(com.sun.tools.javac.code.Type.ForAll,java.lang.Object)">visitForAll</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visitForAll</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type.ForAll&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitUndetVar(com.sun.tools.javac.code.Type.UndetVar,S)">
+<h3 id="visitUndetVar(com.sun.tools.javac.code.Type.UndetVar,java.lang.Object)">visitUndetVar</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visitUndetVar</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type.UndetVar&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visit(com.sun.tools.javac.code.Type,S)">
+<h3 id="visit(com.sun.tools.javac.code.Type,java.lang.Object)">visit</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visit</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitWildcardType(com.sun.tools.javac.code.Type.WildcardType,S)">
+<h3 id="visitWildcardType(com.sun.tools.javac.code.Type.WildcardType,java.lang.Object)">visitWildcardType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visitWildcardType</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type.WildcardType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitArrayType(com.sun.tools.javac.code.Type.ArrayType,S)">
+<h3 id="visitArrayType(com.sun.tools.javac.code.Type.ArrayType,java.lang.Object)">visitArrayType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visitArrayType</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type.ArrayType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitMethodType(com.sun.tools.javac.code.Type.MethodType,S)">
+<h3 id="visitMethodType(com.sun.tools.javac.code.Type.MethodType,java.lang.Object)">visitMethodType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visitMethodType</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type.MethodType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitPackageType(com.sun.tools.javac.code.Type.PackageType,S)">
+<h3 id="visitPackageType(com.sun.tools.javac.code.Type.PackageType,java.lang.Object)">visitPackageType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visitPackageType</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type.PackageType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitModuleType(com.sun.tools.javac.code.Type.ModuleType,S)">
+<h3 id="visitModuleType(com.sun.tools.javac.code.Type.ModuleType,java.lang.Object)">visitModuleType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visitModuleType</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type.ModuleType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitTypeVar(com.sun.tools.javac.code.Type.TypeVar,S)">
+<h3 id="visitTypeVar(com.sun.tools.javac.code.Type.TypeVar,java.lang.Object)">visitTypeVar</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visitTypeVar</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type.TypeVar&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="visitErrorType(com.sun.tools.javac.code.Type.ErrorType,S)">
+<h3 id="visitErrorType(com.sun.tools.javac.code.Type.ErrorType,java.lang.Object)">visitErrorType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</span>&nbsp;<span class="element-name">visitErrorType</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type.ErrorType&nbsp;arg0,
+ <a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;arg1)</span></div>
 </div>
 </section>
 </li>
