@@ -44,7 +44,7 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
   // https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/46317.pdf
   // However, we have chosen a very conservative starting number, with hopes to decrease this in the
   // future.
-  private static final int DEFAULT_LIMIT = 9;
+  private static final int DEFAULT_LIMIT = 8;
 
   static final String TOO_MANY_PARAMETERS_FLAG_NAME = "TooManyParameters:ParameterLimit";
 
@@ -88,13 +88,13 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
       return NO_MATCH;
     }
 
-    String name = getSymbol(tree).isConstructor() ? "constructor" : "method";
+    String ctorOrMethod = getSymbol(tree).isConstructor() ? "constructor" : "method";
     String message =
         String.format(
-            "Consider using a builder pattern instead of a %s with %s parameters. Data shows"
-                + " that defining %s with > 5 parameters often leads to bugs. See also"
-                + " Effective Java, Item 2.",
-            name, paramCount, name);
+            "Consider using a builder pattern (or a library like @AutoBuilder) instead of a %s with"
+                + " %s parameters. Data shows that defining %s with > 5 parameters often leads to"
+                + " bugs. See also Effective Java, Item 2.",
+            ctorOrMethod, paramCount, ctorOrMethod);
     return buildDescription(tree).setMessage(message).build();
   }
 
