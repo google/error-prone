@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -320,5 +321,52 @@ public class UnnecessaryParenthesesTest {
             }
             """)
         .doTest();
+  }
+
+  @Test
+  public void annotationsWithoutTrailingParentheses() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            @Deprecated(forRemoval = true)
+            class Test {
+              @Override
+              public String toString() {
+                return "Test";
+              }
+            }
+            """)
+        .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
+  public void annotationWithTrailingParentheses() {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            """
+            @Deprecated(forRemoval = true)
+            class Test {
+              @Override()
+              public String toString() {
+                return "Test";
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            @Deprecated(forRemoval = true)
+            class Test {
+              @Override
+              public String toString() {
+                return "Test";
+              }
+            }
+            """)
+        // Using TEXT_MATCH because the ASTs are the same with or without the parentheses!
+        .doTest(TestMode.TEXT_MATCH);
   }
 }

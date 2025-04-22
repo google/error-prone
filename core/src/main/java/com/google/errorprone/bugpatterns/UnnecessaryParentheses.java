@@ -22,10 +22,12 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ParenthesizedTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
@@ -33,10 +35,20 @@ import com.sun.source.tree.Tree;
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     summary =
-        "These grouping parentheses are unnecessary; it is unlikely the code will"
-            + " be misinterpreted without them",
+        "These parentheses are unnecessary; it is unlikely the code will be misinterpreted without"
+            + " them",
     severity = WARNING)
-public class UnnecessaryParentheses extends BugChecker implements ParenthesizedTreeMatcher {
+public class UnnecessaryParentheses extends BugChecker
+    implements ParenthesizedTreeMatcher, AnnotationTreeMatcher {
+
+  @Override
+  public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+    return state.getSourceForNode(tree).endsWith("()")
+        ? describeMatch(
+            tree,
+            SuggestedFix.replace(tree, "@" + state.getSourceForNode(tree.getAnnotationType())))
+        : NO_MATCH;
+  }
 
   @Override
   public Description matchParenthesized(ParenthesizedTree tree, VisitorState state) {
