@@ -1,7 +1,7 @@
 ---
 title: UnnecessaryParentheses
-summary: These grouping parentheses are unnecessary; it is unlikely the code will
-  be misinterpreted without them
+summary: These parentheses are unnecessary; it is unlikely the code will be misinterpreted
+  without them
 layout: bugpattern
 tags: ''
 severity: WARNING

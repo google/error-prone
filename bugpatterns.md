@@ -1371,7 +1371,7 @@ __[UnnecessaryMethodReference](bugpattern/UnnecessaryMethodReference)__<br>
 This method reference is unnecessary, and can be replaced with the variable itself.
 
 __[UnnecessaryParentheses](bugpattern/UnnecessaryParentheses)__<br>
-These grouping parentheses are unnecessary; it is unlikely the code will be misinterpreted without them
+These parentheses are unnecessary; it is unlikely the code will be misinterpreted without them
 
 __[UnnecessaryStringBuilder](bugpattern/UnnecessaryStringBuilder)__<br>
 Prefer string concatenation over explicitly using &#96;StringBuilder#append&#96;, since &#96;+&#96; reads better and has equivalent or better performance.
