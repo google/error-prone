@@ -142,6 +142,7 @@ public final class WellKnownThreadSafety implements ThreadSafetyKnownTypes {
         .add("com.github.benmanes.caffeine.cache.stats.ConcurrentStatsCounter")
         .add("kotlinx.coroutines.CoroutineDispatcher")
         .add("kotlinx.coroutines.CoroutineScope")
+        .add("kotlinx.coroutines.Deferred", "T")
         .add("kotlinx.coroutines.ExecutorCoroutineDispatcher")
         .add("kotlinx.coroutines.flow.Flow", "T")
         .add("kotlinx.coroutines.flow.SharedFlow", "T")
