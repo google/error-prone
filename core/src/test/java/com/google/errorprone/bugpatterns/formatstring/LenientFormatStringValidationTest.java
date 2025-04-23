@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.formatstring;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;

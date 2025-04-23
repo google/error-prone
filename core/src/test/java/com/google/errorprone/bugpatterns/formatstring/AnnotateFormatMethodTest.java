@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.formatstring;
 
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link AnnotateFormatMethod} bug pattern.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
 @RunWith(JUnit4.class)
 public final class AnnotateFormatMethodTest {
   private final CompilationTestHelper compilationHelper =

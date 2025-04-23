@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.MoreCollectors.toOptional;
@@ -28,6 +28,7 @@ import static com.google.errorprone.util.AnnotationNames.FORMAT_METHOD_ANNOTATIO
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
