@@ -27,7 +27,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.BinaryTree;
-import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
@@ -334,8 +333,14 @@ public final class FindIdentifiers {
 
       @Override
       public Void visitInstanceOf(InstanceOfTree node, Void unused) {
-        if (!negated && node.getPattern() instanceof BindingPatternTree bpt) {
-          addIfVariable(bpt.getVariable(), result);
+        if (!negated) {
+          new TreeScanner<Void, Void>() {
+            @Override
+            public Void visitVariable(VariableTree node, Void unused) {
+              addIfVariable(node, result);
+              return super.visitVariable(node, null);
+            }
+          }.scan(node.getPattern(), null);
         }
         return null;
       }

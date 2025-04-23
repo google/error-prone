@@ -16,6 +16,8 @@
 
 package com.google.errorprone.util;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -923,8 +925,7 @@ public class FindIdentifiersTest {
 
             public interface MyInterface {
               static void test(Object o) {
-                if (!(o instanceof MyInterface mi)) {
-                }
+                if (!(o instanceof MyInterface mi)) {}
                 // BUG: Diagnostic contains: [o]
                 String.format("");
               }
@@ -998,6 +999,24 @@ public class FindIdentifiersTest {
               static boolean test7(Object o) {
                 // BUG: Diagnostic contains: [o]
                 return o instanceof String s && true || true && String.format("").isEmpty();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void findAllIdents_bindingVariableInRecord() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+
+    CompilationTestHelper.newInstance(PrintIdents.class, getClass())
+        .addSourceLines(
+            "Point.java",
+            """
+            record Point(int x, int y) {
+              static boolean test(Object o) {
+                // BUG: Diagnostic contains: [x, y, o]
+                return o instanceof Point(int x, int y) && String.format("").isEmpty();
               }
             }
             """)
