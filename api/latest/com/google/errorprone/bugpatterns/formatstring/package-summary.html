@@ -87,32 +87,45 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="FormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatString</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AnnotateFormatMethod.html" title="class in com.google.errorprone.bugpatterns.formatstring">AnnotateFormatMethod</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">Detects occurrences of pairs of parameters being passed straight through to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html#format(java.lang.String,java.lang.Object...)" title="class or interface in java.lang" class="external-link"><code>String.format(String, Object...)</code></a>
+from a method not annotated with <a href="../../annotations/FormatMethod.html" title="annotation interface in com.google.errorprone.annotations"><code>FormatMethod</code></a>.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="FormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatString</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="FormatStringAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringAnnotationChecker</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="FormatStringAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringAnnotationChecker</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block"><a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> to assert validity of methods calls with <a href="FormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring"><code>FormatString</code></a> annotations.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="FormatStringUtils.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringUtils</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="FormatStringUtils.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringUtils</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Format string utilities.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="FormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="FormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Utilities for validating format strings.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="FormatStringValidation.ValidationResult.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation.ValidationResult</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="FormatStringValidation.ValidationResult.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation.ValidationResult</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Description of an incorrect format method call.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="InlineFormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring">InlineFormatString</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="InlineFormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring">InlineFormatString</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="StrictFormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">StrictFormatStringValidation</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="LenientFormatStringUtils.html" title="class in com.google.errorprone.bugpatterns.formatstring">LenientFormatStringUtils</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Utilities relating to lenient format strings.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="LenientFormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">LenientFormatStringValidation</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">A BugPattern; see the summary.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="StrictFormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">StrictFormatStringValidation</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Format string validation utility that fails on more cases than <a href="FormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring"><code>FormatStringValidation</code></a> to
 enforce strict format string checking.</div>
 </div>

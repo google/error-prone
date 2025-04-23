@@ -616,12 +616,12 @@ devices.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableEnumChecker.html#ANNOTATED_ENUM_MESSAGE" class="member-name-link">ANNOTATED_ENUM_MESSAGE</a> - Static variable in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableEnumChecker.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableEnumChecker</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/AnnotateFormatMethod.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">AnnotateFormatMethod</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/formatstring/AnnotateFormatMethod.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.formatstring">AnnotateFormatMethod</a> - Class in <a href="com/google/errorprone/bugpatterns/formatstring/package-summary.html">com.google.errorprone.bugpatterns.formatstring</a></dt>
 <dd>
 <div class="block">Detects occurrences of pairs of parameters being passed straight through to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html#format(java.lang.String,java.lang.Object...)" title="class or interface in java.lang" class="external-link"><code>String.format(String, Object...)</code></a>
 from a method not annotated with <a href="com/google/errorprone/annotations/FormatMethod.html" title="annotation interface in com.google.errorprone.annotations"><code>FormatMethod</code></a>.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/AnnotateFormatMethod.html#%3Cinit%3E()" class="member-name-link">AnnotateFormatMethod()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotateFormatMethod.html" title="class in com.google.errorprone.bugpatterns">AnnotateFormatMethod</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/formatstring/AnnotateFormatMethod.html#%3Cinit%3E()" class="member-name-link">AnnotateFormatMethod()</a> - Constructor for class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/AnnotateFormatMethod.html" title="class in com.google.errorprone.bugpatterns.formatstring">AnnotateFormatMethod</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/suppliers/Suppliers.html#ANNOTATION_TYPE" class="member-name-link">ANNOTATION_TYPE</a> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
@@ -5137,6 +5137,11 @@ safely be included in either a Java text block.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownThreadSafety.html#getKnownUnsafeClasses()" class="member-name-link">getKnownUnsafeClasses()</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/formatstring/LenientFormatStringUtils.html#getLenientFormatStringPosition(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">getLenientFormatStringPosition(ExpressionTree, VisitorState)</a> - Static method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/LenientFormatStringUtils.html" title="class in com.google.errorprone.bugpatterns.formatstring">LenientFormatStringUtils</a></dt>
+<dd>
+<div class="block">Returns the index of the lenient format string parameter in <code>tree</code>, or <code>-1</code> if
+there is none.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/ErrorProneTokens.html#getLineMap()" class="member-name-link">getLineMap()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneTokens.html" title="class in com.google.errorprone.util">ErrorProneTokens</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/apply/SourceFile.html#getLines()" class="member-name-link">getLines()</a> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/SourceFile.html" title="class in com.google.errorprone.apply">SourceFile</a></dt>
@@ -7634,11 +7639,15 @@ semantic difference in the code (as, for example, is the case with <a href="http
 </dd>
 <dt><a href="com/google/errorprone/refaster/StringName.html#length()" class="member-name-link">length()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/StringName.html" title="class in com.google.errorprone.refaster">StringName</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/LenientFormatStringValidation.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">LenientFormatStringValidation</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/formatstring/LenientFormatStringUtils.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.formatstring">LenientFormatStringUtils</a> - Class in <a href="com/google/errorprone/bugpatterns/formatstring/package-summary.html">com.google.errorprone.bugpatterns.formatstring</a></dt>
+<dd>
+<div class="block">Utilities relating to lenient format strings.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/formatstring/LenientFormatStringValidation.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.formatstring">LenientFormatStringValidation</a> - Class in <a href="com/google/errorprone/bugpatterns/formatstring/package-summary.html">com.google.errorprone.bugpatterns.formatstring</a></dt>
 <dd>
 <div class="block">A BugPattern; see the summary.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/LenientFormatStringValidation.html#%3Cinit%3E()" class="member-name-link">LenientFormatStringValidation()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/LenientFormatStringValidation.html" title="class in com.google.errorprone.bugpatterns">LenientFormatStringValidation</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/formatstring/LenientFormatStringValidation.html#%3Cinit%3E()" class="member-name-link">LenientFormatStringValidation()</a> - Constructor for class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/LenientFormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">LenientFormatStringValidation</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TypeParameterNaming.TypeParameterNamingClassification.html#LETTER_WITH_MAYBE_NUMERAL" class="member-name-link">LETTER_WITH_MAYBE_NUMERAL</a> - Enum constant in enum class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeParameterNaming.TypeParameterNamingClassification.html" title="enum class in com.google.errorprone.bugpatterns">TypeParameterNaming.TypeParameterNamingClassification</a></dt>
 <dd>
@@ -8908,8 +8917,6 @@ and methods that return an AutoCloseable.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/android/WakelockReleasedDangerously.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.android.<a href="com/google/errorprone/bugpatterns/android/WakelockReleasedDangerously.html" title="class in com.google.errorprone.bugpatterns.android">WakelockReleasedDangerously</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/AnnotateFormatMethod.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AnnotateFormatMethod.html" title="class in com.google.errorprone.bugpatterns">AnnotateFormatMethod</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/argumentselectiondefects/ArgumentSelectionDefectChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.argumentselectiondefects.<a href="com/google/errorprone/bugpatterns/argumentselectiondefects/ArgumentSelectionDefectChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">ArgumentSelectionDefectChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/argumentselectiondefects/AssertEqualsArgumentOrderChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.argumentselectiondefects.<a href="com/google/errorprone/bugpatterns/argumentselectiondefects/AssertEqualsArgumentOrderChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">AssertEqualsArgumentOrderChecker</a></dt>
@@ -9020,9 +9027,13 @@ multidimensional.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/flogger/FloggerWithoutCause.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.flogger.<a href="com/google/errorprone/bugpatterns/flogger/FloggerWithoutCause.html" title="class in com.google.errorprone.bugpatterns.flogger">FloggerWithoutCause</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/formatstring/AnnotateFormatMethod.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/AnnotateFormatMethod.html" title="class in com.google.errorprone.bugpatterns.formatstring">AnnotateFormatMethod</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatString.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatString</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringAnnotationChecker.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringAnnotationChecker</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/formatstring/LenientFormatStringValidation.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/LenientFormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">LenientFormatStringValidation</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ForOverrideChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ForOverrideChecker.html" title="class in com.google.errorprone.bugpatterns">ForOverrideChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -9083,8 +9094,6 @@ multidimensional.</div>
 <dt><a href="com/google/errorprone/bugpatterns/JUnit4ClassUsedInJUnit3.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnit4ClassUsedInJUnit3.html" title="class in com.google.errorprone.bugpatterns">JUnit4ClassUsedInJUnit3</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/JUnitAssertSameCheck.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnitAssertSameCheck.html" title="class in com.google.errorprone.bugpatterns">JUnitAssertSameCheck</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/LenientFormatStringValidation.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/LenientFormatStringValidation.html" title="class in com.google.errorprone.bugpatterns">LenientFormatStringValidation</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/LiteByteStringUtf8.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/LiteByteStringUtf8.html" title="class in com.google.errorprone.bugpatterns">LiteByteStringUtf8</a></dt>
 <dd>&nbsp;</dd>
