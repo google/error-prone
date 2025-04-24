@@ -27,12 +27,15 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
+import java.util.List;
 
 /** A BugPattern; see the summary. */
 @BugPattern(
@@ -41,15 +44,24 @@ import com.sun.source.tree.MethodInvocationTree;
         "The number of arguments provided to lenient format methods should match the positional"
             + " specifiers.")
 public final class LenientFormatStringValidation extends BugChecker
-    implements MethodInvocationTreeMatcher {
+    implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    return match(tree, tree.getArguments(), state);
+  }
+
+  @Override
+  public Description matchNewClass(NewClassTree tree, VisitorState state) {
+    return match(tree, tree.getArguments(), state);
+  }
+
+  private Description match(
+      ExpressionTree tree, List<? extends ExpressionTree> args, VisitorState state) {
     int formatStringPosition = getLenientFormatStringPosition(tree, state);
     if (formatStringPosition < 0) {
       return NO_MATCH;
     }
-    var args = tree.getArguments();
     if (args.size() <= formatStringPosition) {
       return NO_MATCH;
     }
