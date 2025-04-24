@@ -1445,7 +1445,7 @@ public class Matchers {
     return (Matcher<T>) STATIC_EQUALS;
   }
 
-  private static final Matcher<ExpressionTree> INSTANCE_EQUALS =
+  public static final Matcher<ExpressionTree> INSTANCE_EQUALS =
       allOf(
           instanceMethod().anyClass().named("equals").withParameters("java.lang.Object"),
           Matchers::methodReturnsBoolean);
