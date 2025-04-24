@@ -41,7 +41,6 @@ import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
 import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
 import static javax.lang.model.element.ElementKind.RESOURCE_VARIABLE;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CaseFormat;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
@@ -288,20 +287,17 @@ public final class IdentifierName extends BugChecker
     return isConformantLowerCamelName(name);
   }
 
-  @VisibleForTesting
-  static boolean isConformantStaticVariableName(String name) {
+  private static boolean isConformantStaticVariableName(String name) {
     return UPPER_UNDERSCORE_PATTERN.matcher(name).matches();
   }
 
-  @VisibleForTesting
-  static boolean isConformantLowerCamelName(String name) {
+  private static boolean isConformantLowerCamelName(String name) {
     return underscoresAreFlankedByDigits(name)
         && !isUpperCase(name.charAt(0))
         && !PROBABLE_INITIALISM.matcher(name).find();
   }
 
-  @VisibleForTesting
-  boolean isConformantTypeName(String name) {
+  private boolean isConformantTypeName(String name) {
     return underscoresAreFlankedByDigits(name)
         && isUpperCase(name.charAt(0))
         && (allowInitialismsInTypeName || !PROBABLE_INITIALISM.matcher(name).find());

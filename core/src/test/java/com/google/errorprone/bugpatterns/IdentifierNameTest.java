@@ -17,14 +17,9 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.TruthJUnit.assume;
-import static com.google.errorprone.bugpatterns.IdentifierName.isConformantLowerCamelName;
-import static com.google.errorprone.bugpatterns.IdentifierName.isConformantStaticVariableName;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.ErrorProneFlags;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -721,28 +716,52 @@ public class IdentifierNameTest {
 
   @Test
   public void versionNumbers() {
-    assertTrue(isConformantLowerCamelName("murmur3_32"));
-    assertFalse(isConformantLowerCamelName("murmur3__32"));
-    assertFalse(isConformantLowerCamelName("murmur3_d"));
-    assertFalse(isConformantLowerCamelName("murmur_3_32"));
-    assertFalse(isConformantLowerCamelName("murmur3_32_"));
-    assertFalse(isConformantLowerCamelName("_murmur3_32"));
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final int GUAVA33_4_6 = 42;
 
-    // These examples are copied from InetAddressesTest.java.
-    assertTrue(isConformantLowerCamelName("addressV6_66_0"));
-    assertFalse(isConformantLowerCamelName("address_66_255"));
-    assertFalse(isConformantLowerCamelName("addressV6_66_ff"));
-    assertFalse(isConformantLowerCamelName("addressV6_ffffff"));
+              void test() {
+                int murmur3_32;
+                // BUG: Diagnostic contains: murmur332
+                int murmur3__32;
+                // BUG: Diagnostic contains: murmur3D
+                int murmur3_d;
+                // BUG: Diagnostic contains: murmur332
+                int murmur_3_32;
+                // BUG: Diagnostic contains: Murmur332
+                int _murmur3_32;
 
-    assertTrue(isConformantStaticVariableName("GUAVA33_4_6"));
+                int addressV6_66_0;
+                // BUG: Diagnostic contains: address66255
+                int address_66_255;
+                // BUG: Diagnostic contains: addressV666Ff
+                int addressV6_66_ff;
+                // BUG: Diagnostic contains: addressV6Ffffff
+                int addressV6_ffffff;
+              }
 
-    IdentifierName identifierName = new IdentifierName(ErrorProneFlags.empty());
-    assertTrue(identifierName.isConformantTypeName("Murmur3_32"));
-    assertFalse(identifierName.isConformantTypeName("Murmur3__32"));
-    assertFalse(identifierName.isConformantTypeName("Murmur3_32_"));
-    assertFalse(identifierName.isConformantTypeName("Murmur3_d"));
-    assertFalse(identifierName.isConformantTypeName("Murmur_32"));
-    assertFalse(identifierName.isConformantTypeName("_Murmur3_32"));
+              class Murmur3_32 {}
+
+              // BUG: Diagnostic contains: Murmur332
+              class Murmur3__32 {}
+
+              // BUG: Diagnostic contains: Murmur332
+              class Murmur3_32_ {}
+
+              // BUG: Diagnostic contains: Murmur3d
+              class Murmur3_d {}
+
+              // BUG: Diagnostic contains: Murmur32
+              class Murmur_32 {}
+
+              // BUG: Diagnostic contains: Murmur332
+              class _Murmur3_32 {}
+            }
+            """)
+        .doTest();
   }
 
   @Test
