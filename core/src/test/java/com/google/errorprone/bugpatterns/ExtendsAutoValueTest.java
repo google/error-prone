@@ -64,7 +64,7 @@ public class ExtendsAutoValueTest {
             public class TestClass {}
 
             @AutoValue
-            class AutoClass extends TestClass {}
+            abstract class AutoClass extends TestClass {}
             """)
         .doTest();
   }
@@ -79,7 +79,7 @@ public class ExtendsAutoValueTest {
             import javax.annotation.processing.Generated;
 
             @AutoValue
-            class AutoClass {}
+            abstract class AutoClass {}
 
             @Generated(value = "hi")
             public class TestClass extends AutoClass {}
@@ -96,7 +96,7 @@ public class ExtendsAutoValueTest {
             import com.google.auto.value.AutoValue;
 
             @AutoValue
-            class AutoClass {}
+            abstract class AutoClass {}
 
             // BUG: Diagnostic contains: Do not extend an @AutoValue class in non-generated code.
             public class TestClass extends AutoClass {}
@@ -113,7 +113,7 @@ public class ExtendsAutoValueTest {
 import com.google.auto.value.AutoValue;
 
 @AutoValue
-class AutoClass {
+abstract class AutoClass {
   @AutoValue.Builder
   abstract static class Builder {
     abstract AutoClass build();
@@ -139,7 +139,7 @@ public class TestBuilder extends AutoClass.Builder {
 import com.google.auto.value.AutoValue;
 
 @AutoValue
-class AutoClass {
+abstract class AutoClass {
   @AutoValue.Builder
   interface Builder {
     AutoClass build();
@@ -232,7 +232,7 @@ public class TestBuilder implements AutoClass.Builder {
             "TestClass.java",
             """
             @com.google.auto.value.AutoValue
-            class AutoClass {}
+            abstract class AutoClass {}
 
             // BUG: Diagnostic contains: Do not extend an @AutoValue class in non-generated code.
             public class TestClass extends AutoClass {}
@@ -269,7 +269,7 @@ public class TestBuilder implements AutoClass.Builder {
 
             class OuterClass {
               @AutoValue
-              static class AutoClass {}
+              abstract static class AutoClass {}
             }
 
             // BUG: Diagnostic contains: Do not extend an @AutoValue class in non-generated code.
@@ -287,7 +287,7 @@ public class TestBuilder implements AutoClass.Builder {
             import com.google.auto.value.AutoValue;
 
             @AutoValue
-            class AutoClass {}
+            abstract class AutoClass {}
 
             @SuppressWarnings("ExtendsAutoValue")
             public class TestClass extends AutoClass {}
@@ -304,7 +304,7 @@ public class TestBuilder implements AutoClass.Builder {
             import com.google.auto.value.AutoValue;
 
             @AutoValue
-            class AutoClass {}
+            abstract class AutoClass {}
 
             public class TestClass {
               // BUG: Diagnostic contains: Do not extend an @AutoValue class in non-generated code.
@@ -324,7 +324,7 @@ public class TestBuilder implements AutoClass.Builder {
             import javax.annotation.processing.Generated;
 
             @AutoValue
-            class AutoClass {}
+            abstract class AutoClass {}
 
             @Generated("generator")
             public class TestClass {
