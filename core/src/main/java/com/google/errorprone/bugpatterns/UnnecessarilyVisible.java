@@ -23,9 +23,9 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.removeModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
-import static com.google.errorprone.util.ASTHelpers.findSuperMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -85,7 +85,7 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
     if (annotationsAmong(symbol, FRAMEWORK_ANNOTATIONS.get(state), state).isEmpty()) {
       return NO_MATCH;
     }
-    if (findSuperMethod(symbol, state.getTypes()).isPresent()) {
+    if (streamSuperMethods(symbol, state.getTypes()).findAny().isPresent()) {
       return NO_MATCH;
     }
 

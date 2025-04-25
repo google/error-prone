@@ -35,8 +35,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /**
- * Test cases for {@link ASTHelpers#findSuperMethod(MethodSymbol, Types)} and {@link
- * ASTHelpers#findSuperMethod(MethodSymbol, Types)}.
+ * Test cases for {@link ASTHelpers#findSuperMethods(MethodSymbol, Types)}.
  *
  * @author Łukasz Hanuszczak (hanuszczak@google.com)
  */
@@ -50,14 +49,14 @@ public final class ASTHelpersFindSuperMethodsTest extends CompilerBasedAbstractT
     writeFile(
         "Foo.java",
         """
-        abstract class Foo {
-          public abstract void foo();
+        interface Foo {
+          void foo();
         }
         """);
     writeFile(
         "Bar.java",
         """
-        class Bar extends Foo {
+        class Bar implements Foo {
           @Override
           public void foo() {
             System.out.println("bar");
@@ -167,7 +166,7 @@ public final class ASTHelpersFindSuperMethodsTest extends CompilerBasedAbstractT
   }
 
   private Optional<MethodSymbol> findSuperMethod(MethodSymbol method) {
-    return ASTHelpers.findSuperMethod(method, getTypes());
+    return ASTHelpers.streamSuperMethods(method, getTypes()).findFirst();
   }
 
   private Types getTypes() {

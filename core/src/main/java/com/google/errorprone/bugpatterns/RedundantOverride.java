@@ -20,9 +20,9 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
-import static com.google.errorprone.util.ASTHelpers.findSuperMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -44,6 +44,7 @@ import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Types;
 import java.util.Objects;
 import java.util.Optional;
 import javax.lang.model.element.Modifier;
@@ -58,7 +59,9 @@ public final class RedundantOverride extends BugChecker implements MethodTreeMat
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol methodSymbol = getSymbol(tree);
-    Optional<MethodSymbol> maybeSuperMethod = findSuperMethod(methodSymbol, state.getTypes());
+    Types types = state.getTypes();
+    Optional<MethodSymbol> maybeSuperMethod =
+        streamSuperMethods(methodSymbol, types).filter(t -> !t.owner.isInterface()).findFirst();
     if (!maybeSuperMethod.isPresent()) {
       return NO_MATCH;
     }

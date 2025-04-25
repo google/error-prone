@@ -719,33 +719,15 @@ public class ASTHelpers {
    * including interfaces.
    */
   public static Set<MethodSymbol> findSuperMethods(MethodSymbol methodSymbol, Types types) {
-    return findSuperMethods(methodSymbol, types, /* skipInterfaces= */ false)
-        .collect(toCollection(LinkedHashSet::new));
+    return streamSuperMethods(methodSymbol, types).collect(toCollection(LinkedHashSet::new));
   }
 
   /** See {@link #findSuperMethods(MethodSymbol, Types)}. */
   public static Stream<MethodSymbol> streamSuperMethods(MethodSymbol methodSymbol, Types types) {
-    return findSuperMethods(methodSymbol, types, /* skipInterfaces= */ false);
-  }
-
-  static Stream<MethodSymbol> findSuperMethods(
-      MethodSymbol methodSymbol, Types types, boolean skipInterfaces) {
     TypeSymbol owner = (TypeSymbol) methodSymbol.owner;
-    Stream<Type> typeStream = types.closure(owner.type).stream();
-    if (skipInterfaces) {
-      typeStream = typeStream.filter(type -> !type.isInterface());
-    }
-    return typeStream
+    return types.closure(owner.type).stream()
         .map(type -> findSuperMethodInType(methodSymbol, type, types))
         .filter(Objects::nonNull);
-  }
-
-  /**
-   * Finds (if it exists) first (in the class hierarchy) non-interface super method of given {@code
-   * method}.
-   */
-  public static Optional<MethodSymbol> findSuperMethod(MethodSymbol methodSymbol, Types types) {
-    return findSuperMethods(methodSymbol, types, /* skipInterfaces= */ true).findFirst();
   }
 
   /**

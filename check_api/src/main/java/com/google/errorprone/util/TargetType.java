@@ -21,9 +21,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Streams.findLast;
-import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
@@ -538,9 +538,7 @@ public abstract class TargetType {
       // type of `foo` to be the supermost overload of `bar` which returns something on which we can
       // actually call `baz`, hence the recursion.
       ImmutableSet<MethodSymbol> superMethods =
-          Stream.concat(
-                  Stream.of(ms),
-                  findSuperMethods(ms, state.getTypes(), /* skipInterfaces= */ false))
+          Stream.concat(Stream.of(ms), streamSuperMethods(ms, state.getTypes()))
               .collect(toImmutableSet());
 
       // Performance win: if there are no covariant return types to worry about, fast-path out.
