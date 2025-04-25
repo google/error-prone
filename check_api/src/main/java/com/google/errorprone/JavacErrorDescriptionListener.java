@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
-import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.ImportTree;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic;
@@ -135,7 +135,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   // suggested fix to an ImportTree when the fix reports imports to remove/add. Imports can still
   // be fixed if they were specified via SuggestedFix.replace, for example.
   private static boolean shouldSkipImportTreeFix(DiagnosticPosition position, Fix f) {
-    if (position.getTree() != null && position.getTree().getKind() != Kind.IMPORT) {
+    if (position.getTree() != null && !(position.getTree() instanceof ImportTree)) {
       return false;
     }
 

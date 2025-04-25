@@ -101,7 +101,7 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
 
   @Override
   public Description matchIf(IfTree tree, VisitorState state) {
-    if (state.getPath().getParentPath().getLeaf().getKind() == Kind.IF) {
+    if (state.getPath().getParentPath().getLeaf() instanceof IfTree) {
       return NO_MATCH;
     }
     List<String> stringConstants = new ArrayList<>();
@@ -142,7 +142,7 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
         return NO_MATCH;
       }
       stringConstants.add(expressionForCase);
-      if (ifTree.getThenStatement().getKind() == Kind.BLOCK) {
+      if (ifTree.getThenStatement() instanceof BlockTree) {
         branches.add((JCBlock) ifTree.getThenStatement());
       } else {
         TreeMaker maker = TreeMaker.instance(state.context);

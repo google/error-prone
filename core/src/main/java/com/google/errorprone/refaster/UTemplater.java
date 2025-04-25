@@ -167,10 +167,9 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
 
     List<? extends StatementTree> bodyStatements = decl.getBody().getStatements();
     if (bodyStatements.size() == 1
-        && Iterables.getOnlyElement(bodyStatements).getKind() == Kind.RETURN
+        && Iterables.getOnlyElement(bodyStatements) instanceof ReturnTree returnTree
         && context.get(REQUIRE_BLOCK_KEY) == null) {
-      ExpressionTree expression =
-          ((ReturnTree) Iterables.getOnlyElement(bodyStatements)).getExpression();
+      ExpressionTree expression = returnTree.getExpression();
       return ExpressionTemplate.create(
           annotations,
           typeParameters,

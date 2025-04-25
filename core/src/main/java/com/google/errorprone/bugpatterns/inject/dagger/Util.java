@@ -32,7 +32,6 @@ import static com.google.errorprone.util.ASTHelpers.createPrivateConstructor;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.sun.source.tree.Tree.Kind.INTERFACE;
-import static com.sun.source.tree.Tree.Kind.METHOD;
 import static java.util.Arrays.asList;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 import static javax.lang.model.element.Modifier.FINAL;
@@ -195,12 +194,12 @@ final class Util {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     String indent = "  ";
     for (Tree member : classTree.getMembers()) {
-      if (member.getKind().equals(METHOD) && !isGeneratedConstructor((MethodTree) member)) {
+      if (member instanceof MethodTree methodTree && !isGeneratedConstructor(methodTree)) {
         fix.prefixWith(
             member, indent + createPrivateConstructor(classTree) + " // no instances\n" + indent);
         break;
       }
-      if (!member.getKind().equals(METHOD)) {
+      if (!(member instanceof MethodTree)) {
         indent = "";
       }
     }

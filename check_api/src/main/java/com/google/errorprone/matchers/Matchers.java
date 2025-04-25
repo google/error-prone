@@ -658,8 +658,7 @@ public class Matchers {
 
   public static Matcher<ExpressionTree> classLiteral(Matcher<? super ExpressionTree> classMatcher) {
     return (tree, state) -> {
-      if (tree.getKind() == Kind.MEMBER_SELECT) {
-        MemberSelectTree select = (MemberSelectTree) tree;
+      if (tree instanceof MemberSelectTree select) {
         return select.getIdentifier().contentEquals("class")
             && classMatcher.matches(select.getExpression(), state);
       }

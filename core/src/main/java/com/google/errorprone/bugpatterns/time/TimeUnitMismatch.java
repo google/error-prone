@@ -264,11 +264,10 @@ public final class TimeUnitMismatch extends BugChecker
   @CanIgnoreReturnValue
   private boolean checkTimeUnitToUnit(
       MethodInvocationTree tree, MethodSymbol methodSymbol, VisitorState state) {
-    if (tree.getMethodSelect().getKind() != MEMBER_SELECT) {
+    if (!(tree.getMethodSelect() instanceof MemberSelectTree memberSelect)) {
       return false;
     }
 
-    MemberSelectTree memberSelect = (MemberSelectTree) tree.getMethodSelect();
     Symbol receiverSymbol = getSymbol(memberSelect.getExpression());
     if (receiverSymbol == null) {
       return false;

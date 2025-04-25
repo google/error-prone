@@ -45,7 +45,6 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
@@ -101,7 +100,7 @@ public class JUnitParameterMethodNotFound extends BugChecker implements MethodTr
 
     ImmutableList<? extends AssignmentTree> annotationsArguments =
         parametersAnnotation.get().getArguments().stream()
-            .filter(expressionTree -> expressionTree.getKind() == Kind.ASSIGNMENT)
+            .filter(expressionTree -> expressionTree instanceof AssignmentTree)
             .map(expressionTree -> (AssignmentTree) expressionTree)
             .collect(toImmutableList());
 

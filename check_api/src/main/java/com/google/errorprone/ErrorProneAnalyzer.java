@@ -220,7 +220,7 @@ public class ErrorProneAnalyzer implements TaskListener {
       if (shouldExcludeSourceFile(compilation)) {
         return;
       }
-      if (path.getLeaf().getKind() == Tree.Kind.COMPILATION_UNIT) {
+      if (path.getLeaf() instanceof CompilationUnitTree) {
         // We only get TaskEvents for compilation units if they contain no package declarations
         // (e.g. package-info.java files).  In this case it's safe to analyze the
         // CompilationUnitTree immediately.

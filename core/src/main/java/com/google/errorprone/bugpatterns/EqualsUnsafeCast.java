@@ -31,11 +31,11 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
@@ -86,7 +86,7 @@ public final class EqualsUnsafeCast extends BugChecker implements MethodTreeMatc
       public Void visitTypeCast(TypeCastTree node, Void unused) {
         ExpressionTree expression = node.getExpression();
         if (!methodInvoked
-            && expression.getKind() == Kind.IDENTIFIER
+            && expression instanceof IdentifierTree
             && parameter.equals(getSymbol(expression))
             && checkedTypes.stream().noneMatch(t -> isSubtype(t, getType(node.getType()), state))) {
           StatementTree enclosingStatement =

@@ -28,6 +28,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
@@ -62,7 +63,7 @@ public final class ReturnAtTheEndOfVoidFunction extends BugChecker implements Me
 
     // last statement is a return
     StatementTree lastStatement = Iterables.getLast(statements);
-    if (lastStatement.getKind() != StatementTree.Kind.RETURN) {
+    if (!(lastStatement instanceof ReturnTree)) {
       return NO_MATCH;
     }
 

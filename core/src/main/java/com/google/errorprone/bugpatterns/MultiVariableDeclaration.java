@@ -69,7 +69,7 @@ public class MultiVariableDeclaration extends BugChecker
   private Description checkDeclarations(List<? extends Tree> children, VisitorState state) {
     PeekingIterator<Tree> it = Iterators.<Tree>peekingIterator(children.iterator());
     while (it.hasNext()) {
-      if (it.peek().getKind() != Tree.Kind.VARIABLE) {
+      if (!(it.peek() instanceof VariableTree)) {
         it.next();
         continue;
       }
@@ -81,7 +81,7 @@ public class MultiVariableDeclaration extends BugChecker
       // declaration in the group, which is either the first variable declared in this scope or has
       // a distinct end position from the previous declaration.
       while (it.hasNext()
-          && it.peek().getKind() == Tree.Kind.VARIABLE
+          && it.peek() instanceof VariableTree
           && getStartPosition(variableTree) == getStartPosition(it.peek())) {
         fragments.add((JCVariableDecl) it.next());
       }

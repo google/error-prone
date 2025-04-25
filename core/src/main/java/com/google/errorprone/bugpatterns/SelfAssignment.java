@@ -20,9 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.sun.source.tree.Tree.Kind.CLASS;
-import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
-import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
-import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
 import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.common.base.Preconditions;
@@ -38,11 +35,11 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
@@ -74,9 +71,6 @@ public class SelfAssignment extends BugChecker
 
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
-    if (!tree.getKind().equals(Kind.ASSIGNMENT)) {
-      return Description.NO_MATCH;
-    }
     // TODO(cushon): consider handling assignment expressions too, i.e. `x = y = x`
     ExpressionTree expression = skipCast(stripNullCheck(tree.getExpression(), state));
     if (ASTHelpers.sameVariable(tree.getVariable(), expression)) {
@@ -92,13 +86,12 @@ public class SelfAssignment extends BugChecker
 
     // must be a static class variable with member select initializer
     if (initializer == null
-        || initializer.getKind() != MEMBER_SELECT
+        || !(initializer instanceof MemberSelectTree rhs)
         || parent.getKind() != CLASS
         || !tree.getModifiers().getFlags().contains(STATIC)) {
       return Description.NO_MATCH;
     }
 
-    MemberSelectTree rhs = (MemberSelectTree) initializer;
     Symbol rhsClass = ASTHelpers.getSymbol(rhs.getExpression());
     Symbol lhsClass = ASTHelpers.getSymbol(parent);
     if (rhsClass != null
@@ -134,8 +127,7 @@ public class SelfAssignment extends BugChecker
    * otherwise returns that parameter.
    */
   private static ExpressionTree stripNullCheck(ExpressionTree expression, VisitorState state) {
-    if (expression != null && expression.getKind() == METHOD_INVOCATION) {
-      MethodInvocationTree methodInvocation = (MethodInvocationTree) expression;
+    if (expression != null && expression instanceof MethodInvocationTree methodInvocation) {
       if (NON_NULL_MATCHER.matches(methodInvocation, state)) {
         return methodInvocation.getArguments().get(0);
       }
@@ -183,7 +175,7 @@ public class SelfAssignment extends BugChecker
     ExpressionTree rhs = assignmentTree.getExpression();
 
     // if this is a method invocation, they must be calling checkNotNull()
-    if (assignmentTree.getExpression().getKind() == METHOD_INVOCATION) {
+    if (assignmentTree.getExpression() instanceof MethodInvocationTree) {
       // change the default fix to be "checkNotNull(x)" instead of "x = checkNotNull(x)"
       fix = SuggestedFix.replace(assignmentTree, state.getSourceForNode(rhs));
       // new rhs is first argument to checkNotNull()
@@ -192,21 +184,21 @@ public class SelfAssignment extends BugChecker
     rhs = skipCast(rhs);
 
     ImmutableList<Fix> exploratoryFieldFixes = ImmutableList.of();
-    if (lhs.getKind() == MEMBER_SELECT) {
+    if (lhs instanceof MemberSelectTree) {
       // find a method parameter of the same type and similar name and suggest it
       // as the rhs
 
       // rhs should be either identifier or field access
-      Preconditions.checkState(rhs.getKind() == IDENTIFIER || rhs.getKind() == MEMBER_SELECT);
+      Preconditions.checkState(rhs instanceof IdentifierTree || rhs instanceof MemberSelectTree);
 
       Type rhsType = ASTHelpers.getType(rhs);
       exploratoryFieldFixes =
           ReplacementVariableFinder.fixesByReplacingExpressionWithMethodParameter(
               rhs, varDecl -> ASTHelpers.isSameType(rhsType, varDecl.type, state), state);
-    } else if (rhs.getKind() == IDENTIFIER) {
+    } else if (rhs instanceof IdentifierTree) {
       // find a field of the same type and similar name and suggest it as the lhs
       // lhs should be identifier
-      Preconditions.checkState(lhs.getKind() == IDENTIFIER);
+      Preconditions.checkState(lhs instanceof IdentifierTree);
 
       Type lhsType = ASTHelpers.getType(lhs);
       exploratoryFieldFixes =

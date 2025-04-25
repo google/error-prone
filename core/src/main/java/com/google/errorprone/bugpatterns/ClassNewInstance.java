@@ -115,11 +115,11 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
       // earlier catch blocks are left unchanged.
       CatchTree last = Iterables.getLast(tryTree.getCatches());
       Tree lastType = last.getParameter().getType();
-      if (lastType.getKind() == Tree.Kind.UNION_TYPE) {
+      if (lastType instanceof UnionTypeTree unionTypeTree) {
         Type roe = state.getTypeFromString(ReflectiveOperationException.class.getName());
         Set<String> exceptions = new LinkedHashSet<>();
         boolean foundReflective = false;
-        for (Tree alternate : ((UnionTypeTree) lastType).getTypeAlternatives()) {
+        for (Tree alternate : unionTypeTree.getTypeAlternatives()) {
           if (ASTHelpers.isSubtype(ASTHelpers.getType(alternate), roe, state)) {
             foundReflective = true;
             exceptions.add("ReflectiveOperationException");

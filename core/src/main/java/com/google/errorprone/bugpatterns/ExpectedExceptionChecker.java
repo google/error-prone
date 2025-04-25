@@ -54,7 +54,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -278,7 +277,7 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
     fixPrefix.append(String.format("(%s.class, () -> ", exceptionTypeName));
     boolean useExpressionLambda =
         throwingStatements.size() == 1
-            && getOnlyElement(throwingStatements).getKind() == Kind.EXPRESSION_STATEMENT;
+            && getOnlyElement(throwingStatements) instanceof ExpressionStatementTree;
     if (!useExpressionLambda) {
       fixPrefix.append("{");
     }

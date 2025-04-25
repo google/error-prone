@@ -24,8 +24,8 @@ import static com.google.errorprone.matchers.Matchers.isType;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import java.util.ArrayList;
 import java.util.List;
@@ -470,7 +470,7 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
           public Void visitAnnotation(AnnotationTree node, VisitorState visitorState) {
             TreePath currPath = getCurrentPath().getParentPath();
             Tree parent = currPath.getLeaf();
-            if (parent.getKind() == Kind.MODIFIERS) {
+            if (parent instanceof ModifiersTree) {
               currPath = currPath.getParentPath();
               parent = currPath.getLeaf();
             }

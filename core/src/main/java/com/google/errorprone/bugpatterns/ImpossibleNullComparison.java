@@ -51,7 +51,9 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ParenthesizedTree;
@@ -304,7 +306,7 @@ public final class ImpossibleNullComparison extends BugChecker
     }
 
     private @Nullable ExpressionTree getEffectiveTree(ExpressionTree tree) {
-      return tree.getKind() == Kind.IDENTIFIER
+      return tree instanceof IdentifierTree
           ? effectivelyFinalValues.getOrDefault(ASTHelpers.getSymbol(tree), tree)
           : tree;
     }
@@ -446,10 +448,9 @@ public final class ImpossibleNullComparison extends BugChecker
         if (!PROTO_RECEIVER.matches(tree, state)) {
           return null;
         }
-        if (tree.getKind() != Kind.METHOD_INVOCATION) {
+        if (!(tree instanceof MethodInvocationTree method)) {
           return null;
         }
-        MethodInvocationTree method = (MethodInvocationTree) tree;
         if (!method.getArguments().isEmpty()) {
           return null;
         }
@@ -494,10 +495,9 @@ public final class ImpossibleNullComparison extends BugChecker
         if (!PROTO_RECEIVER.matches(tree, state)) {
           return null;
         }
-        if (tree.getKind() != Kind.METHOD_INVOCATION) {
+        if (!(tree instanceof MethodInvocationTree method)) {
           return null;
         }
-        MethodInvocationTree method = (MethodInvocationTree) tree;
         if (method.getArguments().size() != 1 || !isGetter(method.getMethodSelect())) {
           return null;
         }
@@ -527,10 +527,9 @@ public final class ImpossibleNullComparison extends BugChecker
         if (!PROTO_RECEIVER.matches(tree, state)) {
           return null;
         }
-        if (tree.getKind() != Kind.METHOD_INVOCATION) {
+        if (!(tree instanceof MethodInvocationTree method)) {
           return null;
         }
-        MethodInvocationTree method = (MethodInvocationTree) tree;
         if (!method.getArguments().isEmpty()) {
           return null;
         }
@@ -669,7 +668,7 @@ public final class ImpossibleNullComparison extends BugChecker
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
         MethodInvocationTree methodInvocationTree = (MethodInvocationTree) tree;
         Tree parent = state.getPath().getParentPath().getLeaf();
-        return parent.getKind() == Kind.EXPRESSION_STATEMENT
+        return parent instanceof ExpressionStatementTree
             ? SuggestedFix.delete(parent)
             : SuggestedFix.replace(
                 tree, state.getSourceForNode(methodInvocationTree.getArguments().get(0)));

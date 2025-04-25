@@ -22,7 +22,6 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 import static com.sun.source.tree.Tree.Kind.CONDITIONAL_AND;
 import static com.sun.source.tree.Tree.Kind.CONDITIONAL_OR;
-import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -231,7 +230,7 @@ public class InfiniteRecursion extends BugChecker implements MethodTreeMatcher {
 
   private static boolean isCallOnThisObject(MethodInvocationTree invocation) {
     ExpressionTree select = invocation.getMethodSelect();
-    return select.getKind() == IDENTIFIER || isThis(((MemberSelectTree) select).getExpression());
+    return select instanceof IdentifierTree || isThis(((MemberSelectTree) select).getExpression());
   }
 
   // TODO(b/236055787): Share code with various checks that look for "return this."

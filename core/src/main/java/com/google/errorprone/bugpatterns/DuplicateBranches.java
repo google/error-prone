@@ -33,7 +33,6 @@ import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Both branches contain identical code", severity = WARNING)
@@ -74,7 +73,7 @@ public class DuplicateBranches extends BugChecker
     int end = state.getEndPosition(elseTree);
     boolean needsBraces = false;
     if (elseTree instanceof BlockTree blockTree) {
-      needsBraces = !state.getPath().getParentPath().getLeaf().getKind().equals(Kind.BLOCK);
+      needsBraces = !(state.getPath().getParentPath().getLeaf() instanceof BlockTree);
       var statements = blockTree.getStatements();
       if (statements.isEmpty()) {
         start = end;

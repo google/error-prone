@@ -27,11 +27,6 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
-import static com.sun.source.tree.Tree.Kind.BLOCK;
-import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
-import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
-import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
-import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
 import static java.lang.String.format;
 
 import com.google.common.base.Joiner;
@@ -45,6 +40,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -175,23 +171,22 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
    * fail*} method.
    */
   private static boolean isCallToFail(StatementTree then, VisitorState state) {
-    while (then.getKind() == BLOCK) {
+    while (then instanceof BlockTree) {
       List<? extends StatementTree> statements = ((BlockTree) then).getStatements();
       if (statements.size() != 1) {
         return false;
       }
       then = getOnlyElement(statements);
     }
-    if (then.getKind() != EXPRESSION_STATEMENT) {
+    if (!(then instanceof ExpressionStatementTree)) {
       return false;
     }
     ExpressionTree thenExpr = ((ExpressionStatementTree) then).getExpression();
-    if (thenExpr.getKind() != METHOD_INVOCATION) {
+    if (!(thenExpr instanceof MethodInvocationTree thenCall)) {
       return false;
     }
-    MethodInvocationTree thenCall = (MethodInvocationTree) thenExpr;
     ExpressionTree methodSelect = thenCall.getMethodSelect();
-    if (methodSelect.getKind() != IDENTIFIER) {
+    if (!(methodSelect instanceof IdentifierTree)) {
       return false;
       // TODO(cpovirk): Handle "this.fail*(...)," etc.
     }
@@ -213,18 +208,16 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
      * since the actual value is almost always an invocation on actual() and the expected value is
      * almost always a parameter.
      */
-    if (actual.getKind() != METHOD_INVOCATION) {
+    if (!(actual instanceof MethodInvocationTree invocation)) {
       return null;
     }
 
     Deque<String> parts = new ArrayDeque<>();
-    MethodInvocationTree invocation = (MethodInvocationTree) actual;
     while (true) {
       ExpressionTree methodSelect = invocation.getMethodSelect();
-      if (methodSelect.getKind() != MEMBER_SELECT) {
+      if (!(methodSelect instanceof MemberSelectTree memberSelect)) {
         return null;
       }
-      MemberSelectTree memberSelect = (MemberSelectTree) methodSelect;
 
       if (!invocation.getArguments().isEmpty()) {
         // TODO(cpovirk): Handle invocations with arguments.
@@ -236,10 +229,10 @@ public final class ImplementAssertionWithChaining extends BugChecker implements 
       if (ACTUAL_METHOD.matches(expression, state) || refersToFieldNamedActual(expression)) {
         return '"' + Joiner.on('.').join(parts) + '"';
       }
-      if (expression.getKind() != METHOD_INVOCATION) {
+      if (!(expression instanceof MethodInvocationTree methodInvocationTree)) {
         return null;
       }
-      invocation = (MethodInvocationTree) expression;
+      invocation = methodInvocationTree;
     }
   }
 

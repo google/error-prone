@@ -40,12 +40,12 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
-import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import java.util.List;
 import javax.inject.Inject;
@@ -286,7 +286,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
       return true;
     }
     return (defaultStatements.size() == 1
-        && getOnlyElement(defaultStatements).getKind() == Tree.Kind.BREAK);
+        && getOnlyElement(defaultStatements) instanceof BreakTree);
   }
 
   private static SetView<String> unhandledCases(SwitchTree tree, TypeSymbol switchType) {

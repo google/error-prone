@@ -27,7 +27,6 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
-import static com.sun.source.tree.Tree.Kind.METHOD;
 import static javax.lang.model.element.ElementKind.LOCAL_VARIABLE;
 
 import com.google.common.collect.ImmutableList;
@@ -112,7 +111,7 @@ public class VoidMissingNullable extends BugChecker
    */
   private static boolean isInNullMarkedScope(VisitorState state) {
     for (Tree tree : state.getPath()) {
-      if (tree.getKind().asInterface().equals(ClassTree.class) || tree.getKind() == METHOD) {
+      if (tree.getKind().asInterface().equals(ClassTree.class) || tree instanceof MethodTree) {
         Symbol enclosingElement = getSymbol(tree);
         return NullnessUtils.isInNullMarkedScope(enclosingElement, state);
       }

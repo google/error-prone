@@ -38,7 +38,6 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
@@ -131,12 +130,12 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
   // is required.
   private static @Nullable String valueArgumentFromCompatibleWithAnnotation(AnnotationTree tree) {
     ExpressionTree argumentValue = Iterables.getOnlyElement(tree.getArguments());
-    if (argumentValue.getKind() != Kind.ASSIGNMENT) {
+    if (!(argumentValue instanceof AssignmentTree assignmentTree)) {
       // :-| Annotation symbol broken. Punt?
       return null;
     }
 
-    return ASTHelpers.constValue(((AssignmentTree) argumentValue).getExpression(), String.class);
+    return ASTHelpers.constValue(assignmentTree.getExpression(), String.class);
   }
 
   private static String printTypeArgs(Set<String> validNames) {

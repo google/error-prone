@@ -24,9 +24,9 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 
@@ -39,7 +39,7 @@ public class UnusedAnonymousClass extends BugChecker implements NewClassTreeMatc
   // (2) and has no instance initializer blocks or field initializers
   @Override
   public Description matchNewClass(NewClassTree newClassTree, VisitorState state) {
-    if (state.getPath().getParentPath().getLeaf().getKind() != Kind.EXPRESSION_STATEMENT) {
+    if (!(state.getPath().getParentPath().getLeaf() instanceof ExpressionStatementTree)) {
       return Description.NO_MATCH;
     }
     if (newClassTree.getClassBody() == null) {

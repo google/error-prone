@@ -28,8 +28,6 @@ import static com.google.errorprone.bugpatterns.inject.dagger.Util.makeConcreteC
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
-import static com.sun.source.tree.Tree.Kind.RETURN;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -85,10 +83,10 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
           }
           StatementTree onlyStatement = Iterables.getOnlyElement(statements);
 
-          if (!onlyStatement.getKind().equals(RETURN)) {
+          if (!(onlyStatement instanceof ReturnTree returnTree)) {
             return false;
           }
-          Symbol returnedSymbol = getSymbol(((ReturnTree) onlyStatement).getExpression());
+          Symbol returnedSymbol = getSymbol(returnTree.getExpression());
           if (returnedSymbol == null) {
             return false;
           }
@@ -118,8 +116,7 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
     }
 
     for (Tree member : enclosingClass.getMembers()) {
-      if (member.getKind().equals(Tree.Kind.METHOD) && !getSymbol(member).isConstructor()) {
-        MethodTree siblingMethod = (MethodTree) member;
+      if (member instanceof MethodTree siblingMethod && !getSymbol(member).isConstructor()) {
         Set<Modifier> siblingFlags = siblingMethod.getModifiers().getFlags();
         if (!(siblingFlags.contains(Modifier.STATIC) || siblingFlags.contains(Modifier.ABSTRACT))
             && !CAN_BE_A_BINDS_METHOD.matches(siblingMethod, state)) {
@@ -157,7 +154,7 @@ public class UseBinds extends BugChecker implements MethodTreeMatcher {
         List<? extends ExpressionTree> arguments = annotation.getArguments();
         if (!arguments.isEmpty()) {
           ExpressionTree argument = Iterables.getOnlyElement(arguments);
-          checkState(argument.getKind().equals(ASSIGNMENT));
+          checkState(argument instanceof AssignmentTree);
           AssignmentTree assignment = (AssignmentTree) argument;
           checkState(getSymbol(assignment.getVariable()).getSimpleName().contentEquals("type"));
           String typeName = getSymbol(assignment.getExpression()).getSimpleName().toString();

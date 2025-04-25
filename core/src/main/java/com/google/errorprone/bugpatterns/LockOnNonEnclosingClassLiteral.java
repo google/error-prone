@@ -59,9 +59,7 @@ public class LockOnNonEnclosingClassLiteral extends BugChecker implements Synchr
   }
 
   private static boolean isClassLiteral(Tree tree) {
-    if (tree.getKind() != Tree.Kind.MEMBER_SELECT) {
-      return false;
-    }
-    return ((MemberSelectTree) tree).getIdentifier().contentEquals("class");
+    return tree instanceof MemberSelectTree memberSelectTree
+        && memberSelectTree.getIdentifier().contentEquals("class");
   }
 }

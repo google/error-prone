@@ -42,7 +42,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -113,8 +112,8 @@ public class OrphanedFormatString extends BugChecker implements LiteralTreeMatch
 
     // If someone has added new API methods to a subtype of the commonly-misused classes, we can
     // check to see if they made it @FormatMethod and the format-string slots in correctly.
-    if (methodInvocation.getKind() == Kind.METHOD_INVOCATION
-        && literalIsFormatMethodArg(tree, (MethodInvocationTree) methodInvocation, state)) {
+    if (methodInvocation instanceof MethodInvocationTree methodInvocationTree
+        && literalIsFormatMethodArg(tree, methodInvocationTree, state)) {
       return NO_MATCH;
     }
 

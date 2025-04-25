@@ -84,10 +84,9 @@ abstract class UIf implements UStatement, IfTree {
     ImmutableList<? extends StatementTree> unconsumedStatementsTail =
         unconsumedStatements.subList(1, unconsumedStatements.size());
     StatementTree firstStatement = unconsumedStatements.get(0);
-    if (firstStatement.getKind() != Kind.IF) {
+    if (!(firstStatement instanceof IfTree ifTree)) {
       return Choice.none();
     }
-    IfTree ifTree = (IfTree) firstStatement;
     Unifier unifier = state.unifier();
     Choice<UnifierWithUnconsumedStatements> forwardMatch =
         getCondition()

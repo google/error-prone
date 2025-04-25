@@ -30,7 +30,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 
@@ -80,10 +79,10 @@ public final class UnnecessaryOptionalGet extends BugChecker
       return Description.NO_MATCH;
     }
     ExpressionTree onlyArg = getOnlyElement(tree.getArguments());
-    if (!onlyArg.getKind().equals(Kind.LAMBDA_EXPRESSION)) {
+    if (!(onlyArg instanceof LambdaExpressionTree lambdaExpressionTree)) {
       return Description.NO_MATCH;
     }
-    VariableTree arg = getOnlyElement(((LambdaExpressionTree) onlyArg).getParameters());
+    VariableTree arg = getOnlyElement(lambdaExpressionTree.getParameters());
     SuggestedFix.Builder fix = SuggestedFix.builder();
     new TreeScanner<Void, VisitorState>() {
       @Override

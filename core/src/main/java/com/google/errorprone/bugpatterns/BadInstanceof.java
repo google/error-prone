@@ -30,6 +30,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 
@@ -74,8 +75,7 @@ public final class BadInstanceof extends BugChecker implements InstanceOfTreeMat
   private static SuggestedFix getFix(InstanceOfTree tree, VisitorState state) {
     Tree parent = state.getPath().getParentPath().getLeaf();
     Tree grandParent = state.getPath().getParentPath().getParentPath().getLeaf();
-    if (parent.getKind() == Kind.PARENTHESIZED
-        && grandParent.getKind() == Kind.LOGICAL_COMPLEMENT) {
+    if (parent instanceof ParenthesizedTree && grandParent.getKind() == Kind.LOGICAL_COMPLEMENT) {
       return SuggestedFix.replace(
           grandParent, state.getSourceForNode(tree.getExpression()) + " == null");
     }

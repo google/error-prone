@@ -30,7 +30,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refaster.PlaceholderMethod.PlaceholderExpressionKey;
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
 import com.google.errorprone.refaster.annotation.NoAutoboxing;
-import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.ModifiersTree;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -299,7 +299,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
            */
           int endPos = endPositions.getEndPos(tree);
           boolean hasRealEndPosition = endPos != Position.NOPOS;
-          if (tree.getKind() != Kind.MODIFIERS && hasRealEndPosition) {
+          if (!(tree instanceof ModifiersTree) && hasRealEndPosition) {
             writer.append(unitContents.substring(tree.getStartPosition(), endPos));
           } else {
             super.printExpr(tree, prec);

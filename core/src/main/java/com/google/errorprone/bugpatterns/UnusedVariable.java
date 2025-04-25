@@ -90,7 +90,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
@@ -446,11 +445,10 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         SuggestedFix.builder().setShortDescription("remove unused variable and any side effects");
     for (TreePath usagePath : usagePaths) {
       StatementTree statement = (StatementTree) usagePath.getLeaf();
-      if (statement.getKind() == Kind.VARIABLE) {
+      if (statement instanceof VariableTree variableTree) {
         if (getSymbol(statement).getKind() == ElementKind.PARAMETER) {
           continue;
         }
-        VariableTree variableTree = (VariableTree) statement;
         ExpressionTree initializer = variableTree.getInitializer();
         if (hasSideEffect(initializer) && TOP_LEVEL_EXPRESSIONS.contains(initializer.getKind())) {
           encounteredSideEffects = true;
@@ -497,8 +495,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
               SuggestedFixes.replaceIncludingComments(usagePath, replacement, state));
         }
         continue;
-      } else if (statement.getKind() == Kind.EXPRESSION_STATEMENT) {
-        JCTree tree = (JCTree) ((ExpressionStatementTree) statement).getExpression();
+      } else if (statement instanceof ExpressionStatementTree expressionStatementTree) {
+        JCTree tree = (JCTree) expressionStatementTree.getExpression();
 
         if (tree instanceof CompoundAssignmentTree compoundAssignmentTree) {
           if (hasSideEffect(compoundAssignmentTree.getExpression())) {
@@ -859,7 +857,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
     private boolean isInExpressionStatementTree() {
       Tree parent = getCurrentPath().getParentPath().getLeaf();
-      return parent != null && parent.getKind() == Kind.EXPRESSION_STATEMENT;
+      return parent instanceof ExpressionStatementTree;
     }
 
     private boolean isUsed(@Nullable Symbol symbol) {
@@ -941,7 +939,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (!(parent instanceof StatementTree)) {
         return;
       }
-      if (tree.getVariable().getKind() != Kind.IDENTIFIER) {
+      if (!(tree.getVariable() instanceof IdentifierTree)) {
         return;
       }
       if (ASTHelpers.findEnclosingNode(getCurrentPath(), ForLoopTree.class) != null) {

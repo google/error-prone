@@ -258,8 +258,8 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
     }
 
     private static Tree stripTypeParameters(Tree tree) {
-      return tree.getKind().equals(Kind.PARAMETERIZED_TYPE)
-          ? ((ParameterizedTypeTree) tree).getType()
+      return tree instanceof ParameterizedTypeTree parameterizedTypeTree
+          ? parameterizedTypeTree.getType()
           : tree;
     }
   }

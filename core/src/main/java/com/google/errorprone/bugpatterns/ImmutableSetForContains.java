@@ -54,7 +54,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
@@ -103,7 +102,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
   public Description matchClass(ClassTree tree, VisitorState state) {
     ImmutableSet<VariableTree> immutableListVar =
         tree.getMembers().stream()
-            .filter(member -> member.getKind().equals(Kind.VARIABLE))
+            .filter(member -> member instanceof VariableTree)
             .map(VariableTree.class::cast)
             // TODO(ashishkedia) : Expand to non-static vars with simple init in constructors.
             .filter(
@@ -156,13 +155,11 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
       Optional<ExpressionTree> rootExpr =
           getRootMethod((MethodInvocationTree) var.getInitializer(), state);
       if (rootExpr.isPresent()) {
-        if (rootExpr.get().getKind().equals(Kind.METHOD_INVOCATION)) {
-          MethodInvocationTree methodTree = (MethodInvocationTree) rootExpr.get();
+        if (rootExpr.get() instanceof MethodInvocationTree methodTree) {
           fix.replace(getReceiver(methodTree), "ImmutableSet");
           return fix.build();
         }
-        if (rootExpr.get().getKind().equals(Kind.NEW_CLASS)) {
-          NewClassTree ctorTree = (NewClassTree) rootExpr.get();
+        if (rootExpr.get() instanceof NewClassTree ctorTree) {
           fix.replace(stripParameters(ctorTree.getIdentifier()), "ImmutableSet.Builder");
         }
         return fix.build();
@@ -175,8 +172,8 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
   }
 
   private static Tree stripParameters(Tree tree) {
-    return tree.getKind().equals(Kind.PARAMETERIZED_TYPE)
-        ? ((ParameterizedTypeTree) tree).getType()
+    return tree instanceof ParameterizedTypeTree parameterizedTypeTree
+        ? parameterizedTypeTree.getType()
         : tree;
   }
 

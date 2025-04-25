@@ -44,7 +44,6 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreeScanner;
@@ -181,61 +180,56 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
     }
     if (!seenResults.contains(ComparisonResult.ZERO)) {
       if (tree.getBody().getStatements().size() == 1
-          && tree.getBody().getStatements().get(0).getKind() == Kind.RETURN) {
-        ReturnTree returnTree = (ReturnTree) tree.getBody().getStatements().get(0);
-        if (returnTree.getExpression().getKind() == Kind.CONDITIONAL_EXPRESSION) {
-          ConditionalExpressionTree condTree =
-              (ConditionalExpressionTree) returnTree.getExpression();
-          ExpressionTree conditionExpr = condTree.getCondition();
-          conditionExpr = ASTHelpers.stripParentheses(conditionExpr);
-          if (!(conditionExpr instanceof BinaryTree binaryExpr)) {
-            return describeMatch(tree);
-          }
-          ComparisonResult trueConst = condTree.getTrueExpression().accept(CONSTANT_VISITOR, state);
-          ComparisonResult falseConst =
-              condTree.getFalseExpression().accept(CONSTANT_VISITOR, state);
-          boolean trueFirst;
-          if (trueConst == ComparisonResult.NEGATIVE_CONSTANT
-              && falseConst == ComparisonResult.POSITIVE_CONSTANT) {
-            trueFirst = true;
-          } else if (trueConst == ComparisonResult.POSITIVE_CONSTANT
-              && falseConst == ComparisonResult.NEGATIVE_CONSTANT) {
-            trueFirst = false;
-          } else {
-            return describeMatch(tree);
-          }
-          switch (conditionExpr.getKind()) {
-            case LESS_THAN, LESS_THAN_EQUAL -> {}
-            case GREATER_THAN, GREATER_THAN_EQUAL -> trueFirst = !trueFirst;
-            default -> {
-              return describeMatch(tree);
-            }
-          }
-          Type ty = ASTHelpers.getType(binaryExpr.getLeftOperand());
-          Types types = state.getTypes();
-          Symtab symtab = state.getSymtab();
-
-          ExpressionTree first =
-              trueFirst ? binaryExpr.getLeftOperand() : binaryExpr.getRightOperand();
-          ExpressionTree second =
-              trueFirst ? binaryExpr.getRightOperand() : binaryExpr.getLeftOperand();
-
-          String compareType;
-          if (types.isSameType(ty, symtab.intType)) {
-            compareType = "Integer";
-          } else if (types.isSameType(ty, symtab.longType)) {
-            compareType = "Long";
-          } else {
-            return describeMatch(tree);
-          }
-          return describeMatch(
-              condTree,
-              SuggestedFix.replace(
-                  condTree,
-                  String.format(
-                      "%s.compare(%s, %s)",
-                      compareType, state.getSourceForNode(first), state.getSourceForNode(second))));
+          && tree.getBody().getStatements().get(0) instanceof ReturnTree returnTree
+          && returnTree.getExpression() instanceof ConditionalExpressionTree condTree) {
+        ExpressionTree conditionExpr = condTree.getCondition();
+        conditionExpr = ASTHelpers.stripParentheses(conditionExpr);
+        if (!(conditionExpr instanceof BinaryTree binaryExpr)) {
+          return describeMatch(tree);
         }
+        ComparisonResult trueConst = condTree.getTrueExpression().accept(CONSTANT_VISITOR, state);
+        ComparisonResult falseConst = condTree.getFalseExpression().accept(CONSTANT_VISITOR, state);
+        boolean trueFirst;
+        if (trueConst == ComparisonResult.NEGATIVE_CONSTANT
+            && falseConst == ComparisonResult.POSITIVE_CONSTANT) {
+          trueFirst = true;
+        } else if (trueConst == ComparisonResult.POSITIVE_CONSTANT
+            && falseConst == ComparisonResult.NEGATIVE_CONSTANT) {
+          trueFirst = false;
+        } else {
+          return describeMatch(tree);
+        }
+        switch (conditionExpr.getKind()) {
+          case LESS_THAN, LESS_THAN_EQUAL -> {}
+          case GREATER_THAN, GREATER_THAN_EQUAL -> trueFirst = !trueFirst;
+          default -> {
+            return describeMatch(tree);
+          }
+        }
+        Type ty = ASTHelpers.getType(binaryExpr.getLeftOperand());
+        Types types = state.getTypes();
+        Symtab symtab = state.getSymtab();
+
+        ExpressionTree first =
+            trueFirst ? binaryExpr.getLeftOperand() : binaryExpr.getRightOperand();
+        ExpressionTree second =
+            trueFirst ? binaryExpr.getRightOperand() : binaryExpr.getLeftOperand();
+
+        String compareType;
+        if (types.isSameType(ty, symtab.intType)) {
+          compareType = "Integer";
+        } else if (types.isSameType(ty, symtab.longType)) {
+          compareType = "Long";
+        } else {
+          return describeMatch(tree);
+        }
+        return describeMatch(
+            condTree,
+            SuggestedFix.replace(
+                condTree,
+                String.format(
+                    "%s.compare(%s, %s)",
+                    compareType, state.getSourceForNode(first), state.getSourceForNode(second))));
       }
 
       return describeMatch(tree);

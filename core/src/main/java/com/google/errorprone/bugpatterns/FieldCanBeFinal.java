@@ -34,7 +34,6 @@ import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -301,14 +300,12 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     }
 
     private boolean isThisAccess(Tree tree) {
-      if (tree.getKind() == Kind.IDENTIFIER) {
+      if (tree instanceof IdentifierTree) {
         return true;
       }
-      if (tree.getKind() != Kind.MEMBER_SELECT) {
-        return false;
-      }
-      ExpressionTree selected = ((MemberSelectTree) tree).getExpression();
-      return selected instanceof IdentifierTree ident && ident.getName().contentEquals("this");
+      return tree instanceof MemberSelectTree memberSelectTree
+          && memberSelectTree.getExpression() instanceof IdentifierTree ident
+          && ident.getName().contentEquals("this");
     }
 
     @Override

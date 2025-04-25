@@ -25,6 +25,7 @@ import com.google.errorprone.bugpatterns.BugChecker.UnaryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.UnaryTree;
@@ -46,7 +47,7 @@ public class DiscardedPostfixExpression extends BugChecker implements UnaryTreeM
       }
     }
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (parent.getKind() != Kind.LAMBDA_EXPRESSION) {
+    if (!(parent instanceof LambdaExpressionTree)) {
       return NO_MATCH;
     }
     JCLambda lambda = (JCLambda) parent;

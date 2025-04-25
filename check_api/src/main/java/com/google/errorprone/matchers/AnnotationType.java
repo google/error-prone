@@ -18,6 +18,8 @@ package com.google.errorprone.matchers;
 
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
 
@@ -36,9 +38,9 @@ public class AnnotationType implements Matcher<AnnotationTree> {
   @Override
   public boolean matches(AnnotationTree annotationTree, VisitorState state) {
     Tree type = annotationTree.getAnnotationType();
-    if (type.getKind() == Tree.Kind.IDENTIFIER && type instanceof JCTree.JCIdent jcIdent) {
+    if (type instanceof IdentifierTree && type instanceof JCTree.JCIdent jcIdent) {
       return jcIdent.sym.getQualifiedName().contentEquals(annotationClassName);
-    } else if (type.getKind() == Tree.Kind.MEMBER_SELECT
+    } else if (type instanceof MemberSelectTree
         && type instanceof JCTree.JCFieldAccess jcFieldAccess) {
       return jcFieldAccess.sym.getQualifiedName().contentEquals(annotationClassName);
     } else {

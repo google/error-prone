@@ -38,6 +38,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
@@ -164,7 +165,7 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
   }
 
   private static boolean isUsedAsStringBuilder(VisitorState state, TargetType target) {
-    if (target.path().getLeaf().getKind().equals(Tree.Kind.MEMBER_REFERENCE)) {
+    if (target.path().getLeaf() instanceof MemberReferenceTree) {
       // e.g. sb::append
       return true;
     }

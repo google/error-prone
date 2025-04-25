@@ -201,14 +201,13 @@ public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeC
       return false;
     }
 
-    if (!expr1.getKind().equals(Kind.ARRAY_ACCESS)
-        && !expr1.getKind().equals(Kind.IDENTIFIER)
+    if (!(expr1 instanceof ArrayAccessTree)
+        && !(expr1 instanceof IdentifierTree)
         && !(expr1 instanceof LiteralTree)) {
       return false;
     }
 
-    if (expr1.getKind() == Kind.ARRAY_ACCESS) {
-      ArrayAccessTree arrayAccessTree1 = (ArrayAccessTree) expr1;
+    if (expr1 instanceof ArrayAccessTree arrayAccessTree1) {
       ArrayAccessTree arrayAccessTree2 = (ArrayAccessTree) expr2;
       return expressionsEqual(arrayAccessTree1.getExpression(), arrayAccessTree2.getExpression())
           && expressionsEqual(arrayAccessTree1.getIndex(), arrayAccessTree2.getIndex());

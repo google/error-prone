@@ -99,7 +99,7 @@ public class RestrictedApiChecker extends BugChecker
 
   private static Tree getAnnotationArgumentTree(AnnotationTree tree, String name) {
     return tree.getArguments().stream()
-        .filter(arg -> arg.getKind().equals(Tree.Kind.ASSIGNMENT))
+        .filter(arg -> arg instanceof AssignmentTree)
         .map(arg -> (AssignmentTree) arg)
         .filter(arg -> isVariableTreeWithName(arg, name))
         .map(AssignmentTree::getExpression)

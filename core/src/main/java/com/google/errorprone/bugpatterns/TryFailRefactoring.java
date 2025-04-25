@@ -23,7 +23,6 @@ import static com.google.errorprone.BugPattern.StandardTags.REFACTORING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.sun.source.tree.Tree.Kind.UNION_TYPE;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -41,6 +40,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
+import com.sun.source.tree.UnionTypeTree;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,7 +64,7 @@ public class TryFailRefactoring extends BugChecker implements TryTreeMatcher {
       return NO_MATCH;
     }
     CatchTree catchTree = getOnlyElement(tree.getCatches());
-    if (catchTree.getParameter().getType().getKind() == UNION_TYPE) {
+    if (catchTree.getParameter().getType() instanceof UnionTypeTree) {
       // TODO(cushon): handle multi-catch
       return NO_MATCH;
     }

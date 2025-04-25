@@ -252,8 +252,7 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
         }
         Tree parent = getCurrentPath().getParentPath().getLeaf();
         if (sym.owner.getKind() == ElementKind.ENUM) {
-          if (parent.getKind() == Tree.Kind.CASE
-              && ((CaseTree) parent).getExpression().equals(tree)) {
+          if (parent instanceof CaseTree caseTree && caseTree.getExpression().equals(tree)) {
             // switch cases can refer to enum constants by simple name without importing them
             return null;
           }

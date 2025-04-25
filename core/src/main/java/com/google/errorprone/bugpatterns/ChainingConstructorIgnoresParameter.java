@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.hasIdentifier;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static java.util.Collections.unmodifiableList;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -207,7 +206,8 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
   }
 
   private static boolean isIdentifierWithName(ExpressionTree tree, String name) {
-    return tree.getKind() == IDENTIFIER && ((IdentifierTree) tree).getName().contentEquals(name);
+    return tree instanceof IdentifierTree identifierTree
+        && identifierTree.getName().contentEquals(name);
   }
 
   private static final class Caller {

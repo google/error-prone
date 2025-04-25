@@ -29,9 +29,6 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
-import static com.sun.source.tree.Tree.Kind.ASSIGNMENT;
-import static com.sun.source.tree.Tree.Kind.CONDITIONAL_EXPRESSION;
-import static com.sun.source.tree.Tree.Kind.NEW_ARRAY;
 import static com.sun.tools.javac.code.TypeTag.CLASS;
 import static com.sun.tools.javac.util.Position.NOPOS;
 import static java.util.stream.Collectors.joining;
@@ -67,6 +64,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.InstanceOfTree;
@@ -1152,13 +1150,12 @@ public final class SuggestedFixes {
     }
 
     ExpressionTree existingArgument = maybeExistingArgument.get();
-    if (!existingArgument.getKind().equals(NEW_ARRAY)) {
+    if (!(existingArgument instanceof NewArrayTree newArray)) {
       return SuggestedFix.builder()
           .replace(
               existingArgument, newArgument(state.getSourceForNode(existingArgument), newValues));
     }
 
-    NewArrayTree newArray = (NewArrayTree) existingArgument;
     if (newArray.getInitializers().isEmpty()) {
       return SuggestedFix.builder().replace(newArray, newArgument(newValues));
     } else {
@@ -1239,11 +1236,9 @@ public final class SuggestedFixes {
   private static Optional<ExpressionTree> findArgument(
       AnnotationTree annotation, String parameter) {
     for (ExpressionTree argument : annotation.getArguments()) {
-      if (argument.getKind().equals(ASSIGNMENT)) {
-        AssignmentTree assignment = (AssignmentTree) argument;
-        if (assignment.getVariable().toString().equals(parameter)) {
-          return Optional.of(ASTHelpers.stripParentheses(assignment.getExpression()));
-        }
+      if (argument instanceof AssignmentTree assignment
+          && assignment.getVariable().toString().equals(parameter)) {
+        return Optional.of(ASTHelpers.stripParentheses(assignment.getExpression()));
       }
     }
     return Optional.empty();
@@ -1732,7 +1727,7 @@ public final class SuggestedFixes {
             || expressionTree instanceof AssignmentTree
             || expressionTree instanceof CompoundAssignmentTree
             || expressionTree instanceof InstanceOfTree
-            || expressionTree.getKind() == CONDITIONAL_EXPRESSION;
+            || expressionTree instanceof ConditionalExpressionTree;
 
     return "("
         + toType

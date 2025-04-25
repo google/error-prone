@@ -37,7 +37,6 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -167,13 +166,10 @@ public class ForOverrideChecker extends BugChecker
 
   /** Returns true if this method invocation is of the form {@code super.foo()} */
   private static boolean isSuperCall(Type type, MethodInvocationTree tree, VisitorState state) {
-    if (tree.getMethodSelect().getKind() == Kind.MEMBER_SELECT) {
-      MemberSelectTree select = (MemberSelectTree) tree.getMethodSelect();
-      if (select.getExpression().getKind() == Kind.IDENTIFIER) {
-        IdentifierTree ident = (IdentifierTree) select.getExpression();
+    if (tree.getMethodSelect() instanceof MemberSelectTree select) {
+      if (select.getExpression() instanceof IdentifierTree ident) {
         return ident.getName().contentEquals("super");
-      } else if (select.getExpression().getKind() == Kind.MEMBER_SELECT) {
-        MemberSelectTree subSelect = (MemberSelectTree) select.getExpression();
+      } else if (select.getExpression() instanceof MemberSelectTree subSelect) {
 
         return subSelect.getIdentifier().contentEquals("super")
             && ASTHelpers.isSameType(ASTHelpers.getType(subSelect.getExpression()), type, state);

@@ -34,10 +34,10 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -217,7 +217,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
 
     for (MethodInvocationTree methodInvocationTree : methodCallMap.values()) {
       if (methodInvocationTree.getArguments().stream()
-          .filter(a -> a.getKind().equals(Kind.LAMBDA_EXPRESSION))
+          .filter(a -> a instanceof LambdaExpressionTree)
           .filter(a -> hasFunctionAsArg(a, state))
           .noneMatch(
               a ->

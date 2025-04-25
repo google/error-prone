@@ -45,7 +45,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -287,11 +286,11 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
       for (TreePath usagePath : uses.get(varSymbol)) {
         var usage = usagePath.getLeaf();
         if (deletedTrees.contains(usage)
-            || usage.getKind() == Kind.IDENTIFIER
-            || usage.getKind() != Kind.MEMBER_SELECT) {
+            || usage instanceof IdentifierTree
+            || !(usage instanceof MemberSelectTree memberSelectTree)) {
           continue;
         }
-        ExpressionTree selected = ((MemberSelectTree) usage).getExpression();
+        ExpressionTree selected = memberSelectTree.getExpression();
         if (!(selected instanceof IdentifierTree ident)) {
           continue;
         }

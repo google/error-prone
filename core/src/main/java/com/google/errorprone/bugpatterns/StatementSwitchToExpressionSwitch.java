@@ -27,8 +27,6 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
-import static com.sun.source.tree.Tree.Kind.BLOCK;
-import static com.sun.source.tree.Tree.Kind.BREAK;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.RETURN;
 import static com.sun.source.tree.Tree.Kind.THROW;
@@ -568,13 +566,13 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
     StatementTree lastStatement = getLast(statements);
     if (!statements.subList(0, statements.size() - 1).stream()
-            .allMatch(statement -> statement.getKind().equals(EXPRESSION_STATEMENT))
+            .allMatch(statement -> statement instanceof ExpressionStatementTree)
         || !KINDS_RETURN_OR_THROW.contains(lastStatement.getKind())) {
       return CaseQualifications.SOME_OR_ALL_CASES_DONT_QUALIFY;
     }
 
     // For this analysis, cases that don't return something can be disregarded
-    if (!lastStatement.getKind().equals(RETURN)) {
+    if (!(lastStatement instanceof ReturnTree returnTree)) {
       return previousCaseQualifications;
     }
 
@@ -585,7 +583,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
 
     // This is the first value-returning case that we are examining
-    Type returnType = ASTHelpers.getType(((ReturnTree) lastStatement).getExpression());
+    Type returnType = ASTHelpers.getType(returnTree.getExpression());
     return returnType == null
         // Return of void does not qualify
         ? CaseQualifications.SOME_OR_ALL_CASES_DONT_QUALIFY
@@ -632,8 +630,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         (statements.size() == 1 && KINDS_CONVERTIBLE_WITHOUT_BRACES.contains(firstStatementKind))
             || (KINDS_CONVERTIBLE_WITHOUT_BRACES.contains(firstStatementKind)
                 // If the second statement is a break, then there must be exactly two statements
-                && statements.get(1).getKind().equals(BREAK)
-                && ((BreakTree) statements.get(1)).getLabel() == null);
+                && statements.get(1) instanceof BreakTree breakTree
+                && breakTree.getLabel() == null);
     if (!expressionOrExpressionBreak) {
       // Conversion of this block is not supported
       return AssignmentSwitchAnalysisState.of(
@@ -643,12 +641,12 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
           assignmentTreeOptional);
     }
 
-    if (!firstStatement.getKind().equals(EXPRESSION_STATEMENT)) {
+    if (!(firstStatement instanceof ExpressionStatementTree expressionStatementTree)) {
       // Throws don't affect the assignment analysis
       return previousAssignmentSwitchAnalysisState;
     }
 
-    ExpressionTree expression = ((ExpressionStatementTree) firstStatement).getExpression();
+    ExpressionTree expression = expressionStatementTree.getExpression();
     Optional<ExpressionTree> caseAssignmentTargetOptional = Optional.empty();
     Optional<Tree.Kind> caseAssignmentKindOptional = Optional.empty();
     Optional<ExpressionTree> caseAssignmentTreeOptional = Optional.empty();
@@ -1408,7 +1406,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   private static ImmutableList<StatementTree> filterOutRedundantBreak(CaseTree caseTree) {
     boolean caseEndsWithUnlabelledBreak =
         Streams.findLast(getStatements(caseTree).stream())
-            .filter(statement -> statement.getKind().equals(BREAK))
+            .filter(statement -> statement instanceof BreakTree)
             .filter(breakTree -> ((BreakTree) breakTree).getLabel() == null)
             .isPresent();
     return caseEndsWithUnlabelledBreak
@@ -1428,10 +1426,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       return statements;
     }
     StatementTree onlyStatement = getOnlyElement(statements);
-    if (!onlyStatement.getKind().equals(BLOCK)) {
+    if (!(onlyStatement instanceof BlockTree blockTree)) {
       return statements;
     }
-    return ((BlockTree) onlyStatement).getStatements();
+    return blockTree.getStatements();
   }
 
   /** Transforms code for this case into the code under an expression switch. */
@@ -1590,12 +1588,12 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     // Invariant: statements.size() == 1
     StatementTree onlyStatement = getOnlyElement(statements);
-    if (!onlyStatement.getKind().equals(BLOCK)) {
+    if (!(onlyStatement instanceof BlockTree blockTree)) {
       return state.getEndPosition(caseTree);
     }
 
     // The RHS of the case has a single enclosing block { ... }
-    List<? extends StatementTree> blockStatements = ((BlockTree) onlyStatement).getStatements();
+    List<? extends StatementTree> blockStatements = blockTree.getStatements();
     return blockStatements.isEmpty()
         ? state.getEndPosition(caseTree)
         : state.getEndPosition(blockStatements.get(blockStatements.size() - 1));
@@ -1699,10 +1697,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
             offset + start - codeBlockStart + "return".length(),
             "yield");
       }
-    } else if (statements.size() == 1 && statements.get(0).getKind().equals(RETURN)) {
+    } else if (statements.size() == 1 && statements.get(0) instanceof ReturnTree returnTree) {
       // For "return x;", we want to take source starting after the "return"
       int unused = extractLhsComments(caseTree, state, transformedBlockBuilder);
-      ReturnTree returnTree = (ReturnTree) statements.get(0);
       int codeBlockStart = getStartPosition(returnTree.getExpression());
       transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
     } else {
@@ -1729,10 +1726,11 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
             ? getBlockEnd(state, caseTree)
             : state.getEndPosition(Streams.findLast(statements.stream()).get());
 
-    if (!statements.isEmpty() && statements.get(0).getKind().equals(EXPRESSION_STATEMENT)) {
+    if (!statements.isEmpty()
+        && statements.get(0) instanceof ExpressionStatementTree expressionStatementTree) {
       // For "x = foo", we want to take source starting after the "x ="
       int unused = extractLhsComments(caseTree, state, transformedBlockBuilder);
-      ExpressionTree expression = ((ExpressionStatementTree) statements.get(0)).getExpression();
+      ExpressionTree expression = expressionStatementTree.getExpression();
       Optional<ExpressionTree> rhs = Optional.empty();
       if (expression instanceof CompoundAssignmentTree compoundAssignmentTree) {
         rhs = Optional.of(compoundAssignmentTree.getExpression());

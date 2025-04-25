@@ -29,7 +29,6 @@ import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.sun.source.tree.Tree.Kind.CLASS;
-import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
 import static java.lang.String.format;
 import static java.util.stream.Stream.concat;
 import static javax.lang.model.element.Modifier.STATIC;
@@ -160,10 +159,9 @@ public final class ChainedAssertionLosesContext extends BugChecker
     while (true) {
       path = path.getParentPath().getParentPath();
       Tree leaf = path.getLeaf();
-      if (leaf.getKind() != METHOD_INVOCATION) {
+      if (!(leaf instanceof MethodInvocationTree maybeThatCall)) {
         return null;
       }
-      MethodInvocationTree maybeThatCall = (MethodInvocationTree) leaf;
       if (WITH_MESSAGE_OR_ABOUT.matches(maybeThatCall, state)) {
         continue;
       } else if (SUBJECT_BUILDER_THAT.matches(maybeThatCall, state)) {

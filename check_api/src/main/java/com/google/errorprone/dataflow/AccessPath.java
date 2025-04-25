@@ -22,7 +22,6 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -125,7 +124,7 @@ public abstract class AccessPath {
         pathBuilder.add(TreeUtils.getMethodName(tree) + "()");
       }
 
-      if (tree.getKind() == Kind.IDENTIFIER) {
+      if (tree instanceof IdentifierTree) {
         // Implicit `this` receiver
         return AccessPath.create(/* base= */ null, pathBuilder.build());
       }
@@ -134,13 +133,12 @@ public abstract class AccessPath {
     }
 
     // Explicit `this` receiver
-    if (tree.getKind() == Kind.IDENTIFIER
-        && ((IdentifierTree) tree).getName().contentEquals("this")) {
+    if (tree instanceof IdentifierTree id && id.getName().contentEquals("this")) {
       return AccessPath.create(/* base= */ null, pathBuilder.build());
     }
 
     // Local variable receiver
-    if (tree.getKind() == Kind.IDENTIFIER) {
+    if (tree instanceof IdentifierTree) {
       return AccessPath.create(TreeUtils.elementFromTree(tree), pathBuilder.build());
     }
 

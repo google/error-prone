@@ -294,9 +294,8 @@ public final class FindIdentifiers {
         case COMPILATION_UNIT -> {
           for (ImportTree importTree : ((CompilationUnitTree) curr).getImports()) {
             if (importTree.isStatic()
-                && importTree.getQualifiedIdentifier().getKind() == Kind.MEMBER_SELECT) {
-              MemberSelectTree memberSelectTree =
-                  (MemberSelectTree) importTree.getQualifiedIdentifier();
+                && importTree.getQualifiedIdentifier()
+                    instanceof MemberSelectTree memberSelectTree) {
               Scope scope =
                   state
                       .getTypes()
@@ -534,10 +533,10 @@ public final class FindIdentifiers {
         if (lowerThan(
             path,
             (curr, parent) ->
-                curr.getKind() == Kind.LAMBDA_EXPRESSION
-                    || (curr.getKind() == Kind.NEW_CLASS
-                        && ((NewClassTree) curr).getClassBody() != null)
-                    || (curr.getKind() == Kind.CLASS && parent.getKind() == Kind.BLOCK),
+                curr instanceof LambdaExpressionTree
+                    || (curr instanceof NewClassTree newClassTree
+                        && newClassTree.getClassBody() != null)
+                    || (curr.getKind() == Kind.CLASS && parent instanceof BlockTree),
             (curr, unused) -> Objects.equals(var.owner, ASTHelpers.getSymbol(curr)))) {
           if (!isConsideredFinal(var)) {
             return false;
@@ -597,8 +596,8 @@ public final class FindIdentifiers {
   }
 
   private static void addIfVariable(Tree tree, ImmutableSet.Builder<VarSymbol> setBuilder) {
-    if (tree.getKind() == Kind.VARIABLE) {
-      setBuilder.add(ASTHelpers.getSymbol((VariableTree) tree));
+    if (tree instanceof VariableTree variableTree) {
+      setBuilder.add(ASTHelpers.getSymbol(variableTree));
     }
   }
 

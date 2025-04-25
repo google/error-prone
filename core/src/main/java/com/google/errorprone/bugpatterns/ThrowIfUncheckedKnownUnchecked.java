@@ -21,8 +21,6 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.argumentCount;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.sun.source.tree.Tree.Kind.BLOCK;
-import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -32,6 +30,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symtab;
@@ -94,9 +93,8 @@ public class ThrowIfUncheckedKnownUnchecked extends BugChecker
        */
       var parent = state.getPath().getParentPath().getLeaf();
       var grandparent = state.getPath().getParentPath().getParentPath().getLeaf();
-      if (parent.getKind() == EXPRESSION_STATEMENT && grandparent.getKind() == BLOCK) {
-        ((BlockTree) grandparent)
-            .getStatements().stream().dropWhile(t -> t != parent).skip(1).forEach(fix::delete);
+      if (parent instanceof ExpressionStatementTree && grandparent instanceof BlockTree blockTree) {
+        blockTree.getStatements().stream().dropWhile(t -> t != parent).skip(1).forEach(fix::delete);
       }
       return describeMatch(tree, fix.build());
     }

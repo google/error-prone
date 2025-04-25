@@ -36,7 +36,6 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -188,8 +187,7 @@ public class MissingSuperCall extends BugChecker
     public Boolean visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       boolean result = false;
       ExpressionTree methodSelect = tree.getMethodSelect();
-      if (methodSelect.getKind() == Kind.MEMBER_SELECT) {
-        MemberSelectTree memberSelect = (MemberSelectTree) methodSelect;
+      if (methodSelect instanceof MemberSelectTree memberSelect) {
         result =
             ASTHelpers.isSuper(memberSelect.getExpression())
                 && memberSelect.getIdentifier().contentEquals(overridingMethodName);

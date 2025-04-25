@@ -37,7 +37,6 @@ import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.StatementTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.WhileLoopTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -59,8 +58,7 @@ public class MissingBraces extends BugChecker
   @Override
   public Description matchIf(IfTree tree, VisitorState state) {
     check(tree.getThenStatement(), state);
-    if (tree.getElseStatement() != null
-        && !tree.getElseStatement().getKind().equals(Tree.Kind.IF)) {
+    if (tree.getElseStatement() != null && !(tree.getElseStatement() instanceof IfTree)) {
       check(tree.getElseStatement(), state);
     }
     return NO_MATCH;

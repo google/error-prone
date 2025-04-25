@@ -34,7 +34,6 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
@@ -80,11 +79,10 @@ public class ParcelableCreator extends BugChecker implements ClassTreeMatcher {
 
     ClassType classType = ASTHelpers.getType(tree);
     for (Tree member : tree.getMembers()) {
-      if (member.getKind() != Kind.VARIABLE) {
+      if (!(member instanceof VariableTree variableTree)) {
         continue;
       }
 
-      VariableTree variableTree = (VariableTree) member;
       if (PARCELABLE_CREATOR_MATCHER.matches(variableTree, state)) {
         if (isVariableClassCreator(variableTree, state, classType, parcelableCreatorSymbol)) {
           return Description.NO_MATCH;

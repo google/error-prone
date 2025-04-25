@@ -45,6 +45,7 @@ import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -129,7 +130,7 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
         // Runnable r = () -> foo.getBar();
         ? implementsVoidMethod(lambdaExpressionTree, state)
         // foo.getBar();
-        : parent.getKind() == Kind.EXPRESSION_STATEMENT;
+        : parent instanceof ExpressionStatementTree;
   }
 
   /**

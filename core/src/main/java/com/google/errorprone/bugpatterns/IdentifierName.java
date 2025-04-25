@@ -55,8 +55,8 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -197,7 +197,7 @@ public final class IdentifierName extends BugChecker
     String name = tree.getName().toString();
     if (symbol.owner instanceof MethodSymbol methodSymbol
         && symbol.getKind() == ElementKind.PARAMETER
-        && state.getPath().getParentPath().getLeaf().getKind() != Kind.LAMBDA_EXPRESSION) {
+        && !(state.getPath().getParentPath().getLeaf() instanceof LambdaExpressionTree)) {
       int index = methodSymbol.getParameters().indexOf(symbol);
       var maybeSuper = ASTHelpers.streamSuperMethods(methodSymbol, state.getTypes()).findFirst();
       if (maybeSuper.isPresent()) {

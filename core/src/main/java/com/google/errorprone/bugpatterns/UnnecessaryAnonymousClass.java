@@ -245,7 +245,7 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
           failed = true;
           return null;
         }
-        Tree receiver = node.getKind() == Tree.Kind.IDENTIFIER ? null : getReceiver(node);
+        Tree receiver = node instanceof IdentifierTree ? null : getReceiver(node);
         return SuggestedFix.replace(
             receiver != null ? state.getEndPosition(receiver) : getStartPosition(node),
             state.getEndPosition(parent),

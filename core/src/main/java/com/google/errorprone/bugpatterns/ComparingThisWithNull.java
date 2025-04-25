@@ -54,13 +54,8 @@ public class ComparingThisWithNull extends BugChecker implements BinaryTreeMatch
   private static class ThisMatcher implements Matcher<ExpressionTree> {
     @Override
     public boolean matches(ExpressionTree thisExpression, VisitorState state) {
-      if (thisExpression.getKind().equals(Kind.IDENTIFIER)) {
-        IdentifierTree identifier = (IdentifierTree) thisExpression;
-        if (identifier.getName().contentEquals("this")) {
-          return true;
-        }
-      }
-      return false;
+      return thisExpression instanceof IdentifierTree identifier
+          && identifier.getName().contentEquals("this");
     }
   }
 }

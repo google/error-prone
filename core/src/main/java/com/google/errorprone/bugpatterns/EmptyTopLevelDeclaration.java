@@ -28,6 +28,7 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.Tree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -39,7 +40,7 @@ public final class EmptyTopLevelDeclaration extends BugChecker
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     ImmutableList<Tree> toDelete =
         tree.getTypeDecls().stream()
-            .filter(m -> m.getKind() == Tree.Kind.EMPTY_STATEMENT)
+            .filter(m -> m instanceof EmptyStatementTree)
             .collect(toImmutableList());
     if (toDelete.isEmpty()) {
       return NO_MATCH;

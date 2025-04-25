@@ -49,7 +49,6 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
-import static com.sun.source.tree.Tree.Kind.METHOD;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -423,8 +422,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     // Skip fields declared in other compilation units since we can't make a fix for them here.
     if (declPath != null
         && declPath.getCompilationUnit() == state.getPath().getCompilationUnit()
-        && (declPath.getLeaf().getKind() == METHOD)) {
-      return (MethodTree) declPath.getLeaf();
+        && declPath.getLeaf() instanceof MethodTree methodTree) {
+      return methodTree;
     }
     return null;
   }

@@ -26,9 +26,9 @@ import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.Tree.Kind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Thread created but not started", severity = ERROR)
@@ -42,7 +42,7 @@ public class DeadThread extends BugChecker implements NewClassTreeMatcher {
     if (!NEW_THREAD.matches(tree, state)) {
       return NO_MATCH;
     }
-    if (state.getPath().getParentPath().getLeaf().getKind() != Kind.EXPRESSION_STATEMENT) {
+    if (!(state.getPath().getParentPath().getLeaf() instanceof ExpressionStatementTree)) {
       return NO_MATCH;
     }
     return describeMatch(tree, SuggestedFix.postfixWith(tree, ".start()"));

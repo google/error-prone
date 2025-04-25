@@ -110,13 +110,11 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
 
     // Lambda expressions are special. If the release call is in a one-expression lambda,
     // only wrap body (not args) and convert to block lambda.
-    if (releaseStatement.getKind() == Kind.LAMBDA_EXPRESSION) {
-      LambdaExpressionTree enclosingLambda = (LambdaExpressionTree) releaseStatement;
-      if (enclosingLambda.getBodyKind() == BodyKind.EXPRESSION) {
-        releaseStatement = enclosingLambda.getBody();
-        before = "{" + before;
-        after = ";" + after + "}";
-      }
+    if (releaseStatement instanceof LambdaExpressionTree enclosingLambda
+        && enclosingLambda.getBodyKind() == BodyKind.EXPRESSION) {
+      releaseStatement = enclosingLambda.getBody();
+      before = "{" + before;
+      after = ";" + after + "}";
     }
 
     // Remove `if (wakelock.isHeld())` check.

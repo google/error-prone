@@ -30,7 +30,6 @@ import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TryTree;
 import java.util.List;
 import java.util.Optional;
@@ -112,7 +111,7 @@ public final class AssertThrowsUtils {
             state.getSourceForNode(catchTree.getParameter().getType())));
     boolean useExpressionLambda =
         throwingStatements.size() == 1
-            && getOnlyElement(throwingStatements).getKind() == Kind.EXPRESSION_STATEMENT;
+            && getOnlyElement(throwingStatements) instanceof ExpressionStatementTree;
     if (!useExpressionLambda) {
       fixPrefix.append("{");
     }

@@ -30,10 +30,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
-import static com.sun.source.tree.Tree.Kind.BLOCK;
 import static com.sun.source.tree.Tree.Kind.EMPTY_STATEMENT;
-import static com.sun.source.tree.Tree.Kind.METHOD;
-import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
 import static java.lang.String.format;
 
 import com.google.errorprone.BugPattern;
@@ -49,6 +46,7 @@ import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
@@ -106,7 +104,7 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
       new Matcher<ExpressionTree>() {
         @Override
         public boolean matches(ExpressionTree item, VisitorState state) {
-          if (item.getKind() != METHOD_INVOCATION) {
+          if (!(item instanceof MethodInvocationTree)) {
             return false;
           }
           Symbol sym = getSymbol(item);
@@ -160,9 +158,9 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
       TryTree tryTree, StatementTree failStatement, VisitorState state) {
     Tree parent = state.getPath().getParentPath().getLeaf();
     Tree grandparent = state.getPath().getParentPath().getParentPath().getLeaf();
-    if (parent.getKind() == BLOCK
-        && grandparent.getKind() == METHOD
-        && tryTree == getLastStatement((BlockTree) parent)) {
+    if (parent instanceof BlockTree blockTree
+        && grandparent instanceof MethodTree
+        && tryTree == getLastStatement(blockTree)) {
       return fixWithReturn(tryTree, failStatement, state);
     } else {
       return fixWithBoolean(tryTree, failStatement, state);

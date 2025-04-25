@@ -32,10 +32,8 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.sun.source.tree.Tree.Kind.ANNOTATED_TYPE;
 import static com.sun.source.tree.Tree.Kind.ARRAY_TYPE;
-import static com.sun.source.tree.Tree.Kind.CONDITIONAL_EXPRESSION;
 import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
-import static com.sun.source.tree.Tree.Kind.PARAMETERIZED_TYPE;
 import static com.sun.tools.javac.parser.Tokens.TokenKind.DOT;
 import static java.lang.Boolean.TRUE;
 import static java.util.Objects.requireNonNull;
@@ -214,19 +212,19 @@ class NullnessUtils {
       Tree typeTree,
       NullableAnnotationToUse nullableAnnotationToUse,
       @Nullable String suppressionToRemove) {
-    if (typeTree.getKind() == PARAMETERIZED_TYPE) {
-      typeTree = ((ParameterizedTypeTree) typeTree).getType();
+    if (typeTree instanceof ParameterizedTypeTree ptt) {
+      typeTree = ptt.getType();
     }
     switch (typeTree.getKind()) {
       case ARRAY_TYPE -> {
         Tree beforeBrackets = typeTree;
         while (true) {
           Tree pastAnnotations =
-              beforeBrackets.getKind() == ANNOTATED_TYPE
-                  ? ((AnnotatedTypeTree) beforeBrackets).getUnderlyingType()
+              beforeBrackets instanceof AnnotatedTypeTree att
+                  ? att.getUnderlyingType()
                   : beforeBrackets;
-          if (pastAnnotations.getKind() == ARRAY_TYPE) {
-            beforeBrackets = ((ArrayTypeTree) pastAnnotations).getType();
+          if (pastAnnotations instanceof ArrayTypeTree arrayTypeTree) {
+            beforeBrackets = arrayTypeTree.getType();
           } else {
             break;
           }
@@ -466,9 +464,9 @@ class NullnessUtils {
     abstract Polarity polarity();
 
     boolean bareIdentifierMatches(ExpressionTree other) {
-      return other.getKind() == IDENTIFIER
+      return other instanceof IdentifierTree identifierTree
           && bareIdentifier() != null
-          && bareIdentifier().equals(((IdentifierTree) other).getName());
+          && bareIdentifier().equals(identifierTree.getName());
     }
 
     ExpressionTree nullCase(ConditionalExpressionTree tree) {
@@ -623,8 +621,7 @@ class NullnessUtils {
       if (!(tree instanceof ExpressionTree)) {
         break;
       }
-      if (tree.getKind() == CONDITIONAL_EXPRESSION) {
-        ConditionalExpressionTree ternary = (ConditionalExpressionTree) tree;
+      if (tree instanceof ConditionalExpressionTree ternary) {
         NullCheck nullCheck = getNullCheck(ternary.getCondition());
         if (nullCheck == null) {
           return ImmutableSet.of();

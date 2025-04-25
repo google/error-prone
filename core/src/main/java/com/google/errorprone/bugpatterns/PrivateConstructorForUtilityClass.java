@@ -83,7 +83,7 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
         classTree.getMembers().stream()
             .filter(
                 tree ->
-                    !(tree.getKind().equals(METHOD) && isGeneratedConstructor((MethodTree) tree)))
+                    !(tree instanceof MethodTree methodTree && isGeneratedConstructor(methodTree)))
             .collect(toImmutableList());
     if (nonSyntheticMembers.isEmpty()
         || nonSyntheticMembers.stream().anyMatch(PrivateConstructorForUtilityClass::isInstance)) {

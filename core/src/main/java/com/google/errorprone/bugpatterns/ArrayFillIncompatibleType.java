@@ -32,7 +32,6 @@ import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 
 /**
@@ -74,8 +73,7 @@ public class ArrayFillIncompatibleType extends BugChecker implements MethodInvoc
 
     // Due to some funky behavior, javac doesn't appear to fully expand the type of a ternary
     // when passed into an "Object" context. Let's explore both sides
-    if (fillingArgument.getKind() == Kind.CONDITIONAL_EXPRESSION) {
-      ConditionalExpressionTree cet = (ConditionalExpressionTree) fillingArgument;
+    if (fillingArgument instanceof ConditionalExpressionTree cet) {
       Type trueExpressionType = ASTHelpers.getType(cet.getTrueExpression());
       if (!isValidArrayFill(state, arrayComponentType, trueExpressionType)) {
         return reportMismatch(invocationTree, arrayComponentType, trueExpressionType);

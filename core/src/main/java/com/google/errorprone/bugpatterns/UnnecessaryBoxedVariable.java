@@ -40,6 +40,7 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -47,10 +48,10 @@ import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
@@ -222,7 +223,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
       Type expressionType = ASTHelpers.getType(castInvocation);
 
       if (castPath.getParentPath() != null
-          && castPath.getParentPath().getLeaf().getKind() == Kind.EXPRESSION_STATEMENT) {
+          && castPath.getParentPath().getLeaf() instanceof ExpressionStatementTree) {
         // If we were to replace X.intValue(); with (int) x;, the code wouldn't compile because
         // that's not a statement. Instead, just delete.
         fixBuilder.delete(castPath.getParentPath().getLeaf());
@@ -365,7 +366,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
       // Unless it's an invocation of Boxed.valueOf or new Boxed, in which case it doesn't need to
       // be kept boxed since we know the result of valueOf is non-null.
       return !VALUE_OF_MATCHER.matches(expression, state.withPath(getCurrentPath()))
-          && expression.getKind() != Kind.NEW_CLASS;
+          && !(expression instanceof NewClassTree);
     }
 
     @Override
@@ -445,7 +446,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
     @Override
     public Void visitMemberReference(MemberReferenceTree node, Void unused) {
       ExpressionTree qualifierExpression = node.getQualifierExpression();
-      if (qualifierExpression.getKind() == Kind.IDENTIFIER) {
+      if (qualifierExpression instanceof IdentifierTree) {
         Symbol symbol = getSymbol(qualifierExpression);
         if (isBoxed(symbol, state)) {
           boxedUsageFound.add((VarSymbol) symbol);

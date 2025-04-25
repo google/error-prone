@@ -37,8 +37,8 @@ import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import java.util.Arrays;
 import java.util.Collections;
@@ -93,7 +93,7 @@ public class FloggerWithCause extends BugChecker implements MethodInvocationTree
 
     ExpressionTree cause = Iterables.getOnlyElement(tree.getArguments());
 
-    if (cause.getKind() == Kind.NEW_CLASS) {
+    if (cause instanceof NewClassTree) {
       Optional<ExpressionTree> throwableArgument = getThrowableArgument(cause, state);
       if (throwableArgument.isPresent() || FIXABLE_THROWABLE_MATCHER.matches(cause, state)) {
         List<Fix> fixes = getFixes(tree, state, throwableArgument.orElse(null));

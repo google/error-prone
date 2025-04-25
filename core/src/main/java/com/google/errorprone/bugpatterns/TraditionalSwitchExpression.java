@@ -24,8 +24,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CaseTree.CaseKind;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Prefer -> switches for switch expressions", severity = WARNING)
@@ -37,7 +37,7 @@ public class TraditionalSwitchExpression extends BugChecker implements BugChecke
       return NO_MATCH;
     }
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (!parent.getKind().equals(Kind.SWITCH_EXPRESSION)) {
+    if (!(parent instanceof SwitchExpressionTree)) {
       return NO_MATCH;
     }
     return describeMatch(parent);

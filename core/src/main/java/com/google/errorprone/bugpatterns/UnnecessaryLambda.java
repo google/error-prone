@@ -57,7 +57,6 @@ import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
@@ -281,7 +280,7 @@ public class UnnecessaryLambda extends BugChecker
                 (t, p) -> String.format("%s %s", prettyType(state, fix, t), p.getName()))
             .collect(joining(", ")));
     replacement.append(")");
-    if (lambda.getBody().getKind() == Kind.BLOCK) {
+    if (lambda.getBody() instanceof BlockTree) {
       replacement.append(state.getSourceForNode(lambda.getBody()));
     } else {
       replacement.append("{");
@@ -304,7 +303,7 @@ public class UnnecessaryLambda extends BugChecker
     Tree parent = state.getPath().getParentPath().getLeaf();
     if (parent instanceof MemberSelectTree memberSelectTree
         && memberSelectTree.getExpression().equals(node)) {
-      Tree receiver = node.getKind() == Tree.Kind.IDENTIFIER ? null : getReceiver(node);
+      Tree receiver = node instanceof IdentifierTree ? null : getReceiver(node);
       fix.replace(
           receiver != null ? state.getEndPosition(receiver) : getStartPosition(node),
           state.getEndPosition(parent),

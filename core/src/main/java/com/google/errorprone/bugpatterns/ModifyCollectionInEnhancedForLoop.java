@@ -35,7 +35,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import java.util.List;
 
@@ -147,7 +146,7 @@ public class ModifyCollectionInEnhancedForLoop extends BugChecker
     }
 
     // Check if the loopExpression is a .keySet(), .entrySet, or .values() of the map
-    if (loopExpression.getKind() == Kind.METHOD_INVOCATION) {
+    if (loopExpression instanceof MethodInvocationTree) {
       ExpressionTree receiver = getReceiver(loopExpression);
       return receiver != null
           && sameVariable(collection, receiver)

@@ -17,8 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
-import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -32,6 +30,8 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.names.LevenshteinEditDistance;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -57,7 +57,7 @@ public final class ReplacementVariableFinder {
    */
   public static ImmutableList<Fix> fixesByReplacingExpressionWithLocallyDeclaredField(
       ExpressionTree input, Predicate<JCVariableDecl> validFieldPredicate, VisitorState state) {
-    Preconditions.checkState(input.getKind() == IDENTIFIER || input.getKind() == MEMBER_SELECT);
+    Preconditions.checkState(input instanceof IdentifierTree || input instanceof MemberSelectTree);
 
     ImmutableMultimap<Integer, JCVariableDecl> potentialReplacements =
         ASTHelpers.findEnclosingNode(state.getPath(), JCClassDecl.class).getMembers().stream()
@@ -80,7 +80,7 @@ public final class ReplacementVariableFinder {
    */
   public static ImmutableList<Fix> fixesByReplacingExpressionWithMethodParameter(
       ExpressionTree input, Predicate<JCVariableDecl> validParameterPredicate, VisitorState state) {
-    Preconditions.checkState(input.getKind() == IDENTIFIER || input.getKind() == MEMBER_SELECT);
+    Preconditions.checkState(input instanceof IdentifierTree || input instanceof MemberSelectTree);
 
     JCMethodDecl methodTree = ASTHelpers.findEnclosingNode(state.getPath(), JCMethodDecl.class);
     if (methodTree == null) {
@@ -125,9 +125,9 @@ public final class ReplacementVariableFinder {
 
   private static String simpleNameOfIdentifierOrMemberAccess(ExpressionTree tree) {
     String name = null;
-    if (tree.getKind() == IDENTIFIER) {
+    if (tree instanceof IdentifierTree) {
       name = ((JCIdent) tree).name.toString();
-    } else if (tree.getKind() == MEMBER_SELECT) {
+    } else if (tree instanceof MemberSelectTree) {
       name = ((JCFieldAccess) tree).name.toString();
     }
     return name;

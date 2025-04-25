@@ -28,6 +28,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TypeCastTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -40,7 +41,7 @@ public class IntLiteralCast extends BugChecker implements LiteralTreeMatcher {
       return NO_MATCH;
     }
     Tree parent = state.getPath().getParentPath().getLeaf();
-    if (!parent.getKind().equals(Tree.Kind.TYPE_CAST)) {
+    if (!(parent instanceof TypeCastTree)) {
       return NO_MATCH;
     }
     String source = state.getSourceForNode(tree);

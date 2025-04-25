@@ -37,12 +37,13 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
@@ -143,14 +144,14 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
       return Optional.empty();
     }
     JCCatch catchTree = Iterables.getOnlyElement(tryStatement.getCatches());
-    if (catchTree.getParameter().getType().getKind() == Kind.UNION_TYPE) {
+    if (catchTree.getParameter().getType() instanceof UnionTypeTree) {
       // variables can't have union types
       return Optional.empty();
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     boolean expression =
         block.getStatements().size() == 2
-            && block.getStatements().get(0).getKind() == Kind.EXPRESSION_STATEMENT;
+            && block.getStatements().get(0) instanceof ExpressionStatementTree;
     int startPosition;
     int endPosition;
     if (expression) {

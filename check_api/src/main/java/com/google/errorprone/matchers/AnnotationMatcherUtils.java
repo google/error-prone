@@ -19,7 +19,6 @@ package com.google.errorprone.matchers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.Tree;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -38,10 +37,9 @@ public class AnnotationMatcherUtils {
    */
   public static @Nullable ExpressionTree getArgument(AnnotationTree annotationTree, String name) {
     for (ExpressionTree argumentTree : annotationTree.getArguments()) {
-      if (argumentTree.getKind() != Tree.Kind.ASSIGNMENT) {
+      if (!(argumentTree instanceof AssignmentTree assignmentTree)) {
         continue;
       }
-      AssignmentTree assignmentTree = (AssignmentTree) argumentTree;
       if (!assignmentTree.getVariable().toString().equals(name)) {
         continue;
       }

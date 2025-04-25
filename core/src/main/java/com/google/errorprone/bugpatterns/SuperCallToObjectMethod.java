@@ -23,12 +23,7 @@ import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.sun.source.tree.Tree.Kind.BLOCK;
-import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.LOGICAL_COMPLEMENT;
-import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
-import static com.sun.source.tree.Tree.Kind.METHOD;
-import static com.sun.source.tree.Tree.Kind.RETURN;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -38,6 +33,8 @@ import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ReturnTree;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -51,16 +48,15 @@ public class SuperCallToObjectMethod extends BugChecker implements MethodInvocat
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     var methodSelect = tree.getMethodSelect();
-    if (methodSelect.getKind() != MEMBER_SELECT) {
+    if (!(methodSelect instanceof MemberSelectTree memberSelect)) {
       return NO_MATCH;
     }
-    var memberSelect = (MemberSelectTree) methodSelect;
     var expression = memberSelect.getExpression();
     var methodName = memberSelect.getIdentifier();
     var methodIsEquals = methodName.equals(state.getNames().equals);
     var methodIsHashCode = methodName.equals(state.getNames().hashCode);
-    if (expression.getKind() == IDENTIFIER
-        && ((IdentifierTree) expression).getName().equals(state.getNames()._super)
+    if (expression instanceof IdentifierTree identifierTree
+        && identifierTree.getName().equals(state.getNames()._super)
         // We can't use a Matcher because onExactClass suffers from b/130658266.
         && enclosingClass(getSymbol(tree)) == state.getSymtab().objectType.tsym
         && (methodIsEquals || methodIsHashCode)
@@ -101,19 +97,19 @@ public class SuperCallToObjectMethod extends BugChecker implements MethodInvocat
 
   private static boolean methodBodyIsOnlyReturnSuper(VisitorState state) {
     var parentPath = state.getPath().getParentPath();
-    if (parentPath.getLeaf().getKind() != RETURN) {
+    if (!(parentPath.getLeaf() instanceof ReturnTree)) {
       return false;
     }
     var grandparentPath = parentPath.getParentPath();
     var grandparent = grandparentPath.getLeaf();
-    if (grandparent.getKind() != BLOCK) {
+    if (!(grandparent instanceof BlockTree blockTree)) {
       return false;
     }
-    if (((BlockTree) grandparent).getStatements().size() > 1) {
+    if (blockTree.getStatements().size() > 1) {
       return false;
     }
     var greatGrandparent = grandparentPath.getParentPath().getLeaf();
-    if (greatGrandparent.getKind() != METHOD) {
+    if (!(greatGrandparent instanceof MethodTree)) {
       return false;
     }
     return true;

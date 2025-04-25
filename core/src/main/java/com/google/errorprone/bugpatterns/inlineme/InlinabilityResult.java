@@ -39,7 +39,6 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
@@ -199,7 +198,7 @@ abstract class InlinabilityResult {
 
     // TODO(kak): declare a list of all the types we don't want to allow (e.g., ClassTree) and use
     // contains
-    if (body.toString().contains("{") || body.getKind() == Kind.CONDITIONAL_EXPRESSION) {
+    if (body.toString().contains("{") || body instanceof ConditionalExpressionTree) {
       return fromError(InlineValidationErrorReason.COMPLEX_STATEMENT, body);
     }
 

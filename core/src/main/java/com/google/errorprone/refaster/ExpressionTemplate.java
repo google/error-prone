@@ -29,8 +29,8 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.refaster.annotation.AlsoNegation;
 import com.google.errorprone.refaster.annotation.UseImportPolicy;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Type;
@@ -191,7 +191,7 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
                     // they could be allowed, instead of the narrowest, where Refaster really wants
                     // the narrowest type possible.  We reconstruct that by taking the lub of the
                     // types from each branch.
-                    if (target.getKind() == Kind.CONDITIONAL_EXPRESSION) {
+                    if (target instanceof ConditionalExpressionTree) {
                       JCConditional cond = (JCConditional) target;
                       Type trueTy = cond.truepart.type;
                       Type falseTy = cond.falsepart.type;

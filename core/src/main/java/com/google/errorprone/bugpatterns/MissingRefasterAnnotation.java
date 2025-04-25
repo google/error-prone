@@ -52,7 +52,7 @@ public final class MissingRefasterAnnotation extends BugChecker implements Class
   public Description matchClass(ClassTree tree, VisitorState state) {
     long methodTypeCount =
         tree.getMembers().stream()
-            .filter(member -> member.getKind() == Tree.Kind.METHOD)
+            .filter(member -> member instanceof MethodTree)
             .map(MethodTree.class::cast)
             .filter(method -> !ASTHelpers.isGeneratedConstructor(method))
             .map(method -> HAS_REFASTER_ANNOTATION.matches(method, state))

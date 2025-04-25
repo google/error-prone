@@ -30,9 +30,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
-import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
-import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
-import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
@@ -77,20 +74,11 @@ public class DoNotCallChecker extends BugChecker
       instanceMethod().onDescendantOf("java.lang.Thread").named("run").withNoParameters();
 
   private static final Matcher<ExpressionTree> CALL_ON_SUPER =
-      (invocation, state) -> {
-        if (invocation.getKind() != METHOD_INVOCATION) {
-          return false;
-        }
-        ExpressionTree select = ((MethodInvocationTree) invocation).getMethodSelect();
-        if (select.getKind() != MEMBER_SELECT) {
-          return false;
-        }
-        ExpressionTree receiver = ((MemberSelectTree) select).getExpression();
-        if (receiver.getKind() != IDENTIFIER) {
-          return false;
-        }
-        return ((IdentifierTree) receiver).getName().contentEquals("super");
-      };
+      (invocation, state) ->
+          invocation instanceof MethodInvocationTree methodInvocationTree
+              && methodInvocationTree.getMethodSelect() instanceof MemberSelectTree memberSelectTree
+              && memberSelectTree.getExpression() instanceof IdentifierTree identifierTree
+              && identifierTree.getName().contentEquals("super");
 
   // If your method cannot be annotated with @DoNotCall (e.g., it's a JDK or thirdparty method),
   // then add it to this Map with an explanation.

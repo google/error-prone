@@ -22,8 +22,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.sun.source.tree.Tree.Kind.BLOCK;
-import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -113,8 +111,8 @@ public class FloggerRedundantIsEnabled extends BugChecker implements IfTreeMatch
       IfTree ifTree, VisitorState state) {
     // Get lone statement from then-block.
     StatementTree thenStatement = ifTree.getThenStatement();
-    while (thenStatement.getKind() == BLOCK) {
-      List<? extends StatementTree> statements = ((BlockTree) thenStatement).getStatements();
+    while (thenStatement instanceof BlockTree blockTree) {
+      List<? extends StatementTree> statements = blockTree.getStatements();
       if (statements.size() != 1) {
         return Optional.empty();
       }
@@ -122,8 +120,8 @@ public class FloggerRedundantIsEnabled extends BugChecker implements IfTreeMatch
     }
 
     // Check if that lone statement is a Flogger `log` method invocation, and cast.
-    if (thenStatement.getKind() == EXPRESSION_STATEMENT) {
-      ExpressionTree thenExpression = ((ExpressionStatementTree) thenStatement).getExpression();
+    if (thenStatement instanceof ExpressionStatementTree expressionStatementTree) {
+      ExpressionTree thenExpression = expressionStatementTree.getExpression();
       if (LOG.matches(thenExpression, state)) {
         return Optional.of((MethodInvocationTree) thenExpression);
       }

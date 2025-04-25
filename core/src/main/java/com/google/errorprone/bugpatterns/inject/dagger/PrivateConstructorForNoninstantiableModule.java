@@ -24,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.createPrivateConstructor;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.sun.source.tree.Tree.Kind.CLASS;
-import static com.sun.source.tree.Tree.Kind.METHOD;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -63,7 +62,7 @@ public class PrivateConstructorForNoninstantiableModule extends BugChecker
         classTree.getMembers().stream()
             .filter(
                 tree ->
-                    !(tree.getKind().equals(METHOD) && isGeneratedConstructor((MethodTree) tree)))
+                    !(tree instanceof MethodTree methodTree && isGeneratedConstructor(methodTree)))
             .collect(toImmutableList());
 
     // ignore empty modules

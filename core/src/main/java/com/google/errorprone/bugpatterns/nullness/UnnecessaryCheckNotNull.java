@@ -34,6 +34,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -136,7 +137,7 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     Tree parent = state.getPath().getParentPath().getLeaf();
 
     // Assignment, return, etc.
-    if (parent.getKind() != Kind.EXPRESSION_STATEMENT) {
+    if (!(parent instanceof ExpressionStatementTree)) {
       return describeMatch(
           arg1, SuggestedFix.replace(methodInvocationTree, state.getSourceForNode(arg1)));
     }
@@ -155,7 +156,7 @@ public class UnnecessaryCheckNotNull extends BugChecker implements MethodInvocat
     }
 
     if ((arg1 instanceof BinaryTree
-            || arg1.getKind() == Kind.METHOD_INVOCATION
+            || arg1 instanceof MethodInvocationTree
             || arg1.getKind() == Kind.LOGICAL_COMPLEMENT)
         && state.getTypes().isSameType(ASTHelpers.getType(arg1), state.getSymtab().booleanType)) {
       return describeMatch(arg1, createCheckArgumentOrStateCall(methodInvocationTree, state, arg1));

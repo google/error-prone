@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getConstructors;
 import static com.sun.source.tree.Tree.Kind.CLASS;
-import static com.sun.source.tree.Tree.Kind.METHOD;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -56,8 +55,8 @@ public class AutoFactoryAtInject extends BugChecker implements AnnotationTreeMat
     }
 
     Tree annotatedTree = getCurrentlyAnnotatedNode(state);
-    if (!annotatedTree.getKind().equals(METHOD)
-        || !methodIsConstructor().matches((MethodTree) annotatedTree, state)) {
+    if (!(annotatedTree instanceof MethodTree methodTree)
+        || !methodIsConstructor().matches(methodTree, state)) {
       return Description.NO_MATCH;
     }
 

@@ -32,6 +32,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
@@ -125,7 +126,7 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
               if (constValue(node) != null) {
                 return true;
               }
-              if (node.getKind() != Tree.Kind.IDENTIFIER) {
+              if (!(node instanceof IdentifierTree)) {
                 return false;
               }
               Symbol.VarSymbol varSymbol = (Symbol.VarSymbol) getSymbol(node);
