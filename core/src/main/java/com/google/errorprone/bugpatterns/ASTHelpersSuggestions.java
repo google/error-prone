@@ -54,8 +54,7 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
       anyOf(
           instanceMethod()
               .onDescendantOf("com.sun.tools.javac.code.Symbol")
-              .namedAnyOf(
-                  "isDirectlyOrIndirectlyLocal", "isLocal", "packge", "getEnclosedElements"),
+              .namedAnyOf("packge", "getEnclosedElements"),
           instanceMethod()
               .onClass((t, s) -> isSubtype(MODULE_SYMBOL.get(s), t, s))
               .namedAnyOf("isStatic"));
@@ -67,9 +66,7 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
       instanceField("com.sun.tools.javac.code.Symbol", "owner");
 
   private static final ImmutableMap<String, String> NAMES =
-      ImmutableMap.of(
-          "packge", "enclosingPackage",
-          "isDirectlyOrIndirectlyLocal", "isLocal");
+      ImmutableMap.of("packge", "enclosingPackage");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -112,10 +109,4 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
     }
     return NO_MATCH;
   }
-
-  private static final Supplier<Type> COM_SUN_TOOLS_JAVAC_UTIL_FILTER =
-      VisitorState.memoize(state -> state.getTypeFromString("com.sun.tools.javac.util.Filter"));
-
-  private static final Supplier<Type> JAVA_UTIL_FUNCTION_PREDICATE =
-      VisitorState.memoize(state -> state.getTypeFromString("java.util.function.Predicate"));
 }
