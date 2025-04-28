@@ -43,7 +43,8 @@ import java.util.regex.Pattern;
 @BugPattern(
     name = "PreconditionsExpensiveString",
     summary =
-        "Second argument to Preconditions.* is a call to String.format(), which can be unwrapped",
+        "Second argument to Preconditions.* is a call to String.format(), which can be unwrapped to"
+            + " avoid eager string construction",
     severity = WARNING)
 public class PreconditionsExpensiveString extends BugChecker
     implements MethodInvocationTreeMatcher {
