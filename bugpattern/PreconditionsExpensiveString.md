@@ -1,7 +1,7 @@
 ---
 title: PreconditionsExpensiveString
 summary: Second argument to Preconditions.* is a call to String.format(), which can
-  be unwrapped
+  be unwrapped to avoid eager string construction
 layout: bugpattern
 tags: ''
 severity: WARNING

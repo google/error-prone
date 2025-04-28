@@ -1185,7 +1185,7 @@ __[PreconditionsCheckNotNullRepeated](bugpattern/PreconditionsCheckNotNullRepeat
 Including the first argument of checkNotNull in the failure message is not useful, as it will always be &#96;null&#96;.
 
 __[PreconditionsExpensiveString](bugpattern/PreconditionsExpensiveString)__<br>
-Second argument to Preconditions.* is a call to String.format(), which can be unwrapped
+Second argument to Preconditions.* is a call to String.format(), which can be unwrapped to avoid eager string construction
 
 __[PreferInstanceofOverGetKind](bugpattern/PreferInstanceofOverGetKind)__<br>
 Prefer instanceof over getKind() checks where possible, as these work well with pattern matching instanceofs
