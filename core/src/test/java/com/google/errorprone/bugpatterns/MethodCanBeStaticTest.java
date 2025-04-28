@@ -681,4 +681,56 @@ class Test implements Serializable {
             """)
         .doTest();
   }
+
+  @Test
+  public void privateMethod_overriddenWithinFile_cannotBeStatic() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static class A {
+                // BUG: Diagnostic contains:
+                public int get() {
+                  return 0;
+                }
+              }
+
+              private static class B extends A {
+                private final int x = 1;
+
+                @Override
+                public int get() {
+                  return x;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateMethod_overriddenWithinFile_bothDoNotReferenceInstanceState_cannotBeStatic() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static class A {
+                // BUG: Diagnostic contains:
+                public int get() {
+                  return 0;
+                }
+              }
+
+              private static class B extends A {
+                @Override
+                public int get() {
+                  return 1;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }
