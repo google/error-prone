@@ -155,6 +155,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           "javax.persistence.Id",
           "javax.persistence.Version",
           "javax.xml.bind.annotation.XmlElement",
+          "net.starlark.java.annot.StarlarkBuiltin",
           "org.junit.Rule",
           "org.junit.jupiter.api.extension.RegisterExtension",
           "org.openqa.selenium.support.FindAll",
