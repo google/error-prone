@@ -690,7 +690,6 @@ class Test implements Serializable {
             """
             class Test {
               private static class A {
-                // BUG: Diagnostic contains:
                 public int get() {
                   return 0;
                 }
@@ -717,7 +716,6 @@ class Test implements Serializable {
             """
             class Test {
               private static class A {
-                // BUG: Diagnostic contains:
                 public int get() {
                   return 0;
                 }
