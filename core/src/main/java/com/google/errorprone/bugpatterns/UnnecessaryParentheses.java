@@ -55,13 +55,7 @@ public class UnnecessaryParentheses extends BugChecker
     ExpressionTree expression = tree.getExpression();
     Tree parent = state.getPath().getParentPath().getLeaf();
     switch (parent.getKind()) {
-      case IF, WHILE_LOOP, DO_WHILE_LOOP, FOR_LOOP, SWITCH, SYNCHRONIZED -> {
-        return NO_MATCH;
-      }
-      default -> {}
-    }
-    switch (parent.getKind().name()) {
-      case "SWITCH_EXPRESSION" -> {
+      case IF, WHILE_LOOP, DO_WHILE_LOOP, FOR_LOOP, SWITCH, SYNCHRONIZED, SWITCH_EXPRESSION -> {
         return NO_MATCH;
       }
       default -> {}

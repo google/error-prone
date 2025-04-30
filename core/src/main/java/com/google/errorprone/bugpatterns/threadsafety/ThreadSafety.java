@@ -558,11 +558,8 @@ public final class ThreadSafety {
           // TODO(b/25630186): add enforcement
           return Violation.absent();
         }
-        case INTERFACE, CLASS -> {}
+        case INTERFACE, CLASS, RECORD -> {}
         default -> {
-          if (type.tsym.getKind().name().equals("RECORD")) {
-            break;
-          }
           throw new AssertionError(String.format("Unexpected type kind %s", type.tsym.getKind()));
         }
       }

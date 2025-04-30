@@ -105,28 +105,13 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
   }
 
   private static boolean isInstance(Tree tree) {
-    switch (tree.getKind()) {
-      case CLASS -> {
-        return !((ClassTree) tree).getModifiers().getFlags().contains(STATIC);
-      }
-      case METHOD -> {
-        return !((MethodTree) tree).getModifiers().getFlags().contains(STATIC);
-      }
-      case VARIABLE -> {
-        return !((VariableTree) tree).getModifiers().getFlags().contains(STATIC);
-      }
-      case BLOCK -> {
-        return !((BlockTree) tree).isStatic();
-      }
-      case ENUM, ANNOTATION_TYPE, INTERFACE -> {
-        return false;
-      }
-      default -> {
-        if (tree.getKind().name().equals("RECORD")) {
-          return false;
-        }
-        throw new AssertionError("unknown member type:" + tree.getKind());
-      }
-    }
+    return switch (tree.getKind()) {
+      case CLASS -> !((ClassTree) tree).getModifiers().getFlags().contains(STATIC);
+      case METHOD -> !((MethodTree) tree).getModifiers().getFlags().contains(STATIC);
+      case VARIABLE -> !((VariableTree) tree).getModifiers().getFlags().contains(STATIC);
+      case BLOCK -> !((BlockTree) tree).isStatic();
+      case ENUM, ANNOTATION_TYPE, INTERFACE, RECORD -> false;
+      default -> throw new AssertionError("unknown member type:" + tree.getKind());
+    };
   }
 }
