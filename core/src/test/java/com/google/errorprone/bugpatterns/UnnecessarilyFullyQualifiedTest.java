@@ -27,6 +27,9 @@ public final class UnnecessarilyFullyQualifiedTest {
   private final BugCheckerRefactoringTestHelper helper =
       BugCheckerRefactoringTestHelper.newInstance(UnnecessarilyFullyQualified.class, getClass());
 
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(UnnecessarilyFullyQualified.class, getClass());
+
   @Test
   public void singleUse() {
     helper
@@ -395,6 +398,40 @@ public final class UnnecessarilyFullyQualifiedTest {
             }
             """)
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void unbatchedFindings() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            interface Test {
+              // BUG: Diagnostic contains:
+              java.util.List foo();
+
+              // BUG: Diagnostic contains:
+              java.util.List bar();
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void batchedFindings() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            interface Test {
+              // BUG: Diagnostic contains:
+              java.util.List foo();
+
+              java.util.List bar();
+            }
+            """)
+        .setArgs("-XepOpt:UnnecessarilyFullyQualified:BatchFindings=true")
         .doTest();
   }
 }
