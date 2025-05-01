@@ -1,8 +1,8 @@
 ---
 title: AnnotateFormatMethod
 summary: This method uses a pair of parameters as a format string and its arguments,
-  but the enclosing method wasn't annotated @FormatMethod. Doing so gives compile-time
-  rather than run-time protection against malformed format strings.
+  but the enclosing method wasn't annotated. Doing so gives compile-time rather than
+  run-time protection against malformed format strings.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
