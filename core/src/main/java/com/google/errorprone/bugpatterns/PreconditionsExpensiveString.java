@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.formatstring.LenientFormatStringUtils.getLenientFormatStringPosition;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -49,11 +50,6 @@ import java.util.regex.Pattern;
 public class PreconditionsExpensiveString extends BugChecker
     implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> PRECONDITIONS_MATCHER =
-      staticMethod()
-          .onClass("com.google.common.base.Preconditions")
-          .namedAnyOf("checkNotNull", "checkState", "checkArgument");
-
   private static final Matcher<ExpressionTree> STRING_FORMAT_MATCHER =
       staticMethod().onClass("java.lang.String").named("format");
 
@@ -61,13 +57,14 @@ public class PreconditionsExpensiveString extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!PRECONDITIONS_MATCHER.matches(tree, state)) {
+    var lenientFormatStringPosition = getLenientFormatStringPosition(tree, state);
+    if (lenientFormatStringPosition == -1) {
       return NO_MATCH;
     }
-    if (tree.getArguments().size() < 2) {
+    if (tree.getArguments().size() < lenientFormatStringPosition + 1) {
       return NO_MATCH;
     }
-    ExpressionTree argument = tree.getArguments().get(1);
+    ExpressionTree argument = tree.getArguments().get(lenientFormatStringPosition);
     if (!STRING_FORMAT_MATCHER.matches(argument, state)) {
       return NO_MATCH;
     }
