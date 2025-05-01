@@ -64,7 +64,7 @@ public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
 
   public static GuardedBySymbolResolver from(Tree tree, VisitorState visitorState) {
     return GuardedBySymbolResolver.from(
-        ASTHelpers.getSymbol(tree).owner.enclClass(),
+        ASTHelpers.enclosingClass(ASTHelpers.getSymbol(tree)),
         MethodInfo.create(tree, visitorState),
         visitorState.getPath().getCompilationUnit(),
         visitorState.context,

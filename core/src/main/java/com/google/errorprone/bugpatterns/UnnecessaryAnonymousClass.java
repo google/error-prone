@@ -23,6 +23,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -106,7 +107,7 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
       return NO_MATCH;
     }
     if (!methodSymbol.overrides(
-        descriptorSymbol, methodSymbol.owner.enclClass(), state.getTypes(), false)) {
+        descriptorSymbol, enclosingClass(methodSymbol), state.getTypes(), false)) {
       return NO_MATCH;
     }
     if (tree.getModifiers().getAnnotations().stream()
@@ -255,7 +256,7 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
         return SuggestedFix.replace(
             node,
             String.format(
-                "%s::%s", isStatic(sym) ? sym.owner.enclClass().getSimpleName() : "this", newName));
+                "%s::%s", isStatic(sym) ? enclosingClass(sym).getSimpleName() : "this", newName));
       }
     }
 

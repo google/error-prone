@@ -20,6 +20,7 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
@@ -145,7 +146,7 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
                 && (((sym.flags() | other.flags()) & Flags.SYNTHETIC) == 0)
                 && sym.name.contentEquals(other.name)
                 && sym.overrides(
-                    other, sym.owner.enclClass(), state.getTypes(), /* checkResult= */ false);
+                    other, enclosingClass(sym), state.getTypes(), /* checkResult= */ false);
           }
         }.scan(method.getBody(), null),
         false);

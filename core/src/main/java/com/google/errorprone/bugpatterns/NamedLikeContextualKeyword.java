@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.findPathFromEnclosingNodeToTopLevel;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
@@ -129,7 +130,7 @@ public final class NamedLikeContextualKeyword extends BugChecker
   private static String getQualifier(
       VisitorState state, MethodSymbol sym, SuggestedFix.Builder fix) {
     if (sym.isStatic()) {
-      return qualifyType(state, fix, sym.owner.enclClass());
+      return qualifyType(state, fix, enclosingClass(sym));
     }
     TreePath path = findPathFromEnclosingNodeToTopLevel(state.getPath(), ClassTree.class);
     if (sym.isMemberOf(getSymbol((ClassTree) path.getLeaf()), state.getTypes())) {

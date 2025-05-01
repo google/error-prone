@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isInStaticInitializer;
@@ -184,7 +185,7 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
     }
     MethodSymbol methodSymbol = getSymbol(outerMethodTree);
     boolean canUseStatic =
-        methodSymbol.owner.enclClass().getNestingKind() == NestingKind.TOP_LEVEL
+        enclosingClass(methodSymbol).getNestingKind() == NestingKind.TOP_LEVEL
             || outerMethodTree.getModifiers().getFlags().contains(Modifier.STATIC);
     String replacement =
         String.format(

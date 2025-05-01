@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import static java.util.Collections.disjoint;
@@ -233,7 +234,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
 
       private void fixQualifier(Tree tree, ExpressionTree qualifierExpression) {
         if (sym.equals(ASTHelpers.getSymbol(tree))) {
-          builder.replace(qualifierExpression, sym.owner.enclClass().getSimpleName().toString());
+          builder.replace(qualifierExpression, enclosingClass(sym).getSimpleName().toString());
         }
       }
     }.scan(state.getPath().getCompilationUnit(), null);
@@ -248,11 +249,11 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
     if (!ASTHelpers.canBeRemoved(sym, state) || ASTHelpers.shouldKeep(tree)) {
       return true;
     }
-    switch (sym.owner.enclClass().getNestingKind()) {
+    switch (enclosingClass(sym).getNestingKind()) {
       case TOP_LEVEL -> {}
       case MEMBER -> {
         if (!SourceVersion.supportsStaticInnerClass(state.context)
-            && sym.owner.enclClass().hasOuterInstance()) {
+            && enclosingClass(sym).hasOuterInstance()) {
           return true;
         }
       }

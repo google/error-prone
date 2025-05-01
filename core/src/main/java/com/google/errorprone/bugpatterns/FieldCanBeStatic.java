@@ -24,6 +24,7 @@ import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static javax.lang.model.element.ElementKind.FIELD;
@@ -99,7 +100,7 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
         || (symbol.flags() & RECORD_FLAG) == RECORD_FLAG) {
       return NO_MATCH;
     }
-    ClassSymbol enclClass = symbol.owner.enclClass();
+    ClassSymbol enclClass = enclosingClass(symbol);
     if (enclClass == null) {
       return NO_MATCH;
     }

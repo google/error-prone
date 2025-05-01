@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.bugpatterns.inject.dagger.DaggerAnnotations.isAnyModule;
 import static com.google.errorprone.util.ASTHelpers.createPrivateConstructor;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
@@ -105,7 +106,7 @@ public final class InterfaceWithOnlyStatics extends BugChecker implements ClassT
     int endPos = getStartPosition(classTree.getMembers().get(0));
     ImmutableList<ErrorProneToken> tokens = state.getOffsetTokens(startPos, endPos);
     String modifiers =
-        getSymbol(classTree).owner.enclClass() == null ? "final class" : "static final class";
+        enclosingClass(getSymbol(classTree)) == null ? "final class" : "static final class";
     SuggestedFix.Builder fix = SuggestedFix.builder();
     for (ErrorProneToken token : tokens) {
       if (token.kind() == TokenKind.INTERFACE) {

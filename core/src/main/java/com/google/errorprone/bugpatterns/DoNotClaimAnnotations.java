@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
@@ -84,7 +85,7 @@ public class DoNotClaimAnnotations extends BugChecker implements MethodTreeMatch
         .allMatch(x -> x)) {
       return NO_MATCH;
     }
-    if (!sym.owner.enclClass().isSubClass(PROCESSOR_SYMBOL.get(state), state.getTypes())) {
+    if (!enclosingClass(sym).isSubClass(PROCESSOR_SYMBOL.get(state), state.getTypes())) {
       return NO_MATCH;
     }
     List<ReturnTree> returns = new ArrayList<>();

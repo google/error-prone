@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
@@ -71,7 +72,7 @@ public class StaticQualifiedUsingExpression extends BugChecker implements Member
       default:
         return NO_MATCH;
     }
-    ClassSymbol owner = sym.owner.enclClass();
+    ClassSymbol owner = enclosingClass(sym);
     ExpressionTree expression = tree.getExpression();
     switch (expression.getKind()) {
       case MEMBER_SELECT, IDENTIFIER -> {

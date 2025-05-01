@@ -24,6 +24,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.prettyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
@@ -314,7 +315,7 @@ public class UnnecessaryLambda extends BugChecker
       if (node instanceof MethodInvocationTree && getReceiver(node) != null) {
         receiverCode = state.getSourceForNode(getReceiver(node));
       } else {
-        receiverCode = isStatic(sym) ? sym.owner.enclClass().getSimpleName().toString() : "this";
+        receiverCode = isStatic(sym) ? enclosingClass(sym).getSimpleName().toString() : "this";
       }
       fix.replace(node, String.format("%s::%s", receiverCode, newName));
     }

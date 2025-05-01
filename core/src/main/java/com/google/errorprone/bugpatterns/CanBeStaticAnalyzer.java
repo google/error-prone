@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.auto.value.AutoValue;
@@ -184,9 +185,9 @@ public class CanBeStaticAnalyzer extends TreeScanner {
     if (sym == null || !sym.hasOuterInstance()) {
       return false;
     }
-    for (ClassSymbol encl = owner.owner.enclClass();
+    for (ClassSymbol encl = enclosingClass(owner);
         encl != null;
-        encl = encl.owner != null ? encl.owner.enclClass() : null) {
+        encl = encl.owner != null ? enclosingClass(encl) : null) {
       if (sym.isMemberOf(encl, state.getTypes())) {
         return true;
       }

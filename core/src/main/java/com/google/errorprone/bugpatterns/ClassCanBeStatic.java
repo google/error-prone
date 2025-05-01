@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
@@ -57,11 +58,11 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
       // local or anonymous classes can't be static
       return NO_MATCH;
     }
-    switch (currentClass.owner.enclClass().getNestingKind()) {
+    switch (enclosingClass(currentClass).getNestingKind()) {
       case TOP_LEVEL -> {}
       case MEMBER -> {
         if (!SourceVersion.supportsStaticInnerClass(state.context)
-            && currentClass.owner.enclClass().hasOuterInstance()) {
+            && enclosingClass(currentClass).hasOuterInstance()) {
           // class is nested inside an inner class, so it can't be static
           return NO_MATCH;
         }
