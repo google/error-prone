@@ -38,6 +38,8 @@ public final class AnnotationNames {
   public static final String IMMUTABLE_ANNOTATION = "com.google.errorprone.annotations.Immutable";
   public static final String LAZY_INIT_ANNOTATION =
       "com.google.errorprone.annotations.concurrent.LazyInit";
+  public static final String LENIENT_FORMAT_STRING_ANNOTATION =
+      "com.google.errorprone.annotations.LenientFormatString";
   public static final String MUST_BE_CLOSED_ANNOTATION =
       "com.google.errorprone.annotations.MustBeClosed";
   public static final String REPEATED_ANNOTATION =
