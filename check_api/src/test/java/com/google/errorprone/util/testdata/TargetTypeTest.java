@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 abstract class TargetTypeTest {
   void unary() {
@@ -626,5 +628,28 @@ abstract class TargetTypeTest {
 
     // BUG: Diagnostic contains: BB
     detectMe.bar().ensureCapacity(1);
+
+    // NOTE(ghm): Should be AA.
+    // BUG: Diagnostic contains: BB
+    supplies(detectMe.bar()::size);
+
+    // BUG: Diagnostic contains: BB
+    consumes(detectMe.bar()::ensureCapacity);
+
+    // NOTE(ghm): Should be AA.
+    // BUG: Diagnostic contains: List<?>
+    suppliesList(detectMe::bar);
+
+    // NOTE(ghm): Should be BB.
+    // BUG: Diagnostic contains: List<?>
+    suppliesArrayList(detectMe::bar);
   }
+
+  void supplies(Supplier<Integer> x) {}
+
+  void consumes(Consumer<Integer> x) {}
+
+  void suppliesList(Supplier<List<?>> x) {}
+
+  void suppliesArrayList(Supplier<ArrayList<?>> x) {}
 }
