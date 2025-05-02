@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.apidiff;
 
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
@@ -94,7 +95,7 @@ public abstract class ApiDiffChecker extends BugChecker
     ClassMemberKey memberKey =
         ClassMemberKey.create(
             sym.getSimpleName().toString(), Signatures.descriptor(sym.type, state));
-    ClassSymbol owner = sym.owner.enclClass();
+    ClassSymbol owner = enclosingClass(sym);
     if (apiDiff.isMemberUnsupported(Signatures.classDescriptor(owner.type, state), memberKey)
         || hasAnnotationForbiddingUse(sym, state)) {
       return buildDescription(tree)

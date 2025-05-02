@@ -20,6 +20,7 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -75,7 +76,7 @@ public class BuilderReturnThis extends BugChecker implements MethodTreeMatcher {
       return false;
     }
     // declared in a class with the simple name that contains Builder
-    ClassSymbol enclosingClass = sym.owner.enclClass();
+    ClassSymbol enclosingClass = enclosingClass(sym);
     if (!enclosingClass.getSimpleName().toString().endsWith("Builder")) {
       return false;
     }

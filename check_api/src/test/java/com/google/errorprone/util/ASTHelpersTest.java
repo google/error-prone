@@ -22,6 +22,7 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.canonicalConstructor;
+import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -1286,7 +1287,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         JavacElements.instance(tool.getContext()).getTypeElement(Lib.class.getCanonicalName());
     VarSymbol field =
         (VarSymbol)
-            element.getEnclosedElements().stream()
+            getEnclosedElements(element).stream()
                 .filter(e -> e.getSimpleName().contentEquals("field"))
                 .findAny()
                 .get();
@@ -1297,7 +1298,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
 
     MethodSymbol method =
         (MethodSymbol)
-            element.getEnclosedElements().stream()
+            getEnclosedElements(element).stream()
                 .filter(e -> e.getSimpleName().contentEquals("method"))
                 .findAny()
                 .get();

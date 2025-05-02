@@ -16,6 +16,7 @@
 
 package com.google.errorprone.util;
 
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static java.util.stream.Collectors.joining;
 
 import com.google.errorprone.VisitorState;
@@ -55,10 +56,10 @@ public final class Signatures {
   public static String prettyMethodSignature(ClassSymbol origin, MethodSymbol m) {
     StringBuilder sb = new StringBuilder();
     if (m.isConstructor()) {
-      Name name = m.owner.enclClass().getSimpleName();
+      Name name = enclosingClass(m).getSimpleName();
       if (name.isEmpty()) {
         // use the superclass name of anonymous classes
-        name = m.owner.enclClass().getSuperclass().asElement().getSimpleName();
+        name = enclosingClass(m).getSuperclass().asElement().getSimpleName();
       }
       sb.append(name);
     } else {

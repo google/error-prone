@@ -35,6 +35,7 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
+import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
@@ -429,6 +430,6 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
 
   private static Stream<Symbol> streamElements(VisitorState state, String clazz) {
     Symbol symbol = state.getSymbolFromString(clazz);
-    return symbol == null ? Stream.empty() : symbol.getEnclosedElements().stream();
+    return symbol == null ? Stream.empty() : getEnclosedElements(symbol).stream();
   }
 }

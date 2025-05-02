@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.errorprone.VisitorState;
@@ -91,7 +92,7 @@ public final class FieldMatchers {
       }
       return symbol.getKind().isField()
           && fieldSymbolIsAppropriate(symbol)
-          && classIsAppropriate(symbol.owner.enclClass());
+          && classIsAppropriate(enclosingClass(symbol));
     }
 
     abstract boolean fieldSymbolIsAppropriate(Symbol symbol);

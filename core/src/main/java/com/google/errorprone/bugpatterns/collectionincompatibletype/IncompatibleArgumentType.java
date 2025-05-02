@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.extractTypeArgAsMemberOfSupertype;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableListMultimap;
@@ -266,7 +267,7 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
       //    }
       // }
       // new Foo<String>().new Bar().something(123); // should fail, 123 needs to match String
-      ClassSymbol encloser = clazzSymbol.owner.enclClass();
+      ClassSymbol encloser = enclosingClass(clazzSymbol);
       calledType = calledType.getEnclosingType();
       tyargIndex = findTypeArgInList(encloser, typeArgName);
       if (tyargIndex != -1) {

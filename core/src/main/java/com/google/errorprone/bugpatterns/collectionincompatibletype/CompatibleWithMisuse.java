@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.AnnotationNames.COMPATIBLE_WITH_ANNOTATION;
 
@@ -91,7 +92,7 @@ public class CompatibleWithMisuse extends BugChecker implements AnnotationTreeMa
     ClassSymbol cs = (ClassSymbol) declaredMethod.owner;
     do {
       potentialTypeVars.addAll(cs.getTypeParameters());
-      cs = cs.isInner() ? cs.owner.enclClass() : null;
+      cs = cs.isInner() ? enclosingClass(cs) : null;
     } while (cs != null);
 
     if (potentialTypeVars.isEmpty()) {
