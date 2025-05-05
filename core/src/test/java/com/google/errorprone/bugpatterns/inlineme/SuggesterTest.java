@@ -1187,6 +1187,7 @@ public final class Client {
             }
 
             """)
+        // TODO(b/202145711): MAGIC.get() should be Client.MAGIC.get()
         .addOutputLines(
             "Client.java",
 """
