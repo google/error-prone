@@ -170,5 +170,10 @@ UNRECOGNIZED case.
 
 [complete normally]: https://docs.oracle.com/javase/specs/jls/se10/html/jls-14.html#jls-14.1
 
+## Library skew
+
+A default branch that has a comment containing "skew" will not be classified as
+unnecessary. See: [MissingCasesInEnumSwitch](MissingCasesInEnumSwitch.md).
+
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnecessaryDefaultInEnumSwitch")` to the enclosing element.
