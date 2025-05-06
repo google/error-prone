@@ -28,5 +28,7 @@ or map negative numbers onto the non-negative range:
 
 ```java
 long lng = r.nextLong();
-lng = (lng == Long.MIN_VALUE) ? 0 : Math.abs(lng);
+
+long bestForHashCodes = lng & Long.MAX_VALUE;
+long bestForMath = LongMath.saturatedAbs(lng);
 ```

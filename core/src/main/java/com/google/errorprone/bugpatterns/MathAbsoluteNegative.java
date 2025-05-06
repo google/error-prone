@@ -36,7 +36,7 @@ import com.sun.source.tree.MethodInvocationTree;
 @BugPattern(
     summary =
         "Math.abs does not always give a non-negative result. Please consider other "
-            + "methods for positive numbers.",
+            + "methods for positive numbers, such as `mod` or `saturatedAbs`.",
     severity = WARNING,
     altNames = "MathAbsoluteRandom")
 public final class MathAbsoluteNegative extends BugChecker implements MethodInvocationTreeMatcher {
