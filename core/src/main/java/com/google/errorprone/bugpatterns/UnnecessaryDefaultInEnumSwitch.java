@@ -32,7 +32,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
@@ -48,7 +47,6 @@ import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import java.util.List;
-import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -75,14 +73,6 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
           + "to `UNRECOGNIZED` to enable compile-time enforcement that the switch statement is "
           + "exhaustive";
 
-  private final boolean allowDefaultForSkew;
-
-  @Inject
-  UnnecessaryDefaultInEnumSwitch(ErrorProneFlags flags) {
-    allowDefaultForSkew =
-        flags.getBoolean("UnnecessaryDefaultInEnumSwitch:AllowDefaultForSkew").orElse(true);
-  }
-
   @Override
   public Description matchSwitchExpression(SwitchExpressionTree tree, VisitorState state) {
     TypeSymbol switchType = getType(tree.getExpression()).asElement();
@@ -94,7 +84,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
     if (defaultCase == null) {
       return NO_MATCH;
     }
-    if (allowDefaultForSkew && isDefaultCaseForSkew(tree, defaultCase, state)) {
+    if (isDefaultCaseForSkew(tree, defaultCase, state)) {
       // default is explicitly commented as being present for skew, it can stay.
       return NO_MATCH;
     }
@@ -155,7 +145,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
       return NO_MATCH;
     }
 
-    if (allowDefaultForSkew && isDefaultCaseForSkew(switchTree, defaultCase, state)) {
+    if (isDefaultCaseForSkew(switchTree, defaultCase, state)) {
       // default is explicitly commented as being present for skew, it can stay.
       return NO_MATCH;
     }

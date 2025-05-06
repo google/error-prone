@@ -23,7 +23,6 @@ import static com.google.errorprone.bugpatterns.Switches.isDefaultCaseForSkew;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -36,7 +35,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -45,14 +43,6 @@ import javax.lang.model.element.ElementKind;
     severity = WARNING)
 public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMatcher {
   public static final int MAX_CASES_TO_PRINT = 5;
-
-  private final boolean checkSwitchesWithDefaultForSkew;
-
-  @Inject
-  MissingCasesInEnumSwitch(ErrorProneFlags flags) {
-    checkSwitchesWithDefaultForSkew =
-        flags.getBoolean("MissingCasesInEnumSwitch:CheckSwitchesWithDefaultForSkew").orElse(true);
-  }
 
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {
@@ -67,9 +57,7 @@ public class MissingCasesInEnumSwitch extends BugChecker implements SwitchTreeMa
     // Continue to perform the check only if:
     //  - there is no default case present or
     //  - the default case only exists for potential version.
-    if (defaultCase.isPresent()
-        && (!checkSwitchesWithDefaultForSkew
-            || !isDefaultCaseForSkew(tree, defaultCase.get(), state))) {
+    if (defaultCase.isPresent() && !isDefaultCaseForSkew(tree, defaultCase.get(), state)) {
       return Description.NO_MATCH;
     }
     ImmutableSet<String> handled =
