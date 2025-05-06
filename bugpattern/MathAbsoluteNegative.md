@@ -1,7 +1,7 @@
 ---
 title: MathAbsoluteNegative
 summary: Math.abs does not always give a non-negative result. Please consider other
-  methods for positive numbers.
+  methods for positive numbers, such as `mod` or `saturatedAbs`.
 layout: bugpattern
 tags: ''
 severity: WARNING
@@ -45,7 +45,9 @@ or map negative numbers onto the non-negative range:
 
 ```java
 long lng = r.nextLong();
-lng = (lng == Long.MIN_VALUE) ? 0 : Math.abs(lng);
+
+long bestForHashCodes = lng & Long.MAX_VALUE;
+long bestForMath = LongMath.saturatedAbs(lng);
 ```
 
 ## Suppression
