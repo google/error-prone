@@ -437,6 +437,7 @@ import com.google.errorprone.bugpatterns.UnnecessaryMethodInvocationMatcher;
 import com.google.errorprone.bugpatterns.UnnecessaryMethodReference;
 import com.google.errorprone.bugpatterns.UnnecessaryOptionalGet;
 import com.google.errorprone.bugpatterns.UnnecessaryParentheses;
+import com.google.errorprone.bugpatterns.UnnecessaryQualifier;
 import com.google.errorprone.bugpatterns.UnnecessarySetDefault;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryStringBuilder;
@@ -1144,6 +1145,7 @@ public class BuiltInCheckerSuppliers {
           UnnecessaryMethodInvocationMatcher.class,
           UnnecessaryMethodReference.class,
           UnnecessaryParentheses.class,
+          UnnecessaryQualifier.class,
           UnnecessaryStringBuilder.class,
           UnrecognisedJavadocTag.class,
           UnsafeFinalization.class,
