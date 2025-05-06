@@ -30,6 +30,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symtab;
@@ -37,7 +38,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import javax.lang.model.element.Modifier;
 
-/** Bugpattern for incorrect overloads of main. */
+/** See BugPattern annotation. */
 @BugPattern(summary = "'main' methods must be public, static, and void", severity = WARNING)
 public final class IncorrectMainMethod extends BugChecker implements MethodTreeMatcher {
 
@@ -59,15 +60,20 @@ public final class IncorrectMainMethod extends BugChecker implements MethodTreeM
     if (!types.isArray(type) || !types.isSameType(types.elemtype(type), symtab.stringType)) {
       return NO_MATCH;
     }
-    if (sym.getModifiers().containsAll(REQUIRED_MODIFIERS)
-        && types.isSameType(getType(tree.getReturnType()), symtab.voidType)) {
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    if (!types.isSameType(getType(tree.getReturnType()), symtab.voidType)) {
+      fix.replace(tree.getReturnType(), "void");
+    }
+    if (!SourceVersion.supportsInstanceMainMethods(state.context)
+        && !sym.getModifiers().containsAll(REQUIRED_MODIFIERS)) {
+      SuggestedFixes.removeModifiers(tree, state, Modifier.PROTECTED, Modifier.PRIVATE)
+          .ifPresent(fix::merge);
+      SuggestedFixes.addModifiers(tree, tree.getModifiers(), state, REQUIRED_MODIFIERS)
+          .ifPresent(fix::merge);
+    }
+    if (fix.isEmpty()) {
       return NO_MATCH;
     }
-    SuggestedFix.Builder fix = SuggestedFix.builder().replace(tree.getReturnType(), "void");
-    SuggestedFixes.removeModifiers(tree, state, Modifier.PROTECTED, Modifier.PRIVATE)
-        .ifPresent(fix::merge);
-    SuggestedFixes.addModifiers(tree, tree.getModifiers(), state, REQUIRED_MODIFIERS)
-        .ifPresent(fix::merge);
     return describeMatch(tree, fix.build());
   }
 }

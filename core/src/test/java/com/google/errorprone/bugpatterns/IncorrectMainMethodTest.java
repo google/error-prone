@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -87,6 +89,7 @@ public class IncorrectMainMethodTest {
 
   @Test
   public void positiveNonPublic() {
+    assume().that(Runtime.version().feature()).isLessThan(25);
     testHelper
         .addSourceLines(
             "Test.java",
@@ -101,12 +104,41 @@ public class IncorrectMainMethodTest {
 
   @Test
   public void positiveNonStatic() {
+    assume().that(Runtime.version().feature()).isLessThan(25);
     testHelper
         .addSourceLines(
             "Test.java",
             """
             class Test {
               // BUG: Diagnostic contains:
+              public void main(String[] args) {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeNonPublic() {
+    assume().that(Runtime.version().feature()).isAtLeast(25);
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static void main(String[] args) {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeNonStatic() {
+    assume().that(Runtime.version().feature()).isAtLeast(25);
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
               public void main(String[] args) {}
             }
             """)
@@ -170,6 +202,7 @@ public class IncorrectMainMethodTest {
 
   @Test
   public void removePrivate() {
+    assume().that(Runtime.version().feature()).isLessThan(25);
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -190,6 +223,7 @@ public class IncorrectMainMethodTest {
 
   @Test
   public void removeProtected() {
+    assume().that(Runtime.version().feature()).isLessThan(25);
     refactoringHelper
         .addInputLines(
             "Test.java",
