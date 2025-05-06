@@ -58,6 +58,35 @@ public final class PatternMatchingInstanceofTest {
   }
 
   @Test
+  public void seesThroughParens() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test) {
+                  Test test = ((((Test) o)));
+                  test(test);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Test test) {
+                  test(test);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negatedIf() {
     helper
         .addInputLines(

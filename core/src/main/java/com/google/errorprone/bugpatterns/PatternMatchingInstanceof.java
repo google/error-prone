@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Ascii.toLowerCase;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -45,6 +46,7 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
@@ -139,11 +141,12 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
 
   private static @Nullable VariableTree isVariableAssignedFromCast(
       TreePath treePath, InstanceOfTree instanceOfTree, VisitorState state) {
-    var parent = treePath.getParentPath().getLeaf();
+    var parent =
+        stream(treePath.getParentPath())
+            .dropWhile(t -> t.getKind() == Kind.PARENTHESIZED)
+            .findFirst()
+            .orElse(null);
     if (!(parent instanceof VariableTree variableTree)) {
-      return null;
-    }
-    if (!variableTree.getInitializer().equals(treePath.getLeaf())) {
       return null;
     }
     // Check that the type is exactly the same (not a subtypes), since refactoring cases where the
