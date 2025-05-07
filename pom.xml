@@ -46,6 +46,7 @@
     <protobuf.version>3.25.5</protobuf.version>
     <grpc.version>1.43.3</grpc.version>
     <jspecify.version>1.0.0</jspecify.version>
+    <google-java-format.version>1.27.0</google-java-format.version>
   </properties>
 
   <organization>
