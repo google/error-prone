@@ -1023,7 +1023,7 @@ __[MalformedInlineTag](bugpattern/MalformedInlineTag)__<br>
 This Javadoc tag is malformed. The correct syntax is {@tag and not @{tag.
 
 __[MathAbsoluteNegative](bugpattern/MathAbsoluteNegative)__<br>
-Math.abs does not always give a non-negative result. Please consider other methods for positive numbers, such as &#96;mod&#96; or &#96;saturatedAbs&#96;.
+Math.abs() does not always give a non-negative result. Please consider other methods for positive numbers, such as IntMath.saturatedAbs() or Math.floorMod().
 
 __[MemoizeConstantVisitorStateLookups](bugpattern/MemoizeConstantVisitorStateLookups)__<br>
 Anytime you need to look up a constant value from VisitorState, improve performance by creating a cache for it with VisitorState.memoize

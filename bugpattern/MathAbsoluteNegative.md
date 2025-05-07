@@ -1,7 +1,7 @@
 ---
 title: MathAbsoluteNegative
-summary: Math.abs does not always give a non-negative result. Please consider other
-  methods for positive numbers, such as `mod` or `saturatedAbs`.
+summary: Math.abs() does not always give a non-negative result. Please consider other
+  methods for positive numbers, such as IntMath.saturatedAbs() or Math.floorMod().
 layout: bugpattern
 tags: ''
 severity: WARNING
