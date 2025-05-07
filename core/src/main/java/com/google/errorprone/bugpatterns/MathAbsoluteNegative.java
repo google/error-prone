@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -35,17 +36,29 @@ import com.sun.source.tree.MethodInvocationTree;
  */
 @BugPattern(
     summary =
-        "Math.abs does not always give a non-negative result. Please consider other "
-            + "methods for positive numbers, such as `mod` or `saturatedAbs`.",
+        "Math.abs() does not always give a non-negative result. Please consider other "
+            + "methods for positive numbers, such as IntMath.saturatedAbs() or Math.floorMod().",
     severity = WARNING,
     altNames = "MathAbsoluteRandom")
 public final class MathAbsoluteNegative extends BugChecker implements MethodInvocationTreeMatcher {
+  private static final ImmutableSet<String> HASH_CODE_CLASSES =
+      ImmutableSet.of(
+          "java.lang.Long",
+          "java.lang.Integer",
+          "java.lang.Double",
+          "java.lang.Float",
+          "com.google.common.primitives.Longs",
+          "com.google.common.primitives.Ints",
+          "com.google.common.primitives.Floats",
+          "com.google.common.primitives.Doubles");
+
   private static final Matcher<MethodInvocationTree> POSSIBLY_NEGATIVE_ABS_VAL =
       allOf(
           staticMethod().onClass("java.lang.Math").named("abs"),
           argument(
               0,
               anyOf(
+                  staticMethod().onClassAny(HASH_CODE_CLASSES).named("hashCode"),
                   instanceMethod()
                       .onDescendantOf("java.util.Random")
                       .namedAnyOf("nextInt", "nextLong")

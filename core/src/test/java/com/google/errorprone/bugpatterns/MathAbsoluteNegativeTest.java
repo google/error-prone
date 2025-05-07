@@ -236,4 +236,50 @@ public class MathAbsoluteNegativeTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void guavaPrimitivesHashCode() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(long l, int i, float f, double d) {
+                int abs = 0;
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                abs = Math.abs(com.google.common.primitives.Longs.hashCode(l));
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                abs = Math.abs(com.google.common.primitives.Ints.hashCode(i));
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                abs = Math.abs(com.google.common.primitives.Floats.hashCode(f));
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                abs = Math.abs(com.google.common.primitives.Doubles.hashCode(d));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void jdkPrimitiveHashCode() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(long l, int i, float f, double d) {
+                int abs = 0;
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                abs = Math.abs(Long.hashCode(l));
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                abs = Math.abs(Integer.hashCode(i));
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                abs = Math.abs(Float.hashCode(f));
+                // BUG: Diagnostic contains: MathAbsoluteNegative
+                abs = Math.abs(Double.hashCode(d));
+              }
+            }
+            """)
+        .doTest();
+  }
 }
