@@ -2103,6 +2103,53 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
+  public void switchByEnum_returnSwitchWithAllEnumValues_retainTrailingLintComment() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit) {
+                // LINT.
+                switch (suit) {
+                  case HEART:
+                    return 1;
+                  case DIAMOND:
+                    return 2;
+                  case SPADE:
+                    return 3;
+                  case CLUB:
+                    return 4;
+                }
+                // LINT.
+                throw new AssertionError("unreachable!");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit) {
+                // LINT.
+                return switch (suit) {
+                  case HEART -> 1;
+                  case DIAMOND -> 2;
+                  case SPADE -> 3;
+                  case CLUB -> 4;
+                };
+                // LINT.
+
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void switchByEnum_returnSwitchNoFollowingStatementsInBlock_errorAndNoRemoval() {
     // The switch is exhaustive but doesn't have any statements immediately following it in the
     // lowest ancestor statement block
