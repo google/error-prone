@@ -1994,7 +1994,7 @@ public final class StatementSwitchToExpressionSwitchTest {
                     default:
                       throw new NullPointerException();
                   }
-                  // Unreachable - no "should never happen" code
+                  // Trailing comment
                 }
                 System.out.println("don't delete 2");
                 return 0;
@@ -2023,6 +2023,7 @@ public final class StatementSwitchToExpressionSwitchTest {
                     case CLUB -> throw new NullPointerException();
                     default -> throw new NullPointerException();
                   };
+                  // Trailing comment
                 }
                 System.out.println("don't delete 2");
                 return 0;

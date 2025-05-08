@@ -1132,12 +1132,15 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
           break;
         }
 
-        // If the next statement is not reachable, then none of the following statements in this
-        // block are either.  So, we need to delete them all.
-        regionsToDelete.add(
-            Range.closed(
-                state.getEndPosition(blockTree.getStatements().get(indexInBlock)),
-                state.getEndPosition(blockTree)));
+        // If a next statement in this block exists, then it is not reachable; similarly, none of
+        // the following statements in this block are reachable either.  So, iff further statements
+        // exist, delete them all (including their comments).
+        if (indexInBlock < blockTree.getStatements().size() - 1) {
+          regionsToDelete.add(
+              Range.closed(
+                  state.getEndPosition(blockTree.getStatements().get(indexInBlock)),
+                  state.getEndPosition(blockTree)));
+        }
       }
     }
 
@@ -1146,7 +1149,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       suggestedFixBuilder.setShortDescription(REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION);
     }
     suggestedFixBuilder.replace(switchTree, replacementCodeBuilder.toString());
-    // Delete dead code, leaving comments where feasible
+    // Delete dead code and its comments
     regionsToDelete.forEach(
         r -> suggestedFixBuilder.replace(r.lowerEndpoint(), r.upperEndpoint(), "}"));
     return suggestedFixBuilder.build();
