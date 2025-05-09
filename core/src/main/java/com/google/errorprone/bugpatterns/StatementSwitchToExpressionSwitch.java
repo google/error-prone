@@ -161,9 +161,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     this.enableDirectConversion =
         flags.getBoolean("StatementSwitchToExpressionSwitch:EnableDirectConversion").orElse(true);
     this.enableReturnSwitchConversion =
-        flags
-            .getBoolean("StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
-            .orElse(true);
+        true
+            || flags
+                .getBoolean("StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
+                .orElse(true);
     this.enableAssignmentSwitchConversion =
         flags
             .getBoolean("StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion")
