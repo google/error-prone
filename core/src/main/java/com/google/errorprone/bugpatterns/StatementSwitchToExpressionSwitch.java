@@ -298,6 +298,14 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         return DEFAULT_ANALYSIS_RESULT;
       }
 
+      // Null case can never be grouped with a following case (except possibly default)
+      if (caseIndex > 0
+          && groupedWithNextCase.get(caseIndex - 1)
+          && isNullCase.get(caseIndex - 1)
+          && !isDefaultCase) {
+        return DEFAULT_ANALYSIS_RESULT;
+      }
+
       // Grouping null with default requires Java 21+
       if (caseIndex > 0
           && isNullCase.get(caseIndex - 1)

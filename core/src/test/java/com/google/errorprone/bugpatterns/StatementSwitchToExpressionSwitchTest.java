@@ -1378,6 +1378,40 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
+  public void switchByEnum_firstNullCase_noError() {
+    // The null case cannot be grouped with a following regular case per Java syntax
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public int invoke() {
+                return 123;
+              }
+
+              public int foo(Suit suit) {
+                switch (suit) {
+                  case null:
+                  case DIAMOND:
+                    return invoke();
+                  case SPADE:
+                    throw new RuntimeException("Spade");
+                  case HEART:
+                    throw new RuntimeException("Heart");
+                  case CLUB:
+                    throw new NullPointerException("Club");
+                }
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
+        .doTest();
+  }
+
+  @Test
   public void switchByEnum_nullGroupedWithDefault_error() {
     assume().that(Runtime.version().feature()).isAtLeast(21);
     // Null can be grouped with default
