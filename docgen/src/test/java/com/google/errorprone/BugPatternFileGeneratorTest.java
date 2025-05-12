@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -84,7 +85,12 @@ public class BugPatternFileGeneratorTest {
   public void regressionTest_frontmatter_pygments() throws Exception {
     BugPatternFileGenerator generator =
         new BugPatternFileGenerator(
-            wikiDir, explanationDirBase, true, null, input -> input.severity);
+            wikiDir,
+            explanationDirBase,
+            true,
+            null,
+            Collections.emptySet(),
+            input -> input.severity);
     generator.processLine(BUGPATTERN_LINE);
     String expected =
         CharStreams.toString(
@@ -100,7 +106,12 @@ public class BugPatternFileGeneratorTest {
   public void regressionTest_nofrontmatter_gfm() throws Exception {
     BugPatternFileGenerator generator =
         new BugPatternFileGenerator(
-            wikiDir, explanationDirBase, false, null, input -> input.severity);
+            wikiDir,
+            explanationDirBase,
+            false,
+            null,
+            Collections.emptySet(),
+            input -> input.severity);
     generator.processLine(BUGPATTERN_LINE);
     String expected =
         CharStreams.toString(
@@ -115,7 +126,12 @@ public class BugPatternFileGeneratorTest {
   public void regressionTest_sidecar() throws Exception {
     BugPatternFileGenerator generator =
         new BugPatternFileGenerator(
-            wikiDir, explanationDirBase, false, null, input -> input.severity);
+            wikiDir,
+            explanationDirBase,
+            false,
+            null,
+            Collections.emptySet(),
+            input -> input.severity);
     Files.write(
         explanationDirBase.resolve("DeadException.md"),
         Arrays.asList(
@@ -147,7 +163,12 @@ public class BugPatternFileGeneratorTest {
     // Write markdown file
     BugPatternFileGenerator generator =
         new BugPatternFileGenerator(
-            wikiDir, explanationDirBase, false, null, input -> input.severity);
+            wikiDir,
+            explanationDirBase,
+            false,
+            null,
+            Collections.emptySet(),
+            input -> input.severity);
     generator.processLine(new Gson().toJson(instance));
     String expected =
         CharStreams.toString(

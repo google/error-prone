@@ -35,7 +35,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.StreamSupport;
 
 /**
@@ -70,6 +72,9 @@ public final class DocGenTool {
         description = "The base url for links to bugpatterns",
         arity = 1)
     private String baseUrl = null;
+
+    @Parameter(names = "-ignore", description = "Check name to ignore")
+    private Set<String> ignore = new HashSet<>();
   }
 
   enum Target {
@@ -109,6 +114,7 @@ public final class DocGenTool {
             explanationDir,
             options.target == Target.EXTERNAL,
             options.baseUrl,
+            options.ignore,
             input -> input.severity);
     try (Writer w =
         Files.newBufferedWriter(wikiDir.resolve("bugpatterns.md"), StandardCharsets.UTF_8)) {
