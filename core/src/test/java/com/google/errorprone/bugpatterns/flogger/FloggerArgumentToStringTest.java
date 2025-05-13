@@ -142,4 +142,24 @@ public class FloggerArgumentToStringTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void lenientFormat_explicitToStringNotNeeded() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkArgument;
+
+            class Test {
+              void test(Object x, long l) {
+                // BUG: Diagnostic contains:
+                checkArgument(1 == 1, "%s", x.toString());
+                // BUG: Diagnostic contains:
+                checkArgument(1 == 1, "%s", Long.toString(l));
+              }
+            }
+            """)
+        .doTest();
+  }
 }

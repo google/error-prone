@@ -21,6 +21,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.flogger.FloggerHelpers.inferFormatSpecifier;
+import static com.google.errorprone.bugpatterns.formatstring.LenientFormatStringUtils.getLenientFormatStringPosition;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -29,7 +30,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static java.util.Arrays.stream;
 
 import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableMap;
@@ -46,6 +46,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
@@ -281,34 +282,58 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
   private static final Matcher<ExpressionTree> LOG_MATCHER =
       instanceMethod().onDescendantOf("com.google.common.flogger.LoggingApi").named("log");
 
-  static final Matcher<ExpressionTree> UNWRAPPABLE =
-      anyOf(stream(Unwrapper.values()).map(u -> u.matcher).collect(toImmutableList()));
-
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!LOG_MATCHER.matches(tree, state)) {
-      return NO_MATCH;
-    }
     List<? extends ExpressionTree> arguments = tree.getArguments();
-    if (arguments.isEmpty()) {
-      return NO_MATCH;
+    if (LOG_MATCHER.matches(tree, state)) {
+      if (arguments.isEmpty()) {
+        return NO_MATCH;
+      }
+      String formatString = ASTHelpers.constValue(arguments.get(0), String.class);
+      if (formatString == null) {
+        return NO_MATCH;
+      }
+      arguments = arguments.subList(1, arguments.size());
+      return unwrapArguments(formatString, tree, arguments, EnumSet.allOf(Unwrapper.class), state);
+    } else {
+      var lenientFormatPosition = getLenientFormatStringPosition(tree, state);
+      EnumSet<Unwrapper> unwrappers =
+          EnumSet.of(Unwrapper.TO_STRING, Unwrapper.STRING_VALUE_OF, Unwrapper.STATIC_TO_STRING);
+      if (lenientFormatPosition != -1) {
+        for (int i = lenientFormatPosition + 1; i < arguments.size(); ++i) {
+          var argument = arguments.get(i);
+          var unwrapper =
+              unwrappers.stream()
+                  .filter(u -> u.matcher.matches(argument, state))
+                  .findFirst()
+                  .orElse(null);
+          if (unwrapper == null) {
+            continue;
+          }
+          Parameter unwrapped = unwrapper.unwrap((MethodInvocationTree) argument, 's');
+          state.reportMatch(
+              buildDescription(argument)
+                  .setMessage(
+                      "Avoid eagerly stringifying arguments to lenient format methods. The method"
+                          + " will stringify if needed, and the evaluation may be lazy.")
+                  .addFix(SuggestedFix.replace(argument, unwrapped.source.get(state)))
+                  .build());
+        }
+      }
     }
-    String formatString = ASTHelpers.constValue(arguments.get(0), String.class);
-    if (formatString == null) {
-      return NO_MATCH;
-    }
-    arguments = arguments.subList(1, arguments.size());
-    if (arguments.stream().noneMatch(argument -> UNWRAPPABLE.matches(argument, state))) {
-      return NO_MATCH;
-    }
-    return unwrapArguments(formatString, tree, arguments, state);
+    return NO_MATCH;
   }
 
-  Description unwrapArguments(
+  private Description unwrapArguments(
       String formatString,
       MethodInvocationTree tree,
       List<? extends ExpressionTree> arguments,
+      EnumSet<Unwrapper> unwrappers,
       VisitorState state) {
+    if (arguments.stream()
+        .noneMatch(arg -> unwrappers.stream().anyMatch(u -> u.matcher.matches(arg, state)))) {
+      return NO_MATCH;
+    }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     int start = 0;
     java.util.regex.Matcher matcher = PRINTF_TERM_CAPTURE_PATTERN.matcher(formatString);
@@ -332,7 +357,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
         if (term.length() == 2) {
           ExpressionTree argument = arguments.get(idx);
           char placeholder = term.charAt(1);
-          Parameter unwrapped = unwrap(argument, placeholder, state);
+          Parameter unwrapped = unwrap(argument, placeholder, unwrappers, state);
           if (unwrapped != null) {
             fix.replace(argument, unwrapped.source.get(state));
             placeholder = firstNonNull(unwrapped.placeholder, 's');
@@ -357,13 +382,15 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
   }
 
   private static @Nullable Parameter unwrap(
-      ExpressionTree argument, char placeholder, VisitorState state) {
-    for (Unwrapper unwrapper : Unwrapper.values()) {
-      if (unwrapper.matcher.matches(argument, state)) {
-        return unwrapper.unwrap((MethodInvocationTree) argument, placeholder);
-      }
-    }
-    return null;
+      ExpressionTree argument,
+      char placeholder,
+      EnumSet<Unwrapper> unwrappers,
+      VisitorState state) {
+    return unwrappers.stream()
+        .filter(unwrapper -> unwrapper.matcher.matches(argument, state))
+        .map(unwrapper -> unwrapper.unwrap((MethodInvocationTree) argument, placeholder))
+        .findFirst()
+        .orElse(null);
   }
 
   private static boolean hasSingleVarargsCompatibleArgument(
