@@ -21,8 +21,12 @@ var activeTableTab = "active-table-tab";
 const linkIcon = "Link icon";
 const linkToSection = "Link to this section";
 
-if (hljs) {
-    hljs.highlightAll();
+if (typeof hljs !== "undefined") {
+    try {
+        hljs.highlightAll();
+    } catch (err) {
+        console.error(err)
+    }
 }
 
 function loadScripts(doc, tag) {
