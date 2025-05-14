@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.Switches.isDefaultCaseForSkew;
+import static com.google.errorprone.fixes.SuggestedFixes.compilesWithFix;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -36,7 +37,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BreakTree;
@@ -158,8 +158,13 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
       SwitchTree switchTree, CaseTree caseBeforeDefault, CaseTree defaultCase, VisitorState state) {
     List<? extends StatementTree> defaultStatements = defaultCase.getStatements();
     if (defaultStatements == null) {
-      // TODO(b/177258673): provide fixes for `case -> ...`
-      return buildDescription(defaultCase).setMessage(DESCRIPTION_REMOVED_DEFAULT).build();
+      SuggestedFix fix = SuggestedFix.delete(defaultCase);
+      return compilesWithFix(fix, state)
+          ? buildDescription(defaultCase)
+              .setMessage(DESCRIPTION_REMOVED_DEFAULT)
+              .addFix(fix)
+              .build()
+          : NO_MATCH;
     }
     if (trivialDefault(defaultStatements)) {
       // deleting `default:` or `default: break;` is a no-op
@@ -212,7 +217,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
     //  Try deleting the code entirely.  If it fails to compile, we've broken (3) -> no match.
     //  Try lifting the code to the prior case statement.  If it fails to compile, we had (2)
     //  and the code is unreachable -- so use (2) as the strategy.  Otherwise, use (1).
-    if (!SuggestedFixes.compilesWithFix(SuggestedFix.delete(defaultCase), state)) {
+    if (!compilesWithFix(SuggestedFix.delete(defaultCase), state)) {
       return NO_MATCH; // case (3)
     }
     if (!canFallThrough(caseBeforeDefault)) {
@@ -238,8 +243,8 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
     Description.Builder unrecognizedDescription =
         buildDescription(defaultCase).setMessage(DESCRIPTION_UNRECOGNIZED);
     if (defaultStatements == null) {
-      // TODO(b/177258673): provide fixes for `case -> ...`
-      return unrecognizedDescription.build();
+      SuggestedFix fix = SuggestedFix.replace(defaultCase.getLabels().get(0), "case UNRECOGNIZED");
+      return compilesWithFix(fix, state) ? unrecognizedDescription.addFix(fix).build() : NO_MATCH;
     }
     if (trivialDefault(defaultStatements)) {
       // the default case is empty or contains only `break` -- replace it with `case UNRECOGNIZED:`
@@ -261,7 +266,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
     }
 
     SuggestedFix fix = SuggestedFix.replace(defaultCase, "case UNRECOGNIZED:" + defaultContents);
-    if (!SuggestedFixes.compilesWithFix(fix, state)) {
+    if (!compilesWithFix(fix, state)) {
       // code in the default case can't be deleted -- no fix available.
       return NO_MATCH;
     }
