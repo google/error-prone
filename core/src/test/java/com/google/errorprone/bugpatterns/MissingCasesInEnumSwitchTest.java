@@ -375,4 +375,107 @@ public class MissingCasesInEnumSwitchTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void switchExpression_exhaustive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                int x =
+                    switch (c) {
+                      case ONE -> 1;
+                      case TWO -> 2;
+                      case THREE -> 3;
+                    };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switchExpression_hasDefault() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                int x =
+                    switch (c) {
+                      case ONE -> 1;
+                      default -> -1;
+                    };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switchExpression_onlyDefault() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                int x =
+                    switch (c) {
+                      default -> -1;
+                    };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switchExpression_nonExhaustive_withDefaultForSkew() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                int x =
+                    // BUG: Diagnostic contains: THREE
+                    switch (c) {
+                      case ONE -> 1;
+                      case TWO -> 2;
+                      // fallback for library skew
+                      default -> -1;
+                    };
+              }
+            }
+            """)
+        .doTest();
+  }
 }
