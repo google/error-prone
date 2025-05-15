@@ -378,7 +378,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   }
 
   private String apiTrailer(MethodSymbol symbol, VisitorState state) {
-    // (isLocal returns true for both local classes and anonymous classes. That's good for us.)
+    /*
+     * (isDirectlyOrIndirectlyLocal returns true for both local classes and anonymous classes.
+     * That's good for us.)
+     */
     if (enclosingClass(symbol).isDirectlyOrIndirectlyLocal()) {
       /*
        * We don't have a defined format for members of local and anonymous classes. After all, their
