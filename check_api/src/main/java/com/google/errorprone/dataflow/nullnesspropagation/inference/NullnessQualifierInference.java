@@ -21,7 +21,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
@@ -517,18 +516,13 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
   }
 
   /** Pair of a {@link Type} and an optional {@link Symbol}. */
-  @AutoValue
-  abstract static class TypeAndSymbol {
+  private record TypeAndSymbol(Type type, @Nullable VarSymbol symbol) {
     static TypeAndSymbol create(Type type) {
       return create(type, /* symbol= */ null);
     }
 
     static TypeAndSymbol create(Type type, @Nullable VarSymbol symbol) {
-      return new AutoValue_NullnessQualifierInference_TypeAndSymbol(type, symbol);
+      return new TypeAndSymbol(type, symbol);
     }
-
-    abstract Type type();
-
-    abstract @Nullable VarSymbol symbol();
   }
 }

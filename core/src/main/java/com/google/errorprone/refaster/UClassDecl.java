@@ -49,17 +49,12 @@ abstract class UClassDecl extends USimpleStatement implements ClassTree {
     return new AutoValue_UClassDecl(ImmutableList.copyOf(members));
   }
 
-  @AutoValue
-  abstract static class UnifierWithRemainingMembers {
+  private record UnifierWithRemainingMembers(
+      Unifier unifier, ImmutableList<UMethodDecl> remainingMembers) {
     static UnifierWithRemainingMembers create(
         Unifier unifier, Iterable<UMethodDecl> remainingMembers) {
-      return new AutoValue_UClassDecl_UnifierWithRemainingMembers(
-          unifier, ImmutableList.copyOf(remainingMembers));
+      return new UnifierWithRemainingMembers(unifier, ImmutableList.copyOf(remainingMembers));
     }
-
-    abstract Unifier unifier();
-
-    abstract ImmutableList<UMethodDecl> remainingMembers();
 
     static Function<Unifier, UnifierWithRemainingMembers> withRemaining(
         Iterable<UMethodDecl> remainingMembers) {

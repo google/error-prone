@@ -40,7 +40,6 @@ import static java.util.concurrent.TimeUnit.MINUTES;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
@@ -514,22 +513,17 @@ public final class TimeUnitMismatch extends BugChecker
    * TreeAndTimeUnit#innermostTree()} refers to {@code getFooSeconds()}, {@link
    * TreeAndTimeUnit#outermostUnit()} is MILLISECONDS, and {@link TreeAndTimeUnit#innermostUnit()}
    * is SECONDS.
+   *
+   * @param innermostTree The innermost tree expressing a unit, ignoring any conversions around it.
+   * @param outermostUnit The effective unit of the expression we started from.
+   * @param innermostUnit The underlying unit of {@link #innermostTree()}.
    */
-  @AutoValue
-  abstract static class TreeAndTimeUnit {
+  private record TreeAndTimeUnit(
+      ExpressionTree innermostTree, TimeUnit outermostUnit, TimeUnit innermostUnit) {
     public static TreeAndTimeUnit of(
         ExpressionTree tree, TimeUnit timeUnit, TimeUnit underlyingUnit) {
-      return new AutoValue_TimeUnitMismatch_TreeAndTimeUnit(tree, timeUnit, underlyingUnit);
+      return new TreeAndTimeUnit(tree, timeUnit, underlyingUnit);
     }
-
-    /** The innermost tree expressing a unit, ignoring any conversions around it. */
-    abstract ExpressionTree innermostTree();
-
-    /** The effective unit of the expression we started from. */
-    abstract TimeUnit outermostUnit();
-
-    /** The underlying unit of {@link #innermostTree()}. */
-    abstract TimeUnit innermostUnit();
   }
 
   private @Nullable TreeAndTimeUnit unitSuggestedWithConversion(

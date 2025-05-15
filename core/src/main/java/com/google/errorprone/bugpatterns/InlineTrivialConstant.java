@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
@@ -51,14 +50,9 @@ import javax.lang.model.element.Modifier;
 @BugPattern(summary = "Consider inlining this constant", severity = WARNING)
 public class InlineTrivialConstant extends BugChecker implements CompilationUnitTreeMatcher {
 
-  @AutoValue
-  abstract static class TrivialConstant {
-    abstract VariableTree tree();
-
-    abstract String replacement();
-
+  private record TrivialConstant(VariableTree tree, String replacement) {
     static TrivialConstant create(VariableTree tree, String replacement) {
-      return new AutoValue_InlineTrivialConstant_TrivialConstant(tree, replacement);
+      return new TrivialConstant(tree, replacement);
     }
   }
 

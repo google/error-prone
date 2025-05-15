@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -70,21 +69,17 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
   /** Maximum number of members to import before switching to qualified names. */
   public static final int MAX_MEMBER_IMPORTS = 20;
 
-  /** A type or member that needs to be imported. */
-  @AutoValue
-  abstract static class TypeToImport {
-
-    /** Returns the simple name of the import. */
-    abstract String name();
-
-    /** Returns the owner of the imported type or member. */
-    abstract Symbol owner();
-
-    /** Returns true if the import needs to be static (i.e. the import is for a field or method). */
-    abstract boolean isStatic();
-
+  /**
+   * A type or member that needs to be imported.
+   *
+   * @param name Returns the simple name of the import.
+   * @param owner Returns the owner of the imported type or member.
+   * @param isStatic Returns true if the import needs to be static (i.e. the import is for a field
+   *     or method).
+   */
+  private record TypeToImport(String name, Symbol owner, boolean isStatic) {
     static TypeToImport create(String name, Symbol owner, boolean stat) {
-      return new AutoValue_WildcardImport_TypeToImport(name, owner, stat);
+      return new TypeToImport(name, owner, stat);
     }
 
     private void addFix(SuggestedFix.Builder fix) {

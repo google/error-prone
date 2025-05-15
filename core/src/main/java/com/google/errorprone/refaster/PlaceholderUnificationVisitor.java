@@ -124,18 +124,11 @@ abstract class PlaceholderUnificationVisitor
    * state, the parameters of the placeholder method that have been bound, and a result used to
    * store additional state.
    */
-  @AutoValue
-  abstract static class State<R> {
+  record State<R>(List<UVariableDecl> seenParameters, Unifier unifier, @Nullable R result) {
     static <R> State<R> create(
         List<UVariableDecl> seenParameters, Unifier unifier, @Nullable R result) {
-      return new AutoValue_PlaceholderUnificationVisitor_State<>(seenParameters, unifier, result);
+      return new State<>(seenParameters, unifier, result);
     }
-
-    public abstract List<UVariableDecl> seenParameters();
-
-    public abstract Unifier unifier();
-
-    public abstract @Nullable R result();
 
     public <R2> State<R2> withResult(R2 result) {
       return create(seenParameters(), unifier(), result);

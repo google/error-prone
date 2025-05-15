@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
-import com.google.auto.value.AutoValue;
-
 /**
  * Represents a pair of a formal parameter and an actual parameter. Pairs can correspond to those in
  * the original method invocation but can also represent potential alternatives and suggested
@@ -25,15 +23,9 @@ import com.google.auto.value.AutoValue;
  *
  * @author andrewrice@google.com (Andrew Rice)
  */
-@AutoValue
-abstract class ParameterPair {
-
-  abstract Parameter formal();
-
-  abstract Parameter actual();
-
+record ParameterPair(Parameter formal, Parameter actual) {
   static ParameterPair create(Parameter formal, Parameter actual) {
-    return new AutoValue_ParameterPair(formal, actual);
+    return new ParameterPair(formal, actual);
   }
 
   boolean isAlternativePairing() {

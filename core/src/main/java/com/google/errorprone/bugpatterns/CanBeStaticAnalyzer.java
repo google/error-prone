@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
@@ -200,22 +199,17 @@ public class CanBeStaticAnalyzer extends TreeScanner {
     // skip annotations; the keys of key/value pairs look like unqualified method invocations
   }
 
-  /** Stores the result of a can-be-static query. */
-  @AutoValue
-  public abstract static class CanBeStaticResult {
-    /**
-     * Whether the method could *possibly* be static: i.e., this is false if it references an
-     * instance field.
-     */
-    public abstract boolean canPossiblyBeStatic();
-
-    /** Set of instance methods referenced by the method under inspection. */
-    public abstract ImmutableSet<MethodSymbol> methodsReferenced();
-
-    public static CanBeStaticResult of(
-        boolean canPossiblyBeStatic, Set<MethodSymbol> methodsReferenced) {
-      return new AutoValue_CanBeStaticAnalyzer_CanBeStaticResult(
-          canPossiblyBeStatic, ImmutableSet.copyOf(methodsReferenced));
+  /**
+   * Stores the result of a can-be-static query.
+   *
+   * @param canPossiblyBeStatic Whether the method could *possibly* be static: i.e., this is false
+   *     if it references an instance field.
+   * @param methodsReferenced Set of instance methods referenced by the method under inspection.
+   */
+  record CanBeStaticResult(
+      boolean canPossiblyBeStatic, ImmutableSet<MethodSymbol> methodsReferenced) {
+    static CanBeStaticResult of(boolean canPossiblyBeStatic, Set<MethodSymbol> methodsReferenced) {
+      return new CanBeStaticResult(canPossiblyBeStatic, ImmutableSet.copyOf(methodsReferenced));
     }
   }
 }

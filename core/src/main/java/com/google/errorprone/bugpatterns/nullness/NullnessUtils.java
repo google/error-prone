@@ -422,7 +422,7 @@ class NullnessUtils {
 
     VarSymbol varSymbol = getSymbol(nullChecked) instanceof VarSymbol vs ? vs : null;
 
-    return new AutoValue_NullnessUtils_NullCheck(name, varSymbol, polarity);
+    return new NullCheck(name, varSymbol, polarity);
   }
 
   /**
@@ -448,21 +448,18 @@ class NullnessUtils {
    * foo.bar} is non-null in the future. One case that might be particularly useful is {@code
    * this.bar}. We might even go further, assuming that {@code foo.bar()} will continue to have the
    * same value in some cases.
+   *
+   * @param bareIdentifier Returns the bare identifier that was checked against {@code null}, if the
+   *     null check took that form. Prefer this over {@link
+   *     #varSymbolButUsuallyPreferBareIdentifier} in most cases, as discussed in the class
+   *     documentation.
+   * @param varSymbolButUsuallyPreferBareIdentifier Returns the symbol that was checked against
+   *     {@code null}.
    */
-  @com.google.auto.value.AutoValue // fully qualified to work around JDK-7177813(?) in JDK8 build
-  abstract static class NullCheck {
-    /**
-     * Returns the bare identifier that was checked against {@code null}, if the null check took
-     * that form. Prefer this over {@link #varSymbolButUsuallyPreferBareIdentifier} in most cases,
-     * as discussed in the class documentation.
-     */
-    abstract @Nullable Name bareIdentifier();
-
-    /** Returns the symbol that was checked against {@code null}. */
-    abstract @Nullable VarSymbol varSymbolButUsuallyPreferBareIdentifier();
-
-    abstract Polarity polarity();
-
+  record NullCheck(
+      @Nullable Name bareIdentifier,
+      @Nullable VarSymbol varSymbolButUsuallyPreferBareIdentifier,
+      Polarity polarity) {
     boolean bareIdentifierMatches(ExpressionTree other) {
       return other instanceof IdentifierTree identifierTree
           && bareIdentifier() != null

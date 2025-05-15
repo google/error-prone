@@ -211,15 +211,9 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
         .map(type -> ReplaceableVar.create(tree, type));
   }
 
-  @AutoValue
-  abstract static class ReplaceableType<M> {
-    abstract Class<M> interfaceType();
-
-    abstract Class<? extends M> immutableType();
-
+  record ReplaceableType<M>(Class<M> interfaceType, Class<? extends M> immutableType) {
     static <M> ReplaceableType<M> create(Class<M> interfaceType, Class<? extends M> immutableType) {
-      return new AutoValue_ImmutableMemberCollection_ReplaceableType<>(
-          interfaceType, immutableType);
+      return new ReplaceableType<>(interfaceType, immutableType);
     }
   }
 

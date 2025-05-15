@@ -16,7 +16,6 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation.inference;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.sun.source.tree.Tree;
 
@@ -31,18 +30,14 @@ import com.sun.source.tree.Tree;
  * since it is the base type; {@code B} by the list {@code [0]} since it is the 0th type parameter
  * of the base type; {@code F} by the list {@code [1,1,0]} since it is the 0th type parameter of the
  * 1st type parameter of the 1st type parameter of the base type; and so on.
+ *
+ * @param typeArgSelector An empty list selects the type of the {@code astNode} itself, while
+ *     non-empty lists select type variables within, according to the format described in the
+ *     class-level Javadoc
  */
-@AutoValue
-abstract class TypeArgInferenceVar implements InferenceVariable {
+record TypeArgInferenceVar(ImmutableList<Integer> typeArgSelector, Tree astNode)
+    implements InferenceVariable {
   static TypeArgInferenceVar create(ImmutableList<Integer> typeArgSelector, Tree astNode) {
-    return new AutoValue_TypeArgInferenceVar(typeArgSelector, astNode);
+    return new TypeArgInferenceVar(typeArgSelector, astNode);
   }
-
-  /**
-   * An empty list selects the type of the {@code astNode} itself, while non-empty lists select type
-   * variables within, according to the format described in the class-level Javadoc
-   */
-  abstract ImmutableList<Integer> typeArgSelector();
-
-  abstract Tree astNode();
 }

@@ -18,16 +18,13 @@ package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.Immutable;
 import java.util.stream.Stream;
 
 /** Describes Javadoc tags, and contains lists of valid tags. */
 @Immutable
-@AutoValue
-abstract class JavadocTag {
-
+record JavadocTag(String name, TagType type) {
   /** Non-standard commonly-used tags which we should allow. */
   static final ImmutableSet<JavadocTag> KNOWN_OTHER_TAGS =
       ImmutableSet.of(
@@ -98,10 +95,6 @@ abstract class JavadocTag {
           .filter(tag -> tag.type() == TagType.INLINE)
           .collect(toImmutableSet());
 
-  abstract String name();
-
-  abstract TagType type();
-
   enum TagType {
     BLOCK,
     INLINE
@@ -116,6 +109,6 @@ abstract class JavadocTag {
   }
 
   private static JavadocTag of(String name, TagType type) {
-    return new AutoValue_JavadocTag(name, type);
+    return new JavadocTag(name, type);
   }
 }

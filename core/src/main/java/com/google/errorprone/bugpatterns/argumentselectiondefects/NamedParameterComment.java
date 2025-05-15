@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.Streams;
 import com.google.errorprone.util.Commented;
@@ -64,20 +63,13 @@ public final class NamedParameterComment {
     NOT_ANNOTATED,
   }
 
-  @AutoValue
-  abstract static class MatchedComment {
-
-    abstract Optional<ErrorProneComment> comment();
-
-    abstract MatchType matchType();
-
+  record MatchedComment(Optional<ErrorProneComment> comment, MatchType matchType) {
     static MatchedComment create(Optional<ErrorProneComment> comment, MatchType matchType) {
-      return new AutoValue_NamedParameterComment_MatchedComment(comment, matchType);
+      return new MatchedComment(comment, matchType);
     }
 
     static MatchedComment notAnnotated() {
-      return new AutoValue_NamedParameterComment_MatchedComment(
-          Optional.empty(), MatchType.NOT_ANNOTATED);
+      return new MatchedComment(Optional.empty(), MatchType.NOT_ANNOTATED);
     }
   }
 

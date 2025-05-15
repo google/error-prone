@@ -24,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpl
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.MoreAnnotations.getValue;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
@@ -64,9 +63,9 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 
-@AutoValue
-abstract class InlineMeData {
-
+record InlineMeData(
+    // TODO(glorioso): be tolerant of trailing semicolon in replacement
+    String replacement, ImmutableSet<String> imports, ImmutableSet<String> staticImports) {
   private static final String INLINE_ME = "InlineMe";
 
   /** Builds the {@code @InlineMe} annotation as it would be found in source code. */
@@ -99,13 +98,6 @@ abstract class InlineMeData {
     return "{" + quoted + "}";
   }
 
-  // TODO(glorioso): be tolerant of trailing semicolon
-  abstract String replacement();
-
-  abstract ImmutableSet<String> imports();
-
-  abstract ImmutableSet<String> staticImports();
-
   static Optional<InlineMeData> createFromSymbol(MethodSymbol symbol) {
     // if the API doesn't have the @InlineMe annotation, then return no match
     if (!hasDirectAnnotationWithSimpleName(symbol, INLINE_ME)) {
@@ -130,7 +122,7 @@ abstract class InlineMeData {
 
   private static InlineMeData create(
       String replacement, Iterable<String> imports, Iterable<String> staticImports) {
-    return new AutoValue_InlineMeData(
+    return new InlineMeData(
         replacement, ImmutableSet.copyOf(imports), ImmutableSet.copyOf(staticImports));
   }
 

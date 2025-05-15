@@ -25,7 +25,6 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.TargetType.targetType;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -117,14 +116,9 @@ public final class UnnecessaryMethodReference extends BugChecker
               instanceMethod().onDescendantOf("com.google.common.collect.Range").named("contains"),
               Suppliers.typeFromString("com.google.common.base.Predicate")));
 
-  @AutoValue
-  abstract static class KnownAlias {
-    public static KnownAlias create(Matcher<ExpressionTree> matcher, Supplier<Type> targetType) {
-      return new AutoValue_UnnecessaryMethodReference_KnownAlias(matcher, targetType);
+  private record KnownAlias(Matcher<ExpressionTree> matcher, Supplier<Type> targetType) {
+    static KnownAlias create(Matcher<ExpressionTree> matcher, Supplier<Type> targetType) {
+      return new KnownAlias(matcher, targetType);
     }
-
-    abstract Matcher<ExpressionTree> matcher();
-
-    abstract Supplier<Type> targetType();
   }
 }

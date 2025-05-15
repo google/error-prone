@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.apidiff;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
@@ -172,23 +171,17 @@ public final class CompilationBuilderHelpers {
   }
 
   /** The output from a compilation. */
-  @AutoValue
-  abstract static class CompilationResult {
-    abstract boolean ok();
-
-    abstract ImmutableList<Diagnostic<? extends JavaFileObject>> diagnostics();
-
-    abstract String errorOutput();
-
-    abstract Path classOutput();
-
+  record CompilationResult(
+      boolean ok,
+      ImmutableList<Diagnostic<? extends JavaFileObject>> diagnostics,
+      String errorOutput,
+      Path classOutput) {
     static CompilationResult create(
         boolean ok,
         Iterable<Diagnostic<? extends JavaFileObject>> diagnostics,
         String errorOutput,
         Path classOutput) {
-      return new AutoValue_CompilationBuilderHelpers_CompilationResult(
-          ok, ImmutableList.copyOf(diagnostics), errorOutput, classOutput);
+      return new CompilationResult(ok, ImmutableList.copyOf(diagnostics), errorOutput, classOutput);
     }
   }
 

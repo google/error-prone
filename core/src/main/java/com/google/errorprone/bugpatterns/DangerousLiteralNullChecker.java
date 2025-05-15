@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
-import com.google.auto.value.AutoValue;
+import com.google.auto.value.AutoBuilder;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableTable;
 import com.google.errorprone.BugPattern;
@@ -43,19 +43,12 @@ import com.sun.tools.javac.util.Name;
     severity = SeverityLevel.ERROR)
 public class DangerousLiteralNullChecker extends BugChecker implements LiteralTreeMatcher {
 
-  @AutoValue
-  abstract static class NullReplacementRule {
-    abstract Name klass();
-
-    abstract Name method();
-
-    abstract String replacementBody();
-
+  record NullReplacementRule(Name klass, Name method, String replacementBody) {
     private static Builder builder() {
-      return new AutoValue_DangerousLiteralNullChecker_NullReplacementRule.Builder();
+      return new AutoBuilder_DangerousLiteralNullChecker_NullReplacementRule_Builder();
     }
 
-    @AutoValue.Builder
+    @AutoBuilder
     abstract static class Builder {
       abstract Builder setKlass(Name klass);
 

@@ -41,7 +41,6 @@ import static com.sun.source.tree.Tree.Kind.POSTFIX_INCREMENT;
 import static com.sun.source.tree.Tree.Kind.PREFIX_DECREMENT;
 import static com.sun.source.tree.Tree.Kind.PREFIX_INCREMENT;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Ascii;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
@@ -1090,32 +1089,26 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     }
   }
 
-  @AutoValue
-  abstract static class UnusedSpec {
-    /** {@link Symbol} of the unused element. */
-    abstract Symbol symbol();
-
-    /** {@link VariableTree} or {@link AssignmentTree} for the original assignment site. */
-    abstract TreePath assignmentPath();
-
-    /**
-     * All the usage sites of this variable that we claim are unused (including the initial
-     * declaration/assignment).
-     */
-    abstract ImmutableList<TreePath> usageSites();
-
-    /**
-     * If this usage chain was terminated by an unconditional reassignment, the corresponding {@link
-     * AssignmentTree}.
-     */
-    abstract Optional<AssignmentTree> terminatingAssignment();
-
+  /**
+   * @param symbol {@link Symbol} of the unused element.
+   * @param assignmentPath {@link VariableTree} or {@link AssignmentTree} for the original
+   *     assignment site.
+   * @param usageSites All the usage sites of this variable that we claim are unused (including the
+   *     initial declaration/assignment).
+   * @param terminatingAssignment If this usage chain was terminated by an unconditional
+   *     reassignment, the corresponding {@link AssignmentTree}.
+   */
+  private record UnusedSpec(
+      Symbol symbol,
+      TreePath assignmentPath,
+      ImmutableList<TreePath> usageSites,
+      Optional<AssignmentTree> terminatingAssignment) {
     private static UnusedSpec of(
         Symbol symbol,
         TreePath assignmentPath,
         Iterable<TreePath> treePaths,
         @Nullable AssignmentTree assignmentTree) {
-      return new AutoValue_UnusedVariable_UnusedSpec(
+      return new UnusedSpec(
           symbol,
           assignmentPath,
           ImmutableList.copyOf(treePaths),

@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns.overloading;
 
 import static java.util.stream.Collectors.joining;
 
-import com.google.auto.value.AutoValue;
+import com.google.auto.value.AutoBuilder;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -34,16 +34,11 @@ import com.sun.source.tree.VariableTree;
  *
  * @author hanuszczak@google.com (Łukasz Hanuszczak)
  */
-@AutoValue
-abstract class ParameterOrderingViolation {
-
-  public abstract MethodTree methodTree();
-
-  public abstract ImmutableList<ParameterTree> actual();
-
-  public abstract ImmutableList<ParameterTree> expected();
-
-  @AutoValue.Builder
+record ParameterOrderingViolation(
+    MethodTree methodTree,
+    ImmutableList<ParameterTree> actual,
+    ImmutableList<ParameterTree> expected) {
+  @AutoBuilder
   abstract static class Builder {
 
     abstract Builder setMethodTree(MethodTree methodTree);
@@ -65,8 +60,8 @@ abstract class ParameterOrderingViolation {
     }
   }
 
-  public static ParameterOrderingViolation.Builder builder() {
-    return new AutoValue_ParameterOrderingViolation.Builder();
+  static ParameterOrderingViolation.Builder builder() {
+    return new AutoBuilder_ParameterOrderingViolation_Builder();
   }
 
   /**

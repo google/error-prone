@@ -29,7 +29,6 @@ import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.methodIsPublicAndNotAnOverride;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -291,19 +290,22 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
       TypePredicate enclosingTypePredicate,
       String failureMessage,
       ApiElementType elementType) {
-    return new AutoValue_NonApiType_TypeToCheck(
+    return new TypeToCheck(
         typePredicate, enclosingTypePredicate, failureMessage, ApiVisibility.PUBLIC, elementType);
   }
 
   private static TypeToCheck withAnyVisibility(
       TypePredicate typePredicate, String failureMessage, ApiElementType elementType) {
-    return new AutoValue_NonApiType_TypeToCheck(
+    return new TypeToCheck(
         typePredicate, anything(), failureMessage, ApiVisibility.ANY, elementType);
   }
 
-  @AutoValue
-  abstract static class TypeToCheck {
-
+  private record TypeToCheck(
+      TypePredicate typePredicate,
+      TypePredicate enclosingTypePredicate,
+      String failureMessage,
+      ApiVisibility visibility,
+      ApiElementType elementType) {
     final boolean matches(Type type, Type enclosingType, VisitorState state) {
       // only fire this check inside certain subtypes
       if (enclosingTypePredicate().apply(enclosingType, state)) {
@@ -320,15 +322,5 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
       // TODO(kak): do we want to check var-args as well?
       return false;
     }
-
-    abstract TypePredicate typePredicate();
-
-    abstract TypePredicate enclosingTypePredicate();
-
-    abstract String failureMessage();
-
-    abstract ApiVisibility visibility();
-
-    abstract ApiElementType elementType();
   }
 }

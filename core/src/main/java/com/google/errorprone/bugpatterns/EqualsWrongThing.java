@@ -28,7 +28,6 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
@@ -164,29 +163,19 @@ public final class EqualsWrongThing extends BugChecker implements MethodTreeMatc
     return kind == Kind.IDENTIFIER ? Kind.MEMBER_SELECT : kind;
   }
 
-  @AutoValue
-  abstract static class ComparisonSite {
-    abstract Tree tree();
-
-    abstract ComparisonPair pair();
-
+  private record ComparisonSite(Tree tree, ComparisonPair pair) {
     private static ComparisonSite of(Tree tree, Symbol lhs, Symbol rhs) {
-      return new AutoValue_EqualsWrongThing_ComparisonSite(tree, ComparisonPair.of(lhs, rhs));
+      return new ComparisonSite(tree, ComparisonPair.of(lhs, rhs));
     }
   }
 
-  @AutoValue
-  abstract static class ComparisonPair {
-    abstract Symbol lhs();
-
-    abstract Symbol rhs();
-
+  private record ComparisonPair(Symbol lhs, Symbol rhs) {
     final ComparisonPair reversed() {
       return of(rhs(), lhs());
     }
 
     private static ComparisonPair of(Symbol lhs, Symbol rhs) {
-      return new AutoValue_EqualsWrongThing_ComparisonPair(lhs, rhs);
+      return new ComparisonPair(lhs, rhs);
     }
   }
 }

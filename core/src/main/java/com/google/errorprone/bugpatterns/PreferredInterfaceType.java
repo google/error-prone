@@ -41,7 +41,6 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -327,15 +326,9 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
                     .findFirst());
   }
 
-  @AutoValue
-  abstract static class BetterTypes {
-    abstract TypePredicate predicate();
-
-    abstract ImmutableSet<String> betterTypes();
-
+  private record BetterTypes(TypePredicate predicate, ImmutableSet<String> betterTypes) {
     private static BetterTypes of(TypePredicate predicate, String... betterTypes) {
-      return new AutoValue_PreferredInterfaceType_BetterTypes(
-          predicate, ImmutableSet.copyOf(betterTypes));
+      return new BetterTypes(predicate, ImmutableSet.copyOf(betterTypes));
     }
   }
 }

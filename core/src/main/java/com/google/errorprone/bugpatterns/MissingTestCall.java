@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
@@ -135,17 +134,11 @@ public final class MissingTestCall extends BugChecker implements MethodTreeMatch
     return symbol != null && symbol.getKind() == ElementKind.FIELD;
   }
 
-  @AutoValue
-  abstract static class MethodPairing {
-    abstract String name();
-
-    abstract Matcher<ExpressionTree> ifCall();
-
-    abstract Matcher<ExpressionTree> mustCall();
-
+  private record MethodPairing(
+      String name, Matcher<ExpressionTree> ifCall, Matcher<ExpressionTree> mustCall) {
     private static MethodPairing of(
         String name, Matcher<ExpressionTree> ifCall, Matcher<ExpressionTree> mustCall) {
-      return new AutoValue_MissingTestCall_MethodPairing(name, ifCall, mustCall);
+      return new MethodPairing(name, ifCall, mustCall);
     }
   }
 }

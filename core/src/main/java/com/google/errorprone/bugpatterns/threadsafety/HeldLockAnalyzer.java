@@ -20,7 +20,6 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
@@ -299,22 +298,19 @@ public final class HeldLockAnalyzer {
     }
   }
 
-  /** An abstraction over the lock classes we understand. */
-  @AutoValue
-  abstract static class LockResource {
-
-    /** The fully-qualified name of the lock class. */
-    abstract String className();
-
-    /** The method that releases the lock. */
-    abstract String unlockMethod();
-
+  /**
+   * An abstraction over the lock classes we understand.
+   *
+   * @param className The fully-qualified name of the lock class.
+   * @param unlockMethod The method that releases the lock.
+   */
+  private record LockResource(String className, String unlockMethod) {
     public Matcher<ExpressionTree> createUnlockMatcher() {
       return instanceMethod().onDescendantOf(className()).named(unlockMethod());
     }
 
     static LockResource create(String className, String unlockMethod) {
-      return new AutoValue_HeldLockAnalyzer_LockResource(className, unlockMethod);
+      return new LockResource(className, unlockMethod);
     }
   }
 

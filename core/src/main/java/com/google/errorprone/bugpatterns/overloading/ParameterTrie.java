@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.overloading;
 
 import static java.util.Comparator.comparingInt;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.sun.source.tree.MethodTree;
@@ -226,20 +225,14 @@ class ParameterTrie {
    * A class used to represent a {@link ParameterTree} (which is essentially just a {@link
    * com.sun.source.tree.VariableTree} and its original position within the {@link MethodTree}.
    */
-  @AutoValue
-  abstract static class Parameter {
-
-    public abstract ParameterTree tree();
-
-    public abstract int position();
-
-    public Name name() {
+  private record Parameter(ParameterTree tree, int position) {
+    Name name() {
       return tree().getName();
     }
 
-    public static Parameter create(MethodTree methodTree, int position) {
+    static Parameter create(MethodTree methodTree, int position) {
       ParameterTree parameterTree = ParameterTree.create(methodTree.getParameters().get(position));
-      return new AutoValue_ParameterTrie_Parameter(parameterTree, position);
+      return new Parameter(parameterTree, position);
     }
   }
 

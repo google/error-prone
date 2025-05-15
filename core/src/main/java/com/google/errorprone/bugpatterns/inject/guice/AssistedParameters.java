@@ -25,7 +25,6 @@ import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 
 import com.google.auto.common.MoreElements;
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
@@ -163,16 +162,9 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
     return sb.toString();
   }
 
-  @AutoValue
-  abstract static class ConflictResult {
-    abstract Type type();
-
-    abstract String value();
-
-    abstract ImmutableList<VariableTree> parameters();
-
+  private record ConflictResult(Type type, String value, ImmutableList<VariableTree> parameters) {
     static ConflictResult create(Type t, String v, ImmutableList<VariableTree> p) {
-      return new AutoValue_AssistedParameters_ConflictResult(t, v, p);
+      return new ConflictResult(t, v, p);
     }
   }
 

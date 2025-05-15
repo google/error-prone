@@ -22,7 +22,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -179,19 +178,11 @@ public class ParameterName extends BugChecker
     return true;
   }
 
-  @AutoValue
-  abstract static class FixInfo {
-    abstract boolean isFormatCorrect();
-
-    abstract boolean isNameCorrect();
-
-    abstract ErrorProneComment comment();
-
-    abstract String name();
-
+  private record FixInfo(
+      boolean isFormatCorrect, boolean isNameCorrect, ErrorProneComment comment, String name) {
     static FixInfo create(
         boolean isFormatCorrect, boolean isNameCorrect, ErrorProneComment comment, String name) {
-      return new AutoValue_ParameterName_FixInfo(isFormatCorrect, isNameCorrect, comment, name);
+      return new FixInfo(isFormatCorrect, isNameCorrect, comment, name);
     }
   }
 

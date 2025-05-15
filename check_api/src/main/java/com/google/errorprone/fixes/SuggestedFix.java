@@ -432,15 +432,14 @@ public abstract class SuggestedFix implements Fix {
   }
 
   /** Replaces an entire diagnostic position (from start to end) with the given string. */
-  @AutoValue
-  abstract static class ReplacementFix implements FixOperation {
-    abstract DiagnosticPosition original();
-
-    abstract String replacement();
-
-    public static ReplacementFix create(DiagnosticPosition original, String replacement) {
+  private record ReplacementFix(DiagnosticPosition original, String replacement)
+      implements FixOperation {
+    ReplacementFix {
       checkArgument(original.getStartPosition() >= 0, "invalid start position");
-      return new AutoValue_SuggestedFix_ReplacementFix(original, replacement);
+    }
+
+    static ReplacementFix create(DiagnosticPosition original, String replacement) {
+      return new ReplacementFix(original, replacement);
     }
 
     @Override

@@ -33,7 +33,6 @@ import static java.lang.String.format;
 import static java.util.stream.Stream.concat;
 import static javax.lang.model.element.Modifier.STATIC;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -177,10 +176,9 @@ public final class ChainedAssertionLosesContext extends BugChecker
     return describeMatch(tree, SuggestedFix.replace(tree, String.format(format, args)));
   }
 
-  @AutoValue
-  abstract static class FactoryMethodName {
+  private record FactoryMethodName(String clazz, String method) {
     static FactoryMethodName create(String clazz, String method) {
-      return new AutoValue_ChainedAssertionLosesContext_FactoryMethodName(clazz, method);
+      return new FactoryMethodName(clazz, method);
     }
 
     static @Nullable FactoryMethodName tryCreate(MethodSymbol symbol) {
@@ -188,10 +186,6 @@ public final class ChainedAssertionLosesContext extends BugChecker
           ? create(symbol.owner.getQualifiedName().toString(), symbol.getSimpleName().toString())
           : null;
     }
-
-    abstract String clazz();
-
-    abstract String method();
   }
 
   private static @Nullable FactoryMethodName tryFindFactory(

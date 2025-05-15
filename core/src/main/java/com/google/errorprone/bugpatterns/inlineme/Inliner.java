@@ -32,7 +32,6 @@ import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -504,8 +503,13 @@ public final class Inliner extends BugChecker
     return buildDescription(tree).setMessage(api.message()).addFix(fix).build();
   }
 
-  @AutoValue
-  abstract static class Api {
+  private record Api(
+      String className,
+      String methodName,
+      String packageName,
+      boolean isConstructor,
+      boolean isDeprecated,
+      String extraMessage) {
     private static final Splitter CLASS_NAME_SPLITTER = Splitter.on('.');
 
     static Api create(MethodSymbol method, VisitorState state) {
@@ -518,7 +522,7 @@ public final class Inliner extends BugChecker
         String reason = Iterables.getOnlyElement(getStrings(inlineMeValidationDisabled, "value"));
         extraMessage = " NOTE: this is an unvalidated inlining! Reasoning: " + reason;
       }
-      return new AutoValue_Inliner_Api(
+      return new Api(
           method.owner.getQualifiedName().toString(),
           method.getSimpleName().toString(),
           enclosingPackage(method).toString(),
@@ -526,18 +530,6 @@ public final class Inliner extends BugChecker
           hasAnnotation(method, "java.lang.Deprecated", state),
           extraMessage);
     }
-
-    abstract String className();
-
-    abstract String methodName();
-
-    abstract String packageName();
-
-    abstract boolean isConstructor();
-
-    abstract boolean isDeprecated();
-
-    abstract String extraMessage();
 
     final String message() {
       return "Migrate (via inlining) away from "

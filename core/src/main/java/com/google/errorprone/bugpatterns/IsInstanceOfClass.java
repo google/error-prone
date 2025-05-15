@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.argument;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -108,16 +107,9 @@ public class IsInstanceOfClass extends BugChecker implements MethodInvocationTre
     EXPR
   }
 
-  @AutoValue
-  abstract static class Operand {
-    abstract Kind kind();
-
-    abstract CharSequence value();
-
-    abstract CharSequence source();
-
+  private record Operand(Kind kind, CharSequence value, CharSequence source) {
     static Operand create(Kind kind, CharSequence value, CharSequence source) {
-      return new AutoValue_IsInstanceOfClass_Operand(kind, value, source);
+      return new Operand(kind, value, source);
     }
   }
 

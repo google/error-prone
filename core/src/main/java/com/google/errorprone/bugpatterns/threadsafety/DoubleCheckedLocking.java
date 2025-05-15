@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -64,7 +63,7 @@ import org.jspecify.annotations.Nullable;
 public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
   @Override
   public Description matchIf(IfTree outerIf, VisitorState state) {
-    DCLInfo info = findDcl(outerIf);
+    DclInfo info = findDcl(outerIf);
     if (info == null) {
       return Description.NO_MATCH;
     }
@@ -146,7 +145,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    * }
    * }</pre>
    */
-  private Description handleLocal(DCLInfo info, VisitorState state) {
+  private Description handleLocal(DclInfo info, VisitorState state) {
     JCExpressionStatement expr = getChild(info.synchTree().getBlock(), JCExpressionStatement.class);
     if (expr == null) {
       return Description.NO_MATCH;
@@ -169,24 +168,20 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     return handleField(info.outerIf(), fvar, state);
   }
 
-  /** Information about an instance of DCL. */
-  @AutoValue
-  abstract static class DCLInfo {
-    /** The outer if statement */
-    abstract IfTree outerIf();
+  /**
+   * Information about an instance of DCL.
+   *
+   * @param outerIf The outer if statement
+   * @param synchTree The synchronized statement
+   * @param innerIf The inner if statement
+   * @param sym The variable (local or field) that is double-checked
+   */
+  private record DclInfo(
+      IfTree outerIf, SynchronizedTree synchTree, IfTree innerIf, VarSymbol sym) {
 
-    /** The synchronized statement */
-    abstract SynchronizedTree synchTree();
-
-    /** The inner if statement */
-    abstract IfTree innerIf();
-
-    /** The variable (local or field) that is double-checked */
-    abstract VarSymbol sym();
-
-    static DCLInfo create(
+    static DclInfo create(
         IfTree outerIf, SynchronizedTree synchTree, IfTree innerIf, VarSymbol sym) {
-      return new AutoValue_DoubleCheckedLocking_DCLInfo(outerIf, synchTree, innerIf, sym);
+      return new DclInfo(outerIf, synchTree, innerIf, sym);
     }
   }
 
@@ -207,7 +202,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    * Gaps before the synchronized or inner 'if' statement are ignored, and the operands in the
    * null-checks are accepted in either order.
    */
-  private static @Nullable DCLInfo findDcl(IfTree outerIf) {
+  private static @Nullable DclInfo findDcl(IfTree outerIf) {
     // TODO(cushon): Optional.ifPresent...
     ExpressionTree outerIfTest = getNullCheckedExpression(outerIf.getCondition());
     if (outerIfTest == null) {
@@ -232,7 +227,7 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
     if (!(outerSym instanceof VarSymbol var)) {
       return null;
     }
-    return DCLInfo.create(outerIf, synchTree, innerIf, var);
+    return DclInfo.create(outerIf, synchTree, innerIf, var);
   }
 
   /**

@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.stream.Collectors.joining;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.errorprone.BugPattern;
@@ -63,30 +62,20 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     batchFindings = flags.getBoolean("UngroupedOverloads:BatchFindings").orElse(false);
   }
 
-  @AutoValue
-  abstract static class MemberWithIndex {
-
-    abstract int index();
-
-    abstract MethodTree tree();
-
+  private record MemberWithIndex(int index, MethodTree tree) {
     static MemberWithIndex create(int index, MethodTree tree) {
-      return new AutoValue_UngroupedOverloads_MemberWithIndex(index, tree);
+      return new MemberWithIndex(index, tree);
     }
   }
 
-  @AutoValue
-  abstract static class OverloadKey {
-    abstract Name name();
+  private record OverloadKey(Name name) {
+    // TODO(cushon): re-enable `boolean isStatic`, but don't warn about interspersed
+    // static/non-static overloads Include static-ness when grouping overloads. Static and
+    // non-static methods are still overloads per the JLS, but are less interesting in practice.
 
-    // TODO(cushon): re-enable this, but don't warn about interspersed static/non-static overloads
-    // Include static-ness when grouping overloads. Static and non-static methods are still
-    // overloads per the JLS, but are less interesting in practice.
-    // abstract boolean isStatic();
-
-    public static OverloadKey create(MethodTree methodTree) {
+    static OverloadKey create(MethodTree methodTree) {
       MethodSymbol sym = ASTHelpers.getSymbol(methodTree);
-      return new AutoValue_UngroupedOverloads_OverloadKey(sym.getSimpleName());
+      return new OverloadKey(sym.getSimpleName());
     }
   }
 

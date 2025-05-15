@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
@@ -56,38 +55,27 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
     LAST
   }
 
-  @AutoValue
-  abstract static class Matchable<T extends Tree> {
-    public abstract T tree();
-
-    public abstract VisitorState state();
-
-    public static <T extends Tree> Matchable<T> create(T tree, VisitorState state) {
-      return new AutoValue_ChildMultiMatcher_Matchable<>(tree, state);
+  private record Matchable<T extends Tree>(T tree, VisitorState state) {
+    static <T extends Tree> Matchable<T> create(T tree, VisitorState state) {
+      return new Matchable<>(tree, state);
     }
   }
 
-  @AutoValue
-  abstract static class MatchResult<T extends Tree> {
-    public abstract ImmutableList<T> matchingNodes();
-
-    public abstract boolean matches();
-
-    public static <T extends Tree> MatchResult<T> none() {
+  private record MatchResult<T extends Tree>(ImmutableList<T> matchingNodes, boolean matches) {
+    static <T extends Tree> MatchResult<T> none() {
       return create(ImmutableList.<T>of(), /* matches= */ false);
     }
 
-    public static <T extends Tree> MatchResult<T> match(T matchingNode) {
+    static <T extends Tree> MatchResult<T> match(T matchingNode) {
       return create(ImmutableList.of(matchingNode), /* matches= */ true);
     }
 
-    public static <T extends Tree> MatchResult<T> match(ImmutableList<T> matchingNodes) {
+    static <T extends Tree> MatchResult<T> match(ImmutableList<T> matchingNodes) {
       return create(matchingNodes, /* matches= */ true);
     }
 
     private static <T extends Tree> MatchResult<T> create(List<T> matchingNode, boolean matches) {
-      return new AutoValue_ChildMultiMatcher_MatchResult<>(
-          ImmutableList.copyOf(matchingNode), matches);
+      return new MatchResult<>(ImmutableList.copyOf(matchingNode), matches);
     }
   }
 
@@ -98,7 +86,7 @@ public abstract class ChildMultiMatcher<T extends Tree, N extends Tree>
   private abstract static class ListMatcher<N extends Tree> {
     abstract MatchResult<N> matches(List<Matchable<N>> matchables, Matcher<N> nodeMatcher);
 
-    public static <N extends Tree> ListMatcher<N> create(MatchType matchType) {
+    static <N extends Tree> ListMatcher<N> create(MatchType matchType) {
       return switch (matchType) {
         case ALL -> new AllMatcher<>();
         case AT_LEAST_ONE -> new AtLeastOneMatcher<>();

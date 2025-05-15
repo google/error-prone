@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.extractTypeArgAsMemberOfSupertype;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -67,12 +66,9 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
 
   // Nonnull requiredType: The type I need is bound, in requiredType
   // null requiredType: I found the type variable, but I can't bind it to any type
-  @AutoValue
-  abstract static class RequiredType {
-    abstract @Nullable Type type();
-
-    static RequiredType create(Type type) {
-      return new AutoValue_IncompatibleArgumentType_RequiredType(type);
+  private record RequiredType(@Nullable Type type) {
+    static RequiredType create(@Nullable Type type) {
+      return new RequiredType(type);
     }
   }
 
