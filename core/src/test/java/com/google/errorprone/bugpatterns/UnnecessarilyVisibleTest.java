@@ -58,6 +58,23 @@ public final class UnnecessarilyVisibleTest {
   }
 
   @Test
+  public void annotationAppearsInFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import javax.inject.Inject;
+
+            class Test {
+              @Inject
+              // BUG: Diagnostic contains: annotated with @Inject
+              public Test() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void caveatOnInject() {
     compilationHelper
         .addSourceLines(

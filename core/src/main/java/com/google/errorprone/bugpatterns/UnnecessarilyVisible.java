@@ -26,6 +26,8 @@ import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -82,13 +84,13 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
-    if (annotationsAmong(symbol, FRAMEWORK_ANNOTATIONS.get(state), state).isEmpty()) {
+    var annotations = annotationsAmong(symbol, FRAMEWORK_ANNOTATIONS.get(state), state);
+    if (annotations.isEmpty()) {
       return NO_MATCH;
     }
     if (streamSuperMethods(symbol, state.getTypes()).findAny().isPresent()) {
       return NO_MATCH;
     }
-
     if (hasDirectAnnotationWithSimpleName(tree, "VisibleForTesting")) {
       return NO_MATCH;
     }
@@ -97,6 +99,13 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
       return NO_MATCH;
     }
     return buildDescription(tree)
+        .setMessage(
+            format(
+                "Methods annotated with %s are intended to be called by a framework, and so should"
+                    + " have default visibility.",
+                annotations.stream()
+                    .map(n -> "@" + n.toString().replaceFirst("^.+\\.", ""))
+                    .collect(joining(", "))))
         .addFix(
             removeModifiers(tree.getModifiers(), state, badModifiers)
                 .orElse(SuggestedFix.emptyFix()))
