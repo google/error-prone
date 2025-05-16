@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.auto.value.processor.AutoValueProcessor;
 import com.google.errorprone.CompilationTestHelper;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -389,6 +390,65 @@ public class A {
               private static final Foo FOO = new $$AutoValue_Foo();
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  public void simpleSubclassMethodReference() {
+    testHelper
+        .addSourceLines(
+            "Foo.java",
+            "import java.util.function.Supplier;",
+            "class A {",
+            "  static Supplier<B> supplier = B::new;",
+            "}",
+            "class B extends A {}")
+        .doTest();
+  }
+
+  @Test
+  public void compoundSubclassMethodReference() {
+    testHelper
+        .addSourceLines(
+            "Foo.java",
+            "import java.util.Comparator;",
+            "class A {",
+            "  static Comparator<B> comparator = Comparator.comparing(B::value);",
+            "}",
+            "class B extends A {",
+            "  int value;",
+            "  int value() {",
+            "    return value;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void lambda() {
+    testHelper
+        .addSourceLines(
+            "Foo.java",
+            "import java.util.function.Supplier;",
+            "class A {",
+            "  static Supplier<B> supplier = () -> new B();",
+            "}",
+            "class B extends A {}")
+        .doTest();
+  }
+
+  @Test
+  public void subclassStaticMethod() {
+    testHelper
+        .addSourceLines(
+            "Foo.java",
+            "class A {",
+            "  // BUG: Diagnostic contains:",
+            "  static int value = B.value(); ",
+            "}",
+            "class B extends A {",
+            "  static int value() { return 0; }",
+            "}")
         .doTest();
   }
 }
