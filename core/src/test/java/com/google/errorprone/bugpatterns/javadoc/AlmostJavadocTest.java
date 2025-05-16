@@ -251,4 +251,20 @@ public final class AlmostJavadocTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void nonJavadoccablePosition() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            public class Test {
+              void foo() {
+                /* Foo {@link Test}. */
+                class Foo {}
+              }
+            }
+            """)
+        .doTest();
+  }
 }

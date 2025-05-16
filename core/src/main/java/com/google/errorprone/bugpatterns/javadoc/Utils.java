@@ -17,18 +17,29 @@
 package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.errorprone.names.LevenshteinEditDistance.getEditDistance;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.FixedPosition;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.DocTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ModuleTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.DocSourcePositions;
 import com.sun.source.util.DocTreePath;
+import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DocCommentTable;
 import com.sun.tools.javac.tree.JCTree;
@@ -36,7 +47,10 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Position;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
+import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
 /** Common utility methods for fixing Javadocs. */
@@ -130,6 +144,61 @@ final class Utils {
 
   private static @Nullable DocCommentTree getDocCommentTree(VisitorState state) {
     return JavacTrees.instance(state.context).getDocCommentTree(state.getPath());
+  }
+
+  /** Returns a map of positions to trees which can be documented by Javadoc. */
+  static ImmutableMap<Integer, TreePath> getJavadoccableTrees(CompilationUnitTree tree) {
+    Map<Integer, TreePath> javadoccablePositions = new HashMap<>();
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitPackage(PackageTree packageTree, Void unused) {
+        javadoccablePositions.put(ASTHelpers.getStartPosition(packageTree), getCurrentPath());
+        return super.visitPackage(packageTree, null);
+      }
+
+      @Override
+      public Void visitClass(ClassTree classTree, Void unused) {
+        if (!(getSymbol(classTree).owner instanceof MethodSymbol)) {
+          javadoccablePositions.put(ASTHelpers.getStartPosition(classTree), getCurrentPath());
+        }
+        return super.visitClass(classTree, null);
+      }
+
+      @Override
+      public Void visitMethod(MethodTree methodTree, Void unused) {
+        if (!ASTHelpers.isGeneratedConstructor(methodTree)) {
+          javadoccablePositions.put(ASTHelpers.getStartPosition(methodTree), getCurrentPath());
+        }
+        return super.visitMethod(methodTree, null);
+      }
+
+      @Override
+      public Void visitVariable(VariableTree variableTree, Void unused) {
+        ElementKind kind = getSymbol(variableTree).getKind();
+        if (kind == ElementKind.FIELD) {
+          javadoccablePositions.put(ASTHelpers.getStartPosition(variableTree), getCurrentPath());
+        }
+        // For enum constants, skip past the desugared class declaration.
+        if (kind == ElementKind.ENUM_CONSTANT) {
+          javadoccablePositions.put(ASTHelpers.getStartPosition(variableTree), getCurrentPath());
+          if (variableTree.getInitializer() instanceof NewClassTree newClassTree) {
+            ClassTree classBody = newClassTree.getClassBody();
+            if (classBody != null) {
+              scan(classBody.getMembers(), null);
+            }
+            return null;
+          }
+        }
+        return super.visitVariable(variableTree, null);
+      }
+
+      @Override
+      public Void visitModule(ModuleTree moduleTree, Void unused) {
+        javadoccablePositions.put(ASTHelpers.getStartPosition(moduleTree), getCurrentPath());
+        return super.visitModule(moduleTree, null);
+      }
+    }.scan(tree, null);
+    return ImmutableMap.copyOf(javadoccablePositions);
   }
 
   private Utils() {}

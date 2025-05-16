@@ -18,10 +18,9 @@ package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDiagnosticPosition;
+import static com.google.errorprone.bugpatterns.javadoc.Utils.getJavadoccableTrees;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.getStartPosition;
-import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ErrorProneTokens.getTokens;
 
 import com.google.common.collect.ImmutableMap;
@@ -32,23 +31,11 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.ErrorProneComment.ErrorProneCommentStyle;
 import com.google.errorprone.util.ErrorProneToken;
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ModuleTree;
-import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.PackageTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreePathScanner;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import java.util.HashMap;
-import java.util.Map;
-import javax.lang.model.element.ElementKind;
+import com.sun.source.util.TreePath;
 
 /** A BugPattern; see the summary. */
 @BugPattern(
@@ -58,7 +45,7 @@ import javax.lang.model.element.ElementKind;
 public final class NotJavadoc extends BugChecker implements CompilationUnitTreeMatcher {
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    ImmutableMap<Integer, Tree> javadocableTrees = getJavadoccableTrees(tree);
+    ImmutableMap<Integer, TreePath> javadocableTrees = getJavadoccableTrees(tree);
     ImmutableRangeSet<Integer> suppressedRegions = suppressedRegions(state);
     for (ErrorProneToken token : getTokens(state.getSourceCode().toString(), state.context)) {
       for (ErrorProneComment comment : token.comments()) {
@@ -87,59 +74,5 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
       }
     }
     return NO_MATCH;
-  }
-
-  private ImmutableMap<Integer, Tree> getJavadoccableTrees(CompilationUnitTree tree) {
-    Map<Integer, Tree> javadoccablePositions = new HashMap<>();
-    new TreePathScanner<Void, Void>() {
-      @Override
-      public Void visitPackage(PackageTree packageTree, Void unused) {
-        javadoccablePositions.put(getStartPosition(packageTree), packageTree);
-        return super.visitPackage(packageTree, null);
-      }
-
-      @Override
-      public Void visitClass(ClassTree classTree, Void unused) {
-        if (!(getSymbol(classTree).owner instanceof MethodSymbol)) {
-          javadoccablePositions.put(getStartPosition(classTree), classTree);
-        }
-        return super.visitClass(classTree, null);
-      }
-
-      @Override
-      public Void visitMethod(MethodTree methodTree, Void unused) {
-        if (!ASTHelpers.isGeneratedConstructor(methodTree)) {
-          javadoccablePositions.put(getStartPosition(methodTree), methodTree);
-        }
-        return super.visitMethod(methodTree, null);
-      }
-
-      @Override
-      public Void visitVariable(VariableTree variableTree, Void unused) {
-        ElementKind kind = getSymbol(variableTree).getKind();
-        if (kind == ElementKind.FIELD) {
-          javadoccablePositions.put(getStartPosition(variableTree), variableTree);
-        }
-        // For enum constants, skip past the desugared class declaration.
-        if (kind == ElementKind.ENUM_CONSTANT) {
-          javadoccablePositions.put(getStartPosition(variableTree), variableTree);
-          if (variableTree.getInitializer() instanceof NewClassTree newClassTree) {
-            ClassTree classBody = newClassTree.getClassBody();
-            if (classBody != null) {
-              scan(classBody.getMembers(), null);
-            }
-            return null;
-          }
-        }
-        return super.visitVariable(variableTree, null);
-      }
-
-      @Override
-      public Void visitModule(ModuleTree moduleTree, Void unused) {
-        javadoccablePositions.put(getStartPosition(moduleTree), moduleTree);
-        return super.visitModule(moduleTree, null);
-      }
-    }.scan(tree, null);
-    return ImmutableMap.copyOf(javadoccablePositions);
   }
 }
