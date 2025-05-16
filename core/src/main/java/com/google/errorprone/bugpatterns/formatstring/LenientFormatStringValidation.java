@@ -31,6 +31,7 @@ import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.SourceCodeEscapers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -75,9 +76,20 @@ public final class LenientFormatStringValidation extends BugChecker
     if (expected == actual) {
       return NO_MATCH;
     }
+    String replacedNumericPlaceholders = string.replace("%d", "%s");
     var builder =
         buildDescription(tree)
             .setMessage(format("Expected %s positional arguments, but saw %s", expected, actual));
+    if (occurrences(replacedNumericPlaceholders, "%s") == actual
+        && formatStringArgument instanceof LiteralTree) {
+      builder.addFix(
+          SuggestedFix.replace(
+              formatStringArgument,
+              "\""
+                  + SourceCodeEscapers.javaCharEscaper().escape(replacedNumericPlaceholders)
+                  + "\""));
+      return builder.build();
+    }
     if (expected < actual) {
       String extraArgs =
           nCopies(actual - expected, "%s").stream().collect(joining(", ", " (", ")"));

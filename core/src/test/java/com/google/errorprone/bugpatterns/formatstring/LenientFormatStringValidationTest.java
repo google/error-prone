@@ -95,6 +95,34 @@ public final class LenientFormatStringValidationTest {
   }
 
   @Test
+  public void numericSpecifier_fix() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              void test() {
+                Preconditions.checkState(false, "expected %d = %d", 1, 1);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              void test() {
+                Preconditions.checkState(false, "expected %s = %s", 1, 1);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void tooManyArguments_fixWithNonLiteral() {
     refactoring
         .addInputLines(
