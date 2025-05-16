@@ -317,8 +317,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       // Accumulate enum values included in this case
       handledEnumValues.addAll(
           caseTree.getExpressions().stream()
-              .filter(IdentifierTree.class::isInstance)
-              .map(expressionTree -> ((IdentifierTree) expressionTree).getName().toString())
+              .map(ASTHelpers::getSymbol)
+              .filter(x -> x != null)
+              .map(symbol -> symbol.getSimpleName().toString())
               .collect(toImmutableSet()));
       boolean isLastCaseInSwitch = caseIndex == cases.size() - 1;
 

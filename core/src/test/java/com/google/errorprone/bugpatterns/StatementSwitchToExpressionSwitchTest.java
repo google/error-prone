@@ -2551,6 +2551,50 @@ public final class StatementSwitchToExpressionSwitchTest {
         .doTest();
   }
 
+  @Test
+  public void switchByEnumExhaustive_qualifiedCaseLabels() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit) {
+                switch (suit) {
+                  case Suit.HEART:
+                    return 1;
+                  case Suit.CLUB:
+                    return 2;
+                  case Suit.DIAMOND:
+                    return 3;
+                  case Suit.SPADE:
+                    return 4;
+                }
+                throw new AssertionError();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit) {
+                return switch (suit) {
+                  case Suit.HEART -> 1;
+                  case Suit.CLUB -> 2;
+                  case Suit.DIAMOND -> 3;
+                  case Suit.SPADE -> 4;
+                };
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
+        .doTest();
+  }
+
   /**********************************
    *
    * Assignment switch test cases
