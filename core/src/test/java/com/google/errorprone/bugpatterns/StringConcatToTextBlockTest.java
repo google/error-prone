@@ -77,6 +77,32 @@ public class StringConcatToTextBlockTest {
   }
 
   @Test
+  public void alreadyTextBlock() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.testing.compile.JavaFileObjects;
+            import javax.tools.JavaFileObject;
+
+            class Test {
+              JavaFileObject javaFileObject =
+                  JavaFileObjects.forSourceLines(
+                      "foo.bar.NotAbstract",
+                      \"""
+                      package foo.bar;
+
+                      import com.google.auto.value.AutoValue;
+
+                      @AutoValue
+                      public class NotAbstract {}
+                      \""");
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void noTrailing() {
     refactoringHelper
         .addInputLines(

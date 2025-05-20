@@ -191,6 +191,9 @@ public class StringConcatToTextBlock extends BugChecker
             .map(SourceCodeEscapers.getJavaTextBlockEscaper()::escape)
             .map(s -> s.endsWith(" ") ? (s.substring(0, s.length() - 1) + "\\s") : s)
             .collect(joining("\n", DELIMITER + "\n", suffix + "\n" + indent + DELIMITER));
+    if (state.getSourceCode().subSequence(replaceFrom, replaceTo).toString().equals(replacement)) {
+      return NO_MATCH;
+    }
     SuggestedFix fix = SuggestedFix.replace(replaceFrom, replaceTo, replacement);
     return describeMatch(tree, fix);
   }
