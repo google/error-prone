@@ -181,7 +181,7 @@ public final class UnnecessaryQualifier extends BugChecker
               PROVIDER_METHODS.stream())
           .collect(toImmutableSet());
 
-  /** Annotations for methods which have parameters injected into them */
+  /** Annotations for fields which can have qualifiers. */
   private static final ImmutableSet<String> INJECTION_FIELDS =
       ImmutableSet.of(
           // keep-sorted start
