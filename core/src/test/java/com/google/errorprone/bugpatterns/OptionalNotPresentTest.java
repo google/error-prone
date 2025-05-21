@@ -50,7 +50,7 @@ public class OptionalNotPresentTest {
               public String getWhenTestedSafe_referenceEquality(Optional<String> optional) {
                 if (!optional.isPresent()) {
                   if (optional == Optional.of("OK")) { // always false
-                    // BUG: Diagnostic contains: Optional
+                    // BUG: Diagnostic contains:
                     return optional.get();
                   }
                 }
@@ -61,7 +61,7 @@ public class OptionalNotPresentTest {
               public String getWhenTestedSafe_equals(Optional<String> optional) {
                 if (!optional.isPresent()) {
                   if (optional.equals(Optional.of("OK"))) { // always false
-                    // BUG: Diagnostic contains: Optional
+                    // BUG: Diagnostic contains:
                     return optional.get();
                   }
                 }
@@ -134,7 +134,7 @@ public class OptionalNotPresentTest {
 
               public String getWhenAbsent(Optional<String> testStr) {
                 if (!testStr.isPresent()) {
-                  // BUG: Diagnostic contains: Optional
+                  // BUG: Diagnostic contains:
                   return testStr.get();
                 }
                 return "";
@@ -143,15 +143,15 @@ public class OptionalNotPresentTest {
               public String getWhenAbsent_multipleStatements(Optional<String> optional) {
                 if (!optional.isPresent()) {
                   String test = "test";
-                  // BUG: Diagnostic contains: Optional
+                  // BUG: Diagnostic contains:
                   return test + optional.get();
                 }
                 return "";
               }
 
-              // False-negative
               public String getWhenAbsent_nestedCheck(Optional<String> optional) {
                 if (!optional.isPresent() || true) {
+                  // BUG: Diagnostic contains:
                   return !optional.isPresent() ? optional.get() : "";
                 }
                 return "";
@@ -159,7 +159,7 @@ public class OptionalNotPresentTest {
 
               public String getWhenAbsent_compoundIf_false(Optional<String> optional) {
                 if (!optional.isPresent() && true) {
-                  // BUG: Diagnostic contains: Optional
+                  // BUG: Diagnostic contains:
                   return optional.get();
                 }
                 return "";
@@ -177,7 +177,7 @@ public class OptionalNotPresentTest {
                 if (optional.isPresent()) {
                   return optional.get();
                 } else {
-                  // BUG: Diagnostic contains: Optional
+                  // BUG: Diagnostic contains:
                   return optional.get();
                 }
               }
@@ -283,6 +283,41 @@ public class OptionalNotPresentTest {
                   return o.orElseThrow();
                 }
                 return -1;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void ternary_good() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            class Test {
+              int g(Optional<Integer> o) {
+                return o.isEmpty() ? 0 : o.get();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void ternary_bad() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            class Test {
+              int g(Optional<Integer> o) {
+                // BUG: Diagnostic contains:
+                return o.isEmpty() ? o.get() : 0;
               }
             }
             """)

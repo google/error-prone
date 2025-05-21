@@ -35,6 +35,7 @@ import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.Truthi
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -84,14 +85,23 @@ public final class OptionalNotPresent extends BugChecker implements CompilationU
 
     @Override
     public Void visitIf(IfTree tree, Void unused) {
-      Truthiness truthiness =
-          constantExpressions.truthiness(tree.getCondition(), /* not= */ false, state);
-
-      withinScope(truthiness, tree.getThenStatement());
-
+      withinScope(
+          constantExpressions.truthiness(tree.getCondition(), /* not= */ false, state),
+          tree.getThenStatement());
       withinScope(
           constantExpressions.truthiness(tree.getCondition(), /* not= */ true, state),
           tree.getElseStatement());
+      return null;
+    }
+
+    @Override
+    public Void visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
+      withinScope(
+          constantExpressions.truthiness(tree.getCondition(), /* not= */ false, state),
+          tree.getTrueExpression());
+      withinScope(
+          constantExpressions.truthiness(tree.getCondition(), /* not= */ true, state),
+          tree.getFalseExpression());
       return null;
     }
 
