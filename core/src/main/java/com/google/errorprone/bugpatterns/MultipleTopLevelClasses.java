@@ -49,24 +49,17 @@ public final class MultipleTopLevelClasses extends BugChecker
     List<String> names = new ArrayList<>();
     for (Tree member : tree.getTypeDecls()) {
       if (member instanceof ClassTree classMember) {
-        switch (classMember.getKind()) {
-          case CLASS, INTERFACE, ANNOTATION_TYPE, ENUM -> {
-            if (isSuppressed(classMember, state)) {
-              // If any top-level classes have @SuppressWarnings("TopLevel"), ignore
-              // this compilation unit. We can't rely on the normal suppression
-              // mechanism because the only enclosing element is the package declaration,
-              // and @SuppressWarnings can't be applied to packages.
-              return NO_MATCH;
-            }
-            names.add(classMember.getSimpleName().toString());
-          }
-          default -> {}
+        if (isSuppressed(classMember, state)) {
+          // If any top-level classes have @SuppressWarnings("TopLevel"), ignore
+          // this compilation unit. We can't rely on the normal suppression
+          // mechanism because the only enclosing element is the package declaration,
+          // and @SuppressWarnings can't be applied to packages.
+          return NO_MATCH;
         }
+        names.add(classMember.getSimpleName().toString());
       }
     }
     if (names.size() <= 1) {
-      // this can happen with multiple type declarations if some of them are
-      // empty (e.g. ";" at the top level counts as an empty type decl)
       return NO_MATCH;
     }
     String message =

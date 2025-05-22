@@ -124,4 +124,21 @@ public class MultipleTopLevelClassesTest {
             "class Extra {}")
         .doTest();
   }
+
+  @Test
+  public void twoRecords() {
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
+            """
+            package a;
+
+            // BUG: Diagnostic contains: one top-level class declaration, instead found: One, Two
+            record One() {}
+
+            // BUG: Diagnostic contains:
+            record Two() {}
+            """)
+        .doTest();
+  }
 }
