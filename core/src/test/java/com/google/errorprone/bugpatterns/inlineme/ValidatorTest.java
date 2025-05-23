@@ -586,17 +586,13 @@ public class ValidatorTest {
             "RpcClient.java",
             """
             import com.google.errorprone.annotations.InlineMe;
-            import java.time.Duration;
 
             public final class RpcClient {
               @InlineMe(replacement = "")
               @Deprecated
-              // BUG: Diagnostic contains: cannot inline methods with more than 1 statement
+              // BUG: Diagnostic contains: only inline methods with exactly 1 statement
               public void setDeadline(org.joda.time.Duration deadline) {}
-
-              public void setDeadline(Duration deadline) {}
             }
-
             """)
         .doTest();
   }
@@ -892,7 +888,7 @@ public class ValidatorTest {
   }
 
   @Test
-  public void emptyMethod() {
+  public void returnVoidMethod() {
     helper
         .addSourceLines(
             "Client.java",
@@ -902,7 +898,7 @@ public class ValidatorTest {
             public final class Client {
               @Deprecated
               @InlineMe(replacement = "return")
-              // BUG: Diagnostic contains: no-op
+              // BUG: Diagnostic contains: InlineMe cannot yet be applied to no-op void methods
               public void noOp() {
                 return;
               }
