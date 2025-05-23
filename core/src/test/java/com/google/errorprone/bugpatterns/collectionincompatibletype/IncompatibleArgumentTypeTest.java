@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -303,6 +305,8 @@ public class IncompatibleArgumentTypeIntersectionTypes {
 
   @Test
   public void typeWithinLambda() {
+    assume().that(Runtime.version().feature()).isAtMost(21);
+
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -318,6 +322,33 @@ abstract class Test {
   void test(Map<Long, String> map, ImmutableList<Long> xs) {
     // BUG: Diagnostic contains:
     getOrEmpty(map, xs);
+    Optional<String> x = Optional.empty().flatMap(k -> getOrEmpty(map, xs));
+  }
+}
+""")
+        .doTest();
+  }
+
+  @Test
+  public void typeWithinLambda_jdkhead() {
+    assume().that(Runtime.version().feature()).isAtLeast(25);
+
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+"""
+import com.google.common.collect.ImmutableList;
+import com.google.errorprone.annotations.CompatibleWith;
+import java.util.Map;
+import java.util.Optional;
+
+abstract class Test {
+  abstract <K, V> Optional<V> getOrEmpty(Map<K, V> map, @CompatibleWith("K") Object key);
+
+  void test(Map<Long, String> map, ImmutableList<Long> xs) {
+    // BUG: Diagnostic contains:
+    getOrEmpty(map, xs);
+    // BUG: Diagnostic contains:
     Optional<String> x = Optional.empty().flatMap(k -> getOrEmpty(map, xs));
   }
 }
