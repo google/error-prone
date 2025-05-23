@@ -37,7 +37,6 @@ import static javax.lang.model.element.Modifier.STATIC;
 import com.google.common.base.VerifyException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
@@ -62,6 +61,7 @@ import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -1313,18 +1313,11 @@ public class Matchers {
     return anyOf(matchers);
   }
 
-  private static final ImmutableSet<Kind> DECLARATION =
-      Sets.immutableEnumSet(Kind.LAMBDA_EXPRESSION, Kind.CLASS, Kind.ENUM, Kind.INTERFACE);
-
-  private static boolean isDeclaration(Kind kind) {
-    return DECLARATION.contains(kind) || kind.name().equals("RECORD");
-  }
-
   public static boolean methodCallInDeclarationOfThrowingRunnable(VisitorState state) {
     return stream(state.getPath())
         // Find the nearest definitional context for this method invocation
         // (i.e.: the nearest surrounding class or lambda)
-        .filter(t -> isDeclaration(t.getKind()))
+        .filter(t -> t instanceof LambdaExpressionTree || t instanceof ClassTree)
         .findFirst()
         .map(t -> isThrowingFunctionalInterface(getType(t), state))
         .orElseThrow(VerifyException::new);

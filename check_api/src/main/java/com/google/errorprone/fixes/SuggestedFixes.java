@@ -31,13 +31,13 @@ import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.sun.tools.javac.code.TypeTag.CLASS;
 import static com.sun.tools.javac.util.Position.NOPOS;
+import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
-import com.google.common.base.Predicates;
 import com.google.common.base.Splitter;
 import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
@@ -108,7 +108,6 @@ import com.sun.tools.javac.util.Options;
 import com.sun.tools.javac.util.Position;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.net.JarURLConnection;
@@ -129,6 +128,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
@@ -1565,25 +1565,28 @@ public final class SuggestedFixes {
     }
     SuggestedFix.Builder builder = SuggestedFix.builder();
     Type exemptingAnnotationType = state.getTypeFromString(exemptingAnnotation);
-    ImmutableSet<Tree.Kind> supportedExemptingAnnotationLocationKinds;
+    ImmutableSet<Class<? extends Tree>> supportedExemptingAnnotationLocationTypes;
     String annotationName;
 
     if (exemptingAnnotationType != null) {
-      supportedExemptingAnnotationLocationKinds =
+      supportedExemptingAnnotationLocationTypes =
           supportedTreeTypes(exemptingAnnotationType.asElement());
       annotationName = qualifyType(state, builder, exemptingAnnotationType);
     } else {
       // If we can't resolve the type, fall back to an approximation.
       int idx = exemptingAnnotation.lastIndexOf('.');
       Verify.verify(idx > 0 && idx + 1 < exemptingAnnotation.length());
-      supportedExemptingAnnotationLocationKinds = TREE_TYPE_UNKNOWN_ANNOTATION;
+      supportedExemptingAnnotationLocationTypes = TREE_TYPE_UNKNOWN_ANNOTATION;
       annotationName = exemptingAnnotation.substring(idx + 1);
       builder.addImport(exemptingAnnotation);
     }
     Optional<Tree> exemptingAnnotationLocation =
         stream(where)
-            .filter(tree -> supportedExemptingAnnotationLocationKinds.contains(tree.getKind()))
-            .filter(Predicates.not(SuggestedFixes::isAnonymousClassTree))
+            .filter(
+                tree ->
+                    supportedExemptingAnnotationLocationTypes.stream()
+                            .anyMatch(clazz -> clazz.isInstance(tree))
+                        && !isAnonymousClassTree(tree))
             .findFirst();
 
     return exemptingAnnotationLocation.map(
@@ -1600,37 +1603,31 @@ public final class SuggestedFixes {
    * <p>These are reasonable for exempting annotations which annotate a block of code, e.g. they
    * don't usually make sense on a variable declaration.
    */
-  private static final ImmutableSet<Tree.Kind> TREE_TYPE_UNKNOWN_ANNOTATION =
-      ImmutableSet.of(
-          Tree.Kind.CLASS,
-          Tree.Kind.ENUM,
-          Tree.Kind.INTERFACE,
-          Tree.Kind.ANNOTATION_TYPE,
-          Tree.Kind.METHOD);
+  private static final ImmutableSet<Class<? extends Tree>> TREE_TYPE_UNKNOWN_ANNOTATION =
+      ImmutableSet.of(ClassTree.class, MethodTree.class);
 
   /** Returns true iff {@code suggestExemptingAnnotation()} supports this annotation. */
   public static boolean suggestedExemptingAnnotationSupported(Element exemptingAnnotation) {
     return !supportedTreeTypes(exemptingAnnotation).isEmpty();
   }
 
-  private static ImmutableSet<Tree.Kind> supportedTreeTypes(Element exemptingAnnotation) {
+  private static ImmutableSet<Class<? extends Tree>> supportedTreeTypes(
+      Element exemptingAnnotation) {
     Target targetAnnotation = exemptingAnnotation.getAnnotation(Target.class);
     if (targetAnnotation == null) {
       // in the absence of further information, we assume the annotation is supported on classes and
       // methods.
       return TREE_TYPE_UNKNOWN_ANNOTATION;
     }
-    ImmutableSet.Builder<Tree.Kind> types = ImmutableSet.builder();
-    for (ElementType t : targetAnnotation.value()) {
-      switch (t) {
-        case TYPE ->
-            types.add(
-                Tree.Kind.CLASS, Tree.Kind.ENUM, Tree.Kind.INTERFACE, Tree.Kind.ANNOTATION_TYPE);
-        case METHOD -> types.add(Tree.Kind.METHOD);
-        default -> {}
-      }
-    }
-    return types.build();
+    return stream(targetAnnotation.value())
+        .flatMap(
+            t ->
+                switch (t) {
+                  case TYPE -> Stream.of(ClassTree.class);
+                  case METHOD -> Stream.of(MethodTree.class);
+                  default -> Stream.empty();
+                })
+        .collect(toImmutableSet());
   }
 
   /**
