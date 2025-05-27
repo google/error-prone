@@ -148,7 +148,9 @@ public class MissingCasesInEnumSwitchTest {
               }
 
               void m(Case c) {
-                // BUG: Diagnostic contains: THREE
+                // BUG: Diagnostic contains:
+                // Non-exhaustive switch; either add a default or handle the remaining cases
+                // THREE
                 switch (c) {
                   case ONE:
                   case TWO:
@@ -466,7 +468,9 @@ public class MissingCasesInEnumSwitchTest {
 
               void m(Case c) {
                 int x =
-                    // BUG: Diagnostic contains: THREE
+                    // BUG: Diagnostic contains:
+                    // Non-exhaustive switch; ensure all cases are handled in addition to the default case
+                    // THREE
                     switch (c) {
                       case ONE -> 1;
                       case TWO -> 2;

@@ -78,7 +78,11 @@ public class MissingCasesInEnumSwitch extends BugChecker
       return Description.NO_MATCH;
     }
 
-    return generateDescriptionForUnhandledCases(expression, switchType, cases);
+    return generateDescriptionForUnhandledCases(
+        "Non-exhaustive switch; either add a default or handle the remaining cases",
+        expression,
+        switchType,
+        cases);
   }
 
   @Override
@@ -105,16 +109,20 @@ public class MissingCasesInEnumSwitch extends BugChecker
       return Description.NO_MATCH;
     }
 
-    return generateDescriptionForUnhandledCases(expression, switchType, cases);
+    return generateDescriptionForUnhandledCases(
+        "Non-exhaustive switch; ensure all cases are handled in addition to the default case",
+        expression,
+        switchType,
+        cases);
   }
 
   private Description generateDescriptionForUnhandledCases(
-      Tree switchNode, Type switchType, List<? extends CaseTree> cases) {
+      String errorMessage, Tree switchNode, Type switchType, List<? extends CaseTree> cases) {
     Set<String> unhandled = getUnhandledEnumValues(switchType, cases);
     if (unhandled.isEmpty()) {
       return Description.NO_MATCH;
     }
-    return buildDescription(switchNode).setMessage(buildMessage(unhandled)).build();
+    return buildDescription(switchNode).setMessage(buildMessage(errorMessage, unhandled)).build();
   }
 
   private static Set<String> getUnhandledEnumValues(
@@ -139,10 +147,9 @@ public class MissingCasesInEnumSwitch extends BugChecker
    *   <li>Non-exhaustive switch, expected cases for: FOO, BAR, BAZ, and 42 others.
    * </ul>
    */
-  private static String buildMessage(Set<String> unhandled) {
-    StringBuilder message =
-        new StringBuilder(
-            "Non-exhaustive switch; either add a default or handle the remaining cases: ");
+  private static String buildMessage(String errorMessage, Set<String> unhandled) {
+    StringBuilder message = new StringBuilder(errorMessage);
+    message.append(": ");
     int numberToShow =
         unhandled.size() > MAX_CASES_TO_PRINT
             ? 3 // if there are too many to print, only show three examples.
