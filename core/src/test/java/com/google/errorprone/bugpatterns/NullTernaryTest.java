@@ -166,4 +166,42 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void nullTernaryInSwitch_negative() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              String f(int n) {
+                return switch (n) {
+                  case 0 -> "zero";
+                  default -> (n % 2 == 0) ? "even" : null;
+                };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nullTernaryInSwitch_positive() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              int f(int n) {
+                return switch (n) {
+                  default -> {
+                    // BUG: Diagnostic contains:
+                    yield (n % 2 == 0) ? 0 : null;
+                  }
+                };
+              }
+            }
+            """)
+        .doTest();
+  }
 }

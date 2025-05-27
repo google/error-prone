@@ -225,6 +225,9 @@ public abstract class TargetType {
     @Override
     public @Nullable Type visitCase(CaseTree tree, Void unused) {
       Tree switchTree = parent.getParentPath().getLeaf();
+      if (tree.getBody() != null && tree.getBody().equals(current)) {
+        return getType(switchTree);
+      }
       return getType(getSwitchExpression(switchTree));
     }
 
