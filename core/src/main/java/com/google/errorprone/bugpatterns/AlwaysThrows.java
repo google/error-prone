@@ -108,6 +108,8 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
             .withParameters("java.lang.String")) {
       @Override
       void validate(MethodInvocationTree tree, String argument) {
+        // ByteString.fromHex was only added in 2021; use reflection to be tolerant of old proto
+        // versions.
         try {
           ByteString.class.getMethod("fromHex", String.class).invoke(null, argument);
         } catch (NoSuchMethodException | IllegalAccessException e) {
