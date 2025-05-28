@@ -3,7 +3,7 @@ only the latest or unreleased devices can handle
 
 ## Suppression
 
-WARNING: We _strongly_ recommend checking your code with Android Lint if
+WARNING: We *strongly* recommend checking your code with Android Lint if
 suppressing or disabling this check.
 
 The check can be suppressed in code that deliberately only targets newer Android
