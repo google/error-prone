@@ -23,7 +23,6 @@ import static com.google.errorprone.bugpatterns.Switches.isDefaultCaseForSkew;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
@@ -39,7 +38,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -49,16 +47,6 @@ import javax.lang.model.element.ElementKind;
 public class MissingCasesInEnumSwitch extends BugChecker
     implements SwitchTreeMatcher, SwitchExpressionTreeMatcher {
   public static final int MAX_CASES_TO_PRINT = 5;
-
-  private final boolean checkSwitchExpressionsWithDefaultForSkew;
-
-  @Inject
-  MissingCasesInEnumSwitch(ErrorProneFlags flags) {
-    this.checkSwitchExpressionsWithDefaultForSkew =
-        flags
-            .getBoolean("MissingCasesInEnumSwitch:CheckSwitchExpressionsWithDefaultForSkew")
-            .orElse(true);
-  }
 
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {
@@ -87,12 +75,6 @@ public class MissingCasesInEnumSwitch extends BugChecker
 
   @Override
   public Description matchSwitchExpression(SwitchExpressionTree tree, VisitorState state) {
-    // Javac will check for exhaustiveness; the only reason we would check is if there's a default
-    // only intended for version skew.
-    if (!checkSwitchExpressionsWithDefaultForSkew) {
-      return Description.NO_MATCH;
-    }
-
     ExpressionTree expression = tree.getExpression();
     List<? extends CaseTree> cases = tree.getCases();
     Type switchType = ASTHelpers.getType(expression);
