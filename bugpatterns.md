@@ -632,6 +632,9 @@ BigDecimal#equals has surprising behavior: it also compares scale.
 __[BigDecimalLiteralDouble](bugpattern/BigDecimalLiteralDouble)__<br>
 new BigDecimal(double) loses precision in this case.
 
+__[BooleanLiteral](bugpattern/BooleanLiteral)__<br>
+This expression can be written more clearly with a boolean literal.
+
 __[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
 valueOf or autoboxing provides better time and space performance
 
