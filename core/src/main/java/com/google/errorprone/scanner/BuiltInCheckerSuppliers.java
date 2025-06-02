@@ -60,6 +60,7 @@ import com.google.errorprone.bugpatterns.BanSerializableRead;
 import com.google.errorprone.bugpatterns.BareDotMetacharacter;
 import com.google.errorprone.bugpatterns.BigDecimalEquals;
 import com.google.errorprone.bugpatterns.BigDecimalLiteralDouble;
+import com.google.errorprone.bugpatterns.BooleanLiteral;
 import com.google.errorprone.bugpatterns.BooleanParameter;
 import com.google.errorprone.bugpatterns.BoxedPrimitiveConstructor;
 import com.google.errorprone.bugpatterns.BoxedPrimitiveEquality;
@@ -897,6 +898,7 @@ public class BuiltInCheckerSuppliers {
           BareDotMetacharacter.class,
           BigDecimalEquals.class,
           BigDecimalLiteralDouble.class,
+          BooleanLiteral.class,
           BoxedPrimitiveConstructor.class,
           BugPatternNaming.class,
           ByteBufferBackingArray.class,
