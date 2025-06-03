@@ -63,7 +63,6 @@ public class BooleanLiteralTest {
   @Test
   public void methodRef() {
     refactoringHelper
-        .allowBreakingChanges()
         .addInputLines(
             "Test.java",
             """
@@ -75,18 +74,7 @@ public class BooleanLiteralTest {
               }
             }
             """)
-        // TODO: kak - this is a bug (it shouldn't be re-written).
-        .addOutputLines(
-            "Test.java",
-            """
-            import java.util.function.Predicate;
-
-            class Test {
-              void f() {
-                Predicate<Boolean> p = true::equals;
-              }
-            }
-            """)
+        .expectUnchanged()
         .doTest();
   }
 }

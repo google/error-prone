@@ -28,6 +28,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreePath;
@@ -55,6 +56,9 @@ public class BooleanLiteral extends BugChecker
       return NO_MATCH;
     }
     if (!sym.owner.equals(state.getTypes().boxedClass(state.getSymtab().booleanType))) {
+      return NO_MATCH;
+    }
+    if (state.getPath().getParentPath().getLeaf() instanceof MemberReferenceTree) {
       return NO_MATCH;
     }
     boolean value;
