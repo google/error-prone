@@ -2774,6 +2774,59 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
+  public void variableInTransitiveEnclosingBlock_shouldNotBeMoved() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.HashMap;
+            import java.util.Map;
+
+            class Test {
+              public Map<Object, Object> foo(Suit suit) {
+                Map<Object, Object> map = null;
+                if (toString().length() == 2)
+                  switch (suit) {
+                    case HEART:
+                    case DIAMOND:
+                      map = new HashMap<>();
+                      break;
+                    case SPADE:
+                      throw new RuntimeException();
+                    default:
+                      throw new NullPointerException();
+                  }
+                return map;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.HashMap;
+            import java.util.Map;
+
+            class Test {
+              public Map<Object, Object> foo(Suit suit) {
+                Map<Object, Object> map = null;
+                if (toString().length() == 2)
+                  map =
+                      switch (suit) {
+                        case HEART, DIAMOND -> new HashMap<>();
+                        case SPADE -> throw new RuntimeException();
+                        default -> throw new NullPointerException();
+                      };
+                return map;
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
+            "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
+        .doTest();
+  }
+
+  @Test
   public void switchByEnum_assignmentSwitchToInitializedtAsConstant_error() {
     // Dead store of a compile-time constant to local variable {@code x} can be elided.  Also tests
     // that the type of a "var" declaration is handled correctly.
