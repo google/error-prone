@@ -50,7 +50,8 @@ abstract class UInstanceOf extends UExpression {
                 (unused, method, args) -> {
                   switch (method.getName()) {
                     case "getPattern" -> {
-                      // TODO(cushon): support refaster template matching on instanceof patterns
+                      // TODO(b/422117955): support refaster template matching on instanceof
+                      // patterns.
                       return null;
                     }
                     case "getExpression" -> {
