@@ -98,10 +98,10 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.IntersectionType;
 import org.jspecify.annotations.Nullable;
 
-/** Checks for statement switches that can be expressed as an equivalent expression switch. */
+/** Checks for statement switches that can be converted into a new-style arrow (`->`) switch. */
 @BugPattern(
     severity = WARNING,
-    summary = "This statement switch can be converted to an equivalent expression switch")
+    summary = "This statement switch can be converted to a new-style arrow switch")
 public final class StatementSwitchToExpressionSwitch extends BugChecker
     implements SwitchTreeMatcher {
   // Braces are not required if there is exactly one statement on the right hand of the arrow, and
