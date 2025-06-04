@@ -1,6 +1,6 @@
 ---
 title: StatementSwitchToExpressionSwitch
-summary: This statement switch can be converted to an equivalent expression switch
+summary: This statement switch can be converted to a new-style arrow switch
 layout: bugpattern
 tags: ''
 severity: WARNING
@@ -13,31 +13,37 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-We're trying to make `switch` statements simpler to understand at a glance.
-Misunderstanding the control flow of a `switch` block is a common source of
-bugs.
+We're trying to make `switch`es simpler to understand at a glance.
+Misunderstanding the control flow of a `switch` is a common source of bugs.
 
-### Statement `switch` statements:
+As part of this simplification, new-style arrow (`->`) switches are encouraged
+instead of old-style colon (`:`) switches. And where possible, neighboring cases
+are grouped together (e.g. `case A, B, C`).
 
-*   Have a colon between the `case` and the case's code. For example, `case
+### Old-style colon (`:`) `switch`es:
+
+*   Have a colon between the `case` and the `case`'s code. For example, `case
     HEARTS:`
 *   Because of the potential for fall-through, it takes time and cognitive load
-    to understand the control flow for each `case`
-*   When a `switch` block is large, just skimming each `case` can be toilsome
-*   Fall-though can also be conditional (see example below). In this scenario,
-    one would need to reason about all possible flows for each `case`. When
-    conditionally falling-through multiple `case`s in a row is possible, the
-    number of potential control flows can grow rapidly
+    to understand the control flow. When a `switch` block is large, just
+    skimming each `case` can be toilsome. Fall-through can also be conditional
+    (see example 5. below). In this scenario, one would potentially need to
+    reason about all possible flows for each `case`. When conditionally
+    falling-through multiple `case`s, the number of potential control flows can
+    grow rapidly
+*   Lexical scopes overlap, which can lead to surprising behaviors: definitions
+    of local variables from earlier `case`s are propagated down to later
+    `case`s, however the *values* that initialize those local variables do not
+    propagate in the same way
 
-### Expression `switch` statements
+### New-style arrow (`->`) `switch`es:
 
-*   Have an arrow between the `case` and the case's code. For example, `case
+*   Have an arrow between the `case` and the `case`'s code. For example, `case
     HEARTS ->`
-*   With an expression `switch` statement, you know at a glance that no cases
-    fall through. No control flow analysis needed
+*   No `case`s fall through; no control flow analysis needed
 *   Safely and easily reorder `case`s (within a `switch`)
-*   It's also possible to group identical cases together (`case A, B, C`) for
-    improved readability
+*   Lexical scopes are isolated between different `case`s; if you define a local
+    variable within a `case`, it can only be used within that specific `case`.
 
 ### Examples
 
@@ -63,7 +69,7 @@ private void foo(Suit suit) {
 }
 ```
 
-Which can be simplified into the following expression `switch`:
+Which can be simplified by grouping and using a new-style switch:
 
 ``` {.good}
 enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
@@ -80,16 +86,14 @@ private void foo(Suit suit) {
 }
 ```
 
-#### 2. Return switch
+#### 2. `return switch ...`
 
-Sometimes `switch` is used with `return`. Below, even though a `case` is
-specified for each possible value of the `enum`, note that we nevertheless need
-a "should never happen" clause:
+Sometimes `switch` is used with a `return` for each `case`, like this:
 
 ``` {.bad}
 enum SideOfCoin {OBVERSE, REVERSE};
 
-private String foo(SideOfCoin sideOfCoin) {
+private String renderName(SideOfCoin sideOfCoin) {
   switch(sideOfCoin) {
     case OBVERSE:
       return "Heads";
@@ -101,8 +105,24 @@ private String foo(SideOfCoin sideOfCoin) {
 }
 ```
 
-Using an expression switch simplifies the code and removes the need for an
-explicit "should never happen" clause.
+Note that even though a `case` is present for each possible value of the `enum`,
+a boilerplate "should never happen" clause is still needed. The transformed code
+is simpler and doesn't need a "should never happen" clause.
+
+```
+enum SideOfCoin {OBVERSE, REVERSE};
+
+private String renderName(SideOfCoin sideOfCoin) {
+  return switch(sideOfCoin) {
+    case OBVERSE -> "Heads";
+    case REVERSE -> "Tails";
+  };
+}
+```
+
+If you nevertheless wish to define an explicit "should never happen" clause,
+this can be accomplished by placing the logic inside a `default` case. For
+example:
 
 ```
 enum SideOfCoin {OBVERSE, REVERSE};
@@ -111,33 +131,19 @@ private String foo(SideOfCoin sideOfCoin) {
   return switch(sideOfCoin) {
     case OBVERSE -> "Heads";
     case REVERSE -> "Tails";
+    default -> throw new RuntimeException("Unknown side of coin"); // should never happen
   };
 }
 ```
 
-If you nevertheless wish to have an explicit "should never happen" clause, this
-can be accomplished by placing the logic under a `default` case. For example:
+When the checker detects an existing `default` that appears to be redundant, it
+may suggest a secondary auto-fix which removes the redundant `default` and its
+code (if any).
 
-```
+#### 3. Assignment `switch`
 
-enum SideOfCoin {OBVERSE, REVERSE};
-
-private String foo(SideOfCoin sideOfCoin) {
-  return switch(sideOfCoin) {
-    case OBVERSE -> "Heads";
-    case REVERSE -> "Tails";
-    default -> {
-      // This should never happen
-      throw new RuntimeException("Unknown side of coin");
-    }
-  };
-}
-```
-
-#### 3. Assignment switch
-
-If every branch of a `switch` is making an assignment to the same variable, it
-can be re-written as an assignment switch:
+If every branch of a `switch` is making an assignment to the same variable, the
+code can be simplified into a combined assignment and `switch`:
 
 ``` {.bad}
 enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
@@ -172,14 +178,107 @@ private void updateScore(Suit suit) {
     case HEARTS, DIAMONDS -> -1;
     case SPADES -> 2;
     case CLUBS -> 3;
-    };
+  };
 }
 ```
 
-#### 4. Complex control flows
+Taking this one step further: if a local variable is defined, and then
+immediately followed by a `switch` in which every `case` assigns to that same
+variable, then all three (the `switch`, the variable declaration, and the
+assignment) can be merged:
+
+``` {.bad}
+enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
+
+private void updateStatus(Suit suit) {
+  int score;
+
+  switch(suit) {
+    case HEARTS:
+    // Fall thru
+    case DIAMONDS:
+      score = 1;
+      break;
+    case SPADES:
+      score = 2;
+      break;
+    case CLUBS:
+      score = 3;
+    }
+  ...
+
+}
+```
+
+Becomes:
+
+```
+enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
+
+private void updateStatus(Suit suit) {
+  int score = switch(suit) {
+    case HEARTS, DIAMONDS -> 1;
+    case SPADES -> 2;
+    case CLUBS -> 3;
+  };
+  ...
+}
+```
+
+#### 4. Just converting to new arrow `switch`
+
+Even when the simplifications discussed above are not applicable, conversion to
+new arrow `switch`es can be automated by this checker:
+
+``` {.bad}
+enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
+
+private void processEvent(Suit suit) {
+    switch (suit) {
+      case CLUBS:
+        String message = "hello";
+        var anotherMessage = "salut";
+        processMessages(message, anotherMessage);
+        break;
+      case DIAMONDS:
+        anotherMessage = "bonjour";
+        processMessage(anotherMessage);
+    }
+}
+```
+
+Note that the local variables referenced in multiple cases are hoisted up out of
+the `switch` statement, and `var` declarations are converted to explicit types,
+resulting in:
+
+```
+enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
+
+private void processEvent(Suit suit) {
+    String anotherMessage;
+    switch (suit) {
+      case CLUBS -> {
+        String message = "hello";
+        anotherMessage = "salut";
+        processMessages(message, anotherMessage);
+      }
+      case DIAMONDS -> {
+        anotherMessage = "bonjour";
+        processMessage(anotherMessage);
+      }
+    }
+}
+```
+
+#### 5. Complex control flows
 
 Here's an example of a complex statement `switch` with conditional fall-through
-and complex control flows. How many potential execution paths can you spot?
+and various control flows. Unfortunately, the checker does not currently have
+the ability to automatically convert such code to new-style arrow `switch`es.
+Manually converting the code could be a good opportunity to improve its
+readability.
+
+How many potential execution paths can you spot?
 
 ``` {.bad}
 enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};

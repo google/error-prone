@@ -1248,7 +1248,7 @@ __[ShortCircuitBoolean](bugpattern/ShortCircuitBoolean)__<br>
 Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.
 
 __[StatementSwitchToExpressionSwitch](bugpattern/StatementSwitchToExpressionSwitch)__<br>
-This statement switch can be converted to an equivalent expression switch
+This statement switch can be converted to a new-style arrow switch
 
 __[StaticAssignmentInConstructor](bugpattern/StaticAssignmentInConstructor)__<br>
 This assignment is to a static field. Mutating static state from a constructor is highly error-prone.
