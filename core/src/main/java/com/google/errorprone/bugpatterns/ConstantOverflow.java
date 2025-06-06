@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
+import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.math.IntMath;
@@ -97,9 +97,8 @@ public class ConstantOverflow extends BugChecker implements BinaryTreeMatcher {
     Tree parent = state.getPath().getParentPath().getLeaf();
     if (parent instanceof VariableTree variableTree
         && isSameType(getType(parent), intType, state)) {
-      Tree type = variableTree.getType();
-      if (hasExplicitSource(type, state)) {
-        fix.replace(type, "long");
+      if (!hasImplicitType(variableTree, state)) {
+        fix.replace(variableTree.getType(), "long");
       }
     }
     return fix.build();

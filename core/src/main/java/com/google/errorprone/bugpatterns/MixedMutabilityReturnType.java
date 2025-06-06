@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 
 import com.google.auto.value.AutoValue;
@@ -388,7 +389,7 @@ public final class MixedMutabilityReturnType extends BugChecker
 
       Tree erasedType = ASTHelpers.getErasedTypeTree(variableTree.getType());
       // don't try to replace synthetic nodes for `var`
-      if (ASTHelpers.hasExplicitSource(erasedType, state)) {
+      if (!hasImplicitType(variableTree, state)) {
         fix.replace(erasedType, qualifyType(state, fix, details.builderType()));
       }
       if (variableTree.getInitializer() != null) {

@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.requiresParentheses;
 import static com.google.errorprone.util.TargetType.targetType;
@@ -48,7 +49,6 @@ import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.Position;
 import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.ElementKind;
@@ -128,7 +128,7 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
     if (leaf instanceof VariableTree variableTree) {
       if (isRewritableVariable(variableTree, state)) {
         SuggestedFix.Builder fix = SuggestedFix.builder();
-        if (state.getEndPosition(variableTree.getType()) != Position.NOPOS) {
+        if (!hasImplicitType(variableTree, state)) {
           // If the variable is declared with `var`, there's no declaration type to change
           fix.replace(variableTree.getType(), "String");
         }

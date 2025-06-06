@@ -32,7 +32,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
-import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
+import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isInStaticInitializer;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -471,7 +471,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     Tree type = var.getType();
     String typePrefix;
     int startPos;
-    if (hasExplicitSource(type, state)) {
+    if (!hasImplicitType(var, state)) {
       startPos = state.getEndPosition(type);
       typePrefix = "";
     } else {
