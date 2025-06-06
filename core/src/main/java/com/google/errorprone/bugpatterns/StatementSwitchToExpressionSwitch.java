@@ -119,7 +119,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   private static final AssignmentSwitchAnalysisResult DEFAULT_ASSIGNMENT_SWITCH_ANALYSIS_RESULT =
       AssignmentSwitchAnalysisResult.of(
           /* canConvertToAssignmentSwitch= */ false,
-          /* canCombineWithPrecedingVariableDeclaration= */ false,
+          /* precedingVariableDeclaration= */ Optional.empty(),
           /* assignmentTargetOptional= */ Optional.empty(),
           /* assignmentKindOptional= */ Optional.empty(),
           /* assignmentSourceCodeOptional= */ Optional.empty());
@@ -433,33 +433,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     // If present, the variable tree that can be combined with the switch block
     Optional<VariableTree> combinableVariableTree =
-        precedingStatements.isEmpty()
-            ? Optional.empty()
-            : Optional.of(precedingStatements)
-                // Don't try to combine when multiple variables are declared together
-                .filter(
-                    StatementSwitchToExpressionSwitch
-                        ::precedingTwoStatementsNotInSameVariableDeclaratorList)
-                // Extract the immediately preceding statement
-                .map(Iterables::getLast)
-                // Preceding statement must be a variable declaration
-                .filter(precedingStatement -> precedingStatement instanceof VariableTree)
-                .map(precedingStatement -> (VariableTree) precedingStatement)
-                // Variable must be uninitialized, or initialized with a compile-time constant
-                .filter(
-                    variableTree ->
-                        (variableTree.getInitializer() == null)
-                            || COMPILE_TIME_CONSTANT_MATCHER.matches(
-                                variableTree.getInitializer(), state))
-                // If we are reading the initialized value in the switch block, we can't remove it
-                .filter(
-                    variableTree -> noReadsOfVariable(ASTHelpers.getSymbol(variableTree), state))
-                // The variable and the switch's assignment must be compatible
-                .filter(
-                    variableTree ->
-                        isVariableCompatibleWithAssignment(assignmentTarget, variableTree));
-    boolean canCombineWithPrecedingVariableDeclaration =
-        canConvertToAssignmentSwitch && combinableVariableTree.isPresent();
+        canConvertToAssignmentSwitch
+            ? assignmentTarget.flatMap(
+                target -> findCombinableVariableTree(target, precedingStatements, state))
+            : Optional.empty();
 
     return AnalysisResult.of(
         canConvertDirectlyToExpressionSwitch,
@@ -467,7 +444,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         canRemoveDefault,
         AssignmentSwitchAnalysisResult.of(
             canConvertToAssignmentSwitch,
-            canCombineWithPrecedingVariableDeclaration,
+            combinableVariableTree,
             assignmentSwitchAnalysisState.assignmentTargetOptional(),
             assignmentSwitchAnalysisState.assignmentExpressionKindOptional(),
             assignmentSwitchAnalysisState
@@ -475,6 +452,33 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
                 .map(StatementSwitchToExpressionSwitch::renderJavaSourceOfAssignment)),
         ImmutableList.copyOf(groupedWithNextCase),
         ImmutableBiMap.copyOf(symbolsToHoist));
+  }
+
+  private static Optional<VariableTree> findCombinableVariableTree(
+      ExpressionTree assignmentTarget,
+      ImmutableList<StatementTree> precedingStatements,
+      VisitorState state) {
+    // Don't try to combine when multiple variables are declared together
+    if (precedingStatements.isEmpty()
+        || !precedingTwoStatementsNotInSameVariableDeclaratorList(precedingStatements)) {
+      return Optional.empty();
+    }
+    if (!(getLast(precedingStatements) instanceof VariableTree variableTree)) {
+      return Optional.empty();
+    }
+    if (variableTree.getInitializer() != null
+        && !COMPILE_TIME_CONSTANT_MATCHER.matches(variableTree.getInitializer(), state)) {
+      return Optional.empty();
+    }
+    // If we are reading the initialized value in the switch block, we can't remove it
+    if (!noReadsOfVariable(ASTHelpers.getSymbol(variableTree), state)) {
+      return Optional.empty();
+    }
+    // The variable and the switch's assignment must be compatible
+    if (!isVariableCompatibleWithAssignment(assignmentTarget, variableTree)) {
+      return Optional.empty();
+    }
+    return Optional.of(variableTree);
   }
 
   /**
@@ -742,13 +746,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * variable that is being defined.
    */
   private static boolean isVariableCompatibleWithAssignment(
-      Optional<ExpressionTree> assignmentTargetOptional, VariableTree variableDefinition) {
-    // No assignment target, so not compatible
-    if (assignmentTargetOptional.isEmpty()) {
-      return false;
-    }
-
-    Symbol assignmentTargetSymbol = getSymbol(assignmentTargetOptional.get());
+      ExpressionTree assignmentTarget, VariableTree variableDefinition) {
+    Symbol assignmentTargetSymbol = getSymbol(assignmentTarget);
     Symbol definedSymbol = ASTHelpers.getSymbol(variableDefinition);
 
     return Objects.equals(assignmentTargetSymbol, definedSymbol);
@@ -1234,30 +1233,29 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     SuggestedFix.Builder suggestedFixBuilder = SuggestedFix.builder();
     StringBuilder replacementCodeBuilder = new StringBuilder();
 
-    if (analysisResult
+    analysisResult
         .assignmentSwitchAnalysisResult()
-        .canCombineWithPrecedingVariableDeclaration()) {
+        .precedingVariableDeclaration()
+        .ifPresent(
+            variableTree -> {
+              suggestedFixBuilder.delete(variableTree);
 
-      ImmutableList<StatementTree> precedingStatements = getPrecedingStatementsInBlock(state);
-      VariableTree variableTree = (VariableTree) Iterables.getLast(precedingStatements);
-      suggestedFixBuilder.delete(variableTree);
+              replacementCodeBuilder.append(
+                  Streams.concat(
+                          renderVariableTreeComments(variableTree, state).stream(),
+                          renderVariableTreeAnnotations(variableTree, state).stream(),
+                          Stream.of(renderVariableTreeFlags(variableTree)))
+                      .collect(joining("\n")));
 
-      replacementCodeBuilder.append(
-          Streams.concat(
-                  renderVariableTreeComments(variableTree, state).stream(),
-                  renderVariableTreeAnnotations(variableTree, state).stream(),
-                  Stream.of(renderVariableTreeFlags(variableTree)))
-              .collect(joining("\n")));
+              // Local variables declared with "var" must unfortunately be handled as a special case
+              // because getSourceForNode() returns null for the source code of a "var" declaration.
+              String sourceForType =
+                  hasImplicitType(variableTree, state)
+                      ? "var"
+                      : state.getSourceForNode(variableTree.getType());
 
-      // Local variables declared with "var" must unfortunately be handled as a special case because
-      // getSourceForNode() returns null for the source code of a "var" declaration.
-      String sourceForType =
-          hasImplicitType(variableTree, state)
-              ? "var"
-              : state.getSourceForNode(variableTree.getType());
-
-      replacementCodeBuilder.append(sourceForType).append(" ");
-    }
+              replacementCodeBuilder.append(sourceForType).append(" ");
+            });
 
     List<? extends CaseTree> cases = switchTree.getCases();
     ImmutableList<ErrorProneComment> allSwitchComments =
@@ -1787,11 +1785,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     /** Whether the statement switch can be converted to an assignment switch */
     abstract boolean canConvertToAssignmentSwitch();
 
-    /**
-     * Whether the assignment switch can be combined with the immediately preceding variable
-     * declaration
-     */
-    abstract boolean canCombineWithPrecedingVariableDeclaration();
+    /** The immediately preceding variable declaration if this switch can be combined with it. */
+    abstract Optional<VariableTree> precedingVariableDeclaration();
 
     /** Target of the assignment switch, if any */
     abstract Optional<ExpressionTree> assignmentTargetOptional();
@@ -1804,13 +1799,13 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     static AssignmentSwitchAnalysisResult of(
         boolean canConvertToAssignmentSwitch,
-        boolean canCombineWithPrecedingVariableDeclaration,
+        Optional<VariableTree> precedingVariableDeclaration,
         Optional<ExpressionTree> assignmentTargetOptional,
         Optional<Tree.Kind> assignmentKindOptional,
         Optional<String> assignmentSourceCodeOptional) {
       return new AutoValue_StatementSwitchToExpressionSwitch_AssignmentSwitchAnalysisResult(
           canConvertToAssignmentSwitch,
-          canCombineWithPrecedingVariableDeclaration,
+          precedingVariableDeclaration,
           assignmentTargetOptional,
           assignmentKindOptional,
           assignmentSourceCodeOptional);
