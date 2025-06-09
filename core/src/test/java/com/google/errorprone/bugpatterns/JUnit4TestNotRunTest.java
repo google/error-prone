@@ -925,4 +925,50 @@ public class JUnit4TestNotRunNegativeCase5 extends JUnit4TestNotRunBaseClass {
             """)
         .doTest();
   }
+
+  @Test
+  public void annotatedWithParameters_isATest() {
+    compilationHelper
+        .addSourceLines(
+            "T.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameters;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class T {
+              @TestParameters("foo")
+              // BUG: Diagnostic contains:
+              public void givenFooThenBar(String foo) {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void enumParameter_couldWellBeATest() {
+    compilationHelper
+        .addSourceLines(
+            "T.java",
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+
+            @RunWith(JUnit4.class)
+            public class T {
+              enum E {
+                A
+              }
+
+              // BUG: Diagnostic contains:
+              public void givenFooThenBar(E e) {
+                verify();
+              }
+
+              private void verify() {}
+            }
+            """)
+        .doTest();
+  }
 }
