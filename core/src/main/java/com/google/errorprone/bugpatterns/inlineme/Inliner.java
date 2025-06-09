@@ -69,6 +69,7 @@ import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -572,21 +573,14 @@ public final class Inliner extends BugChecker
   }
 
   private static EndPosTable asEndPosTable(JavacParser parser) {
-    return new EndPosTable() {
-      @Override
-      public int getEndPos(JCTree tree) {
-        return parser.getEndPos(tree);
-      }
-
-      @Override
-      public void storeEnd(JCTree tree, int endpos) {
-        throw new AssertionError();
-      }
-
-      @Override
-      public int replaceTree(JCTree oldtree, JCTree newtree) {
-        throw new AssertionError();
-      }
-    };
+    return (EndPosTable)
+        Proxy.newProxyInstance(
+            EndPosTable.class.getClassLoader(),
+            new Class<?>[] {EndPosTable.class},
+            (proxy, method, args) ->
+                switch (method.getName()) {
+                  case "getEndPos" -> parser.getEndPos((JCTree) args[0]);
+                  default -> throw new AssertionError("Unexpected method: " + method.getName());
+                });
   }
 }
