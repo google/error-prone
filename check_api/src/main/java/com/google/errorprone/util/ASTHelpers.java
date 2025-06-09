@@ -2111,12 +2111,15 @@ public class ASTHelpers {
 
   /** Returns whether this is a {@code var} or a lambda parameter that has no explicit type. */
   public static boolean hasImplicitType(VariableTree tree, VisitorState state) {
-    /*
-     * For lambda expression parameters without an explicit type, both
-     * `JCVariableDecl#declaredUsingVar()` and `#isImplicitlyTyped()` may be false. So instead we
-     * check whether the variable's type is explicitly represented in the source code.
-     */
-    return !hasExplicitSource(tree.getType(), state);
+    JCVariableDecl varDecl = (JCVariableDecl) tree;
+    if (varDecl.declaredUsingVar()) {
+      return true;
+    }
+    // after JDK-8358604, inferred variable types have source positions
+    if (!hasExplicitSource(tree.getType(), state)) {
+      return true;
+    }
+    return false;
   }
 
   /** Returns whether the given tree has an explicit source code representation. */
