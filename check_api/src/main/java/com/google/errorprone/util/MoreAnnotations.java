@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
@@ -235,6 +236,24 @@ public final class MoreAnnotations {
             },
             null),
         Stream.empty());
+  }
+
+  /** Converts the given annotation value to one or more annotations. */
+  public static Stream<AnnotationMirror> asAnnotations(AnnotationValue v) {
+    return v.accept(
+        new SimpleAnnotationValueVisitor8<Stream<AnnotationMirror>, Void>(Stream.empty()) {
+          @Override
+          public Stream<AnnotationMirror> visitAnnotation(AnnotationMirror av, Void unused) {
+            return Stream.of(av);
+          }
+
+          @Override
+          public Stream<AnnotationMirror> visitArray(
+              List<? extends AnnotationValue> list, Void unused) {
+            return list.stream().flatMap(a -> a.accept(this, null));
+          }
+        },
+        null);
   }
 
   /** Converts the given annotation value to one or more types. */
