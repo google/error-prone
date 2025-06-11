@@ -573,6 +573,33 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
+  public void helperMethodUsedViaMemberReference() {
+    compilationHelper
+        .addSourceLines(
+            "TestStuff.java",
+            """
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import org.junit.Test;
+
+            @RunWith(JUnit4.class)
+            public class TestStuff {
+              public void shouldDoSomething() {
+                verify();
+              }
+
+              @Test
+              public void testDoesSomething() {
+                Runnable r = this::shouldDoSomething;
+              }
+
+              void verify() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void helperMethodCallFoundInNestedInvocation() {
     compilationHelper
         .addSourceLines(

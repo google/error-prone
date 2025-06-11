@@ -49,6 +49,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -160,10 +161,15 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
           }
 
           @Override
-          public Void visitMethodInvocation(
-              MethodInvocationTree methodInvocationTree, Void unused) {
-            suspiciousMethods.remove(getSymbol(methodInvocationTree));
-            return super.visitMethodInvocation(methodInvocationTree, null);
+          public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+            suspiciousMethods.remove(getSymbol(tree));
+            return super.visitMethodInvocation(tree, null);
+          }
+
+          @Override
+          public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
+            suspiciousMethods.remove(getSymbol(tree));
+            return super.visitMemberReference(tree, null);
           }
         },
         null);
