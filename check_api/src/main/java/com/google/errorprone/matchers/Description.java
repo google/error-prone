@@ -143,9 +143,7 @@ public class Description {
       explanation = "Use describeMatch or buildDescription on BugChecker instead.",
       link = "",
       allowedOnPath =
-          ".*/java/com/google/devtools/staticanalysis/errorprone/pluggabletype/LatticeAdapter.java"
-              + "|.*/java/com/google/devtools/staticanalysis/errorprone/pluggabletype/LatticeInfo.java"
-              + "|.*/third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/bugpatterns/BugChecker.java")
+          ".*/third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/bugpatterns/BugChecker.java")
   public static Builder builder(Tree node, String name, @Nullable String link, String message) {
     return new Builder((DiagnosticPosition) node, name, link, message);
   }
@@ -270,7 +268,6 @@ public class Description {
             ".*/third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/matchers/Description.java$|"
                 + ".*/java/com/google/devtools/javatools/staticanalysis/xlang/java/BugCheckerUsingXlang.java$|"
                 + ".*/java/com/google/devtools/staticanalysis/errorprone/RestrictedInheritanceChecker.java$|"
-                + ".*/java/com/google/devtools/staticanalysis/errorprone/pluggabletype/LatticeAdapter.java$|"
                 + ".*/third_party/java_src/error_prone/project/core/src/main/java/com/google/errorprone/bugpatterns/RestrictedApiChecker.java$|"
                 + ".*/third_party/java_src/error_prone/project/core/src/main/java/com/google/errorprone/refaster/RefasterScanner.java$")
     @CanIgnoreReturnValue
