@@ -487,6 +487,32 @@ public class ErrorProneJavaCompilerTest {
   }
 
   @Test
+  public void patchAllWithDisableAllChecks() throws IOException {
+    JavaFileObject fileObject =
+        createOnDiskFileObject(
+            "StringConstantWrapper.java",
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+
+    CompilationResult result =
+        doCompile(
+            Collections.singleton(fileObject),
+            Arrays.asList("-XepPatchChecks:", "-XepPatchLocation:IN_PLACE", "-XepDisableAllChecks"),
+            ImmutableList.of(AssignmentUpdater.class));
+    assertThat(result.succeeded).isTrue();
+    assertThat(Files.readString(Path.of(fileObject.toUri())))
+        .isEqualTo(
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+  }
+
+  @Test
   public void patchSingleWithCheckDisabled() throws IOException {
     JavaFileObject fileObject =
         createOnDiskFileObject(
