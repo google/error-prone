@@ -501,6 +501,38 @@ public final class PatternMatchingInstanceofTest {
   }
 
   @Test
+  public void checkStyleCompliantName() {
+    helper
+            .addInputLines(
+                    "Class.java",
+                    """
+                    import java.sql.SQLException;
+                    
+                    class Class {
+                      void test(SQLException e) {
+                        if (e instanceof SQLException) {
+                          test((Class) e);
+                        }
+                      }
+                    }
+                    """)
+            .addOutputLines(
+                    "Class.java",
+                    """
+                    import java.sql.SQLException;
+                    
+                    class Class {
+                      void test(SQLException o) {
+                        if (e instanceof SQLException sqlException) {
+                          test(sqlException);
+                        }
+                      }
+                    }
+                    """)
+            .doTest();
+  }
+
+  @Test
   public void recordPatternMatching() {
     assume().that(Runtime.version().feature()).isAtLeast(21);
 
