@@ -506,18 +506,15 @@ public final class PatternMatchingInstanceofTest {
             .addInputLines(
                     "Class.java",
                     """
-                    import java.sql.SQLException;
                     import java.io.InterruptedIOException;
+                    import java.sql.SQLException;
                     
                     class Class {
-                      void test(SQLException e) {
-                        if (e instanceof SQLException) {
-                          test((SQLException) e);
-                        }
-                      }
-                      void test(InterruptedIOException e) {
+                      void test(Object e) {
                         if (e instanceof InterruptedIOException) {
                           test((InterruptedIOException) e);
+                        } else if (e instanceof SQLException) {
+                          test((SQLException) e);
                         }
                       }
                     }
@@ -525,18 +522,15 @@ public final class PatternMatchingInstanceofTest {
             .addOutputLines(
                     "Class.java",
                     """
-                    import java.sql.SQLException;
                     import java.io.InterruptedIOException;
+                    import java.sql.SQLException;                    
                     
                     class Class {
-                      void test(SQLException o) {
-                        if (e instanceof SQLException sqlException) {
-                          test(sqlException);
-                        }
-                      }
-                      void test(InterruptedIOException e) {
+                      void test(Object e) {
                         if (e instanceof InterruptedIOException interruptedIoException) {
                           test(interruptedIoException);
+                        } else if (e instanceof SQLException sqlException) {
+                          test(sqlException);
                         }
                       }
                     }

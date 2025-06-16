@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.base.Ascii.toLowerCase;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
@@ -54,7 +53,6 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.stream.Stream;
 import javax.inject.Inject;
@@ -165,14 +163,14 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     Type unboxed = state.getTypes().unboxedType(targetType);
     String simpleName = targetType.tsym.getSimpleName().toString();
     char[] chars = simpleName.toCharArray();
-    boolean priotCharWasUpper = Character.isUpperCase(chars[0]);;
+    boolean priorCharWasUpper = Character.isUpperCase(chars[0]);;
     chars[0] = Character.toLowerCase(chars[0]);
     for (int i = 1; i < chars.length - 1; i++) {
       boolean currentCharIsUpper = Character.isUpperCase(chars[i]);
-      if (currentCharIsUpper && priotCharWasUpper && Character.isUpperCase(chars[i + 1])) {
+      if (currentCharIsUpper && priorCharWasUpper && Character.isUpperCase(chars[i + 1])) {
         chars[i] = Character.toLowerCase(chars[i]);
       }
-      priotCharWasUpper = currentCharIsUpper;
+      priorCharWasUpper = currentCharIsUpper;
     }
     String camelCased = new String(chars);
     if (SourceVersion.isKeyword(camelCased)
