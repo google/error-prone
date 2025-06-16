@@ -165,11 +165,14 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     Type unboxed = state.getTypes().unboxedType(targetType);
     String simpleName = targetType.tsym.getSimpleName().toString();
     char[] chars = simpleName.toCharArray();
+    boolean priotCharWasUpper = Character.isUpperCase(chars[0]);;
     chars[0] = Character.toLowerCase(chars[0]);
-    for (int i = 1; i < chars.length + 1; i++) {
-      if (Character.isUpperCase(chars[i]) && Character.isUpperCase(chars[i + 1])) {
+    for (int i = 1; i < chars.length - 1; i++) {
+      boolean currentCharIsUpper = Character.isUpperCase(chars[i]);
+      if (currentCharIsUpper && priotCharWasUpper && Character.isUpperCase(chars[i + 1])) {
         chars[i] = Character.toLowerCase(chars[i]);
       }
+      priotCharWasUpper = currentCharIsUpper;
     }
     String camelCased = new String(chars);
     if (SourceVersion.isKeyword(camelCased)

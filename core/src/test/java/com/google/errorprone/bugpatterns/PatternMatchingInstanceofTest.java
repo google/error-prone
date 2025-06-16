@@ -507,11 +507,17 @@ public final class PatternMatchingInstanceofTest {
                     "Class.java",
                     """
                     import java.sql.SQLException;
+                    import java.io.InterruptedIOException;
                     
                     class Class {
                       void test(SQLException e) {
                         if (e instanceof SQLException) {
-                          test((Class) e);
+                          test((SQLException) e);
+                        }
+                      }
+                      void test(InterruptedIOException e) {
+                        if (e instanceof InterruptedIOException) {
+                          test((InterruptedIOException) e);
                         }
                       }
                     }
@@ -520,11 +526,17 @@ public final class PatternMatchingInstanceofTest {
                     "Class.java",
                     """
                     import java.sql.SQLException;
+                    import java.io.InterruptedIOException;
                     
                     class Class {
                       void test(SQLException o) {
                         if (e instanceof SQLException sqlException) {
                           test(sqlException);
+                        }
+                      }
+                      void test(InterruptedIOException e) {
+                        if (e instanceof InterruptedIOException interruptedIoException) {
+                          test(interruptedIoException);
                         }
                       }
                     }
