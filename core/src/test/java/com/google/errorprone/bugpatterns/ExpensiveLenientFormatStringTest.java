@@ -23,13 +23,13 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
-public class PreconditionsExpensiveStringTest {
+public class ExpensiveLenientFormatStringTest {
 
   private final CompilationTestHelper testHelper =
-      CompilationTestHelper.newInstance(PreconditionsExpensiveString.class, getClass());
+      CompilationTestHelper.newInstance(ExpensiveLenientFormatString.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(PreconditionsExpensiveString.class, getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ExpensiveLenientFormatString.class, getClass());
 
   @Test
   public void refactoring() {
