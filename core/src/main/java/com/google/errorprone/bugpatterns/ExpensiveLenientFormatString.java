@@ -42,12 +42,12 @@ import java.util.regex.Pattern;
  * @author sjnickerson@google.com (Simon Nickerson)
  */
 @BugPattern(
-    name = "PreconditionsExpensiveString",
+    altNames = "PreconditionsExpensiveString",
     summary =
-        "Second argument to Preconditions.* is a call to String.format(), which can be unwrapped to"
-            + " avoid eager string construction",
+        "String.format is passed to a lenient formatting method, which can be unwrapped to improve"
+            + " efficiency.",
     severity = WARNING)
-public class PreconditionsExpensiveString extends BugChecker
+public class ExpensiveLenientFormatString extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> STRING_FORMAT_MATCHER =

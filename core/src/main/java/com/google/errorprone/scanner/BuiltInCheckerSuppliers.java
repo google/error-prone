@@ -141,6 +141,7 @@ import com.google.errorprone.bugpatterns.EqualsWrongThing;
 import com.google.errorprone.bugpatterns.ErroneousBitwiseExpression;
 import com.google.errorprone.bugpatterns.ErroneousThreadPoolConstructorChecker;
 import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
+import com.google.errorprone.bugpatterns.ExpensiveLenientFormatString;
 import com.google.errorprone.bugpatterns.ExtendingJUnitAssert;
 import com.google.errorprone.bugpatterns.ExtendsAutoValue;
 import com.google.errorprone.bugpatterns.FallThrough;
@@ -316,7 +317,6 @@ import com.google.errorprone.bugpatterns.ParameterName;
 import com.google.errorprone.bugpatterns.ParametersButNotParameterized;
 import com.google.errorprone.bugpatterns.PatternMatchingInstanceof;
 import com.google.errorprone.bugpatterns.PreconditionsCheckNotNullRepeated;
-import com.google.errorprone.bugpatterns.PreconditionsExpensiveString;
 import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
 import com.google.errorprone.bugpatterns.PreferInstanceofOverGetKind;
 import com.google.errorprone.bugpatterns.PreferredInterfaceType;
@@ -944,6 +944,7 @@ public class BuiltInCheckerSuppliers {
           ErroneousBitwiseExpression.class,
           ErroneousThreadPoolConstructorChecker.class,
           EscapedEntity.class,
+          ExpensiveLenientFormatString.class,
           ExtendingJUnitAssert.class,
           ExtendsObject.class,
           FallThrough.class,
@@ -1081,7 +1082,6 @@ public class BuiltInCheckerSuppliers {
           ParameterName.class,
           PatternMatchingInstanceof.class,
           PreconditionsCheckNotNullRepeated.class,
-          PreconditionsExpensiveString.class,
           PreferInstanceofOverGetKind.class,
           PrimitiveAtomicReference.class,
           ProtectedMembersInFinalClass.class,
