@@ -26,9 +26,7 @@ import com.google.common.collect.ImmutableSet;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.util.Position;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Proxy;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -39,29 +37,16 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class AppliedFixTest {
 
+  // This is unused by the test, it just needs to be non-null.
+  // The proxy is necessary since the interface contains breaking changes across JDK versions.
   final EndPosTable endPositions =
-      new EndPosTable() {
-
-        final Map<JCTree, Integer> map = new HashMap<>();
-
-        @Override
-        public void storeEnd(JCTree tree, int endpos) {
-          map.put(tree, endpos);
-        }
-
-        @Override
-        public int replaceTree(JCTree oldtree, JCTree newtree) {
-          Integer endpos = map.getOrDefault(oldtree, Position.NOPOS);
-          map.put(newtree, endpos);
-          return endpos;
-        }
-
-        @Override
-        public int getEndPos(JCTree tree) {
-          Integer result = map.getOrDefault(tree, Position.NOPOS);
-          return result;
-        }
-      };
+      (EndPosTable)
+          Proxy.newProxyInstance(
+              AppliedFixTest.class.getClassLoader(),
+              new Class<?>[] {EndPosTable.class},
+              (proxy, method, args) -> {
+                throw new UnsupportedOperationException();
+              });
 
   // TODO(b/67738557): consolidate helpers for creating fake trees
   JCTree node(int startPos, int endPos) {
