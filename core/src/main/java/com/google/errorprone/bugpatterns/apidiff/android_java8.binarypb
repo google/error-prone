@@ -4955,9 +4955,6 @@ B
 Q
 O
 Morg/graalvm/compiler/hotspot/replacements/arraycopy/ArrayCopyWithSlowPathNode
-
-
-java/lang/StackWalker
 1
 /
 -sun/jvm/hotspot/utilities/soql/JSJavaInstance
