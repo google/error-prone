@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.auto.value.processor.AutoValueProcessor;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
@@ -367,6 +368,33 @@ public class UnnecessaryParenthesesTest {
             }
             """)
         // Using TEXT_MATCH because the ASTs are the same with or without the parentheses!
+        .doTest(TestMode.TEXT_MATCH);
+  }
+
+  @Test
+  public void recordParameters() {
+    testHelper
+        .addInputLines(
+            "R.java",
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+            import org.checkerframework.dataflow.qual.Pure;
+            import com.google.auto.value.AutoBuilder;
+
+            /**
+             * A record with parameters.
+             *
+             * @param x parameter x
+             * @param y parameter y
+             * @param z parameter z
+             */
+            public record R(@Pure boolean x, @Pure @Nullable String y, @Pure @Nullable String z) {
+              @AutoBuilder
+              public abstract static class Builder {}
+            }
+            """)
+        .expectUnchanged()
+        .setArgs("-processor", AutoValueProcessor.class.getName())
         .doTest(TestMode.TEXT_MATCH);
   }
 }

@@ -77,4 +77,18 @@ public class BooleanLiteralTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void moduleInfo() {
+    refactoringHelper
+        .addInputLines(
+            "module-info.java",
+            """
+            module foo {
+              requires java.base;
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }

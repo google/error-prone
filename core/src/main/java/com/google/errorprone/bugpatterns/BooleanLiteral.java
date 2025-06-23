@@ -52,7 +52,7 @@ public class BooleanLiteral extends BugChecker
 
   private Description match(ExpressionTree tree, VisitorState state) {
     Symbol sym = getSymbol(tree);
-    if (sym == null) {
+    if (sym == null || sym.owner == null) {
       return NO_MATCH;
     }
     if (!sym.owner.equals(state.getTypes().boxedClass(state.getSymtab().booleanType))) {

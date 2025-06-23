@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -43,6 +44,9 @@ public class UnnecessaryParentheses extends BugChecker
 
   @Override
   public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+    if (!hasExplicitSource(tree, state)) {
+      return NO_MATCH;
+    }
     return state.getSourceForNode(tree).endsWith("()")
         ? describeMatch(
             tree,
