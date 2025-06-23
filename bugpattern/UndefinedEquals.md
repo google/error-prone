@@ -77,7 +77,14 @@ TIP: `java.util.Date` is a legacy, bug-prone API. Prefer `java.time.Instant` or
 Prefer subtypes such as `ImmutableSet` or `ImmutableList`, which have
 well-defined `equals`.
 
+## For [`Future`]
+
+Prefer calling `#get` and checking the result, or using
+`assertThat(...).isSameInstanceAs()` or `assertThat(...).isNotSameInstanceAs()`
+for cases where the same/different instance is expected.
+
 [`Collection`]: https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html
+[`Future`]: https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html
 [`Iterable`]: https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html
 [`Iterables.elementsEqual`]: https://guava.dev/releases/snapshot/api/docs/com/google/common/collect/Iterables.html#elementsEqual-java.lang.Iterable-java.lang.Iterable-
 [`LinkedList`]: https://docs.oracle.com/javase/8/docs/api/java/util/LinkedList.html
