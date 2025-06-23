@@ -29,7 +29,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <guava.version>33.4.6-jre</guava.version>
+    <guava.version>33.4.8-jre</guava.version>
     <gwt.version>2.10.0</gwt.version>
     <truth.version>1.4.0</truth.version>
     <autoservice.version>1.0.1</autoservice.version>
