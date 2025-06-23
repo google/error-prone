@@ -37,7 +37,6 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -73,12 +72,18 @@ import javax.lang.model.element.Modifier;
             + " is a helper method, reduce its visibility.",
     severity = ERROR)
 public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
-  private final Matcher<MethodTree> possibleTestMethod;
+  private static final Matcher<MethodTree> POSSIBLE_TEST_METHOD =
+      allOf(
+          hasModifier(PUBLIC),
+          methodReturns(VOID_TYPE),
+          anyOf(
+              (t, s) -> hasParameterisationAnnotation(t.getModifiers().getAnnotations()),
+              (t, s) -> t.getParameters().stream().allMatch(v -> isInjectable(v, s))),
+          not(JUnitMatchers::hasJUnitAnnotation));
+  ;
 
   private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
       ImmutableSet.of("com.pdsl.runners.PdslTest", "com.pholser.junit.quickcheck.Property");
-
-  private final boolean improvedHeuristic;
 
   private static boolean hasParameterisationAnnotation(List<? extends AnnotationTree> annotations) {
     return annotations.stream()
@@ -115,28 +120,7 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
   private static final Matcher<Tree> NOT_STATIC = not(hasModifier(STATIC));
 
   @Inject
-  JUnit4TestNotRun(ErrorProneFlags flags) {
-    this.improvedHeuristic = flags.getBoolean("JUnit4TestNotRun:ImprovedHeuristic").orElse(true);
-    this.possibleTestMethod =
-        improvedHeuristic
-            ? allOf(
-                hasModifier(PUBLIC),
-                methodReturns(VOID_TYPE),
-                anyOf(
-                    (t, s) -> hasParameterisationAnnotation(t.getModifiers().getAnnotations()),
-                    (t, s) -> t.getParameters().stream().allMatch(v -> isInjectable(v, s))),
-                not(JUnitMatchers::hasJUnitAnnotation))
-            : allOf(
-                hasModifier(PUBLIC),
-                methodReturns(VOID_TYPE),
-                (t, s) ->
-                    t.getParameters().stream()
-                        .allMatch(
-                            v ->
-                                v.getModifiers().getAnnotations().stream()
-                                    .anyMatch(a -> isParameterAnnotation(a, s))),
-                not(JUnitMatchers::hasJUnitAnnotation));
-  }
+  JUnit4TestNotRun() {}
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
@@ -148,7 +132,7 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
       if (!(member instanceof MethodTree methodTree) || isSuppressed(member, state)) {
         continue;
       }
-      if (possibleTestMethod.matches(methodTree, state) && !isSuppressed(tree, state)) {
+      if (POSSIBLE_TEST_METHOD.matches(methodTree, state) && !isSuppressed(tree, state)) {
         suspiciousMethods.put(getSymbol(methodTree), methodTree);
       }
     }
@@ -204,10 +188,9 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
       return Optional.empty();
     }
 
-    if (improvedHeuristic
-        && (hasParameterisationAnnotation(methodTree.getModifiers().getAnnotations())
-            || methodTree.getParameters().stream()
-                .anyMatch(p -> hasParameterisationAnnotation(p.getModifiers().getAnnotations())))) {
+    if (hasParameterisationAnnotation(methodTree.getModifiers().getAnnotations())
+        || methodTree.getParameters().stream()
+            .anyMatch(p -> hasParameterisationAnnotation(p.getModifiers().getAnnotations()))) {
       return Optional.of(describeFixes(methodTree, state));
     }
 
