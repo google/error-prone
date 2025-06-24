@@ -14,15 +14,15 @@ misinterpreted.
 For example, consider this:
 
 ```java
-boolean d = (a && b) || c;",
-boolean e = (a || b) ? c : d;",
-int z = (x + y) << 2;",
+boolean d = (a && b) || c;
+boolean e = (a || b) ? c : d;
+int z = (x + y) << 2;
 ```
 
 Instead of this:
 
 ```java
-boolean r = a && b || c;",
-boolean e = a || b ? c : d;",
-int z = x + y << 2;",
+boolean r = a && b || c;
+boolean e = a || b ? c : d;
+int z = x + y << 2;
 ```
