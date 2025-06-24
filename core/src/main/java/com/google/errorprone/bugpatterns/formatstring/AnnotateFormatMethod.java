@@ -18,16 +18,17 @@ package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.MoreCollectors.toOptional;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.FRAGILE_CODE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.AnnotationNames.FORMAT_METHOD_ANNOTATION;
+import static java.util.stream.Stream.empty;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -42,6 +43,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.List;
+import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
 
 /** A BugPattern; see the summary. */
@@ -85,27 +87,38 @@ public final class AnnotateFormatMethod extends BugChecker implements MethodInvo
     if (formatString == null || formatArgs == null) {
       return NO_MATCH;
     }
-    MethodTree enclosingMethod = findEnclosingNode(state.getPath(), MethodTree.class);
-    if (enclosingMethod == null
-        || !getSymbol(enclosingMethod).isVarArgs()
-        || hasAnnotation(enclosingMethod, FORMAT_METHOD_ANNOTATION, state)) {
-      return NO_MATCH;
-    }
-    List<? extends VariableTree> enclosingParameters = enclosingMethod.getParameters();
-    VariableTree formatParameter = findParameterWithSymbol(enclosingParameters, formatString);
-    VariableTree argumentsParameter = findParameterWithSymbol(enclosingParameters, formatArgs);
-    if (formatParameter == null || argumentsParameter == null) {
-      return NO_MATCH;
-    }
-    if (!argumentsParameter.equals(getLast(enclosingParameters))) {
-      return NO_MATCH;
-    }
-    // We can only generate a fix if the format string is the penultimate parameter.
-    boolean fixable =
-        formatParameter.equals(enclosingParameters.get(enclosingParameters.size() - 2));
-    return buildDescription(enclosingMethod)
-        .setMessage(fixable ? message() : (message() + REORDER))
-        .build();
+
+    return stream(state.getPath())
+        .flatMap(
+            node -> {
+              if (!(node instanceof MethodTree methodTree)) {
+                return empty();
+              }
+              if (!getSymbol(methodTree).isVarArgs()
+                  || hasAnnotation(methodTree, FORMAT_METHOD_ANNOTATION, state)) {
+                return empty();
+              }
+              List<? extends VariableTree> enclosingParameters = methodTree.getParameters();
+              VariableTree formatParameter =
+                  findParameterWithSymbol(enclosingParameters, formatString);
+              VariableTree argumentsParameter =
+                  findParameterWithSymbol(enclosingParameters, formatArgs);
+              if (formatParameter == null || argumentsParameter == null) {
+                return empty();
+              }
+              if (!argumentsParameter.equals(getLast(enclosingParameters))) {
+                return empty();
+              }
+              // We can only generate a fix if the format string is the penultimate parameter.
+              boolean fixable =
+                  formatParameter.equals(enclosingParameters.get(enclosingParameters.size() - 2));
+              return Stream.of(
+                  buildDescription(methodTree)
+                      .setMessage(fixable ? message() : (message() + REORDER))
+                      .build());
+            })
+        .findFirst()
+        .orElse(NO_MATCH);
   }
 
   private static VariableTree findParameterWithSymbol(

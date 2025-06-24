@@ -43,6 +43,43 @@ public final class AnnotateFormatMethodTest {
   }
 
   @Test
+  public void passedThroughToLambda() {
+    compilationHelper
+        .addSourceLines(
+            "AnnotateFormatMethodPositiveCases.java",
+            """
+            class AnnotateFormatMethodPositiveCases {
+              // BUG: Diagnostic contains: FormatMethod
+              Runnable formatMe(String formatString, Object... args) {
+                return () -> String.format(formatString, args);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void passedThroughToAnonymousClass() {
+    compilationHelper
+        .addSourceLines(
+            "AnnotateFormatMethodPositiveCases.java",
+            """
+            class AnnotateFormatMethodPositiveCases {
+              // BUG: Diagnostic contains: FormatMethod
+              Runnable formatMe(String formatString, Object... args) {
+                return new Runnable() {
+                  @Override
+                  public void run() {
+                    String.format(formatString, args);
+                  }
+                };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void formatted() {
     compilationHelper
         .addSourceLines(
