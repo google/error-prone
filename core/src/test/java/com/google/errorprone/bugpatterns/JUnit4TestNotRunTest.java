@@ -307,7 +307,7 @@ public class JUnit4TestNotRunTest {
   }
 
   @Test
-  public void noTestKeyword_notATest() {
+  public void noAssertions_isATestAnyway() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -318,6 +318,7 @@ public class JUnit4TestNotRunTest {
 
             @RunWith(JUnit4.class)
             public class Test {
+              // BUG: Diagnostic contains:
               public void shouldDoSomething() {
                 Collections.sort(Collections.<Integer>emptyList());
               }
@@ -728,9 +729,6 @@ import org.junit.runners.JUnit4;
  */
 @RunWith(JUnit4.class)
 public class JUnit4TestNotRunNegativeCase3 {
-  // Doesn't begin with "test", and doesn't contain any assertion-like method invocations.
-  public void thisIsATest() {}
-
   // Isn't public.
   void testTest1() {}
 
