@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.TruthJUnit.assume;
+import static org.junit.Assert.assertThrows;
 
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -127,6 +128,30 @@ public class MissingCasesInEnumSwitchTest {
                     break;
                   default:
                     break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nonExhaustive_withCombinedDefault() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                switch (c) {
+                  case ONE, TWO -> System.err.println("found it!");
+                  case null, default -> {}
                 }
               }
             }
@@ -481,5 +506,29 @@ public class MissingCasesInEnumSwitchTest {
             }
             """)
         .doTest();
+  }
+
+  @Test
+  public void defaultInRuleCase_crash() {
+    compilationHelper.addSourceLines(
+        "Test.java",
+        """
+        public class Test {
+          public enum E {
+            A,
+            B
+          }
+
+          public static Object test(E e) {
+            return switch (e) {
+              case A:
+                yield new Object();
+              default:
+                yield null;
+            };
+          }
+        }
+        """);
+    assertThrows(AssertionError.class, () -> compilationHelper.doTest());
   }
 }
