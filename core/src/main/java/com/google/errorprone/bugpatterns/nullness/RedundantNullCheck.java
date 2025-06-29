@@ -38,6 +38,8 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 
 import java.util.Optional;
 
+import javax.lang.model.element.ElementKind;
+
 @BugPattern(
     summary = "Explicit null check on a variable or method call that is not @Nullable within a @NullMarked scope.",
     severity = WARNING)
@@ -52,25 +54,33 @@ public class RedundantNullCheck extends BugChecker implements BinaryTreeMatcher 
 
     VarSymbol varSymbol = nullCheck.varSymbolButUsuallyPreferBareIdentifier();
     if (varSymbol != null) {
-      VariableTree varDecl = NullnessUtils.findDeclaration(state, varSymbol);
-
-      if (varDecl != null
-          && varDecl.getInitializer() != null
-          && varDecl.getInitializer().getKind() == Tree.Kind.METHOD_INVOCATION) {
-        MethodInvocationTree methodInvocation = (MethodInvocationTree) varDecl.getInitializer();
-        MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodInvocation);
-
-        if (methodSymbol != null && isEffectivelyNullable(methodSymbol, state)) {
-          return NO_MATCH;
-        }
-      }
-
       if (!NullnessUtils.isInNullMarkedScope(varSymbol, state)) {
         return NO_MATCH;
       }
-
       if (NullnessUtils.isAlreadyAnnotatedNullable(varSymbol)) {
         return NO_MATCH;
+      }
+
+      VariableTree varDecl = NullnessUtils.findDeclaration(state, varSymbol);
+
+      if ((varSymbol.getKind() == ElementKind.LOCAL_VARIABLE
+          || varSymbol.getKind() == ElementKind.RESOURCE_VARIABLE) && varDecl != null) {
+
+        if (varDecl.getInitializer() == null) {
+          return NO_MATCH;
+        }
+
+        Tree initializer = varDecl.getInitializer();
+
+        if (initializer.getKind() == Tree.Kind.METHOD_INVOCATION) {
+          MethodInvocationTree methodInvocation = (MethodInvocationTree) initializer;
+          MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodInvocation);
+          if (methodSymbol != null && isEffectivelyNullable(methodSymbol, state)) {
+            return NO_MATCH;
+          }
+        } else {
+          return NO_MATCH;
+        }
       }
     } else {
       MethodSymbol methodSymbol = nullCheck.methodSymbol();
