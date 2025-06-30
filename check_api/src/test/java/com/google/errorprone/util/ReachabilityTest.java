@@ -18,9 +18,7 @@ package com.google.errorprone.util;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static java.util.stream.Collectors.toList;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
@@ -28,16 +26,14 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.testing.junit.testparameterinjector.TestParameter;
+import com.google.testing.junit.testparameterinjector.TestParameterInjector;
 import com.sun.source.tree.SwitchTree;
-import java.util.Arrays;
-import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 
 /** {@link Reachability}Test. */
-@RunWith(Parameterized.class)
+@RunWith(TestParameterInjector.class)
 public class ReachabilityTest {
 
   /** Reports an error if the first case in a switch falls through to the second. */
@@ -56,14 +52,281 @@ public class ReachabilityTest {
     }
   }
 
-  private final String[] lines;
-
-  public ReachabilityTest(String[] lines) {
-    this.lines = lines;
-  }
-
   @Test
-  public void test() {
+  public void test(
+      @TestParameter({
+            """
+            int a = 1;
+            int b = 2;
+            break;
+            """,
+            """
+            System.err.println();
+            // BUG: Diagnostic contains:
+            """,
+            """
+            int a = 1;
+            int b = 2;
+            class L {}
+            ;;
+            assert false;
+            label: System.err.println();
+            // BUG: Diagnostic contains:
+            """,
+            """
+            if (true) {
+            } else {
+              break;
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            if (true) {
+              break;
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            if (true) {
+              break;
+            } else {
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            if (true) {
+              break;
+            } else {
+              break;
+            }
+            """,
+            """
+            switch (42) {
+              case 0:
+              case 1:
+              case 2:
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            switch (42) {
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            switch (42) {
+              case 0:
+                break;
+              case 1:
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            switch (42) {
+              default:
+                break;
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            switch (42) {
+              default:
+                return;
+            }
+            """,
+            """
+            while (true) {
+            }
+            """,
+            """
+            while (true) {
+              break;
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            while (true) {
+              return;
+            }
+            """,
+            """
+            while (x == 0) {}
+            // BUG: Diagnostic contains:
+            """,
+            """
+            loop: do {
+              continue loop;
+            } while (x == 0);
+            // BUG: Diagnostic contains:
+            """,
+            """
+            loop: do {
+              continue loop;
+            } while (true);
+            """,
+            """
+            int i = 1;
+            loop: do {
+              i++;
+              continue loop;
+            } while (i == 0);
+            // BUG: Diagnostic contains:
+            """,
+            """
+            try {
+              Files.readAllBytes(Paths.get("file"));
+              return;
+            } catch (IOException e) {
+              return;
+            }
+            """,
+            """
+            try {
+              try {
+                Files.readAllBytes(Paths.get("file"));
+                return;
+              } catch (NullPointerException e) {
+                return;
+              }
+            } catch (IOException e) {
+              return;
+            }
+            """,
+            """
+            try {
+              Files.readAllBytes(Paths.get("file"));
+              return;
+            } catch (IOException e) {
+              return;
+            } finally {
+            }
+            """,
+            """
+            try {
+              //
+            } catch (Throwable t) {
+              return;
+            } finally {
+              return;
+            }
+            """,
+            """
+            try {
+              return;
+            } catch (Throwable t) {
+              //
+            } finally {
+              return;
+            }
+            """,
+            """
+            int y = 0;
+            while (true) {
+              if (y++ > 10) {
+                return;
+              }
+              if (y-- < 10) {
+                return;
+              }
+            }
+            """,
+            """
+            int y = 0;
+            while (true) {
+              do {
+                switch (y) {
+                  case 0:
+                    continue; // continue target is do/while, not switch or outer while
+                }
+              } while (y > 0);
+              break;
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            try {
+              if (Files.readAllBytes(Paths.get("file")) != null) {}
+              return;
+            } catch (IOException e) {
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            try {
+              Files.readAllBytes(Paths.get("file"));
+            } catch (IOException e) {
+              throw new IOError(e);
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            try {
+              Files.readAllBytes(Paths.get("file"));
+              return;
+            } catch (IOException e) {
+              throw new IOError(e);
+            }
+            """,
+            """
+            throw new AssertionError();
+            """,
+            """
+            for (;;) {}
+            """,
+            """
+            System.exit(1);
+            """,
+            """
+            {
+              System.exit(1);
+              throw new AssertionError();
+            }
+            """,
+            """
+            l:
+            do {
+              break l;
+            } while (true);
+            System.err.println();
+            // BUG: Diagnostic contains:
+            """,
+            """
+            switch (42) {
+              case 1 -> {}
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            switch (42) {
+              case 1 -> throw new AssertionError();
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            switch (42) {
+              case 1 -> throw new AssertionError();
+              case 2 -> throw new AssertionError();
+              default -> {}
+            }
+            // BUG: Diagnostic contains:
+            """,
+            """
+            switch (42) {
+              case 1 -> throw new AssertionError();
+              case 2 -> throw new AssertionError();
+              default -> throw new AssertionError();
+            }
+            """,
+            """
+            switch (42) {
+              case 1 -> { break; }
+              case 2 -> throw new AssertionError();
+              default -> throw new AssertionError();
+            }
+            // BUG: Diagnostic contains:
+            """
+          })
+          String lines) {
     CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
         .addSourceLines(
             "in/Test.java",
@@ -73,289 +336,12 @@ public class ReachabilityTest {
             "  void f(int x) {",
             "    switch (x) {",
             "      case 1:",
-            Joiner.on('\n').join(lines),
+            lines.trim(),
             "      default:",
             "        break;",
             "    }",
             "  }",
             "}")
         .doTest();
-  }
-
-  @Parameters
-  public static List<Object[]> parameters() {
-    String[][] parameters = {
-      {
-        "int a = 1;", //
-        "int b = 2;",
-        "break;",
-      },
-      {
-        "System.err.println();", //
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "int a = 1;",
-        "int b = 2;",
-        "class L {}",
-        ";;",
-        "assert false;",
-        "label: System.err.println();",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "if (true) {", //
-        "} else {",
-        "  break;",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "if (true) {", //
-        "  break;",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "if (true) {", //
-        "  break;",
-        "} else {",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "if (true) {", //
-        "  break;",
-        "} else {",
-        "  break;",
-        "}",
-      },
-      {
-        "switch (42) {", //
-        "  case 0:",
-        "  case 1:",
-        "  case 2:",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "switch (42) {", //
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "switch (42) {",
-        "  case 0:",
-        "    break;",
-        "  case 1:",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "switch (42) {", //
-        "  default:",
-        "    break;",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "switch (42) {", //
-        "  default:",
-        "    return;",
-        "}",
-      },
-      {
-        "while (true) {", //
-        "}",
-      },
-      {
-        "while (true) {", //
-        "  break;",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "while (true) {", //
-        "  return;",
-        "}",
-      },
-      {
-        "while (x == 0) {}", //
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "loop: do {", //
-        "  continue loop;",
-        "} while (x == 0);",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "loop: do {", //
-        "  continue loop;",
-        "} while (true);",
-      },
-      {
-        "int i = 1;",
-        "loop: do {",
-        "  i++;",
-        "  continue loop;",
-        "} while (i == 0);",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "try {",
-        "  Files.readAllBytes(Paths.get(\"file\"));",
-        "  return;",
-        "} catch (IOException e) {",
-        "  return;",
-        "}",
-      },
-      {
-        "try {",
-        "  try {",
-        "    Files.readAllBytes(Paths.get(\"file\"));",
-        "    return;",
-        "  } catch (NullPointerException e) {",
-        "    return;",
-        "  }",
-        "} catch (IOException e) {",
-        "  return;",
-        "}",
-      },
-      {
-        "try {",
-        "  Files.readAllBytes(Paths.get(\"file\"));",
-        "  return;",
-        "} catch (IOException e) {",
-        "  return;",
-        "} finally {",
-        "}",
-      },
-      {
-        "try {", //
-        "  //",
-        "} catch (Throwable t) {",
-        "  return;",
-        "} finally {",
-        "  return;",
-        "}",
-      },
-      {
-        "try {", //
-        "  return;",
-        "} catch (Throwable t) {",
-        "  //",
-        "} finally {",
-        "  return;",
-        "}",
-      },
-      {
-        "int y = 0;",
-        "while (true) {",
-        "  if (y++ > 10) {",
-        "    return;",
-        "  }",
-        "  if (y-- < 10) {",
-        "    return;",
-        "  }",
-        "}",
-      },
-      {
-        "int y = 0;",
-        "while (true) {",
-        "  do {",
-        "    switch (y) {",
-        "      case 0:",
-        "        continue;", // continue target is do/while, not switch or outer while
-        "    }",
-        "  } while (y > 0);",
-        "  break;",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "try {",
-        "  if (Files.readAllBytes(Paths.get(\"file\")) != null) {}",
-        "  return;",
-        "} catch (IOException e) {",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "try {",
-        "  Files.readAllBytes(Paths.get(\"file\"));",
-        "} catch (IOException e) {",
-        "  throw new IOError(e);",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "try {",
-        "  Files.readAllBytes(Paths.get(\"file\"));",
-        "  return;",
-        "} catch (IOException e) {",
-        "  throw new IOError(e);",
-        "}",
-      },
-      {
-        "throw new AssertionError();",
-      },
-      {
-        "for (;;) {}",
-      },
-      {
-        "System.exit(1);", //
-      },
-      {
-        "{", //
-        "  System.exit(1);",
-        "  throw new AssertionError();",
-        "}",
-      },
-      {
-        "l:", //
-        "do {",
-        "  break l;",
-        "} while (true);",
-        "System.err.println();",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "switch (42) {", //
-        "  case 1 -> {}",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "switch (42) {", //
-        "  case 1 -> throw new AssertionError();",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "switch (42) {", //
-        "  case 1 -> throw new AssertionError();",
-        "  case 2 -> throw new AssertionError();",
-        "  default -> {}",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-      {
-        "switch (42) {", //
-        "  case 1 -> throw new AssertionError();",
-        "  case 2 -> throw new AssertionError();",
-        "  default -> throw new AssertionError();",
-        "}",
-      },
-      {
-        "switch (42) {", //
-        "  case 1 -> { break; }",
-        "  case 2 -> throw new AssertionError();",
-        "  default -> throw new AssertionError();",
-        "}",
-        "// BUG: Diagnostic contains:",
-      },
-    };
-    return Arrays.stream(parameters).map(x -> new Object[] {x}).collect(toList());
   }
 }
