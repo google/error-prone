@@ -188,6 +188,10 @@ public final class UnnecessaryQualifier extends BugChecker
           "com.google.inject.Inject",
           "dagger.Binds",
           "dagger.BindsInstance",
+          "dagger.hilt.android.testing.BindElementsIntoSet",
+          "dagger.hilt.android.testing.BindValue",
+          "dagger.hilt.android.testing.BindValueIntoMap",
+          "dagger.hilt.android.testing.BindValueIntoSet",
           "jakarta.inject.Inject",
           "javax.inject.Inject"
           // keep-sorted end
