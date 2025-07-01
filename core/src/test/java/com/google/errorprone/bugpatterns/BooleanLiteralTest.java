@@ -91,4 +91,38 @@ public class BooleanLiteralTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void objectDoubleEqualsBooleanLiteral() {
+    refactoringHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              boolean doubleEqualsBooleanTrue(Object o) {
+                return o == Boolean.TRUE;
+              }
+
+              boolean doubleEqualsBooleanFalse(Object o) {
+                return o == Boolean.FALSE;
+              }
+            }
+            """)
+        // TODO: b/428921980 - this shouldn't get re-written because it doesn't compile!
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              boolean doubleEqualsBooleanTrue(Object o) {
+                return o == true;
+              }
+
+              boolean doubleEqualsBooleanFalse(Object o) {
+                return o == false;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
