@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Verify.verify;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.common.collect.Streams.stream;
 import static com.google.common.collect.Streams.zip;
@@ -2187,16 +2186,18 @@ public class ASTHelpers {
     return switchTree.getCases().stream().filter(c -> isSwitchDefault(c)).findFirst();
   }
 
-  /** Returns whether {@code caseTree} is the default case of a switch statement. */
+  /**
+   * Returns whether {@code caseTree} is the default case of a switch statement. This includes
+   * {@code case null, default ->}.
+   */
   public static boolean isSwitchDefault(CaseTree caseTree) {
-    if (!caseTree.getExpressions().isEmpty()) {
+    List<? extends Tree> labels = caseTree.getLabels();
+    if (!caseTree.getExpressions().isEmpty() && labels.isEmpty()) {
       return false;
     }
-    List<? extends Tree> labels = caseTree.getLabels();
     return labels.isEmpty()
-        || (labels.size() == 1
-            // DEFAULT_CASE_LABEL is in Java 21, so we're stuck stringifying for now.
-            && getOnlyElement(labels).getKind().name().equals("DEFAULT_CASE_LABEL"));
+        // DEFAULT_CASE_LABEL is in Java 21, so we're stuck stringifying for now.
+        || labels.stream().anyMatch(label -> label.getKind().name().equals("DEFAULT_CASE_LABEL"));
   }
 
   private static final Supplier<Name> NULL_MARKED_NAME =
