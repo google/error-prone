@@ -580,6 +580,7 @@ import com.google.errorprone.bugpatterns.nullness.NullablePrimitiveArray;
 import com.google.errorprone.bugpatterns.nullness.NullableTypeParameter;
 import com.google.errorprone.bugpatterns.nullness.NullableWildcard;
 import com.google.errorprone.bugpatterns.nullness.ParameterMissingNullable;
+import com.google.errorprone.bugpatterns.nullness.RedundantNullCheck;
 import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
 import com.google.errorprone.bugpatterns.nullness.UnsafeWildcard;
@@ -1257,6 +1258,7 @@ public class BuiltInCheckerSuppliers {
           PrivateConstructorForUtilityClass.class,
           PublicApiNamedStreamShouldReturnStream.class,
           QualifierWithTypeUse.class,
+          RedundantNullCheck.class,
           RedundantOverride.class,
           RedundantThrows.class,
           RefersToDaggerCodegen.class,
