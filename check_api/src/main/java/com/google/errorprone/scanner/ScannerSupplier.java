@@ -17,6 +17,7 @@
 package com.google.errorprone.scanner;
 
 import static com.google.common.collect.ImmutableListMultimap.flatteningToImmutableListMultimap;
+import static java.util.function.Predicate.not;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Supplier;
@@ -298,7 +299,7 @@ public abstract class ScannerSupplier implements Supplier<Scanner> {
   public ScannerSupplier filter(Predicate<? super BugCheckerInfo> predicate) {
     ImmutableSet<String> disabled =
         getAllChecks().values().stream()
-            .filter(predicate.negate())
+            .filter(bci -> disabled().contains(bci.canonicalName()) || !predicate.test(bci))
             .map(BugCheckerInfo::canonicalName)
             .collect(ImmutableSet.toImmutableSet());
     return new ScannerSupplierImpl(getAllChecks(), severities(), disabled, getFlags());
