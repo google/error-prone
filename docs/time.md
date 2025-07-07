@@ -81,8 +81,10 @@ This is the [timeline](https://i.imgur.com/WnvNLTa.jpeg).
 
 ![A wide arrow points rightward; a tick mark in the middle is labeled "now"; the
 span to the left and right are respectively labeled "the past" and "the
-future"](timeline.svg "The timeline") The timeline. We envision the past on the
-left and the future on the right because we have cultural bias.
+future"](timeline.svg "The timeline")
+
+The timeline. We envision the past on the left and the future on the right
+because we have cultural bias.
 
 Every event that has happened or will happen in history is located at a
 particular point on this line — or had a *start* and *end* that can be so
@@ -156,8 +158,10 @@ now.[^second]
 
 ![A wide arrow points rightward; a tick mark on the left is labeled "play 'Free
 Bird'"; one on the right is labeled "'Free Bird' ends". The span between them is
-labeled "549 seconds".](duration.svg "A duration") An example of a duration.
-Durations are objective and finite, however it might seem at the time.
+labeled "549 seconds".](duration.svg "A duration")
+
+An example of a duration. Durations are objective and finite, however it might
+seem at the time.
 
 **Warning:** in this context, units like "minute" are fine, but larger units
 like "month" or "year" *have no precise meaning*. You should avoid them, but
