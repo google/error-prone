@@ -136,6 +136,31 @@ public class MissingCasesInEnumSwitchTest {
   }
 
   @Test
+  public void nonExhaustive_withCombinedDefault() {
+    assume().that(Runtime.version().feature()).isAtLeast(21);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                switch (c) {
+                  case ONE, TWO -> System.err.println("found it!");
+                  case null, default -> {}
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void nonExhaustive_withDefaultForSkew() {
     compilationHelper
         .addSourceLines(
