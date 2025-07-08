@@ -32,6 +32,7 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Log;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,7 +120,8 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
           factory.create(
               type,
               /* lintCategory */ null,
-              DIAGNOSTIC_FLAGS,
+              // Make a defensive copy, as JDK at head mutates its arguments.
+              EnumSet.copyOf(DIAGNOSTIC_FLAGS),
               log.currentSource(),
               pos,
               MESSAGE_BUNDLE_KEY,
