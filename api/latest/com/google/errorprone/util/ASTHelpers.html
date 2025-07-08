@@ -2235,7 +2235,8 @@ represented as a <code>TypeSubstitution</code> from <code>[K, V]</code> to <code
 <h3>isSwitchDefault</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isSwitchDefault</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/CaseTree.html" title="class or interface in com.sun.source.tree" class="external-link">CaseTree</a>&nbsp;caseTree)</span></div>
-<div class="block">Returns whether <code>caseTree</code> is the default case of a switch statement.</div>
+<div class="block">Returns whether <code>caseTree</code> is the default case of a switch statement. This includes
+<code>case null, default -&gt;</code>.</div>
 </div>
 </section>
 </li>
