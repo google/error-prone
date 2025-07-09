@@ -95,7 +95,12 @@ final class Switches {
 
     // End position will be the start of the body of the default case. In switch expressions the
     // default case will always have a body as it cannot be combined with other cases.
-    int endPos = getStartPosition(defaultCase.getBody());
+    int endPos =
+        getStartPosition(
+            switch (defaultCase.getCaseKind()) {
+              case STATEMENT -> defaultCase.getStatements().get(0);
+              case RULE -> defaultCase.getBody();
+            });
 
     var tokens =
         ErrorProneTokens.getTokens(
