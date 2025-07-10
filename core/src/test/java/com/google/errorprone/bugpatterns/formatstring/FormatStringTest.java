@@ -425,4 +425,37 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void finalVariable_isConstant() {
+    compilationHelper
+        .addSourceLines(
+            "T.java",
+            """
+            class T {
+              public static void main() {
+                final String formatString = " %0$2s) %s";
+                // BUG: Diagnostic contains:
+                System.err.printf(formatString, "foo", "bar");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void effectivelyFinalVariable_isNotConstant() {
+    compilationHelper
+        .addSourceLines(
+            "T.java",
+            """
+            class T {
+              public static void main() {
+                String formatString = " %0$2s) %s";
+                System.err.printf(formatString, "foo", "bar");
+              }
+            }
+            """)
+        .doTest();
+  }
 }
