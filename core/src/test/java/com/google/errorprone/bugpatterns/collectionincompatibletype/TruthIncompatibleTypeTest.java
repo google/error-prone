@@ -696,6 +696,43 @@ public class Test {
   }
 
   @Test
+  public void multiset_hasCount_match() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.Multiset;
+
+            public class Test {
+              public void f(Multiset<String> a, String b) {
+                assertThat(a).hasCount(b, 1);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void multiset_hasCount_mismatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import com.google.common.collect.Multiset;
+
+            public class Test {
+              public void f(Multiset<String> a, Long b) {
+                // BUG: Diagnostic contains:
+                assertThat(a).hasCount(b, 1);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void subjectExhaustiveness(
       @TestParameter(valuesProvider = SubjectMethods.class) Method method) {
     // TODO(ghm): isNotSameInstanceAs might be worth flagging, but the check can be even stricter.

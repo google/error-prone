@@ -131,6 +131,11 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
               "com.google.common.truth.MapSubject", "com.google.common.truth.MultimapSubject")
           .namedAnyOf("containsKey", "doesNotContainKey");
 
+  private static final Matcher<ExpressionTree> HAS_COUNT =
+      instanceMethod()
+          .onDescendantOfAny("com.google.common.truth.MultisetSubject")
+          .named("hasCount");
+
   private static final Matcher<ExpressionTree> MAP_VECTOR_CONTAINS =
       instanceMethod()
           .onDescendantOfAny(
@@ -175,7 +180,8 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
             matchCorrespondence(tree, state),
             matchMapVectorContains(tree, state),
             matchMapScalarContains(tree, state),
-            matchMapContainsKey(tree, state))
+            matchMapContainsKey(tree, state),
+            matchHasCount(tree, state))
         .forEach(state::reportMatch);
     return NO_MATCH;
   }
@@ -439,6 +445,25 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
                     : checkCompatibility(
                         arg, index % 2 == 0 ? targetKeyType : targetValueType, getType(arg), state))
         .flatMap(x -> x);
+  }
+
+  private Stream<Description> matchHasCount(MethodInvocationTree tree, VisitorState state) {
+    if (!HAS_COUNT.matches(tree, state)) {
+      return Stream.empty();
+    }
+    ExpressionTree receiver = getReceiver(tree);
+    if (!START_OF_ASSERTION.matches(receiver, state)) {
+      return Stream.empty();
+    }
+
+    ExpressionTree assertee = getOnlyElement(((MethodInvocationTree) receiver).getArguments());
+    TypeSymbol assertionType =
+        getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type.tsym;
+    Type targetKeyType =
+        extractTypeArgAsMemberOfSupertype(
+            ignoringCasts(assertee, state), assertionType, /* typeArgIndex= */ 0, state.getTypes());
+    var argument = tree.getArguments().get(0);
+    return checkCompatibility(argument, targetKeyType, getType(argument), state);
   }
 
   /** Whether this is a varargs method being invoked in a non-varargs way. */
