@@ -178,6 +178,7 @@ public final class UnnecessaryQualifier extends BugChecker
               Stream.of(
                   // keep-sorted start
                   "com.google.auto.factory.AutoFactory",
+                  "com.google.common.inject.components.OtherRequiredBindings",
                   "com.google.inject.Inject",
                   "dagger.assisted.AssistedInject",
                   "jakarta.inject.Inject",
