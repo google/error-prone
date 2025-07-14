@@ -64,6 +64,12 @@ public final class UnnecessaryQualifier extends BugChecker
     }
 
     var enclosingClass = state.findEnclosing(ClassTree.class);
+    if (getSymbol(enclosingClass).isInterface()) {
+      // This is a sad admission of failure, and also not foolproof. Dagger dependencies can be
+      // declared in interfaces with no annotations to let us tell, or components can have
+      // innocent-looking supertypes.
+      return NO_MATCH;
+    }
     if (CLASS_ANNOTATIONS_EXEMPTING_METHODS.stream()
         .anyMatch(anno -> hasAnnotation(enclosingClass, anno, state))) {
       return NO_MATCH;

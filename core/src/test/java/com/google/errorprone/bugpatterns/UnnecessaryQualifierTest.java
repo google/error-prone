@@ -210,4 +210,18 @@ public final class UnnecessaryQualifierTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void interface_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            interface Test {
+              @Qual
+              Object frobnicator();
+            }
+            """)
+        .doTest();
+  }
 }
