@@ -645,4 +645,54 @@ public final class UnusedMethodTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void anonymousClassMethod() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class T {
+              void f() {
+                var r =
+                    new Runnable() {
+                      public void foo() {}
+
+                      @Override
+                      public void run() {}
+                    };
+              }
+
+              enum E implements Runnable {
+                ONE {
+                  public void foo() {}
+
+                  @Override
+                  public void run() {}
+                };
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class T {
+              void f() {
+                var r =
+                    new Runnable() {
+                      @Override
+                      public void run() {}
+                    };
+              }
+
+              enum E implements Runnable {
+                ONE {
+                  @Override
+                  public void run() {}
+                };
+              }
+            }
+            """)
+        .doTest();
+  }
 }

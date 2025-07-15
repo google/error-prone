@@ -22,7 +22,6 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Multimaps.asMap;
-import static com.google.common.collect.Sets.union;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.fixes.SuggestedFixes.replaceIncludingComments;
@@ -34,7 +33,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.MoreAnnotations.asStrings;
 import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
 import static java.lang.String.format;
@@ -46,7 +44,6 @@ import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -69,7 +66,6 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
@@ -97,77 +93,6 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   private static final String JUNIT_PARAMS_ANNOTATION_TYPE = "junitparams.Parameters";
 
   /**
-   * Annotations that exempt methods from being considered unused.
-   *
-   * <p>Try to avoid adding more annotations here. Annotating these annotations with {@code @Keep}
-   * has the same effect; this list is chiefly for third-party annotations which cannot be
-   * annotated.
-   */
-  private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
-      ImmutableSet.of(
-          "android.webkit.JavascriptInterface",
-          "com.fasterxml.jackson.annotation.JsonCreator",
-          "com.fasterxml.jackson.annotation.JsonProperty",
-          "com.fasterxml.jackson.annotation.JsonSetter",
-          "com.fasterxml.jackson.annotation.JsonValue",
-          "com.google.acai.AfterTest",
-          "com.google.acai.BeforeSuite",
-          "com.google.acai.BeforeTest",
-          "com.google.caliper.Benchmark",
-          "com.google.common.eventbus.Subscribe",
-          "com.google.inject.Provides",
-          "com.google.inject.Inject",
-          "com.google.inject.multibindings.ProvidesIntoMap",
-          "com.google.inject.multibindings.ProvidesIntoSet",
-          "com.google.inject.throwingproviders.CheckedProvides",
-          "com.tngtech.java.junit.dataprovider.DataProvider",
-          "jakarta.annotation.PreDestroy",
-          "jakarta.annotation.PostConstruct",
-          "jakarta.inject.Inject",
-          "jakarta.persistence.PostLoad",
-          "jakarta.persistence.PostPersist",
-          "jakarta.persistence.PostRemove",
-          "jakarta.persistence.PostUpdate",
-          "jakarta.persistence.PrePersist",
-          "jakarta.persistence.PreRemove",
-          "jakarta.persistence.PreUpdate",
-          "jakarta.validation.constraints.AssertFalse",
-          "jakarta.validation.constraints.AssertTrue",
-          "javax.annotation.PreDestroy",
-          "javax.annotation.PostConstruct",
-          "javax.inject.Inject",
-          "javax.persistence.PostLoad",
-          "javax.persistence.PostPersist",
-          "javax.persistence.PostRemove",
-          "javax.persistence.PostUpdate",
-          "javax.persistence.PrePersist",
-          "javax.persistence.PreRemove",
-          "javax.persistence.PreUpdate",
-          "javax.validation.constraints.AssertFalse",
-          "javax.validation.constraints.AssertTrue",
-          "net.bytebuddy.asm.Advice.OnMethodEnter",
-          "net.bytebuddy.asm.Advice.OnMethodExit",
-          "org.apache.beam.sdk.transforms.DoFn.FinishBundle",
-          "org.apache.beam.sdk.transforms.DoFn.ProcessElement",
-          "org.apache.beam.sdk.transforms.DoFn.StartBundle",
-          "org.aspectj.lang.annotation.Pointcut",
-          "org.aspectj.lang.annotation.After",
-          "org.aspectj.lang.annotation.Before",
-          "org.springframework.context.annotation.Bean",
-          "org.testng.annotations.AfterClass",
-          "org.testng.annotations.AfterMethod",
-          "org.testng.annotations.BeforeClass",
-          "org.testng.annotations.BeforeMethod",
-          "org.testng.annotations.DataProvider",
-          "org.junit.jupiter.api.BeforeAll",
-          "org.junit.jupiter.api.AfterAll",
-          "org.junit.jupiter.api.AfterEach",
-          "org.junit.jupiter.api.BeforeEach",
-          "org.junit.jupiter.api.RepeatedTest",
-          "org.junit.jupiter.api.Test",
-          "org.junit.jupiter.params.ParameterizedTest");
-
-  /**
    * Class annotations which exempt methods within the annotated class from findings.
    *
    * <p>Try to avoid adding more annotations here. Annotating these annotations with {@code @Keep}
@@ -185,15 +110,11 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
    */
   private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
 
-  private final ImmutableSet<String> exemptingMethodAnnotations;
+  private final WellKnownKeep wellKnownKeep;
 
   @Inject
-  UnusedMethod(ErrorProneFlags errorProneFlags) {
-    this.exemptingMethodAnnotations =
-        union(
-                errorProneFlags.getSetOrEmpty("UnusedMethod:ExemptingMethodAnnotations"),
-                EXEMPTING_METHOD_ANNOTATIONS)
-            .immutableCopy();
+  UnusedMethod(WellKnownKeep wellKnownKeep) {
+    this.wellKnownKeep = wellKnownKeep;
   }
 
   @Override
@@ -281,11 +202,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         if (exemptedByName(tree.getName())) {
           return false;
         }
-        // Assume the method is called if annotated with a called-reflectively annotation.
-        if (exemptedByAnnotation(tree.getModifiers().getAnnotations())) {
-          return false;
-        }
-        if (shouldKeep(tree)) {
+        if (wellKnownKeep.shouldKeep(tree)) {
           return false;
         }
         MethodSymbol methodSymbol = getSymbol(tree);
@@ -504,25 +421,6 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
       }
     }.scan(tree, null);
     return hasAnyNativeMethods.get();
-  }
-
-  /**
-   * Looks at the list of {@code annotations} and see if there is any annotation which exists {@code
-   * exemptingAnnotations}.
-   */
-  private boolean exemptedByAnnotation(List<? extends AnnotationTree> annotations) {
-    for (AnnotationTree annotation : annotations) {
-      Type annotationType = getType(annotation);
-      if (annotationType == null) {
-        continue;
-      }
-      TypeSymbol tsym = annotationType.tsym;
-      String annotationName = tsym.getQualifiedName().toString();
-      if (exemptingMethodAnnotations.contains(annotationName)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   private static boolean exemptedByName(Name name) {

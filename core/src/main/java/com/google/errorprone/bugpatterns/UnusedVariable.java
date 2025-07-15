@@ -34,7 +34,6 @@ import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 import static com.sun.source.tree.Tree.Kind.POSTFIX_DECREMENT;
 import static com.sun.source.tree.Tree.Kind.POSTFIX_INCREMENT;
@@ -65,7 +64,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
-import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BindingPatternTree;
@@ -100,7 +98,6 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
@@ -134,35 +131,6 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
   private final ImmutableSet<String> exemptPrefixes;
 
   private final ImmutableSet<String> exemptNames;
-
-  /**
-   * The set of annotation full names which exempt annotated element from being reported as unused.
-   *
-   * <p>Try to avoid adding more annotations here. Annotating these annotations with {@code @Keep}
-   * has the same effect; this list is chiefly for third-party annotations which cannot be
-   * annotated.
-   */
-  private static final ImmutableSet<String> EXEMPTING_VARIABLE_ANNOTATIONS =
-      ImmutableSet.of(
-          "jakarta.persistence.Basic",
-          "jakarta.persistence.Column",
-          "jakarta.persistence.Id",
-          "jakarta.persistence.Version",
-          "jakarta.xml.bind.annotation.XmlElement",
-          "javax.persistence.Basic",
-          "javax.persistence.Column",
-          "javax.persistence.Id",
-          "javax.persistence.Version",
-          "javax.xml.bind.annotation.XmlElement",
-          "net.starlark.java.annot.StarlarkBuiltin",
-          "org.junit.Rule",
-          "org.junit.jupiter.api.extension.RegisterExtension",
-          "org.openqa.selenium.support.FindAll",
-          "org.openqa.selenium.support.FindBy",
-          "org.openqa.selenium.support.FindBys",
-          "org.apache.beam.sdk.transforms.DoFn.TimerId",
-          "org.apache.beam.sdk.transforms.DoFn.StateId",
-          "org.springframework.boot.test.mock.mockito.MockBean");
 
   // TODO(ghm): Find a sensible place to dedupe this with UnnecessarilyVisible.
   private static final ImmutableSet<String> ANNOTATIONS_INDICATING_PARAMETERS_SHOULD_BE_CHECKED =
@@ -200,8 +168,10 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   private final boolean reportInjectedFields;
 
+  private final WellKnownKeep wellKnownKeep;
+
   @Inject
-  UnusedVariable(ErrorProneFlags flags) {
+  UnusedVariable(ErrorProneFlags flags, WellKnownKeep wellKnownKeep) {
     this.methodAnnotationsExemptingParameters =
         ImmutableSet.<String>builder()
             .add("org.robolectric.annotation.Implementation")
@@ -221,6 +191,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
             .add("unused")
             .addAll(flags.getSetOrEmpty("Unused:exemptPrefixes"))
             .build();
+
+    this.wellKnownKeep = wellKnownKeep;
   }
 
   @Override
@@ -606,24 +578,6 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         && enhancedForLoopTree.getVariable() == tree;
   }
 
-  /**
-   * Looks at the list of {@code annotations} and see if there is any annotation which exists {@code
-   * exemptingAnnotations}.
-   */
-  private static boolean exemptedByAnnotation(List<? extends AnnotationTree> annotations) {
-    for (AnnotationTree annotation : annotations) {
-      Type annotationType = ASTHelpers.getType(annotation);
-      if (annotationType == null) {
-        continue;
-      }
-      TypeSymbol tsym = annotationType.tsym;
-      if (EXEMPTING_VARIABLE_ANNOTATIONS.contains(tsym.getQualifiedName().toString())) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   private boolean exemptedByName(Name name) {
     String nameString = name.toString();
     String nameStringLower = Ascii.toLowerCase(nameString);
@@ -680,8 +634,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         return;
       }
       // Return if the element is exempted by an annotation.
-      if (exemptedByAnnotation(variableTree.getModifiers().getAnnotations())
-          || shouldKeep(variableTree)) {
+      if (wellKnownKeep.shouldKeep(variableTree)) {
         return;
       }
       switch (symbol.getKind()) {

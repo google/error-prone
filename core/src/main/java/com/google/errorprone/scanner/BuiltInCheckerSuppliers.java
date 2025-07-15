@@ -125,6 +125,7 @@ import com.google.errorprone.bugpatterns.DoubleBraceInitialization;
 import com.google.errorprone.bugpatterns.DuplicateBranches;
 import com.google.errorprone.bugpatterns.DuplicateDateFormatField;
 import com.google.errorprone.bugpatterns.DuplicateMapKeys;
+import com.google.errorprone.bugpatterns.EffectivelyPrivate;
 import com.google.errorprone.bugpatterns.EmptyCatch;
 import com.google.errorprone.bugpatterns.EmptyIfStatement;
 import com.google.errorprone.bugpatterns.EmptyTopLevelDeclaration;
@@ -932,6 +933,7 @@ public class BuiltInCheckerSuppliers {
           DoubleCheckedLocking.class,
           DuplicateBranches.class,
           DuplicateDateFormatField.class,
+          EffectivelyPrivate.class,
           EmptyBlockTag.class,
           EmptyCatch.class,
           EmptySetMultibindingContributions.class,
