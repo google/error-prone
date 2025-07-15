@@ -206,7 +206,6 @@ public final class WellKnownKeep {
       }
       TypeSymbol tsym = annotationType.tsym;
       if (exemptingAnnotations.contains(tsym.getQualifiedName().toString())) {
-        System.err.println(1);
         return true;
       }
     }
