@@ -734,6 +734,9 @@ Both branches contain identical code
 __[DuplicateDateFormatField](bugpattern/DuplicateDateFormatField)__<br>
 Reuse of DateFormat fields is most likely unintentional
 
+__[EffectivelyPrivate](bugpattern/EffectivelyPrivate)__<br>
+This declaration has public or protected modifiers, but is effectively private.
+
 __[EmptyBlockTag](bugpattern/EmptyBlockTag)__<br>
 A block tag (@param, @return, @throws, @deprecated) has an empty description. Block tags without descriptions don&#39;t add much value for future readers of the code; consider removing the tag entirely or adding a description.
 
