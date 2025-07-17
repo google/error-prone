@@ -39,7 +39,6 @@ import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
-import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
@@ -72,6 +71,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 
@@ -132,6 +132,13 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
       anyOf(
           hasProvidesAnnotation(),
           annotations(AT_LEAST_ONE, anyOf(isType("com.google.inject.testing.fieldbinder.Bind"))));
+
+  private final WellKnownKeep wellKnownKeep;
+
+  @Inject
+  PreferredInterfaceType(WellKnownKeep wellKnownKeep) {
+    this.wellKnownKeep = wellKnownKeep;
+  }
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -209,7 +216,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
         if (symbol.getKind() == ElementKind.PARAMETER) {
           return false;
         }
-        if (shouldKeep(tree)) {
+        if (wellKnownKeep.shouldKeep(tree)) {
           return false;
         }
         // TODO(ghm): Open source @Keep on the elements in SHOULD_IGNORE, and remove this.

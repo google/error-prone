@@ -29,7 +29,6 @@ import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpl
 import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
@@ -40,6 +39,7 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.WellKnownKeep;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
@@ -104,13 +104,16 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
   private final ImmutableSet<String> exemptingMethodAnnotations;
 
+  private final WellKnownKeep wellKnownKeep;
+
   @Inject
-  CanIgnoreReturnValueSuggester(ErrorProneFlags errorProneFlags) {
+  CanIgnoreReturnValueSuggester(ErrorProneFlags errorProneFlags, WellKnownKeep wellKnownKeep) {
     this.exemptingMethodAnnotations =
         Sets.union(
                 EXEMPTING_METHOD_ANNOTATIONS,
                 errorProneFlags.getSetOrEmpty("CanIgnoreReturnValue:ExemptingMethodAnnotations"))
             .immutableCopy();
+    this.wellKnownKeep = wellKnownKeep;
   }
 
   @Override
@@ -134,7 +137,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     }
 
     // if the method is annotated with an annotation that is @Keep, bail out
-    if (shouldKeep(methodTree)) {
+    if (wellKnownKeep.shouldKeep(methodTree)) {
       return Description.NO_MATCH;
     }
 

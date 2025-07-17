@@ -22,7 +22,6 @@ import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
-import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -31,6 +30,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.InlineMeValidationDisabled;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.WellKnownKeep;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
@@ -57,9 +57,12 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
 
   private final boolean cleanupInlineMes;
 
+  private final WellKnownKeep wellKnownKeep;
+
   @Inject
-  Validator(ErrorProneFlags flags) {
+  Validator(ErrorProneFlags flags, WellKnownKeep wellKnownKeep) {
     this.cleanupInlineMes = flags.getBoolean(CLEANUP_INLINE_ME_FLAG).orElse(false);
+    this.wellKnownKeep = wellKnownKeep;
   }
 
   @Override
@@ -77,7 +80,7 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
   }
 
   /** Whether or not the API should be deleted when run in cleanup mode. */
-  private static boolean shouldDelete(MethodTree tree, VisitorState state) {
+  private boolean shouldDelete(MethodTree tree, VisitorState state) {
     // We don't delete @InlineMe APIs that are:
     //   * annotated with @InlineMeValidationDisabled (this stops us from deleting default methods)
     //   * annotated with @Override (since the code would likely no longer compile, or it would
@@ -87,7 +90,7 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
     // TODO(kak): it would be nice if we could query to see if there are still any existing
     // usages of the API before unilaterally deleting it.
     return hasDirectAnnotationWithSimpleName(tree, "InlineMe")
-        && !shouldKeep(tree)
+        && !wellKnownKeep.shouldKeep(tree)
         && !hasAnnotation(tree, "java.lang.Override", state)
         && findSuperMethods(getSymbol(tree), state.getTypes()).isEmpty();
   }

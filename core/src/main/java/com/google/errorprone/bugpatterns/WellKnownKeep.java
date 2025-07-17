@@ -136,12 +136,13 @@ public final class WellKnownKeep {
           "org.junit.jupiter.api.Test",
           "org.junit.jupiter.params.ParameterizedTest");
 
-  private final ImmutableSet<String> exemptingVariableAnnotations;
+  private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS =
+      ImmutableSet.of("org.junit.jupiter.api.Nested");
+
   private final ImmutableSet<String> exemptingMethodAnnotations;
 
   @Inject
   WellKnownKeep(ErrorProneFlags flags) {
-    this.exemptingVariableAnnotations = EXEMPTING_VARIABLE_ANNOTATIONS;
     this.exemptingMethodAnnotations =
         ImmutableSet.<String>builder()
             .addAll(EXEMPTING_METHOD_ANNOTATIONS)
@@ -150,7 +151,7 @@ public final class WellKnownKeep {
   }
 
   public final boolean shouldKeep(VariableTree tree) {
-    return shouldKeep(tree, tree.getModifiers(), exemptingVariableAnnotations);
+    return shouldKeep(tree, tree.getModifiers(), EXEMPTING_VARIABLE_ANNOTATIONS);
   }
 
   public final boolean shouldKeep(MethodTree tree) {
@@ -158,7 +159,7 @@ public final class WellKnownKeep {
   }
 
   public final boolean shouldKeep(ClassTree tree) {
-    return shouldKeep(tree, tree.getModifiers(), ImmutableSet.of());
+    return shouldKeep(tree, tree.getModifiers(), EXEMPTING_CLASS_ANNOTATIONS);
   }
 
   public final boolean shouldKeep(Tree tree) {

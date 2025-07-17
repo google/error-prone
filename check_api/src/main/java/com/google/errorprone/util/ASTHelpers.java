@@ -1056,13 +1056,9 @@ public class ASTHelpers {
   }
 
   /**
-   * Returns true if any of the given tree is a declaration annotated with an annotation with the
-   * simple name {@code @UsedReflectively} or {@code @Keep}, or any annotations meta-annotated with
-   * an annotation with that simple name.
-   *
-   * <p>This indicates the annotated element is used (e.g. by reflection, or referenced by generated
-   * code) and should not be removed.
+   * @deprecated use {@code @com.google.errorprone.bugpatterns.WellKnownKeep} instead.
    */
+  @Deprecated
   public static boolean shouldKeep(Tree tree) {
     ModifiersTree modifiers = getModifiers(tree);
     if (modifiers == null) {

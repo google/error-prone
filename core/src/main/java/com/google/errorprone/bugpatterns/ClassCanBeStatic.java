@@ -32,6 +32,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 
@@ -47,6 +48,13 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
 
   private static final String REFASTER_ANNOTATION =
       "com.google.errorprone.refaster.annotation.BeforeTemplate";
+
+  private final WellKnownKeep wellKnownKeep;
+
+  @Inject
+  ClassCanBeStatic(WellKnownKeep wellKnownKeep) {
+    this.wellKnownKeep = wellKnownKeep;
+  }
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
@@ -84,7 +92,7 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
     if (CanBeStaticAnalyzer.referencesOuter(tree, currentClass, state)) {
       return NO_MATCH;
     }
-    if (ASTHelpers.shouldKeep(tree)) {
+    if (wellKnownKeep.shouldKeep(tree)) {
       return NO_MATCH;
     }
     if (tree.getMembers().stream().anyMatch(m -> hasAnnotation(m, REFASTER_ANNOTATION, state))) {

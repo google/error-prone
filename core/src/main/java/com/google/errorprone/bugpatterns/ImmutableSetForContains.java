@@ -32,7 +32,6 @@ import static com.google.errorprone.matchers.Matchers.isStatic;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 import static java.util.stream.Collectors.toMap;
 
@@ -61,6 +60,7 @@ import com.sun.tools.javac.code.Symbol;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -82,10 +82,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
           isSameType(ImmutableList.class));
 
   private static final Matcher<Tree> EXCLUSIONS =
-      anyOf(
-          (t, s) -> shouldKeep(t),
-          hasAnnotationWithSimpleName("Bind"),
-          hasAnnotationWithSimpleName("Inject"));
+      anyOf(hasAnnotationWithSimpleName("Bind"), hasAnnotationWithSimpleName("Inject"));
 
   private static final Matcher<ExpressionTree> IMMUTABLE_LIST_FACTORIES =
       staticMethod().onClass(ImmutableList.class.getName()).namedAnyOf("of", "copyOf");
@@ -98,6 +95,13 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
           .onExactClass(ImmutableList.Builder.class.getName())
           .namedAnyOf("add", "addAll");
 
+  private final WellKnownKeep wellKnownKeep;
+
+  @Inject
+  ImmutableSetForContains(WellKnownKeep wellKnownKeep) {
+    this.wellKnownKeep = wellKnownKeep;
+  }
+
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ImmutableSet<VariableTree> immutableListVar =
@@ -108,6 +112,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
             .filter(
                 member ->
                     PRIVATE_STATIC_IMMUTABLE_LIST_MATCHER.matches(member, state)
+                        && !wellKnownKeep.shouldKeep(member)
                         && !EXCLUSIONS.matches(member, state))
             .collect(toImmutableSet());
     if (immutableListVar.isEmpty()) {

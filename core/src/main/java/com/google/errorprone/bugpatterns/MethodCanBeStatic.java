@@ -70,11 +70,14 @@ import javax.lang.model.element.Modifier;
 public class MethodCanBeStatic extends BugChecker implements CompilationUnitTreeMatcher {
   private final FindingOutputStyle findingOutputStyle;
 
+  private final WellKnownKeep wellKnownKeep;
+
   @Inject
-  MethodCanBeStatic(ErrorProneFlags flags) {
+  MethodCanBeStatic(ErrorProneFlags flags, WellKnownKeep wellKnownKeep) {
     boolean findingPerSite = flags.getBoolean("MethodCanBeStatic:FindingPerSite").orElse(false);
     this.findingOutputStyle =
         findingPerSite ? FindingOutputStyle.FINDING_PER_SITE : FindingOutputStyle.ONE_FINDING;
+    this.wellKnownKeep = wellKnownKeep;
   }
 
   @Override
@@ -241,12 +244,12 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
     return builder.build();
   }
 
-  private static boolean isExcluded(MethodTree tree, VisitorState state) {
+  private boolean isExcluded(MethodTree tree, VisitorState state) {
     MethodSymbol sym = ASTHelpers.getSymbol(tree);
     if (sym.isConstructor() || !disjoint(EXCLUDED_MODIFIERS, sym.getModifiers())) {
       return true;
     }
-    if (!ASTHelpers.canBeRemoved(sym, state) || ASTHelpers.shouldKeep(tree)) {
+    if (!ASTHelpers.canBeRemoved(sym, state) || wellKnownKeep.shouldKeep(tree)) {
       return true;
     }
     switch (enclosingClass(sym).getNestingKind()) {

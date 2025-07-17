@@ -19,7 +19,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
-import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -52,6 +51,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -107,6 +107,13 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
           Kind.POSTFIX_DECREMENT,
           Kind.PREFIX_INCREMENT,
           Kind.POSTFIX_INCREMENT);
+
+  private final WellKnownKeep wellKnownKeep;
+
+  @Inject
+  FieldCanBeFinal(WellKnownKeep wellKnownKeep) {
+    this.wellKnownKeep = wellKnownKeep;
+  }
 
   /** The initialization context where an assignment occurred. */
   private enum InitializationContext {
@@ -221,7 +228,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       if (!canBeRemoved(var.sym)) {
         continue;
       }
-      if (shouldKeep(var.declaration)) {
+      if (wellKnownKeep.shouldKeep(var.declaration)) {
         continue;
       }
       if (IMPLICIT_VAR_ANNOTATIONS.stream().anyMatch(a -> hasAnnotation(var.sym, a, state))) {

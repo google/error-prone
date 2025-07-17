@@ -20,13 +20,13 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.InjectMatchers.hasProvidesAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
-import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 import static com.google.errorprone.util.AnnotationNames.DO_NOT_CALL_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.WellKnownKeep;
 import com.google.errorprone.bugpatterns.inlineme.InlinabilityResult.InlineValidationErrorReason;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -46,8 +46,12 @@ import javax.lang.model.element.Modifier;
 public final class Suggester extends BugChecker implements MethodTreeMatcher {
   private static final String INLINE_ME = "com.google.errorprone.annotations.InlineMe";
 
+  private final WellKnownKeep wellKnownKeep;
+
   @Inject
-  Suggester() {}
+  Suggester(WellKnownKeep wellKnownKeep) {
+    this.wellKnownKeep = wellKnownKeep;
+  }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -67,7 +71,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
     }
 
     // don't suggest on APIs that get called reflectively
-    if (shouldKeep(tree) || hasProvidesAnnotation().matches(tree, state)) {
+    if (wellKnownKeep.shouldKeep(tree) || hasProvidesAnnotation().matches(tree, state)) {
       return Description.NO_MATCH;
     }
 

@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -58,6 +57,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
 /** Flags fields which can be replaced with local variables. */
@@ -69,6 +69,13 @@ import javax.lang.model.element.ElementKind;
 public final class FieldCanBeLocal extends BugChecker implements CompilationUnitTreeMatcher {
   private static final ImmutableSet<ElementType> VALID_ON_LOCAL_VARIABLES =
       Sets.immutableEnumSet(ElementType.LOCAL_VARIABLE, ElementType.TYPE_USE);
+
+  private final WellKnownKeep wellKnownKeep;
+
+  @Inject
+  FieldCanBeLocal(WellKnownKeep wellKnownKeep) {
+    this.wellKnownKeep = wellKnownKeep;
+  }
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -85,7 +92,7 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
         if (symbol.getKind() == ElementKind.FIELD
             && symbol.isPrivate()
             && canBeLocal(variableTree)
-            && !shouldKeep(variableTree)
+            && !wellKnownKeep.shouldKeep(variableTree)
             && !symbol.getSimpleName().toString().startsWith("unused")) {
           potentialFields.put(symbol, getCurrentPath());
         }

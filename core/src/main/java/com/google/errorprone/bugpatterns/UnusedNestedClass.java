@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.shouldKeep;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -43,6 +42,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import javax.inject.Inject;
 
 /** Bugpattern to detect unused nested classes. */
 @BugPattern(
@@ -51,6 +51,13 @@ import java.util.Set;
     severity = WARNING,
     documentSuppression = false)
 public final class UnusedNestedClass extends BugChecker implements CompilationUnitTreeMatcher {
+
+  private final WellKnownKeep wellKnownKeep;
+
+  @Inject
+  UnusedNestedClass(WellKnownKeep wellKnownKeep) {
+    this.wellKnownKeep = wellKnownKeep;
+  }
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -93,7 +100,7 @@ public final class UnusedNestedClass extends BugChecker implements CompilationUn
 
     private boolean ignoreUnusedClass(ClassTree classTree, VisitorState state) {
       return isSuppressed(classTree, state)
-          || shouldKeep(classTree)
+          || wellKnownKeep.shouldKeep(classTree)
           || toLowerCase(classTree.getSimpleName().toString()).startsWith("unused");
     }
   }
