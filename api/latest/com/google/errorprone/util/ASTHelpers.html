@@ -838,12 +838,12 @@ argTypes</code> and <code>tyargTypes</code> and return its MethodSymbol.</div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Determines whether two expressions refer to the same variable.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shouldKeep(com.sun.source.tree.Tree)" class="member-name-link">shouldKeep</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns true if any of the given tree is a declaration annotated with an annotation with the
-simple name <code>@UsedReflectively</code> or <code>@Keep</code>, or any annotations meta-annotated with
-an annotation with that simple name.</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#shouldKeep(com.sun.source.tree.Tree)" class="member-name-link">shouldKeep</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <code>@com.google.errorprone.bugpatterns.WellKnownKeep</code> instead.</div>
+</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#streamReceivers(com.sun.source.tree.ExpressionTree)" class="member-name-link">streamReceivers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree)</code></div>
@@ -1547,13 +1547,11 @@ Does *not* consider annotation inheritance.</div>
 <section class="detail" id="shouldKeep(com.sun.source.tree.Tree)">
 <h3>shouldKeep</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">shouldKeep</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
-<div class="block">Returns true if any of the given tree is a declaration annotated with an annotation with the
-simple name <code>@UsedReflectively</code> or <code>@Keep</code>, or any annotations meta-annotated with
-an annotation with that simple name.
-
-<p>This indicates the annotated element is used (e.g. by reflection, or referenced by generated
-code) and should not be removed.</div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">shouldKeep</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <code>@com.google.errorprone.bugpatterns.WellKnownKeep</code> instead.</div>
+</div>
 </div>
 </section>
 </li>
