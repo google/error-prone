@@ -174,6 +174,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
   UnusedVariable(ErrorProneFlags flags, WellKnownKeep wellKnownKeep) {
     this.methodAnnotationsExemptingParameters =
         ImmutableSet.<String>builder()
+            .add("com.google.common.eventbus.Subscribe")
             .add("org.robolectric.annotation.Implementation")
             .addAll(flags.getListOrEmpty("Unused:methodAnnotationsExemptingParameters"))
             .build();
