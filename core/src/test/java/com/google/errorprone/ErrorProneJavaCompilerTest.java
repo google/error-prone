@@ -417,7 +417,10 @@ public class ErrorProneJavaCompilerTest {
     assertThat(result.succeeded).isFalse();
   }
 
-  @BugPattern(summary = "Test bug pattern to test custom patch functionality", severity = ERROR)
+  @BugPattern(
+          summary = "Test bug pattern to test custom patch functionality",
+          severity = ERROR,
+          altNames = {"AssignmentUpdaterAltName"})
   public static final class AssignmentUpdater extends BugChecker implements VariableTreeMatcher {
     private final String newValue;
 
@@ -475,6 +478,34 @@ public class ErrorProneJavaCompilerTest {
             Collections.singleton(fileObject),
             Arrays.asList(
                 "-XepPatchChecks:", "-XepPatchLocation:IN_PLACE", "-Xep:AssignmentUpdater:OFF"),
+            ImmutableList.of(AssignmentUpdater.class));
+    assertThat(result.succeeded).isTrue();
+    assertThat(Files.readString(Path.of(fileObject.toUri())))
+        .isEqualTo(
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+  }
+
+  @Test
+  public void patchAllWithCheckDisabledThroughAlternateName() throws IOException {
+    JavaFileObject fileObject =
+        createOnDiskFileObject(
+            "StringConstantWrapper.java",
+            """
+            class StringConstantWrapper {
+              String s = "old-value";
+            }
+            """);
+
+    // It should also work if we disable the check through its alternate name.
+    CompilationResult result =
+        doCompile(
+            Collections.singleton(fileObject),
+            Arrays.asList(
+                    "-XepPatchChecks:", "-XepPatchLocation:IN_PLACE", "-Xep:AssignmentUpdaterAltName:OFF"),
             ImmutableList.of(AssignmentUpdater.class));
     assertThat(result.succeeded).isTrue();
     assertThat(Files.readString(Path.of(fileObject.toUri())))
