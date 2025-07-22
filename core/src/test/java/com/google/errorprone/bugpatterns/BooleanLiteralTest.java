@@ -95,34 +95,123 @@ public class BooleanLiteralTest {
   @Test
   public void objectDoubleEqualsBooleanLiteral() {
     refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              boolean objectDoubleEqualsBooleanTrue(Object o) {
+                return o == Boolean.TRUE;
+              }
+
+              boolean objectDoubleEqualsBooleanFalse(Object o) {
+                return o == Boolean.FALSE;
+              }
+
+              boolean booleanTrueDoubleEqualsObject(Object o) {
+                return Boolean.TRUE == o;
+              }
+
+              boolean booleanFalseDoubleEqualsObject(Object o) {
+                return Boolean.FALSE == o;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void primitiveBooleanDoubleEqualsBooleanLiteral() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              boolean booleanDoubleEqualsBooleanTrue(boolean b) {
+                return b == Boolean.TRUE;
+              }
+
+              boolean booleanDoubleEqualsBooleanFalse(boolean b) {
+                return b == Boolean.FALSE;
+              }
+
+              boolean booleanTrueDoubleEqualsBoolean(boolean b) {
+                return Boolean.TRUE == b;
+              }
+
+              boolean booleanFalseDoubleEqualsBoolean(boolean b) {
+                return Boolean.FALSE == b;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              boolean booleanDoubleEqualsBooleanTrue(boolean b) {
+                return b == true;
+              }
+
+              boolean booleanDoubleEqualsBooleanFalse(boolean b) {
+                return b == false;
+              }
+
+              boolean booleanTrueDoubleEqualsBoolean(boolean b) {
+                return true == b;
+              }
+
+              boolean booleanFalseDoubleEqualsBoolean(boolean b) {
+                return false == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void boxedBooleanDoubleEqualsBooleanLiteral() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              boolean booleanDoubleEqualsBooleanTrue(Boolean b) {
+                return b == Boolean.TRUE;
+              }
+
+              boolean booleanDoubleEqualsBooleanFalse(Boolean b) {
+                return b == Boolean.FALSE;
+              }
+
+              boolean booleanTrueDoubleEqualsBoolean(Boolean b) {
+                return Boolean.TRUE == b;
+              }
+
+              boolean booleanFalseDoubleEqualsBoolean(Boolean b) {
+                return Boolean.FALSE == b;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void boxedResult() {
+    refactoringHelper
         .allowBreakingChanges()
         .addInputLines(
             "Test.java",
             """
             class Test {
-              boolean doubleEqualsBooleanTrue(Object o) {
-                return o == Boolean.TRUE;
-              }
-
-              boolean doubleEqualsBooleanFalse(Object o) {
-                return o == Boolean.FALSE;
+              Boolean f() {
+                Boolean foo = null;
+                Boolean b = true ? foo : Boolean.TRUE;
+                return b;
               }
             }
             """)
-        // TODO: b/428921980 - this shouldn't get re-written because it doesn't compile!
-        .addOutputLines(
-            "Test.java",
-            """
-            class Test {
-              boolean doubleEqualsBooleanTrue(Object o) {
-                return o == true;
-              }
-
-              boolean doubleEqualsBooleanFalse(Object o) {
-                return o == false;
-              }
-            }
-            """)
+        .expectUnchanged()
         .doTest();
   }
 }

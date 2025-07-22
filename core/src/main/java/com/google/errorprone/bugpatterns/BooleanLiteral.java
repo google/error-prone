@@ -26,6 +26,7 @@ import com.google.errorprone.bugpatterns.BugChecker.IdentifierTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -33,6 +34,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.TypeTag;
 
 /** Simplifies Boolean.TRUE/FALSE to true/false. */
 @BugPattern(
@@ -84,6 +86,11 @@ public class BooleanLiteral extends BugChecker
             describeMatch(tree, SuggestedFix.replace(invocationTree, Boolean.toString(value)));
         default -> NO_MATCH;
       };
+    }
+    TargetType targetType = TargetType.targetType(state);
+    if (targetType == null
+        || !state.getTypes().unboxedType(targetType.type()).hasTag(TypeTag.NONE)) {
+      return NO_MATCH;
     }
     return describeMatch(tree, SuggestedFix.replace(tree, Boolean.toString(value)));
   }
