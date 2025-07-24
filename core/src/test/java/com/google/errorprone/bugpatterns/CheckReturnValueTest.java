@@ -1489,6 +1489,62 @@ class Test {
         .doTest();
   }
 
+  @Test
+  public void inheritsCanIgnoreReturnValue() {
+    refactoringHelper
+        .addInputLines(
+            "Super.java",
+            """
+            import com.google.errorprone.annotations.CheckReturnValue;
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            @CheckReturnValue
+            interface Super {
+              int a();
+
+              @CanIgnoreReturnValue
+              int b();
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Lib.java",
+            """
+            import com.google.errorprone.annotations.CheckReturnValue;
+
+            @CheckReturnValue
+            interface Lib extends Super {
+              @Override
+              int a();
+
+              @Override
+              int b();
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void foo(Lib lib) {
+                lib.a();
+                lib.b();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void foo(Lib lib) {
+                var unused = lib.a();
+                lib.b();
+              }
+            }
+            """)
+        .doTest();
+  }
+
   private CompilationTestHelper compilationHelperLookingAtAllConstructors() {
     return compilationHelper.setArgs(
         "-XepOpt:" + CheckReturnValue.CHECK_ALL_CONSTRUCTORS + "=true");

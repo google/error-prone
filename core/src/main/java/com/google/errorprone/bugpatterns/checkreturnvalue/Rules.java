@@ -20,7 +20,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
+import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.GlobalRule;
 import com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.MethodRule;
@@ -29,6 +31,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
 import java.util.function.BiPredicate;
+import java.util.stream.Stream;
 
 /** Factories for common kinds of {@link ResultUseRule}s. */
 public final class Rules {
@@ -64,6 +67,25 @@ public final class Rules {
     return new SimpleRule(
         "ANNOTATION @" + simpleName,
         (sym, st) -> hasDirectAnnotationWithSimpleName(sym, simpleName),
+        policy);
+  }
+
+  /**
+   * Returns a {@link ResultUseRule} that maps annotations on the current symbol, or on super
+   * methods if the symbol is a method symbol, with the given {@code simpleName} to the given {@code
+   * policy}.
+   */
+  public static ResultUseRule<VisitorState, Symbol> mapInheritedAnnotationSimpleName(
+      String simpleName, ResultUsePolicy policy) {
+    return new SimpleRule(
+        "ANNOTATION @" + simpleName,
+        (sym, st) ->
+            Streams.concat(
+                    Stream.of(sym),
+                    sym instanceof MethodSymbol methodSymbol
+                        ? streamSuperMethods(methodSymbol, st.getTypes())
+                        : Stream.empty())
+                .anyMatch(s -> hasDirectAnnotationWithSimpleName(s, simpleName)),
         policy);
   }
 

@@ -40,6 +40,7 @@ import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.UNSPECIFIED;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.globalDefault;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.mapAnnotationSimpleName;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.Rules.mapInheritedAnnotationSimpleName;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
@@ -156,7 +157,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
                 // we should be checking declarations to ensure they aren't producing differing
                 // results (i.e. ensuring an @AutoValue.Builder setter method isn't annotated @CRV).
                 mapAnnotationSimpleName(CHECK_RETURN_VALUE, EXPECTED),
-                mapAnnotationSimpleName(CAN_IGNORE_RETURN_VALUE, OPTIONAL),
+                mapInheritedAnnotationSimpleName(CAN_IGNORE_RETURN_VALUE, OPTIONAL),
                 protoBuilders(),
                 mutableProtos(),
                 autoValues(),
