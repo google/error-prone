@@ -60,6 +60,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#globalDefault(java.util.Optional,java.util.Optional)" tabindex="0">globalDefault(Optional, Optional)</a></li>
 <li><a href="#mapAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)" tabindex="0">mapAnnotationSimpleName(String, ResultUsePolicy)</a></li>
+<li><a href="#mapInheritedAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)" tabindex="0">mapInheritedAnnotationSimpleName(String, ResultUsePolicy)</a></li>
 </ol>
 </li>
 </ol>
@@ -107,6 +108,14 @@ constructors.</div>
 <div class="block">Returns a <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations with the given <code>simpleName</code> to the
 given <code>policy</code>.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mapInheritedAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)" class="member-name-link">mapInheritedAnnotationSimpleName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName,
+ <a href="ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations on the current symbol, or on super
+methods if the symbol is a method symbol, with the given <code>simpleName</code> to the given <code>
+policy</code>.</div>
+</div>
 </div>
 </div>
 </div>
@@ -143,6 +152,18 @@ constructors.</div>
  <a href="ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</span></div>
 <div class="block">Returns a <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations with the given <code>simpleName</code> to the
 given <code>policy</code>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="mapInheritedAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)">
+<h3>mapInheritedAnnotationSimpleName</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</span>&nbsp;<span class="element-name">mapInheritedAnnotationSimpleName</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName,
+ <a href="ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</span></div>
+<div class="block">Returns a <a href="ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations on the current symbol, or on super
+methods if the symbol is a method symbol, with the given <code>simpleName</code> to the given <code>
+policy</code>.</div>
 </div>
 </section>
 </li>

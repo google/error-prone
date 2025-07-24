@@ -186,6 +186,14 @@ the order they are declared.</div>
 <div class="block">Returns a <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations with the given <code>simpleName</code> to the
 given <code>policy</code>.</div>
 </div>
+<div class="col-first even-row-color"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Rules.</span><code><a href="../Rules.html#mapInheritedAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)" class="member-name-link">mapInheritedAnnotationSimpleName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName,
+ <a href="../ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Returns a <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations on the current symbol, or on super
+methods if the symbol is a method symbol, with the given <code>simpleName</code> to the given <code>
+policy</code>.</div>
+</div>
 </div>
 <div class="caption"><span>Method parameters in <a href="../package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a> with type arguments of type <a href="../ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a></span></div>
 <div class="summary-table three-column-summary">

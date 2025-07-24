@@ -146,37 +146,45 @@ constructors.</div>
 given <code>policy</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtoRules.</span><code><a href="../ProtoRules.html#mutableProtos()" class="member-name-link">mutableProtos</a>()</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Rules.</span><code><a href="../Rules.html#mapInheritedAnnotationSimpleName(java.lang.String,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)" class="member-name-link">mapInheritedAnnotationSimpleName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName,
+ <a href="../ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Returns a <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUseRule</code></a> that maps annotations on the current symbol, or on super
+methods if the symbol is a method symbol, with the given <code>simpleName</code> to the given <code>
+policy</code>.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtoRules.</span><code><a href="../ProtoRules.html#mutableProtos()" class="member-name-link">mutableProtos</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block">Returns a rule that handles mutable protos, making their fluent setter methods' results
 ignorable.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">DaggerRules.</span><code><a href="../DaggerRules.html#productionComponentBuilders()" class="member-name-link">productionComponentBuilders</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">DaggerRules.</span><code><a href="../DaggerRules.html#productionComponentBuilders()" class="member-name-link">productionComponentBuilders</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Returns a rule that handles <code>@dagger.producers.ProductionComponent.Builder</code> types, making
 their fluent setter methods' results ignorable.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">DaggerRules.</span><code><a href="../DaggerRules.html#productionSubcomponentBuilders()" class="member-name-link">productionSubcomponentBuilders</a>()</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">DaggerRules.</span><code><a href="../DaggerRules.html#productionSubcomponentBuilders()" class="member-name-link">productionSubcomponentBuilders</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block">Returns a rule that handles <code>@dagger.producers.ProductionSubcomponent.Builder</code> types,
 making their fluent setter methods' results ignorable.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtoRules.</span><code><a href="../ProtoRules.html#protoBuilders()" class="member-name-link">protoBuilders</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtoRules.</span><code><a href="../ProtoRules.html#protoBuilders()" class="member-name-link">protoBuilders</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Returns a rule that handles proto builders, making their fluent setter methods' results
 ignorable.</div>
 </div>
-<div class="col-first odd-row-color"><code>abstract <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;?,<wbr><a href="../ResultUseRule.Evaluation.html#type-param-S" title="type parameter in ResultUseRule.Evaluation">S</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ResultUseRule.Evaluation.</span><code><a href="../ResultUseRule.Evaluation.html#rule()" class="member-name-link">rule</a>()</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>abstract <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;?,<wbr><a href="../ResultUseRule.Evaluation.html#type-param-S" title="type parameter in ResultUseRule.Evaluation">S</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ResultUseRule.Evaluation.</span><code><a href="../ResultUseRule.Evaluation.html#rule()" class="member-name-link">rule</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block">The rule that made this evaluation.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">DaggerRules.</span><code><a href="../DaggerRules.html#subcomponentBuilders()" class="member-name-link">subcomponentBuilders</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a><wbr>&lt;<a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>, com.sun.tools.javac.code.Symbol&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">DaggerRules.</span><code><a href="../DaggerRules.html#subcomponentBuilders()" class="member-name-link">subcomponentBuilders</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Returns a rule that handles <code>@dagger.Subcomponent.Builder</code> types, making their fluent
 setter methods' results ignorable.</div>
 </div>
