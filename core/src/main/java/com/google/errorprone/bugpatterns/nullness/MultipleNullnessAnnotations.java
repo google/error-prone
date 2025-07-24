@@ -17,9 +17,12 @@
 package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations.annotationsAreAmbiguous;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations.annotationsRelevantToNullness;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -28,7 +31,6 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotatedTypeTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
-import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.MethodTree;
@@ -75,9 +77,14 @@ public class MultipleNullnessAnnotations extends BugChecker
   }
 
   private Description match(Tree tree, Collection<? extends AnnotationMirror> annotations) {
-    if (NullnessAnnotations.annotationsAreAmbiguous(annotations)) {
-      return describeMatch(tree);
+    if (!annotationsAreAmbiguous(annotations)) {
+      return NO_MATCH;
     }
-    return NO_MATCH;
+    return buildDescription(tree)
+        .setMessage(
+            annotationsRelevantToNullness(annotations).stream()
+                .map(a -> a.getAnnotationType().asElement().toString())
+                .collect(joining(", ", "This type use has conflicting nullness annotations: ", "")))
+        .build();
   }
 }

@@ -74,13 +74,18 @@ public class NullnessAnnotations {
 
   public static boolean annotationsAreAmbiguous(
       Collection<? extends AnnotationMirror> annotations) {
-    return annotations.stream()
-            .map(a -> simpleName(a).toString())
-            .filter(ANNOTATION_RELEVANT_TO_NULLNESS)
-            .map(NULLABLE_ANNOTATION::test)
+    return annotationsRelevantToNullness(annotations).stream()
+            .map(a -> NULLABLE_ANNOTATION.test(simpleName(a).toString()))
             .distinct()
             .count()
         == 2;
+  }
+
+  public static ImmutableList<AnnotationMirror> annotationsRelevantToNullness(
+      Collection<? extends AnnotationMirror> annotations) {
+    return annotations.stream()
+        .filter(a -> ANNOTATION_RELEVANT_TO_NULLNESS.test(simpleName(a).toString()))
+        .collect(toImmutableList());
   }
 
   public static ImmutableList<AnnotationTree> annotationsRelevantToNullness(
