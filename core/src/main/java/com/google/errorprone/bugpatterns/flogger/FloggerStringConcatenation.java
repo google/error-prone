@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.flogger;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.flogger.FloggerHelpers.inferFormatSpecifier;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -55,15 +54,14 @@ public class FloggerStringConcatenation extends BugChecker implements MethodInvo
   private static final Matcher<ExpressionTree> MATCHER =
       MethodMatchers.instanceMethod()
           .onDescendantOf("com.google.common.flogger.LoggingApi")
-          .named("log")
-          .withParameters("java.lang.String");
+          .named("log");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }
-    ExpressionTree argument = getOnlyElement(tree.getArguments());
+    ExpressionTree argument = tree.getArguments().get(0);
     if (!(argument instanceof BinaryTree)) {
       return NO_MATCH;
     }

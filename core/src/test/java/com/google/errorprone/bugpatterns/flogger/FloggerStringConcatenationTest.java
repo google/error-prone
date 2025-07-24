@@ -145,4 +145,36 @@ public class FloggerStringConcatenationTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void multipleArguments() {
+    testHelper
+        .addInputLines(
+            "in/Test.java",
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void method(String hello, String world) {
+                logger.atInfo().log("message is %s " + hello, world);
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void method(String hello, String world) {
+                logger.atInfo().log("message is %s %s", hello, world);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
