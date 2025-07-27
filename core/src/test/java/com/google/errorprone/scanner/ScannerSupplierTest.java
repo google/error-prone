@@ -243,7 +243,9 @@ public class ScannerSupplierTest {
         ScannerSupplier.fromBugCheckerClasses(
             ArrayEquals.class, BadShiftAmount.class, StaticQualifiedUsingExpression.class);
 
-    assertScanner(ss.filter(input -> input.canonicalName().equals("BadShiftAmount")))
+    ScannerSupplier derivedSupplier = ss.filter(input -> !input.canonicalName().startsWith("S"));
+    assertScanner(derivedSupplier).hasEnabledChecks(ArrayEquals.class, BadShiftAmount.class);
+    assertScanner(derivedSupplier.filter(input -> !input.canonicalName().startsWith("A")))
         .hasEnabledChecks(BadShiftAmount.class);
   }
 
