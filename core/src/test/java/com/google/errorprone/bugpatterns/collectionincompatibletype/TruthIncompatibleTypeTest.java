@@ -840,6 +840,9 @@ public class Test {
                     && !m.getName().equals("equals")
                     && m.getParameterCount() > 0
                     && !m.getName().startsWith("ignoring")
+                    // Kotlin `internal` methods are `public` in the class file.
+                    // We can identify them by looking for a mangled name.
+                    && !m.getName().contains("$")
                     && (stream(m.getParameterTypes()).allMatch(p -> p.equals(Iterable.class))
                         || stream(m.getParameterTypes())
                             .allMatch(p -> p.equals(Object.class) || p.isArray())
