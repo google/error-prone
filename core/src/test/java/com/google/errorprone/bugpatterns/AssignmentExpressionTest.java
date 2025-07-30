@@ -127,4 +127,22 @@ public final class AssignmentExpressionTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void returnedValue() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              Object a;
+
+              Object test() {
+                // BUG: Diagnostic contains:
+                return a = new Object();
+              }
+            }
+            """)
+        .doTest();
+  }
 }
