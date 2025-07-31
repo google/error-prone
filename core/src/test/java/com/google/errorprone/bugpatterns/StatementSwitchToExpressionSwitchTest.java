@@ -4430,6 +4430,94 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
+  public void directConversion_hoistWithNamingConflictAbove_noError() {
+    // The checker currently does not have the ability to hoist variables whose names conflict
+    // with other variables in the switch statement's enclosing scope.  Here the conflict is above
+    // the variable to be hoisted.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+
+              public Test() {}
+
+              public void foo() {
+                int z = 0;
+                switch (z) {
+                  case 0:
+                  // Fall thru
+                  case 1:
+                    var anotherString = "salut";
+                    if (anotherString.length() > 0) {
+                      // Note that this would pose a naming conflict with `foo` below (if hoisted)
+                      String foo = "salut salut";
+                      anotherString = foo;
+                    }
+                    double dontHoistMe = 2.0d;
+                    break;
+                  case 2:
+                    String foo = "there";
+                    anotherString = "bonjour";
+                    break;
+                  case 3:
+                    anotherString = "just this var";
+                    foo = "baz";
+                    int staysHere;
+                }
+                return;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+  }
+
+  @Test
+  public void directConversion_hoistWithNamingConflictSameCase_noError() {
+    // The checker currently does not have the ability to hoist variables whose names conflict
+    // with other variables in the switch statement's enclosing scope.  Here the conflict is in the
+    // same case as the variable to be hoisted.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+
+              public Test() {}
+
+              public void foo() {
+                int z = 0;
+                switch (z) {
+                  case 0:
+                  // Fall thru
+                  case 1:
+                    var anotherString = "salut";
+                    double dontHoistMe = 2.0d;
+                    break;
+                  case 2:
+                    anotherString = "bonjour";
+                    if (anotherString.length() > 0) {
+                      // Note that this would pose a naming conflict with `foo` below (if hoisted)
+                      String foo = "salut salut";
+                      anotherString = foo;
+                    }
+                    String foo = "there";
+                    break;
+                  case 3:
+                    anotherString = "just this var";
+                    foo = "baz";
+                    int staysHere;
+                }
+                return;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+  }
+
+  @Test
   public void directConversion_hoistIntersectionType_noError() {
     // The type of foo is an intersection type, which is not supported for hoisting.
     helper

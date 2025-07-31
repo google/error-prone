@@ -374,9 +374,26 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
       // Find any symbols referenced in this case that were defined in a previous case, and thus
       // should be hoisted out of the switch block
-      symbolsDefinedInPreviousCases.keySet().stream()
-          .filter(symbol -> hasReadsOrWritesOfVariableInTree(symbol, caseTree))
-          .forEach(symbol -> symbolsToHoist.put(symbol, symbolsDefinedInPreviousCases.get(symbol)));
+      ImmutableSet<VarSymbol> newSymbolsToHoist =
+          symbolsDefinedInPreviousCases.keySet().stream()
+              .filter(symbol -> hasReadsOrWritesOfVariableInTree(symbol, caseTree))
+              .collect(toImmutableSet());
+
+      // Ensure that hoisting does not conflict with other declared variables in switch scope
+      boolean hasNamingConflict =
+          newSymbolsToHoist.stream()
+              // In principle, this search could be terminated after checking up through `caseTree`
+              // (inclusive) because naming conflicts after that would have caused compile-time
+              // errors.  For simplicity, the search is not restricted.
+              .filter(symbol -> declaresAnotherVariableNamed(symbol, cases))
+              .findAny()
+              .isPresent();
+      if (hasNamingConflict) {
+        return DEFAULT_ANALYSIS_RESULT;
+      }
+
+      newSymbolsToHoist.forEach(
+          symbol -> symbolsToHoist.put(symbol, symbolsDefinedInPreviousCases.get(symbol)));
 
       // Analyze for return switch and assignment switch conversion
       returnSwitchCaseQualifications =
@@ -545,6 +562,33 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       }
     }.scan(tree, null);
     return referencedLocalVariables.contains(symbol);
+  }
+
+  /**
+   * Determines whether the switch statement has a case that declares a local variable with the same
+   * name as the supplied {@code symbol}.
+   */
+  private static boolean declaresAnotherVariableNamed(
+      VarSymbol symbol, List<? extends CaseTree> cases) {
+
+    Set<VarSymbol> nameConflicts = new HashSet<>();
+    for (CaseTree caseTree : cases) {
+      new TreeScanner<Void, Void>() {
+        @Override
+        public Void visitVariable(VariableTree variableTree, Void unused) {
+          // If the variable is named the same as the symbol, but it's not the original declaration
+          // of the symbol, then there's a name conflict.
+          if (variableTree.getName().contentEquals(symbol.name.toString())) {
+            VarSymbol thisVarSymbol = ASTHelpers.getSymbol(variableTree);
+            if (!thisVarSymbol.equals(symbol)) {
+              nameConflicts.add(thisVarSymbol);
+            }
+          }
+          return super.visitVariable(variableTree, null);
+        }
+      }.scan(caseTree, null);
+    }
+    return !nameConflicts.isEmpty();
   }
 
   /**
