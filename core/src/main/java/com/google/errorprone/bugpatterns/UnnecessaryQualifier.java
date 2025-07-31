@@ -213,7 +213,7 @@ public final class UnnecessaryQualifier extends BugChecker
           "dagger.Component.Factory",
           "dagger.Subcomponent",
           "dagger.Subcomponent.Builder",
-          "dagger.Subcomponent.Builder.Factory",
+          "dagger.Subcomponent.Factory",
           "dagger.hilt.EntryPoint",
           "dagger.producers.ProductionComponent",
           "dagger.producers.ProductionComponent.Builder",

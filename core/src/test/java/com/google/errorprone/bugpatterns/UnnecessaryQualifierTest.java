@@ -196,6 +196,23 @@ public final class UnnecessaryQualifierTest {
   }
 
   @Test
+  public void exemptedClassAnnotation_subcomponentFactory_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import dagger.BindsInstance;
+            import dagger.Subcomponent;
+
+            @Subcomponent.Factory
+            interface Factory {
+              Object create(@BindsInstance @Qual boolean isEnabled);
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void lambdas_neverMeaningful() {
     helper
         .addSourceLines(
