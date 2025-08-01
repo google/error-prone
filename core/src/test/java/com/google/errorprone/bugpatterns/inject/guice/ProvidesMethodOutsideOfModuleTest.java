@@ -94,9 +94,6 @@ public class ProvidesMethodOutsideOfModuleTest {
             """
             package com.google.errorprone.bugpatterns.inject.guice.testdata;
 
-            import com.google.gwt.inject.client.AbstractGinModule;
-            import com.google.gwt.inject.client.GinModule;
-            import com.google.gwt.inject.client.binder.GinBinder;
             import com.google.inject.AbstractModule;
             import com.google.inject.Binder;
             import com.google.inject.Module;
@@ -120,29 +117,6 @@ public class ProvidesMethodOutsideOfModuleTest {
               class Module2 implements Module {
                 @Override
                 public void configure(Binder binder) {}
-
-                @Provides
-                int providesFoo() {
-                  return 42;
-                }
-              }
-
-              /** Regular GinModule */
-              class GinModule1 extends AbstractGinModule {
-
-                @Override
-                protected void configure() {}
-
-                @Provides
-                int providesFoo() {
-                  return 42;
-                }
-              }
-
-              /** Implements the GinModule interface directly */
-              class GinModule2 implements GinModule {
-                @Override
-                public void configure(GinBinder binder) {}
 
                 @Provides
                 int providesFoo() {
