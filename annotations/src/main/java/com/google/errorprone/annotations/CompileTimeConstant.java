@@ -41,6 +41,8 @@ import java.lang.annotation.Target;
  *   <li>the expression is a {@link String}, and formed from the concatenation of symbols which meet
  *       these conditions, or
  *   <li>the expression is a ternary condition, where both branches satisfy these conditions, or
+ *   <li>the expression is a switch expression, where every case is either a constant expression or
+ *       throws, or
  *   <li>the expression is an immutable collection with all values known to satisfy these conditions
  *       (for example, {@code ImmutableSet.of("a", "b", "c")}).
  * </ol>

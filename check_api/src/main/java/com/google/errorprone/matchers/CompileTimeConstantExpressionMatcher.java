@@ -30,11 +30,14 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
@@ -100,6 +103,17 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
             public Boolean visitConditionalExpression(ConditionalExpressionTree tree, Void unused) {
               return tree.getTrueExpression().accept(this, null)
                   && tree.getFalseExpression().accept(this, null);
+            }
+
+            @Override
+            public Boolean visitSwitchExpression(SwitchExpressionTree tree, Void unused) {
+              // This is intentionally quite restrictive: only accept bare values and throws.
+              return tree.getCases().stream()
+                  .allMatch(
+                      c ->
+                          c.getCaseKind().equals(CaseKind.RULE)
+                              && (c.getBody().accept(this, null)
+                                  || c.getBody() instanceof ThrowTree));
             }
 
             @Override

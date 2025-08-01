@@ -887,4 +887,68 @@ public class CompileTimeConstantCheckerTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void switchExpression_allBranchesConstant() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.CompileTimeConstant;
+
+            public class Test {
+              @CompileTimeConstant
+              final String s =
+                  switch (1) {
+                    case 1 -> "a";
+                    case 2 -> "b";
+                    default -> "c";
+                  };
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switchExpression_notAllBranchesConstant() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.CompileTimeConstant;
+
+            public class Test {
+              @CompileTimeConstant
+              final String s =
+                  // BUG: Diagnostic contains:
+                  switch (1) {
+                    case 1 -> "a";
+                    case 2 -> toString();
+                    default -> "c";
+                  };
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switchExpression_onlyConsiderReturningBranches() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.CompileTimeConstant;
+
+            public class Test {
+              @CompileTimeConstant
+              final String s =
+                  switch (1) {
+                    case 1 -> "a";
+                    case 2 -> "b";
+                    default -> throw new RuntimeException();
+                  };
+            }
+            """)
+        .doTest();
+  }
 }
