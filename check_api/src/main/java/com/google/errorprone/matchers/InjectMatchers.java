@@ -33,10 +33,7 @@ import com.sun.source.tree.Tree;
 public final class InjectMatchers {
 
   public static final Matcher<Tree> INSIDE_GUICE_MODULE =
-      enclosingClass(
-          anyOf(
-              isSubtypeOf("com.google.inject.Module"),
-              isSubtypeOf("com.google.gwt.inject.client.GinModule")));
+      enclosingClass(isSubtypeOf("com.google.inject.Module"));
 
   private InjectMatchers() {} // no instantiation
 
