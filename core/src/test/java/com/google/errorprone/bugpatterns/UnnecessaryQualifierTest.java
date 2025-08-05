@@ -241,4 +241,36 @@ public final class UnnecessaryQualifierTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void recordWithExplicitlyAnnotatedConstructor_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import javax.inject.Inject;
+
+            record Test(@Qual int x) {
+              @Inject
+              Test {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void recordWithoutExplicitlyAnnotatedConstructor_finding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import javax.inject.Inject;
+
+            // BUG: Diagnostic contains:
+            record Test(@Qual int x) {
+              Test {}
+            }
+            """)
+        .doTest();
+  }
 }

@@ -24,6 +24,7 @@ import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.collect.ImmutableList;
@@ -88,6 +89,19 @@ public final class UnnecessaryQualifier extends BugChecker
       case FIELD -> {
         if (INJECTION_FIELDS.stream().anyMatch(ip -> hasAnnotation(tree, ip, state))) {
           return NO_MATCH;
+        }
+        if (isRecord(symbol)) {
+          var clazzTree = state.findEnclosing(ClassTree.class);
+          if (clazzTree.getMembers().stream()
+              .anyMatch(
+                  m -> {
+                    var sym = getSymbol(m);
+                    return sym.isConstructor()
+                        && isRecord(sym) // canonical record constructor
+                        && INJECTION_METHODS.stream().anyMatch(ip -> hasAnnotation(m, ip, state));
+                  })) {
+            return NO_MATCH;
+          }
         }
       }
       case PARAMETER -> {
