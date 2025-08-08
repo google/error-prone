@@ -507,6 +507,9 @@ This test has @TestParameter fields but is using the default JUnit4 runner. The 
 __[TheoryButNoTheories](bugpattern/TheoryButNoTheories)__<br>
 This test has members annotated with @Theory, @DataPoint, or @DataPoints but is using the default JUnit4 runner.
 
+__[ThreadBuilderNameWithPlaceholder](bugpattern/ThreadBuilderNameWithPlaceholder)__<br>
+Thread.Builder.name() does not accept placeholders (e.g., %d or %s). threadBuilder.name(String) accepts a constant name and threadBuilder.name(String, int) accepts a constant name _prefix_ and an initial counter value.
+
 __[ThrowIfUncheckedKnownChecked](bugpattern/ThrowIfUncheckedKnownChecked)__<br>
 throwIfUnchecked(knownCheckedException) is a no-op.
 
