@@ -389,6 +389,7 @@ import com.google.errorprone.bugpatterns.SystemOut;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
 import com.google.errorprone.bugpatterns.TestParametersNotInitialized;
 import com.google.errorprone.bugpatterns.TheoryButNoTheories;
+import com.google.errorprone.bugpatterns.ThreadBuilderNameWithPlaceholder;
 import com.google.errorprone.bugpatterns.ThreadJoinLoop;
 import com.google.errorprone.bugpatterns.ThreadLocalUsage;
 import com.google.errorprone.bugpatterns.ThreeLetterTimeZoneID;
@@ -850,6 +851,7 @@ public class BuiltInCheckerSuppliers {
           TemporalAccessorGetChronoField.class,
           TestParametersNotInitialized.class,
           TheoryButNoTheories.class,
+          ThreadBuilderNameWithPlaceholder.class,
           ThrowIfUncheckedKnownChecked.class,
           ThrowNull.class,
           TreeToString.class,
