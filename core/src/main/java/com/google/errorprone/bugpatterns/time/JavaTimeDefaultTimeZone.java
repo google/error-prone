@@ -36,9 +36,9 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 @BugPattern(
     summary = "java.time APIs that silently use the default system time-zone are not allowed.",
     explanation =
-        "Using APIs that silently use the default system time-zone is dangerous. "
-            + "The default system time-zone can vary from machine to machine or JVM to JVM. "
-            + "You must choose an explicit ZoneId.",
+        "Using APIs that silently use the default system time-zone is dangerous."
+            + " The default system time-zone can vary from machine to machine or JVM to JVM."
+            + " You must choose an explicit ZoneId.",
     severity = WARNING)
 public final class JavaTimeDefaultTimeZone extends BugChecker
     implements MethodInvocationTreeMatcher {
