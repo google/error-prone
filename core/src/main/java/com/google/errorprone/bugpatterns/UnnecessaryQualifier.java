@@ -21,7 +21,12 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Streams.concat;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.JUnitMatchers.TEST_CASE;
+import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestRunnerOfType;
+import static com.google.errorprone.matchers.Matchers.annotations;
+import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
@@ -35,6 +40,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.MultiMatcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
@@ -130,6 +136,10 @@ public final class UnnecessaryQualifier extends BugChecker
           return NO_MATCH;
         }
         var enclosingClass = state.findEnclosing(ClassTree.class);
+        if (TEST_CASE.matches(method, state) && HAS_JUKITO_RUNNER.matches(enclosingClass, state)) {
+          return NO_MATCH;
+        }
+
         if (CLASS_ANNOTATIONS_EXEMPTING_METHODS.stream()
             .anyMatch(anno -> hasAnnotation(enclosingClass, anno, state))) {
           return NO_MATCH;
@@ -141,6 +151,12 @@ public final class UnnecessaryQualifier extends BugChecker
     }
     return deleteAnnotations(annotations);
   }
+
+  private static final MultiMatcher<ClassTree, AnnotationTree> HAS_JUKITO_RUNNER =
+      annotations(
+          AT_LEAST_ONE,
+          hasArgumentWithValue(
+              "value", isJUnit4TestRunnerOfType(ImmutableSet.of("org.jukito.JukitoRunner"))));
 
   private Description deleteAnnotations(ImmutableList<AnnotationTree> annotations) {
     return describeMatch(

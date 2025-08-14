@@ -273,4 +273,66 @@ public final class UnnecessaryQualifierTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void jukitoTestRunner_noFinding() {
+    helper
+        .addSourceLines(
+            "org/jukito/All.java",
+            """
+            package org.jukito;
+
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import javax.inject.Qualifier;
+
+            @Retention(RetentionPolicy.RUNTIME)
+            @Qualifier
+            public @interface All {}
+            """)
+        .addSourceLines(
+            "org/jukito/JukitoRunner.java",
+            """
+            package org.jukito;
+
+            import org.junit.runner.Runner;
+
+            public abstract class JukitoRunner extends Runner {}
+            """)
+        .addSourceLines(
+            "SubRunner.java",
+            """
+            import org.jukito.JukitoRunner;
+
+            public abstract class SubRunner extends JukitoRunner {}
+            """)
+        .addSourceLines(
+            "JukitoTest.java",
+            """
+            import org.jukito.All;
+            import org.jukito.JukitoRunner;
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+
+            @RunWith(JukitoRunner.class)
+            public class JukitoTest {
+              @Test
+              void test(@All int x) {}
+            }
+            """)
+        .addSourceLines(
+            "SubrunnerTest.java",
+            """
+            import org.jukito.All;
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+
+            @RunWith(SubRunner.class)
+            public class SubrunnerTest {
+              @Test
+              void test(@All int x) {}
+            }
+            """)
+        .doTest();
+  }
 }
