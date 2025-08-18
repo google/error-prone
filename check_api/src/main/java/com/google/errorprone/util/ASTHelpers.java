@@ -2007,9 +2007,23 @@ public class ASTHelpers {
     return method.getModifiers().contains(Modifier.ABSTRACT);
   }
 
-  public static EnumSet<Flags.Flag> asFlagSet(long flags) {
+  /**
+   * Returns a set of strings representing the flags in the given long. This uses the bit encoding
+   * from {@link Flags}.
+   *
+   * @return a set of strings representing the flags in the given long, in lowercase. Elements of
+   *     the set are strings like "static" or "final".
+   */
+  public static ImmutableSet<String> asFlagSet(long flags) {
     flags &= ~(Flags.ANONCONSTR_BASED | POTENTIALLY_AMBIGUOUS);
-    return Flags.asFlagSet(flags);
+    // The cast to EnumSet<?> is because Flags.asFlagSet() returns an EnumSet<Flags.Flag> in some
+    // versions of JDK, and an EnumSet<FlagsEnum> in others. Without the cast, whichever enum type
+    // it is gets referenced by the stream, so the code won't work if compiled with a JDK that has
+    // the change and executed with one that doesn't, or vice versa. Erasure means that the call to
+    // Flags.asFlagSet doesn't itself cause problems because EnumSet<Flags.Flag> gets erased to just
+    // EnumSet in the bytecode.
+    return ((EnumSet<?>) Flags.asFlagSet(flags))
+        .stream().map(Object::toString).collect(toImmutableSet());
   }
 
   // Removed in JDK 21 by JDK-8026369

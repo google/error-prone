@@ -42,8 +42,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.code.Flags.Flag;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
@@ -202,14 +200,12 @@ public final class EmptySetMultibindingContributions extends BugChecker
       }
     }
 
-    EnumSet<Flag> methodFlags = ASTHelpers.asFlagSet(modifiers.flags);
-    methodFlags.remove(Flags.Flag.STATIC);
-    methodFlags.remove(Flags.Flag.FINAL);
-    methodFlags.add(Flags.Flag.ABSTRACT);
+    Set<String> methodFlags = new LinkedHashSet<>(ASTHelpers.asFlagSet(modifiers.flags));
+    methodFlags.remove("static");
+    methodFlags.remove("final");
+    methodFlags.add("abstract");
 
-    for (Flag flag : methodFlags) {
-      modifierStringsBuilder.add(flag.toString());
-    }
+    modifierStringsBuilder.addAll(methodFlags);
 
     return Joiner.on(' ').join(modifierStringsBuilder.build());
   }
@@ -222,12 +218,11 @@ public final class EmptySetMultibindingContributions extends BugChecker
       classModifierStringsBuilder.add(state.getSourceForNode(annotation));
     }
 
-    EnumSet<Flag> classFlags = ASTHelpers.asFlagSet(enclosingClassModifiers.flags);
-    classFlags.remove(Flags.Flag.FINAL);
-    classFlags.add(Flags.Flag.ABSTRACT);
-    for (Flag flag : classFlags) {
-      classModifierStringsBuilder.add(flag.toString());
-    }
+    Set<String> classFlags =
+        new LinkedHashSet<>(ASTHelpers.asFlagSet(enclosingClassModifiers.flags));
+    classFlags.remove("final");
+    classFlags.add("abstract");
+    classModifierStringsBuilder.addAll(classFlags);
 
     return Joiner.on(' ').join(classModifierStringsBuilder.build());
   }
