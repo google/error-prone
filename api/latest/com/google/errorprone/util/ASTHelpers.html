@@ -246,9 +246,11 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Determines which of a set of annotations are present on a symbol.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/EnumSet.html" title="class or interface in java.util" class="external-link">EnumSet</a><wbr>&lt;com.sun.tools.javac.code.Flags.Flag&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#asFlagSet(long)" class="member-name-link">asFlagSet</a><wbr>(long&nbsp;flags)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a set of strings representing the flags in the given long.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#canBeRemoved(com.sun.tools.javac.code.Symbol.ClassSymbol)" class="member-name-link">canBeRemoved</a><wbr>(com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;symbol)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -2151,7 +2153,14 @@ does <i>not</i> have a super-method (i.e., it is not an <code>@Override</code>).
 <section class="detail" id="asFlagSet(long)">
 <h3>asFlagSet</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/EnumSet.html" title="class or interface in java.util" class="external-link">EnumSet</a>&lt;com.sun.tools.javac.code.Flags.Flag&gt;</span>&nbsp;<span class="element-name">asFlagSet</span><wbr><span class="parameters">(long&nbsp;flags)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">asFlagSet</span><wbr><span class="parameters">(long&nbsp;flags)</span></div>
+<div class="block">Returns a set of strings representing the flags in the given long. This uses the bit encoding
+from <code>Flags</code>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a set of strings representing the flags in the given long, in lowercase. Elements of
+    the set are strings like "static" or "final".</dd>
+</dl>
 </div>
 </section>
 </li>
