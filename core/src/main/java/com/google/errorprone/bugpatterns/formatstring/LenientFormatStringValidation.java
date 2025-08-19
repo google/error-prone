@@ -79,7 +79,11 @@ public final class LenientFormatStringValidation extends BugChecker
     String replacedNumericPlaceholders = string.replace("%d", "%s");
     var builder =
         buildDescription(tree)
-            .setMessage(format("Expected %s positional arguments, but saw %s", expected, actual));
+            .setMessage(
+                format(
+                    "Expected %s positional arguments, but saw %s. Note that lenient format strings"
+                        + " only support %%s placeholders.",
+                    expected, actual));
     if (occurrences(replacedNumericPlaceholders, "%s") == actual
         && formatStringArgument instanceof LiteralTree) {
       builder.addFix(
