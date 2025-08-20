@@ -492,6 +492,9 @@ Calling toString on a Stream does not provide useful information
 __[StringBuilderInitWithChar](bugpattern/StringBuilderInitWithChar)__<br>
 StringBuilder does not have a char constructor; this invokes the int constructor.
 
+__[StringJoin](bugpattern/StringJoin)__<br>
+String.join(CharSequence) performs no joining (it always returns the empty string); String.join(CharSequence, CharSequence) performs no joining (it just returns the 2nd parameter).
+
 __[SubstringOfZero](bugpattern/SubstringOfZero)__<br>
 String.substring(0) returns the original String
 
