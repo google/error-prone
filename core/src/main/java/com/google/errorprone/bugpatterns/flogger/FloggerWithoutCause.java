@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.flogger;
 
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 
 import com.google.common.collect.Lists;
 import com.google.errorprone.BugPattern;
@@ -29,9 +30,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Type;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
 
@@ -61,19 +60,7 @@ public class FloggerWithoutCause extends BugChecker
       return Description.NO_MATCH;
     }
 
-    AtomicBoolean withCause = new AtomicBoolean(false);
-    tree.accept(
-        new TreeScanner<Void, Void>() {
-          @Override
-          public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-            if (WITH_CAUSE.matches(tree, state)) {
-              withCause.set(true);
-            }
-            return super.visitMethodInvocation(tree, null);
-          }
-        },
-        null);
-    if (withCause.get()) {
+    if (streamReceivers(tree).anyMatch(receiver -> WITH_CAUSE.matches(receiver, state))) {
       return Description.NO_MATCH;
     }
 
