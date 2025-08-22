@@ -385,7 +385,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
               // In principle, this search could be terminated after checking up through `caseTree`
               // (inclusive) because naming conflicts after that would have caused compile-time
               // errors.  For simplicity, the search is not restricted.
-              .filter(symbol -> declaresAnotherVariableNamed(symbol, cases))
+              .filter(symbol -> declaresAnotherVariableNamed(symbol, switchTree))
               .findAny()
               .isPresent();
       if (hasNamingConflict) {
@@ -568,27 +568,26 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * Determines whether the switch statement has a case that declares a local variable with the same
    * name as the supplied {@code symbol}.
    */
-  private static boolean declaresAnotherVariableNamed(
-      VarSymbol symbol, List<? extends CaseTree> cases) {
-
-    Set<VarSymbol> nameConflicts = new HashSet<>();
-    for (CaseTree caseTree : cases) {
-      new TreeScanner<Void, Void>() {
-        @Override
-        public Void visitVariable(VariableTree variableTree, Void unused) {
-          // If the variable is named the same as the symbol, but it's not the original declaration
-          // of the symbol, then there's a name conflict.
-          if (variableTree.getName().contentEquals(symbol.name.toString())) {
-            VarSymbol thisVarSymbol = ASTHelpers.getSymbol(variableTree);
-            if (!thisVarSymbol.equals(symbol)) {
-              nameConflicts.add(thisVarSymbol);
-            }
+  private static boolean declaresAnotherVariableNamed(VarSymbol symbol, SwitchTree switchTree) {
+    return new TreeScanner<Boolean, Void>() {
+      @Override
+      public Boolean visitVariable(VariableTree variableTree, Void unused) {
+        // If the variable is named the same as the symbol, but it's not the original declaration
+        // of the symbol, then there's a name conflict.
+        if (variableTree.getName().contentEquals(symbol.name.toString())) {
+          VarSymbol thisVarSymbol = ASTHelpers.getSymbol(variableTree);
+          if (!thisVarSymbol.equals(symbol)) {
+            return true;
           }
-          return super.visitVariable(variableTree, null);
         }
-      }.scan(caseTree, null);
-    }
-    return !nameConflicts.isEmpty();
+        return super.visitVariable(variableTree, null);
+      }
+
+      @Override
+      public Boolean reduce(@Nullable Boolean left, @Nullable Boolean right) {
+        return Objects.equals(left, true) || Objects.equals(right, true);
+      }
+    }.scan(switchTree, null);
   }
 
   /**
