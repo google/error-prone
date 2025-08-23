@@ -32,7 +32,6 @@ import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
-import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.google.errorprone.annotations.ThreadSafe;
 import com.google.errorprone.annotations.ThreadSafeTypeParameter;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
@@ -95,10 +94,7 @@ public final class ThreadSafety {
             .knownTypes(wellKnownThreadSafety)
             .markerAnnotations(ImmutableSet.of(ThreadSafe.class.getName()))
             .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()))
-            .typeParameterAnnotation(
-                ImmutableSet.of(
-                    ThreadSafeTypeParameter.class.getName(),
-                    ImmutableTypeParameter.class.getName()));
+            .typeParameterAnnotation(ImmutableSet.of(ThreadSafeTypeParameter.class.getName()));
     return builder;
   }
 

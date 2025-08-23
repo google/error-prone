@@ -1354,23 +1354,6 @@ class Test {
   }
 
   @Test
-  public void immutableTypeParam_alsoThreadSafe() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            """
-            import com.google.errorprone.annotations.ThreadSafe;
-            import com.google.errorprone.annotations.ImmutableTypeParameter;
-
-            @ThreadSafe
-            class Test<@ImmutableTypeParameter T> {
-              final T t = null;
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
   public void threadSafeTypeParameterInstantiation() {
     compilationHelper
         .addSourceLines(
