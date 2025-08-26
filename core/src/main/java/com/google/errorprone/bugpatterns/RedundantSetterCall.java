@@ -16,8 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.Ascii.toUpperCase;
 import static com.google.common.base.CaseFormat.UPPER_CAMEL;
 import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.VisitorState.memoize;
@@ -39,10 +41,12 @@ import static java.util.stream.Collectors.joining;
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -105,16 +109,29 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
                       (ExpressionTree) state.getPath().getParentPath().getParentPath().getLeaf(),
                       state)));
 
+  private final boolean improvements;
+  private final boolean matchLiteProtos;
+
   @Inject
-  RedundantSetterCall() {}
+  RedundantSetterCall(ErrorProneFlags flags) {
+    this.improvements = flags.getBoolean("RedundantSetterCall:Improvements").orElse(true);
+    this.matchLiteProtos = flags.getBoolean("OneOfChecks:MatchLiteProtos").orElse(true);
+  }
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!TERMINAL_FLUENT_SETTER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
+
+    var owner = getUpperBound(getType(tree), state.getTypes()).tsym.owner;
+    boolean isProto = owner != null && isSubtype(owner.type, MESSAGE_LITE.get(state), state);
+
     ListMultimap<Field, FieldWithValue> setters = ArrayListMultimap.create();
-    ImmutableMap<String, OneOfField> oneOfSetters = scanForOneOfSetters(getType(tree), state);
+    ImmutableMap<String, OneOfField> oneOfSetters =
+        isProto ? scanForOneOfSetters(owner, state) : ImmutableMap.of();
+    ImmutableSet<String> fieldNames = isProto ? getFields(owner) : ImmutableSet.of();
+
     Type type = ASTHelpers.getReturnType(tree);
     for (ExpressionTree current = tree;
         FLUENT_SETTER.matches(current, state);
@@ -132,6 +149,17 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
       // same type.
       if (methodName.endsWith("Builder")) {
         break;
+      }
+      if (improvements && isProto && methodName.startsWith("set")) {
+        String withoutSet = methodName.replaceFirst("^set", "");
+        if (!fieldNames.contains(toUpperCase(withoutSet))) {
+          if (methodName.endsWith("Value")) {
+            methodName = methodName.replaceFirst("Value$", "");
+          }
+          if (methodName.endsWith("Bytes")) {
+            methodName = methodName.replaceFirst("Bytes$", "");
+          }
+        }
       }
       for (FieldType fieldType : FieldType.values()) {
         FieldWithValue match = fieldType.match(methodName, method, state);
@@ -158,13 +186,12 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     return Description.NO_MATCH;
   }
 
-  private ImmutableMap<String, OneOfField> scanForOneOfSetters(Type type, VisitorState state) {
-    var owner = getUpperBound(type, state.getTypes()).tsym.owner;
-    if (owner == null || isSubtype(owner.type, GENERATED_MESSAGE_LITE.get(state), state)) {
+  private ImmutableMap<String, OneOfField> scanForOneOfSetters(Symbol proto, VisitorState state) {
+    if (!matchLiteProtos && isSubtype(proto.type, GENERATED_MESSAGE_LITE.get(state), state)) {
       return ImmutableMap.of();
     }
     var builder = ImmutableMap.<String, OneOfField>builder();
-    for (Symbol element : getEnclosedElements(owner)) {
+    for (Symbol element : getEnclosedElements(proto)) {
       if (!ONE_OF_ENUM.apply(element.type, state)) {
         continue;
       }
@@ -179,8 +206,26 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     return builder.buildOrThrow();
   }
 
+  /**
+   * Returns all the field names in the proto in uppercase with all components concatenated.
+   *
+   * <p>This is an odd format, but it works to compare the existence of a field based on a getter,
+   * given both {@code foo_bar} and {@code fooBar} as field names generate a getter named {@code
+   * getFooBar} (so we normalise to {@code FOOBAR}).
+   */
+  private static ImmutableSet<String> getFields(Symbol proto) {
+    return getEnclosedElements(proto).stream()
+        .map(element -> element.getSimpleName().toString())
+        .filter(name -> name.endsWith("_FIELD_NUMBER"))
+        .map(name -> toUpperCase(name.replaceFirst("_FIELD_NUMBER$", "").replace("_", "")))
+        .collect(toImmutableSet());
+  }
+
   private static final Supplier<Type> GENERATED_MESSAGE_LITE =
       memoize(state -> state.getTypeFromString("com.google.protobuf.GeneratedMessageLite"));
+
+  private static final Supplier<Type> MESSAGE_LITE =
+      memoize(state -> state.getTypeFromString("com.google.protobuf.MessageLite"));
 
   private Description describe(
       Field field, Collection<FieldWithValue> locations, VisitorState state) {

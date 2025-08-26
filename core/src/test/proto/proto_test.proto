@@ -33,6 +33,8 @@ message TestProtoMessage {
   /* Named ending in "builder" to check the Java builder API */
   optional TestFieldProtoMessage foo_builder = 6;
 
+  optional string string_field = 7;
+
   extensions 100 to 199;
 }
 
@@ -41,11 +43,21 @@ message TestOneOfMessage {
     string foo = 1;
     string bar = 2;
     string baz = 3;
+    TestEnum enum_field = 6;
   }
   oneof AnotherOneOf {
     string quux = 4;
     string frobber = 5;
   }
+}
+
+message TestProtoWithConfusingNames {
+  optional TestEnum foo = 1;
+  optional int32 foo_value = 2;
+
+  // Fields that both collide, and are named in camelcase.
+  optional TestEnum barField = 3;
+  optional int32 barFieldValue = 4;
 }
 
 message TestMessageContainingOneOfMessage {
