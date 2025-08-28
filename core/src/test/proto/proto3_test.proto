@@ -31,3 +31,10 @@ enum TestProto3Enum {
   VALUE_1 = 1;
   VALUE_2 = 2;
 }
+
+message TestProto3WithOneof {
+  oneof foo {
+    TestProto3Enum enum_field = 1;
+    string string_field = 2;
+  }
+}
