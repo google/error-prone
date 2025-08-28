@@ -18,12 +18,14 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.util.ASTHelpers.enumValues;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.google.errorprone.util.Reachability.canFallThrough;
@@ -31,6 +33,7 @@ import static com.google.errorprone.util.Reachability.canFallThrough;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
@@ -38,6 +41,7 @@ import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -45,6 +49,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Type;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -60,10 +65,12 @@ public final class WrongOneof extends BugChecker
       isDescendantOf("com.google.protobuf.AbstractMessageLite.InternalOneOfEnum");
 
   private final ConstantExpressions constantExpressions;
+  private final boolean matchLiteProtos;
 
   @Inject
-  WrongOneof(ConstantExpressions constantExpressions) {
+  WrongOneof(ConstantExpressions constantExpressions, ErrorProneFlags flags) {
     this.constantExpressions = constantExpressions;
+    this.matchLiteProtos = flags.getBoolean("OneOfChecks:MatchLiteProtos").orElse(true);
   }
 
   @Override
@@ -103,6 +110,12 @@ public final class WrongOneof extends BugChecker
         enumValues(getType(expression).tsym).stream()
             .map(WrongOneof::getter)
             .collect(toImmutableSet());
+
+    if (!matchLiteProtos
+        && isSubtype(
+            getType(expression).tsym.owner.type, GENERATED_MESSAGE_LITE.get(state), state)) {
+      return;
+    }
 
     // Keep track of which getters might be set.
     Set<String> allowableGetters = new HashSet<>();
@@ -165,4 +178,7 @@ public final class WrongOneof extends BugChecker
   private static String getter(String enumCase) {
     return "get" + CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, enumCase);
   }
+
+  private static final Supplier<Type> GENERATED_MESSAGE_LITE =
+      memoize(state -> state.getTypeFromString("com.google.protobuf.GeneratedMessageLite"));
 }
