@@ -731,4 +731,62 @@ class Test implements Serializable {
             """)
         .doTest();
   }
+
+  @Test
+  public void guiceProvidesMethod_madeStatic() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Provides;
+
+            class MadeStatic extends AbstractModule {
+              @Provides
+              Boolean provideBoolean() {
+                return false;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Provides;
+
+            class MadeStatic extends AbstractModule {
+              @Provides
+              static Boolean provideBoolean() {
+                return false;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void guiceProvidesMethod_withInstanceState_cannotBeMadeStatic() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.inject.AbstractModule;
+            import com.google.inject.Provides;
+
+            class Test extends AbstractModule {
+
+              private final int value;
+
+              public Test(int value) {
+                this.value = value;
+              }
+
+              @Provides
+              int provideInteger() {
+                return value;
+              }
+            }
+            """)
+        .doTest();
+  }
 }

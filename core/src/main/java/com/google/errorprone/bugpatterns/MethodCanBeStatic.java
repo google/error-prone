@@ -68,6 +68,10 @@ import javax.lang.model.element.Modifier;
     severity = SUGGESTION,
     documentSuppression = false)
 public class MethodCanBeStatic extends BugChecker implements CompilationUnitTreeMatcher {
+
+  private static final ImmutableSet<String> GUICE_PROVIDES_ANNOTATION_NAMES =
+      ImmutableSet.of("com.google.inject.Provides");
+
   private final FindingOutputStyle findingOutputStyle;
 
   private final WellKnownKeep wellKnownKeep;
@@ -249,9 +253,17 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
     if (sym.isConstructor() || !disjoint(EXCLUDED_MODIFIERS, sym.getModifiers())) {
       return true;
     }
-    if (!ASTHelpers.canBeRemoved(sym, state) || wellKnownKeep.shouldKeep(tree)) {
-      return true;
+
+    boolean isGuiceProvidesMethod =
+        GUICE_PROVIDES_ANNOTATION_NAMES.stream()
+            .anyMatch(annotationName -> ASTHelpers.hasDirectAnnotation(sym, annotationName));
+
+    if (!isGuiceProvidesMethod) {
+      if (!ASTHelpers.canBeRemoved(sym, state) || wellKnownKeep.shouldKeep(tree)) {
+        return true;
+      }
     }
+
     switch (enclosingClass(sym).getNestingKind()) {
       case TOP_LEVEL -> {}
       case MEMBER -> {
