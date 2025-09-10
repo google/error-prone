@@ -17,6 +17,7 @@
 package com.google.errorprone.matchers;
 
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.sun.source.tree.MethodInvocationTree;
@@ -29,7 +30,7 @@ public final class WaitMatchers {
   private static final String CONDITION_FQN = "java.util.concurrent.locks.Condition";
 
   /** Matches any wait/await method. */
-  public static final Matcher<MethodInvocationTree> waitMethod =
+  public static final Matcher<MethodInvocationTree> WAIT_METHOD =
       anyOf(
           instanceMethod().onExactClass(OBJECT_FQN).named("wait"),
           instanceMethod()
@@ -37,7 +38,7 @@ public final class WaitMatchers {
               .withNameMatching(Pattern.compile("await.*")));
 
   /** Matches wait/await methods that have a timeout. */
-  public static final Matcher<MethodInvocationTree> waitMethodWithTimeout =
+  public static final Matcher<MethodInvocationTree> WAIT_METHOD_WITH_TIMEOUT =
       anyOf(
           instanceMethod().onExactClass(OBJECT_FQN).named("wait").withParameters("long"),
           instanceMethod().onExactClass(OBJECT_FQN).named("wait").withParameters("long", "int"),
@@ -46,7 +47,8 @@ public final class WaitMatchers {
               .named("await")
               .withParameters("long", "java.util.concurrent.TimeUnit"),
           instanceMethod().onDescendantOf(CONDITION_FQN).named("awaitNanos"),
-          instanceMethod().onDescendantOf(CONDITION_FQN).named("awaitUntil"));
+          instanceMethod().onDescendantOf(CONDITION_FQN).named("awaitUntil"),
+          staticMethod().onClass("com.google.common.time.Durations").named("wait"));
 
   private WaitMatchers() {}
 }
