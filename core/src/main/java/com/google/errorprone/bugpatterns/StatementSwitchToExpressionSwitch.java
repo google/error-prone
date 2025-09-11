@@ -160,6 +160,20 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     SOME_OR_ALL_CASES_DONT_QUALIFY
   }
 
+  /**
+   * The kind of null/default cases included within a single CaseTree.
+   *
+   * <p>This enum is used to classify whether a CaseTree includes a null and/or default. Referencing
+   * JLS 21 §14.11.1, the `SwitchLabel:` production has specific rules applicable to null/default
+   * cases: `case null, [default]` and `default`. All other scenarios are lumped into KIND_NEITHER.
+   */
+  enum NullDefaultKind {
+    KIND_NULL_AND_DEFAULT,
+    KIND_DEFAULT,
+    KIND_NULL,
+    KIND_NEITHER
+  }
+
   private final boolean enableDirectConversion;
   private final boolean enableReturnSwitchConversion;
   private final boolean enableAssignmentSwitchConversion;
@@ -167,7 +181,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   @Inject
   StatementSwitchToExpressionSwitch(ErrorProneFlags flags) {
     this.enableDirectConversion =
-        flags.getBoolean("StatementSwitchToExpressionSwitch:EnableDirectConversion").orElse(true);
+        true
+            || flags
+                .getBoolean("StatementSwitchToExpressionSwitch:EnableDirectConversion")
+                .orElse(true);
     this.enableReturnSwitchConversion =
         flags
             .getBoolean("StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion")
@@ -293,12 +310,15 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         // Case patterns are not currently supported by the checker.
         return DEFAULT_ANALYSIS_RESULT;
       }
-      boolean isDefaultCase = caseTree.getExpressions().isEmpty();
+
+      NullDefaultKind nullDefaultKind = analyzeCaseForNullAndDefault(caseTree);
+      boolean isDefaultCase =
+          nullDefaultKind.equals(NullDefaultKind.KIND_DEFAULT)
+              || nullDefaultKind.equals(NullDefaultKind.KIND_NULL_AND_DEFAULT);
       isNullCase.set(
           caseIndex,
-          !isDefaultCase
-              && caseTree.getExpressions().stream()
-                  .anyMatch(expressionTree -> expressionTree.getKind() == Kind.NULL_LITERAL));
+          nullDefaultKind.equals(NullDefaultKind.KIND_NULL)
+              || nullDefaultKind.equals(NullDefaultKind.KIND_NULL_AND_DEFAULT));
       hasDefaultCase |= isDefaultCase;
 
       // Null case can never be grouped with a preceding case
@@ -604,6 +624,24 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     JCAssignOp jcAssignOp = (JCAssignOp) tree;
     Pretty pretty = new Pretty(new StringWriter(), /* sourceOutput= */ true);
     return pretty.operatorName(jcAssignOp.getTag().noAssignOp()) + EQUALS_STRING;
+  }
+
+  /**
+   * Renders the Java source prefix needed for the supplied {@code nullDefaultKind} into the {@code
+   * replacementCodeBuilder}, incorporating whether the `default` case should be removed.
+   */
+  private static void renderNullDefaultKindPrefix(
+      StringBuilder replacementCodeBuilder,
+      NullDefaultKind nullDefaultKind,
+      boolean removeDefault) {
+
+    switch (nullDefaultKind) {
+      case KIND_NULL_AND_DEFAULT ->
+          replacementCodeBuilder.append(removeDefault ? "case null" : "case null, default");
+      case KIND_NULL -> replacementCodeBuilder.append("case null");
+      case KIND_DEFAULT -> replacementCodeBuilder.append(removeDefault ? "" : "default");
+      case KIND_NEITHER -> replacementCodeBuilder.append("case ");
+    }
   }
 
   /**
@@ -951,10 +989,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     boolean firstCaseInGroup = true;
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
-      boolean isDefaultCase = isSwitchDefault(caseTree);
+      NullDefaultKind nullDefaultKind = analyzeCaseForNullAndDefault(caseTree);
 
-      if (removeDefault && isDefaultCase) {
-        // Skip default case
+      if (removeDefault && nullDefaultKind.equals(NullDefaultKind.KIND_DEFAULT)) {
+        // Skip removed default (and its code) entirely
         continue;
       }
 
@@ -972,13 +1010,17 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
                     : "");
 
         replacementCodeBuilder.append("\n  ");
-        if (!isDefaultCase) {
-          replacementCodeBuilder.append("case ");
+        renderNullDefaultKindPrefix(replacementCodeBuilder, nullDefaultKind, removeDefault);
+      } else {
+        // Second or later case in our group
+        if (nullDefaultKind.equals(NullDefaultKind.KIND_DEFAULT)) {
+          replacementCodeBuilder.append("default");
         }
       }
-      replacementCodeBuilder.append(
-          isDefaultCase ? "default" : printCaseExpressions(caseTree, state));
 
+      if (nullDefaultKind.equals(NullDefaultKind.KIND_NEITHER)) {
+        replacementCodeBuilder.append(printCaseExpressions(caseTree, state));
+      }
       Optional<String> commentsAfterCaseOptional =
           extractCommentsAfterCase(switchTree, allSwitchComments, state, caseIndex);
       if (analysisResult.groupedWithNextCase().get(caseIndex)) {
@@ -1095,9 +1137,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     boolean firstCaseInGroup = true;
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
-      boolean isDefaultCase = isSwitchDefault(caseTree);
-      if (removeDefault && isDefaultCase) {
-        // Skip default case
+      NullDefaultKind nullDefaultKind = analyzeCaseForNullAndDefault(caseTree);
+      if (removeDefault && nullDefaultKind.equals(NullDefaultKind.KIND_DEFAULT)) {
+        // Skip removed default (and its code) entirely
         continue;
       }
 
@@ -1112,12 +1154,17 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
                     : "");
 
         replacementCodeBuilder.append("\n  ");
-        if (!isDefaultCase) {
-          replacementCodeBuilder.append("case ");
+        renderNullDefaultKindPrefix(replacementCodeBuilder, nullDefaultKind, removeDefault);
+      } else {
+        // Second or later case in our group
+        if (nullDefaultKind.equals(NullDefaultKind.KIND_DEFAULT)) {
+          replacementCodeBuilder.append("default");
         }
       }
-      replacementCodeBuilder.append(
-          isDefaultCase ? "default" : printCaseExpressions(caseTree, state));
+
+      if (nullDefaultKind.equals(NullDefaultKind.KIND_NEITHER)) {
+        replacementCodeBuilder.append(printCaseExpressions(caseTree, state));
+      }
 
       Optional<String> commentsAfterCaseOptional =
           extractCommentsAfterCase(switchTree, allSwitchComments, state, caseIndex);
@@ -1323,9 +1370,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     boolean firstCaseInGroup = true;
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
-      boolean isDefaultCase = isSwitchDefault(caseTree);
-      if (removeDefault && isDefaultCase) {
-        // Remove `default:` case (and its code, if any) from the SuggestedFix
+      NullDefaultKind nullDefaultKind = analyzeCaseForNullAndDefault(caseTree);
+
+      if (removeDefault && nullDefaultKind.equals(NullDefaultKind.KIND_DEFAULT)) {
+        // Skip removed default (and its code) entirely
         continue;
       }
       ImmutableList<StatementTree> filteredStatements = filterOutRedundantBreak(caseTree);
@@ -1341,12 +1389,17 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
                     : "");
 
         replacementCodeBuilder.append("\n  ");
-        if (!isDefaultCase) {
-          replacementCodeBuilder.append("case ");
+        renderNullDefaultKindPrefix(replacementCodeBuilder, nullDefaultKind, removeDefault);
+      } else {
+        // Second or later case in our group
+        if (nullDefaultKind.equals(NullDefaultKind.KIND_DEFAULT)) {
+          replacementCodeBuilder.append("default");
         }
       }
-      replacementCodeBuilder.append(
-          isDefaultCase ? "default" : printCaseExpressions(caseTree, state));
+
+      if (nullDefaultKind.equals(NullDefaultKind.KIND_NEITHER)) {
+        replacementCodeBuilder.append(printCaseExpressions(caseTree, state));
+      }
 
       Optional<String> commentsAfterCaseOptional =
           extractCommentsAfterCase(switchTree, allSwitchComments, state, caseIndex);
@@ -1776,6 +1829,26 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
 
     return transformedBlockBuilder.toString();
+  }
+
+  /**
+   * Determines whether the supplied {@code caseTree} case contains `case null` and/or `default`.
+   */
+  private static NullDefaultKind analyzeCaseForNullAndDefault(CaseTree caseTree) {
+    boolean hasDefault = isSwitchDefault(caseTree);
+    boolean hasNull =
+        caseTree.getExpressions().stream()
+            .anyMatch(expression -> expression.getKind().equals(Tree.Kind.NULL_LITERAL));
+
+    if (hasNull && hasDefault) {
+      return NullDefaultKind.KIND_NULL_AND_DEFAULT;
+    } else if (hasNull) {
+      return NullDefaultKind.KIND_NULL;
+    } else if (hasDefault) {
+      return NullDefaultKind.KIND_DEFAULT;
+    }
+
+    return NullDefaultKind.KIND_NEITHER;
   }
 
   @AutoValue
