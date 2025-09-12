@@ -110,10 +110,12 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
                       state)));
 
   private final boolean improvements;
+  private final boolean matchLiteProtos;
 
   @Inject
   RedundantSetterCall(ErrorProneFlags flags) {
     this.improvements = flags.getBoolean("RedundantSetterCall:Improvements").orElse(true);
+    this.matchLiteProtos = flags.getBoolean("OneOfChecks:MatchLiteProtos").orElse(true);
   }
 
   @Override
@@ -127,7 +129,7 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
 
     ListMultimap<Field, FieldWithValue> setters = ArrayListMultimap.create();
     ImmutableMap<String, OneOfField> oneOfSetters =
-        isProto ? scanForOneOfSetters(getType(tree), state) : ImmutableMap.of();
+        isProto ? scanForOneOfSetters(owner, state) : ImmutableMap.of();
     ImmutableSet<String> fieldNames = isProto ? getFields(owner) : ImmutableSet.of();
 
     Type type = ASTHelpers.getReturnType(tree);
@@ -184,14 +186,12 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     return Description.NO_MATCH;
   }
 
-  private static ImmutableMap<String, OneOfField> scanForOneOfSetters(
-      Type type, VisitorState state) {
-    var owner = getUpperBound(type, state.getTypes()).tsym.owner;
-    if (owner == null || isSubtype(owner.type, GENERATED_MESSAGE_LITE.get(state), state)) {
+  private ImmutableMap<String, OneOfField> scanForOneOfSetters(Symbol proto, VisitorState state) {
+    if (!matchLiteProtos && isSubtype(proto.type, GENERATED_MESSAGE_LITE.get(state), state)) {
       return ImmutableMap.of();
     }
     var builder = ImmutableMap.<String, OneOfField>builder();
-    for (Symbol element : getEnclosedElements(owner)) {
+    for (Symbol element : getEnclosedElements(proto)) {
       if (!ONE_OF_ENUM.apply(element.type, state)) {
         continue;
       }
