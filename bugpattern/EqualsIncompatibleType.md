@@ -161,9 +161,9 @@ if (set.contains(hi)) {
 }
 ```
 
-[equalstester]: https://static.javadoc.io/com.google.guava/guava-testlib/19.0/com/google/common/testing/EqualsTester.html
-[objeq]: https://docs.oracle.com/javase/7/docs/api/java/lang/Object.html#equals(java.lang.Object)
-[av]: https://github.com/google/auto/blob/master/value/userguide/index.md
+[equalstester]: https://www.javadoc.io/doc/com.google.guava/guava-testlib/latest/com/google/common/testing/EqualsTester.html
+[objeq]: https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)
+[av]: https://github.com/google/auto/blob/main/value/userguide/index.md
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("EqualsIncompatibleType")` to the enclosing element.
