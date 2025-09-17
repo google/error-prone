@@ -1569,6 +1569,9 @@ equals() implementation may throw NullPointerException when given null
 __[ExpectedExceptionChecker](bugpattern/ExpectedExceptionChecker)__<br>
 Prefer assertThrows to ExpectedException
 
+__[ExplicitArrayForVarargs](bugpattern/ExplicitArrayForVarargs)__<br>
+Avoid explicit array creation for varargs
+
 __[FloggerLogWithCause](bugpattern/FloggerLogWithCause)__<br>
 Setting the caught exception as the cause of the log message may provide more context for anyone debugging errors.
 
