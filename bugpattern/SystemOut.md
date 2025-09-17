@@ -1,7 +1,7 @@
 ---
 title: SystemOut
-summary: Printing to standard output should only be used for debugging, not in production
-  code
+summary: Production code should not print to standard out or standard error. Standard
+  out and standard error should only be used for debugging.
 layout: bugpattern
 tags: LikelyError
 severity: WARNING

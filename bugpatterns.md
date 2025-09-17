@@ -1666,7 +1666,7 @@ __[SuppressWarningsWithoutExplanation](bugpattern/SuppressWarningsWithoutExplana
 Use of @SuppressWarnings should be accompanied by a comment describing why the warning is safe to ignore.
 
 __[SystemOut](bugpattern/SystemOut)__<br>
-Printing to standard output should only be used for debugging, not in production code
+Production code should not print to standard out or standard error. Standard out and standard error should only be used for debugging.
 
 __[ThrowSpecificExceptions](bugpattern/ThrowSpecificExceptions)__<br>
 Base exception classes should be treated as abstract. If the exception is intended to be caught, throw a domain-specific exception. Otherwise, prefer a more specific exception for clarity. Common alternatives include: AssertionError, IllegalArgumentException, IllegalStateException, and (Guava&#39;s) VerifyException.
