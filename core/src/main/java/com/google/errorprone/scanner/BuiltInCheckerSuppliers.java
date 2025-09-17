@@ -143,6 +143,7 @@ import com.google.errorprone.bugpatterns.ErroneousBitwiseExpression;
 import com.google.errorprone.bugpatterns.ErroneousThreadPoolConstructorChecker;
 import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
 import com.google.errorprone.bugpatterns.ExpensiveLenientFormatString;
+import com.google.errorprone.bugpatterns.ExplicitArrayForVarargs;
 import com.google.errorprone.bugpatterns.ExtendingJUnitAssert;
 import com.google.errorprone.bugpatterns.ExtendsAutoValue;
 import com.google.errorprone.bugpatterns.FallThrough;
@@ -1212,6 +1213,7 @@ public class BuiltInCheckerSuppliers {
           EqualsBrokenForNull.class,
           EqualsMissingNullable.class,
           ExpectedExceptionChecker.class,
+          ExplicitArrayForVarargs.class,
           ExtendsAutoValue.class,
           FieldCanBeFinal.class,
           FieldCanBeLocal.class,
