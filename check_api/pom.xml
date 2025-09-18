@@ -178,7 +178,7 @@
             <id>default-compile</id>
             <configuration>
               <jdkToolchain>
-                <version>17</version>
+                <version>21</version>
               </jdkToolchain>
             </configuration>
           </execution>
