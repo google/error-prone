@@ -117,22 +117,15 @@ public final class FindIdentifiers {
     }
   }
 
-  // Signature was changed in Java 13: https://bugs.openjdk.java.net/browse/JDK-8223305
   private static Symbol findIdent(
       String name, VisitorState state, KindSelector kind, Env<AttrContext> env)
       throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-    if (Runtime.version().feature() >= 13) {
-      Method method =
-          Resolve.class.getDeclaredMethod(
-              "findIdent", DiagnosticPosition.class, Env.class, Name.class, KindSelector.class);
-      method.setAccessible(true);
-      return (Symbol)
-          method.invoke(Resolve.instance(state.context), null, env, state.getName(name), kind);
-    }
     Method method =
-        Resolve.class.getDeclaredMethod("findIdent", Env.class, Name.class, KindSelector.class);
+        Resolve.class.getDeclaredMethod(
+            "findIdent", DiagnosticPosition.class, Env.class, Name.class, KindSelector.class);
     method.setAccessible(true);
-    return (Symbol) method.invoke(Resolve.instance(state.context), env, state.getName(name), kind);
+    return (Symbol)
+        method.invoke(Resolve.instance(state.context), null, env, state.getName(name), kind);
   }
 
   private static @Nullable ClassTree getEnclosingClass(TreePath treePath) {

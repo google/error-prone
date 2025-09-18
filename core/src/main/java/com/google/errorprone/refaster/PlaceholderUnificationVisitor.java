@@ -29,7 +29,6 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CaseTree;
-import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
@@ -652,43 +651,20 @@ abstract class PlaceholderUnificationVisitor
 
   @Override
   public Choice<State<JCCase>> visitCase(CaseTree node, State<?> state) {
-    if (Runtime.version().feature() >= 21) {
-      return chooseSubtrees(
-          state,
-          s -> unify(node.getLabels(), s),
-          s -> unifyExpression(node.getGuard(), s),
-          s -> unifyStatements(node.getStatements(), s),
-          s -> unify(node.getBody(), s),
-          (labels, guard, stmts, body) ->
-              maker()
-                  .Case(
-                      node.getCaseKind(),
-                      List.convert(JCCaseLabel.class, labels),
-                      guard,
-                      stmts,
-                      body));
-    } else {
-      return chooseSubtrees(
-          state,
-          s -> unify(node.getLabels(), s),
-          s -> unifyStatements(node.getStatements(), s),
-          s -> unify(node.getBody(), s),
-          (labels, stmts, body) -> {
-            try {
-              return (JCCase)
-                  TreeMaker.class
-                      .getMethod("Case", CaseKind.class, List.class, List.class, JCTree.class)
-                      .invoke(
-                          maker(),
-                          node.getCaseKind(),
-                          List.convert(JCCaseLabel.class, labels),
-                          stmts,
-                          body);
-            } catch (ReflectiveOperationException e) {
-              throw new LinkageError(e.getMessage(), e);
-            }
-          });
-    }
+    return chooseSubtrees(
+        state,
+        s -> unify(node.getLabels(), s),
+        s -> unifyExpression(node.getGuard(), s),
+        s -> unifyStatements(node.getStatements(), s),
+        s -> unify(node.getBody(), s),
+        (labels, guard, stmts, body) ->
+            maker()
+                .Case(
+                    node.getCaseKind(),
+                    List.convert(JCCaseLabel.class, labels),
+                    guard,
+                    stmts,
+                    body));
   }
 
   @Override

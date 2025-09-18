@@ -109,7 +109,6 @@ import com.sun.tools.javac.util.Position;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.lang.annotation.Target;
-import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.util.ArrayDeque;
@@ -498,15 +497,6 @@ public final class SuggestedFixes {
 
   private static int endPosition(
       DCTree.DCEndPosTree<?> node, DCTree.DCDocComment comment, DocTreePath docPath) {
-    try {
-      Method method = DCTree.DCEndPosTree.class.getMethod("getEndPos", DCTree.DCDocComment.class);
-      return (int) method.invoke(node, comment);
-    } catch (NoSuchMethodException e) {
-      // continue below
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
-
     JCDiagnostic.DiagnosticPosition pos = node.pos(comment);
     EndPosTable endPositions =
         ((JCCompilationUnit) docPath.getTreePath().getCompilationUnit()).endPositions;
