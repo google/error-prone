@@ -102,12 +102,6 @@ jobs:
     steps:
       - name: 'Check out repository'
         uses: actions/checkout@v4
-      - name: 'Set up JDK 26 from jdk.java.net'
-        uses: oracle-actions/setup-java@v1
-        with:
-          website: jdk.java.net
-          release: 26
-          cache: 'maven'
       - name: 'Set up JDK 25'
         uses: actions/setup-java@v4
         with:
@@ -140,12 +134,6 @@ jobs:
     steps:
       - name: 'Check out repository'
         uses: actions/checkout@v4
-      - name: 'Set up JDK 26 from jdk.java.net'
-        uses: oracle-actions/setup-java@v1
-        with:
-          website: jdk.java.net
-          release: 26
-          cache: 'maven'
       - name: 'Set up JDK 25'
         uses: actions/setup-java@v4
         with:
