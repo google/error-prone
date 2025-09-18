@@ -76,8 +76,8 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#CLASS" title="class or interface in java.lang.annotation" class="external-link">CLASS</a>)
-<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>)
+<div class="type-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Retention.html" title="class or interface in java.lang.annotation" class="external-link">@Retention</a>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#CLASS" title="class or interface in java.lang.annotation" class="external-link">CLASS</a>)
+<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Target.html" title="class or interface in java.lang.annotation" class="external-link">@Target</a>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html#METHOD" title="class or interface in java.lang.annotation" class="external-link">METHOD</a>)
 </span><span class="modifiers">public @interface </span><span class="element-name type-name-label">DoNotCall</span></div>
 <div class="block">Indicates that the annotated method should not be called under any normal circumstances, yet is
 either <i>impossible</i> to remove, or <i>should not</i> ever be removed. Example:
@@ -93,7 +93,7 @@ either <i>impossible</i> to remove, or <i>should not</i> ever be removed. Exampl
 By the demands of the <code>List</code> interface, this method can never be removed. However, since it
 should always throw an exception, there can be no valid reason to call it except in the rarest of
 circumstances. Although this information can only benefit users who have a reference of type
-<code>ImmutableList</code> (not <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link"><code>List</code></a>), it's a good start.
+<code>ImmutableList</code> (not <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link"><code>List</code></a>), it's a good start.
 
 <p>If the typical caller's best remedy is to "inline" the method, <a href="InlineMe.html" title="annotation interface in com.google.errorprone.annotations"><code>InlineMe</code></a> is probably a
 better option; read there for more information. Using both annotations together is probably
@@ -108,7 +108,7 @@ remove the method. It might create the impression of a "blemish" on your API; so
 should be fixed. Moreover, it's generally hard to enforce deprecation warnings as strongly as a
 <code>@DoNotCall</code> violation should be.
 
-<p>But, when choosing the <code>@DoNotCall</code> option, consider adding <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link"><code>Deprecated</code></a> as well
+<p>But, when choosing the <code>@DoNotCall</code> option, consider adding <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link"><code>Deprecated</code></a> as well
 anyway, so that any tools that don't support <code>@DoNotCall</code> can still do something reasonable
 to discourage usage. This practice does have some cost; for example, suppression would require
 <code>@SuppressWarnings({"DoNotCall", "deprecation"})</code>.
@@ -129,7 +129,7 @@ Error Prone supports this annotation via its <a href="https://errorprone.info/bu
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Optional Element</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="#value()" class="member-name-link">value</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">An optional explanation of why the method should not be called.</div>
@@ -150,7 +150,7 @@ Error Prone supports this annotation via its <a href="https://errorprone.info/bu
 <section class="detail" id="value()">
 <h3>value</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">value</span></div>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">value</span></div>
 <div class="block">An optional explanation of why the method should not be called.</div>
 <dl class="notes">
 <dt>Default:</dt>

@@ -216,10 +216,10 @@ loadScripts(document, 'script');</script>
     runtime exception. Instead, operate on <code>getSymbol(tree).getAnnotationMirrors()</code> to
     meta-syntactically inspect the annotation. Note that this method (and the <code>
     getSymbol</code>-based replacement suggested above) looks for annotations not just on the given
-    tree (such as a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a>) but also on the symbol referred to by the given tree
-    (such as on the <code>Symbol.MethodSymbol</code> that is being called by the given <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodInvocationTree</code></a>). If you want to examine annotations only on the given tree, then use
+    tree (such as a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a>) but also on the symbol referred to by the given tree
+    (such as on the <code>Symbol.MethodSymbol</code> that is being called by the given <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodInvocationTree</code></a>). If you want to examine annotations only on the given tree, then use
     <a href="com/google/errorprone/util/ASTHelpers.html#getAnnotations(com.sun.source.tree.Tree)"><code>ASTHelpers.getAnnotations(Tree)</code></a> (or a direct call to a <code>getAnnotations</code> method declared on a
-    specific <a href="https://docs.oracle.com/en/java/javase/17/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>Tree</code></a> subclass) instead.</div>
+    specific <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>Tree</code></a> subclass) instead.</div>
 </div>
 <div class="col-summary-item-name odd-row-color"><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class)">com.google.errorprone.util.ASTHelpers.getAnnotation<wbr>(Symbol, Class&lt;T&gt;)</a></div>
 <div class="col-last odd-row-color">

@@ -89,11 +89,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="DateChecker.html" title="class in com.google.errorprone.bugpatterns.time">DateChecker</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Warns against suspect looking calls to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Date.html" title="class or interface in java.util" class="external-link"><code>Date</code></a> APIs.</div>
+<div class="block">Warns against suspect looking calls to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Date.html" title="class or interface in java.util" class="external-link"><code>Date</code></a> APIs.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DurationFrom.html" title="class in com.google.errorprone.bugpatterns.time">DurationFrom</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Bans calls to <code>Duration.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Period.html" title="class or interface in java.time" class="external-link"><code>Period</code></a>.</div>
+<div class="block">Bans calls to <code>Duration.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Period.html" title="class or interface in java.time" class="external-link"><code>Period</code></a>.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="DurationGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">DurationGetTemporalUnit</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -102,8 +102,8 @@ SECONDS</code> or <code>NANOS</code>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DurationTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">DurationTemporalUnit</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Bans calls to <code>Duration</code> APIs where the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/TemporalUnit.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalUnit</code></a> is not
-<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/ChronoUnit.html#DAYS" title="class or interface in java.time.temporal" class="external-link"><code>ChronoUnit.DAYS</code></a> or it has an estimated duration (which is guaranteed to throw an <code>
+<div class="block">Bans calls to <code>Duration</code> APIs where the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/temporal/TemporalUnit.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalUnit</code></a> is not
+<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/temporal/ChronoUnit.html#DAYS" title="class or interface in java.time.temporal" class="external-link"><code>ChronoUnit.DAYS</code></a> or it has an estimated duration (which is guaranteed to throw an <code>
 DateTimeException</code>).</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="DurationToLongTimeUnit.html" title="class in com.google.errorprone.bugpatterns.time">DurationToLongTimeUnit</a></div>
@@ -122,14 +122,14 @@ which accepts a <code>&lt;long, TimeUnit&gt;</code> pair.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="InstantTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">InstantTemporalUnit</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Bans calls to <code>Instant</code> APIs where the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/TemporalUnit.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalUnit</code></a> is not one
+<div class="block">Bans calls to <code>Instant</code> APIs where the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/temporal/TemporalUnit.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalUnit</code></a> is not one
 of: <code>NANOS</code>, <code>MICROS</code>, <code>MILLIS</code>, <code>SECONDS</code>, <code>MINUTES</code>, <code>
 HOURS</code>, <code>HALF_DAYS</code>, or <code>DAYS</code>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="InvalidJavaTimeConstant.html" title="class in com.google.errorprone.bugpatterns.time">InvalidJavaTimeConstant</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">This checker errors on calls to <code>java.time</code> methods using values that are guaranteed to
-throw a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/DateTimeException.html" title="class or interface in java.time" class="external-link"><code>DateTimeException</code></a>.</div>
+throw a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/DateTimeException.html" title="class or interface in java.time" class="external-link"><code>DateTimeException</code></a>.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="JavaDurationGetSecondsGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaDurationGetSecondsGetNano</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
@@ -155,13 +155,13 @@ to <code>instant.getEpochSecond()</code>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JavaLocalDateTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalDateTimeGetNano</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">This checker warns about calls to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalDateTime.html#getNano()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getNano()</code></a> without a corresponding "nearby"
-call to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalDateTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getSecond()</code></a>.</div>
+<div class="block">This checker warns about calls to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/LocalDateTime.html#getNano()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getNano()</code></a> without a corresponding "nearby"
+call to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/LocalDateTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalDateTime.getSecond()</code></a>.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="JavaLocalTimeGetNano.html" title="class in com.google.errorprone.bugpatterns.time">JavaLocalTimeGetNano</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">This checker warns about calls to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalTime.html#getNano()" title="class or interface in java.time" class="external-link"><code>LocalTime.getNano()</code></a> without a corresponding "nearby" call
-to <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/LocalTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalTime.getSecond()</code></a>.</div>
+<div class="block">This checker warns about calls to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/LocalTime.html#getNano()" title="class or interface in java.time" class="external-link"><code>LocalTime.getNano()</code></a> without a corresponding "nearby" call
+to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/LocalTime.html#getSecond()" title="class or interface in java.time" class="external-link"><code>LocalTime.getSecond()</code></a>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="JavaPeriodGetDays.html" title="class in com.google.errorprone.bugpatterns.time">JavaPeriodGetDays</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -213,7 +213,7 @@ to <code>period.getYears(), period.getMonths(), or period.getTotalMonths()</code
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="LocalDateTemporalAmount.html" title="class in com.google.errorprone.bugpatterns.time">LocalDateTemporalAmount</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Bans calls to <code>LocalDate.plus(TemporalAmount)</code> and <code>LocalDate.minus(TemporalAmount)</code>
-where the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/temporal/TemporalAmount.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalAmount</code></a> is a non-zero <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
+where the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/temporal/TemporalAmount.html" title="class or interface in java.time.temporal" class="external-link"><code>TemporalAmount</code></a> is a non-zero <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="NearbyCallers.html" title="class in com.google.errorprone.bugpatterns.time">NearbyCallers</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -221,7 +221,7 @@ where the <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="PeriodFrom.html" title="class in com.google.errorprone.bugpatterns.time">PeriodFrom</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Bans calls to <code>Period.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
+<div class="block">Bans calls to <code>Period.from(temporalAmount)</code> where <code>temporalAmount</code> is a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link"><code>Duration</code></a>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PeriodGetTemporalUnit.html" title="class in com.google.errorprone.bugpatterns.time">PeriodGetTemporalUnit</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
@@ -269,7 +269,7 @@ throw an <code>UnsupportedTemporalTypeException</code>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ZoneIdOfZ.html" title="class in com.google.errorprone.bugpatterns.time">ZoneIdOfZ</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">This checker bans calls to <code>ZoneId.of("Z")</code> in favor of <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/time/ZoneOffset.html#UTC" title="class or interface in java.time" class="external-link"><code>ZoneOffset.UTC</code></a>.</div>
+<div class="block">This checker bans calls to <code>ZoneId.of("Z")</code> in favor of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/ZoneOffset.html#UTC" title="class or interface in java.time" class="external-link"><code>ZoneOffset.UTC</code></a>.</div>
 </div>
 </div>
 </div>
