@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -101,27 +99,6 @@ public class MultipleTopLevelClassesTest {
             class Test {}
             ;
             """)
-        .doTest();
-  }
-
-  @Test
-  public void semiInImportList() {
-    assume().that(Runtime.version().feature()).isLessThan(21);
-    compilationHelper
-        .addSourceLines(
-            "a/A.java",
-            "package a;",
-            "// BUG: Diagnostic contains:",
-            "// one top-level class declaration, instead found: Test, Extra",
-            "import java.util.List;;",
-            "// BUG: Diagnostic contains:",
-            "import java.util.ArrayList;",
-            "// BUG: Diagnostic contains:",
-            "class Test {",
-            "  List<String> xs = new ArrayList<>();",
-            "}",
-            "// BUG: Diagnostic contains:",
-            "class Extra {}")
         .doTest();
   }
 

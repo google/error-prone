@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -217,7 +215,6 @@ public class NestedInstanceOfConditionsNegativeCases {
 
   @Test
   public void patternMatchingInstanceof() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     compilationHelper
         .addSourceLines(
             "Test.java",

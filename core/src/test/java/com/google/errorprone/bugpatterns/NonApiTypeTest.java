@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -348,8 +346,6 @@ public final class NonApiTypeTest {
 
   @Test
   public void recordConstructorParameters_notFlagged() {
-    assume().that(Runtime.version().feature()).isAtLeast(16);
-
     helper
         .addSourceLines(
             "Record.java",

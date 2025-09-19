@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
@@ -1347,7 +1346,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_middleNullCase_noError() {
     // The HEART case cannot be grouped with the null case per Java syntax
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     helper
         .addSourceLines(
             "Test.java",
@@ -1380,7 +1378,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_firstNullCase_noError() {
     // The null case cannot be grouped with a following regular case per Java syntax
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     helper
         .addSourceLines(
             "Test.java",
@@ -1408,9 +1405,7 @@ public final class StatementSwitchToExpressionSwitchTest {
   }
 
   @Test
-  public void switchByEnum_nullGroupedWithDefault_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
-    // Null can be grouped with default
+  public void switchByEnum_nullGroupedWithDefault_error() { // Null can be grouped with default
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -1456,7 +1451,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumReturnSwitch_nullDefaultSameProduction_error() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     // Null can be grouped together with default in a single SwitchLabelProduction in Java 21+
     // as `case null [, default]`
     refactoringHelper
@@ -1544,7 +1538,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_middleNullCase3_error() {
     // null case is converted without being grouped with default
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -2640,8 +2633,6 @@ public final class StatementSwitchToExpressionSwitchTest {
 
   @Test
   public void switchByEnumExhaustive_qualifiedCaseLabels() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
-
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -3715,7 +3706,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnumAssignment_nullDefaultSameProduction_error() {
     // Null can be grouped together with default in a single SwitchLabel production in Java 21+
     // as `case null [, default]`
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -3922,7 +3912,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_canRemoveDefaultFromNullDefault_error() {
     // The default case is originally together with the null case.  It should be removed without
     // affecting the null case.
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -4357,8 +4346,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void directConversion_casePatternWithGuard_noError() {
     // Case patterns are not currently supported by the checker.
-    assume().that(Runtime.version().feature()).isAtLeast(21);
-
     helper
         .addSourceLines(
             "Test.java",
@@ -4395,7 +4382,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void switchByEnum_nullDefaultFallsOut_error() {
     // Null can be grouped with default
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -4445,7 +4431,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   public void switchByEnum_nullDefaultSameProduction_error() {
     // Null can be grouped together with default in a single SwitchLabel production in Java 21+
     // as `case null [, default]`
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -4525,8 +4510,6 @@ public final class StatementSwitchToExpressionSwitchTest {
   @Test
   public void directConversion_casePatternWithoutGuard_noError() {
     // Case patterns are not currently supported by the checker.
-    assume().that(Runtime.version().feature()).isAtLeast(21);
-
     helper
         .addSourceLines(
             "Test.java",

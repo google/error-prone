@@ -16,8 +16,6 @@
 
 package com.google.errorprone.util;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -1007,8 +1005,6 @@ public class FindIdentifiersTest {
 
   @Test
   public void findAllIdents_bindingVariableInRecord() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
-
     CompilationTestHelper.newInstance(PrintIdents.class, getClass())
         .addSourceLines(
             "Point.java",

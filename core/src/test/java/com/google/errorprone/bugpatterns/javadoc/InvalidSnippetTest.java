@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,8 +29,6 @@ public final class InvalidSnippetTest {
 
   @Test
   public void snippetWithoutBody_butWithFile() {
-    assume().that(Runtime.version().feature()).isAtLeast(18);
-
     helper
         .addSourceLines(
             "Test.java",
@@ -49,8 +45,6 @@ public final class InvalidSnippetTest {
 
   @Test
   public void snippetWithColon() {
-    assume().that(Runtime.version().feature()).isAtLeast(18);
-
     helper
         .addSourceLines(
             "Test.java",

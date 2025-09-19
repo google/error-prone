@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
@@ -1268,8 +1267,6 @@ public class UnnecessaryDefaultInEnumSwitchTest {
   @Test
   public void unrecognizedCaseKindRule() {
     // NOTE(ghm): This test is unhappy on 17 for test frameworky reasons.
-    assume().that(Runtime.version().feature()).isAtLeast(21);
-
     refactoringTestHelper
         .addInputLines(
             "Test.java",

@@ -15,8 +15,6 @@
  */
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -406,7 +404,6 @@ record Foo(String first, String second) {}
 
   @Test
   public void recordPattern() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     testHelper
         .addSourceLines(
             "Test.java",

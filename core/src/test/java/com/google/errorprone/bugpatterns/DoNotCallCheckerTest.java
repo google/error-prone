@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
 import static org.junit.Assert.assertThrows;
 
 import com.google.errorprone.CompilationTestHelper;
@@ -559,7 +558,6 @@ class Test {
 
   @Test
   public void sortedCollectionSequencedCollectionMethods() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     testHelper
         .addSourceLines(
             "Test.java",

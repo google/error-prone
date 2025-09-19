@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -502,8 +500,6 @@ public final class PatternMatchingInstanceofTest {
 
   @Test
   public void recordPatternMatching() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
-
     helper
         .addInputLines(
             "Foo.java",
@@ -754,7 +750,6 @@ public final class PatternMatchingInstanceofTest {
 
   @Test
   public void switchExpression() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     helper
         .addInputLines(
             "Test.java",
@@ -842,7 +837,6 @@ public final class PatternMatchingInstanceofTest {
   // https://github.com/google/error-prone/issues/4923
   @Test
   public void requiredParentheses_retainedInFix() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     helper
         .addInputLines(
             "Test1.java",
@@ -908,7 +902,6 @@ public final class PatternMatchingInstanceofTest {
   // https://github.com/google/error-prone/issues/4921
   @Test
   public void castToSupertypeOfInstanceofCheck_noFinding() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     helper
         .addInputLines(
             "Test.java",

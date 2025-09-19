@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +30,6 @@ public final class ThreadBuilderNameWithPlaceholderTest {
 
   @Test
   public void nameOk() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -50,7 +47,6 @@ public final class ThreadBuilderNameWithPlaceholderTest {
 
   @Test
   public void nameBad() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -74,7 +70,6 @@ public final class ThreadBuilderNameWithPlaceholderTest {
 
   @Test
   public void nameBadButNotFlagged() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     compilationHelper
         .addSourceLines(
             "Test.java",

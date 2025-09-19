@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -675,8 +673,6 @@ public class IdentifierNameTest {
 
   @Test
   public void unnamedVariables() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
-
     helper
         .addSourceLines(
             "Test.java",

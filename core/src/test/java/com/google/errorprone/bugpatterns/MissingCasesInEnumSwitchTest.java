@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.truth.TruthJUnit.assume;
-
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +56,6 @@ public class MissingCasesInEnumSwitchTest {
 
   @Test
   public void exhaustive_allowsQualifying() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -136,7 +133,6 @@ public class MissingCasesInEnumSwitchTest {
 
   @Test
   public void nonExhaustive_withCombinedDefault() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -368,7 +364,6 @@ public class MissingCasesInEnumSwitchTest {
 
   @Test
   public void i4684() {
-    assume().that(Runtime.version().feature()).isAtLeast(21);
     compilationHelper
         .addSourceLines(
             "ErrorProneBug.java",
