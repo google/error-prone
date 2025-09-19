@@ -29,6 +29,7 @@ import com.google.errorprone.names.NamingConventions;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
@@ -167,12 +168,12 @@ abstract class Parameter {
    */
   @VisibleForTesting
   static String getArgumentName(Tree tree) {
-    return switch (tree.getKind()) {
-      case VARIABLE -> ((VariableTree) tree).getName().toString();
-      case MEMBER_SELECT -> ((MemberSelectTree) tree).getIdentifier().toString();
+    return switch (tree) {
+      case VariableTree variableTree -> variableTree.getName().toString();
+      case MemberSelectTree memberSelectTree -> memberSelectTree.getIdentifier().toString();
       // null could match anything pretty well
-      case NULL_LITERAL -> NAME_NULL;
-      case IDENTIFIER -> {
+      case LiteralTree literalTree when tree.getKind().equals(Kind.NULL_LITERAL) -> NAME_NULL;
+      case IdentifierTree identifierTree -> {
         IdentifierTree idTree = (IdentifierTree) tree;
         if (idTree.getName().contentEquals("this")) {
           // for the 'this' keyword the argument name is the name of the object's class
@@ -183,8 +184,7 @@ abstract class Parameter {
           yield idTree.getName().toString();
         }
       }
-      case METHOD_INVOCATION -> {
-        MethodInvocationTree methodInvocationTree = (MethodInvocationTree) tree;
+      case MethodInvocationTree methodInvocationTree -> {
         MethodSymbol methodSym = ASTHelpers.getSymbol(methodInvocationTree);
         String name = methodSym.getSimpleName().toString();
         ImmutableList<String> terms = NamingConventions.splitToLowercaseTerms(name);
@@ -204,8 +204,8 @@ abstract class Parameter {
           yield name;
         }
       }
-      case NEW_CLASS -> {
-        MethodSymbol constructorSym = ASTHelpers.getSymbol((NewClassTree) tree);
+      case NewClassTree newClassTree -> {
+        MethodSymbol constructorSym = ASTHelpers.getSymbol(newClassTree);
         yield constructorSym.owner != null
             ? getClassName((ClassSymbol) constructorSym.owner)
             : NAME_NOT_PRESENT;

@@ -370,9 +370,10 @@ public class DefaultCharset extends BugChecker
       SuggestedFix.Builder fix, VisitorState state, Class<?> original, Class<?> replacement) {
     Tree parent = state.getPath().getParentPath().getLeaf();
     Symbol sym;
-    switch (parent.getKind()) {
-      case VARIABLE -> sym = ASTHelpers.getSymbol((VariableTree) parent);
-      case ASSIGNMENT -> sym = ASTHelpers.getSymbol(((AssignmentTree) parent).getVariable());
+    switch (parent) {
+      case VariableTree variableTree -> sym = ASTHelpers.getSymbol(variableTree);
+      case AssignmentTree assignmentTree ->
+          sym = ASTHelpers.getSymbol(assignmentTree.getVariable());
       default -> {
         return;
       }

@@ -30,6 +30,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.Visibility;
 import com.sun.source.tree.AnnotatedTypeTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
@@ -121,27 +122,22 @@ public final class NonCanonicalType extends BugChecker implements MemberSelectTr
    * getSymbol}, given that points to the same symbol as the canonical name.
    */
   private static String getNonCanonicalName(Tree tree) {
-    switch (tree.getKind()) {
-      case IDENTIFIER -> {
-        return getSymbol(tree).getQualifiedName().toString();
-      }
-      case MEMBER_SELECT -> {
-        MemberSelectTree memberSelectTree = (MemberSelectTree) tree;
+    return switch (tree) {
+      case IdentifierTree identifierTree -> getSymbol(tree).getQualifiedName().toString();
+      case MemberSelectTree memberSelectTree -> {
         Symbol expressionSymbol = getSymbol(memberSelectTree.getExpression());
         if (!(expressionSymbol instanceof TypeSymbol)) {
-          return getSymbol(tree).getQualifiedName().toString();
+          yield getSymbol(tree).getQualifiedName().toString();
         }
-        return getNonCanonicalName(memberSelectTree.getExpression())
+        yield getNonCanonicalName(memberSelectTree.getExpression())
             + "."
             + memberSelectTree.getIdentifier();
       }
-      case PARAMETERIZED_TYPE -> {
-        return getNonCanonicalName(((ParameterizedTypeTree) tree).getType());
-      }
-      case ANNOTATED_TYPE -> {
-        return getNonCanonicalName(((AnnotatedTypeTree) tree).getUnderlyingType());
-      }
+      case ParameterizedTypeTree parameterizedTypeTree ->
+          getNonCanonicalName(parameterizedTypeTree.getType());
+      case AnnotatedTypeTree annotatedTypeTree ->
+          getNonCanonicalName(annotatedTypeTree.getUnderlyingType());
       default -> throw new AssertionError(tree.getKind());
-    }
+    };
   }
 }

@@ -383,9 +383,9 @@ public final class Inliner extends BugChecker
   }
 
   private static List<? extends ExpressionTree> getArguments(Tree tree) {
-    return switch (tree.getKind()) {
-      case METHOD_INVOCATION -> ((MethodInvocationTree) tree).getArguments();
-      case NEW_CLASS -> ((NewClassTree) tree).getArguments();
+    return switch (tree) {
+      case MethodInvocationTree mit -> mit.getArguments();
+      case NewClassTree nct -> nct.getArguments();
       default -> ImmutableList.of();
     };
   }

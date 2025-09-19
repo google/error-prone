@@ -39,7 +39,9 @@ import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
@@ -209,12 +211,14 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
   private static @Nullable JCTry enclosingTry(VisitorState state) {
     Tree prev = null;
     for (Tree parent : state.getPath()) {
-      switch (parent.getKind()) {
-        case METHOD, LAMBDA_EXPRESSION -> {
+      switch (parent) {
+        case MethodTree mt -> {
           return null;
         }
-        case TRY -> {
-          JCTry tryStatement = (JCTry) parent;
+        case LambdaExpressionTree let -> {
+          return null;
+        }
+        case JCTry tryStatement -> {
           return tryStatement.getBlock().equals(prev) ? tryStatement : null;
         }
         default -> {}

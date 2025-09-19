@@ -30,9 +30,12 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
@@ -120,12 +123,18 @@ public class ModifyCollectionInEnhancedForLoop extends BugChecker
   /** Returns true if {@code collection} is modified by an enclosing loop. */
   private static boolean enclosingLoop(VisitorState state, ExpressionTree collection) {
     for (Tree node : state.getPath()) {
-      switch (node.getKind()) {
-        case METHOD, CLASS, LAMBDA_EXPRESSION -> {
+      switch (node) {
+        case MethodTree methodTree -> {
           return false;
         }
-        case ENHANCED_FOR_LOOP -> {
-          if (sameCollection(collection, ((EnhancedForLoopTree) node).getExpression(), state)) {
+        case ClassTree classTree -> {
+          return false;
+        }
+        case LambdaExpressionTree lambdaExpressionTree -> {
+          return false;
+        }
+        case EnhancedForLoopTree enhancedForLoopTree -> {
+          if (sameCollection(collection, enhancedForLoopTree.getExpression(), state)) {
             return true;
           }
         }

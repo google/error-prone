@@ -77,11 +77,11 @@ public final class AssignmentExpression extends BugChecker implements Assignment
         && getSymbol(tree.getVariable()) instanceof VarSymbol varSymbol)) {
       return false;
     }
-    return switch (parent.getKind()) {
-      case ASSIGNMENT ->
-          ((AssignmentTree) parent).getVariable() instanceof IdentifierTree identifierTree
+    return switch (parent) {
+      case AssignmentTree assignmentTree ->
+          assignmentTree.getVariable() instanceof IdentifierTree identifierTree
               && varSymbol.equals(getSymbol(identifierTree));
-      case VARIABLE -> varSymbol.equals(getSymbol((VariableTree) parent));
+      case VariableTree variableTree -> varSymbol.equals(getSymbol(variableTree));
       default -> false;
     };
   }

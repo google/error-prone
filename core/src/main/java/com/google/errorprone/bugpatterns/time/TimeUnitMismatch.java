@@ -30,7 +30,6 @@ import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
-import static com.sun.source.tree.Tree.Kind.MEMBER_SELECT;
 import static java.util.EnumSet.allOf;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
@@ -422,39 +421,37 @@ public final class TimeUnitMismatch extends BugChecker
    * Names," ICSE 2016
    */
   private static @Nullable String extractArgumentName(ExpressionTree expr) {
-    switch (expr.getKind()) {
-      case TYPE_CAST -> {
-        return extractArgumentName(((TypeCastTree) expr).getExpression());
+    switch (expr) {
+      case TypeCastTree typeCast -> {
+        return extractArgumentName(typeCast.getExpression());
       }
-      case MEMBER_SELECT -> {
+      case MemberSelectTree memberSelect -> {
         // If we have a field or method access, we use the name of the field/method. (We ignore
         // the name of the receiver object.) Exception: If the method is named "get" (Optional,
         // Flag, etc.), we use the name of the object or class that it's called on.
-        MemberSelectTree memberSelect = (MemberSelectTree) expr;
         String member = memberSelect.getIdentifier().toString();
         return member.equals("get") ? extractArgumentName(memberSelect.getExpression()) : member;
       }
-      case METHOD_INVOCATION -> {
+      case MethodInvocationTree methodInvocation -> {
         // If we have a 'call expression' we use the name of the method we are calling. Exception:
         // If the method is named "get," we use the object or class instead. (See above.)
-        Symbol sym = getSymbol(expr);
+        Symbol sym = getSymbol(methodInvocation);
         if (sym == null) {
           return null;
         }
         String methodName = sym.getSimpleName().toString();
         return methodName.equals("get")
-            ? extractArgumentName(((MethodInvocationTree) expr).getMethodSelect())
+            ? extractArgumentName(methodInvocation.getMethodSelect())
             : methodName;
       }
-      case IDENTIFIER -> {
-        IdentifierTree idTree = (IdentifierTree) expr;
-        if (idTree.getName().contentEquals("this")) {
+      case IdentifierTree identifier -> {
+        if (identifier.getName().contentEquals("this")) {
           // for the 'this' keyword the argument name is the name of the object's class
-          Symbol sym = getSymbol(idTree);
+          Symbol sym = getSymbol(identifier);
           return (sym == null) ? null : enclosingClass(sym).getSimpleName().toString();
         } else {
           // if we have a variable, just extract its name
-          return ((IdentifierTree) expr).getName().toString();
+          return identifier.getName().toString();
         }
       }
       default -> {

@@ -58,10 +58,10 @@ final class NameInCommentHeuristic implements Heuristic {
 
   private static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(
       Tree tree, VisitorState state) {
-    return switch (tree.getKind()) {
-      case METHOD_INVOCATION ->
-          Comments.findCommentsForArguments((MethodInvocationTree) tree, state);
-      case NEW_CLASS -> Comments.findCommentsForArguments((NewClassTree) tree, state);
+    return switch (tree) {
+      case MethodInvocationTree methodInvocationTree ->
+          Comments.findCommentsForArguments(methodInvocationTree, state);
+      case NewClassTree newClassTree -> Comments.findCommentsForArguments(newClassTree, state);
       default ->
           throw new IllegalArgumentException(
               "Only MethodInvocationTree or NewClassTree is supported");

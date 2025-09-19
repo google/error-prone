@@ -25,8 +25,11 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import java.util.Objects;
@@ -48,13 +51,19 @@ public class ReachabilityFenceUsage extends BugChecker implements MethodInvocati
     Tree previous = null;
     OUTER:
     for (Tree enclosing : state.getPath().getParentPath()) {
-      switch (enclosing.getKind()) {
-        case TRY -> {
-          if (Objects.equals(((TryTree) enclosing).getFinallyBlock(), previous)) {
+      switch (enclosing) {
+        case TryTree tryTree -> {
+          if (Objects.equals(tryTree.getFinallyBlock(), previous)) {
             return NO_MATCH;
           }
         }
-        case CLASS, METHOD, LAMBDA_EXPRESSION -> {
+        case ClassTree classTree -> {
+          break OUTER;
+        }
+        case MethodTree methodTree -> {
+          break OUTER;
+        }
+        case LambdaExpressionTree lambdaExpressionTree -> {
           break OUTER;
         }
         default -> {}

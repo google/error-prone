@@ -192,16 +192,14 @@ public final class GuardedByBinder {
               node.getArguments().isEmpty() && node.getTypeArguments().isEmpty(),
               "Only nullary methods are allowed.");
           ExpressionTree methodSelect = node.getMethodSelect();
-          switch (methodSelect.getKind()) {
-            case IDENTIFIER -> {
-              IdentifierTree identifier = (IdentifierTree) methodSelect;
+          switch (methodSelect) {
+            case IdentifierTree identifier -> {
               Symbol.MethodSymbol method =
                   context.resolver.resolveMethod(node, identifier.getName());
               checkGuardedBy(method != null, identifier.toString());
               return bindSelect(computeBase(context, method), method);
             }
-            case MEMBER_SELECT -> {
-              MemberSelectTree select = (MemberSelectTree) methodSelect;
+            case MemberSelectTree select -> {
               GuardedByExpression base = visit(select.getExpression(), context);
               checkGuardedBy(base != null, select.getExpression().toString());
               Symbol.MethodSymbol method =

@@ -31,6 +31,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
@@ -55,12 +56,12 @@ public class IntLongMath extends BugChecker
     Type type = null;
     outer:
     for (Tree parent : state.getPath()) {
-      switch (parent.getKind()) {
-        case METHOD -> {
-          type = ASTHelpers.getType(((MethodTree) parent).getReturnType());
+      switch (parent) {
+        case MethodTree methodTree -> {
+          type = ASTHelpers.getType(methodTree.getReturnType());
           break outer;
         }
-        case LAMBDA_EXPRESSION -> {
+        case LambdaExpressionTree lambdaExpressionTree -> {
           type = state.getTypes().findDescriptorType(ASTHelpers.getType(parent)).getReturnType();
           break outer;
         }

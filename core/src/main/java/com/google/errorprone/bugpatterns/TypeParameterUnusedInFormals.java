@@ -50,8 +50,8 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
     // Only match methods where the return type is just a type parameter.
     // e.g. the following is OK: <T> List<T> newArrayList();
     TypeVar retType;
-    switch (methodSymbol.getReturnType().getKind()) {
-      case TYPEVAR -> retType = (TypeVar) methodSymbol.getReturnType();
+    switch (methodSymbol.getReturnType()) {
+      case TypeVar typeVar -> retType = typeVar;
       default -> {
         return Description.NO_MATCH;
       }

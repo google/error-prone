@@ -50,6 +50,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.UnusedReturnValueMatcher;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -59,6 +60,7 @@ import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
@@ -114,10 +116,10 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
      */
     String suggestName(ExpressionTree tree) {
       String symbolName =
-          switch (tree.getKind()) {
-            case NEW_CLASS ->
-                getSymbol(((NewClassTree) tree).getIdentifier()).getSimpleName().toString();
-            case METHOD_INVOCATION -> getReturnType(tree).asElement().getSimpleName().toString();
+          switch (tree) {
+            case NewClassTree nct -> getSymbol(nct.getIdentifier()).getSimpleName().toString();
+            case MethodInvocationTree mit ->
+                getReturnType(tree).asElement().getSimpleName().toString();
             default -> throw new AssertionError(tree.getKind());
           };
       return uniquifyName(CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, symbolName));
@@ -253,8 +255,8 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     while (true) {
       TreePath prev = path;
       path = path.getParentPath();
-      switch (path.getLeaf().getKind()) {
-        case RETURN -> {
+      switch (path.getLeaf()) {
+        case ReturnTree returnTree -> {
           if (callerMethodTree == null) {
             // If enclosingMethod returned null, we must be returning from a statement lambda.
             return handleTailPositionInLambda(state);
@@ -275,19 +277,17 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
                   .addImport(MustBeClosed.class.getCanonicalName())
                   .build());
         }
-        case LAMBDA_EXPRESSION -> {
+        case LambdaExpressionTree lambdaExpressionTree -> {
           // The method invocation is the body of an expression lambda.
           return handleTailPositionInLambda(state);
         }
-        case CONDITIONAL_EXPRESSION -> {
-          var conditionalExpressionTree = (ConditionalExpressionTree) path.getLeaf();
+        case ConditionalExpressionTree conditionalExpressionTree -> {
           if (conditionalExpressionTree.getTrueExpression().equals(prev.getLeaf())
               || conditionalExpressionTree.getFalseExpression().equals(prev.getLeaf())) {
             continue OUTER;
           }
         }
-        case MEMBER_SELECT -> {
-          var memberSelectTree = (MemberSelectTree) path.getLeaf();
+        case MemberSelectTree memberSelectTree -> {
           if (memberSelectTree.getExpression().equals(prev.getLeaf())) {
             Type streamType = state.getTypeFromString(Stream.class.getName());
             Type classType = enclosingClass(getSymbol(memberSelectTree)).asType();
@@ -300,8 +300,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
             }
           }
         }
-        case NEW_CLASS -> {
-          var newClassTree = (NewClassTree) path.getLeaf();
+        case NewClassTree newClassTree -> {
           if (isClosingDecorator(newClassTree, prev.getLeaf(), state)) {
             if (HAS_MUST_BE_CLOSED_ANNOTATION.matches(newClassTree, state)) {
               // if the decorator is also annotated then it would already be enforced
@@ -311,15 +310,15 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
             continue OUTER;
           }
         }
-        case VARIABLE -> {
-          VarSymbol var = getSymbol((VariableTree) path.getLeaf());
-          if (var.getKind() == ElementKind.RESOURCE_VARIABLE
-              || isClosedInFinallyClause(var, path, state)
-              || variableIsStaticFinal(var)) {
+        case VariableTree variableTree -> {
+          var variable = getSymbol(variableTree);
+          if (variable.getKind() == ElementKind.RESOURCE_VARIABLE
+              || isClosedInFinallyClause(variable, path, state)
+              || variableIsStaticFinal(variable)) {
             return Optional.empty();
           }
         }
-        case ASSIGNMENT -> {
+        case AssignmentTree assignmentTree -> {
           // We shouldn't suggest a try/finally fix when we know the variable is going to be saved
           // for later.
           return findingWithNoFix();
@@ -362,12 +361,15 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
    */
   private static @Nullable MethodTree enclosingMethod(VisitorState state) {
     for (Tree node : state.getPath().getParentPath()) {
-      switch (node.getKind()) {
-        case LAMBDA_EXPRESSION, NEW_CLASS -> {
+      switch (node) {
+        case LambdaExpressionTree let -> {
           return null;
         }
-        case METHOD -> {
-          return (MethodTree) node;
+        case NewClassTree nct -> {
+          return null;
+        }
+        case MethodTree methodTree -> {
+          return methodTree;
         }
         default -> {}
       }

@@ -313,12 +313,12 @@ public abstract class TargetType {
     public @Nullable Type visitReturn(ReturnTree tree, Void unused) {
       for (TreePath path = parent; path != null; path = path.getParentPath()) {
         Tree enclosing = path.getLeaf();
-        switch (enclosing.getKind()) {
-          case METHOD -> {
-            return getType(((MethodTree) enclosing).getReturnType());
+        switch (enclosing) {
+          case MethodTree methodTree -> {
+            return getType(methodTree.getReturnType());
           }
-          case LAMBDA_EXPRESSION -> {
-            return visitLambdaExpression((LambdaExpressionTree) enclosing, null);
+          case LambdaExpressionTree lambdaExpressionTree -> {
+            return visitLambdaExpression(lambdaExpressionTree, null);
           }
           default -> {}
         }

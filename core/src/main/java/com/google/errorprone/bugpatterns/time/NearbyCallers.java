@@ -24,6 +24,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.GeneratedMessageLite;
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -161,12 +162,12 @@ public class NearbyCallers {
 
   private static ImmutableList<Tree> getNearbyTreesToScan(VisitorState state) {
     for (Tree parent : state.getPath()) {
-      switch (parent.getKind()) {
-        case BLOCK -> {
+      switch (parent) {
+        case BlockTree blockTree -> {
           // if we reach a block tree, then _only_ scan that block
           return ImmutableList.of(parent);
         }
-        case LAMBDA_EXPRESSION -> {
+        case LambdaExpressionTree lambdaExpressionTree -> {
           // if we reach a lambda tree, just scan the lambda body itself
           // TODO(glorioso): for simple expression lambdas, consider looking for use sites and scan
           // *those* sites, but binding the lambda variable to its use site might be rough :(
@@ -177,13 +178,13 @@ public class NearbyCallers {
           //   long nanos = NANOS.apply(myDuration) + SECONDS.apply(myDuration) * 1_000_000L;
           //
           // how do we track myDuration through both layers?
-          return ImmutableList.of(((LambdaExpressionTree) parent).getBody());
+          return ImmutableList.of(lambdaExpressionTree.getBody());
         }
-        case CLASS -> {
+        case ClassTree classTree -> {
           // if we get all the way up to the class tree, then _only_ scan the other class-level
           // fields
           ImmutableList.Builder<Tree> treesToScan = ImmutableList.builder();
-          for (Tree member : ((ClassTree) parent).getMembers()) {
+          for (Tree member : classTree.getMembers()) {
             if (member instanceof VariableTree variableTree) {
               ExpressionTree expressionTree = variableTree.getInitializer();
               if (expressionTree != null) {

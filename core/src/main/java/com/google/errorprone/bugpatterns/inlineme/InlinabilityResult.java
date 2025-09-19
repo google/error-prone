@@ -168,10 +168,10 @@ abstract class InlinabilityResult {
     ExpressionTree body;
     // The statement is either an ExpressionStatement or a ReturnStatement, given
     // InlinabilityResult.forMethod
-    switch (statement.getKind()) {
-      case EXPRESSION_STATEMENT -> body = ((ExpressionStatementTree) statement).getExpression();
-      case RETURN -> {
-        body = ((ReturnTree) statement).getExpression();
+    switch (statement) {
+      case ExpressionStatementTree est -> body = est.getExpression();
+      case ReturnTree rt -> {
+        body = rt.getExpression();
         if (body == null) {
           return fromError(InlineValidationErrorReason.EMPTY_VOID);
         }

@@ -1677,9 +1677,10 @@ public class ASTHelpers {
   }
 
   public static boolean isSuper(Tree tree) {
-    return switch (tree.getKind()) {
-      case IDENTIFIER -> ((IdentifierTree) tree).getName().contentEquals("super");
-      case MEMBER_SELECT -> ((MemberSelectTree) tree).getIdentifier().contentEquals("super");
+    return switch (tree) {
+      case IdentifierTree identifierTree -> identifierTree.getName().contentEquals("super");
+      case MemberSelectTree memberSelectTree ->
+          memberSelectTree.getIdentifier().contentEquals("super");
       default -> false;
     };
   }

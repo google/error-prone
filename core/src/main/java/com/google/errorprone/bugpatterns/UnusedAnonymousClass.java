@@ -24,6 +24,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
@@ -49,14 +50,11 @@ public class UnusedAnonymousClass extends BugChecker implements NewClassTreeMatc
       return Description.NO_MATCH;
     }
     for (Tree def : newClassTree.getClassBody().getMembers()) {
-      switch (def.getKind()) {
-        case VARIABLE -> {
-          VariableTree variableTree = (VariableTree) def;
-          if (variableTree.getInitializer() != null) {
-            return Description.NO_MATCH;
-          }
+      switch (def) {
+        case VariableTree variableTree when variableTree.getInitializer() != null -> {
+          return Description.NO_MATCH;
         }
-        case BLOCK -> {
+        case BlockTree blockTree -> {
           return Description.NO_MATCH;
         }
         default -> {}
