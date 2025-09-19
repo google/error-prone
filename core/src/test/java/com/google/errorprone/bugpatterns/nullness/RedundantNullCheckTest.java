@@ -1034,4 +1034,32 @@ public class RedundantNullCheckTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void negative_falseNullnessAnnotation_inNullMarkedScope() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import org.jspecify.annotations.NullMarked;
+            import org.jspecify.annotations.NonNull;
+            import org.jspecify.annotations.Nullable;
+            import jakarta.validation.constraints.NotNull;
+
+            @NullMarked
+            class Test {
+              @NotNull @Nullable String negative;
+              @NonNull @Nullable String positive;
+
+              void foo() {
+                if (negative == null) {
+                  /* This is fine */
+                }
+                // BUG: Diagnostic contains: RedundantNullCheck
+                if (positive == null) {}
+              }
+            }
+            """)
+        .doTest();
+  }
 }

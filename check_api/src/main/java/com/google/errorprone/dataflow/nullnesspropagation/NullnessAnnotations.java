@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static javax.lang.model.element.ElementKind.TYPE_PARAMETER;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -37,6 +38,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.Parameterizable;
+import javax.lang.model.element.QualifiedNameable;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.IntersectionType;
 import javax.lang.model.type.TypeMirror;
@@ -59,6 +61,9 @@ public class NullnessAnnotations {
                   + "ProtoMethodMayReturnNull|ProtoMethodAcceptsNullParameter|"
                   + "ProtoPassThroughNullness")
           .asMatchPredicate();
+  private static final ImmutableSet<String> FALSE_NULLNESS_ANNOTATIONS =
+      ImmutableSet.of(
+          "jakarta.validation.constraints.NotNull", "javax.validation.constraints.NotNull");
 
   private NullnessAnnotations() {} // static methods only
 
@@ -83,12 +88,13 @@ public class NullnessAnnotations {
   public static ImmutableList<AnnotationMirror> annotationsRelevantToNullness(
       Collection<? extends AnnotationMirror> annotations) {
     return annotations.stream()
-        .filter(a -> ANNOTATION_RELEVANT_TO_NULLNESS.test(simpleName(a).toString()))
+        .filter(NullnessAnnotations::isAnnotationRelevant)
         .collect(toImmutableList());
   }
 
   public static ImmutableList<AnnotationTree> annotationsRelevantToNullness(
       List<? extends AnnotationTree> annotations) {
+    // Missing support for FALSE_NULLNESS_ANNOTATIONS
     return annotations.stream()
         .filter(a -> ANNOTATION_RELEVANT_TO_NULLNESS.test(simpleName(a)))
         .collect(toImmutableList());
@@ -209,7 +215,10 @@ public class NullnessAnnotations {
 
   private static Optional<Nullness> fromAnnotationStream(
       Stream<? extends AnnotationMirror> annotations) {
-    return fromAnnotationSimpleNames(annotations.map(a -> simpleName(a).toString()));
+    return fromAnnotationSimpleNames(
+        annotations
+            .filter(NullnessAnnotations::isAnnotationRelevant)
+            .map(a -> simpleName(a).toString()));
   }
 
   private static Optional<Nullness> fromAnnotationSimpleNames(Stream<String> annotations) {
@@ -217,5 +226,22 @@ public class NullnessAnnotations {
         .filter(ANNOTATION_RELEVANT_TO_NULLNESS)
         .map(annot -> NULLABLE_ANNOTATION.test(annot) ? Nullness.NULLABLE : Nullness.NONNULL)
         .reduce(Nullness::greatestLowerBound);
+  }
+
+  private static boolean isAnnotationRelevant(AnnotationMirror annotation) {
+    // https://github.com/google/error-prone/issues/4334
+    // Some @NotNull annotations, e.g. com.google.firebase.database.annotations.NotNull, resemble
+    // JSpecify @NonNull semantics. However, the Jakarta Bean Validation @NotNull constraint instead
+    // represents a runtime check to reject a value that turns out to be null, rather than a static
+    // promise that null will not be observed. Therefore, "@j.v.c.NotNull @o.j.a.Nullable Object o"
+    // is a sensible and unambiguous declaration.
+    if (annotation.getAnnotationType().asElement() instanceof QualifiedNameable qn) {
+      var fqn = qn.getQualifiedName().toString();
+      if (FALSE_NULLNESS_ANNOTATIONS.contains(fqn)) {
+        return false;
+      }
+      return ANNOTATION_RELEVANT_TO_NULLNESS.test(simpleName(annotation).toString());
+    }
+    return true;
   }
 }
