@@ -197,6 +197,9 @@ public abstract class Api {
             check(!finishedConstructor, api, "Only one '>' is allowed");
             finishedConstructor = true;
           }
+          case '-' -> {
+            // OK, see https://kotlinlang.org/docs/inline-classes.html#mangling.
+          }
           default ->
               checkArgument(
                   isJavaIdentifierPart(next),
