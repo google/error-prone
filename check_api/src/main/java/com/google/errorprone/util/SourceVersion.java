@@ -31,11 +31,6 @@ public final class SourceVersion {
     return sourceIsAtLeast(context, 15);
   }
 
-  /** Returns true if the compiler source version level supports effectively final. */
-  public static boolean supportsEffectivelyFinal(Context context) {
-    return sourceIsAtLeast(context, 8);
-  }
-
   /** Returns whether the compiler supports pattern-matching instanceofs. */
   public static boolean supportsPatternMatchingInstanceof(Context context) {
     return sourceIsAtLeast(context, 17);

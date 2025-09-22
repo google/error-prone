@@ -30,7 +30,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -95,14 +94,12 @@ public class VarChecker extends BugChecker implements VariableTreeMatcher {
 
   private Description handleLocalOrParam(VariableTree tree, VisitorState state, Symbol sym) {
     if (sym.getModifiers().contains(Modifier.FINAL)) {
-      if (SourceVersion.supportsEffectivelyFinal(state.context)) {
-        // In Java 8, the final modifier is never necessary on locals/parameters because
-        // effectively final variables can be used anywhere a final variable is required.
-        Optional<SuggestedFix> fix = SuggestedFixes.removeModifiers(tree, state, Modifier.FINAL);
-        // The fix may not be present for TWR variables that were not explicitly final
-        if (fix.isPresent()) {
-          return buildDescription(tree).setMessage(UNNECESSARY_FINAL).addFix(fix.get()).build();
-        }
+      // The final modifier is never necessary on locals/parameters because the compiler recognizes
+      // them as "effectively final" where relevant.
+      Optional<SuggestedFix> fix = SuggestedFixes.removeModifiers(tree, state, Modifier.FINAL);
+      // The fix may not be present for TWR variables that were not explicitly final
+      if (fix.isPresent()) {
+        return buildDescription(tree).setMessage(UNNECESSARY_FINAL).addFix(fix.get()).build();
       }
       return Description.NO_MATCH;
     }
