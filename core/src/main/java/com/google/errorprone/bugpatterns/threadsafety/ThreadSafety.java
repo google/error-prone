@@ -32,7 +32,6 @@ import com.google.common.collect.Streams;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
-import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.google.errorprone.annotations.ThreadSafe;
 import com.google.errorprone.annotations.ThreadSafeTypeParameter;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
@@ -82,7 +81,6 @@ public final class ThreadSafety {
   private final ImmutableSet<String> containerOfAnnotation;
   private final ImmutableSet<String> suppressAnnotation;
   private final ImmutableSet<String> typeParameterAnnotation;
-  private final ImmutableSet<String> acceptedTypeParameterAnnotation;
 
   public static Builder builder() {
     return new Builder();
@@ -96,9 +94,7 @@ public final class ThreadSafety {
             .knownTypes(wellKnownThreadSafety)
             .markerAnnotations(ImmutableSet.of(ThreadSafe.class.getName()))
             .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()))
-            .typeParameterAnnotation(ImmutableSet.of(ThreadSafeTypeParameter.class.getName()))
-            .acceptedTypeParameterAnnotation(
-                ImmutableSet.of(ImmutableTypeParameter.class.getName()));
+            .typeParameterAnnotation(ImmutableSet.of(ThreadSafeTypeParameter.class.getName()));
     return builder;
   }
 
@@ -160,7 +156,6 @@ public final class ThreadSafety {
     private ImmutableSet<String> containerOfAnnotation = ImmutableSet.of();
     private ImmutableSet<String> suppressAnnotation = ImmutableSet.of();
     private ImmutableSet<String> typeParameterAnnotation = ImmutableSet.of();
-    private ImmutableSet<String> acceptedTypeParameterAnnotation = ImmutableSet.of();
 
     /** See {@link Purpose}. */
     @CanIgnoreReturnValue
@@ -254,18 +249,8 @@ public final class ThreadSafety {
      */
     @CanIgnoreReturnValue
     public Builder typeParameterAnnotation(Iterable<String> typeParameterAnnotation) {
+      checkNotNull(typeParameterAnnotation);
       this.typeParameterAnnotation = ImmutableSet.copyOf(typeParameterAnnotation);
-      return this;
-    }
-
-    /**
-     * An annotation which, when found on a type parameter, indicates that the type parameter may
-     * only be instantiated with thread-safe types.
-     */
-    @CanIgnoreReturnValue
-    public Builder acceptedTypeParameterAnnotation(
-        Iterable<String> acceptedTypeParameterAnnotation) {
-      this.acceptedTypeParameterAnnotation = ImmutableSet.copyOf(acceptedTypeParameterAnnotation);
       return this;
     }
 
@@ -280,8 +265,7 @@ public final class ThreadSafety {
           acceptedAnnotations,
           containerOfAnnotation,
           suppressAnnotation,
-          typeParameterAnnotation,
-          acceptedTypeParameterAnnotation);
+          typeParameterAnnotation);
     }
   }
 
@@ -293,8 +277,7 @@ public final class ThreadSafety {
       Set<String> acceptedAnnotations,
       Set<String> containerOfAnnotation,
       Set<String> suppressAnnotation,
-      Set<String> typeParameterAnnotation,
-      Set<String> acceptedTypeParameterAnnotation) {
+      Set<String> typeParameterAnnotation) {
     this.state = checkNotNull(state);
     this.purpose = purpose;
     this.knownTypes = checkNotNull(knownTypes);
@@ -303,8 +286,6 @@ public final class ThreadSafety {
     this.containerOfAnnotation = ImmutableSet.copyOf(checkNotNull(containerOfAnnotation));
     this.suppressAnnotation = ImmutableSet.copyOf(checkNotNull(suppressAnnotation));
     this.typeParameterAnnotation = ImmutableSet.copyOf(checkNotNull(typeParameterAnnotation));
-    this.acceptedTypeParameterAnnotation =
-        ImmutableSet.copyOf(checkNotNull(acceptedTypeParameterAnnotation));
   }
 
   /**
@@ -374,7 +355,7 @@ public final class ThreadSafety {
       Set<TypeVariableSymbol> recursiveThreadSafeTypeParameter) {
     for (int i = 0; i < type.tsym.getTypeParameters().size(); i++) {
       TypeVariableSymbol typaram = type.tsym.getTypeParameters().get(i);
-      boolean immutableTypeParameter = hasAcceptedThreadSafeTypeParameterAnnotation(typaram);
+      boolean immutableTypeParameter = hasThreadSafeTypeParameterAnnotation(typaram);
       if (annotation.containerOf().contains(typaram.getSimpleName().toString())
           || immutableTypeParameter) {
         if (type.getTypeArguments().isEmpty()) {
@@ -629,16 +610,6 @@ public final class ThreadSafety {
 
   /**
    * Returns whether the given type parameter's declaration is annotated with {@link
-   * #typeParameterAnnotation} or another acceptable annotation.
-   */
-  public boolean hasAcceptedThreadSafeTypeParameterAnnotation(TypeVariableSymbol symbol) {
-    Set<String> annotations = Sets.union(typeParameterAnnotation, acceptedTypeParameterAnnotation);
-    return symbol.getAnnotationMirrors().stream()
-        .anyMatch(t -> annotations.contains(t.type.tsym.flatName().toString()));
-  }
-
-  /**
-   * Returns whether the given type parameter's declaration is annotated with {@link
    * #containerOfAnnotation} indicating its type-safety determines the type-safety of the outer
    * class.
    */
@@ -687,7 +658,7 @@ public final class ThreadSafety {
           return true;
         }
       }
-      return hasAcceptedThreadSafeTypeParameterAnnotation(symbol);
+      return hasThreadSafeTypeParameterAnnotation(symbol);
     } finally {
       recursiveThreadSafeTypeParameter.remove(symbol);
     }
