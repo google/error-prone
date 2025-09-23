@@ -18,6 +18,9 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
+import static javax.lang.model.type.TypeKind.TYPEVAR;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -30,6 +33,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -60,13 +64,23 @@ public class RedundantNullCheck extends BugChecker implements BinaryTreeMatcher 
       if (NullnessUtils.isAlreadyAnnotatedNullable(varSymbol)) {
         return NO_MATCH;
       }
+      if (varSymbol.asType().getKind() == TYPEVAR) {
+        return NO_MATCH;
+      }
 
       VariableTree varDecl = NullnessUtils.findDeclaration(state, varSymbol);
+      if (varSymbol.getKind() == ElementKind.PARAMETER && hasImplicitType(varDecl, state)) {
+        return NO_MATCH;
+      }
 
       if ((varSymbol.getKind() == ElementKind.LOCAL_VARIABLE
           || varSymbol.getKind() == ElementKind.RESOURCE_VARIABLE) && varDecl != null) {
 
         if (varDecl.getInitializer() == null) {
+          return NO_MATCH;
+        }
+
+        if (!isConsideredFinal(varSymbol)) {
           return NO_MATCH;
         }
 
@@ -76,6 +90,10 @@ public class RedundantNullCheck extends BugChecker implements BinaryTreeMatcher 
           MethodInvocationTree methodInvocation = (MethodInvocationTree) initializer;
           MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodInvocation);
           if (methodSymbol != null && isEffectivelyNullable(methodSymbol, state)) {
+            return NO_MATCH;
+          }
+        } else if (initializer instanceof LiteralTree) {
+          if (initializer.getKind() == Tree.Kind.NULL_LITERAL) {
             return NO_MATCH;
           }
         } else {
@@ -99,6 +117,12 @@ public class RedundantNullCheck extends BugChecker implements BinaryTreeMatcher 
     if (returnTypeNullness.isPresent()) {
       // Explicit @Nullable or @NonNull on the return type
       return returnTypeNullness.get() == Nullness.NULLABLE;
+    }
+    if (methodSymbol.isConstructor()) {
+      return false;
+    }
+    if (methodSymbol.getReturnType().getKind() == TYPEVAR) {
+      return true;
     }
     // No explicit annotation on return type.
     // Default based on the null-marked status of the method's defining scope.
