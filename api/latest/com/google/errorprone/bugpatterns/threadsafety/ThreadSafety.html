@@ -66,7 +66,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#checkSuperInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type)" tabindex="0">checkSuperInstantiation(Set, AnnotationInfo, Type)</a></li>
 <li><a href="#isThreadSafeType(boolean,java.util.Set,com.sun.tools.javac.code.Type)" tabindex="0">isThreadSafeType(boolean, Set, Type)</a></li>
 <li><a href="#hasThreadSafeTypeParameterAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)" tabindex="0">hasThreadSafeTypeParameterAnnotation(Symbol.TypeVariableSymbol)</a></li>
-<li><a href="#hasAcceptedThreadSafeTypeParameterAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)" tabindex="0">hasAcceptedThreadSafeTypeParameterAnnotation(Symbol.TypeVariableSymbol)</a></li>
 <li><a href="#hasThreadSafeElementAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)" tabindex="0">hasThreadSafeElementAnnotation(Symbol.TypeVariableSymbol)</a></li>
 <li><a href="#getMarkerOrAcceptedAnnotation(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" tabindex="0">getMarkerOrAcceptedAnnotation(Symbol, VisitorState)</a></li>
 <li><a href="#mutableEnclosingInstance(java.util.Optional,com.sun.tools.javac.code.Type.ClassType)" tabindex="0">mutableEnclosingInstance(Optional, Type.ClassType)</a></li>
@@ -186,54 +185,49 @@ an accepted annotation on the symbol, or from the list of well-known types.</div
 <div class="block">Gets a human-friendly name for the given <code>Symbol</code> to use in diagnostics.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasAcceptedThreadSafeTypeParameterAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)" class="member-name-link">hasAcceptedThreadSafeTypeParameterAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasThreadSafeElementAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)" class="member-name-link">hasThreadSafeElementAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns whether the given type parameter's declaration is annotated with <code>typeParameterAnnotation</code> or another acceptable annotation.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasThreadSafeElementAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)" class="member-name-link">hasThreadSafeElementAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns whether the given type parameter's declaration is annotated with <code>containerOfAnnotation</code> indicating its type-safety determines the type-safety of the outer
 class.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasThreadSafeTypeParameterAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)" class="member-name-link">hasThreadSafeTypeParameterAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasThreadSafeTypeParameterAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)" class="member-name-link">hasThreadSafeTypeParameterAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns whether the given type parameter's declaration is annotated with <code>typeParameterAnnotation</code> indicating it will only ever be instantiated with thread-safe types.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isThreadSafeType(boolean,java.util.Set,com.sun.tools.javac.code.Type)" class="member-name-link">isThreadSafeType</a><wbr>(boolean&nbsp;allowContainerTypeParameters,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isThreadSafeType(boolean,java.util.Set,com.sun.tools.javac.code.Type)" class="member-name-link">isThreadSafeType</a><wbr>(boolean&nbsp;allowContainerTypeParameters,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
  com.sun.tools.javac.code.Type&nbsp;type)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns an <a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Violation</code></a> explaining whether the type is threadsafe.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Type</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mutableEnclosingInstance(java.util.Optional,com.sun.tools.javac.code.Type.ClassType)" class="member-name-link">mutableEnclosingInstance</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;&nbsp;tree,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Type</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mutableEnclosingInstance(java.util.Optional,com.sun.tools.javac.code.Type.ClassType)" class="member-name-link">mutableEnclosingInstance</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;&nbsp;tree,
  com.sun.tools.javac.code.Type.ClassType&nbsp;type)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns an enclosing instance for the specified type if it is thread-safe.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#threadSafeBuilder(com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)" class="member-name-link">threadSafeBuilder</a><wbr>(<a href="WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a>&nbsp;wellKnownThreadSafety)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type)" class="member-name-link">threadSafeInstantiation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#threadSafeBuilder(com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)" class="member-name-link">threadSafeBuilder</a><wbr>(<a href="WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a>&nbsp;wellKnownThreadSafety)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type)" class="member-name-link">threadSafeInstantiation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
  <a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
  com.sun.tools.javac.code.Type&nbsp;type)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Check that a type-use of an <code>@ThreadSafe</code>-annotated type is instantiated with threadsafe
 type arguments where required by its annotation's containerOf element.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type,java.util.Set)" class="member-name-link">threadSafeInstantiation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type,java.util.Set)" class="member-name-link">threadSafeInstantiation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
  <a href="AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a>&nbsp;annotation,
  com.sun.tools.javac.code.Type&nbsp;type,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;com.sun.tools.javac.code.Symbol.TypeVariableSymbol&gt;&nbsp;recursiveThreadSafeTypeParameter)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#threadSafeTypeParametersInScope(com.sun.tools.javac.code.Symbol)" class="member-name-link">threadSafeTypeParametersInScope</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#threadSafeTypeParametersInScope(com.sun.tools.javac.code.Symbol)" class="member-name-link">threadSafeTypeParametersInScope</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the set of in-scope threadsafe type parameters from the containerOf specs on annotations.</div>
 </div>
 </div>
@@ -346,15 +340,6 @@ super-type's containerOf spec.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasThreadSafeTypeParameterAnnotation</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</span></div>
 <div class="block">Returns whether the given type parameter's declaration is annotated with <code>typeParameterAnnotation</code> indicating it will only ever be instantiated with thread-safe types.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="hasAcceptedThreadSafeTypeParameterAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)">
-<h3>hasAcceptedThreadSafeTypeParameterAnnotation</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasAcceptedThreadSafeTypeParameterAnnotation</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.TypeVariableSymbol&nbsp;symbol)</span></div>
-<div class="block">Returns whether the given type parameter's declaration is annotated with <code>typeParameterAnnotation</code> or another acceptable annotation.</div>
 </div>
 </section>
 </li>
