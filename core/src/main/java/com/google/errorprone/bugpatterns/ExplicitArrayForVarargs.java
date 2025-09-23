@@ -73,6 +73,9 @@ public final class ExplicitArrayForVarargs extends BugChecker
       return NO_MATCH;
     }
     var initializers = newArrayTree.getInitializers();
+    if (initializers == null) {
+      return NO_MATCH;
+    }
     var fix =
         initializers.isEmpty()
             ? SuggestedFixes.removeElement(newArrayTree, args, state)
