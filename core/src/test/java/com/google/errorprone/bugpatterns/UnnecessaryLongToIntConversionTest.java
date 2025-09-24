@@ -86,6 +86,12 @@ public class UnnecessaryLongToIntConversionPositiveCases {
     acceptsLong(Ints.checkedCast(x));
   }
 
+  public void saturatedCast() {
+    long x = 1;
+    // BUG: Diagnostic contains: UnnecessaryLongToIntConversion
+    acceptsLong(Ints.saturatedCast(x));
+  }
+
   public void toIntExact() {
     long x = 1;
     // BUG: Diagnostic contains: UnnecessaryLongToIntConversion
