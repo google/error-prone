@@ -126,9 +126,11 @@ public class RedundantNullCheck extends BugChecker
         varSymbol.getKind() == ElementKind.LOCAL_VARIABLE
             || varSymbol.getKind() == ElementKind.RESOURCE_VARIABLE;
 
-    Optional<Nullness> varNullness = NullnessAnnotations.fromAnnotationsOn(varSymbol);
-    if (varNullness.isPresent()) {
-      return varNullness.get() == Nullness.NULLABLE;
+    if (!isLocalOrResourceVariable) {
+      Optional<Nullness> varNullness = NullnessAnnotations.fromAnnotationsOn(varSymbol);
+      if (varNullness.isPresent()) {
+        return varNullness.get() == Nullness.NULLABLE;
+      }
     }
 
     if (varSymbol.asType().getKind() == TYPEVAR) {
