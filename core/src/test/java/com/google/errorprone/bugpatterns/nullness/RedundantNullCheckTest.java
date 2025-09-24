@@ -621,6 +621,23 @@ public class RedundantNullCheckTest {
   }
 
   @Test
+  public void negative_localVariable_annotatedNullable_inNullMarkedScope() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import org.jspecify.annotations.NullMarked;",
+            "import org.jspecify.annotations.Nullable;",
+            "@NullMarked",
+            "class Test {",
+            "  void foo() {",
+            "    @Nullable String s = \"hello\";",
+            "    if (s == null) { /* This is fine */ }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void positive_variableInitializedWithLiteral_inNullMarkedScope() {
     compilationHelper
         .addSourceLines(

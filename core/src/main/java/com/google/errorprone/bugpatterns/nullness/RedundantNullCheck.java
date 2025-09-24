@@ -122,6 +122,10 @@ public class RedundantNullCheck extends BugChecker
   }
 
   private static boolean isEffectivelyNullable(VarSymbol varSymbol, VisitorState state) {
+    boolean isLocalOrResourceVariable =
+        varSymbol.getKind() == ElementKind.LOCAL_VARIABLE
+            || varSymbol.getKind() == ElementKind.RESOURCE_VARIABLE;
+
     Optional<Nullness> varNullness = NullnessAnnotations.fromAnnotationsOn(varSymbol);
     if (varNullness.isPresent()) {
       return varNullness.get() == Nullness.NULLABLE;
@@ -136,9 +140,7 @@ public class RedundantNullCheck extends BugChecker
       return true;
     }
 
-    if ((varSymbol.getKind() == ElementKind.LOCAL_VARIABLE
-            || varSymbol.getKind() == ElementKind.RESOURCE_VARIABLE)
-        && varDecl != null) {
+    if (isLocalOrResourceVariable && varDecl != null) {
       if (varDecl.getInitializer() == null) {
         return true;
       }
