@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
@@ -26,17 +27,21 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.nullness.NullnessUtils.NullCheck;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 
@@ -47,7 +52,35 @@ import javax.lang.model.element.ElementKind;
 @BugPattern(
     summary = "Explicit null check on a variable or method call that is not @Nullable within a @NullMarked scope.",
     severity = WARNING)
-public class RedundantNullCheck extends BugChecker implements BinaryTreeMatcher {
+public class RedundantNullCheck extends BugChecker
+    implements BinaryTreeMatcher, MethodInvocationTreeMatcher {
+
+  private static final Matcher<ExpressionTree> OBJECTS_REQUIRE_NON_NULL =
+      staticMethod().onClass("java.util.Objects").named("requireNonNull");
+
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (!OBJECTS_REQUIRE_NON_NULL.matches(tree, state)) {
+      return NO_MATCH;
+    }
+    if (tree.getArguments().isEmpty()) {
+      return NO_MATCH;
+    }
+    ExpressionTree arg = tree.getArguments().get(0);
+    Symbol symbol = ASTHelpers.getSymbol(arg);
+
+    boolean isRedundant = false;
+    if (symbol instanceof VarSymbol) {
+      isRedundant = isRedundantForVarSymbol((VarSymbol) symbol, state);
+    } else if (symbol instanceof MethodSymbol) {
+      isRedundant = !isEffectivelyNullable((MethodSymbol) symbol, state);
+    }
+
+    if (isRedundant) {
+      return buildDescription(tree).build();
+    }
+    return NO_MATCH;
+  }
 
   @Override
   public Description matchBinary(BinaryTree tree, VisitorState state) {
@@ -56,60 +89,68 @@ public class RedundantNullCheck extends BugChecker implements BinaryTreeMatcher 
       return NO_MATCH;
     }
 
+    boolean isRedundant = false;
     VarSymbol varSymbol = nullCheck.varSymbolButUsuallyPreferBareIdentifier();
     if (varSymbol != null) {
-      if (!NullnessUtils.isInNullMarkedScope(varSymbol, state)) {
-        return NO_MATCH;
-      }
-      if (NullnessUtils.isAlreadyAnnotatedNullable(varSymbol)) {
-        return NO_MATCH;
-      }
-      if (varSymbol.asType().getKind() == TYPEVAR) {
-        return NO_MATCH;
-      }
-
-      VariableTree varDecl = NullnessUtils.findDeclaration(state, varSymbol);
-      if (varSymbol.getKind() == ElementKind.PARAMETER && hasImplicitType(varDecl, state)) {
-        return NO_MATCH;
-      }
-
-      if ((varSymbol.getKind() == ElementKind.LOCAL_VARIABLE
-          || varSymbol.getKind() == ElementKind.RESOURCE_VARIABLE) && varDecl != null) {
-
-        if (varDecl.getInitializer() == null) {
-          return NO_MATCH;
-        }
-
-        if (!isConsideredFinal(varSymbol)) {
-          return NO_MATCH;
-        }
-
-        Tree initializer = varDecl.getInitializer();
-
-        if (initializer.getKind() == Tree.Kind.METHOD_INVOCATION) {
-          MethodInvocationTree methodInvocation = (MethodInvocationTree) initializer;
-          MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodInvocation);
-          if (methodSymbol != null && isEffectivelyNullable(methodSymbol, state)) {
-            return NO_MATCH;
-          }
-        } else if (initializer instanceof LiteralTree) {
-          if (initializer.getKind() == Tree.Kind.NULL_LITERAL) {
-            return NO_MATCH;
-          }
-        } else {
-          return NO_MATCH;
-        }
-      }
+      isRedundant = isRedundantForVarSymbol(varSymbol, state);
     } else {
       MethodSymbol methodSymbol = nullCheck.methodSymbol();
-      if (methodSymbol == null) {
-        return NO_MATCH;
-      }
-      if (isEffectivelyNullable(methodSymbol, state)) {
-        return NO_MATCH;
+      if (methodSymbol != null) {
+        isRedundant = !isEffectivelyNullable(methodSymbol, state);
       }
     }
-    return buildDescription(tree).build();
+
+    if (isRedundant) {
+      return buildDescription(tree).build();
+    }
+    return NO_MATCH;
+  }
+
+  private static boolean isRedundantForVarSymbol(VarSymbol varSymbol, VisitorState state) {
+    if (!NullnessUtils.isInNullMarkedScope(varSymbol, state)) {
+      return false;
+    }
+    if (NullnessUtils.isAlreadyAnnotatedNullable(varSymbol)) {
+      return false;
+    }
+    if (varSymbol.asType().getKind() == TYPEVAR) {
+      return false;
+    }
+
+    VariableTree varDecl = NullnessUtils.findDeclaration(state, varSymbol);
+    if (varSymbol.getKind() == ElementKind.PARAMETER && hasImplicitType(varDecl, state)) {
+      return false;
+    }
+
+    if ((varSymbol.getKind() == ElementKind.LOCAL_VARIABLE
+        || varSymbol.getKind() == ElementKind.RESOURCE_VARIABLE)
+        && varDecl != null) {
+
+      if (varDecl.getInitializer() == null) {
+        return false;
+      }
+
+      if (!isConsideredFinal(varSymbol)) {
+        return false;
+      }
+
+      Tree initializer = varDecl.getInitializer();
+
+      if (initializer.getKind() == Tree.Kind.METHOD_INVOCATION) {
+        MethodInvocationTree methodInvocation = (MethodInvocationTree) initializer;
+        MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodInvocation);
+        if (methodSymbol != null && isEffectivelyNullable(methodSymbol, state)) {
+          return false;
+        }
+      } else if (initializer instanceof LiteralTree) {
+        if (initializer.getKind() == Tree.Kind.NULL_LITERAL) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    }
+    return true;
   }
 
   private static boolean isEffectivelyNullable(MethodSymbol methodSymbol, VisitorState state) {

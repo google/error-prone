@@ -496,6 +496,22 @@ public class RedundantNullCheckTest {
   }
 
   @Test
+  public void positive_constructorCall_inNullMarkedScope() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import org.jspecify.annotations.NullMarked;",
+            "@NullMarked",
+            "class Test {",
+            "  void foo() {",
+            "    // BUG: Diagnostic contains: RedundantNullCheck",
+            "    if (new Object() == null) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negative_methodCall_onInstance_explicitlyNullableReturn_inNullMarkedScope() {
     compilationHelper
         .addSourceLines(
@@ -648,6 +664,72 @@ public class RedundantNullCheckTest {
             "  T get() { return null; }",
             "  void foo() {",
             "    if (get() == null) { /* This is fine, T could be nullable */ }",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_objectsRequireNonNull_inNullMarkedScope() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import org.jspecify.annotations.NullMarked;",
+            "import java.util.Objects;",
+            "@NullMarked",
+            "class Test {",
+            "  void foo(String s) {",
+            "    // BUG: Diagnostic contains: RedundantNullCheck",
+            "    Objects.requireNonNull(s);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void positive_objectsRequireNonNull_methodCall_inNullMarkedScope() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import org.jspecify.annotations.NullMarked;",
+            "import java.util.Objects;",
+            "@NullMarked",
+            "class Test {",
+            "  String getString() { return \"foo\"; }",
+            "  void foo() {",
+            "    // BUG: Diagnostic contains: RedundantNullCheck",
+            "    Objects.requireNonNull(getString());",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_objectsRequireNonNull_explicitlyNullable_inNullMarkedScope() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import org.jspecify.annotations.NullMarked;",
+            "import org.jspecify.annotations.Nullable;",
+            "import java.util.Objects;",
+            "@NullMarked",
+            "class Test {",
+            "  void foo(@Nullable String s) {",
+            "    Objects.requireNonNull(s); // This is fine",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void negative_objectsRequireNonNull_outsideNullMarkedScope() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import java.util.Objects;",
+            "class Test {",
+            "  void foo(String s) {",
+            "    Objects.requireNonNull(s); // This is fine",
             "  }",
             "}")
         .doTest();
