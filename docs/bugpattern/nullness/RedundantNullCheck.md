@@ -1,4 +1,5 @@
-A null check (e.g., `x == null` or `x != null`) is redundant if it is performed on a variable or method call that is known to be non-null within a `@NullMarked` scope. This check can optionally be configured to flag redundant calls to `Objects.requireNonNull(x)` as well.
+A null check (e.g., `x == null` or `x != null`) is redundant if it is performed on an expression that is statically determined to be non-null according to language semantics or nullness annotations.
+This check can optionally be configured to flag redundant calls to `Objects.requireNonNull(x)` as well.
 
 Within a `@NullMarked` scope, types are non-null by default unless explicitly annotated with `@Nullable`.
 Therefore, checking a variable or method return value (that isn't `@Nullable`) for nullness is unnecessary, as it should never be null.

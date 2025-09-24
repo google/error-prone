@@ -754,4 +754,19 @@ public class RedundantNullCheckTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void positive_nonNullAnnotated_outsideNullMarkedScope() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import org.jspecify.annotations.NonNull;",
+            "class Test {",
+            "  void foo(@NonNull String s) {",
+            "    // BUG: Diagnostic contains: RedundantNullCheck",
+            "    if (s == null) {}",
+            "  }",
+            "}")
+        .doTest();
+  }
 }

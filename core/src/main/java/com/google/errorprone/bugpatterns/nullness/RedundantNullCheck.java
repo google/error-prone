@@ -52,7 +52,9 @@ import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
 @BugPattern(
-    summary = "Explicit null check on a variable or method call that is not @Nullable within a @NullMarked scope.",
+    summary =
+        "Null check on an expression that is statically determined to be non-null according to "
+            + "language semantics or nullness annotations.",
     severity = WARNING)
 public class RedundantNullCheck extends BugChecker
     implements BinaryTreeMatcher, MethodInvocationTreeMatcher {
@@ -84,7 +86,7 @@ public class RedundantNullCheck extends BugChecker
 
     boolean isRedundant = false;
     if (symbol instanceof VarSymbol) {
-      isRedundant = isRedundantForVarSymbol((VarSymbol) symbol, state);
+      isRedundant = !isEffectivelyNullable((VarSymbol) symbol, state);
     } else if (symbol instanceof MethodSymbol) {
       isRedundant = !isEffectivelyNullable((MethodSymbol) symbol, state);
     }
@@ -105,7 +107,7 @@ public class RedundantNullCheck extends BugChecker
     boolean isRedundant = false;
     VarSymbol varSymbol = nullCheck.varSymbolButUsuallyPreferBareIdentifier();
     if (varSymbol != null) {
-      isRedundant = isRedundantForVarSymbol(varSymbol, state);
+      isRedundant = !isEffectivelyNullable(varSymbol, state);
     } else {
       MethodSymbol methodSymbol = nullCheck.methodSymbol();
       if (methodSymbol != null) {
@@ -119,32 +121,30 @@ public class RedundantNullCheck extends BugChecker
     return NO_MATCH;
   }
 
-  private static boolean isRedundantForVarSymbol(VarSymbol varSymbol, VisitorState state) {
-    if (!NullnessUtils.isInNullMarkedScope(varSymbol, state)) {
-      return false;
+  private static boolean isEffectivelyNullable(VarSymbol varSymbol, VisitorState state) {
+    Optional<Nullness> varNullness = NullnessAnnotations.fromAnnotationsOn(varSymbol);
+    if (varNullness.isPresent()) {
+      return varNullness.get() == Nullness.NULLABLE;
     }
-    if (NullnessUtils.isAlreadyAnnotatedNullable(varSymbol)) {
-      return false;
-    }
+
     if (varSymbol.asType().getKind() == TYPEVAR) {
-      return false;
+      return true;
     }
 
     VariableTree varDecl = NullnessUtils.findDeclaration(state, varSymbol);
     if (varSymbol.getKind() == ElementKind.PARAMETER && hasImplicitType(varDecl, state)) {
-      return false;
+      return true;
     }
 
     if ((varSymbol.getKind() == ElementKind.LOCAL_VARIABLE
-        || varSymbol.getKind() == ElementKind.RESOURCE_VARIABLE)
+            || varSymbol.getKind() == ElementKind.RESOURCE_VARIABLE)
         && varDecl != null) {
-
       if (varDecl.getInitializer() == null) {
-        return false;
+        return true;
       }
 
       if (!isConsideredFinal(varSymbol)) {
-        return false;
+        return true;
       }
 
       Tree initializer = varDecl.getInitializer();
@@ -153,17 +153,18 @@ public class RedundantNullCheck extends BugChecker
         MethodInvocationTree methodInvocation = (MethodInvocationTree) initializer;
         MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodInvocation);
         if (methodSymbol != null && isEffectivelyNullable(methodSymbol, state)) {
-          return false;
+          return true;
         }
       } else if (initializer instanceof LiteralTree) {
         if (initializer.getKind() == Tree.Kind.NULL_LITERAL) {
-          return false;
+          return true;
         }
       } else {
-        return false;
+        return true;
       }
     }
-    return true;
+
+    return !NullnessUtils.isInNullMarkedScope(varSymbol, state);
   }
 
   private static boolean isEffectivelyNullable(MethodSymbol methodSymbol, VisitorState state) {
