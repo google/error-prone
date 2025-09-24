@@ -156,16 +156,11 @@ public class RedundantNullCheck extends BugChecker
       if (initializer.getKind() == Tree.Kind.METHOD_INVOCATION) {
         MethodInvocationTree methodInvocation = (MethodInvocationTree) initializer;
         MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodInvocation);
-        if (methodSymbol != null && isEffectivelyNullable(methodSymbol, state)) {
-          return true;
-        }
+        return methodSymbol != null && isEffectivelyNullable(methodSymbol, state);
       } else if (initializer instanceof LiteralTree) {
-        if (initializer.getKind() == Tree.Kind.NULL_LITERAL) {
-          return true;
-        }
-      } else {
-        return true;
+        return initializer.getKind() == Tree.Kind.NULL_LITERAL;
       }
+      return true;
     }
 
     return !NullnessUtils.isInNullMarkedScope(varSymbol, state);
