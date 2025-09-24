@@ -24,6 +24,7 @@ import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
@@ -47,6 +48,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 
 import java.util.Optional;
 
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
 @BugPattern(
@@ -58,8 +60,19 @@ public class RedundantNullCheck extends BugChecker
   private static final Matcher<ExpressionTree> OBJECTS_REQUIRE_NON_NULL =
       staticMethod().onClass("java.util.Objects").named("requireNonNull");
 
+  private final boolean checkRequireNonNull;
+
+  @Inject
+  public RedundantNullCheck(ErrorProneFlags flags) {
+    this.checkRequireNonNull =
+        flags.getBoolean("RedundantNullCheck:CheckRequireNonNull").orElse(false);
+  }
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    if (!checkRequireNonNull) {
+      return NO_MATCH;
+    }
     if (!OBJECTS_REQUIRE_NON_NULL.matches(tree, state)) {
       return NO_MATCH;
     }

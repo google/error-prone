@@ -1,4 +1,4 @@
-A null check (e.g., `x == null`, `x != null`, `Objects.requireNonNull(x)`) is redundant if it is performed on a variable or method call that is known to be non-null within a `@NullMarked` scope.
+A null check (e.g., `x == null` or `x != null`) is redundant if it is performed on a variable or method call that is known to be non-null within a `@NullMarked` scope. This check can optionally be configured to flag redundant calls to `Objects.requireNonNull(x)` as well.
 
 Within a `@NullMarked` scope, types are non-null by default unless explicitly annotated with `@Nullable`.
 Therefore, checking a variable or method return value (that isn't `@Nullable`) for nullness is unnecessary, as it should never be null.
@@ -46,6 +46,14 @@ class MyClass {
 
 This check helps to clean up code and reduce clutter by removing unnecessary null checks, making the code easier to read and maintain.
 It also reinforces the contract provided by `@NullMarked` and `@Nullable` annotations.
+
+## Configuration
+
+By default, this check only flags redundant null checks using `== null` and `!= null`. To also flag redundant calls to `Objects.requireNonNull(x)`, enable it with the following flag:
+
+```
+-XepOpt:RedundantNullCheck:CheckRequireNonNull=true
+```
 
 ## Suppression
 

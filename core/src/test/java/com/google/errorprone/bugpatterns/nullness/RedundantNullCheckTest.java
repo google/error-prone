@@ -672,6 +672,7 @@ public class RedundantNullCheckTest {
   @Test
   public void positive_objectsRequireNonNull_inNullMarkedScope() {
     compilationHelper
+        .setArgs("-XepOpt:RedundantNullCheck:CheckRequireNonNull=true")
         .addSourceLines(
             "Test.java",
             "import org.jspecify.annotations.NullMarked;",
@@ -689,6 +690,7 @@ public class RedundantNullCheckTest {
   @Test
   public void positive_objectsRequireNonNull_methodCall_inNullMarkedScope() {
     compilationHelper
+        .setArgs("-XepOpt:RedundantNullCheck:CheckRequireNonNull=true")
         .addSourceLines(
             "Test.java",
             "import org.jspecify.annotations.NullMarked;",
@@ -705,8 +707,25 @@ public class RedundantNullCheckTest {
   }
 
   @Test
+  public void negative_objectsRequireNonNull_byDefault() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import org.jspecify.annotations.NullMarked;",
+            "import java.util.Objects;",
+            "@NullMarked",
+            "class Test {",
+            "  void foo(String s) {",
+            "    Objects.requireNonNull(s);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negative_objectsRequireNonNull_explicitlyNullable_inNullMarkedScope() {
     compilationHelper
+        .setArgs("-XepOpt:RedundantNullCheck:CheckRequireNonNull=true")
         .addSourceLines(
             "Test.java",
             "import org.jspecify.annotations.NullMarked;",
@@ -724,6 +743,7 @@ public class RedundantNullCheckTest {
   @Test
   public void negative_objectsRequireNonNull_outsideNullMarkedScope() {
     compilationHelper
+        .setArgs("-XepOpt:RedundantNullCheck:CheckRequireNonNull=true")
         .addSourceLines(
             "Test.java",
             "import java.util.Objects;",
