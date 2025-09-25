@@ -573,9 +573,7 @@ public class Matchers {
 
   /** Matches an AST node if it is a null literal. */
   public static Matcher<ExpressionTree> nullLiteral() {
-    return (tree, state) -> {
-      return tree.getKind() == Kind.NULL_LITERAL;
-    };
+    return (tree, state) -> tree.getKind() == Kind.NULL_LITERAL;
   }
 
   /** Matches an AST node if it is a literal other than null. */
@@ -614,9 +612,10 @@ public class Matchers {
   }
 
   public static Matcher<ExpressionTree> booleanLiteral(boolean value) {
-    return (expressionTree, state) ->
-        expressionTree.getKind() == Kind.BOOLEAN_LITERAL
-            && value == (Boolean) (((LiteralTree) expressionTree).getValue());
+    return (tree, state) ->
+        tree instanceof LiteralTree literalTree
+            && literalTree.getValue() instanceof Boolean bool
+            && bool == value;
   }
 
   /**
@@ -649,21 +648,20 @@ public class Matchers {
     return (tree, state) -> innerMatcher.matches(stripParentheses(tree), state);
   }
 
+  /** Matches an {@code int} literal with the given value. */
   public static Matcher<ExpressionTree> intLiteral(int value) {
-    return (tree, state) -> {
-      return tree.getKind() == Kind.INT_LITERAL
-          && value == ((Integer) ((LiteralTree) tree).getValue());
-    };
+    return (tree, state) ->
+        tree instanceof LiteralTree literalTree
+            && literalTree.getValue() instanceof Integer integer
+            && integer == value;
   }
 
+  /** Matches a class literal with the given class matcher. */
   public static Matcher<ExpressionTree> classLiteral(Matcher<? super ExpressionTree> classMatcher) {
-    return (tree, state) -> {
-      if (tree instanceof MemberSelectTree select) {
-        return select.getIdentifier().contentEquals("class")
+    return (tree, state) ->
+        tree instanceof MemberSelectTree select
+            && select.getIdentifier().contentEquals("class")
             && classMatcher.matches(select.getExpression(), state);
-      }
-      return false;
-    };
   }
 
   /**
