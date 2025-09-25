@@ -21,10 +21,12 @@ import static com.google.errorprone.bugpatterns.javadoc.Utils.getDiagnosticPosit
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getJavadoccableTrees;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ErrorProneTokens.getTokens;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableRangeSet;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -34,8 +36,12 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.ErrorProneComment.ErrorProneCommentStyle;
 import com.google.errorprone.util.ErrorProneToken;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreeScanner;
 
 /** A BugPattern; see the summary. */
 @BugPattern(
@@ -46,6 +52,7 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     ImmutableMap<Integer, TreePath> javadocableTrees = getJavadoccableTrees(tree);
+    ImmutableSet<Integer> seeminglyJavadocableTrees = getSeeminglyJavadocableTrees(tree);
     ImmutableRangeSet<Integer> suppressedRegions = suppressedRegions(state);
     for (ErrorProneToken token : getTokens(state.getSourceCode().toString(), state.context)) {
       for (ErrorProneComment comment : token.comments()) {
@@ -67,12 +74,34 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
         while (comment.getText().charAt(endPos) == '*') {
           endPos++;
         }
+        var message =
+            seeminglyJavadocableTrees.contains(token.pos())
+                ? "This comment seems to be attached to a method or class, but methods and classes"
+                    + " nested within methods cannot be documented with Javadoc."
+                : message();
         state.reportMatch(
-            describeMatch(
-                getDiagnosticPosition(comment.getSourcePos(0), tree),
-                replace(comment.getSourcePos(1), comment.getSourcePos(endPos - 1), "")));
+            buildDescription(getDiagnosticPosition(comment.getSourcePos(0), tree))
+                .setMessage(message)
+                .addFix(replace(comment.getSourcePos(1), comment.getSourcePos(endPos - 1), ""))
+                .build());
       }
     }
     return NO_MATCH;
+  }
+
+  private static ImmutableSet<Integer> getSeeminglyJavadocableTrees(CompilationUnitTree tree) {
+    ImmutableSet.Builder<Integer> builder = ImmutableSet.builder();
+    tree.accept(
+        new TreeScanner<Void, Void>() {
+          @Override
+          public Void scan(Tree tree, Void unused) {
+            if (tree instanceof MethodTree || tree instanceof ClassTree) {
+              builder.add(getStartPosition(tree));
+            }
+            return super.scan(tree, null);
+          }
+        },
+        null);
+    return builder.build();
   }
 }

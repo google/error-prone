@@ -19,12 +19,15 @@ package com.google.errorprone.bugpatterns.javadoc;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 @RunWith(JUnit4.class)
 public final class NotJavadocTest {
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(NotJavadoc.class, getClass());
   private final BugCheckerRefactoringTestHelper helper =
       BugCheckerRefactoringTestHelper.newInstance(NotJavadoc.class, getClass());
 
@@ -50,6 +53,23 @@ public final class NotJavadocTest {
             }
             """)
         .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void nestedClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                // BUG: Diagnostic contains: nested
+                /** Not Javadoc. */
+                class A {}
+              }
+            }
+            """)
+        .doTest();
   }
 
   @Test

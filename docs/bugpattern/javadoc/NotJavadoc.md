@@ -2,6 +2,8 @@ This comment starts with `/**`, but isn't actually Javadoc.
 
 Javadoc comments
 [must precede a class, field, constructor, or method declaration](https://www.oracle.com/technical-resources/articles/java/javadoc-tool.html#format).
+Javadoc cannot be applied to classes or methods nested within a method, as those
+elements never form part of an API.
 
 Using `/**` comments in locations where Javadoc is not supported is confusing
 and unnecessary.
