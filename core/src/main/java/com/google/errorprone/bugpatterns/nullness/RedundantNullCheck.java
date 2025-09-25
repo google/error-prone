@@ -65,7 +65,7 @@ public class RedundantNullCheck extends BugChecker
   private final boolean checkRequireNonNull;
 
   @Inject
-  public RedundantNullCheck(ErrorProneFlags flags) {
+  RedundantNullCheck(ErrorProneFlags flags) {
     this.checkRequireNonNull =
         flags.getBoolean("RedundantNullCheck:CheckRequireNonNull").orElse(false);
   }
@@ -78,22 +78,19 @@ public class RedundantNullCheck extends BugChecker
     if (!OBJECTS_REQUIRE_NON_NULL.matches(tree, state)) {
       return NO_MATCH;
     }
-    if (tree.getArguments().isEmpty()) {
-      return NO_MATCH;
-    }
+
     ExpressionTree arg = tree.getArguments().get(0);
     Symbol symbol = ASTHelpers.getSymbol(arg);
 
-    boolean isRedundant = false;
-    if (symbol instanceof VarSymbol) {
-      isRedundant = !isEffectivelyNullable((VarSymbol) symbol, state);
-    } else if (symbol instanceof MethodSymbol) {
-      isRedundant = !isEffectivelyNullable((MethodSymbol) symbol, state);
+    if (symbol instanceof VarSymbol varSymbol && !isEffectivelyNullable(varSymbol, state)) {
+      return describeMatch(tree);
     }
 
-    if (isRedundant) {
-      return buildDescription(tree).build();
+    if (symbol instanceof MethodSymbol methodSymbol
+        && !isEffectivelyNullable(methodSymbol, state)) {
+      return describeMatch(tree);
     }
+
     return NO_MATCH;
   }
 
@@ -104,20 +101,16 @@ public class RedundantNullCheck extends BugChecker
       return NO_MATCH;
     }
 
-    boolean isRedundant = false;
     VarSymbol varSymbol = nullCheck.varSymbolButUsuallyPreferBareIdentifier();
-    if (varSymbol != null) {
-      isRedundant = !isEffectivelyNullable(varSymbol, state);
-    } else {
-      MethodSymbol methodSymbol = nullCheck.methodSymbol();
-      if (methodSymbol != null) {
-        isRedundant = !isEffectivelyNullable(methodSymbol, state);
-      }
+    if (varSymbol != null && !isEffectivelyNullable(varSymbol, state)) {
+      return describeMatch(tree);
     }
 
-    if (isRedundant) {
-      return buildDescription(tree).build();
+    MethodSymbol methodSymbol = nullCheck.methodSymbol();
+    if (methodSymbol != null && !isEffectivelyNullable(methodSymbol, state)) {
+      return describeMatch(tree);
     }
+
     return NO_MATCH;
   }
 
@@ -142,7 +135,7 @@ public class RedundantNullCheck extends BugChecker
       return true;
     }
 
-    if (isLocalOrResourceVariable && varDecl != null) {
+    if (isLocalOrResourceVariable) {
       if (varDecl.getInitializer() == null) {
         return true;
       }
@@ -153,8 +146,7 @@ public class RedundantNullCheck extends BugChecker
 
       Tree initializer = varDecl.getInitializer();
 
-      if (initializer.getKind() == Tree.Kind.METHOD_INVOCATION) {
-        MethodInvocationTree methodInvocation = (MethodInvocationTree) initializer;
+      if (initializer instanceof MethodInvocationTree methodInvocation) {
         MethodSymbol methodSymbol = ASTHelpers.getSymbol(methodInvocation);
         return methodSymbol == null || isEffectivelyNullable(methodSymbol, state);
       } else if (initializer instanceof LiteralTree) {
