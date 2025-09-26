@@ -1365,7 +1365,7 @@ __[UnicodeEscape](bugpattern/UnicodeEscape)__<br>
 Using unicode escape sequences for printable ASCII characters is obfuscated, and potentially dangerous.
 
 __[UnnecessaryAssignment](bugpattern/UnnecessaryAssignment)__<br>
-Fields annotated with @Inject/@Mock should not be manually assigned to, as they should be initialized by a framework. Remove the assignment if a framework is being used, or the annotation if one isn&#39;t.
+Fields annotated with @Inject/@Mock/@TestParameter should not be manually assigned to, as they should be initialized by a framework. Remove the assignment if a framework is being used, or the annotation if one isn&#39;t.
 
 __[UnnecessaryAsync](bugpattern/UnnecessaryAsync)__<br>
 Variables which are initialized and do not escape the current scope do not need to worry about concurrency. Using the non-concurrent type will reduce overhead and verbosity.

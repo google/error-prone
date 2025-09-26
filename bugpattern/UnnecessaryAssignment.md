@@ -1,8 +1,8 @@
 ---
 title: UnnecessaryAssignment
-summary: Fields annotated with @Inject/@Mock should not be manually assigned to, as
-  they should be initialized by a framework. Remove the assignment if a framework
-  is being used, or the annotation if one isn't.
+summary: Fields annotated with @Inject/@Mock/@TestParameter should not be manually
+  assigned to, as they should be initialized by a framework. Remove the assignment
+  if a framework is being used, or the annotation if one isn't.
 layout: bugpattern
 tags: ''
 severity: WARNING
