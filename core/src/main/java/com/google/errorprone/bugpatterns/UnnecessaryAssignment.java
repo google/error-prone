@@ -70,11 +70,13 @@ import javax.lang.model.element.Modifier;
 /**
  * Discourage manual initialization or assignment to fields annotated with framework annotations.
  */
+// TODO: b/447474042 - All diagnostics should customize the message to mention the specific
+// annotation
 @BugPattern(
     summary =
-        "Fields annotated with @Inject/@Mock should not be manually assigned to, as they should be"
-            + " initialized by a framework. Remove the assignment if a framework is being used, or"
-            + " the annotation if one isn't.",
+        "Fields annotated with @Inject/@Mock/@TestParameter should not be manually assigned to, as"
+            + " they should be initialized by a framework. Remove the assignment if a framework is"
+            + " being used, or the annotation if one isn't.",
     severity = WARNING)
 public final class UnnecessaryAssignment extends BugChecker
     implements AssignmentTreeMatcher, VariableTreeMatcher {
