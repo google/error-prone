@@ -40,6 +40,7 @@ import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Pair;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.jspecify.annotations.Nullable;
@@ -166,21 +167,13 @@ public class SuppressionInfo {
     if (inGeneratedCode && suppressedInGeneratedCode) {
       return new Suppressed(null);
     }
-    if (suppressible.supportsSuppressWarnings()
-        && (suppressWarningsStrings.contains("all")
-            || !Collections.disjoint(suppressible.allNames(), suppressWarningsStrings))) {
-      String name;
-      if (suppressWarningsStrings.contains("all")) {
-        name = "all";
-      } else {
-        // find the first name that suppresses this check
-        name =
-            suppressible.allNames().stream()
-                .filter(suppressWarningsStrings::contains)
-                .findAny()
-                .get();
+    if (suppressible.supportsSuppressWarnings()) {
+      Optional<String> warningName =
+          suppressible.allNames().stream().filter(suppressWarningsStrings::contains).findAny();
+      if (suppressWarningsStrings.contains("all") || warningName.isPresent()) {
+        String name = warningName.orElse("all");
+        return new Suppressed(name);
       }
-      return new Suppressed(name);
     }
     if (suppressible.suppressedByAnyOf(customSuppressions, state)) {
       return new Suppressed(null);
