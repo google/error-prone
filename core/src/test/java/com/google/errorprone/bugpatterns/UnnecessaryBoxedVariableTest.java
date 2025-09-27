@@ -548,4 +548,79 @@ public class UnnecessaryBoxedVariableTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void privateConstant_alwaysUsedUnboxed_refactored() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: int FOO
+              private static final Integer FOO = 42;
+
+              public int foo() {
+                return FOO;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void publicConstant_alwaysUsedUnboxed_notRefactored() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public static final Integer FOO = 42;
+
+              public int foo() {
+                return FOO;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateConstant_usedBoxed_notRefactored() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final Integer FOO = 42;
+
+              public Integer foo() {
+                return FOO;
+              }
+
+              public int unboxedFoo() {
+                return FOO;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateConstant_usedInAnotherBoxedContext_notRefactored() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              private static final Integer FOO = 42;
+
+              public ImmutableList<Integer> foos() {
+                return ImmutableList.of(FOO);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

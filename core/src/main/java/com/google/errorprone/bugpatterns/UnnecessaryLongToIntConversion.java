@@ -57,7 +57,9 @@ public class UnnecessaryLongToIntConversion extends BugChecker
   // for each case.
   private static final Matcher<ExpressionTree> LONG_TO_INT_STATIC_METHODS =
       anyOf(
-          staticMethod().onClass("com.google.common.primitives.Ints").named("checkedCast"),
+          staticMethod()
+              .onClass("com.google.common.primitives.Ints")
+              .namedAnyOf("checkedCast", "saturatedCast"),
           staticMethod().onClass("java.lang.Math").named("toIntExact"));
 
   private static final Matcher<ExpressionTree> LONG_TO_INT_INSTANCE_METHODS =

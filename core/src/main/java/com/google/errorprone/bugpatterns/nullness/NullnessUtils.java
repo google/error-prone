@@ -420,13 +420,16 @@ class NullnessUtils {
 
     Name name = nullChecked instanceof IdentifierTree id ? id.getName() : null;
 
-    VarSymbol varSymbol = getSymbol(nullChecked) instanceof VarSymbol vs ? vs : null;
+    Symbol symbol = getSymbol(nullChecked);
+    VarSymbol varSymbol = symbol instanceof VarSymbol vs ? vs : null;
+    MethodSymbol methodSymbol = symbol instanceof MethodSymbol ms ? ms : null;
 
-    return new NullCheck(name, varSymbol, polarity);
+    return new NullCheck(name, varSymbol, methodSymbol, polarity);
   }
 
   /**
-   * A check of a variable against {@code null}, like {@code foo == null}.
+   * A check of a variable or method call against {@code null}, like {@code foo == null}, or {@code
+   * foo.method() == null}.
    *
    * <p>This class exposes the variable in two forms: the {@link VarSymbol} (if available) and the
    * {@link Name} (if the null check was performed on a bare identifier, like {@code foo}). Many
@@ -455,10 +458,13 @@ class NullnessUtils {
    *     documentation.
    * @param varSymbolButUsuallyPreferBareIdentifier Returns the symbol that was checked against
    *     {@code null}.
+   * @param methodSymbol Returns the method symbol that was checked against {@code null}, if the
+   *     null check took that form.
    */
   record NullCheck(
       @Nullable Name bareIdentifier,
       @Nullable VarSymbol varSymbolButUsuallyPreferBareIdentifier,
+      @Nullable MethodSymbol methodSymbol,
       Polarity polarity) {
     boolean bareIdentifierMatches(ExpressionTree other) {
       return other instanceof IdentifierTree identifierTree

@@ -16,11 +16,15 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static java.util.Collections.nCopies;
+import static java.util.stream.Collectors.joining;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -73,6 +77,17 @@ public final class ExplicitArrayForVarargs extends BugChecker
       return NO_MATCH;
     }
     var initializers = newArrayTree.getInitializers();
+    if (initializers == null) {
+      var dimensions = newArrayTree.getDimensions();
+      if (dimensions == null || dimensions.size() != 1) {
+        return NO_MATCH;
+      }
+      if (!(constValue(getOnlyElement(dimensions)) instanceof Integer dimension)) {
+        return NO_MATCH;
+      }
+      String replacement = nCopies(dimension, "null").stream().collect(joining(", "));
+      return describeMatch(newArrayTree, SuggestedFix.replace(newArrayTree, replacement));
+    }
     var fix =
         initializers.isEmpty()
             ? SuggestedFixes.removeElement(newArrayTree, args, state)

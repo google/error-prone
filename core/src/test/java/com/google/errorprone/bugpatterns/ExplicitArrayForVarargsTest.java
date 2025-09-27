@@ -79,4 +79,28 @@ public final class ExplicitArrayForVarargsTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void emptyInitializers() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.Arrays;
+            import java.util.List;
+
+            class Test {
+              List<Object> empty() {
+                // BUG: Diagnostic contains: Arrays.asList()
+                return Arrays.asList(new Object[0]);
+              }
+
+              List<Object> nonempty() {
+                // BUG: Diagnostic contains: Arrays.asList(null)
+                return Arrays.asList(new Object[1]);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

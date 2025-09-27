@@ -264,4 +264,22 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void mockito() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.mockito.Mockito.mock;
+
+            class Test {
+              public void testFoo() {
+                NullPointerException npe = mock(NullPointerException.class);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }

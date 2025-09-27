@@ -160,4 +160,16 @@ public final class ApiTest {
     assertThat(api.isConstructor()).isFalse();
     assertThat(api.toString()).isEqualTo(string);
   }
+
+  @Test
+  public void parseApi_kotlinFunctionWithMangledName() {
+    String string = "androidx.camera.camera2.pipe.FrameMetadata#getCamera-Dz_R5H8()";
+    Api api = Api.parse(string);
+
+    assertThat(api.className()).isEqualTo("androidx.camera.camera2.pipe.FrameMetadata");
+    assertThat(api.methodName()).isEqualTo("getCamera-Dz_R5H8");
+    assertThat(api.parameterTypes()).isEmpty();
+    assertThat(api.isConstructor()).isFalse();
+    assertThat(api.toString()).isEqualTo(string);
+  }
 }

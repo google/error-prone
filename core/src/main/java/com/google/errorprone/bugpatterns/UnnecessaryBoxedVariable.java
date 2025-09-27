@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -47,9 +46,7 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -64,6 +61,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
 /**
@@ -81,6 +79,13 @@ import javax.lang.model.element.ElementKind;
 public class UnnecessaryBoxedVariable extends BugChecker implements CompilationUnitTreeMatcher {
   private static final Matcher<ExpressionTree> VALUE_OF_MATCHER =
       staticMethod().onClass(UnnecessaryBoxedVariable::isBoxableType).named("valueOf");
+
+  private final WellKnownKeep wellKnownKeep;
+
+  @Inject
+  UnnecessaryBoxedVariable(WellKnownKeep wellKnownKeep) {
+    this.wellKnownKeep = wellKnownKeep;
+  }
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
@@ -112,6 +117,19 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
       // Fall through.
       case LOCAL_VARIABLE:
         if (!variableMatches(tree, state)) {
+          return Optional.empty();
+        }
+        break;
+      case FIELD:
+        if (wellKnownKeep.shouldKeep(tree)
+            || !ASTHelpers.canBeRemoved(varSymbol)
+            || !ASTHelpers.isStatic(varSymbol)
+            || !ASTHelpers.isConsideredFinal(varSymbol)
+            || usages.boxedUsageFound.contains(varSymbol)) {
+          return Optional.empty();
+        }
+        var initializer = tree.getInitializer();
+        if (initializer == null || !ASTHelpers.getType(initializer).isPrimitive()) {
           return Optional.empty();
         }
         break;
@@ -149,15 +167,19 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
       return Optional.of(describeMatch(tree, fixBuilder.build()));
     }
     fixBuilder.replace(nullableAnnotation, "");
+    var message =
+        switch (varSymbol.getKind()) {
+          case FIELD ->
+              "This field is assigned a primitive value, and not used in a boxed context. Prefer"
+                  + " using the primitive type directly.";
+          default ->
+              "All usages of this @Nullable variable would result in a NullPointerException when"
+                  + " it actually is null. Use the primitive type if this variable should never"
+                  + " be null, or else fix the code to avoid unboxing or invoking its instance"
+                  + " methods.";
+        };
     return Optional.of(
-        buildDescription(tree)
-            .setMessage(
-                "All usages of this @Nullable variable would result in a NullPointerException when"
-                    + " it actually is null. Use the primitive type if this variable should never"
-                    + " be null, or else fix the code to avoid unboxing or invoking its instance"
-                    + " methods.")
-            .addFix(fixBuilder.build())
-            .build());
+        buildDescription(tree).setMessage(message).addFix(fixBuilder.build()).build());
   }
 
   private static Optional<Type> unboxed(Tree tree, VisitorState state) {
@@ -371,6 +393,17 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
 
     @Override
     public Void visitIdentifier(IdentifierTree node, Void unused) {
+      handleIdentifier(node);
+      return super.visitIdentifier(node, null);
+    }
+
+    @Override
+    public Void visitMemberSelect(MemberSelectTree node, Void unused) {
+      handleIdentifier(node);
+      return super.visitMemberSelect(node, null);
+    }
+
+    private void handleIdentifier(Tree node) {
       Symbol nodeSymbol = getSymbol(node);
       if (isBoxed(nodeSymbol, state)) {
         dereferenced.add((VarSymbol) nodeSymbol);
@@ -378,10 +411,8 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
         TargetType targetType = TargetType.targetType(identifierState);
         if (targetType != null && !targetType.type().isPrimitive()) {
           boxedUsageFound.add((VarSymbol) nodeSymbol);
-          return null;
         }
       }
-      return super.visitIdentifier(node, null);
     }
 
     @Override
@@ -419,28 +450,6 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
       }
 
       return super.visitMethodInvocation(node, null);
-    }
-
-    @Override
-    public Void visitReturn(ReturnTree node, Void unused) {
-      Symbol nodeSymbol = getSymbol(ASTHelpers.stripParentheses(node.getExpression()));
-      if (!isBoxed(nodeSymbol, state)) {
-        return super.visitReturn(node, null);
-      }
-      dereferenced.add((VarSymbol) nodeSymbol);
-
-      // Don't count a return value as a boxed usage, except if we are returning a parameter, and
-      // the method's return type is boxed.
-      if (nodeSymbol.getKind() == ElementKind.PARAMETER) {
-        MethodTree enclosingMethod = findEnclosingMethod(state.withPath(getCurrentPath()));
-        if (enclosingMethod != null) {
-          Type returnType = ASTHelpers.getType(enclosingMethod.getReturnType());
-          if (!returnType.isPrimitive()) {
-            boxedUsageFound.add((VarSymbol) nodeSymbol);
-          }
-        }
-      }
-      return null;
     }
 
     @Override
