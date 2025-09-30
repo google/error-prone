@@ -1791,7 +1791,7 @@ __[LambdaFunctionalInterface](bugpattern/LambdaFunctionalInterface)__<br>
 Use Java&#39;s utility functional interfaces instead of Function&lt;A, B&gt; for primitive types.
 
 __[MethodCanBeStatic](bugpattern/MethodCanBeStatic)__<br>
-A private method that does not reference the enclosing instance can be static
+This method does not reference the enclosing instance and can be static
 
 __[MissingBraces](bugpattern/MissingBraces)__<br>
 The Google Java Style Guide requires braces to be used with if, else, for, do and while statements, even when the body is empty or contains only a single statement.

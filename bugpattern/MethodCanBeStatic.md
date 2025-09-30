@@ -1,6 +1,6 @@
 ---
 title: MethodCanBeStatic
-summary: A private method that does not reference the enclosing instance can be static
+summary: This method does not reference the enclosing instance and can be static
 layout: bugpattern
 tags: ''
 severity: SUGGESTION
