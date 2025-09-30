@@ -641,6 +641,11 @@ public abstract class BugChecker implements Suppressible, Serializable {
     }
 
     private boolean suppressed(Tree tree) {
+      boolean ignoreSuppressions = state.errorProneOptions().isIgnoreSuppressionAnnotations();
+      if (ignoreSuppressions) {
+        return false;
+      }
+
       boolean isSuppressible =
           tree instanceof ClassTree || tree instanceof MethodTree || tree instanceof VariableTree;
       return isSuppressible && isSuppressed(tree, state);
