@@ -759,7 +759,7 @@ __[EnumOrdinal](bugpattern/EnumOrdinal)__<br>
 You should almost never invoke the Enum.ordinal() method or depend on the enum values by index.
 
 __[EqualsGetClass](bugpattern/EqualsGetClass)__<br>
-Prefer instanceof to getClass when implementing Object#equals.
+Prefer instanceof to getClass when implementing Object#equals. Note that this may be a behaviour change.
 
 __[EqualsIncompatibleType](bugpattern/EqualsIncompatibleType)__<br>
 An equality test between objects with incompatible types always returns false

@@ -1,6 +1,7 @@
 ---
 title: EqualsGetClass
-summary: Prefer instanceof to getClass when implementing Object#equals.
+summary: Prefer instanceof to getClass when implementing Object#equals. Note that
+  this may be a behaviour change.
 layout: bugpattern
 tags: FragileCode
 severity: WARNING
