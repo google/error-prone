@@ -1352,7 +1352,7 @@ public class Matchers {
                   .collect(toImmutableSet()));
 
   private static class IsDirectImplementationOf extends ChildMultiMatcher<ClassTree, Tree> {
-    public IsDirectImplementationOf(Matcher<Tree> classMatcher) {
+    IsDirectImplementationOf(Matcher<Tree> classMatcher) {
       super(MatchType.AT_LEAST_ONE, classMatcher);
     }
 

@@ -66,11 +66,11 @@ public class MissingSuperCall extends BugChecker
       this.fullyQualifiedName = fullyQualifiedName;
     }
 
-    public String fullyQualifiedName() {
+    String fullyQualifiedName() {
       return fullyQualifiedName;
     }
 
-    public String simpleName() {
+    String simpleName() {
       int index = fullyQualifiedName().lastIndexOf('.');
       if (index >= 0) {
         return fullyQualifiedName().substring(index + 1);

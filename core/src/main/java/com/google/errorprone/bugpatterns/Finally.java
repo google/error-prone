@@ -136,7 +136,7 @@ public class Finally extends BugChecker
     }
 
     /** Match a tree in the ancestor chain given the ancestor's immediate descendant. */
-    protected MatchResult matchAncestor(Tree leaf, Tree prevTree) {
+    MatchResult matchAncestor(Tree leaf, Tree prevTree) {
       if (leaf instanceof TryTree tryTree) {
         if (tryTree.getFinallyBlock() != null && tryTree.getFinallyBlock().equals(prevTree)) {
           return MatchResult.FOUND_ERROR;
@@ -157,12 +157,12 @@ public class Finally extends BugChecker
       CONTINUE
     }
 
-    public FinallyJumpMatcher(JCContinue jcContinue) {
+    FinallyJumpMatcher(JCContinue jcContinue) {
       this.label = jcContinue.getLabel();
       this.jumpType = JumpType.CONTINUE;
     }
 
-    public FinallyJumpMatcher(JCBreak jcBreak) {
+    FinallyJumpMatcher(JCBreak jcBreak) {
       this.label = jcBreak.getLabel();
       this.jumpType = JumpType.BREAK;
     }

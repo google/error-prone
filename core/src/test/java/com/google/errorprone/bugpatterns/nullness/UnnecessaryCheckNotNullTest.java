@@ -531,12 +531,12 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
       private final ImmutableMap.Builder<String, Match> builder = ImmutableMap.builder();
 
       @CanIgnoreReturnValue
-      public Builder add(String expression, String... expected) {
+      Builder add(String expression, String... expected) {
         builder.put(expression, new Match(expected));
         return this;
       }
 
-      public TestScanner build() {
+      TestScanner build() {
         return new TestScanner(builder.buildOrThrow());
       }
     }
@@ -565,7 +565,7 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
           .isEqualTo(expected);
     }
 
-    public void assertFoundAll() {
+    void assertFoundAll() {
       for (Map.Entry<String, Match> entry : matches.entrySet()) {
         assertWithMessage("found " + entry.getKey()).that(entry.getValue().found).isTrue();
       }

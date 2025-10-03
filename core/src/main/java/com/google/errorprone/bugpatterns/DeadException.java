@@ -93,7 +93,7 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
 
   private static class ChildOfBlockOrCase<T extends Tree>
       extends ChildMultiMatcher<T, StatementTree> {
-    public ChildOfBlockOrCase(MatchType matchType, Matcher<StatementTree> nodeMatcher) {
+    ChildOfBlockOrCase(MatchType matchType, Matcher<StatementTree> nodeMatcher) {
       super(matchType, nodeMatcher);
     }
 

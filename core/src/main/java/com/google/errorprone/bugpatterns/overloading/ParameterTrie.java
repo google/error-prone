@@ -86,7 +86,7 @@ class ParameterTrie {
     private final NavigableSet<Parameter> inputParameters;
     private final List<Parameter> outputParameters;
 
-    public ParameterTrieExtender(MethodTree methodTree) {
+    ParameterTrieExtender(MethodTree methodTree) {
       this.methodTree = methodTree;
 
       this.inputParameters = new TreeSet<>(comparingInt(Parameter::position));
@@ -99,7 +99,7 @@ class ParameterTrie {
      * <p>If any {@link ParameterOrderingViolation} is found during the extension procedure, it is
      * reported in the result.
      */
-    public Optional<ParameterOrderingViolation> execute(ParameterTrie trie) {
+    Optional<ParameterOrderingViolation> execute(ParameterTrie trie) {
       Preconditions.checkArgument(trie != null);
 
       initialize();

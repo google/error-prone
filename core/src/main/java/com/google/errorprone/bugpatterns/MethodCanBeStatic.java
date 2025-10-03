@@ -328,7 +328,7 @@ public class MethodCanBeStatic extends BugChecker implements CompilationUnitTree
       }
     };
 
-    public abstract Description report(
+    abstract Description report(
         Set<MethodTree> affectedTrees, SuggestedFix fix, VisitorState state, BugChecker checker);
   }
 }

@@ -46,7 +46,7 @@ public class Contains implements Matcher<Tree> {
 
     private final VisitorState state;
 
-    public FirstMatchingScanner(VisitorState state) {
+    FirstMatchingScanner(VisitorState state) {
       this.state = state;
     }
 

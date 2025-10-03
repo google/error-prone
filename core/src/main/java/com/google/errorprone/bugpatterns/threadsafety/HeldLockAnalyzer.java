@@ -305,7 +305,7 @@ public final class HeldLockAnalyzer {
    * @param unlockMethod The method that releases the lock.
    */
   private record LockResource(String className, String unlockMethod) {
-    public Matcher<ExpressionTree> createUnlockMatcher() {
+    Matcher<ExpressionTree> createUnlockMatcher() {
       return instanceMethod().onDescendantOf(className()).named(unlockMethod());
     }
 

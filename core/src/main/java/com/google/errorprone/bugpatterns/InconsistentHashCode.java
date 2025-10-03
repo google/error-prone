@@ -226,7 +226,7 @@ public final class InconsistentHashCode extends BugChecker implements ClassTreeM
       return accessedFields.build();
     }
 
-    public boolean failed() {
+    boolean failed() {
       return failed;
     }
   }

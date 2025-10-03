@@ -187,10 +187,9 @@ public class FloggerRedundantIsEnabled extends BugChecker implements IfTreeMatch
 
     private final ExpressionTree logInvocation;
     private final VisitorState state;
-    public Optional<SuggestedFix> fix;
+    Optional<SuggestedFix> fix;
 
-    public LoggerIsEnabledBinaryIfConditionScanner(
-        ExpressionTree logInvocation, VisitorState state) {
+    LoggerIsEnabledBinaryIfConditionScanner(ExpressionTree logInvocation, VisitorState state) {
       this.logInvocation = logInvocation;
       this.state = state;
       this.fix = Optional.empty();

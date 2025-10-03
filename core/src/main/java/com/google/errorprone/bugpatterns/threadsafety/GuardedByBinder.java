@@ -93,7 +93,7 @@ public final class GuardedByBinder {
     final Names names;
     final GuardedByFlags flags;
 
-    public BinderContext(
+    BinderContext(
         Resolver resolver, ClassSymbol thisClass, Types types, Names names, GuardedByFlags flags) {
       this.resolver = resolver;
       this.thisClass = thisClass;
@@ -102,7 +102,7 @@ public final class GuardedByBinder {
       this.flags = flags;
     }
 
-    public static BinderContext of(
+    static BinderContext of(
         Resolver resolver, ClassSymbol thisClass, Types types, Names names, GuardedByFlags flags) {
       return new BinderContext(resolver, thisClass, types, names, flags);
     }

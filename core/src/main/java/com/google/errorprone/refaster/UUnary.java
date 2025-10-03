@@ -95,7 +95,7 @@ abstract class UUnary extends UExpression implements UnaryTree {
           }
         }
 
-        public JCExpression defaultNegation(Tree expr) {
+        JCExpression defaultNegation(Tree expr) {
           return maker.Unary(JCTree.Tag.NOT, (JCExpression) expr);
         }
 

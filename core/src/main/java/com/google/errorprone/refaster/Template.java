@@ -410,7 +410,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
   private static class InferException extends Exception {
     final Collection<JCDiagnostic> diagnostics;
 
-    public InferException(Collection<JCDiagnostic> diagnostics) {
+    InferException(Collection<JCDiagnostic> diagnostics) {
       this.diagnostics = diagnostics;
     }
 

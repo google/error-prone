@@ -106,7 +106,7 @@ public class LoopConditionChecker extends BugChecker
 
     private final ImmutableSet.Builder<Symbol.VarSymbol> conditionVars;
 
-    public LoopConditionVisitor(ImmutableSet.Builder<Symbol.VarSymbol> conditionVars) {
+    LoopConditionVisitor(ImmutableSet.Builder<Symbol.VarSymbol> conditionVars) {
       this.conditionVars = conditionVars;
     }
 
@@ -145,7 +145,7 @@ public class LoopConditionChecker extends BugChecker
   /** Scan for updates to the given variables. */
   private static class UpdateScanner extends TreeScanner<Void, Void> {
 
-    public static boolean scan(Tree tree, ImmutableSet<Symbol.VarSymbol> variables) {
+    static boolean scan(Tree tree, ImmutableSet<Symbol.VarSymbol> variables) {
       UpdateScanner scanner = new UpdateScanner(variables);
       tree.accept(scanner, null);
       return scanner.modified;
@@ -154,7 +154,7 @@ public class LoopConditionChecker extends BugChecker
     private boolean modified = false;
     private final ImmutableSet<Symbol.VarSymbol> variables;
 
-    public UpdateScanner(ImmutableSet<Symbol.VarSymbol> variables) {
+    UpdateScanner(ImmutableSet<Symbol.VarSymbol> variables) {
       this.variables = variables;
     }
 

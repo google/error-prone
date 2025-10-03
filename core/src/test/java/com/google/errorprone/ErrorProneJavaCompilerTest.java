@@ -589,12 +589,11 @@ public class ErrorProneJavaCompilerTest {
   }
 
   private static class CompilationResult {
-    public final boolean succeeded;
-    public final String output;
-    public final DiagnosticTestHelper diagnosticHelper;
+    final boolean succeeded;
+    final String output;
+    final DiagnosticTestHelper diagnosticHelper;
 
-    public CompilationResult(
-        boolean succeeded, String output, DiagnosticTestHelper diagnosticHelper) {
+    CompilationResult(boolean succeeded, String output, DiagnosticTestHelper diagnosticHelper) {
       this.succeeded = succeeded;
       this.output = output;
       this.diagnosticHelper = diagnosticHelper;

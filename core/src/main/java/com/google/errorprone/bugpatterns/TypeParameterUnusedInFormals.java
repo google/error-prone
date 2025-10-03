@@ -106,7 +106,7 @@ public class TypeParameterUnusedInFormals extends BugChecker implements MethodTr
       return null;
     }
 
-    public void visitIntersectionClassType(Type.IntersectionClassType type) {
+    void visitIntersectionClassType(Type.IntersectionClassType type) {
       for (Type component : type.getComponents()) {
         component.accept(this, null);
       }

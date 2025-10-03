@@ -97,7 +97,7 @@ public class FunctionalInterfaceMethodChanged extends BugChecker implements Meth
     private boolean inBoxedVoidReturningMethod = false;
     private final Symbol methodToCall;
 
-    public BehaviorPreservingChecker(Symbol methodToCall) {
+    BehaviorPreservingChecker(Symbol methodToCall) {
       super(false);
       this.methodToCall = methodToCall;
     }

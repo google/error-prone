@@ -517,8 +517,7 @@ public final class TimeUnitMismatch extends BugChecker
    */
   private record TreeAndTimeUnit(
       ExpressionTree innermostTree, TimeUnit outermostUnit, TimeUnit innermostUnit) {
-    public static TreeAndTimeUnit of(
-        ExpressionTree tree, TimeUnit timeUnit, TimeUnit underlyingUnit) {
+    static TreeAndTimeUnit of(ExpressionTree tree, TimeUnit timeUnit, TimeUnit underlyingUnit) {
       return new TreeAndTimeUnit(tree, timeUnit, underlyingUnit);
     }
   }

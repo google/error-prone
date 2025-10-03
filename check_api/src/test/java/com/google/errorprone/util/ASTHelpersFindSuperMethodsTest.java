@@ -194,15 +194,15 @@ public final class ASTHelpersFindSuperMethodsTest extends CompilerBasedAbstractT
     // Last state passed to the `Scanner#scan` method.
     private VisitorState state;
 
-    public FindSuperMethodsTestScanner() {
+    FindSuperMethodsTestScanner() {
       this.methods = HashBasedTable.create();
     }
 
-    public MethodSymbol getMethod(String className, String methodName) {
+    MethodSymbol getMethod(String className, String methodName) {
       return methods.get(className, methodName);
     }
 
-    public VisitorState getState() {
+    VisitorState getState() {
       return state;
     }
 

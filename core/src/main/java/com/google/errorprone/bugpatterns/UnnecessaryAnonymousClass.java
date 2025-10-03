@@ -260,7 +260,7 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
       }
     }
 
-    public Optional<SuggestedFix> getFixes() {
+    Optional<SuggestedFix> getFixes() {
       return failed ? Optional.empty() : Optional.of(fix.build());
     }
   }

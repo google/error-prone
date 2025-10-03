@@ -35,10 +35,10 @@ public class Enclosing {
 
   private abstract static class EnclosingMatcher<T extends Tree, U extends Tree>
       implements Matcher<U> {
-    protected final Matcher<T> matcher;
-    protected final java.lang.Class<T> clazz;
+    final Matcher<T> matcher;
+    final java.lang.Class<T> clazz;
 
-    protected EnclosingMatcher(Matcher<T> matcher, java.lang.Class<T> clazz) {
+    EnclosingMatcher(Matcher<T> matcher, java.lang.Class<T> clazz) {
       this.matcher = matcher;
       this.clazz = clazz;
     }

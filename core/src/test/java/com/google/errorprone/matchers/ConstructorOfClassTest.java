@@ -139,7 +139,7 @@ public class ConstructorOfClassTest extends CompilerBasedAbstractTest {
   }
 
   private abstract class ScannerTest extends Scanner {
-    public abstract void assertDone();
+    abstract void assertDone();
   }
 
   private Scanner classMatches(boolean shouldMatch, ConstructorOfClass toMatch) {
