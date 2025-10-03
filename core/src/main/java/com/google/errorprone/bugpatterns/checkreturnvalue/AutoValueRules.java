@@ -95,7 +95,7 @@ public final class AutoValueRules {
       return '@' + simpleAnnotation;
     }
 
-    protected abstract ResultUsePolicy autoMethodPolicy(
+    abstract ResultUsePolicy autoMethodPolicy(
         MethodSymbol abstractMethod, ClassSymbol autoClass, VisitorState state);
 
     @Override

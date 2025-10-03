@@ -301,41 +301,41 @@ public class ErrorProneOptions {
       severityMap.put(checkName, severity);
     }
 
-    public void parseFlag(String flag) {
+    void parseFlag(String flag) {
       flagsBuilder.parseFlag(flag);
     }
 
-    public void setIgnoreSuppressionAnnotations(boolean ignoreSuppressionAnnotations) {
+    void setIgnoreSuppressionAnnotations(boolean ignoreSuppressionAnnotations) {
       this.ignoreSuppressionAnnotations = ignoreSuppressionAnnotations;
     }
 
-    public void setIgnoreUnknownChecks(boolean ignoreUnknownChecks) {
+    void setIgnoreUnknownChecks(boolean ignoreUnknownChecks) {
       this.ignoreUnknownChecks = ignoreUnknownChecks;
     }
 
-    public void setDisableWarningsInGeneratedCode(boolean disableWarningsInGeneratedCode) {
+    void setDisableWarningsInGeneratedCode(boolean disableWarningsInGeneratedCode) {
       this.disableWarningsInGeneratedCode = disableWarningsInGeneratedCode;
     }
 
-    public void setDropErrorsToWarnings(boolean dropErrorsToWarnings) {
+    void setDropErrorsToWarnings(boolean dropErrorsToWarnings) {
       severityMap.entrySet().stream()
           .filter(e -> e.getValue() == Severity.ERROR)
           .forEach(e -> e.setValue(Severity.WARN));
       this.dropErrorsToWarnings = dropErrorsToWarnings;
     }
 
-    public void setSuggestionsAsWarnings(boolean suggestionsAsWarnings) {
+    void setSuggestionsAsWarnings(boolean suggestionsAsWarnings) {
       this.suggestionsAsWarnings = suggestionsAsWarnings;
     }
 
-    public void setDisableAllWarnings(boolean disableAllWarnings) {
+    void setDisableAllWarnings(boolean disableAllWarnings) {
       severityMap.entrySet().stream()
           .filter(e -> e.getValue() == Severity.WARN)
           .forEach(e -> e.setValue(Severity.OFF));
       this.disableAllWarnings = disableAllWarnings;
     }
 
-    public void setEnableAllChecksAsWarnings(boolean enableAllChecksAsWarnings) {
+    void setEnableAllChecksAsWarnings(boolean enableAllChecksAsWarnings) {
       // Checks manually disabled before this flag are reset to warning-level
       severityMap.entrySet().stream()
           .filter(e -> e.getValue() == Severity.OFF)
@@ -343,11 +343,11 @@ public class ErrorProneOptions {
       this.enableAllChecksAsWarnings = enableAllChecksAsWarnings;
     }
 
-    public void setIgnoreLargeCodeGenerators(boolean ignoreLargeCodeGenerators) {
+    void setIgnoreLargeCodeGenerators(boolean ignoreLargeCodeGenerators) {
       this.ignoreLargeCodeGenerators = ignoreLargeCodeGenerators;
     }
 
-    public void setDisableAllChecks(boolean disableAllChecks) {
+    void setDisableAllChecks(boolean disableAllChecks) {
       // Discard previously set severities so that the DisableAllChecks flag is position sensitive.
       severityMap.clear();
       this.disableAllChecks = disableAllChecks;
@@ -357,19 +357,19 @@ public class ErrorProneOptions {
       this.warnOnUnneededSuppressions = warnOnUnneededSuppressions;
     }
 
-    public void setTestOnlyTarget(boolean isTestOnlyTarget) {
+    void setTestOnlyTarget(boolean isTestOnlyTarget) {
       this.isTestOnlyTarget = isTestOnlyTarget;
     }
 
-    public void setPubliclyVisibleTarget(boolean isPubliclyVisibleTarget) {
+    void setPubliclyVisibleTarget(boolean isPubliclyVisibleTarget) {
       this.isPubliclyVisibleTarget = isPubliclyVisibleTarget;
     }
 
-    public PatchingOptions.Builder patchingOptionsBuilder() {
+    PatchingOptions.Builder patchingOptionsBuilder() {
       return patchingOptionsBuilder;
     }
 
-    public ErrorProneOptions build(ImmutableList<String> remainingArgs) {
+    ErrorProneOptions build(ImmutableList<String> remainingArgs) {
       return new ErrorProneOptions(
           ImmutableMap.copyOf(severityMap),
           remainingArgs,
@@ -390,7 +390,7 @@ public class ErrorProneOptions {
           ignoreLargeCodeGenerators);
     }
 
-    public void setExcludedPattern(Pattern excludedPattern) {
+    void setExcludedPattern(Pattern excludedPattern) {
       this.excludedPattern = excludedPattern;
     }
   }

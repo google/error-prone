@@ -60,7 +60,7 @@ public final class UnicodeEscape extends BugChecker implements CompilationUnitTr
       this.currentCharacter = source.charAt(0);
     }
 
-    public void scan() {
+    void scan() {
       for (; position < source.length(); processCharacter()) {
         if (isUnicode && isBanned(currentCharacter)) {
           if (currentCharacter == '\\' && peek() == 'u') {

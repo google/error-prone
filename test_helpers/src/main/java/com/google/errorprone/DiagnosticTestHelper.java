@@ -359,11 +359,11 @@ public class DiagnosticTestHelper {
       diagnostics.add(diagnostic);
     }
 
-    public List<Diagnostic<? extends S>> getDiagnostics() {
+    List<Diagnostic<? extends S>> getDiagnostics() {
       return ImmutableList.copyOf(diagnostics);
     }
 
-    public void clear() {
+    void clear() {
       diagnostics.clear();
     }
   }

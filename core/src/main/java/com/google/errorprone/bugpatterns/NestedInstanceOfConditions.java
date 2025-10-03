@@ -79,7 +79,7 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
   private static class AssignmentTreeMatcher implements Matcher<Tree> {
     private final ExpressionTree variableExpressionTree;
 
-    public AssignmentTreeMatcher(ExpressionTree e) {
+    AssignmentTreeMatcher(ExpressionTree e) {
       variableExpressionTree = e;
     }
 
@@ -104,7 +104,7 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
     private final ExpressionTree expressionTree;
     private final Tree typeTree;
 
-    public NestedInstanceOfMatcher(ExpressionTree e, Tree t) {
+    NestedInstanceOfMatcher(ExpressionTree e, Tree t) {
       expressionTree = e;
       typeTree = t;
     }

@@ -55,7 +55,7 @@ public class MethodInvocation implements Matcher<ExpressionTree> {
   private static class MethodArgumentMatcher
       extends ChildMultiMatcher<MethodInvocationTree, ExpressionTree> {
 
-    public MethodArgumentMatcher(MatchType matchType, Matcher<ExpressionTree> nodeMatcher) {
+    MethodArgumentMatcher(MatchType matchType, Matcher<ExpressionTree> nodeMatcher) {
       super(matchType, nodeMatcher);
     }
 

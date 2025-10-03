@@ -496,7 +496,7 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
 
   private static class ChildOfTryMatcher extends ChildMultiMatcher<TryTree, Tree> {
 
-    public ChildOfTryMatcher(MatchType matchType, Matcher<Tree> nodeMatcher) {
+    ChildOfTryMatcher(MatchType matchType, Matcher<Tree> nodeMatcher) {
       super(matchType, nodeMatcher);
     }
 

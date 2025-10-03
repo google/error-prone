@@ -193,7 +193,7 @@ public abstract class GuardedByExpression {
 
     private static class EnclosingInstanceSymbol extends VarSymbol {
 
-      public EnclosingInstanceSymbol(Names names, Symbol curr) {
+      EnclosingInstanceSymbol(Names names, Symbol curr) {
         super(
             Flags.SYNTHETIC,
             names.fromString(GuardedByExpression.ENCLOSING_INSTANCE_NAME),
@@ -279,7 +279,7 @@ public abstract class GuardedByExpression {
   /** Pretty printer for lock expressions. */
   private static class PrettyPrinter {
 
-    public static String print(GuardedByExpression exp) {
+    static String print(GuardedByExpression exp) {
       StringBuilder sb = new StringBuilder();
       pprint(exp, sb);
       return sb.toString();
@@ -322,7 +322,7 @@ public abstract class GuardedByExpression {
 
   /** s-exp pretty printer for lock expressions. */
   private static class DebugPrinter {
-    public static String print(GuardedByExpression exp) {
+    static String print(GuardedByExpression exp) {
       StringBuilder sb = new StringBuilder();
       pprint(exp, sb);
       return sb.toString();

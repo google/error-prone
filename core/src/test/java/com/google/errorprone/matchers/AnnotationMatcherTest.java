@@ -458,7 +458,7 @@ public class AnnotationMatcherTest extends CompilerBasedAbstractTest {
   }
 
   private abstract class ScannerTest extends Scanner {
-    public abstract void assertDone();
+    abstract void assertDone();
   }
 
   private Scanner nodeWithAnnotationMatches(boolean shouldMatch, AnnotationMatcher<Tree> toMatch) {

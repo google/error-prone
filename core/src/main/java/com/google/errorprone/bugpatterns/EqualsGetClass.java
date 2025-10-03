@@ -63,7 +63,9 @@ import javax.lang.model.element.Modifier;
  * @author ghm@google.com (Graeme Morgan)
  */
 @BugPattern(
-    summary = "Prefer instanceof to getClass when implementing Object#equals.",
+    summary =
+        "Prefer instanceof to getClass when implementing Object#equals. Note that this may be a"
+            + " behaviour change.",
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
 public final class EqualsGetClass extends BugChecker implements MethodInvocationTreeMatcher {

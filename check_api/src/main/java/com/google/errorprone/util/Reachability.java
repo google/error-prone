@@ -118,7 +118,7 @@ public class Reachability {
     /** Trees that are patched to have a specific completion result. */
     private final ImmutableMap<Tree, Boolean> patches;
 
-    public CanCompleteNormallyVisitor(ImmutableMap<Tree, Boolean> patches) {
+    CanCompleteNormallyVisitor(ImmutableMap<Tree, Boolean> patches) {
       this.patches = patches;
     }
 

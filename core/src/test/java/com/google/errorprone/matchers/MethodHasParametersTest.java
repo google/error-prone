@@ -152,7 +152,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
   }
 
   private abstract class ScannerTest extends Scanner {
-    public abstract void assertDone();
+    abstract void assertDone();
   }
 
   private Scanner methodMatches(boolean shouldMatch, MethodHasParameters toMatch) {

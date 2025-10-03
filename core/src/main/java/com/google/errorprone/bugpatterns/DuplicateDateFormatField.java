@@ -71,11 +71,11 @@ public final class DuplicateDateFormatField extends MisusedDateFormat {
       prev = null;
     }
 
-    public Set<Character> getDuplicates() {
+    Set<Character> getDuplicates() {
       return duplicates;
     }
 
-    public static ImmutableSet<Character> getDuplicates(String pattern) {
+    static ImmutableSet<Character> getDuplicates(String pattern) {
       PatternCounter counter = new PatternCounter();
       parseDateFormat(pattern, counter);
       return ImmutableSet.copyOf(counter.getDuplicates());

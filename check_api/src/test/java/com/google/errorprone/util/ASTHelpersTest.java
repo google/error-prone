@@ -1043,7 +1043,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
      * Subclasses of {@link TestScanner} are expected to call this method within their overridden
      * visitXYZ() method in order to verify that the method has run at least once.
      */
-    protected void setAssertionsComplete() {
+    void setAssertionsComplete() {
       this.assertionsComplete = true;
     }
 
@@ -1052,7 +1052,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
       assertThat(matcher.matches(node, state)).isTrue();
     }
 
-    public void verifyAssertionsComplete() {
+    void verifyAssertionsComplete() {
       assertWithMessage("Expected the visitor to call setAssertionsComplete().")
           .that(assertionsComplete)
           .isTrue();

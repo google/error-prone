@@ -415,7 +415,7 @@ public class BugCheckerRefactoringTestHelper {
 
     private final ScannerSupplier delegate;
 
-    public OverrideIgnoringScannerSupplier(ErrorProneScanner scanner) {
+    OverrideIgnoringScannerSupplier(ErrorProneScanner scanner) {
       delegate = ScannerSupplier.fromScanner(scanner);
     }
 
