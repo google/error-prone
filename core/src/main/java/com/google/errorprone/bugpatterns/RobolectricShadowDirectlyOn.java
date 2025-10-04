@@ -72,7 +72,7 @@ public class RobolectricShadowDirectlyOn extends BugChecker implements MethodInv
     MethodSymbol symbol = getSymbol(parent);
     String argReplacement =
         Streams.concat(
-                Stream.of(state.getConstantExpression(symbol.getSimpleName().toString())),
+                Stream.of(state.getConstantExpression(symbol.getSimpleName())),
                 Streams.zip(
                     symbol.getParameters().stream(),
                     parent.getArguments().stream(),

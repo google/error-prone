@@ -183,6 +183,22 @@
             </configuration>
           </execution>
           <execution>
+            <id>java23</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <jdkToolchain>
+                <version>23</version>
+              </jdkToolchain>
+              <compileSourceRoots>
+                <compileSourceRoot>${basedir}/src/main/java23</compileSourceRoot>
+              </compileSourceRoots>
+              <!-- multiReleaseOutput requires setting release -->
+              <outputDirectory>${project.build.outputDirectory}/META-INF/versions/23</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
             <id>java24</id>
             <configuration>
               <jdkToolchain>
@@ -195,8 +211,35 @@
               <outputDirectory>${project.build.outputDirectory}/META-INF/versions/24</outputDirectory>
             </configuration>
           </execution>
+          <execution>
+            <!-- This final no-op compilation step resets the output directory associated with this
+            module. This is important for Maven reactor builds that skip the `install` phase,
+            because in those the compilation of a module `B` happens with reference to the output
+            directory of a module `A` on which it depends, rather than `A`'s installed JAR. -->
+            <id>reset-output-directory</id>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <compileSourceRoots>
+                <compileSourceRoot>${basedir}/nonexistent-directory</compileSourceRoot>
+              </compileSourceRoots>
+              <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+            </configuration>
+          </execution>
         </executions>
 
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Multi-Release>true</Multi-Release>
+            </manifestEntries>
+          </archive>
+        </configuration>
       </plugin>
     </plugins>
   </build>
