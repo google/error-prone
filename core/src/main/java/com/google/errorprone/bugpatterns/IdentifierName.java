@@ -63,6 +63,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.util.Name;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.inject.Inject;
@@ -106,10 +107,14 @@ public final class IdentifierName extends BugChecker
 
   private final boolean allowInitialismsInTypeName;
 
+  private final Pattern allowRegexInTypeName;
+
   @Inject
   IdentifierName(ErrorProneFlags flags) {
     this.allowInitialismsInTypeName =
         flags.getBoolean("IdentifierName:AllowInitialismsInTypeName").orElse(false);
+    this.allowRegexInTypeName =
+        Pattern.compile(flags.get("IdentifierName:AllowRegexInTypeName").orElse(".+"));
   }
 
   @Override
@@ -300,7 +305,9 @@ public final class IdentifierName extends BugChecker
   private boolean isConformantTypeName(String name) {
     return underscoresAreFlankedByDigits(name)
         && isUpperCase(name.charAt(0))
-        && (allowInitialismsInTypeName || !PROBABLE_INITIALISM.matcher(name).find());
+        && (allowInitialismsInTypeName
+            || allowRegexInTypeName.matcher(name).matches()
+            || !PROBABLE_INITIALISM.matcher(name).find());
   }
 
   private static boolean underscoresAreFlankedByDigits(String name) {
