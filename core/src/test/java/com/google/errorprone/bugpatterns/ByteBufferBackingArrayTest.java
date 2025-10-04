@@ -104,6 +104,13 @@ public class ByteBufferBackingArrayPositiveCases {
     // BUG: Diagnostic contains: ByteBuffer.array()
     buff.array();
   }
+  
+  void array_precededByHasArray_isFlagged() {
+    ByteBuffer buffer = ByteBuffer.allocateDirect(10);
+    buffer.hasArray();
+    // BUG: Diagnostic contains: ByteBuffer.array()
+    buffer.array();
+  }
 }\
 """)
         .doTest();
@@ -248,6 +255,33 @@ public class ByteBufferBackingArrayNegativeCases {
           buffer.array();
           return null;
         };
+  }
+
+  void array_precededByHasArray_inConditional_isNotFlagged() {
+    ByteBuffer buffer = ByteBuffer.allocateDirect(10);
+    if (buffer.hasArray()) {
+      buffer.array();
+    }
+  }
+
+  void array_inElseOfNegatedHasArray_isNotFlagged() {
+    ByteBuffer buffer = ByteBuffer.allocateDirect(10);
+    if (!buffer.hasArray()) {
+      // no array() here
+    } else {
+      buffer.array(); // safe due to else of !hasArray()
+    }
+  }
+
+  void array_precededByHasArray_inIfElse_isNotFlagged() {
+    final int frameSize = 100;
+    final ByteBuffer buffer = ByteBuffer.allocateDirect(frameSize);
+    if (buffer.hasArray()) {
+      buffer.array();
+    } else {
+      final byte[] array = new byte[frameSize];
+      buffer.get(array);
+    }
   }
 }\
 """)
