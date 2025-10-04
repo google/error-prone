@@ -110,7 +110,7 @@ public class FloggerStringConcatenation extends BugChecker implements MethodInvo
         tree,
         SuggestedFix.replace(
             argument,
-            state.getConstantExpression(formatString.toString())
+            state.getConstantExpression(formatString)
                 + ", "
                 + formatArguments.stream().map(state::getSourceForNode).collect(joining(", "))));
   }
