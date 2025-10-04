@@ -218,6 +218,26 @@ public class BugCheckerTest {
   }
 
   @Test
+  public void suppressibleTreePathScanner_respectsIgnoreSuppressionAnnotationsFlag() {
+    CompilationTestHelper.newInstance(SuppressibleTreePathScannerCheck.class, getClass())
+        .setArgs("-XepIgnoreSuppressionAnnotations")
+        .addSourceLines(
+            "A.java",
+            """
+            class A {
+              void m() {
+                // BUG: Diagnostic contains:
+                int unsuppressed;
+                @SuppressWarnings("foo")
+                // BUG: Diagnostic contains:
+                int suppressed;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void isSuppressed_disableWarningsInGeneratedCode() {
     CompilationTestHelper.newInstance(CustomSuppressibilityCheck.class, getClass())
         .setArgs("-XepDisableWarningsInGeneratedCode")
