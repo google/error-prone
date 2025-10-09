@@ -384,6 +384,9 @@ Calling getAnnotation on an annotation that is not retained at runtime
 __[NullArgumentForNonNullParameter](bugpattern/NullArgumentForNonNullParameter)__<br>
 Null is not permitted for this parameter.
 
+__[NullNeedsCastForVarargs](bugpattern/NullNeedsCastForVarargs)__<br>
+This call passes a null *array*, so it always produces NullPointerException. To pass a null *element*, cast to the element type.
+
 __[NullTernary](bugpattern/NullTernary)__<br>
 This conditional expression may evaluate to null, which will result in an NPE when the result is unboxed.
 
