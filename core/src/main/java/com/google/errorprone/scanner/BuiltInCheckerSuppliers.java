@@ -292,6 +292,7 @@ import com.google.errorprone.bugpatterns.NonFinalCompileTimeConstant;
 import com.google.errorprone.bugpatterns.NonFinalStaticField;
 import com.google.errorprone.bugpatterns.NonOverridingEquals;
 import com.google.errorprone.bugpatterns.NonRuntimeAnnotation;
+import com.google.errorprone.bugpatterns.NullNeedsCastForVarargs;
 import com.google.errorprone.bugpatterns.NullOptional;
 import com.google.errorprone.bugpatterns.NullTernary;
 import com.google.errorprone.bugpatterns.NullableConstructor;
@@ -813,6 +814,7 @@ public class BuiltInCheckerSuppliers {
           NonFinalCompileTimeConstant.class,
           NonRuntimeAnnotation.class,
           NullArgumentForNonNullParameter.class,
+          NullNeedsCastForVarargs.class,
           NullTernary.class,
           NullableOnContainingClass.class,
           OptionalEquality.class,
