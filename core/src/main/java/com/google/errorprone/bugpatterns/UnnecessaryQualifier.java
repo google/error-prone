@@ -93,7 +93,13 @@ public final class UnnecessaryQualifier extends BugChecker
     var symbol = getSymbol(tree);
     switch (symbol.getKind()) {
       case FIELD -> {
-        if (INJECTION_FIELDS.stream().anyMatch(ip -> hasAnnotation(tree, ip, state))) {
+        if (INJECTION_FIELDS.stream().anyMatch(ip -> hasAnnotation(tree, ip, state))
+            || tree.getModifiers().getAnnotations().stream()
+                .anyMatch(
+                    anno ->
+                        INJECTION_PREFIXES.stream()
+                            .anyMatch(
+                                p -> getSymbol(anno).getSimpleName().toString().startsWith(p)))) {
           return NO_MATCH;
         }
         if (isRecord(symbol)) {
@@ -222,21 +228,11 @@ public final class UnnecessaryQualifier extends BugChecker
   private static final ImmutableSet<String> INJECTION_FIELDS =
       ImmutableSet.of(
           // keep-sorted start
-          "com.google.inject.Inject",
-          "dagger.Binds",
-          "dagger.BindsInstance",
-          "dagger.hilt.android.testing.BindElementsIntoSet",
-          "dagger.hilt.android.testing.BindValue",
-          "dagger.hilt.android.testing.BindValueIntoMap",
-          "dagger.hilt.android.testing.BindValueIntoSet",
-          "dagger.hilt.testing.BindElementsIntoSet",
-          "dagger.hilt.testing.BindValue",
-          "dagger.hilt.testing.BindValueIntoMap",
-          "dagger.hilt.testing.BindValueIntoSet",
-          "jakarta.inject.Inject",
-          "javax.inject.Inject"
           // keep-sorted end
           );
+
+  /** Prefixes for annotations on variables which can have qualifiers. */
+  private static final ImmutableSet<String> INJECTION_PREFIXES = ImmutableSet.of("Bind", "Inject");
 
   private static final ImmutableSet<String> CLASS_ANNOTATIONS_EXEMPTING_METHODS =
       ImmutableSet.of(
