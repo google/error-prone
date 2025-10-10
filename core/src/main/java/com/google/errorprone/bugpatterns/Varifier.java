@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
@@ -104,8 +105,13 @@ public final class Varifier extends BugChecker implements VariableTreeMatcher {
       return fix(tree);
     }
     // Foo foo = Foo.builder()...build();
+    // (but not Bar bar = Foo.builder()...build())
     if (BUILD_METHOD.matches(initializer, state)
-        && streamReceivers(initializer).anyMatch(t -> BUILDER_FACTORY.matches(t, state))) {
+        && streamReceivers(initializer)
+            .anyMatch(
+                t ->
+                    BUILDER_FACTORY.matches(t, state)
+                        && isSameType(getReceiverType(t), getType(tree.getType()), state))) {
       return fix(tree);
     }
     // Foo foo = Foo.createFoo(..);
