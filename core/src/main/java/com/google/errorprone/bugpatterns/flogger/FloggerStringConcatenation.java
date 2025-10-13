@@ -61,6 +61,9 @@ public class FloggerStringConcatenation extends BugChecker implements MethodInvo
     if (!MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }
+    if (tree.getArguments().isEmpty()) {
+      return NO_MATCH;
+    }
     ExpressionTree argument = tree.getArguments().get(0);
     if (!(argument instanceof BinaryTree)) {
       return NO_MATCH;
