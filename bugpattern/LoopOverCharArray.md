@@ -21,8 +21,8 @@ That is, prefer this:
 
 ```java
 boolean isDigits(String string) {
-  for (int i = 0; i < s.length(); i++) {
-    char c = s.charAt(i);
+  for (int i = 0; i < string.length(); i++) {
+    char c = string.charAt(i);
     if (!Character.isDigit(c)) {
       return false;
     }
