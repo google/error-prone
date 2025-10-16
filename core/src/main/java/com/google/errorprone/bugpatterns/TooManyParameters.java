@@ -53,9 +53,6 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
           "java.lang.Deprecated",
           "java.lang.Override",
           // dependency injection annotations
-          "jakarta.inject.Inject",
-          "javax.inject.Inject",
-          "com.google.inject.Inject",
           "com.google.inject.Provides",
           // JUnit @Test methods are never directly invoked (most of the time they don't even have
           // parameters, unless it's a parameterized test --- which still are not directly
@@ -106,6 +103,10 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
       return false;
     }
     if (isRecord(symbol)) {
+      return false;
+    }
+    if (tree.getModifiers().getAnnotations().stream()
+        .anyMatch(a -> getSymbol(a).getSimpleName().toString().contains("Inject"))) {
       return false;
     }
     return METHOD_ANNOTATIONS_TO_IGNORE.stream().noneMatch(a -> hasAnnotation(tree, a, state))
