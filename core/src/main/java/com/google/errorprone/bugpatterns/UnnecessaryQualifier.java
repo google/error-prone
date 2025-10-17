@@ -228,6 +228,8 @@ public final class UnnecessaryQualifier extends BugChecker
   private static final ImmutableSet<String> INJECTION_FIELDS =
       ImmutableSet.of(
           // keep-sorted start
+          // FlagSpec is obviously not an injecty annotation, but it's commonly used with
+          // FlagBinder, at which point qualifiers on the field are relevant.
           // keep-sorted end
           );
 
