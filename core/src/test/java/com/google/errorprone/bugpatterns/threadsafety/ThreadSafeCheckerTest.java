@@ -1602,4 +1602,38 @@ abstract class Recursive<T extends Recursive<T>> {
             """)
         .doTest();
   }
+
+  @Test
+  public void subtyping() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            package a;
+
+            import com.google.errorprone.annotations.ThreadSafe;
+
+            @ThreadSafe
+            interface ThreadSafeInterface {}
+
+            @ThreadSafe
+            abstract class ThreadSafeAbstractClass {}
+
+            // BUG: Diagnostic contains: is not annotated
+            class A implements ThreadSafeInterface {}
+
+            class C extends ThreadSafeAbstractClass {}
+
+            // BUG: Diagnostic contains: is not annotated
+            class E implements ThreadSafeInterface {
+              Object unsafe;
+            }
+
+            class G extends ThreadSafeAbstractClass {
+              // BUG: Diagnostic contains: fields should be final or annotated with @GuardedBy
+              Object unsafe;
+            }
+            """)
+        .doTest();
+  }
 }
