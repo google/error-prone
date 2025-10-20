@@ -1447,9 +1447,6 @@ withSignature is discouraged. Prefer .named and/or .withParameters where possibl
 
 ## Experimental : ERROR
 
-__[AndroidJdkLibsChecker](bugpattern/AndroidJdkLibsChecker)__<br>
-Use of class, field, or method that is not compatible with legacy Android devices
-
 __[AutoFactoryAtInject](bugpattern/AutoFactoryAtInject)__<br>
 @AutoFactory and @Inject should not be used in the same type.
 
