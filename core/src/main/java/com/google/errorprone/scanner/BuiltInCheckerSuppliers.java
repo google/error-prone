@@ -485,7 +485,6 @@ import com.google.errorprone.bugpatterns.android.ParcelableCreator;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
 import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
 import com.google.errorprone.bugpatterns.android.WakelockReleasedDangerously;
-import com.google.errorprone.bugpatterns.apidiff.AndroidJdkLibsChecker;
 import com.google.errorprone.bugpatterns.apidiff.Java8ApiChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker;
@@ -1184,7 +1183,6 @@ public class BuiltInCheckerSuppliers {
       getSuppliers(
           // keep-sorted start
           AddNullMarkedToPackageInfo.class,
-          AndroidJdkLibsChecker.class,
           AnnotationMirrorToString.class,
           AnnotationPosition.class,
           AnnotationValueToString.class,
