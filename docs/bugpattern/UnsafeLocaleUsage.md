@@ -92,9 +92,9 @@ the right fix is to use a `Locale.Builder()`.
 ```java
 // Initial code
 void someMethod(@NotNull String langId, String regionId) {
-  Locale locale (region == null)
+  Locale locale (regionId == null)
       ? new Locale(langId) // or Locale.of
-      : new Locale(langId, region); // or Locale.of
+      : new Locale(langId, regionId); // or Locale.of
   // use the locale
 }
 
@@ -102,8 +102,8 @@ void someMethod(@NotNull String langId, String regionId) {
 void someMethod(@NotNull String langId, String regionId) {
   Locale.Builder builder = new Locale.Builder();
   builder.setLanguage(langId);
-  if (region == null) {
-    builder.setCountry(langId);
+  if (regionId == null) {
+    builder.setCountry(regionId);
   }
   Locale locale = builder.build();
   // use the locale
