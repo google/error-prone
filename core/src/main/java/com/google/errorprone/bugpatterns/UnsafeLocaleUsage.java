@@ -38,7 +38,7 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 /** Flags unsafe usages of the {@link java.util.Locale} constructor and class methods. */
 @BugPattern(
-    summary = "Possible unsafe operation related to the java.util.Locale library.",
+    summary = "Possible unsafe operation related to the java.util.Locale class.",
     severity = WARNING)
 public final class UnsafeLocaleUsage extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
@@ -49,6 +49,13 @@ public final class UnsafeLocaleUsage extends BugChecker
       staticMethod().onClass("java.util.Locale").named("of");
   private static final Matcher<ExpressionTree> LOCALE_CONSTRUCTOR =
       constructor().forClass("java.util.Locale");
+
+  // Used for both Locale constructors and Locale.of static methods.
+  private static final String DESCRIPTION =
+      " They do not check their arguments for"
+          + " well-formedness. Prefer using Locale.forLanguageTag(String)"
+          + " (which takes in an IETF BCP 47-formatted string) or a Locale.Builder"
+          + " (which throws exceptions when the input is not well-formed).";
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -65,13 +72,7 @@ public final class UnsafeLocaleUsage extends BugChecker
     if (LOCALE_OF.matches(tree, state)) {
       Description.Builder descriptionBuilder =
           buildDescription(tree)
-              .setMessage(
-                  "Avoid using Locale.of static methods (which do not check their arguments for"
-                      + " well-formedness). Prefer using Locale.forLanguageTag(String)"
-                      + " (which takes in an IETF BCP 47-formatted string) or a Locale.Builder"
-                      + " (which throws exceptions when the input is not well-formed).\n"
-                      + "Please read the Error Prone documentation page for UnsafeLocaleUsage for"
-                      + " more information.");
+              .setMessage("Avoid using the Locale.of static methods." + DESCRIPTION);
 
       fixCallableWithArguments(
           descriptionBuilder, ImmutableList.copyOf(tree.getArguments()), tree, state);
@@ -85,14 +86,7 @@ public final class UnsafeLocaleUsage extends BugChecker
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     if (LOCALE_CONSTRUCTOR.matches(tree, state)) {
       Description.Builder descriptionBuilder =
-          buildDescription(tree)
-              .setMessage(
-                  "Avoid using Locale constructors (which do not check their arguments for"
-                      + " well-formedness). Prefer using Locale.forLanguageTag(String)"
-                      + " (which takes in an IETF BCP 47-formatted string) or a Locale.Builder"
-                      + " (which throws exceptions when the input is not well-formed).\n"
-                      + "Please read the Error Prone documentation page for UnsafeLocaleUsage for"
-                      + " more information.");
+          buildDescription(tree).setMessage("Avoid using the Locale constructors." + DESCRIPTION);
 
       fixCallableWithArguments(
           descriptionBuilder, ImmutableList.copyOf(tree.getArguments()), tree, state);
