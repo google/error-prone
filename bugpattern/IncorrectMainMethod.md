@@ -13,8 +13,10 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-A `main` method must be `public`, `static`, and return `void` (see
-[JLS §12.1.4]).
+## Pre Java 25
+
+Prior to Java 25, a `main` method must be `public`, `static`, and return `void`
+(see [JLS §12.1.4]).
 
 For example, the following method is confusing, because it is an overload of a
 valid `main` method (it has the same name and signature), but is not a valid
@@ -33,7 +35,25 @@ $ java T.java
 error: 'main' method is not declared 'public static'
 ```
 
-[JLS §12.1.4]: https://docs.oracle.com/javase/specs/jls/se11/html/jls-12.html#jls-12.1.4
+## Java 25 and later
+
+For Java 25 and later, a `main` method must return `void` (see [JLS §12.1.4]).
+The `public` and `static` requirements have been dropped.
+
+For example, the following method is confusing, because it is an overload of a
+valid `main` method (it has the same name and arguments), but does not return
+`void`:
+
+```java
+class Test {
+  public static int main(String[] args) {
+    System.err.println("hello world");
+    return 0;
+  }
+}
+```
+
+[JLS §12.1.4]: https://docs.oracle.com/javase/specs/jls/se25/html/jls-12.html#jls-12.1.4
 
 TIP: If you're declaring a method that isn't intended to be used as the main
 method of your program, prefer to use a name other than `main`. It's confusing
