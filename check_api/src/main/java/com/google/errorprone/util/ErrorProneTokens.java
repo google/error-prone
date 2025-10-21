@@ -113,7 +113,7 @@ public class ErrorProneTokens {
 
     @Override
     protected Comment processComment(int pos, int endPos, CommentStyle style) {
-      char[] buf = getRawCharactersReflectively(pos, endPos);
+      char[] buf = getRawCharacters(pos, endPos);
       Comment comment = super.processComment(pos, endPos, style);
       AccessibleReader reader = new AccessibleReader(fac, buf, buf.length);
       ErrorProneComment errorProneComment =
@@ -125,24 +125,6 @@ public class ErrorProneTokens {
               ErrorProneComment.ErrorProneCommentStyle.from(style));
       comments.put(comment, errorProneComment);
       return comment;
-    }
-
-    private char[] getRawCharactersReflectively(int beginIndex, int endIndex) {
-      Object instance;
-      try {
-        instance = JavaTokenizer.class.getDeclaredField("reader").get(this);
-      } catch (ReflectiveOperationException e) {
-        instance = this;
-      }
-      try {
-        return (char[])
-            instance
-                .getClass()
-                .getMethod("getRawCharacters", int.class, int.class)
-                .invoke(instance, beginIndex, endIndex);
-      } catch (ReflectiveOperationException e) {
-        throw new LinkageError(e.getMessage(), e);
-      }
     }
   }
 
