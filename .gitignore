@@ -26,6 +26,8 @@
 .idea/uiDesigner.xml
 .idea/vcs.xml
 .idea/workspace.xml
+.idea/checkstyle-idea.xml
+.idea/palantir-java-format.xml
 
 # bazel
 bazel-bazel
