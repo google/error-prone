@@ -533,9 +533,7 @@ abstract class PlaceholderUnificationVisitor
         state,
         s -> unifyExpression(node.getExpression(), s),
         s -> unifyStatement(node.getStatement(), s),
-        (expr, stmt) ->
-            UEnhancedForLoop.makeForeachLoop(
-                maker(), (JCVariableDecl) node.getVariable(), expr, stmt));
+        (expr, stmt) -> maker().ForeachLoop((JCVariableDecl) node.getVariable(), expr, stmt));
   }
 
   @Override
