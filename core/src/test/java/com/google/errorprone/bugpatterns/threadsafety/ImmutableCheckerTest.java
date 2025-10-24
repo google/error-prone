@@ -4213,4 +4213,35 @@ abstract class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void subtyping() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.Immutable;
+
+            @Immutable
+            interface ImmutableInterface {}
+
+            @Immutable
+            abstract class ImmutableAbstractClass {}
+
+            class B implements ImmutableInterface {}
+
+            class D extends ImmutableAbstractClass {}
+
+            class F implements ImmutableInterface {
+              // BUG: Diagnostic contains: has non-final field
+              Object unsafe;
+            }
+
+            class H extends ImmutableAbstractClass {
+              // BUG: Diagnostic contains: has non-final field
+              Object unsafe;
+            }
+            """)
+        .doTest();
+  }
 }

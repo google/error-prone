@@ -339,4 +339,33 @@ public class MissingDefaultTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void arrowSwitchPositive() {
+    BugCheckerRefactoringTestHelper.newInstance(MissingDefault.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f(int i) {
+                switch (i) {
+                  case 0 -> System.err.println(i);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void f(int i) {
+                switch (i) {
+                  case 0 -> System.err.println(i);
+                  default -> {}
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }

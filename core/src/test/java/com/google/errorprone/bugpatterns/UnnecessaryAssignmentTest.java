@@ -327,4 +327,23 @@ public final class UnnecessaryAssignmentTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void optionalInject_andMock_flagged() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.inject.Inject;
+            import org.mockito.Mock;
+
+            class Test {
+              @Mock
+              @Inject(optional = true)
+              // BUG: Diagnostic contains:
+              boolean myFoo = false;
+            }
+            """)
+        .doTest();
+  }
 }

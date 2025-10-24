@@ -26,6 +26,8 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
+import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ImportTree;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -288,15 +290,13 @@ public enum ImportPolicy {
         .collect(toImmutableSet());
   }
 
-  @SuppressWarnings("unchecked")
-  private static Collection<JCTree> getImports(JCCompilationUnit unit) {
-    try {
-      return (Collection<JCTree>) JCCompilationUnit.class.getMethod("getImports").invoke(unit);
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
+  // The return type of JCCompilationUnit#getImports changed for 'import module' in JDK 23
+  @SuppressWarnings("UnnecessaryCast")
+  private static List<? extends ImportTree> getImports(JCCompilationUnit unit) {
+    return ((CompilationUnitTree) unit).getImports();
   }
 
+  // Added for 'module import' declarations in JDK 23
   private static JCTree getQualifiedIdentifier(JCImport i) {
     try {
       return (JCTree) JCImport.class.getMethod("getQualifiedIdentifier").invoke(i);

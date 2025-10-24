@@ -161,7 +161,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
 
   private static String generateVariableName(Type targetType, VisitorState state) {
     Type unboxed = state.getTypes().unboxedType(targetType);
-    String simpleName = targetType.tsym.getSimpleName().toString();
+    String simpleName = IdentifierNames.fixInitialisms(targetType.tsym.getSimpleName().toString());
     String lowerFirstLetter = toLowerCase(String.valueOf(simpleName.charAt(0)));
     String camelCased = lowerFirstLetter + simpleName.substring(1);
     if (SourceVersion.isKeyword(camelCased)

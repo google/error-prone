@@ -23,7 +23,6 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.StructuralTypeMapping;
 import com.sun.tools.javac.code.TypeMetadata;
 import com.sun.tools.javac.code.Types;
-import java.lang.reflect.Method;
 
 /** Utility method to produce {@link Api} objects from javac {@link MethodSymbol}. */
 public final class ApiFactory {
@@ -59,29 +58,18 @@ public final class ApiFactory {
 
         @Override
         public Type visitClassType(Type.ClassType t, Void unused) {
-          return super.visitClassType((Type.ClassType) cloneWithoutMetadata(t), null);
+          return super.visitClassType((Type.ClassType) dropAnnotations(t), null);
         }
 
         // Remove annotations from all enclosing containers
         @Override
         public Type visitArrayType(Type.ArrayType t, Void unused) {
-          return super.visitArrayType((Type.ArrayType) cloneWithoutMetadata(t), null);
+          return super.visitArrayType((Type.ArrayType) dropAnnotations(t), null);
         }
       };
 
-  public static Type cloneWithoutMetadata(Type type) {
-    try {
-      try {
-        Method method = Type.class.getMethod("cloneWithMetadata", TypeMetadata.class);
-        return (Type) method.invoke(type, TypeMetadata.class.getField("EMPTY").get(null));
-      } catch (NoSuchMethodException e) {
-        Class<?> annotations = Class.forName("com.sun.tools.javac.code.TypeMetadata$Annotations");
-        Method method = Type.class.getMethod("dropMetadata", Class.class);
-        return (Type) method.invoke(type, annotations);
-      }
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
-    }
+  public static Type dropAnnotations(Type type) {
+    return type.dropMetadata(TypeMetadata.Annotations.class);
   }
 
   private ApiFactory() {}

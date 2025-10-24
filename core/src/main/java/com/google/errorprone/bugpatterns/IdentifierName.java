@@ -16,9 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.base.Ascii.isUpperCase;
-import static com.google.common.base.Ascii.toLowerCase;
-import static com.google.common.base.Ascii.toUpperCase;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
@@ -34,7 +31,6 @@ import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
-import static java.lang.Character.isDigit;
 import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.ElementKind.BINDING_VARIABLE;
 import static javax.lang.model.element.ElementKind.EXCEPTION_PARAMETER;
@@ -45,7 +41,6 @@ import com.google.common.base.CaseFormat;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -104,25 +99,24 @@ public final class IdentifierName extends BugChecker
       ", with acronyms treated as words"
           + " (https://google.github.io/styleguide/javaguide.html#s5.3-camel-case)";
 
-  private final boolean allowInitialismsInTypeName;
+  private final IdentifierNames identifierNames;
 
   @Inject
-  IdentifierName(ErrorProneFlags flags) {
-    this.allowInitialismsInTypeName =
-        flags.getBoolean("IdentifierName:AllowInitialismsInTypeName").orElse(false);
+  IdentifierName(IdentifierNames identifierNames) {
+    this.identifierNames = identifierNames;
   }
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ClassSymbol symbol = getSymbol(tree);
     String name = tree.getSimpleName().toString();
-    if (name.isEmpty() || isConformantTypeName(name)) {
+    if (name.isEmpty() || identifierNames.isConformantTypeName(name)) {
       // The name can be empty for enum member declarations, which are desugared early to class
       // declarations.
       return NO_MATCH;
     }
     String renamed = suggestedClassRename(name);
-    String suggested = allowInitialismsInTypeName ? renamed : fixInitialisms(renamed);
+    String suggested = identifierNames.fixInitialismsIfNeeded(renamed);
     boolean fixable = !suggested.equals(name) && canBeRemoved(symbol);
     String diagnostic =
         "Classes should be named in UpperCamelCase"
@@ -171,7 +165,7 @@ public final class IdentifierName extends BugChecker
       return NO_MATCH;
     }
     String renamed = suggestedRename(symbol, name);
-    String suggested = fixInitialisms(renamed);
+    String suggested = IdentifierNames.fixInitialisms(renamed);
     boolean fixable = !suggested.equals(name) && canBeRemoved(symbol, state);
     String diagnostic =
         "Methods and non-static variables should be named in lowerCamelCase"
@@ -222,7 +216,7 @@ public final class IdentifierName extends BugChecker
       return NO_MATCH;
     }
     String renamed = suggestedRename(symbol, name);
-    String suggested = fixInitialisms(renamed);
+    String suggested = IdentifierNames.fixInitialisms(renamed);
     boolean fixable = !suggested.equals(name) && canBeRenamed(symbol);
     String diagnostic =
         (isStaticVariable(symbol) ? STATIC_VARIABLE_FINDING : message())
@@ -284,56 +278,18 @@ public final class IdentifierName extends BugChecker
     if (name.isEmpty()) {
       return true;
     }
-    return isConformantLowerCamelName(name);
+    return IdentifierNames.isConformantLowerCamelName(name);
   }
 
   private static boolean isConformantStaticVariableName(String name) {
     return UPPER_UNDERSCORE_PATTERN.matcher(name).matches();
   }
 
-  private static boolean isConformantLowerCamelName(String name) {
-    return underscoresAreFlankedByDigits(name)
-        && !isUpperCase(name.charAt(0))
-        && !PROBABLE_INITIALISM.matcher(name).find();
-  }
-
-  private boolean isConformantTypeName(String name) {
-    return underscoresAreFlankedByDigits(name)
-        && isUpperCase(name.charAt(0))
-        && (allowInitialismsInTypeName || !PROBABLE_INITIALISM.matcher(name).find());
-  }
-
-  private static boolean underscoresAreFlankedByDigits(String name) {
-    if (name.startsWith("_") || name.endsWith("_")) {
-      return false;
-    }
-    for (int i = 1; i < name.length() - 1; i++) {
-      if (name.charAt(i) == '_') {
-        boolean flankedByDigits = isDigit(name.charAt(i - 1)) && isDigit(name.charAt(i + 1));
-        if (!flankedByDigits) {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
-
   private static boolean isStaticVariable(Symbol symbol) {
     return symbol instanceof VarSymbol && isStatic(symbol);
   }
 
-  private static String fixInitialisms(String input) {
-    return PROBABLE_INITIALISM.matcher(input).replaceAll(r -> titleCase(r.group(1)) + r.group(2));
-  }
-
-  private static String titleCase(String input) {
-    String lower = toLowerCase(input);
-    return toUpperCase(lower.charAt(0)) + lower.substring(1);
-  }
-
   private static final Pattern LOWER_UNDERSCORE_PATTERN = Pattern.compile("[a-z0-9_]+");
   private static final Pattern UPPER_UNDERSCORE_PATTERN = Pattern.compile("[A-Z0-9_]+");
-  private static final java.util.regex.Pattern PROBABLE_INITIALISM =
-      java.util.regex.Pattern.compile("([A-Z]{2,})([A-Z][^A-Z]|$)");
   private static final Splitter UNDERSCORE_SPLITTER = Splitter.on('_');
 }

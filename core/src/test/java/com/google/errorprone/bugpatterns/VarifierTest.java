@@ -184,6 +184,74 @@ public final class VarifierTest {
   }
 
   @Test
+  public void builderChainGeneric() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              static class Foo {}
+
+              public void t() {
+                ImmutableList<Foo> foos = ImmutableList.<Foo>builder().add(new Foo()).build();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              static class Foo {}
+
+              public void t() {
+                var foos = ImmutableList.<Foo>builder().add(new Foo()).build();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void builderChain_typeMismatch() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              static class Foo {
+                static Builder newBuilder() {
+                  return new Builder();
+                }
+
+                static class Builder {
+                  Builder setX(int x) {
+                    return this;
+                  }
+
+                  Bar build() {
+                    return new Bar();
+                  }
+                }
+              }
+
+              static class Bar {}
+
+              public void t() {
+                Bar bar = Foo.newBuilder().setX(1).build();
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void fromFactoryMethod() {
     refactoringHelper
         .addInputLines(

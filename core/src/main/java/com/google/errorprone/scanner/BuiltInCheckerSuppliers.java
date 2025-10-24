@@ -292,6 +292,7 @@ import com.google.errorprone.bugpatterns.NonFinalCompileTimeConstant;
 import com.google.errorprone.bugpatterns.NonFinalStaticField;
 import com.google.errorprone.bugpatterns.NonOverridingEquals;
 import com.google.errorprone.bugpatterns.NonRuntimeAnnotation;
+import com.google.errorprone.bugpatterns.NullNeedsCastForVarargs;
 import com.google.errorprone.bugpatterns.NullOptional;
 import com.google.errorprone.bugpatterns.NullTernary;
 import com.google.errorprone.bugpatterns.NullableConstructor;
@@ -484,7 +485,6 @@ import com.google.errorprone.bugpatterns.android.ParcelableCreator;
 import com.google.errorprone.bugpatterns.android.RectIntersectReturnValueIgnored;
 import com.google.errorprone.bugpatterns.android.StaticOrDefaultInterfaceMethod;
 import com.google.errorprone.bugpatterns.android.WakelockReleasedDangerously;
-import com.google.errorprone.bugpatterns.apidiff.AndroidJdkLibsChecker;
 import com.google.errorprone.bugpatterns.apidiff.Java8ApiChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.ArgumentSelectionDefectChecker;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.AssertEqualsArgumentOrderChecker;
@@ -813,6 +813,7 @@ public class BuiltInCheckerSuppliers {
           NonFinalCompileTimeConstant.class,
           NonRuntimeAnnotation.class,
           NullArgumentForNonNullParameter.class,
+          NullNeedsCastForVarargs.class,
           NullTernary.class,
           NullableOnContainingClass.class,
           OptionalEquality.class,
@@ -1182,7 +1183,6 @@ public class BuiltInCheckerSuppliers {
       getSuppliers(
           // keep-sorted start
           AddNullMarkedToPackageInfo.class,
-          AndroidJdkLibsChecker.class,
           AnnotationMirrorToString.class,
           AnnotationPosition.class,
           AnnotationValueToString.class,

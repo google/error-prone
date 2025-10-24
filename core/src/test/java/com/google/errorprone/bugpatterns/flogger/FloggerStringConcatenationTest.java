@@ -27,6 +27,8 @@ import org.junit.runners.JUnit4;
 public class FloggerStringConcatenationTest {
   private final BugCheckerRefactoringTestHelper testHelper =
       BugCheckerRefactoringTestHelper.newInstance(FloggerStringConcatenation.class, getClass());
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(FloggerStringConcatenation.class, getClass());
 
   @Test
   public void fix() {
@@ -172,6 +174,25 @@ public class FloggerStringConcatenationTest {
 
               public void method(String hello, String world) {
                 logger.atInfo().log("message is %s %s", hello, world);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeNoArgs() {
+    compilationHelper
+        .addSourceLines(
+            "in/Test.java",
+            """
+            import com.google.common.flogger.FluentLogger;
+
+            class Test {
+              private static final FluentLogger logger = FluentLogger.forEnclosingClass();
+
+              public void method() {
+                logger.atInfo().log();
               }
             }
             """)
