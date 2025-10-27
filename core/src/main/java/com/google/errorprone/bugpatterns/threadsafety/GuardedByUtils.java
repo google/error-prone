@@ -51,10 +51,8 @@ public final class GuardedByUtils {
     return rawAttributes.stream()
         .filter(
             a ->
-                flags.includeSelectedGuardedBy()
-                    ? ACCEPTED_GUARDED_BY_ANNOTATIONS.contains(
-                        a.getAnnotationType().asElement().toString())
-                    : a.type.tsym.flatName().contentEquals(GUARDED_BY))
+                ACCEPTED_GUARDED_BY_ANNOTATIONS.contains(
+                    a.getAnnotationType().asElement().toString()))
         .flatMap(
             a ->
                 MoreAnnotations.getValue(a, "value")
@@ -67,8 +65,6 @@ public final class GuardedByUtils {
     Symbol sym = getSymbol(tree);
     return sym == null ? ImmutableSet.of() : getGuardValues(sym, flags);
   }
-
-  private static final String GUARDED_BY = "com.google.errorprone.annotations.concurrent.GuardedBy";
 
   private static final ImmutableSet<String> ACCEPTED_GUARDED_BY_ANNOTATIONS =
       ImmutableSet.of(
