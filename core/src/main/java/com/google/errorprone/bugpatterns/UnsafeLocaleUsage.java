@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -37,15 +38,24 @@ import com.sun.tools.javac.tree.JCTree.JCLiteral;
 
 /** Flags unsafe usages of the {@link java.util.Locale} constructor and class methods. */
 @BugPattern(
-    summary = "Possible unsafe operation related to the java.util.Locale library.",
+    summary = "Possible unsafe operation related to the java.util.Locale class.",
     severity = WARNING)
 public final class UnsafeLocaleUsage extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
   private static final Matcher<ExpressionTree> LOCALE_TO_STRING =
       instanceMethod().onExactClass("java.util.Locale").named("toString");
+  private static final Matcher<ExpressionTree> LOCALE_OF =
+      staticMethod().onClass("java.util.Locale").named("of");
   private static final Matcher<ExpressionTree> LOCALE_CONSTRUCTOR =
       constructor().forClass("java.util.Locale");
+
+  // Used for both Locale constructors and Locale.of static methods.
+  private static final String DESCRIPTION =
+      " They do not check their arguments for"
+          + " well-formedness. Prefer using Locale.forLanguageTag(String)"
+          + " (which takes in an IETF BCP 47-formatted string) or a Locale.Builder"
+          + " (which throws exceptions when the input is not well-formed).";
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -54,10 +64,20 @@ public final class UnsafeLocaleUsage extends BugChecker
           .setMessage(
               "Avoid using Locale.toString() since it produces a value that"
                   + " misleadingly looks like a locale identifier. Prefer using"
-                  + " Locale.toLanguageTag() since it produces an IETF BCP 47-formatted string that"
-                  + " can be deserialized back into a Locale.")
+                  + " Locale.toLanguageTag() since it produces an IETF BCP 47-formatted string"
+                  + " that can be deserialized back into a Locale.")
           .addFix(SuggestedFixes.renameMethodInvocation(tree, "toLanguageTag", state))
           .build();
+    }
+    if (LOCALE_OF.matches(tree, state)) {
+      Description.Builder descriptionBuilder =
+          buildDescription(tree)
+              .setMessage("Avoid using the Locale.of static methods." + DESCRIPTION);
+
+      fixCallableWithArguments(
+          descriptionBuilder, ImmutableList.copyOf(tree.getArguments()), tree, state);
+
+      return descriptionBuilder.build();
     }
     return Description.NO_MATCH;
   }
@@ -66,41 +86,37 @@ public final class UnsafeLocaleUsage extends BugChecker
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     if (LOCALE_CONSTRUCTOR.matches(tree, state)) {
       Description.Builder descriptionBuilder =
-          buildDescription(tree)
-              .setMessage(
-                  "Avoid using Locale constructors, and prefer using"
-                      + " Locale.forLanguageTag(String) which takes in an IETF BCP 47-formatted"
-                      + " string or a Locale Builder.");
+          buildDescription(tree).setMessage("Avoid using the Locale constructors." + DESCRIPTION);
 
-      // Only suggest a fix for constructor calls with one or two parameters since there's
-      // too much variance in multi-parameter calls to be able to make a confident suggestion
-      ImmutableList<ExpressionTree> constructorArguments =
-          ImmutableList.copyOf(tree.getArguments());
-      if (constructorArguments.size() == 1) {
-        // Locale.forLanguageTag() doesn't support underscores in language tags. We can replace this
-        // ourselves when the constructor arg is a string literal. Otherwise, we can only append a
-        // .replace() to it.
-        ExpressionTree arg = constructorArguments.get(0);
-        String replacementArg =
-            arg instanceof JCLiteral
-                ? String.format(
-                    "\"%s\"", ASTHelpers.constValue(arg, String.class).replace('_', '-'))
-                : String.format(
-                    "%s.replace('_', '-')", state.getSourceForNode(constructorArguments.get(0)));
+      fixCallableWithArguments(
+          descriptionBuilder, ImmutableList.copyOf(tree.getArguments()), tree, state);
 
-        descriptionBuilder.addFix(
-            SuggestedFix.replace(tree, String.format("Locale.forLanguageTag(%s)", replacementArg)));
-      } else if (constructorArguments.size() == 2) {
-        descriptionBuilder.addFix(
-            SuggestedFix.replace(
-                tree,
-                String.format(
-                    "new Locale.Builder().setLanguage(%s).setRegion(%s).build()",
-                    state.getSourceForNode(constructorArguments.get(0)),
-                    state.getSourceForNode(constructorArguments.get(1)))));
-      }
       return descriptionBuilder.build();
     }
     return Description.NO_MATCH;
+  }
+
+  // Something that can be called with arguments, for example a method or constructor.
+  private static void fixCallableWithArguments(
+      Description.Builder descriptionBuilder,
+      ImmutableList<? extends ExpressionTree> arguments,
+      ExpressionTree tree,
+      VisitorState state) {
+
+    // Only suggest a fix for constructor or Locale.of calls with one parameter since there's
+    // too much variance in multi-parameter calls to be able to make a confident suggestion
+    if (arguments.size() == 1) {
+      // Locale.forLanguageTag() doesn't support underscores in language tags. We can replace this
+      // ourselves when the constructor arg is a string literal. Otherwise, we can only append a
+      // .replace() to it.
+      ExpressionTree arg = arguments.get(0);
+      String replacementArg =
+          arg instanceof JCLiteral
+              ? String.format( // Something like `new Locale("en_US")` or `Locale.of("en_US")`
+                  "\"%s\"", ASTHelpers.constValue(arg, String.class).replace('_', '-'))
+              : String.format("%s.replace('_', '-')", state.getSourceForNode(arguments.get(0)));
+      descriptionBuilder.addFix(
+          SuggestedFix.replace(tree, String.format("Locale.forLanguageTag(%s)", replacementArg)));
+    }
   }
 }
