@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -61,12 +60,8 @@ public class GuardedByChecker extends BugChecker
 
   private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
 
-  private final GuardedByFlags flags;
-
   @Inject
-  GuardedByChecker(ErrorProneFlags flags) {
-    this.flags = GuardedByFlags.fromFlags(flags);
-  }
+  GuardedByChecker() {}
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -106,8 +101,7 @@ public class GuardedByChecker extends BugChecker
     HeldLockAnalyzer.analyze(
         state,
         (tree, guard, live) -> report(checkGuardedAccess(tree, guard, live, state), state),
-        tree -> isSuppressed(tree, state),
-        flags);
+        tree -> isSuppressed(tree, state));
   }
 
   @Override
@@ -241,7 +235,7 @@ public class GuardedByChecker extends BugChecker
 
   /** Validates that {@code @GuardedBy} strings can be resolved. */
   private Description validate(Tree tree, VisitorState state) {
-    GuardedByValidationResult result = GuardedByUtils.isGuardedByValid(tree, state, flags);
+    GuardedByValidationResult result = GuardedByUtils.isGuardedByValid(tree, state);
     if (result.isValid()) {
       return Description.NO_MATCH;
     }

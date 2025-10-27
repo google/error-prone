@@ -47,12 +47,18 @@ import org.jspecify.annotations.Nullable;
  */
 public final class GuardedByBinder {
 
+  /** Stub method to allow removing the GuardedByFlags argument. */
+  public static Optional<GuardedByExpression> bindExpression(
+      JCTree.JCExpression exp, VisitorState visitorState, GuardedByFlags flags) {
+    return bindExpression(exp, visitorState);
+  }
+
   /**
    * Creates a {@link GuardedByExpression} from a bound AST node, or returns {@code
    * Optional.empty()} if the AST node doesn't correspond to a 'simple' lock expression.
    */
   public static Optional<GuardedByExpression> bindExpression(
-      JCTree.JCExpression exp, VisitorState visitorState, GuardedByFlags flags) {
+      JCTree.JCExpression exp, VisitorState visitorState) {
     try {
       return Optional.of(
           bind(
@@ -61,16 +67,21 @@ public final class GuardedByBinder {
                   ALREADY_BOUND_RESOLVER,
                   ASTHelpers.getSymbol(visitorState.findEnclosing(ClassTree.class)),
                   visitorState.getTypes(),
-                  visitorState.getNames(),
-                  flags)));
+                  visitorState.getNames())));
     } catch (IllegalGuardedBy expected) {
       return Optional.empty();
     }
   }
 
-  /** Creates a {@link GuardedByExpression} from a string, given the resolution context. */
+  /** Stub method to allow removing the GuardedByFlags argument. */
   public static Optional<GuardedByExpression> bindString(
       String string, GuardedBySymbolResolver resolver, GuardedByFlags flags) {
+    return bindString(string, resolver);
+  }
+
+  /** Creates a {@link GuardedByExpression} from a string, given the resolution context. */
+  public static Optional<GuardedByExpression> bindString(
+      String string, GuardedBySymbolResolver resolver) {
     try {
       return Optional.of(
           bind(
@@ -79,8 +90,7 @@ public final class GuardedByBinder {
                   resolver,
                   resolver.enclosingClass(),
                   resolver.visitorState().getTypes(),
-                  resolver.visitorState().getNames(),
-                  flags)));
+                  resolver.visitorState().getNames())));
     } catch (IllegalGuardedBy expected) {
       return Optional.empty();
     }
@@ -91,20 +101,16 @@ public final class GuardedByBinder {
     final ClassSymbol thisClass;
     final Types types;
     final Names names;
-    final GuardedByFlags flags;
 
-    BinderContext(
-        Resolver resolver, ClassSymbol thisClass, Types types, Names names, GuardedByFlags flags) {
+    BinderContext(Resolver resolver, ClassSymbol thisClass, Types types, Names names) {
       this.resolver = resolver;
       this.thisClass = thisClass;
       this.types = types;
       this.names = names;
-      this.flags = flags;
     }
 
-    static BinderContext of(
-        Resolver resolver, ClassSymbol thisClass, Types types, Names names, GuardedByFlags flags) {
-      return new BinderContext(resolver, thisClass, types, names, flags);
+    static BinderContext of(Resolver resolver, ClassSymbol thisClass, Types types, Names names) {
+      return new BinderContext(resolver, thisClass, types, names);
     }
   }
 

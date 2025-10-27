@@ -77,13 +77,11 @@ public class ThreadSafeChecker extends BugChecker
         MemberReferenceTreeMatcher {
 
   private final WellKnownThreadSafety wellKnownThreadSafety;
-  private final GuardedByFlags flags;
   private final ErrorProneFlags errorProneFlags;
 
   @Inject
   ThreadSafeChecker(WellKnownThreadSafety wellKnownThreadSafety, ErrorProneFlags flags) {
     this.wellKnownThreadSafety = wellKnownThreadSafety;
-    this.flags = GuardedByFlags.fromFlags(flags);
     this.errorProneFlags = flags;
   }
 
@@ -108,7 +106,7 @@ public class ThreadSafeChecker extends BugChecker
         tree, ((JCNewClass) tree).constructorType, state, ((JCNewClass) tree).constructor);
     // check instantiations of `@ThreadSafeTypeParameter`s in class constructor invocations
     ThreadSafeAnalysis analysis =
-        new ThreadSafeAnalysis(this, state, wellKnownThreadSafety, flags, errorProneFlags);
+        new ThreadSafeAnalysis(this, state, wellKnownThreadSafety, errorProneFlags);
     Violation info =
         analysis.checkInstantiation(
             getSymbol(tree.getIdentifier()).getTypeParameters(), getType(tree).getTypeArguments());
@@ -120,7 +118,7 @@ public class ThreadSafeChecker extends BugChecker
 
   private void checkInvocation(Tree tree, Type methodType, VisitorState state, Symbol symbol) {
     ThreadSafeAnalysis analysis =
-        new ThreadSafeAnalysis(this, state, wellKnownThreadSafety, flags, errorProneFlags);
+        new ThreadSafeAnalysis(this, state, wellKnownThreadSafety, errorProneFlags);
     Violation info = analysis.checkInvocation(methodType, symbol);
     if (info.isPresent()) {
       state.reportMatch(buildDescription(tree).setMessage(info.message()).build());
@@ -140,7 +138,7 @@ public class ThreadSafeChecker extends BugChecker
       default -> {}
     }
     ThreadSafeAnalysis analysis =
-        new ThreadSafeAnalysis(this, state, wellKnownThreadSafety, flags, errorProneFlags);
+        new ThreadSafeAnalysis(this, state, wellKnownThreadSafety, errorProneFlags);
     if (analysis.hasThreadSafeTypeParameterAnnotation((TypeVariableSymbol) sym)) {
       if (analysis.getThreadSafeAnnotation(sym.owner, state) == null) {
         return buildDescription(tree)
@@ -161,7 +159,7 @@ public class ThreadSafeChecker extends BugChecker
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ThreadSafeAnalysis analysis =
-        new ThreadSafeAnalysis(this, state, wellKnownThreadSafety, flags, errorProneFlags);
+        new ThreadSafeAnalysis(this, state, wellKnownThreadSafety, errorProneFlags);
     if (tree.getSimpleName().length() == 0) {
       // anonymous classes have empty names
       // TODO(cushon): once Java 8 happens, require @ThreadSafe on anonymous classes
