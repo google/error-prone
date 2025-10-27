@@ -21,6 +21,7 @@ import static com.google.errorprone.util.AnnotationNames.LAZY_INIT_ANNOTATION;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
@@ -57,13 +58,15 @@ public class ThreadSafeAnalysis {
       BugChecker bugChecker,
       VisitorState state,
       WellKnownThreadSafety wellKnownThreadSafety,
-      GuardedByFlags flags) {
+      GuardedByFlags flags,
+      ErrorProneFlags errorProneFlags) {
     this.bugChecker = bugChecker;
     this.state = state;
     this.wellKnownThreadSafety = wellKnownThreadSafety;
     this.flags = flags;
 
-    this.threadSafety = ThreadSafety.threadSafeBuilder(wellKnownThreadSafety).build(state);
+    this.threadSafety =
+        ThreadSafety.threadSafeBuilder(wellKnownThreadSafety, errorProneFlags).build(state);
   }
 
   boolean hasThreadSafeTypeParameterAnnotation(TypeVariableSymbol sym) {
