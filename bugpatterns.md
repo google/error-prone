@@ -1717,7 +1717,7 @@ __[UnnecessaryTestMethodPrefix](bugpattern/UnnecessaryTestMethodPrefix)__<br>
 A &#96;test&#96; prefix for a JUnit4 test is redundant, and a holdover from JUnit3. The &#96;@Test&#96; annotation makes it clear it&#39;s a test.
 
 __[UnsafeLocaleUsage](bugpattern/UnsafeLocaleUsage)__<br>
-Possible unsafe operation related to the java.util.Locale library.
+Possible unsafe operation related to the java.util.Locale class.
 
 __[UnusedException](bugpattern/UnusedException)__<br>
 This catch block catches an exception and re-throws another, but swallows the caught exception rather than setting it as a cause. This can make debugging harder.
