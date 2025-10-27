@@ -59,7 +59,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#analyze(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener,java.util.function.Predicate,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" tabindex="0">analyze(VisitorState, HeldLockAnalyzer.LockEventListener, Predicate, GuardedByFlags)</a></li>
+<li><a href="#analyze(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener,java.util.function.Predicate)" tabindex="0">analyze(VisitorState, HeldLockAnalyzer.LockEventListener, Predicate)</a></li>
 </ol>
 </li>
 </ol>
@@ -122,10 +122,9 @@ guarded members.</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#analyze(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener,java.util.function.Predicate,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">analyze</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#analyze(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener,java.util.function.Predicate)" class="member-name-link">analyze</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a>&nbsp;listener,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;isSuppressed,
- <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;isSuppressed)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Analyzes a method body, tracking the set of held locks and checking accesses to guarded
 members.</div>
@@ -148,13 +147,12 @@ members.</div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="analyze(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener,java.util.function.Predicate,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">
+<section class="detail" id="analyze(com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.LockEventListener,java.util.function.Predicate)">
 <h3>analyze</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">analyze</span><wbr><span class="parameters">(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a>&nbsp;listener,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;isSuppressed,
- <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;isSuppressed)</span></div>
 <div class="block">Analyzes a method body, tracking the set of held locks and checking accesses to guarded
 members.</div>
 </div>

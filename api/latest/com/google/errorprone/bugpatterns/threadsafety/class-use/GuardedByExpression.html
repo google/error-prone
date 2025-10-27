@@ -123,27 +123,46 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">GuardedByBinder.</span><code><a href="../GuardedByBinder.html#bindExpression(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">bindExpression</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;exp,
- <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState,
- <a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">GuardedByBinder.</span><code><a href="../GuardedByBinder.html#bindExpression(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.VisitorState)" class="member-name-link">bindExpression</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;exp,
+ <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates a <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a bound AST node, or returns <code>
 Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock expression.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">GuardedByBinder.</span><code><a href="../GuardedByBinder.html#bindExpression(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">bindExpression</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;exp,
+ <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState,
+ <a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Stub method to allow removing the GuardedByFlags argument.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">GuardedByBinder.</span><code><a href="../GuardedByBinder.html#bindString(java.lang.String,com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver)" class="member-name-link">bindString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;string,
+ <a href="../GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a>&nbsp;resolver)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Creates a <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a string, given the resolution context.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">GuardedByBinder.</span><code><a href="../GuardedByBinder.html#bindString(java.lang.String,com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">bindString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;string,
  <a href="../GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a>&nbsp;resolver,
  <a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Creates a <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a string, given the resolution context.</div>
+<div class="block">Stub method to allow removing the GuardedByFlags argument.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">HeldLockAnalyzer.ExpectedLockCalculator.</span><code><a href="../HeldLockAnalyzer.ExpectedLockCalculator.html#from(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">from</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;guardedMemberExpression,
+<div class="col-second even-row-color"><span class="type-name-label">HeldLockAnalyzer.ExpectedLockCalculator.</span><code><a href="../HeldLockAnalyzer.ExpectedLockCalculator.html#from(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.VisitorState)" class="member-name-link">from</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;guardedMemberExpression,
+ <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;guard,
+ <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Determine the lock expression that needs to be held when accessing a specific guarded member.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">HeldLockAnalyzer.ExpectedLockCalculator.</span><code><a href="../HeldLockAnalyzer.ExpectedLockCalculator.html#from(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">from</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;guardedMemberExpression,
  <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;guard,
  <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Determine the lock expression that needs to be held when accessing a specific guarded member.</div>
+<div class="col-last odd-row-color">
+<div class="block">Stub method to allow removing the GuardedByFlags argument.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a> with parameters of type <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a></span></div>
@@ -163,46 +182,53 @@ Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock ex
  com.sun.tools.javac.code.Type&nbsp;type)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">HeldLockAnalyzer.ExpectedLockCalculator.</span><code><a href="../HeldLockAnalyzer.ExpectedLockCalculator.html#from(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">from</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;guardedMemberExpression,
+<div class="col-second even-row-color"><span class="type-name-label">HeldLockAnalyzer.ExpectedLockCalculator.</span><code><a href="../HeldLockAnalyzer.ExpectedLockCalculator.html#from(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.VisitorState)" class="member-name-link">from</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;guardedMemberExpression,
  <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;guard,
- <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
- <a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
+ <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Determine the lock expression that needs to be held when accessing a specific guarded member.</div>
 </div>
-<div class="col-first odd-row-color"><code>void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">HeldLockAnalyzer.LockEventListener.</span><code><a href="../HeldLockAnalyzer.LockEventListener.html#handleGuardedAccess(com.sun.source.tree.ExpressionTree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.bugpatterns.threadsafety.HeldLockSet)" class="member-name-link">handleGuardedAccess</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">HeldLockAnalyzer.ExpectedLockCalculator.</span><code><a href="../HeldLockAnalyzer.ExpectedLockCalculator.html#from(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">from</a><wbr>(com.sun.tools.javac.tree.JCTree.JCExpression&nbsp;guardedMemberExpression,
+ <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;guard,
+ <a href="../../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ <a href="../GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Stub method to allow removing the GuardedByFlags argument.</div>
+</div>
+<div class="col-first even-row-color"><code>void</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">HeldLockAnalyzer.LockEventListener.</span><code><a href="../HeldLockAnalyzer.LockEventListener.html#handleGuardedAccess(com.sun.source.tree.ExpressionTree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.bugpatterns.threadsafety.HeldLockSet)" class="member-name-link">handleGuardedAccess</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;guard,
  com.google.errorprone.bugpatterns.threadsafety.HeldLockSet&nbsp;locks)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Handles a guarded member access.</div>
 </div>
-<div class="col-first even-row-color"><code>com.sun.tools.javac.code.Symbol</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">GuardedByBinder.Resolver.</span><code><a href="../GuardedByBinder.Resolver.html#resolveMemberReference(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberReferenceTree)" class="member-name-link">resolveMemberReference</a><wbr>(<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MemberReferenceTree.html" title="class or interface in com.sun.source.tree" class="external-link">MemberReferenceTree</a>&nbsp;node)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>com.sun.tools.javac.code.Symbol</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">GuardedBySymbolResolver.</span><code><a href="../GuardedBySymbolResolver.html#resolveMemberReference(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberReferenceTree)" class="member-name-link">resolveMemberReference</a><wbr>(<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
+<div class="col-second odd-row-color"><span class="type-name-label">GuardedByBinder.Resolver.</span><code><a href="../GuardedByBinder.Resolver.html#resolveMemberReference(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberReferenceTree)" class="member-name-link">resolveMemberReference</a><wbr>(<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MemberReferenceTree.html" title="class or interface in com.sun.source.tree" class="external-link">MemberReferenceTree</a>&nbsp;node)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>com.sun.tools.javac.code.Symbol.MethodSymbol</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">GuardedByBinder.Resolver.</span><code><a href="../GuardedByBinder.Resolver.html#resolveMethod(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,javax.lang.model.element.Name)" class="member-name-link">resolveMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;node,
- <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;identifier)</code></div>
+<div class="col-first even-row-color"><code>com.sun.tools.javac.code.Symbol</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">GuardedBySymbolResolver.</span><code><a href="../GuardedBySymbolResolver.html#resolveMemberReference(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberReferenceTree)" class="member-name-link">resolveMemberReference</a><wbr>(<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MemberReferenceTree.html" title="class or interface in com.sun.source.tree" class="external-link">MemberReferenceTree</a>&nbsp;node)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>com.sun.tools.javac.code.Symbol.MethodSymbol</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">GuardedBySymbolResolver.</span><code><a href="../GuardedBySymbolResolver.html#resolveMethod(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,javax.lang.model.element.Name)" class="member-name-link">resolveMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;node,
+<div class="col-second odd-row-color"><span class="type-name-label">GuardedByBinder.Resolver.</span><code><a href="../GuardedByBinder.Resolver.html#resolveMethod(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,javax.lang.model.element.Name)" class="member-name-link">resolveMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;node,
  <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;identifier)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>com.sun.tools.javac.code.Symbol</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">GuardedByBinder.Resolver.</span><code><a href="../GuardedByBinder.Resolver.html#resolveSelect(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberSelectTree)" class="member-name-link">resolveSelect</a><wbr>(<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MemberSelectTree.html" title="class or interface in com.sun.source.tree" class="external-link">MemberSelectTree</a>&nbsp;node)</code></div>
+<div class="col-first even-row-color"><code>com.sun.tools.javac.code.Symbol.MethodSymbol</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">GuardedBySymbolResolver.</span><code><a href="../GuardedBySymbolResolver.html#resolveMethod(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,javax.lang.model.element.Name)" class="member-name-link">resolveMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;node,
+ <a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;identifier)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>com.sun.tools.javac.code.Symbol</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">GuardedBySymbolResolver.</span><code><a href="../GuardedBySymbolResolver.html#resolveSelect(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberSelectTree)" class="member-name-link">resolveSelect</a><wbr>(<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
+<div class="col-second odd-row-color"><span class="type-name-label">GuardedByBinder.Resolver.</span><code><a href="../GuardedByBinder.Resolver.html#resolveSelect(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberSelectTree)" class="member-name-link">resolveSelect</a><wbr>(<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MemberSelectTree.html" title="class or interface in com.sun.source.tree" class="external-link">MemberSelectTree</a>&nbsp;node)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>com.sun.tools.javac.code.Symbol</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">GuardedBySymbolResolver.</span><code><a href="../GuardedBySymbolResolver.html#resolveSelect(com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.sun.source.tree.MemberSelectTree)" class="member-name-link">resolveSelect</a><wbr>(<a href="../GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>&nbsp;base,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MemberSelectTree.html" title="class or interface in com.sun.source.tree" class="external-link">MemberSelectTree</a>&nbsp;node)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>

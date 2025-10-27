@@ -58,9 +58,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#getGuardValues(com.sun.tools.javac.code.Symbol,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" tabindex="0">getGuardValues(Symbol, GuardedByFlags)</a></li>
-<li><a href="#isGuardedByValid(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" tabindex="0">isGuardedByValid(Tree, VisitorState, GuardedByFlags)</a></li>
-<li><a href="#bindGuardedByString(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" tabindex="0">bindGuardedByString(Tree, String, VisitorState, GuardedByFlags)</a></li>
+<li><a href="#getGuardValues(com.sun.tools.javac.code.Symbol)" tabindex="0">getGuardValues(Symbol)</a></li>
+<li><a href="#isGuardedByValid(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" tabindex="0">isGuardedByValid(Tree, VisitorState)</a></li>
+<li><a href="#bindGuardedByString(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)" tabindex="0">bindGuardedByString(Tree, String, VisitorState)</a></li>
 </ol>
 </li>
 </ol>
@@ -98,19 +98,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable com.sun.tools.javac.code.Symbol</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#bindGuardedByString(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">bindGuardedByString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#bindGuardedByString(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">bindGuardedByString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;guard,
- <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState,
- <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
+ <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getGuardValues(com.sun.tools.javac.code.Symbol,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">getGuardValues</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
- <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getGuardValues(com.sun.tools.javac.code.Symbol)" class="member-name-link">getGuardValues</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isGuardedByValid(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">isGuardedByValid</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
- <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
- <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isGuardedByValid(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isGuardedByValid</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+ <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -130,32 +127,29 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="getGuardValues(com.sun.tools.javac.code.Symbol,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">
+<section class="detail" id="getGuardValues(com.sun.tools.javac.code.Symbol)">
 <h3>getGuardValues</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getGuardValues</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym,
- <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getGuardValues</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="isGuardedByValid(com.sun.source.tree.Tree,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">
+<section class="detail" id="isGuardedByValid(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)">
 <h3>isGuardedByValid</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult</span>&nbsp;<span class="element-name">isGuardedByValid</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
- <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
- <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</span></div>
+ <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="bindGuardedByString(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)">
+<section class="detail" id="bindGuardedByString(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)">
 <h3>bindGuardedByString</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="element-name">bindGuardedByString</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;guard,
- <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState,
- <a href="GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a>&nbsp;flags)</span></div>
+ <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</span></div>
 </div>
 </section>
 </li>
