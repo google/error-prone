@@ -42,18 +42,35 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 
 /** Analyzes types for deep thread safety. */
-public class ThreadSafeAnalysis {
+public final class ThreadSafeAnalysis {
+  /** Factory for {@link ThreadSafeAnalysis}. */
+  public static final class Factory {
+    private final WellKnownThreadSafety wellKnownThreadSafety;
+    private final ErrorProneFlags errorProneFlags;
+
+    @Inject
+    Factory(WellKnownThreadSafety wellKnownThreadSafety, ErrorProneFlags errorProneFlags) {
+      this.wellKnownThreadSafety = wellKnownThreadSafety;
+      this.errorProneFlags = errorProneFlags;
+    }
+
+    public ThreadSafeAnalysis create(BugChecker bugChecker, VisitorState state) {
+      return new ThreadSafeAnalysis(bugChecker, state, wellKnownThreadSafety, errorProneFlags);
+    }
+  }
+
   private final BugChecker bugChecker;
   private final VisitorState state;
   private final WellKnownThreadSafety wellKnownThreadSafety;
   private final ThreadSafety threadSafety;
 
-  public ThreadSafeAnalysis(
+  private ThreadSafeAnalysis(
       BugChecker bugChecker,
       VisitorState state,
       WellKnownThreadSafety wellKnownThreadSafety,
