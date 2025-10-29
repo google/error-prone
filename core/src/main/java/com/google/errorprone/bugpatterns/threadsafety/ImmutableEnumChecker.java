@@ -54,11 +54,11 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
       "enums are immutable by default; annotating them with"
           + " @com.google.errorprone.annotations.Immutable is unnecessary";
 
-  private final WellKnownMutability wellKnownMutability;
+  private final ImmutableAnalysis.Factory immutableAnalysisFactory;
 
   @Inject
-  ImmutableEnumChecker(WellKnownMutability wellKnownMutability) {
-    this.wellKnownMutability = wellKnownMutability;
+  ImmutableEnumChecker(ImmutableAnalysis.Factory immutableAnalysisFactory) {
+    this.immutableAnalysisFactory = immutableAnalysisFactory;
   }
 
   @Override
@@ -84,11 +84,8 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
     }
 
     Violation info =
-        new ImmutableAnalysis(
-                this::isSuppressed,
-                state,
-                wellKnownMutability,
-                ImmutableSet.of(IMMUTABLE_ANNOTATION))
+        immutableAnalysisFactory
+            .create(this::isSuppressed, state, ImmutableSet.of(IMMUTABLE_ANNOTATION))
             .checkForImmutability(
                 Optional.of(tree), ImmutableSet.of(), getType(tree), this::describe);
 

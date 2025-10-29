@@ -98,16 +98,21 @@ public class ImmutableChecker extends BugChecker
         MethodTreeMatcher,
         MemberReferenceTreeMatcher {
 
+  private final ImmutableAnalysis.Factory immutableAnalysisFactory;
   private final WellKnownMutability wellKnownMutability;
   private final ImmutableSet<String> immutableAnnotations;
 
   @Inject
-  ImmutableChecker(WellKnownMutability wellKnownMutability) {
-    this(wellKnownMutability, ImmutableSet.of(Immutable.class.getName()));
+  ImmutableChecker(
+      ImmutableAnalysis.Factory immutableAnalysisFactory, WellKnownMutability wellKnownMutability) {
+    this(immutableAnalysisFactory, wellKnownMutability, ImmutableSet.of(Immutable.class.getName()));
   }
 
   ImmutableChecker(
-      WellKnownMutability wellKnownMutability, ImmutableSet<String> immutableAnnotations) {
+      ImmutableAnalysis.Factory immutableAnalysisFactory,
+      WellKnownMutability wellKnownMutability,
+      ImmutableSet<String> immutableAnnotations) {
+    this.immutableAnalysisFactory = immutableAnalysisFactory;
     this.wellKnownMutability = wellKnownMutability;
     this.immutableAnnotations = immutableAnnotations;
   }
@@ -213,8 +218,7 @@ public class ImmutableChecker extends BugChecker
   }
 
   private ImmutableAnalysis createImmutableAnalysis(VisitorState state) {
-    return new ImmutableAnalysis(
-        this::isSuppressed, state, wellKnownMutability, immutableAnnotations);
+    return immutableAnalysisFactory.create(this::isSuppressed, state, immutableAnnotations);
   }
 
   private void checkInvocation(

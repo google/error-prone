@@ -58,11 +58,11 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
   private static final ImmutableSet<String> IGNORED_PROCESSORS =
       ImmutableSet.of("com.google.auto.value.processor.AutoAnnotationProcessor");
 
-  private final WellKnownMutability wellKnownMutability;
+  private final ImmutableAnalysis.Factory immutableAnalysisFactory;
 
   @Inject
-  ImmutableAnnotationChecker(WellKnownMutability wellKnownMutability) {
-    this.wellKnownMutability = wellKnownMutability;
+  ImmutableAnnotationChecker(ImmutableAnalysis.Factory immutableAnalysisFactory) {
+    this.immutableAnalysisFactory = immutableAnalysisFactory;
   }
 
   @Override
@@ -90,11 +90,8 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
     }
 
     Violation info =
-        new ImmutableAnalysis(
-                this::isSuppressed,
-                state,
-                wellKnownMutability,
-                ImmutableSet.of(IMMUTABLE_ANNOTATION))
+        immutableAnalysisFactory
+            .create(this::isSuppressed, state, ImmutableSet.of(IMMUTABLE_ANNOTATION))
             .checkForImmutability(
                 Optional.of(tree), ImmutableSet.of(), getType(tree), this::describeClass);
 

@@ -45,10 +45,13 @@ import javax.inject.Inject;
     summary = "Refactors uses of the JSR 305 @Immutable to Error Prone's annotation",
     severity = SUGGESTION)
 public class ImmutableRefactoring extends BugChecker implements CompilationUnitTreeMatcher {
+  private final ImmutableAnalysis.Factory immutableAnalysisFactory;
   private final WellKnownMutability wellKnownMutability;
 
   @Inject
-  ImmutableRefactoring(WellKnownMutability wellKnownMutability) {
+  ImmutableRefactoring(
+      ImmutableAnalysis.Factory immutableAnalysisFactory, WellKnownMutability wellKnownMutability) {
+    this.immutableAnalysisFactory = immutableAnalysisFactory;
     this.wellKnownMutability = wellKnownMutability;
   }
 
@@ -58,7 +61,9 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     ImmutableChecker immutableChecker =
         new ImmutableChecker(
-            wellKnownMutability, ImmutableSet.of(JSR_305_IMMUTABLE, Immutable.class.getName()));
+            immutableAnalysisFactory,
+            wellKnownMutability,
+            ImmutableSet.of(JSR_305_IMMUTABLE, Immutable.class.getName()));
     Optional<? extends ImportTree> immutableImport =
         tree.getImports().stream()
             .filter(
