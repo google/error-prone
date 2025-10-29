@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.auto.value.AutoValue;
@@ -77,6 +78,7 @@ import org.pcollections.ConsPStack;
 public final class ThreadSafety {
   private final VisitorState state;
   private final Purpose purpose;
+  private final boolean markerAnnotationInherited;
   private final ThreadSafetyKnownTypes knownTypes;
   private final ImmutableSet<String> markerAnnotations;
   private final ImmutableSet<String> acceptedAnnotations;
@@ -94,6 +96,7 @@ public final class ThreadSafety {
     ThreadSafety.Builder builder =
         ThreadSafety.builder()
             .setPurpose(Purpose.FOR_THREAD_SAFE_CHECKER)
+            .markerAnnotationInherited(false)
             .knownTypes(wellKnownThreadSafety)
             .markerAnnotations(ImmutableSet.of(ThreadSafe.class.getName()))
             .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()))
@@ -157,6 +160,7 @@ public final class ThreadSafety {
     private Builder() {}
 
     private Purpose purpose = Purpose.FOR_IMMUTABLE_CHECKER;
+    private boolean markerAnnotationInherited = false;
     private ThreadSafetyKnownTypes knownTypes;
     private ImmutableSet<String> markerAnnotations;
     private ImmutableSet<String> acceptedAnnotations = ImmutableSet.of();
@@ -169,6 +173,13 @@ public final class ThreadSafety {
     @CanIgnoreReturnValue
     public Builder setPurpose(Purpose purpose) {
       this.purpose = purpose;
+      return this;
+    }
+
+    /** Whether to assume the marker annotation is implicitly inherited by subclasses. */
+    @CanIgnoreReturnValue
+    public Builder markerAnnotationInherited(boolean markerAnnotationInherited) {
+      this.markerAnnotationInherited = markerAnnotationInherited;
       return this;
     }
 
@@ -278,6 +289,7 @@ public final class ThreadSafety {
       return new ThreadSafety(
           state,
           purpose,
+          markerAnnotationInherited,
           knownTypes,
           markerAnnotations,
           acceptedAnnotations,
@@ -291,6 +303,7 @@ public final class ThreadSafety {
   private ThreadSafety(
       VisitorState state,
       Purpose purpose,
+      boolean markerAnnotationInherited,
       ThreadSafetyKnownTypes knownTypes,
       Set<String> markerAnnotations,
       Set<String> acceptedAnnotations,
@@ -300,6 +313,7 @@ public final class ThreadSafety {
       Set<String> acceptedTypeParameterAnnotation) {
     this.state = checkNotNull(state);
     this.purpose = purpose;
+    this.markerAnnotationInherited = markerAnnotationInherited;
     this.knownTypes = checkNotNull(knownTypes);
     this.markerAnnotations = ImmutableSet.copyOf(checkNotNull(markerAnnotations));
     this.acceptedAnnotations = ImmutableSet.copyOf(checkNotNull(acceptedAnnotations));
@@ -807,31 +821,40 @@ public final class ThreadSafety {
     if (!(sym instanceof ClassSymbol classSymbol)) {
       return null;
     }
-    Type superClass = classSymbol.getSuperclass();
-    AnnotationInfo superAnnotation = getInheritedAnnotation(superClass.asElement(), state);
-    if (superAnnotation == null) {
-      return null;
-    }
-    // If an annotated super-type was found, look for any type arguments to the super-type that
-    // are in the super-type's containerOf spec, and where the arguments are type parameters
-    // of the current class.
-    // E.g. for `Foo<X> extends Super<X>` if `Super<Y>` is annotated
-    // `@ThreadSafeContainerAnnotation Y`
-    // then `Foo<X>` is has X implicitly annotated `@ThreadSafeContainerAnnotation X`
-    ImmutableList.Builder<String> containerOf = ImmutableList.builder();
-    for (int i = 0; i < superClass.getTypeArguments().size(); i++) {
-      Type arg = superClass.getTypeArguments().get(i);
-      TypeVariableSymbol formal = superClass.asElement().getTypeParameters().get(i);
-      if (!arg.hasTag(TypeTag.TYPEVAR)) {
+
+    ImmutableSet<Type> superclasses =
+        markerAnnotationInherited
+            ? state.getTypes().closure(classSymbol.type).stream()
+                .filter(c -> !c.tsym.equals(classSymbol))
+                .collect(toImmutableSet())
+            : ImmutableSet.of(classSymbol.getSuperclass());
+    for (Type superClass : superclasses) {
+      AnnotationInfo superAnnotation = getInheritedAnnotation(superClass.asElement(), state);
+      if (superAnnotation == null) {
         continue;
       }
-      TypeSymbol argSym = arg.asElement();
-      if (argSym.owner == sym
-          && superAnnotation.containerOf().contains(formal.getSimpleName().toString())) {
-        containerOf.add(argSym.getSimpleName().toString());
+      // If an annotated super-type was found, look for any type arguments to the super-type that
+      // are in the super-type's containerOf spec, and where the arguments are type parameters
+      // of the current class.
+      // E.g. for `Foo<X> extends Super<X>` if `Super<Y>` is annotated
+      // `@ThreadSafeContainerAnnotation Y`
+      // then `Foo<X>` is has X implicitly annotated `@ThreadSafeContainerAnnotation X`
+      ImmutableList.Builder<String> containerOf = ImmutableList.builder();
+      for (int i = 0; i < superClass.getTypeArguments().size(); i++) {
+        Type arg = superClass.getTypeArguments().get(i);
+        TypeVariableSymbol formal = superClass.asElement().getTypeParameters().get(i);
+        if (!arg.hasTag(TypeTag.TYPEVAR)) {
+          continue;
+        }
+        TypeSymbol argSym = arg.asElement();
+        if (argSym.owner == sym
+            && superAnnotation.containerOf().contains(formal.getSimpleName().toString())) {
+          containerOf.add(argSym.getSimpleName().toString());
+        }
       }
+      return AnnotationInfo.create(superAnnotation.typeName(), containerOf.build());
     }
-    return AnnotationInfo.create(superAnnotation.typeName(), containerOf.build());
+    return null;
   }
 
   /**

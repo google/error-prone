@@ -201,6 +201,7 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
     ThreadSafety threadSafety =
         ThreadSafety.builder()
             .setPurpose(ThreadSafety.Purpose.FOR_IMMUTABLE_CHECKER)
+            .markerAnnotationInherited(true)
             .knownTypes(wellKnownMutability)
             .acceptedAnnotations(
                 ImmutableSet.of(Immutable.class.getName(), AutoValue.class.getName()))

@@ -90,6 +90,7 @@ public final class ConstantExpressions {
             s ->
                 ThreadSafety.builder()
                     .setPurpose(ThreadSafety.Purpose.FOR_IMMUTABLE_CHECKER)
+                    .markerAnnotationInherited(true)
                     .knownTypes(wellKnownMutability)
                     .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()))
                     .markerAnnotations(ImmutableSet.of())

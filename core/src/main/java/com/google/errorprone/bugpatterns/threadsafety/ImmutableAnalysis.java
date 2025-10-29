@@ -22,6 +22,7 @@ import static com.google.errorprone.util.AnnotationNames.LAZY_INIT_ANNOTATION;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.ImmutableTypeParameter;
@@ -58,10 +59,12 @@ public final class ImmutableAnalysis {
   /** Factory for {@link ImmutableAnalysis}. */
   public static final class Factory {
     private final WellKnownMutability wellKnownMutability;
+    private final ErrorProneFlags flags;
 
     @Inject
-    Factory(WellKnownMutability wellKnownMutability) {
+    Factory(WellKnownMutability wellKnownMutability, ErrorProneFlags flags) {
       this.wellKnownMutability = wellKnownMutability;
+      this.flags = flags;
     }
 
     public ImmutableAnalysis create(
@@ -69,7 +72,7 @@ public final class ImmutableAnalysis {
         VisitorState state,
         ImmutableSet<String> immutableAnnotations) {
       return new ImmutableAnalysis(
-          suppressionChecker, state, wellKnownMutability, immutableAnnotations);
+          suppressionChecker, state, wellKnownMutability, immutableAnnotations, flags);
     }
   }
 
@@ -82,13 +85,16 @@ public final class ImmutableAnalysis {
       BiPredicate<Symbol, VisitorState> suppressionChecker,
       VisitorState state,
       WellKnownMutability wellKnownMutability,
-      ImmutableSet<String> immutableAnnotations) {
+      ImmutableSet<String> immutableAnnotations,
+      ErrorProneFlags flags) {
     this.suppressionChecker = suppressionChecker;
     this.state = state;
     this.wellKnownMutability = wellKnownMutability;
     this.threadSafety =
         ThreadSafety.builder()
             .setPurpose(Purpose.FOR_IMMUTABLE_CHECKER)
+            .markerAnnotationInherited(
+                flags.getBoolean("Immutable:MarkerAnnotationInherited").orElse(true))
             .knownTypes(wellKnownMutability)
             .markerAnnotations(immutableAnnotations)
             .typeParameterAnnotation(ImmutableTypeParameter.class)
