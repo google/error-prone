@@ -3,7 +3,7 @@ title: LabelledBreakTarget
 summary: Labels should only be used on loops.
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: ERROR
 ---
 
 <!--

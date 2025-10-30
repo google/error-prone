@@ -306,6 +306,9 @@ Abstract and default methods are not injectable with javax.inject.Inject
 __[JodaToSelf](bugpattern/JodaToSelf)__<br>
 Use of Joda-Time&#39;s DateTime.toDateTime(), Duration.toDuration(), Instant.toInstant(), Interval.toInterval(), and Period.toPeriod() are not allowed.
 
+__[LabelledBreakTarget](bugpattern/LabelledBreakTarget)__<br>
+Labels should only be used on loops.
+
 __[LenientFormatStringValidation](bugpattern/LenientFormatStringValidation)__<br>
 The number of arguments provided to lenient format methods should match the positional specifiers.
 
@@ -1012,9 +1015,6 @@ Joda-Time&#39;s ConverterManager makes the semantics of DateTime/Instant/etc con
 
 __[JodaWithDurationAddedLong](bugpattern/JodaWithDurationAddedLong)__<br>
 Use of JodaTime&#39;s type.withDurationAdded(long, int) (where &lt;type&gt; &#61; {Duration,Instant,DateTime}). Please use type.withDurationAdded(Duration.millis(long), int) instead.
-
-__[LabelledBreakTarget](bugpattern/LabelledBreakTarget)__<br>
-Labels should only be used on loops.
 
 __[LiteEnumValueOf](bugpattern/LiteEnumValueOf)__<br>
 Instead of converting enums to string and back, its numeric value should be used instead as it is the stable part of the protocol defined by the enum.
