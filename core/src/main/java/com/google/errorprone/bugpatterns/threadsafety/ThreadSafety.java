@@ -16,12 +16,11 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
+import com.google.auto.value.AutoBuilder;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -32,7 +31,6 @@ import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.google.errorprone.annotations.ThreadSafe;
@@ -56,10 +54,6 @@ import com.sun.tools.javac.code.Type.WildcardType;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.Name;
-import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -88,14 +82,19 @@ public final class ThreadSafety {
   private final ImmutableSet<String> acceptedTypeParameterAnnotation;
 
   public static Builder builder() {
-    return new Builder();
+    return new AutoBuilder_ThreadSafety_Builder()
+        .acceptedAnnotations(ImmutableSet.of())
+        .containerOfAnnotation(ImmutableSet.of())
+        .suppressAnnotation(ImmutableSet.of())
+        .typeParameterAnnotation(ImmutableSet.of())
+        .acceptedTypeParameterAnnotation(ImmutableSet.of());
   }
 
-  public static ThreadSafety.Builder threadSafeBuilder(
+  public static Builder threadSafeBuilder(
       WellKnownThreadSafety wellKnownThreadSafety, ErrorProneFlags flags) {
-    ThreadSafety.Builder builder =
+    Builder builder =
         ThreadSafety.builder()
-            .setPurpose(Purpose.FOR_THREAD_SAFE_CHECKER)
+            .purpose(Purpose.FOR_THREAD_SAFE_CHECKER)
             .markerAnnotationInherited(false)
             .knownTypes(wellKnownThreadSafety)
             .markerAnnotations(ImmutableSet.of(ThreadSafe.class.getName()))
@@ -106,6 +105,61 @@ public final class ThreadSafety {
                     ? ImmutableSet.of(ImmutableTypeParameter.class.getName())
                     : ImmutableSet.of());
     return builder;
+  }
+
+  /** Builder for {@link ThreadSafety}. */
+  @AutoBuilder(ofClass = ThreadSafety.class)
+  public abstract static class Builder {
+
+    /** See {@link Purpose}. */
+    public abstract Builder purpose(Purpose purpose);
+
+    /** Whether to assume the marker annotation is implicitly inherited by subclasses. */
+    public abstract Builder markerAnnotationInherited(boolean markerAnnotationInherited);
+
+    /** Information about known types and whether they're known to be safe or unsafe. */
+    public abstract Builder knownTypes(ThreadSafetyKnownTypes knownTypes);
+
+    /**
+     * Annotations that will cause a class to be tested with this {@link ThreadSafety} instance; for
+     * example, when testing a class for immutability, this should be @Immutable.
+     */
+    public abstract Builder markerAnnotations(Iterable<String> markerAnnotations);
+
+    /**
+     * Annotations that do *not* cause a class to be tested, but which are treated as valid
+     * annotations to pass the test; for example, if @ThreadSafe is the marker
+     * annotation, @Immutable would be included in this list, as an immutable class is by definition
+     * thread-safe.
+     */
+    public abstract Builder acceptedAnnotations(Iterable<String> acceptedAnnotations);
+
+    /** An annotation which marks a generic parameter as a container type. */
+    public abstract Builder containerOfAnnotation(Iterable<String> containerOfAnnotation);
+
+    /** An annotation which, when found on a class, should suppress the test */
+    public abstract Builder suppressAnnotation(Iterable<String> suppressAnnotation);
+
+    /**
+     * An annotation which, when found on a type parameter, indicates that the type parameter may
+     * only be instantiated with thread-safe types.
+     */
+    public abstract Builder typeParameterAnnotation(Iterable<String> typeParameterAnnotation);
+
+    /**
+     * An annotation which, when found on a type parameter, indicates that the type parameter may
+     * only be instantiated with thread-safe types.
+     */
+    public abstract Builder acceptedTypeParameterAnnotation(
+        Iterable<String> acceptedTypeParameterAnnotation);
+
+    abstract Builder visitorState(VisitorState state);
+
+    public final ThreadSafety build(VisitorState state) {
+      return visitorState(state).build();
+    }
+
+    abstract ThreadSafety build();
   }
 
   /**
@@ -154,174 +208,27 @@ public final class ThreadSafety {
     abstract String mutableOrNotThreadSafe();
   }
 
-  /** {@link ThreadSafety}Builder */
-  public static class Builder {
-
-    private Builder() {}
-
-    private Purpose purpose = Purpose.FOR_IMMUTABLE_CHECKER;
-    private boolean markerAnnotationInherited = false;
-    private ThreadSafetyKnownTypes knownTypes;
-    private ImmutableSet<String> markerAnnotations;
-    private ImmutableSet<String> acceptedAnnotations = ImmutableSet.of();
-    private ImmutableSet<String> containerOfAnnotation = ImmutableSet.of();
-    private ImmutableSet<String> suppressAnnotation = ImmutableSet.of();
-    private ImmutableSet<String> typeParameterAnnotation = ImmutableSet.of();
-    private ImmutableSet<String> acceptedTypeParameterAnnotation = ImmutableSet.of();
-
-    /** See {@link Purpose}. */
-    @CanIgnoreReturnValue
-    public Builder setPurpose(Purpose purpose) {
-      this.purpose = purpose;
-      return this;
-    }
-
-    /** Whether to assume the marker annotation is implicitly inherited by subclasses. */
-    @CanIgnoreReturnValue
-    public Builder markerAnnotationInherited(boolean markerAnnotationInherited) {
-      this.markerAnnotationInherited = markerAnnotationInherited;
-      return this;
-    }
-
-    /** Information about known types and whether they're known to be safe or unsafe. */
-    @CanIgnoreReturnValue
-    public Builder knownTypes(ThreadSafetyKnownTypes knownTypes) {
-      this.knownTypes = knownTypes;
-      return this;
-    }
-
-    /**
-     * Annotations that will cause a class to be tested with this {@link ThreadSafety} instance; for
-     * example, when testing a class for immutability, this should be @Immutable.
-     */
-    @CanIgnoreReturnValue
-    public Builder markerAnnotations(Iterable<String> markerAnnotations) {
-      checkNotNull(markerAnnotations);
-      this.markerAnnotations = ImmutableSet.copyOf(markerAnnotations);
-      return this;
-    }
-
-    /**
-     * Annotations that do *not* cause a class to be tested, but which are treated as valid
-     * annotations to pass the test; for example, if @ThreadSafe is the marker
-     * annotation, @Immutable would be included in this list, as an immutable class is by definition
-     * thread-safe.
-     */
-    @CanIgnoreReturnValue
-    public Builder acceptedAnnotations(Iterable<String> acceptedAnnotations) {
-      checkNotNull(acceptedAnnotations);
-      this.acceptedAnnotations = ImmutableSet.copyOf(acceptedAnnotations);
-      return this;
-    }
-
-    /** An annotation which marks a generic parameter as a container type. */
-    @CanIgnoreReturnValue
-    public Builder containerOfAnnotation(Class<? extends Annotation> containerOfAnnotation) {
-      checkNotNull(containerOfAnnotation);
-      this.containerOfAnnotation = ImmutableSet.of(containerOfAnnotation.getName());
-      return this;
-    }
-
-    /** An annotation which marks a generic parameter as a container type. */
-    @CanIgnoreReturnValue
-    public Builder containerOfAnnotation(Iterable<String> containerOfAnnotation) {
-      checkNotNull(containerOfAnnotation);
-      this.containerOfAnnotation = ImmutableSet.copyOf(containerOfAnnotation);
-      return this;
-    }
-
-    /** An annotation which, when found on a class, should suppress the test */
-    @CanIgnoreReturnValue
-    public Builder suppressAnnotation(Class<? extends Annotation> suppressAnnotation) {
-      checkNotNull(suppressAnnotation);
-      this.suppressAnnotation = ImmutableSet.of(suppressAnnotation.getName());
-      return this;
-    }
-
-    /** An annotation which, when found on a class, should suppress the test */
-    @CanIgnoreReturnValue
-    public Builder suppressAnnotation(Iterable<String> suppressAnnotation) {
-      checkNotNull(suppressAnnotation);
-      this.suppressAnnotation = ImmutableSet.copyOf(suppressAnnotation);
-      return this;
-    }
-
-    /**
-     * An annotation which, when found on a type parameter, indicates that the type parameter may
-     * only be instantiated with thread-safe types.
-     */
-    @CanIgnoreReturnValue
-    public Builder typeParameterAnnotation(Class<? extends Annotation> typeParameterAnnotation) {
-      checkNotNull(typeParameterAnnotation);
-      checkArgument(
-          Arrays.stream(typeParameterAnnotation.getAnnotation(Target.class).value())
-              .anyMatch(ElementType.TYPE_PARAMETER::equals),
-          "%s must be applicable to type parameters",
-          typeParameterAnnotation);
-      this.typeParameterAnnotation = ImmutableSet.of(typeParameterAnnotation.getName());
-      return this;
-    }
-
-    /**
-     * An annotation which, when found on a type parameter, indicates that the type parameter may
-     * only be instantiated with thread-safe types.
-     */
-    @CanIgnoreReturnValue
-    public Builder typeParameterAnnotation(Iterable<String> typeParameterAnnotation) {
-      this.typeParameterAnnotation = ImmutableSet.copyOf(typeParameterAnnotation);
-      return this;
-    }
-
-    /**
-     * An annotation which, when found on a type parameter, indicates that the type parameter may
-     * only be instantiated with thread-safe types.
-     */
-    @CanIgnoreReturnValue
-    public Builder acceptedTypeParameterAnnotation(
-        Iterable<String> acceptedTypeParameterAnnotation) {
-      this.acceptedTypeParameterAnnotation = ImmutableSet.copyOf(acceptedTypeParameterAnnotation);
-      return this;
-    }
-
-    public ThreadSafety build(VisitorState state) {
-      checkNotNull(knownTypes);
-      checkNotNull(markerAnnotations);
-      return new ThreadSafety(
-          state,
-          purpose,
-          markerAnnotationInherited,
-          knownTypes,
-          markerAnnotations,
-          acceptedAnnotations,
-          containerOfAnnotation,
-          suppressAnnotation,
-          typeParameterAnnotation,
-          acceptedTypeParameterAnnotation);
-    }
-  }
-
-  private ThreadSafety(
-      VisitorState state,
+  ThreadSafety(
+      VisitorState visitorState,
       Purpose purpose,
       boolean markerAnnotationInherited,
       ThreadSafetyKnownTypes knownTypes,
-      Set<String> markerAnnotations,
-      Set<String> acceptedAnnotations,
-      Set<String> containerOfAnnotation,
-      Set<String> suppressAnnotation,
-      Set<String> typeParameterAnnotation,
-      Set<String> acceptedTypeParameterAnnotation) {
-    this.state = checkNotNull(state);
+      ImmutableSet<String> markerAnnotations,
+      ImmutableSet<String> acceptedAnnotations,
+      ImmutableSet<String> containerOfAnnotation,
+      ImmutableSet<String> suppressAnnotation,
+      ImmutableSet<String> typeParameterAnnotation,
+      ImmutableSet<String> acceptedTypeParameterAnnotation) {
+    this.state = visitorState;
     this.purpose = purpose;
     this.markerAnnotationInherited = markerAnnotationInherited;
-    this.knownTypes = checkNotNull(knownTypes);
-    this.markerAnnotations = ImmutableSet.copyOf(checkNotNull(markerAnnotations));
-    this.acceptedAnnotations = ImmutableSet.copyOf(checkNotNull(acceptedAnnotations));
-    this.containerOfAnnotation = ImmutableSet.copyOf(checkNotNull(containerOfAnnotation));
-    this.suppressAnnotation = ImmutableSet.copyOf(checkNotNull(suppressAnnotation));
-    this.typeParameterAnnotation = ImmutableSet.copyOf(checkNotNull(typeParameterAnnotation));
-    this.acceptedTypeParameterAnnotation =
-        ImmutableSet.copyOf(checkNotNull(acceptedTypeParameterAnnotation));
+    this.knownTypes = knownTypes;
+    this.markerAnnotations = markerAnnotations;
+    this.acceptedAnnotations = acceptedAnnotations;
+    this.containerOfAnnotation = containerOfAnnotation;
+    this.suppressAnnotation = suppressAnnotation;
+    this.typeParameterAnnotation = typeParameterAnnotation;
+    this.acceptedTypeParameterAnnotation = acceptedTypeParameterAnnotation;
   }
 
   /**

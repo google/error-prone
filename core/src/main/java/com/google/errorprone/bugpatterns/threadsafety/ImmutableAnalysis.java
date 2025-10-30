@@ -92,12 +92,12 @@ public final class ImmutableAnalysis {
     this.wellKnownMutability = wellKnownMutability;
     this.threadSafety =
         ThreadSafety.builder()
-            .setPurpose(Purpose.FOR_IMMUTABLE_CHECKER)
+            .purpose(Purpose.FOR_IMMUTABLE_CHECKER)
             .markerAnnotationInherited(
                 flags.getBoolean("Immutable:MarkerAnnotationInherited").orElse(true))
             .knownTypes(wellKnownMutability)
             .markerAnnotations(immutableAnnotations)
-            .typeParameterAnnotation(ImmutableTypeParameter.class)
+            .typeParameterAnnotation(ImmutableSet.of(ImmutableTypeParameter.class.getName()))
             .build(state);
   }
 

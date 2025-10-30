@@ -200,7 +200,7 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
   private boolean isTypeKnownImmutable(Type type, VisitorState state) {
     ThreadSafety threadSafety =
         ThreadSafety.builder()
-            .setPurpose(ThreadSafety.Purpose.FOR_IMMUTABLE_CHECKER)
+            .purpose(ThreadSafety.Purpose.FOR_IMMUTABLE_CHECKER)
             .markerAnnotationInherited(true)
             .knownTypes(wellKnownMutability)
             .acceptedAnnotations(
