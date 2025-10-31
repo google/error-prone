@@ -55,7 +55,7 @@ public final class PeriodFrom extends BugChecker implements MethodInvocationTree
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (PERIOD_FROM.matches(tree, state)) {
-      ExpressionTree arg0 = tree.getArguments().get(0);
+      ExpressionTree arg0 = tree.getArguments().getFirst();
       if (DURATION.matches(arg0, state)) {
         return describeMatch(tree);
       }

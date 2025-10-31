@@ -123,7 +123,7 @@ public class OptionalOfRedundantMethod extends BugChecker implements MethodInvoc
         || methodSimpleName.contentEquals("orElseThrow")
         || methodSimpleName.contentEquals("or")
         || methodSimpleName.contentEquals("orNull")) {
-      Tree argument = optionalOfInvocationTree.getArguments().get(0);
+      Tree argument = optionalOfInvocationTree.getArguments().getFirst();
       SuggestedFix.Builder fixBuilder =
           SuggestedFix.builder().replace(tree, state.getSourceForNode(argument));
       fixBuilder.setShortDescription("Simplify expression.");

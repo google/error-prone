@@ -70,7 +70,7 @@ public class ExpensiveLenientFormatString extends BugChecker
     }
     MethodInvocationTree stringFormat = (MethodInvocationTree) argument;
     var stringFormatArguments = stringFormat.getArguments();
-    String formatString = ASTHelpers.constValue(stringFormatArguments.get(0), String.class);
+    String formatString = ASTHelpers.constValue(stringFormatArguments.getFirst(), String.class);
     if (formatString == null) {
       return NO_MATCH;
     }
@@ -81,7 +81,9 @@ public class ExpensiveLenientFormatString extends BugChecker
         stringFormat,
         SuggestedFix.builder()
             .replace(
-                getStartPosition(stringFormat), getStartPosition(stringFormatArguments.get(0)), "")
+                getStartPosition(stringFormat),
+                getStartPosition(stringFormatArguments.getFirst()),
+                "")
             .replace(
                 state.getEndPosition(getLast(stringFormatArguments)),
                 state.getEndPosition(stringFormat),

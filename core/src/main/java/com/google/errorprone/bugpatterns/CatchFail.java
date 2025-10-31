@@ -105,7 +105,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
           + state
               .getSourceCode()
               .subSequence(
-                  getStartPosition(tree.getArguments().get(0)),
+                  getStartPosition(tree.getArguments().getFirst()),
                   state.getEndPosition(getLast(tree.getArguments())))
           + ")";
     }
@@ -163,7 +163,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
         fix.replace(
             tree,
             source.substring(
-                getStartPosition(tryStatements.get(0)),
+                getStartPosition(tryStatements.getFirst()),
                 state.getEndPosition(getLast(tryStatements))));
       }
     }

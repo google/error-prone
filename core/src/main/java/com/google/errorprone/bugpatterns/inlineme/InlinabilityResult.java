@@ -158,7 +158,7 @@ abstract class InlinabilityResult {
       return fromError(InlineValidationErrorReason.API_IS_PRIVATE);
     }
 
-    StatementTree statement = methodTree.getBody().getStatements().get(0);
+    StatementTree statement = methodTree.getBody().getStatements().getFirst();
 
     if (state.getSourceForNode(statement) == null) {
       return fromError(InlineValidationErrorReason.NO_BODY);

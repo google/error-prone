@@ -56,6 +56,6 @@ public final class EmptyTopLevelDeclaration extends BugChecker
           }
           fixBuilder.replace(start, end, "");
         });
-    return describeMatch(toDelete.get(0), fixBuilder.build());
+    return describeMatch(toDelete.getFirst(), fixBuilder.build());
   }
 }

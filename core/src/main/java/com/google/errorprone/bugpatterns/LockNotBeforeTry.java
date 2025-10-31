@@ -117,7 +117,7 @@ public final class LockNotBeforeTry extends BugChecker implements MethodInvocati
       // ... for a try/finally which releases this lock.
       if (statement instanceof TryTree tryTree && releases(tryTree, lockee, state)) {
         int start = getStartPosition(statement);
-        int end = getStartPosition(tryTree.getBlock().getStatements().get(0));
+        int end = getStartPosition(tryTree.getBlock().getStatements().getFirst());
         SuggestedFix fix =
             SuggestedFix.builder()
                 .replace(start, end, "")

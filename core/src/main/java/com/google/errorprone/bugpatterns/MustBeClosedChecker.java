@@ -165,7 +165,7 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
       // Not sure how the body would be empty, but just filter it out in case.
       return false;
     }
-    ExpressionStatementTree est = (ExpressionStatementTree) statements.get(0);
+    ExpressionStatementTree est = (ExpressionStatementTree) statements.getFirst();
     MethodInvocationTree mit = (MethodInvocationTree) est.getExpression();
     MethodSymbol invokedConstructorSymbol = ASTHelpers.getSymbol(mit);
     return hasAnnotation(invokedConstructorSymbol, MUST_BE_CLOSED_ANNOTATION, state);

@@ -402,7 +402,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
       String message = String.format("Constructor '%s' is never used.", symbol.getSimpleName());
       trees.forEach(t -> fix.merge(replaceIncludingComments(t, "", state)));
       state.reportMatch(
-          buildDescription(trees.get(0).getLeaf())
+          buildDescription(trees.getFirst().getLeaf())
               .addFix(fixable ? fix.build() : emptyFix())
               .setMessage(message)
               .build());

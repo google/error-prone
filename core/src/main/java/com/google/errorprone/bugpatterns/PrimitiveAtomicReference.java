@@ -52,7 +52,7 @@ public final class PrimitiveAtomicReference extends BugChecker
     if (!COMPARE_AND_SET.matches(tree, state)) {
       return NO_MATCH;
     }
-    ExpressionTree firstArgument = tree.getArguments().get(0);
+    ExpressionTree firstArgument = tree.getArguments().getFirst();
     if (firstArgument instanceof LiteralTree literalTree && literalTree.getValue() == null) {
       return NO_MATCH;
     }
@@ -64,7 +64,7 @@ public final class PrimitiveAtomicReference extends BugChecker
     if (receiverType.getTypeArguments().isEmpty()) {
       return NO_MATCH;
     }
-    Type typeArgument = receiverType.getTypeArguments().get(0);
+    Type typeArgument = receiverType.getTypeArguments().getFirst();
     if (state.getTypes().unboxedType(typeArgument).getKind() == TypeKind.NONE) {
       return NO_MATCH;
     }

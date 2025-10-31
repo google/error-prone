@@ -90,7 +90,7 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
   public void onDescribed(Description description) {
     // Use only first (most likely) suggested fix
     if (description.fixes.size() > 0) {
-      handleFix(description.fixes.get(0));
+      handleFix(description.fixes.getFirst());
     }
   }
 

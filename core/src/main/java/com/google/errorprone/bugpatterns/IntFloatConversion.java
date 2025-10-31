@@ -58,7 +58,7 @@ public class IntFloatConversion extends BugChecker implements MethodInvocationTr
     if (!MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }
-    Tree arg = tree.getArguments().get(0);
+    Tree arg = tree.getArguments().getFirst();
     if (!getType(arg).hasTag(TypeTag.INT)) {
       return NO_MATCH;
     }

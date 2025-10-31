@@ -49,7 +49,7 @@ public final class ThreadBuilderNameWithPlaceholder extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (THREAD_BUILDER_NAME.matches(tree, state)) {
-      String nameValue = constValue(tree.getArguments().get(0), String.class);
+      String nameValue = constValue(tree.getArguments().getFirst(), String.class);
       if (nameValue != null && (nameValue.contains("%d") || nameValue.contains("%s"))) {
         return describeMatch(tree);
       }

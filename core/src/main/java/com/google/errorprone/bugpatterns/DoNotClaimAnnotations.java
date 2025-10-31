@@ -117,6 +117,6 @@ public class DoNotClaimAnnotations extends BugChecker implements MethodTreeMatch
         fix.replace(returnTree.getExpression(), "false");
       }
     }
-    return describeMatch(returns.get(0), fix.build());
+    return describeMatch(returns.getFirst(), fix.build());
   }
 }

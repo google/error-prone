@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.findMatchingMethods;
@@ -200,7 +201,8 @@ public final class TypeCompatibility {
         && methodSymbol.getParameters().size() == 1
         && state
             .getTypes()
-            .isSameType(methodSymbol.getParameters().get(0).type, state.getSymtab().objectType)
+            .isSameType(
+                getOnlyElement(methodSymbol.getParameters()).type, state.getSymtab().objectType)
         && !owningClass.equals(state.getSymtab().objectType.tsym)
         && !owningClass.equals(state.getSymtab().enumSym);
   }

@@ -171,7 +171,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
                         && matchGetterAndSetter(getter.method(), methodTree, allGettersPrefixed))
             .findAny();
     if (fixedGetter.isPresent()) {
-      var parameter = methodTree.getParameters().get(0);
+      var parameter = methodTree.getParameters().getFirst();
       Type type = getType(parameter);
       if (isBoxedPrimitive(state, type) && !hasNullableAnnotation(parameter)) {
         suggestRemoveUnnecessaryBoxing(parameter.getType(), state, type, fixedGetter.get().fix());
@@ -330,7 +330,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     // Trivial factory method must have one argument for each getter and a single return statement.
     if (params.size() != gettersCount
         || statements.size() != 1
-        || !(statements.get(0) instanceof ReturnTree returnTree)) {
+        || !(statements.getFirst() instanceof ReturnTree returnTree)) {
       return false;
     }
     // Trivial factory method must return a new instance.

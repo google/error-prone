@@ -173,7 +173,7 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
         return Optional.empty();
       }
       if (tree.getArguments().size() >= 1) {
-        return Optional.ofNullable(ASTHelpers.getType(tree.getArguments().get(0)));
+        return Optional.ofNullable(ASTHelpers.getType(tree.getArguments().getFirst()));
       }
       return Optional.ofNullable(TargetType.targetType(state)).map(t -> t.type());
     };

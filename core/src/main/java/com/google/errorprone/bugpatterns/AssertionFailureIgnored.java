@@ -153,11 +153,12 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
     SuggestedFix.Builder fix = SuggestedFix.builder();
     boolean expression =
         block.getStatements().size() == 2
-            && block.getStatements().get(0) instanceof ExpressionStatementTree;
+            && block.getStatements().getFirst() instanceof ExpressionStatementTree;
     int startPosition;
     int endPosition;
     if (expression) {
-      JCExpressionStatement expressionTree = (JCExpressionStatement) block.getStatements().get(0);
+      JCExpressionStatement expressionTree =
+          (JCExpressionStatement) block.getStatements().getFirst();
       startPosition = expressionTree.getStartPosition();
       endPosition = state.getEndPosition(expressionTree.getExpression());
     } else {
@@ -184,7 +185,7 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
                   state.getSourceForNode(catchTree.getParameter().getType())))
           .replace(
               /* startPos= */ endPosition,
-              /* endPos= */ catchTree.getBlock().getStatements().get(0).getStartPosition(),
+              /* endPos= */ catchTree.getBlock().getStatements().getFirst().getStartPosition(),
               (expression ? "" : "}") + ");\n")
           .replace(
               state.getEndPosition(getLast(catchTree.getBlock().getStatements())),

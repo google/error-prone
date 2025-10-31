@@ -45,7 +45,7 @@ public final class ElementPredicates {
       List<ExecutableElement> injectConstructors =
           getConstructorsWithAnnotations(
               injectedMember, Arrays.asList("javax.inject.Inject", "com.google.inject.Inject"));
-      if (injectConstructors.size() > 1 && injectConstructors.get(0).equals(injectedMember)) {
+      if (injectConstructors.size() > 1 && injectConstructors.getFirst().equals(injectedMember)) {
         return true;
       }
     }

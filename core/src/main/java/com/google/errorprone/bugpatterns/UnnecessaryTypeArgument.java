@@ -82,8 +82,8 @@ public class UnnecessaryTypeArgument extends BugChecker
 
     JCTree node = (JCTree) tree;
     int startAbsolute = node.getStartPosition();
-    int lower = getStartPosition(arguments.get(0)) - startAbsolute;
-    int upper = state.getEndPosition(arguments.get(arguments.size() - 1)) - startAbsolute;
+    int lower = getStartPosition(arguments.getFirst()) - startAbsolute;
+    int upper = state.getEndPosition(arguments.getLast()) - startAbsolute;
 
     CharSequence source = state.getSourceForNode(node);
 

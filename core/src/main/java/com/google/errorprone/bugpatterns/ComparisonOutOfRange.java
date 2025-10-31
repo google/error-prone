@@ -79,7 +79,7 @@ public class ComparisonOutOfRange extends BugChecker implements BinaryTreeMatche
           if (binaryTreeMatches == null) {
             return;
           }
-          Tree constant = binaryTreeMatches.get(0);
+          Tree constant = binaryTreeMatches.getFirst();
 
           Number numericConstantValue =
               constValue(constant) instanceof Character c

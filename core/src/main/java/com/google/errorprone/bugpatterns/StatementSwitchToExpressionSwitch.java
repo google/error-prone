@@ -1678,7 +1678,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     List<? extends StatementTree> blockStatements = blockTree.getStatements();
     return blockStatements.isEmpty()
         ? state.getEndPosition(caseTree)
-        : state.getEndPosition(blockStatements.get(blockStatements.size() - 1));
+        : state.getEndPosition(blockStatements.getLast());
   }
 
   /**

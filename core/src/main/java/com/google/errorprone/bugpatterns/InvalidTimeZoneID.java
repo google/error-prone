@@ -64,7 +64,7 @@ public class InvalidTimeZoneID extends BugChecker implements MethodInvocationTre
     if (!METHOD_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
-    String value = (String) ASTHelpers.constValue(tree.getArguments().get(0));
+    String value = (String) ASTHelpers.constValue(tree.getArguments().getFirst());
     if (value == null) {
       // Value isn't a compile-time constant, so we can't know if it's unsafe.
       return Description.NO_MATCH;
@@ -83,7 +83,7 @@ public class InvalidTimeZoneID extends BugChecker implements MethodInvocationTre
     if (isValidId(spacesToUnderscores)) {
       builder.addFix(
           SuggestedFix.replace(
-              tree.getArguments().get(0), String.format("\"%s\"", spacesToUnderscores)));
+              tree.getArguments().getFirst(), String.format("\"%s\"", spacesToUnderscores)));
     }
 
     return builder.build();
