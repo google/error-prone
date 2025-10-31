@@ -40,7 +40,7 @@ public final class UnnecessaryAssignmentTest {
             import org.mockito.Mock;
 
             class Test {
-              // BUG: Diagnostic contains:
+              // BUG: Diagnostic contains: with @Mock should not
               @Mock Object mockObject = new Object();
             }
             """)
@@ -72,7 +72,7 @@ public final class UnnecessaryAssignmentTest {
             import org.mockito.Mock;
 
             class Test {
-              // BUG: Diagnostic contains: both
+              // BUG: Diagnostic contains: with both
               @Mock @Inject Object mockObject;
             }
             """)
@@ -198,6 +198,22 @@ public final class UnnecessaryAssignmentTest {
   }
 
   @Test
+  public void positiveOnInject() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.inject.Inject;
+
+            class Test {
+              // BUG: Diagnostic contains: with @Inject should not
+              @Inject boolean myFoo = false;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void positiveOnTestParameter() {
     testHelper
         .addSourceLines(
@@ -206,7 +222,7 @@ public final class UnnecessaryAssignmentTest {
             import com.google.testing.junit.testparameterinjector.TestParameter;
 
             class Test {
-              // BUG: Diagnostic contains: @TestParameter
+              // BUG: Diagnostic contains: with @TestParameter should not
               @TestParameter boolean myFoo = false;
             }
             """)
