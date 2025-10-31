@@ -86,7 +86,7 @@ public class AutoValueFinalMethods extends BugChecker implements ClassTreeMatche
     if (fix.isEmpty()) {
       return NO_MATCH;
     }
-    return buildDescription(candidateMethods.getFirst())
+    return buildDescription(candidateMethods.get(0))
         .setMessage(
             String.format(
                 "Make %s final in AutoValue classes, "

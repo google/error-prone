@@ -124,7 +124,7 @@ public final class CheckedExceptionNotThrown extends BugChecker implements Metho
         canActuallyBeThrown.isEmpty()
             ? deleteEntireThrowsClause(tree, state)
             : SuggestedFix.replace(
-                getStartPosition(tree.getThrows().getFirst()),
+                getStartPosition(tree.getThrows().get(0)),
                 state.getEndPosition(getLast(tree.getThrows())),
                 canActuallyBeThrown.stream().map(state::getSourceForNode).collect(joining(", ")));
     SuggestedFix fix = fixJavadoc(thrownTypes, state).toBuilder().merge(throwsFix).build();

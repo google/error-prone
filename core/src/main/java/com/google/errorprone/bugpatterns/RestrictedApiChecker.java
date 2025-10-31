@@ -148,7 +148,7 @@ public class RestrictedApiChecker extends BugChecker
       return true;
     }
     List<? extends ExpressionTree> arguments = tree.getArguments();
-    return !arguments.isEmpty() && ((JCTree) arguments.getFirst()).hasTag(JCTree.Tag.NULLCHK);
+    return !arguments.isEmpty() && ((JCTree) arguments.get(0)).hasTag(JCTree.Tag.NULLCHK);
   }
 
   private static MethodSymbol superclassConstructorSymbol(NewClassTree tree, VisitorState state) {

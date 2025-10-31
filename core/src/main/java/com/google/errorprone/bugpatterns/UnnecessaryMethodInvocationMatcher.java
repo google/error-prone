@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
@@ -63,7 +62,7 @@ public class UnnecessaryMethodInvocationMatcher extends BugChecker
       return NO_MATCH;
     }
     Type methodMatcherType = state.getTypeFromString(MethodMatcher.class.getCanonicalName());
-    ExpressionTree argument = getOnlyElement(arguments);
+    ExpressionTree argument = arguments.get(0);
     if (!containsOnlyMethodMatchers(argument, methodMatcherType, state)) {
       return NO_MATCH;
     }

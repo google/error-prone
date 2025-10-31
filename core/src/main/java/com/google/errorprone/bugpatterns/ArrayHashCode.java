@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.argument;
@@ -87,7 +86,7 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
     if (jdk7HashCodeMethodMatcher.matches(tree, state)) {
       // java.util.Objects#hashCode takes a single argument, so rewrite the whole method call
       // to use Arrays.hashCode/deepHashCode instead.
-      fix.replace(tree, rewriteArrayArgument(tree.getArguments().getFirst(), state));
+      fix.replace(tree, rewriteArrayArgument(tree.getArguments().get(0), state));
     } else if (instanceHashCodeMethodMatcher.matches(tree, state)) {
       // Rewrite call to instance hashCode method to use Arrays.hashCode/deepHashCode instead.
       fix.replace(
@@ -100,7 +99,7 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
         // If only one argument, type must be either primitive array or multidimensional array.
         // Types like Object[], String[], etc. are not an error because they don't get boxed
         // in this single-argument varargs call.
-        ExpressionTree arg = getOnlyElement(tree.getArguments());
+        ExpressionTree arg = tree.getArguments().get(0);
         Type elemType = types.elemtype(getType(arg));
         if (elemType.isPrimitive() || types.isArray(elemType)) {
           fix.replace(tree, rewriteArrayArgument(arg, state));

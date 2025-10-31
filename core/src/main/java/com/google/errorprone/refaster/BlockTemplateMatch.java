@@ -48,7 +48,7 @@ class BlockTemplateMatch extends TemplateMatch {
   public String getRange(JCCompilationUnit unit) {
     try {
       CharSequence sequence = unit.getSourceFile().getCharContent(true);
-      JCTree firstStatement = statements.getFirst();
+      JCTree firstStatement = statements.get(0);
       JCTree lastStatement = Iterables.getLast(statements);
       return sequence
           .subSequence(

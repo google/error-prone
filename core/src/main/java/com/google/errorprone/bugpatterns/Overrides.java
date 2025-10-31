@@ -74,7 +74,7 @@ public class Overrides extends BugChecker implements MethodTreeMatcher {
     // of the current method.
 
     List<? extends VariableTree> parameterTree = methodTree.getParameters();
-    Tree paramType = parameterTree.getLast().getType();
+    Tree paramType = parameterTree.get(parameterTree.size() - 1).getType();
     CharSequence paramTypeSource = state.getSourceForNode(paramType);
     if (paramTypeSource == null) {
       // No fix if we don't have tree end positions.

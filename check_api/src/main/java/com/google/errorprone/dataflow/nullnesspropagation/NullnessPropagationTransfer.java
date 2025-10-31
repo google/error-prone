@@ -889,7 +889,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       elseUpdates.set(var, NONNULL);
     }
     if (isEqualsMethod(calleeName, arguments, types, symtab)) {
-      LocalVariableNode var = variablesAtIndexes(ImmutableSet.of(0), arguments).getFirst();
+      LocalVariableNode var = variablesAtIndexes(ImmutableSet.of(0), arguments).get(0);
       thenUpdates.set(var, NONNULL);
     }
   }

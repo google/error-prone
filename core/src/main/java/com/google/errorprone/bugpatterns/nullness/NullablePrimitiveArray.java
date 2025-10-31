@@ -117,7 +117,7 @@ public class NullablePrimitiveArray extends BugChecker
           dims,
           typeNullnessAnnos.stream().map(state::getSourceForNode).collect(joining(" ", " ", " ")));
     }
-    return describeMatch(typeNullnessAnnos.getFirst(), fix.build());
+    return describeMatch(typeNullnessAnnos.get(0), fix.build());
   }
 
   private static boolean isTypeAnnotation(Attribute.Compound attribute) {

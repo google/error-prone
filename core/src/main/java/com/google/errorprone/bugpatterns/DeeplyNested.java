@@ -136,7 +136,7 @@ public class DeeplyNested extends BugChecker implements CompilationUnitTreeMatch
     replacement.append(
         String.format(
             "%s builder = %s;",
-            prettyType(state, fix, builderType), state.getSourceForNode(chain.getFirst())));
+            prettyType(state, fix, builderType), state.getSourceForNode(chain.get(0))));
     // Update all subsequence chained calls to use the variable as their receiver
     for (int i = 1; i < chain.size(); i++) {
       int start = state.getEndPosition(chain.get(i - 1));

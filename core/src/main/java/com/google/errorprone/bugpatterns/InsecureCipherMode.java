@@ -59,7 +59,7 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
 
   private Description identifyEcbVulnerability(MethodInvocationTree tree) {
     // We analyze the first argument of all the overloads of Cipher.getInstance().
-    Object argument = ASTHelpers.constValue(tree.getArguments().getFirst());
+    Object argument = ASTHelpers.constValue(tree.getArguments().get(0));
     if (argument == null) {
       // We flag call sites where the transformation string is dynamically computed.
       return buildErrorMessage(
@@ -105,7 +105,7 @@ public class InsecureCipherMode extends BugChecker implements MethodInvocationTr
   private Description identifyDiffieHellmanAndDsaVulnerabilities(MethodInvocationTree tree) {
     // The first argument holds a string specifying the algorithm used for the operation
     // considered.
-    Object argument = ASTHelpers.constValue(tree.getArguments().getFirst());
+    Object argument = ASTHelpers.constValue(tree.getArguments().get(0));
     if (argument == null) {
       // We flag call sites where the algorithm specification string is dynamically computed.
       return buildErrorMessage(

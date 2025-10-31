@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -90,8 +89,7 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
                 && ((methodSymbol.flags() & Flags.ABSTRACT) == 0)
                 && methodSymbol.getParameters().size() == 1
                 && types.isSameType(
-                    getOnlyElement(methodSymbol.getParameters()).type,
-                    state.getSymtab().objectType);
+                    methodSymbol.getParameters().get(0).type, state.getSymtab().objectType);
     Name hashCodeName = HASHCODE.get(state);
     Predicate<MethodSymbol> hashCodePredicate =
         methodSymbol ->

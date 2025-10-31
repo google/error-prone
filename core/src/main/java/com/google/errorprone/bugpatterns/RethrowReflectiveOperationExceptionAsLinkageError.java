@@ -66,7 +66,7 @@ public class RethrowReflectiveOperationExceptionAsLinkageError extends BugChecke
     String message =
         arguments.size() == 1
             ? String.format("%s.getMessage()", cause.getSimpleName())
-            : state.getSourceForNode(arguments.getFirst());
+            : state.getSourceForNode(arguments.get(0));
     return describeMatch(
         newClassTree,
         SuggestedFix.replace(

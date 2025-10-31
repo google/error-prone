@@ -129,7 +129,7 @@ public class SelfAssignment extends BugChecker
   private static ExpressionTree stripNullCheck(ExpressionTree expression, VisitorState state) {
     if (expression != null && expression instanceof MethodInvocationTree methodInvocation) {
       if (NON_NULL_MATCHER.matches(methodInvocation, state)) {
-        return methodInvocation.getArguments().getFirst();
+        return methodInvocation.getArguments().get(0);
       }
     }
     return expression;

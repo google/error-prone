@@ -17,7 +17,6 @@
 package com.google.errorprone.matchers;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
@@ -237,7 +236,7 @@ public final class JUnitMatchers {
         if (typeArgs.size() != 1) {
           return false;
         }
-        Type runnerType = getOnlyElement(typeArgs);
+        Type runnerType = typeArgs.get(0);
         for (String testRunner : runnerTypes) {
           Symbol parent = state.getSymbolFromString(testRunner);
           if (parent == null) {

@@ -65,7 +65,7 @@ public final class AddressSelection extends BugChecker
     if (!CONSTRUCTORS.matches(tree, state)) {
       return NO_MATCH;
     }
-    ExpressionTree argument = tree.getArguments().getFirst();
+    ExpressionTree argument = tree.getArguments().get(0);
     return handleMatch(
         argument,
         argument,

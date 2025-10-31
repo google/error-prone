@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -51,7 +50,7 @@ public final class SelfSet extends BugChecker implements MethodInvocationTreeMat
     if (!PROTO_SETTER.matches(tree, state) || tree.getArguments().size() != 1) {
       return NO_MATCH;
     }
-    var argument = getOnlyElement(tree.getArguments());
+    var argument = tree.getArguments().get(0);
     // TODO(ghm): Consider broadening to more than protos? AutoValues are at least very predictable,
     // as is record + AutoBuilder. We could also just try not restricting at all.
     if (!PROTO_GETTER.matches(argument, state)) {

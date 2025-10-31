@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -49,7 +48,7 @@ public final class SetUnrecognized extends BugChecker implements MethodInvocatio
     if (tree.getArguments().size() != 1) {
       return NO_MATCH;
     }
-    ExpressionTree arg = getOnlyElement(tree.getArguments());
+    ExpressionTree arg = tree.getArguments().get(0);
     var argSymbol = getSymbol(arg);
     if (argSymbol == null) {
       return NO_MATCH;

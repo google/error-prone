@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
@@ -202,7 +201,7 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
 
   private static String suggestedSingleLetter(String id, Tree tree) {
     char firstLetter =
-        Ascii.toUpperCase(NamingConventions.splitToLowercaseTerms(id).getFirst().charAt(0));
+        Ascii.toUpperCase(NamingConventions.splitToLowercaseTerms(id).get(0).charAt(0));
     Symbol sym = ASTHelpers.getSymbol(tree);
     List<TypeVariableSymbol> enclosingTypeSymbols = typeVariablesEnclosing(sym);
 
@@ -288,7 +287,7 @@ public class TypeParameterNaming extends BugChecker implements TypeParameterTree
 
     // UPPERCASE => UppercaseT
     if (tokens.size() == 1) {
-      String token = getOnlyElement(tokens);
+      String token = tokens.get(0);
       if (Ascii.toUpperCase(token).equals(identifier)) {
         return upperCamelToken(token) + "T";
       }

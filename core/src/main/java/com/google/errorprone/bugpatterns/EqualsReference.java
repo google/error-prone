@@ -47,7 +47,7 @@ public class EqualsReference extends BugChecker implements MethodTreeMatcher {
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState visitorState) {
     if (Matchers.equalsMethodDeclaration().matches(methodTree, visitorState)) {
-      VariableTree variableTree = methodTree.getParameters().getFirst();
+      VariableTree variableTree = methodTree.getParameters().get(0);
       VarSymbol varSymbol = ASTHelpers.getSymbol(variableTree);
       TreeScannerEquals treeScannerEquals = new TreeScannerEquals(methodTree);
       treeScannerEquals.scan(methodTree.getBody(), varSymbol);
@@ -75,7 +75,7 @@ public class EqualsReference extends BugChecker implements MethodTreeMatcher {
       boolean hasParameterAndSameSymbol =
           methodInvocationTree.getArguments().size() == 1
               && Objects.equals(
-                  ASTHelpers.getSymbol(methodInvocationTree.getArguments().getFirst()), varSymbol);
+                  ASTHelpers.getSymbol(methodInvocationTree.getArguments().get(0)), varSymbol);
       if (methodSelectTree instanceof MemberSelectTree m) {
         memberSelectTree = m;
         ExpressionTree e = memberSelectTree.getExpression();

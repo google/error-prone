@@ -52,6 +52,6 @@ public class NullableVoid extends BugChecker implements MethodTreeMatcher {
     }
     var fix = SuggestedFix.builder();
     relevantAnnos.forEach(fix::delete);
-    return describeMatch(relevantAnnos.getFirst(), fix.build());
+    return describeMatch(relevantAnnos.get(0), fix.build());
   }
 }

@@ -69,13 +69,13 @@ public final class MockIllegalThrows extends BugChecker implements MethodInvocat
           receiver instanceof MethodInvocationTree whenMit;
           receiver = getReceiver(receiver)) {
         if (WHEN.matches(receiver, state)
-            && whenMit.getArguments().getFirst() instanceof MethodInvocationTree mit
+            && whenMit.getArguments().get(0) instanceof MethodInvocationTree mit
             && getType(mit.getMethodSelect()).getThrownTypes().stream()
                 .noneMatch(
                     throwableType -> state.getTypes().isAssignable(thrownType, throwableType))) {
           var thrownTypes = getType(mit.getMethodSelect()).getThrownTypes();
           state.reportMatch(
-              buildDescription(whenMit.getArguments().getFirst())
+              buildDescription(whenMit.getArguments().get(0))
                   .setMessage(
                       thrownTypes.isEmpty()
                           ? format(

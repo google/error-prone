@@ -89,10 +89,9 @@ abstract class ULambda extends UExpression implements LambdaExpressionTree {
             UPlaceholderExpression.copier(body.arguments(), inliner)
                 .copy(blockBinding.get(), inliner);
         if (blockInlined.size() == 1) {
-          if (blockInlined.getFirst() instanceof JCReturn jCReturn) {
+          if (blockInlined.get(0) instanceof JCReturn jCReturn) {
             return jCReturn.getExpression();
-          } else if (blockInlined.getFirst()
-              instanceof JCExpressionStatement jCExpressionStatement) {
+          } else if (blockInlined.get(0) instanceof JCExpressionStatement jCExpressionStatement) {
             return jCExpressionStatement.getExpression();
           }
         }

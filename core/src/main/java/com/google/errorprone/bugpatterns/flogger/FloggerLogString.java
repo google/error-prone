@@ -57,7 +57,7 @@ public class FloggerLogString extends BugChecker implements MethodInvocationTree
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     return LOG_STRING.matches(tree, state)
-            && !COMPILE_TIME_CONSTANT.matches(tree.getArguments().getFirst(), state)
+            && !COMPILE_TIME_CONSTANT.matches(tree.getArguments().get(0), state)
         ? describeMatch(tree)
         : Description.NO_MATCH;
   }

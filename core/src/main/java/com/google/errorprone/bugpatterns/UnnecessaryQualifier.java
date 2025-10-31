@@ -166,8 +166,7 @@ public final class UnnecessaryQualifier extends BugChecker
 
   private Description deleteAnnotations(ImmutableList<AnnotationTree> annotations) {
     return describeMatch(
-        annotations.getFirst(),
-        annotations.stream().map(SuggestedFix::delete).collect(mergeFixes()));
+        annotations.get(0), annotations.stream().map(SuggestedFix::delete).collect(mergeFixes()));
   }
 
   private static ImmutableList<AnnotationTree> getQualifiers(

@@ -65,7 +65,7 @@ public class AssertThrowsMultipleStatements extends BugChecker
       return NO_MATCH;
     }
     StatementTree last = getLast(statements);
-    int startPosition = getStartPosition(statements.getFirst());
+    int startPosition = getStartPosition(statements.get(0));
     int endPosition = state.getEndPosition(statements.get(statements.size() - 2));
     SuggestedFix.Builder fix = SuggestedFix.builder();
     // if the last statement is an expression, convert from a block to expression lambda

@@ -94,7 +94,7 @@ public final class EqualsWrongThing extends BugChecker implements MethodTreeMatc
         if (COMPARISON_METHOD.matches(node, state)) {
           // args.size() / 2 handles the six-arg overload of Arrays.equals (the 0th and 3rd args are
           // the arrays).
-          getDubiousComparison(classSymbol, node, args.getFirst(), args.get(args.size() / 2))
+          getDubiousComparison(classSymbol, node, args.get(0), args.get(args.size() / 2))
               .ifPresent(suspiciousComparisons::add);
         }
         if (instanceEqualsInvocation().matches(node, state)) {
@@ -103,7 +103,7 @@ public final class EqualsWrongThing extends BugChecker implements MethodTreeMatc
             // Special-case super, for odd cases like `super.equals(this)`.
             if (!(receiver instanceof IdentifierTree identifierTree
                 && identifierTree.getName().contentEquals("super"))) {
-              getDubiousComparison(classSymbol, node, receiver, args.getFirst())
+              getDubiousComparison(classSymbol, node, receiver, args.get(0))
                   .ifPresent(suspiciousComparisons::add);
             }
           }

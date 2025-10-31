@@ -68,7 +68,7 @@ public final class GuiceNestedCombine extends BugChecker implements MethodInvoca
 
     var fix =
         SuggestedFix.builder()
-            .replace(getStartPosition(tree), getStartPosition(tree.getArguments().getFirst()), "")
+            .replace(getStartPosition(tree), getStartPosition(tree.getArguments().get(0)), "")
             .replace(
                 state.getEndPosition(getLast(tree.getArguments())), state.getEndPosition(tree), "")
             .build();

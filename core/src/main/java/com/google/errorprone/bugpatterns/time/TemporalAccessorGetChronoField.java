@@ -129,7 +129,7 @@ public final class TemporalAccessorGetChronoField extends BugChecker
     if (params.size() != 1) {
       return Description.NO_MATCH;
     }
-    Name argType = params.getFirst().type.tsym.getQualifiedName();
+    Name argType = params.get(0).type.tsym.getQualifiedName();
     if (!argType.contentEquals("java.time.temporal.TemporalField")) {
       return Description.NO_MATCH;
     }

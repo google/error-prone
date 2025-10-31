@@ -582,7 +582,7 @@ public final class SuggestedFixes {
           // is just as good.
           return LAST.pos(tree, state);
         }
-        JCTree firstMember = (JCTree) members.getFirst();
+        JCTree firstMember = (JCTree) members.get(0);
         int firstMemberStart = firstMember.getStartPosition();
         List<ErrorProneToken> methodTokens = state.getOffsetTokens(classStart, firstMemberStart);
         ListIterator<ErrorProneToken> iter = methodTokens.listIterator(methodTokens.size());
@@ -744,7 +744,7 @@ public final class SuggestedFixes {
     int endPos =
         tree.getArguments().isEmpty()
             ? state.getEndPosition(tree)
-            : getStartPosition(tree.getArguments().getFirst());
+            : getStartPosition(tree.getArguments().get(0));
     List<ErrorProneToken> tokens = state.getOffsetTokens(startPos, endPos);
     for (ErrorProneToken token : Lists.reverse(tokens)) {
       if (token.kind() == TokenKind.IDENTIFIER && token.name().equals(identifier)) {
@@ -909,7 +909,7 @@ public final class SuggestedFixes {
             .map(state::getSourceForNode)
             .collect(joining(", "));
     return SuggestedFix.replace(
-        getStartPosition(tree.getThrows().getFirst()),
+        getStartPosition(tree.getThrows().get(0)),
         state.getEndPosition(getLast(tree.getThrows())),
         replacement);
   }
@@ -1135,7 +1135,7 @@ public final class SuggestedFixes {
     if (!maybeExistingArgument.isPresent()) {
       return SuggestedFix.builder()
           .prefixWith(
-              annotation.getArguments().getFirst(),
+              annotation.getArguments().get(0),
               parameterName + " = " + newArgument(newValues) + ", ");
     }
 
@@ -1195,7 +1195,7 @@ public final class SuggestedFixes {
     if (!maybeExistingArgument.isPresent()) {
       return SuggestedFix.builder()
           .prefixWith(
-              annotation.getArguments().getFirst(),
+              annotation.getArguments().get(0),
               parameterName + " = " + newArgument(newValues) + ", ");
     }
 
@@ -1667,19 +1667,19 @@ public final class SuggestedFixes {
     //  int deletingThisVariable;
     // }
     // Treat this as morally part of the previous member.
-    if (!tokens.isEmpty() && tokens.getFirst().kind() == TokenKind.SEMI) {
+    if (!tokens.isEmpty() && tokens.get(0).kind() == TokenKind.SEMI) {
       tokens = tokens.subList(1, tokens.size());
     }
     if (tokens.isEmpty()) {
       return SuggestedFix.replace(tree, replacement);
     }
-    if (tokens.getFirst().comments().isEmpty()) {
-      return SuggestedFix.replace(tokens.getFirst().pos(), state.getEndPosition(tree), replacement);
+    if (tokens.get(0).comments().isEmpty()) {
+      return SuggestedFix.replace(tokens.get(0).pos(), state.getEndPosition(tree), replacement);
     }
     ImmutableList<ErrorProneComment> comments =
         ImmutableList.sortedCopyOf(
             Comparator.<ErrorProneComment>comparingInt(c -> c.getSourcePos(0)).reversed(),
-            tokens.getFirst().comments());
+            tokens.get(0).comments());
     int startPos = getStartPosition(tree);
     // This can happen for desugared expressions like `int a, b;`.
     if (startPos < startTokenization) {

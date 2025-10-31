@@ -74,12 +74,12 @@ public final class MathRoundIntLong extends BugChecker implements MethodInvocati
             tree,
             SuggestedFix.builder()
                 .prefixWith(tree, "(")
-                .replace(tree, state.getSourceForNode(tree.getArguments().getFirst()))
+                .replace(tree, state.getSourceForNode(tree.getArguments().get(0)))
                 .postfixWith(tree, ")")
                 .build());
       }
       return describeMatch(
-          tree, SuggestedFix.replace(tree, state.getSourceForNode(tree.getArguments().getFirst())));
+          tree, SuggestedFix.replace(tree, state.getSourceForNode(tree.getArguments().get(0))));
     } else if (ROUND_CALLS_WITH_LONG_ARG.matches(tree, state)) {
       // TODO(b/112270644): skip Ints.saturatedCast fix if guava isn't on the classpath
       return describeMatch(
@@ -87,7 +87,7 @@ public final class MathRoundIntLong extends BugChecker implements MethodInvocati
           SuggestedFix.builder()
               .addImport("com.google.common.primitives.Ints")
               .prefixWith(tree, "Ints.saturatedCast(")
-              .replace(tree, state.getSourceForNode(tree.getArguments().getFirst()))
+              .replace(tree, state.getSourceForNode(tree.getArguments().get(0)))
               .postfixWith(tree, ")")
               .build());
     }

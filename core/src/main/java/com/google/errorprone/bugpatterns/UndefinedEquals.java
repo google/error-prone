@@ -88,7 +88,7 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
       argument = getLast(arguments);
     } else if (instanceEqualsInvocation().matches(tree, state)) {
       receiver = getReceiver(tree);
-      argument = arguments.getFirst();
+      argument = arguments.get(0);
     } else if (ASSERT_THAT_EQUALS.matches(tree, state)) {
       receiver = getOnlyElement(arguments);
       argument = getOnlyElement(((MethodInvocationTree) getReceiver(tree)).getArguments());

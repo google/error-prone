@@ -112,7 +112,7 @@ public abstract class BlockTemplate extends Template<BlockTemplateMatch> {
     if (statements.isEmpty()) {
       return Choice.none();
     }
-    JCStatement firstStatement = (JCStatement) statements.getFirst();
+    JCStatement firstStatement = (JCStatement) statements.get(0);
     Choice<UnifierWithUnconsumedStatements> choice =
         Choice.of(UnifierWithUnconsumedStatements.create(new Unifier(context), statements));
     for (UStatement templateStatement : templateStatements()) {

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.flogger;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.postfixWith;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -72,7 +71,7 @@ public final class FloggerLogWithCause extends BugChecker implements CatchTreeMa
     if (statements.size() != 1) {
       return NO_MATCH;
     }
-    StatementTree statementTree = getOnlyElement(statements);
+    StatementTree statementTree = statements.get(0);
     if (!(statementTree instanceof ExpressionStatementTree expressionStatementTree)) {
       return NO_MATCH;
     }

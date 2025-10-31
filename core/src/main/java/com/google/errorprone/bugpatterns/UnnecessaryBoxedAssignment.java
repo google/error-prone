@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
@@ -73,7 +72,7 @@ public class UnnecessaryBoxedAssignment extends BugChecker
     if (methodInvocationTree.getArguments().size() != 1) {
       return Description.NO_MATCH;
     }
-    ExpressionTree arg = getOnlyElement(methodInvocationTree.getArguments());
+    ExpressionTree arg = methodInvocationTree.getArguments().get(0);
     Type argType = ASTHelpers.getType(arg);
     if (ASTHelpers.isSameType(argType, state.getSymtab().stringType, state)) {
       return Description.NO_MATCH;

@@ -135,7 +135,7 @@ public class UnnecessaryLongToIntConversion extends BugChecker
       if (LONG_TO_INT_STATIC_METHOD_ON_LONG_VALUE_MATCHER.matches(arg, state)) {
         // Get the first argument to the method. This works because the methods we are matching have
         // only one parameter, which is the long or Long parameter we care about.
-        ExpressionTree methodArgExpression = ((MethodInvocationTree) arg).getArguments().getFirst();
+        ExpressionTree methodArgExpression = ((MethodInvocationTree) arg).getArguments().get(0);
         String methodArg = state.getSourceForNode(methodArgExpression);
         return buildDescription(tree)
             // Remove the static method and just keep the arguments (i.e. the long values).

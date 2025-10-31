@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.compareToMethodDeclaration;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
@@ -181,7 +180,7 @@ public class ComparisonContractViolated extends BugChecker implements MethodTree
     }
     if (!seenResults.contains(ComparisonResult.ZERO)) {
       if (tree.getBody().getStatements().size() == 1
-          && getOnlyElement(tree.getBody().getStatements()) instanceof ReturnTree returnTree
+          && tree.getBody().getStatements().get(0) instanceof ReturnTree returnTree
           && returnTree.getExpression() instanceof ConditionalExpressionTree condTree) {
         ExpressionTree conditionExpr = condTree.getCondition();
         conditionExpr = ASTHelpers.stripParentheses(conditionExpr);

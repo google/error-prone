@@ -529,8 +529,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
    */
   private static boolean isClosingDecorator(
       NewClassTree decorator, Tree resource, VisitorState state) {
-    if (decorator.getArguments().isEmpty()
-        || !decorator.getArguments().getFirst().equals(resource)) {
+    if (decorator.getArguments().isEmpty() || !decorator.getArguments().get(0).equals(resource)) {
       // we assume the decorated resource is always the first argument to the decorator constructor
       return false;
     }
@@ -539,7 +538,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
       // resource would not be closed if the decorator constructor throws
       return false;
     }
-    Type resourceType = constructor.params().getFirst().type;
+    Type resourceType = constructor.params().get(0).type;
     Type decoratorType = constructor.owner.type;
     return CLOSEABLE_DECORATOR_TYPES.keySet().stream()
         .filter(key -> isSameType(resourceType, state.getTypeFromString(key), state))

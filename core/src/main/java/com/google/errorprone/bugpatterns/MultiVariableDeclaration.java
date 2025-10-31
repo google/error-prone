@@ -90,10 +90,10 @@ public class MultiVariableDeclaration extends BugChecker
       }
       Fix fix =
           SuggestedFix.replace(
-              fragments.getFirst().getStartPosition(),
+              fragments.get(0).getStartPosition(),
               state.getEndPosition(Iterables.getLast(fragments)),
               fragments.stream().map(this::pretty).collect(joining("")));
-      state.reportMatch(describeMatch(fragments.getFirst(), fix));
+      state.reportMatch(describeMatch(fragments.get(0), fix));
     }
     return NO_MATCH;
   }

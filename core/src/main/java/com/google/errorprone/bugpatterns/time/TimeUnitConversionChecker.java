@@ -86,7 +86,7 @@ public final class TimeUnitConversionChecker extends BugChecker
 
     String methodName = ASTHelpers.getSymbol(tree).getSimpleName().toString();
     TimeUnit convertTo = methodNameToTimeUnit(methodName);
-    ExpressionTree arg0 = tree.getArguments().getFirst();
+    ExpressionTree arg0 = tree.getArguments().get(0);
 
     // if we have a constant and can Long-parse it...
     Long constant = Longs.tryParse(String.valueOf(state.getSourceForNode(arg0)));

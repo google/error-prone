@@ -81,6 +81,6 @@ public class NullablePrimitive extends BugChecker
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     annotationsRelevantToNullness.forEach(fix::delete);
-    return describeMatch(annotationsRelevantToNullness.getFirst(), fix.build());
+    return describeMatch(annotationsRelevantToNullness.get(0), fix.build());
   }
 }

@@ -60,7 +60,7 @@ public class FloggerMessageFormat extends BugChecker implements MethodInvocation
     if (arguments.isEmpty()) {
       return NO_MATCH;
     }
-    ExpressionTree formatArg = arguments.getFirst();
+    ExpressionTree formatArg = arguments.get(0);
     String formatString = ASTHelpers.constValue(formatArg, String.class);
     if (formatString == null) {
       return NO_MATCH;

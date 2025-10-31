@@ -69,7 +69,7 @@ public final class ExplicitArrayForVarargs extends BugChecker
     if (args.size() != symbol.getParameters().size()) {
       return NO_MATCH;
     }
-    if (!(args.getLast() instanceof NewArrayTree newArrayTree)) {
+    if (!(args.get(args.size() - 1) instanceof NewArrayTree newArrayTree)) {
       return NO_MATCH;
     }
     // Bail out if we're constructing a multidimensional array.
@@ -92,8 +92,7 @@ public final class ExplicitArrayForVarargs extends BugChecker
         initializers.isEmpty()
             ? SuggestedFixes.removeElement(newArrayTree, args, state)
             : SuggestedFix.builder()
-                .replace(
-                    getStartPosition(newArrayTree), getStartPosition(initializers.getFirst()), "")
+                .replace(getStartPosition(newArrayTree), getStartPosition(initializers.get(0)), "")
                 .replace(
                     state.getEndPosition(
                         newArrayTree.getInitializers().get(initializers.size() - 1)),

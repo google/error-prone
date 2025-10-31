@@ -244,7 +244,7 @@ class NullnessUtils {
       }
       case ANNOTATED_TYPE -> {
         return nullableAnnotationToUse.fixPrefixingOnto(
-            ((AnnotatedTypeTree) typeTree).getAnnotations().getFirst(), state, suppressionToRemove);
+            ((AnnotatedTypeTree) typeTree).getAnnotations().get(0), state, suppressionToRemove);
       }
       case IDENTIFIER -> {
         return nullableAnnotationToUse.fixPrefixingOnto(typeTree, state, suppressionToRemove);
@@ -557,7 +557,7 @@ class NullnessUtils {
       boolean isOptionalOrNull(MethodInvocationTree tree) {
         return OPTIONAL_OR_NULL.matches(tree, stateForCompilationUnit)
             || (OPTIONAL_OR_ELSE.matches(tree, stateForCompilationUnit)
-                && tree.getArguments().getFirst().getKind() == NULL_LITERAL);
+                && tree.getArguments().get(0).getKind() == NULL_LITERAL);
         /*
          * TODO(cpovirk): Instead of checking only for NULL_LITERAL, call hasDefinitelyNullBranch?
          * But consider whether that would interfere with the TODO at the top of that method.

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Sets.union;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -243,9 +242,9 @@ public final class FutureTransformAsync extends BugChecker implements MethodInvo
     if (IMMEDIATE_FUTURE.matches(tree, state)) {
       var typeArguments = tree.getTypeArguments();
       if (typeArguments.size() == 1) {
-        typeArgument = state.getSourceForNode(getOnlyElement(typeArguments));
+        typeArgument = state.getSourceForNode(typeArguments.get(0));
       }
-      argument = state.getSourceForNode(tree.getArguments().getFirst());
+      argument = state.getSourceForNode(tree.getArguments().get(0));
     } else if (IMMEDIATE_VOID_FUTURE.matches(tree, state)) {
       typeArgument = "Void";
       argument = "null";

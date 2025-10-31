@@ -103,7 +103,7 @@ public final class InterfaceWithOnlyStatics extends BugChecker implements ClassT
 
   private static SuggestedFix fixClass(ClassTree classTree, VisitorState state) {
     int startPos = getStartPosition(classTree);
-    int endPos = getStartPosition(classTree.getMembers().getFirst());
+    int endPos = getStartPosition(classTree.getMembers().get(0));
     ImmutableList<ErrorProneToken> tokens = state.getOffsetTokens(startPos, endPos);
     String modifiers =
         enclosingClass(getSymbol(classTree)) == null ? "final class" : "static final class";

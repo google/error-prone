@@ -100,7 +100,7 @@ public class WildcardImport extends BugChecker implements CompilationUnitTreeMat
     if (fix.isEmpty()) {
       return NO_MATCH;
     }
-    return describeMatch(wildcardImports.getFirst(), fix);
+    return describeMatch(wildcardImports.get(0), fix);
   }
 
   /** Collect all on demand imports. */

@@ -96,9 +96,6 @@ public class ProtectedMembersInFinalClass extends BugChecker implements ClassTre
                           : symbol.name.toString();
                     })
                 .collect(joining(", ")));
-    return buildDescription(relevantMembers.getFirst())
-        .setMessage(message)
-        .addFix(fix.build())
-        .build();
+    return buildDescription(relevantMembers.get(0)).setMessage(message).addFix(fix.build()).build();
   }
 }

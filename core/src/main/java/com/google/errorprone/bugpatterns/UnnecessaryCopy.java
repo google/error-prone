@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -76,7 +75,7 @@ public final class UnnecessaryCopy extends BugChecker implements CompilationUnit
       public Void visitMethodInvocation(MethodInvocationTree mit, Void unused) {
         if (IMMUTABLE_COPY.matches(mit, state)
             && mit.getArguments().size() == 1
-            && PROTO_GETTER.matches(getOnlyElement(mit.getArguments()), state)) {
+            && PROTO_GETTER.matches(mit.getArguments().get(0), state)) {
           var targetType = targetType(state.withPath(getCurrentPath()));
           if (targetType != null && isSuperType(targetType.type(), state)) {
             state.reportMatch(describe(mit, state));
@@ -119,14 +118,13 @@ public final class UnnecessaryCopy extends BugChecker implements CompilationUnit
 
   private Description describe(MethodInvocationTree tree, VisitorState state) {
     return describeMatch(
-        tree, SuggestedFix.replace(tree, state.getSourceForNode(tree.getArguments().getFirst())));
+        tree, SuggestedFix.replace(tree, state.getSourceForNode(tree.getArguments().get(0))));
   }
 
   private Description describe(
       VariableTree variableTree, MethodInvocationTree tree, VisitorState state) {
     var fix =
-        SuggestedFix.builder()
-            .replace(tree, state.getSourceForNode(tree.getArguments().getFirst()));
+        SuggestedFix.builder().replace(tree, state.getSourceForNode(tree.getArguments().get(0)));
     if (!ASTHelpers.hasImplicitType(variableTree, state)) {
       var simpleName =
           SuggestedFixes.qualifyType(state, fix, replacementTypeName(variableTree, state));

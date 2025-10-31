@@ -264,7 +264,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     ImmutableMap.Builder<String, SuggestedFix> fixes = ImmutableMap.builder();
     if (MOCKITO_VERIFY.matches(invocationTree, state)) {
       ExpressionTree maybeCallToMock =
-          ((MethodInvocationTree) invocationTree).getArguments().getFirst();
+          ((MethodInvocationTree) invocationTree).getArguments().get(0);
       if (maybeCallToMock instanceof MethodInvocationTree methodInvocationTree) {
         ExpressionTree maybeMethodSelectOnMock = methodInvocationTree.getMethodSelect();
         if (maybeMethodSelectOnMock instanceof MemberSelectTree maybeSelectOnMock) {
@@ -420,7 +420,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
         && !returnedFutureType.hasTag(TypeTag.ERROR) // work around error-prone#996
         && !returnedFutureType.isRaw()) {
       if (isSubtype(
-          getUpperBound(returnedFutureType.getTypeArguments().getFirst(), state.getTypes()),
+          getUpperBound(returnedFutureType.getTypeArguments().get(0), state.getTypes()),
           lostType,
           state)) {
         return buildDescription(tree)

@@ -83,7 +83,7 @@ public class ThrowIfUncheckedKnownUnchecked extends BugChecker
     if (IS_THROW_IF_UNCHECKED.matches(tree, state)
         && argument(0, IS_KNOWN_UNCHECKED).matches(tree, state)) {
       var fix = SuggestedFix.builder();
-      fix.replace(tree, "throw " + state.getSourceForNode(tree.getArguments().getFirst()));
+      fix.replace(tree, "throw " + state.getSourceForNode(tree.getArguments().get(0)));
       /*
        * Changing to `throw ...` make the compiler recognize everything afterward in the block as
        * unreachable. To avoid build errors from that, we remove everything afterward.

@@ -47,6 +47,6 @@ public class PackageInfo extends BugChecker implements CompilationUnitTreeMatche
     if (tree.getTypeDecls().isEmpty()) {
       return NO_MATCH;
     }
-    return describeMatch(tree.getTypeDecls().getFirst());
+    return describeMatch(tree.getTypeDecls().get(0));
   }
 }

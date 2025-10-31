@@ -250,7 +250,7 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
     }
     // remove all interactions with the ExpectedException rule
     fix.replace(
-        getStartPosition(expectations.getFirst()), state.getEndPosition(getLast(expectations)), "");
+        getStartPosition(expectations.get(0)), state.getEndPosition(getLast(expectations)), "");
     if (failure != null) {
       fix.delete(failure);
     }
@@ -281,10 +281,9 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
     if (!useExpressionLambda) {
       fixPrefix.append("{");
     }
-    fix.prefixWith(throwingStatements.getFirst(), fixPrefix.toString());
+    fix.prefixWith(throwingStatements.get(0), fixPrefix.toString());
     if (useExpressionLambda) {
-      fix.postfixWith(
-          ((ExpressionStatementTree) throwingStatements.getFirst()).getExpression(), ")");
+      fix.postfixWith(((ExpressionStatementTree) throwingStatements.get(0)).getExpression(), ")");
       fix.postfixWith(getLast(throwingStatements), '\n' + Joiner.on('\n').join(newAsserts));
     } else {
       fix.postfixWith(getLast(throwingStatements), "});\n" + Joiner.on('\n').join(newAsserts));

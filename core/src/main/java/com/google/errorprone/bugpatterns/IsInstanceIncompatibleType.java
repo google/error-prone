@@ -60,7 +60,7 @@ public final class IsInstanceIncompatibleType extends BugChecker
     if (receiverType == null) {
       return NO_MATCH;
     }
-    Type argumentType = getType(tree.getArguments().getFirst());
+    Type argumentType = getType(tree.getArguments().get(0));
 
     return isCastable(argumentType, receiverType, state)
         ? NO_MATCH
@@ -78,8 +78,7 @@ public final class IsInstanceIncompatibleType extends BugChecker
     if (receiverType == null) {
       return NO_MATCH;
     }
-    Type argumentType =
-        ASTHelpers.getUpperBound(type.getParameterTypes().getFirst(), state.getTypes());
+    Type argumentType = ASTHelpers.getUpperBound(type.getParameterTypes().get(0), state.getTypes());
 
     return isCastable(argumentType, receiverType, state)
         ? NO_MATCH

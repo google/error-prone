@@ -120,7 +120,7 @@ public class ForOverrideChecker extends BugChecker
       ImmutableList<MethodSymbol> overriddenMethods = getOverriddenMethods(state, method);
 
       if (!overriddenMethods.isEmpty()) {
-        MethodSymbol nearestForOverrideMethod = overriddenMethods.getFirst();
+        MethodSymbol nearestForOverrideMethod = overriddenMethods.get(0);
         String customMessage = "must have protected or package-private visibility";
         if (nearestForOverrideMethod.equals(method)) {
           // The method itself is @ForOverride but is too visible

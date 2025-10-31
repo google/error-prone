@@ -550,7 +550,7 @@ public class DefaultCharset extends BugChecker
   }
 
   private Description handlePrintWriterOutputStream(NewClassTree tree) {
-    Tree outputStream = tree.getArguments().getFirst();
+    Tree outputStream = tree.getArguments().get(0);
     Description.Builder description = buildDescription(tree);
     for (CharsetFix charsetFix : CharsetFix.values()) {
       SuggestedFix.Builder fix =

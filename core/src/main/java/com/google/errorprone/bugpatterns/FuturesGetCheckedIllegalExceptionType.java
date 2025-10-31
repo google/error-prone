@@ -72,8 +72,7 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
           tree,
           SuggestedFix.builder()
               .replace(
-                  tree,
-                  "getUnchecked(" + state.getSourceForNode(tree.getArguments().getFirst()) + ")")
+                  tree, "getUnchecked(" + state.getSourceForNode(tree.getArguments().get(0)) + ")")
               .addStaticImport(Futures.class.getName() + ".getUnchecked")
               .build());
     }

@@ -60,7 +60,7 @@ public class DuplicateMapKeys extends BugChecker implements MethodInvocationTree
       if (!ENTRY_MATCHER.matches(expr, state)) {
         continue;
       }
-      Object key = ASTHelpers.constValue(entryInvocation.getArguments().getFirst());
+      Object key = ASTHelpers.constValue(entryInvocation.getArguments().get(0));
       if (key == null) {
         continue;
       }

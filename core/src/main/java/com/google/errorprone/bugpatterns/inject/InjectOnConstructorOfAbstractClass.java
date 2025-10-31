@@ -65,7 +65,7 @@ public class InjectOnConstructorOfAbstractClass extends BugChecker implements Me
       MultiMatchResult<AnnotationTree> injectAnnotations =
           INJECT_FINDER.multiMatchResult(methodTree, state);
       if (injectAnnotations.matches()) {
-        AnnotationTree injectAnnotation = injectAnnotations.matchingNodes().getFirst();
+        AnnotationTree injectAnnotation = injectAnnotations.matchingNodes().get(0);
         return describeMatch(injectAnnotation, delete(injectAnnotation));
       }
     }

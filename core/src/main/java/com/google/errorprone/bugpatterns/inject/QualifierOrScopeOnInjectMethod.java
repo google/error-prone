@@ -97,12 +97,12 @@ public class QualifierOrScopeOnInjectMethod extends BugChecker implements Method
     // should be semantics-preserving (since Modules aren't generally themselves @Injected).
     if (PROVIDES_METHOD.matches(tree, state)) {
       deleteAll(injectAnnotations.matchingNodes(), fixBuilder);
-      return describeMatch(injectAnnotations.matchingNodes().getFirst(), fixBuilder.build());
+      return describeMatch(injectAnnotations.matchingNodes().get(0), fixBuilder.build());
     }
 
     // Don't know what else to do here, deleting is the no-op change.
     deleteAll(matchingAnnotations, fixBuilder);
-    return describeMatch(matchingAnnotations.getFirst(), fixBuilder.build());
+    return describeMatch(matchingAnnotations.get(0), fixBuilder.build());
   }
 
   private static void deleteAll(List<AnnotationTree> scopes, SuggestedFix.Builder fixBuilder) {

@@ -58,7 +58,7 @@ public class ThrowsUncheckedException extends BugChecker implements MethodTreeMa
       return NO_MATCH;
     }
     return describeMatch(
-        uncheckedExceptions.getFirst(),
+        uncheckedExceptions.get(0),
         SuggestedFixes.deleteExceptions(tree, state, uncheckedExceptions));
   }
 }

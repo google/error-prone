@@ -56,7 +56,7 @@ public class WithSignatureDiscouraged extends BugChecker implements MethodInvoca
     if (!WITH_SIGNATURE.matches(tree, state)) {
       return NO_MATCH;
     }
-    ExpressionTree argument = tree.getArguments().getFirst();
+    ExpressionTree argument = tree.getArguments().get(0);
     String sig = ASTHelpers.constValue(argument, String.class);
     if (sig == null) {
       // Non-const arguments to withSignature are a bit weird but there's not much we can do.

@@ -243,8 +243,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
     Description.Builder unrecognizedDescription =
         buildDescription(defaultCase).setMessage(DESCRIPTION_UNRECOGNIZED);
     if (defaultStatements == null) {
-      SuggestedFix fix =
-          SuggestedFix.replace(defaultCase.getLabels().getFirst(), "case UNRECOGNIZED");
+      SuggestedFix fix = SuggestedFix.replace(defaultCase.getLabels().get(0), "case UNRECOGNIZED");
       return compilesWithFix(fix, state) ? unrecognizedDescription.addFix(fix).build() : NO_MATCH;
     }
     if (trivialDefault(defaultStatements)) {
@@ -309,7 +308,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
     String defaultSource =
         sourceCode
             .subSequence(
-                getStartPosition(defaultStatements.getFirst()),
+                getStartPosition(defaultStatements.get(0)),
                 state.getEndPosition(getLast(defaultStatements)))
             .toString();
     String initialComments = comments(defaultCase, defaultStatements, sourceCode);
@@ -330,7 +329,7 @@ public class UnnecessaryDefaultInEnumSwitch extends BugChecker
     // "default:" to the first statement, and then strip off "default:", because
     // we have no way of identifying the end position of just the "default:" statement.
     int defaultStart = getStartPosition(defaultCase);
-    int statementStart = getStartPosition(defaultStatements.getFirst());
+    int statementStart = getStartPosition(defaultStatements.get(0));
     String defaultAndComments = sourceCode.subSequence(defaultStart, statementStart).toString();
     String comments =
         defaultAndComments

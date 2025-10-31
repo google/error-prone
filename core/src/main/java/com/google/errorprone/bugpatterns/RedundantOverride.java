@@ -69,7 +69,7 @@ public final class RedundantOverride extends BugChecker implements MethodTreeMat
     if (tree.getBody() == null || tree.getBody().getStatements().size() != 1) {
       return NO_MATCH;
     }
-    StatementTree statement = tree.getBody().getStatements().getFirst();
+    StatementTree statement = tree.getBody().getStatements().get(0);
     ExpressionTree expression = getSingleInvocation(statement);
     if (expression == null) {
       return NO_MATCH;

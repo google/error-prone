@@ -69,7 +69,7 @@ public final class TruthContainsExactlyElementsInUsage extends BugChecker
 
     // Avoids refactoring variables and method invocations that are not creating new iterables.
     // The first param from containsExactlyElementsIn should always be an Iterable.
-    return getArgumentsFromNewIterableExpression(tree.getArguments().getFirst(), state)
+    return getArgumentsFromNewIterableExpression(tree.getArguments().get(0), state)
         .map(arguments -> describeMatch(tree, refactor(arguments, tree, state)))
         .orElse(Description.NO_MATCH);
   }
@@ -92,9 +92,9 @@ public final class TruthContainsExactlyElementsInUsage extends BugChecker
     SuggestedFix.Builder fix =
         SuggestedFixes.renameMethodInvocation(tree, "containsExactly", state).toBuilder();
     // Finally, we use the arguments from the new iterable to build the containsExactly arguments.
-    ExpressionTree expressionToReplace = tree.getArguments().getFirst();
+    ExpressionTree expressionToReplace = tree.getArguments().get(0);
     if (!arguments.isEmpty()) {
-      fix.replace(getStartPosition(expressionToReplace), getStartPosition(arguments.getFirst()), "")
+      fix.replace(getStartPosition(expressionToReplace), getStartPosition(arguments.get(0)), "")
           .replace(
               state.getEndPosition(getLast(arguments)),
               state.getEndPosition(expressionToReplace),

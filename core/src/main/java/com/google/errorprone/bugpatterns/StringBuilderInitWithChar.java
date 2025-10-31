@@ -14,7 +14,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
@@ -43,7 +42,7 @@ public class StringBuilderInitWithChar extends BugChecker implements NewClassTre
     if (ASTHelpers.isSameType(
             state.getSymtab().stringBuilderType, ASTHelpers.getType(tree.getIdentifier()), state)
         && tree.getArguments().size() == 1) {
-      ExpressionTree argument = getOnlyElement(tree.getArguments());
+      ExpressionTree argument = tree.getArguments().get(0);
       Type type = ASTHelpers.getType(argument);
       if (type.getKind() == TypeKind.CHAR) {
         if (argument.getKind() == Kind.CHAR_LITERAL) {

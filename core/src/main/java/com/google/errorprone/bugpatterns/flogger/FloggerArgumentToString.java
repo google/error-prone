@@ -289,7 +289,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
       if (arguments.isEmpty()) {
         return NO_MATCH;
       }
-      String formatString = ASTHelpers.constValue(arguments.getFirst(), String.class);
+      String formatString = ASTHelpers.constValue(arguments.get(0), String.class);
       if (formatString == null) {
         return NO_MATCH;
       }
@@ -377,7 +377,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
     if (!fixed) {
       return NO_MATCH;
     }
-    fix.replace(tree.getArguments().getFirst(), state.getConstantExpression(sb.toString()));
+    fix.replace(tree.getArguments().get(0), state.getConstantExpression(sb.toString()));
     return describeMatch(tree, fix.build());
   }
 

@@ -343,7 +343,7 @@ public class DoNotCallChecker extends BugChecker
           return Optional.empty();
         }
         ImmutableList<Type> assigned = assignedTypes.get(receiverSymbol);
-        if (!assigned.stream().allMatch(t -> isSameType(t, assigned.getFirst(), state))) {
+        if (!assigned.stream().allMatch(t -> isSameType(t, assigned.get(0), state))) {
           return Optional.empty();
         }
         Types types = state.getTypes();

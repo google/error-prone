@@ -462,7 +462,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
     Type targetKeyType =
         extractTypeArgAsMemberOfSupertype(
             ignoringCasts(assertee, state), assertionType, /* typeArgIndex= */ 0, state.getTypes());
-    var argument = tree.getArguments().getFirst();
+    var argument = tree.getArguments().get(0);
     return checkCompatibility(argument, targetKeyType, getType(argument), state);
   }
 
