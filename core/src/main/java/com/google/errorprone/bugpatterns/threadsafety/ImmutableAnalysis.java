@@ -22,6 +22,7 @@ import static com.google.errorprone.util.AnnotationNames.LAZY_INIT_ANNOTATION;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.ImmutableTypeParameter;
@@ -46,6 +47,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
@@ -54,25 +56,48 @@ import org.jspecify.annotations.Nullable;
 /** Analyzes types for deep immutability. */
 public final class ImmutableAnalysis {
 
+  /** Factory for {@link ImmutableAnalysis}. */
+  public static final class Factory {
+    private final WellKnownMutability wellKnownMutability;
+    private final ErrorProneFlags flags;
+
+    @Inject
+    Factory(WellKnownMutability wellKnownMutability, ErrorProneFlags flags) {
+      this.wellKnownMutability = wellKnownMutability;
+      this.flags = flags;
+    }
+
+    public ImmutableAnalysis create(
+        BiPredicate<Symbol, VisitorState> suppressionChecker,
+        VisitorState state,
+        ImmutableSet<String> immutableAnnotations) {
+      return new ImmutableAnalysis(
+          suppressionChecker, state, wellKnownMutability, immutableAnnotations, flags);
+    }
+  }
+
   private final BiPredicate<Symbol, VisitorState> suppressionChecker;
   private final VisitorState state;
   private final WellKnownMutability wellKnownMutability;
   private final ThreadSafety threadSafety;
 
-  ImmutableAnalysis(
+  private ImmutableAnalysis(
       BiPredicate<Symbol, VisitorState> suppressionChecker,
       VisitorState state,
       WellKnownMutability wellKnownMutability,
-      ImmutableSet<String> immutableAnnotations) {
+      ImmutableSet<String> immutableAnnotations,
+      ErrorProneFlags flags) {
     this.suppressionChecker = suppressionChecker;
     this.state = state;
     this.wellKnownMutability = wellKnownMutability;
     this.threadSafety =
         ThreadSafety.builder()
-            .setPurpose(Purpose.FOR_IMMUTABLE_CHECKER)
+            .purpose(Purpose.FOR_IMMUTABLE_CHECKER)
+            .markerAnnotationInherited(
+                flags.getBoolean("Immutable:MarkerAnnotationInherited").orElse(true))
             .knownTypes(wellKnownMutability)
             .markerAnnotations(immutableAnnotations)
-            .typeParameterAnnotation(ImmutableTypeParameter.class)
+            .typeParameterAnnotation(ImmutableSet.of(ImmutableTypeParameter.class.getName()))
             .build(state);
   }
 

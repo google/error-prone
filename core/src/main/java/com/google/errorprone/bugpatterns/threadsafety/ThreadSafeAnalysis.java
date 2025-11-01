@@ -21,6 +21,7 @@ import static com.google.errorprone.util.AnnotationNames.LAZY_INIT_ANNOTATION;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
@@ -41,29 +42,45 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeKind;
 
 /** Analyzes types for deep thread safety. */
-public class ThreadSafeAnalysis {
+public final class ThreadSafeAnalysis {
+  /** Factory for {@link ThreadSafeAnalysis}. */
+  public static final class Factory {
+    private final WellKnownThreadSafety wellKnownThreadSafety;
+    private final ErrorProneFlags errorProneFlags;
+
+    @Inject
+    Factory(WellKnownThreadSafety wellKnownThreadSafety, ErrorProneFlags errorProneFlags) {
+      this.wellKnownThreadSafety = wellKnownThreadSafety;
+      this.errorProneFlags = errorProneFlags;
+    }
+
+    public ThreadSafeAnalysis create(BugChecker bugChecker, VisitorState state) {
+      return new ThreadSafeAnalysis(bugChecker, state, wellKnownThreadSafety, errorProneFlags);
+    }
+  }
+
   private final BugChecker bugChecker;
   private final VisitorState state;
   private final WellKnownThreadSafety wellKnownThreadSafety;
   private final ThreadSafety threadSafety;
-  private final GuardedByFlags flags;
 
-  public ThreadSafeAnalysis(
+  private ThreadSafeAnalysis(
       BugChecker bugChecker,
       VisitorState state,
       WellKnownThreadSafety wellKnownThreadSafety,
-      GuardedByFlags flags) {
+      ErrorProneFlags errorProneFlags) {
     this.bugChecker = bugChecker;
     this.state = state;
     this.wellKnownThreadSafety = wellKnownThreadSafety;
-    this.flags = flags;
 
-    this.threadSafety = ThreadSafety.threadSafeBuilder(wellKnownThreadSafety).build(state);
+    this.threadSafety =
+        ThreadSafety.threadSafeBuilder(wellKnownThreadSafety, errorProneFlags).build(state);
   }
 
   boolean hasThreadSafeTypeParameterAnnotation(TypeVariableSymbol sym) {
@@ -226,7 +243,7 @@ public class ThreadSafeAnalysis {
     if (var.getModifiers().contains(Modifier.STATIC)) {
       return Violation.absent();
     }
-    if (!GuardedByUtils.getGuardValues(var, flags).isEmpty()) {
+    if (!GuardedByUtils.getGuardValues(var).isEmpty()) {
       return Violation.absent();
     }
 

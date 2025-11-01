@@ -1,5 +1,5 @@
-Suppressions for `unchecked` or `rawtypes` warnings should have an accompanying
-comment to explain why the javac warning is safe to ignore.
+`@SuppressWarnings` should have an accompanying comment to explain why the javac
+warning is safe to ignore.
 
 Rather than just suppressing the warning:
 

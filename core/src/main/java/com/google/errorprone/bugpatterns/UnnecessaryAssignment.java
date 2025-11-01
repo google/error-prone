@@ -63,7 +63,9 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.lang.model.element.Modifier;
 
@@ -88,7 +90,8 @@ public final class UnnecessaryAssignment extends BugChecker
           "jakarta.inject.Inject",
           "javax.inject.Inject");
 
-  private static final Matcher<Tree> HAS_MOCK_ANNOTATION = symbolHasAnnotation("org.mockito.Mock");
+  private static final String MOCK_ANNOTATION = "org.mockito.Mock";
+  private static final Matcher<Tree> HAS_MOCK_ANNOTATION = symbolHasAnnotation(MOCK_ANNOTATION);
 
   private static final Matcher<Tree> HAS_NON_MOCK_FRAMEWORK_ANNOTATION =
       allOf(
@@ -125,10 +128,29 @@ public final class UnnecessaryAssignment extends BugChecker
               "value",
               isJUnit4TestRunnerOfType(ImmutableList.of("org.mockito.junit.MockitoJUnitRunner"))));
 
+  private static boolean hasAnnotation(Tree tree, String annotation, VisitorState state) {
+    Symbol sym = getSymbol(tree);
+    return sym != null && ASTHelpers.hasAnnotation(sym, annotation, state);
+  }
+
+  private static Optional<String> hasAnnotation(
+      Tree tree, Collection<String> annotations, VisitorState state) {
+    return annotations.stream().filter(a -> hasAnnotation(tree, a, state)).findFirst();
+  }
+
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
-    if (!HAS_MOCK_ANNOTATION.matches(tree.getVariable(), state)
-        && !HAS_NON_MOCK_FRAMEWORK_ANNOTATION.matches(tree.getVariable(), state)) {
+    Tree variable = tree.getVariable();
+    Optional<String> annotation = Optional.empty();
+    if (hasAnnotation(variable, MOCK_ANNOTATION, state)) {
+      annotation = Optional.of(MOCK_ANNOTATION);
+    } else {
+      annotation =
+          hasAnnotation(variable, FRAMEWORK_ANNOTATIONS, state)
+              .filter(a -> !isOptionalInject(variable, state));
+    }
+
+    if (annotation.isEmpty()) {
       return NO_MATCH;
     }
 
@@ -137,7 +159,7 @@ public final class UnnecessaryAssignment extends BugChecker
             ? SuggestedFix.delete(est)
             : SuggestedFix.emptyFix();
 
-    return describeMatch(tree, fix);
+    return buildDescription(tree).addFix(fix).setMessage(buildMessage(annotation.get())).build();
   }
 
   @Override
@@ -156,7 +178,10 @@ public final class UnnecessaryAssignment extends BugChecker
       return NO_MATCH;
     }
     if (hasMockAnnotation) {
-      return describeMatch(tree, createMockFix(tree, state));
+      return buildDescription(tree)
+          .addFix(createMockFix(tree, state))
+          .setMessage(buildMessage(MOCK_ANNOTATION))
+          .build();
     }
     if (hasInjectyAnnotation) {
       Description.Builder description = buildDescription(tree);
@@ -252,5 +277,14 @@ public final class UnnecessaryAssignment extends BugChecker
       }
     }.scan(classTree, null);
     return initialized.get();
+  }
+
+  private static String buildMessage(String annotationUsed) {
+    String simpleName = annotationUsed.substring(annotationUsed.lastIndexOf('.') + 1);
+    return String.format(
+        "Fields annotated with @%s should not be manually assigned to, as they should be"
+            + " initialized by a framework. Remove the assignment if a framework is being"
+            + " used, or the annotation if one isn't.",
+        simpleName);
   }
 }

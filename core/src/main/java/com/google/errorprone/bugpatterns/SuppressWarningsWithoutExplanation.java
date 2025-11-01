@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
@@ -48,8 +49,8 @@ import com.sun.source.tree.Tree;
  * Finds occurrences of {@code @SuppressWarnings} where there is definitely no explanation for why
  * it is safe.
  *
- * <p>The Google style guide mandates this for <em>all</em> suppressions; this is only matching on
- * {@code deprecation} as a trial.
+ * <p>The Google style guide mandates this for <em>all</em> suppressions; we're matching on a subset
+ * to start which seem important.
  */
 @BugPattern(
     summary =
@@ -64,7 +65,12 @@ public final class SuppressWarningsWithoutExplanation extends BugChecker
   private static final Matcher<AnnotationTree> SUPPRESS_WARNINGS =
       allOf(
           isSameType(SuppressWarnings.class),
-          hasArgumentWithValue("value", stringLiteral("deprecation")));
+          hasArgumentWithValue(
+              "value",
+              anyOf(
+                  stringLiteral("deprecation"),
+                  stringLiteral("rawtypes"),
+                  stringLiteral("unchecked"))));
 
   private final boolean emitDummyFixes;
 

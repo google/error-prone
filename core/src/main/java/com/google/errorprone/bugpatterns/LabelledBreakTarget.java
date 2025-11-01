@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.errorprone.BugPattern;
@@ -26,16 +26,13 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.LabeledStatementTree;
 
 /** A BugPattern; see the summary. */
-@BugPattern(summary = "Labels should only be used on loops.", severity = WARNING)
+@BugPattern(summary = "Labels should only be used on loops.", severity = ERROR)
 public class LabelledBreakTarget extends BugChecker implements LabeledStatementTreeMatcher {
   @Override
   public Description matchLabeledStatement(LabeledStatementTree tree, VisitorState state) {
-    switch (tree.getStatement().getKind()) {
-      case DO_WHILE_LOOP, ENHANCED_FOR_LOOP, FOR_LOOP, WHILE_LOOP -> {
-        return NO_MATCH;
-      }
-      default -> {}
-    }
-    return describeMatch(tree);
+    return switch (tree.getStatement().getKind()) {
+      case DO_WHILE_LOOP, ENHANCED_FOR_LOOP, FOR_LOOP, WHILE_LOOP -> NO_MATCH;
+      default -> describeMatch(tree);
+    };
   }
 }

@@ -16,11 +16,11 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
+import com.google.auto.value.AutoBuilder;
 import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -29,9 +29,10 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.Immutable;
+import com.google.errorprone.annotations.ImmutableTypeParameter;
 import com.google.errorprone.annotations.ThreadSafe;
 import com.google.errorprone.annotations.ThreadSafeTypeParameter;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
@@ -53,10 +54,6 @@ import com.sun.tools.javac.code.Type.WildcardType;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.Name;
-import java.lang.annotation.Annotation;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -75,27 +72,94 @@ import org.pcollections.ConsPStack;
 public final class ThreadSafety {
   private final VisitorState state;
   private final Purpose purpose;
+  private final boolean markerAnnotationInherited;
   private final ThreadSafetyKnownTypes knownTypes;
   private final ImmutableSet<String> markerAnnotations;
   private final ImmutableSet<String> acceptedAnnotations;
   private final ImmutableSet<String> containerOfAnnotation;
   private final ImmutableSet<String> suppressAnnotation;
   private final ImmutableSet<String> typeParameterAnnotation;
+  private final ImmutableSet<String> acceptedTypeParameterAnnotation;
 
   public static Builder builder() {
-    return new Builder();
+    return new AutoBuilder_ThreadSafety_Builder()
+        .acceptedAnnotations(ImmutableSet.of())
+        .containerOfAnnotation(ImmutableSet.of())
+        .suppressAnnotation(ImmutableSet.of())
+        .typeParameterAnnotation(ImmutableSet.of())
+        .acceptedTypeParameterAnnotation(ImmutableSet.of());
   }
 
-  public static ThreadSafety.Builder threadSafeBuilder(
-      WellKnownThreadSafety wellKnownThreadSafety) {
-    ThreadSafety.Builder builder =
+  public static Builder threadSafeBuilder(
+      WellKnownThreadSafety wellKnownThreadSafety, ErrorProneFlags flags) {
+    Builder builder =
         ThreadSafety.builder()
-            .setPurpose(Purpose.FOR_THREAD_SAFE_CHECKER)
+            .purpose(Purpose.FOR_THREAD_SAFE_CHECKER)
+            .markerAnnotationInherited(false)
             .knownTypes(wellKnownThreadSafety)
             .markerAnnotations(ImmutableSet.of(ThreadSafe.class.getName()))
             .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()))
-            .typeParameterAnnotation(ImmutableSet.of(ThreadSafeTypeParameter.class.getName()));
+            .typeParameterAnnotation(ImmutableSet.of(ThreadSafeTypeParameter.class.getName()))
+            .acceptedTypeParameterAnnotation(
+                flags.getBoolean("ThreadSafety:CheckImmutableTypeParameter").orElse(true)
+                    ? ImmutableSet.of(ImmutableTypeParameter.class.getName())
+                    : ImmutableSet.of());
     return builder;
+  }
+
+  /** Builder for {@link ThreadSafety}. */
+  @AutoBuilder(ofClass = ThreadSafety.class)
+  public abstract static class Builder {
+
+    /** See {@link Purpose}. */
+    public abstract Builder purpose(Purpose purpose);
+
+    /** Whether to assume the marker annotation is implicitly inherited by subclasses. */
+    public abstract Builder markerAnnotationInherited(boolean markerAnnotationInherited);
+
+    /** Information about known types and whether they're known to be safe or unsafe. */
+    public abstract Builder knownTypes(ThreadSafetyKnownTypes knownTypes);
+
+    /**
+     * Annotations that will cause a class to be tested with this {@link ThreadSafety} instance; for
+     * example, when testing a class for immutability, this should be @Immutable.
+     */
+    public abstract Builder markerAnnotations(Iterable<String> markerAnnotations);
+
+    /**
+     * Annotations that do *not* cause a class to be tested, but which are treated as valid
+     * annotations to pass the test; for example, if @ThreadSafe is the marker
+     * annotation, @Immutable would be included in this list, as an immutable class is by definition
+     * thread-safe.
+     */
+    public abstract Builder acceptedAnnotations(Iterable<String> acceptedAnnotations);
+
+    /** An annotation which marks a generic parameter as a container type. */
+    public abstract Builder containerOfAnnotation(Iterable<String> containerOfAnnotation);
+
+    /** An annotation which, when found on a class, should suppress the test */
+    public abstract Builder suppressAnnotation(Iterable<String> suppressAnnotation);
+
+    /**
+     * An annotation which, when found on a type parameter, indicates that the type parameter may
+     * only be instantiated with thread-safe types.
+     */
+    public abstract Builder typeParameterAnnotation(Iterable<String> typeParameterAnnotation);
+
+    /**
+     * An annotation which, when found on a type parameter, indicates that the type parameter may
+     * only be instantiated with thread-safe types.
+     */
+    public abstract Builder acceptedTypeParameterAnnotation(
+        Iterable<String> acceptedTypeParameterAnnotation);
+
+    abstract Builder visitorState(VisitorState state);
+
+    public final ThreadSafety build(VisitorState state) {
+      return visitorState(state).build();
+    }
+
+    abstract ThreadSafety build();
   }
 
   /**
@@ -144,148 +208,27 @@ public final class ThreadSafety {
     abstract String mutableOrNotThreadSafe();
   }
 
-  /** {@link ThreadSafety}Builder */
-  public static class Builder {
-
-    private Builder() {}
-
-    private Purpose purpose = Purpose.FOR_IMMUTABLE_CHECKER;
-    private ThreadSafetyKnownTypes knownTypes;
-    private ImmutableSet<String> markerAnnotations;
-    private ImmutableSet<String> acceptedAnnotations = ImmutableSet.of();
-    private ImmutableSet<String> containerOfAnnotation = ImmutableSet.of();
-    private ImmutableSet<String> suppressAnnotation = ImmutableSet.of();
-    private ImmutableSet<String> typeParameterAnnotation = ImmutableSet.of();
-
-    /** See {@link Purpose}. */
-    @CanIgnoreReturnValue
-    public Builder setPurpose(Purpose purpose) {
-      this.purpose = purpose;
-      return this;
-    }
-
-    /** Information about known types and whether they're known to be safe or unsafe. */
-    @CanIgnoreReturnValue
-    public Builder knownTypes(ThreadSafetyKnownTypes knownTypes) {
-      this.knownTypes = knownTypes;
-      return this;
-    }
-
-    /**
-     * Annotations that will cause a class to be tested with this {@link ThreadSafety} instance; for
-     * example, when testing a class for immutability, this should be @Immutable.
-     */
-    @CanIgnoreReturnValue
-    public Builder markerAnnotations(Iterable<String> markerAnnotations) {
-      checkNotNull(markerAnnotations);
-      this.markerAnnotations = ImmutableSet.copyOf(markerAnnotations);
-      return this;
-    }
-
-    /**
-     * Annotations that do *not* cause a class to be tested, but which are treated as valid
-     * annotations to pass the test; for example, if @ThreadSafe is the marker
-     * annotation, @Immutable would be included in this list, as an immutable class is by definition
-     * thread-safe.
-     */
-    @CanIgnoreReturnValue
-    public Builder acceptedAnnotations(Iterable<String> acceptedAnnotations) {
-      checkNotNull(acceptedAnnotations);
-      this.acceptedAnnotations = ImmutableSet.copyOf(acceptedAnnotations);
-      return this;
-    }
-
-    /** An annotation which marks a generic parameter as a container type. */
-    @CanIgnoreReturnValue
-    public Builder containerOfAnnotation(Class<? extends Annotation> containerOfAnnotation) {
-      checkNotNull(containerOfAnnotation);
-      this.containerOfAnnotation = ImmutableSet.of(containerOfAnnotation.getName());
-      return this;
-    }
-
-    /** An annotation which marks a generic parameter as a container type. */
-    @CanIgnoreReturnValue
-    public Builder containerOfAnnotation(Iterable<String> containerOfAnnotation) {
-      checkNotNull(containerOfAnnotation);
-      this.containerOfAnnotation = ImmutableSet.copyOf(containerOfAnnotation);
-      return this;
-    }
-
-    /** An annotation which, when found on a class, should suppress the test */
-    @CanIgnoreReturnValue
-    public Builder suppressAnnotation(Class<? extends Annotation> suppressAnnotation) {
-      checkNotNull(suppressAnnotation);
-      this.suppressAnnotation = ImmutableSet.of(suppressAnnotation.getName());
-      return this;
-    }
-
-    /** An annotation which, when found on a class, should suppress the test */
-    @CanIgnoreReturnValue
-    public Builder suppressAnnotation(Iterable<String> suppressAnnotation) {
-      checkNotNull(suppressAnnotation);
-      this.suppressAnnotation = ImmutableSet.copyOf(suppressAnnotation);
-      return this;
-    }
-
-    /**
-     * An annotation which, when found on a type parameter, indicates that the type parameter may
-     * only be instantiated with thread-safe types.
-     */
-    @CanIgnoreReturnValue
-    public Builder typeParameterAnnotation(Class<? extends Annotation> typeParameterAnnotation) {
-      checkNotNull(typeParameterAnnotation);
-      checkArgument(
-          Arrays.stream(typeParameterAnnotation.getAnnotation(Target.class).value())
-              .anyMatch(ElementType.TYPE_PARAMETER::equals),
-          "%s must be applicable to type parameters",
-          typeParameterAnnotation);
-      this.typeParameterAnnotation = ImmutableSet.of(typeParameterAnnotation.getName());
-      return this;
-    }
-
-    /**
-     * An annotation which, when found on a type parameter, indicates that the type parameter may
-     * only be instantiated with thread-safe types.
-     */
-    @CanIgnoreReturnValue
-    public Builder typeParameterAnnotation(Iterable<String> typeParameterAnnotation) {
-      checkNotNull(typeParameterAnnotation);
-      this.typeParameterAnnotation = ImmutableSet.copyOf(typeParameterAnnotation);
-      return this;
-    }
-
-    public ThreadSafety build(VisitorState state) {
-      checkNotNull(knownTypes);
-      checkNotNull(markerAnnotations);
-      return new ThreadSafety(
-          state,
-          purpose,
-          knownTypes,
-          markerAnnotations,
-          acceptedAnnotations,
-          containerOfAnnotation,
-          suppressAnnotation,
-          typeParameterAnnotation);
-    }
-  }
-
-  private ThreadSafety(
-      VisitorState state,
+  ThreadSafety(
+      VisitorState visitorState,
       Purpose purpose,
+      boolean markerAnnotationInherited,
       ThreadSafetyKnownTypes knownTypes,
-      Set<String> markerAnnotations,
-      Set<String> acceptedAnnotations,
-      Set<String> containerOfAnnotation,
-      Set<String> suppressAnnotation,
-      Set<String> typeParameterAnnotation) {
-    this.state = checkNotNull(state);
+      ImmutableSet<String> markerAnnotations,
+      ImmutableSet<String> acceptedAnnotations,
+      ImmutableSet<String> containerOfAnnotation,
+      ImmutableSet<String> suppressAnnotation,
+      ImmutableSet<String> typeParameterAnnotation,
+      ImmutableSet<String> acceptedTypeParameterAnnotation) {
+    this.state = visitorState;
     this.purpose = purpose;
-    this.knownTypes = checkNotNull(knownTypes);
-    this.markerAnnotations = ImmutableSet.copyOf(checkNotNull(markerAnnotations));
-    this.acceptedAnnotations = ImmutableSet.copyOf(checkNotNull(acceptedAnnotations));
-    this.containerOfAnnotation = ImmutableSet.copyOf(checkNotNull(containerOfAnnotation));
-    this.suppressAnnotation = ImmutableSet.copyOf(checkNotNull(suppressAnnotation));
-    this.typeParameterAnnotation = ImmutableSet.copyOf(checkNotNull(typeParameterAnnotation));
+    this.markerAnnotationInherited = markerAnnotationInherited;
+    this.knownTypes = knownTypes;
+    this.markerAnnotations = markerAnnotations;
+    this.acceptedAnnotations = acceptedAnnotations;
+    this.containerOfAnnotation = containerOfAnnotation;
+    this.suppressAnnotation = suppressAnnotation;
+    this.typeParameterAnnotation = typeParameterAnnotation;
+    this.acceptedTypeParameterAnnotation = acceptedTypeParameterAnnotation;
   }
 
   /**
@@ -355,7 +298,7 @@ public final class ThreadSafety {
       Set<TypeVariableSymbol> recursiveThreadSafeTypeParameter) {
     for (int i = 0; i < type.tsym.getTypeParameters().size(); i++) {
       TypeVariableSymbol typaram = type.tsym.getTypeParameters().get(i);
-      boolean immutableTypeParameter = hasThreadSafeTypeParameterAnnotation(typaram);
+      boolean immutableTypeParameter = hasAcceptedThreadSafeTypeParameterAnnotation(typaram);
       if (annotation.containerOf().contains(typaram.getSimpleName().toString())
           || immutableTypeParameter) {
         if (type.getTypeArguments().isEmpty()) {
@@ -610,6 +553,16 @@ public final class ThreadSafety {
 
   /**
    * Returns whether the given type parameter's declaration is annotated with {@link
+   * #typeParameterAnnotation} or another acceptable annotation.
+   */
+  public boolean hasAcceptedThreadSafeTypeParameterAnnotation(TypeVariableSymbol symbol) {
+    Set<String> annotations = Sets.union(typeParameterAnnotation, acceptedTypeParameterAnnotation);
+    return symbol.getAnnotationMirrors().stream()
+        .anyMatch(t -> annotations.contains(t.type.tsym.flatName().toString()));
+  }
+
+  /**
+   * Returns whether the given type parameter's declaration is annotated with {@link
    * #containerOfAnnotation} indicating its type-safety determines the type-safety of the outer
    * class.
    */
@@ -658,7 +611,7 @@ public final class ThreadSafety {
           return true;
         }
       }
-      return hasThreadSafeTypeParameterAnnotation(symbol);
+      return hasAcceptedThreadSafeTypeParameterAnnotation(symbol);
     } finally {
       recursiveThreadSafeTypeParameter.remove(symbol);
     }
@@ -775,31 +728,40 @@ public final class ThreadSafety {
     if (!(sym instanceof ClassSymbol classSymbol)) {
       return null;
     }
-    Type superClass = classSymbol.getSuperclass();
-    AnnotationInfo superAnnotation = getInheritedAnnotation(superClass.asElement(), state);
-    if (superAnnotation == null) {
-      return null;
-    }
-    // If an annotated super-type was found, look for any type arguments to the super-type that
-    // are in the super-type's containerOf spec, and where the arguments are type parameters
-    // of the current class.
-    // E.g. for `Foo<X> extends Super<X>` if `Super<Y>` is annotated
-    // `@ThreadSafeContainerAnnotation Y`
-    // then `Foo<X>` is has X implicitly annotated `@ThreadSafeContainerAnnotation X`
-    ImmutableList.Builder<String> containerOf = ImmutableList.builder();
-    for (int i = 0; i < superClass.getTypeArguments().size(); i++) {
-      Type arg = superClass.getTypeArguments().get(i);
-      TypeVariableSymbol formal = superClass.asElement().getTypeParameters().get(i);
-      if (!arg.hasTag(TypeTag.TYPEVAR)) {
+
+    ImmutableSet<Type> superclasses =
+        markerAnnotationInherited
+            ? state.getTypes().closure(classSymbol.type).stream()
+                .filter(c -> !c.tsym.equals(classSymbol))
+                .collect(toImmutableSet())
+            : ImmutableSet.of(classSymbol.getSuperclass());
+    for (Type superClass : superclasses) {
+      AnnotationInfo superAnnotation = getInheritedAnnotation(superClass.asElement(), state);
+      if (superAnnotation == null) {
         continue;
       }
-      TypeSymbol argSym = arg.asElement();
-      if (argSym.owner == sym
-          && superAnnotation.containerOf().contains(formal.getSimpleName().toString())) {
-        containerOf.add(argSym.getSimpleName().toString());
+      // If an annotated super-type was found, look for any type arguments to the super-type that
+      // are in the super-type's containerOf spec, and where the arguments are type parameters
+      // of the current class.
+      // E.g. for `Foo<X> extends Super<X>` if `Super<Y>` is annotated
+      // `@ThreadSafeContainerAnnotation Y`
+      // then `Foo<X>` is has X implicitly annotated `@ThreadSafeContainerAnnotation X`
+      ImmutableList.Builder<String> containerOf = ImmutableList.builder();
+      for (int i = 0; i < superClass.getTypeArguments().size(); i++) {
+        Type arg = superClass.getTypeArguments().get(i);
+        TypeVariableSymbol formal = superClass.asElement().getTypeParameters().get(i);
+        if (!arg.hasTag(TypeTag.TYPEVAR)) {
+          continue;
+        }
+        TypeSymbol argSym = arg.asElement();
+        if (argSym.owner == sym
+            && superAnnotation.containerOf().contains(formal.getSimpleName().toString())) {
+          containerOf.add(argSym.getSimpleName().toString());
+        }
       }
+      return AnnotationInfo.create(superAnnotation.typeName(), containerOf.build());
     }
-    return AnnotationInfo.create(superAnnotation.typeName(), containerOf.build());
+    return null;
   }
 
   /**

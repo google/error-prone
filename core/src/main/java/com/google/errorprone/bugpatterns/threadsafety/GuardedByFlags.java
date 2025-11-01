@@ -26,14 +26,11 @@ import com.google.errorprone.ErrorProneFlags;
  */
 @AutoValue
 public abstract class GuardedByFlags {
-  public abstract boolean includeSelectedGuardedBy();
-
   public static GuardedByFlags allOn() {
-    return new AutoValue_GuardedByFlags(true);
+    return new AutoValue_GuardedByFlags();
   }
 
   public static GuardedByFlags fromFlags(ErrorProneFlags flags) {
-    return new AutoValue_GuardedByFlags(
-        flags.getBoolean("GuardedBy:IncludeSelectedGuardedBy").orElse(true));
+    return allOn();
   }
 }

@@ -43,7 +43,7 @@ import org.jspecify.annotations.Nullable;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 public final class GuardedByUtils {
-  public static ImmutableSet<String> getGuardValues(Symbol sym, GuardedByFlags flags) {
+  public static ImmutableSet<String> getGuardValues(Symbol sym) {
     List<Attribute.Compound> rawAttributes = sym.getRawAttributes();
     if (rawAttributes.isEmpty()) {
       return ImmutableSet.of();
@@ -51,10 +51,8 @@ public final class GuardedByUtils {
     return rawAttributes.stream()
         .filter(
             a ->
-                flags.includeSelectedGuardedBy()
-                    ? ACCEPTED_GUARDED_BY_ANNOTATIONS.contains(
-                        a.getAnnotationType().asElement().toString())
-                    : a.type.tsym.flatName().contentEquals(GUARDED_BY))
+                ACCEPTED_GUARDED_BY_ANNOTATIONS.contains(
+                    a.getAnnotationType().asElement().toString()))
         .flatMap(
             a ->
                 MoreAnnotations.getValue(a, "value")
@@ -63,12 +61,10 @@ public final class GuardedByUtils {
         .collect(toImmutableSet());
   }
 
-  static ImmutableSet<String> getGuardValues(Tree tree, GuardedByFlags flags) {
+  static ImmutableSet<String> getGuardValues(Tree tree) {
     Symbol sym = getSymbol(tree);
-    return sym == null ? ImmutableSet.of() : getGuardValues(sym, flags);
+    return sym == null ? ImmutableSet.of() : getGuardValues(sym);
   }
-
-  private static final String GUARDED_BY = "com.google.errorprone.annotations.concurrent.GuardedBy";
 
   private static final ImmutableSet<String> ACCEPTED_GUARDED_BY_ANNOTATIONS =
       ImmutableSet.of(
@@ -113,9 +109,8 @@ public final class GuardedByUtils {
     }
   }
 
-  public static GuardedByValidationResult isGuardedByValid(
-      Tree tree, VisitorState state, GuardedByFlags flags) {
-    ImmutableSet<String> guards = GuardedByUtils.getGuardValues(tree, flags);
+  public static GuardedByValidationResult isGuardedByValid(Tree tree, VisitorState state) {
+    ImmutableSet<String> guards = GuardedByUtils.getGuardValues(tree);
     if (guards.isEmpty()) {
       return GuardedByValidationResult.ok();
     }
@@ -123,7 +118,7 @@ public final class GuardedByUtils {
     List<GuardedByExpression> boundGuards = new ArrayList<>();
     for (String guard : guards) {
       Optional<GuardedByExpression> boundGuard =
-          GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, state), flags);
+          GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, state));
       if (!boundGuard.isPresent()) {
         return GuardedByValidationResult.invalid("could not resolve guard");
       }
@@ -155,9 +150,9 @@ public final class GuardedByUtils {
   }
 
   public static @Nullable Symbol bindGuardedByString(
-      Tree tree, String guard, VisitorState visitorState, GuardedByFlags flags) {
+      Tree tree, String guard, VisitorState visitorState) {
     Optional<GuardedByExpression> bound =
-        GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState), flags);
+        GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState));
     if (!bound.isPresent()) {
       return null;
     }

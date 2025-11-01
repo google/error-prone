@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.Tree;
@@ -256,9 +255,7 @@ public class HeldLockAnalyzerTest {
   @BugPattern(name = "GuardedByLockSet", summary = "", explanation = "", severity = ERROR)
   public static class GuardedByLockSetAnalyzer extends GuardedByChecker {
     @Inject
-    GuardedByLockSetAnalyzer(ErrorProneFlags flags) {
-      super(flags);
-    }
+    GuardedByLockSetAnalyzer() {}
 
     @Override
     protected Description checkGuardedAccess(
