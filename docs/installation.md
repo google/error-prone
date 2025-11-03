@@ -48,8 +48,8 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>
         <configuration>
-          <source>17</source>
-          <target>8</target>
+          <!-- Can still target older Java version if desired -->
+          <release>11</release>
           <encoding>UTF-8</encoding>
           <compilerArgs>
             <arg>-XDcompilePolicy=simple</arg>
