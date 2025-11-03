@@ -592,16 +592,8 @@ public class ImmutableChecker extends BugChecker
       if (hasImmutableAnnotation(superType.tsym, state)) {
         return superType;
       }
-      // We currently trust that @interface annotations are immutable, but don't enforce that
-      // custom interface implementations are also immutable. That means the check can be
-      // defeated by writing a custom mutable annotation implementation, and passing it around
-      // using the superclass type.
-      //
-      // TODO(b/25630189): fix this
-      //
-      // if (superType.tsym.getKind() == ElementKind.ANNOTATION_TYPE) {
-      //   return superType;
-      // }
+      // Annotations could be checked here, but are checked separately by
+      // https://errorprone.info/bugpattern/ImmutableAnnotationChecker.
     }
     return null;
   }

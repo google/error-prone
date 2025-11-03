@@ -197,7 +197,8 @@ public final class ImmutableAnalysis {
       return Violation.absent();
     }
     if (WellKnownMutability.isAnnotation(state, type)) {
-      // TODO(b/25630189): add enforcement
+      // Annotations are always immutable
+      // (https://errorprone.info/bugpattern/ImmutableAnnotationChecker)
       return Violation.absent();
     }
 

@@ -120,38 +120,6 @@ public class ImmutableCheckerTest {
         .doTest();
   }
 
-  @Ignore("b/25630189") // don't check annotations for immutability yet
-  @Test
-  public void customImplementionsOfImplicitlyImmutableAnnotationsMustBeImmutable() {
-    compilationHelper
-        .addSourceLines("Anno.java", "@interface Anno {}")
-        .addSourceLines(
-            "MyAnno.java",
-            """
-            import java.lang.annotation.Annotation;
-
-            final class MyAnno implements Anno {
-              // BUG: Diagnostic contains:
-              public Object[] xs = {};
-
-              public Class<? extends Annotation> annotationType() {
-                return null;
-              }
-            }
-            """)
-        .addSourceLines(
-            "Test.java",
-            """
-            import com.google.errorprone.annotations.Immutable;
-
-            @Immutable
-            class Test {
-              private final Anno anno = new MyAnno();
-            }
-            """)
-        .doTest();
-  }
-
   @Test
   public void customAnnotationsSubtype() {
     compilationHelper
@@ -1925,24 +1893,6 @@ class Test extends Super {
                 // BUG: Diagnostic contains: @Immutable class has mutable field
                 private final Object o = null;
               }
-            }
-            """)
-        .doTest();
-  }
-
-  @Ignore("b/25630189") // don't check annotations for immutability yet
-  @Test
-  public void mutableExtendsAnnotation() {
-    compilationHelper
-        .addSourceLines(
-            "Anno.java", //
-            "@interface Anno {}")
-        .addSourceLines(
-            "Test.java",
-            """
-            abstract class Test implements Anno {
-              // BUG: Diagnostic contains: @Immutable class has mutable field
-              final Object o = null;
             }
             """)
         .doTest();
