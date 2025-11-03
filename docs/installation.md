@@ -4,9 +4,11 @@ layout: documentation
 ---
 
 Our goal is to make it simple to add Error Prone checks to your existing Java
-compilation. Please note that Error Prone must be run on JDK 17 or newer. (It
+compilation. Please note that Error Prone must be run on JDK 21 or newer. (It
 can still be used to build Java 8 code by setting the appropriate `-source` /
-`-target` / `-bootclasspath` flags.)
+`-target` / `-bootclasspath` or `--release` flags.)\
+If you still have to build with an older JDK version you can use
+[older unmaintained Error Prone versions](#running-error-prone-on-earlier-jdk-versions).
 
 Please join our
 [mailing list](https://groups.google.com/group/error-prone-announce) to know
@@ -258,6 +260,7 @@ will vary according to the build tool you are using.
 
 *   Error Prone 2.10.0 is the latest version to support running on JDK 8.
 *   Error Prone 2.31.0 is the latest version to support running on JDK 11.
+*   Error Prone 2.42.0 is the latest version to support running on JDK 17.
 
 (Compiling the Java 8 language level is still supported by using a javac from a
 newer JDK, and setting the appropriate `-source`/`-target`/`-bootclasspath` or
