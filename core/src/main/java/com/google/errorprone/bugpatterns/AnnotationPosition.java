@@ -54,9 +54,6 @@ import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.TypeAnnotations.AnnotationType;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-import com.sun.tools.javac.tree.JCTree.JCMethodDecl;
-import com.sun.tools.javac.tree.JCTree.JCVariableDecl;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -150,10 +147,10 @@ public final class AnnotationPosition extends BugChecker
   }
 
   /** Tokenizes as little of the {@code tree} as possible to ensure we grab all the annotations. */
-  private static List<ErrorProneToken> annotationTokens(
+  private static ImmutableList<ErrorProneToken> annotationTokens(
       Tree tree, VisitorState state, int annotationEnd) {
     int endPos;
-    if (tree instanceof JCMethodDecl methodTree) {
+    if (tree instanceof MethodTree methodTree) {
       if (methodTree.getReturnType() != null) {
         endPos = getStartPosition(methodTree.getReturnType());
       } else if (!methodTree.getParameters().isEmpty()) {
@@ -166,17 +163,17 @@ public final class AnnotationPosition extends BugChecker
       } else {
         endPos = state.getEndPosition(methodTree);
       }
-    } else if (tree instanceof JCVariableDecl variableTree) {
+    } else if (tree instanceof VariableTree variableTree) {
       endPos = getStartPosition(variableTree.getType());
       if (endPos == -1) {
         // handle 'var'
         endPos = state.getEndPosition(variableTree.getModifiers());
       }
-    } else if (tree instanceof JCClassDecl classTree) {
+    } else if (tree instanceof ClassTree classTree) {
       endPos =
           classTree.getMembers().isEmpty()
               ? state.getEndPosition(classTree)
-              : classTree.getMembers().get(0).getStartPosition();
+              : getStartPosition(classTree.getMembers().get(0));
     } else {
       throw new AssertionError();
     }

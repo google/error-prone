@@ -100,9 +100,6 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCAssign;
-import com.sun.tools.javac.tree.JCTree.JCAssignOp;
 import com.sun.tools.javac.util.Position;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -469,7 +466,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         }
         continue;
       } else if (statement instanceof ExpressionStatementTree expressionStatementTree) {
-        JCTree tree = (JCTree) expressionStatementTree.getExpression();
+        ExpressionTree tree = expressionStatementTree.getExpression();
 
         if (tree instanceof CompoundAssignmentTree compoundAssignmentTree) {
           if (hasSideEffect(compoundAssignmentTree.getExpression())) {
@@ -477,8 +474,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
             // so don't set `encounteredSideEffects` based on this usage.
             SuggestedFix replacement =
                 SuggestedFix.replace(
-                    tree.getStartPosition(),
-                    ((JCAssignOp) tree).getExpression().getStartPosition(),
+                    getStartPosition(tree),
+                    getStartPosition(compoundAssignmentTree.getExpression()),
                     "");
             keepSideEffectsFix.merge(replacement);
             removeSideEffectsFix.merge(replacement);
@@ -488,7 +485,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           if (hasSideEffect(assignmentTree.getExpression())) {
             encounteredSideEffects = true;
             keepSideEffectsFix.replace(
-                tree.getStartPosition(), ((JCAssign) tree).getExpression().getStartPosition(), "");
+                getStartPosition(tree), getStartPosition(assignmentTree.getExpression()), "");
             removeSideEffectsFix.replace(statement, "");
             continue;
           }

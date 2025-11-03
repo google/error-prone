@@ -30,8 +30,10 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.StatementTree;
@@ -44,9 +46,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCAssign;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
-import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
 import java.util.List;
 import java.util.Objects;
 import javax.lang.model.element.ElementKind;
@@ -146,14 +146,15 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
    * }</pre>
    */
   private Description handleLocal(DclInfo info, VisitorState state) {
-    JCExpressionStatement expr = getChild(info.synchTree().getBlock(), JCExpressionStatement.class);
+    ExpressionStatementTree expr =
+        getChild(info.synchTree().getBlock(), ExpressionStatementTree.class);
     if (expr == null) {
       return Description.NO_MATCH;
     }
-    if (expr.getStartPosition() > getStartPosition(info.innerIf())) {
+    if (getStartPosition(expr) > getStartPosition(info.innerIf())) {
       return Description.NO_MATCH;
     }
-    if (!(expr.getExpression() instanceof JCAssign assign)) {
+    if (!(expr.getExpression() instanceof AssignmentTree assign)) {
       return Description.NO_MATCH;
     }
     if (!Objects.equals(ASTHelpers.getSymbol(assign.getVariable()), info.sym())) {

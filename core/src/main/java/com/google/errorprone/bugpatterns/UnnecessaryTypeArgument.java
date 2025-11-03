@@ -33,7 +33,6 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -80,12 +79,11 @@ public class UnnecessaryTypeArgument extends BugChecker
   /** Constructor a fix that deletes the set of type arguments. */
   private static Fix buildFix(Tree tree, List<? extends Tree> arguments, VisitorState state) {
 
-    JCTree node = (JCTree) tree;
-    int startAbsolute = node.getStartPosition();
+    int startAbsolute = getStartPosition(tree);
     int lower = getStartPosition(arguments.get(0)) - startAbsolute;
     int upper = state.getEndPosition(arguments.get(arguments.size() - 1)) - startAbsolute;
 
-    CharSequence source = state.getSourceForNode(node);
+    String source = state.getSourceForNode(tree);
 
     while (lower >= 0 && source.charAt(lower) != '<') {
       lower--;

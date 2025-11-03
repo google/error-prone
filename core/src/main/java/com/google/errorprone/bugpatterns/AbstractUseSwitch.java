@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
@@ -42,7 +43,6 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
@@ -94,7 +94,7 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
     if (statements.isEmpty()) {
       return "";
     }
-    int start = ((JCTree) statements.get(0)).getStartPosition();
+    int start = getStartPosition(statements.get(0));
     int end = state.getEndPosition(getLast(statements));
     return state.getSourceCode().subSequence(start, end);
   }

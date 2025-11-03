@@ -36,7 +36,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.tree.JCTree;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -117,7 +116,7 @@ public final class InconsistentOverloads extends BugChecker implements ClassTree
   }
 
   private static Comparator<MethodTree> comparingPositions() {
-    return comparingInt(InconsistentOverloads::getStartPosition);
+    return comparingInt(ASTHelpers::getStartPosition);
   }
 
   private static Comparator<MethodTree> comparingArity() {
@@ -149,14 +148,5 @@ public final class InconsistentOverloads extends BugChecker implements ClassTree
         .map(MethodTree.class::cast)
         .filter(m -> !isSuppressed(m, state))
         .collect(toImmutableList());
-  }
-
-  /**
-   * Returns a start position of given {@code tree}.
-   *
-   * <p>The only purpose of this method is to avoid doing a hacky casting to {@link JCTree}.
-   */
-  private static int getStartPosition(Tree tree) {
-    return ASTHelpers.getStartPosition(tree);
   }
 }

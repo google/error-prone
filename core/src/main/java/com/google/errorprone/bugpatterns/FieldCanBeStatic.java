@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static javax.lang.model.element.ElementKind.FIELD;
@@ -143,7 +144,7 @@ public final class FieldCanBeStatic extends BugChecker implements VariableTreeMa
     int typeEndPos = state.getEndPosition(variableTree.getType());
     int searchOffset = typeEndPos - ((JCTree) variableTree).getStartPosition();
     int pos =
-        ((JCTree) variableTree).getStartPosition()
+        getStartPosition(variableTree)
             + state.getSourceForNode(variableTree).indexOf(name, searchOffset);
     SuggestedFix.Builder fix =
         SuggestedFix.builder().replace(pos, pos + name.length(), replacement);

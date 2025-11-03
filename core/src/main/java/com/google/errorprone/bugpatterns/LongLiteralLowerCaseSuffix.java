@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -27,7 +28,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import java.util.regex.Pattern;
 import org.jspecify.annotations.Nullable;
 
@@ -65,12 +65,11 @@ public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTre
    * code as a string. Returns null if the source code is not available.
    */
   private static @Nullable String getLongLiteral(LiteralTree literalTree, VisitorState state) {
-    JCLiteral longLiteral = (JCLiteral) literalTree;
     CharSequence sourceFile = state.getSourceCode();
     if (sourceFile == null) {
       return null;
     }
-    int start = longLiteral.getStartPosition();
+    int start = getStartPosition(literalTree);
     java.util.regex.Matcher matcher =
         LONG_LITERAL_PATTERN.matcher(sourceFile.subSequence(start, sourceFile.length()));
     if (matcher.lookingAt()) {

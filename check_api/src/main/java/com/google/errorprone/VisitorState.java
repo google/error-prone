@@ -554,7 +554,7 @@ public class VisitorState {
    *     unavailable (e.g. for generated or desugared AST nodes)
    */
   public @Nullable String getSourceForNode(Tree tree) {
-    int start = ((JCTree) tree).getStartPosition();
+    int start = getStartPosition(tree);
     int end = getEndPosition(tree);
     CharSequence source = getSourceCode();
     if (end == -1) {

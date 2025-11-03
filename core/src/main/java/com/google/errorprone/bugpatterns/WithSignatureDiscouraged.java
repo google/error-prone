@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.base.Ascii;
@@ -32,7 +33,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.tree.JCTree;
 
 /**
  * {@link
@@ -76,18 +76,13 @@ public class WithSignatureDiscouraged extends BugChecker implements MethodInvoca
     // .withSignature("valueOf(java.lang.String,int)")
     //      =>
     // .named("valueOf").withParameters("java.lang.String", "int")
-    if (!(tree instanceof JCTree jCTree)) {
-      // We can't easily compute offsets to replace a whole method chain based on just the public
-      // Tree API.
-      return NO_MATCH;
-    }
     String methodName = sig.substring(0, firstParenIndex);
     String paramList = sig.substring(firstParenIndex + 1, sig.length() - 1);
-    return fixWithParameters(jCTree, state, methodName, paramList);
+    return fixWithParameters(tree, state, methodName, paramList);
   }
 
   private Description fixWithParameters(
-      JCTree tree, VisitorState state, String methodName, String paramList) {
+      MethodInvocationTree tree, VisitorState state, String methodName, String paramList) {
     ImmutableList<String> paramTypes =
         ImmutableList.copyOf(Splitter.on(',').omitEmptyStrings().split(paramList));
     if (paramTypes.stream().anyMatch(type -> isProbableTypeParameter(type) || isArrayType(type))) {
@@ -95,7 +90,7 @@ public class WithSignatureDiscouraged extends BugChecker implements MethodInvoca
       // handle those.
       return NO_MATCH;
     }
-    int treeStart = tree.getStartPosition();
+    int treeStart = getStartPosition(tree);
     String source = state.getSourceForNode(tree);
     if (source == null) {
       // Not clear how this could happen, but if it does we may as well give up.
