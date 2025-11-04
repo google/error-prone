@@ -83,8 +83,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#disableable()" tabindex="0">disableable()</a></li>
 <li><a href="#customSuppressionAnnotations()" tabindex="0">customSuppressionAnnotations()</a></li>
 <li><a href="#suppressedByAnyOf(java.util.Set,com.google.errorprone.VisitorState)" tabindex="0">suppressedByAnyOf(Set, VisitorState)</a></li>
-<li><a href="#isSuppressed(com.sun.source.tree.Tree)" tabindex="0">isSuppressed(Tree)</a></li>
-<li><a href="#isSuppressed(com.sun.tools.javac.code.Symbol)" tabindex="0">isSuppressed(Symbol)</a></li>
 <li><a href="#isSuppressed(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" tabindex="0">isSuppressed(Tree, VisitorState)</a></li>
 <li><a href="#isSuppressed(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" tabindex="0">isSuppressed(Symbol, VisitorState)</a></li>
 <li><a href="#suppressedRegions(com.google.errorprone.VisitorState)" tabindex="0">suppressedRegions(VisitorState)</a></li>
@@ -352,7 +350,7 @@ types to match against.</div>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -437,26 +435,12 @@ message or multiple fixes.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#isSuppressed(com.sun.source.tree.Tree)" class="member-name-link">isSuppressed</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="#isSuppressed(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)"><code>isSuppressed(Tree, VisitorState)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isSuppressed(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isSuppressed</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isSuppressed(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isSuppressed</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns true if the given tree is annotated with a <code>@SuppressWarnings</code> that disables this
 bug checker.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#isSuppressed(com.sun.tools.javac.code.Symbol)" class="member-name-link">isSuppressed</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="#isSuppressed(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)"><code>isSuppressed(Symbol, VisitorState)</code></a> instead</div>
-</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isSuppressed(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">isSuppressed</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
@@ -713,30 +697,6 @@ message or multiple fixes.</div>
 <dt>Specified by:</dt>
 <dd><code><a href="../matchers/Suppressible.html#suppressedByAnyOf(java.util.Set,com.google.errorprone.VisitorState)">suppressedByAnyOf</a></code>&nbsp;in interface&nbsp;<code><a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a></code></dd>
 </dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="isSuppressed(com.sun.source.tree.Tree)">
-<h3>isSuppressed</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isSuppressed</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="#isSuppressed(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)"><code>isSuppressed(Tree, VisitorState)</code></a> instead</div>
-</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="isSuppressed(com.sun.tools.javac.code.Symbol)">
-<h3>isSuppressed</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isSuppressed</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;symbol)</span></div>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="#isSuppressed(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)"><code>isSuppressed(Symbol, VisitorState)</code></a> instead</div>
-</div>
 </div>
 </section>
 </li>
