@@ -95,28 +95,17 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="ConstantExpressions.ConstantEquals.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantEquals</a></code></div>
+<div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ConstantExpressions.ConstantExpression.html" class="type-name-link" title="interface in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Represents a binary equals call on two constant expressions.</div>
-</div>
-<div class="col-first odd-row-color"><code>static class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="ConstantExpressions.ConstantExpression.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a></code></div>
-<div class="col-last odd-row-color">
 <div class="block">Represents a constant expression.</div>
 </div>
-<div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="ConstantExpressions.ConstantExpressionVisitor.html" class="type-name-link" title="interface in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpressionVisitor</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static interface&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="ConstantExpressions.ConstantExpressionVisitor.html" class="type-name-link" title="interface in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpressionVisitor</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Visitor for scanning over the components of a constant expression.</div>
 </div>
-<div class="col-first odd-row-color"><code>static class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="ConstantExpressions.PureMethodInvocation.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Represents both a constant method call or a constant field/local access, depending on the
-actual type of <code>symbol</code>.</div>
-</div>
-<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="ConstantExpressions.Truthiness.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.Truthiness</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Represents sets of things known to be true and false if a boolean statement evaluated true.</div>
@@ -135,7 +124,7 @@ actual type of <code>symbol</code>.</div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="ConstantExpressions.ConstantExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a>&gt;</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="ConstantExpressions.ConstantExpression.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#constantExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">constantExpression</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -149,7 +138,7 @@ actual type of <code>symbol</code>.</div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns whether <code>aTree</code> and <code>bTree</code> seem to correspond to the same expression.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a>&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="ConstantExpressions.ConstantExpression.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.PureMethodInvocation</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">symbolizeImmutableExpression</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -205,7 +194,7 @@ expression is true.</div>
 <section class="detail" id="constantExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
 <h3>constantExpression</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ConstantExpressions.ConstantExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a>&gt;</span>&nbsp;<span class="element-name">constantExpression</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ConstantExpressions.ConstantExpression.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression</a>&gt;</span>&nbsp;<span class="element-name">constantExpression</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 </div>
 </section>
@@ -225,7 +214,7 @@ expression is true.</div>
 <section class="detail" id="symbolizeImmutableExpression(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
 <h3>symbolizeImmutableExpression</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a>&gt;</span>&nbsp;<span class="element-name">symbolizeImmutableExpression</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="ConstantExpressions.ConstantExpression.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.PureMethodInvocation</a>&gt;</span>&nbsp;<span class="element-name">symbolizeImmutableExpression</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Returns a list of the methods called to get to this expression, as well as a terminating
 variable if needed.</div>

@@ -5,7 +5,7 @@
 <title>ConstantExpressions.ConstantExpression (Error Prone parent POM 1.0-HEAD-SNAPSHOT API)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="description" content="declaration: package: com.google.errorprone.bugpatterns.threadsafety, class: ConstantExpressions, class: ConstantExpression">
+<meta name="description" content="declaration: package: com.google.errorprone.bugpatterns.threadsafety, class: ConstantExpressions, interface: ConstantExpression">
 <meta name="generator" content="javadoc/ClassWriter">
 <link rel="stylesheet" type="text/css" href="../../../../../resource-files/jquery-ui.min.css">
 <link rel="stylesheet" type="text/css" href="../../../../../resource-files/stylesheet.css">
@@ -57,18 +57,9 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
 <li><a href="#nested-class-summary" tabindex="0">Nested Class Summary</a></li>
-<li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
-<li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
-<ol class="toc-list">
-<li><a href="#%3Cinit%3E()" tabindex="0">ConstantExpression()</a></li>
-</ol>
-</li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#kind()" tabindex="0">kind()</a></li>
-<li><a href="#pureMethod()" tabindex="0">pureMethod()</a></li>
-<li><a href="#toString()" tabindex="0">toString()</a></li>
 <li><a href="#accept(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpressionVisitor)" tabindex="0">accept(ConstantExpressions.ConstantExpressionVisitor)</a></li>
 </ol>
 </li>
@@ -77,20 +68,21 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<h1 title="Class ConstantExpressions.ConstantExpression" class="title">Class ConstantExpressions.ConstantExpression</h1>
-</div>
-<div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression</div>
+<h1 title="Interface ConstantExpressions.ConstantExpression" class="title">Interface ConstantExpressions.ConstantExpression</h1>
 </div>
 <section class="class-description" id="class-description">
+<dl class="notes">
+<dt>All Known Implementing Classes:</dt>
+<dd><code><a href="ConstantExpressions.ConstantExpression.ConstantEquals.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.ConstantEquals</a>, <a href="ConstantExpressions.ConstantExpression.Literal.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.Literal</a>, <a href="ConstantExpressions.ConstantExpression.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.PureMethodInvocation</a></code></dd>
+</dl>
 <dl class="notes">
 <dt>Enclosing class:</dt>
 <dd><code><a href="ConstantExpressions.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public abstract static class </span><span class="element-name type-name-label">ConstantExpressions.ConstantExpression</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="type-signature"><span class="modifiers">public static sealed interface </span><span class="element-name type-name-label">ConstantExpressions.ConstantExpression</span>
+<span class="permits">permits <a href="ConstantExpressions.ConstantExpression.Literal.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.Literal</a>, <a href="ConstantExpressions.ConstantExpression.ConstantEquals.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.ConstantEquals</a>, <a href="ConstantExpressions.ConstantExpression.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.PureMethodInvocation</a></span></div>
 <div class="block">Represents a constant expression.</div>
 </div>
 </section>
@@ -103,26 +95,24 @@ loadScripts(document, 'script');</script>
 <div class="caption"><span>Nested Classes</span></div>
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Class</div>
+<div class="table-header col-second">Interface</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="ConstantExpressions.ConstantExpression.ConstantExpressionKind.html" class="type-name-link" title="enum class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.ConstantExpressionKind</a></code></div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ConstantExpressions.ConstantExpression.ConstantEquals.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.ConstantEquals</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">The kind of a constant expression.</div>
+<div class="block">Represents a binary equals call on two constant expressions.</div>
 </div>
+<div class="col-first odd-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="ConstantExpressions.ConstantExpression.Literal.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.Literal</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Represents a constant literal.</div>
 </div>
-</section>
-</li>
-<!-- ======== CONSTRUCTOR SUMMARY ======== -->
-<li>
-<section class="constructor-summary" id="constructor-summary">
-<h2>Constructor Summary</h2>
-<div class="caption"><span>Constructors</span></div>
-<div class="summary-table two-column-summary">
-<div class="table-header col-first">Constructor</div>
-<div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">ConstantExpression</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="ConstantExpressions.ConstantExpression.PureMethodInvocation.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.PureMethodInvocation</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Represents both a constant method call or a constant field/local access, depending on the
+actual type of <code>symbol</code>.</div>
+</div>
 </div>
 </section>
 </li>
@@ -131,90 +121,34 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#accept(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpressionVisitor)" class="member-name-link">accept</a><wbr>(<a href="ConstantExpressions.ConstantExpressionVisitor.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpressionVisitor</a>&nbsp;visitor)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="ConstantExpressions.ConstantExpression.ConstantExpressionKind.html" title="enum class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.ConstantExpressionKind</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#kind()" class="member-name-link">kind</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#pureMethod()" class="member-name-link">pureMethod</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#accept(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpressionVisitor)" class="member-name-link">accept</a><wbr>(<a href="ConstantExpressions.ConstantExpressionVisitor.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpressionVisitor</a>&nbsp;visitor)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
 </section>
 <section class="details">
 <ul class="details-list">
-<!-- ========= CONSTRUCTOR DETAIL ======== -->
-<li>
-<section class="constructor-details" id="constructor-detail">
-<h2>Constructor Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="&lt;init&gt;()">
-<h3>ConstantExpression</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ConstantExpression</span>()</div>
-</div>
-</section>
-</li>
-</ul>
-</section>
-</li>
 <!-- ============ METHOD DETAIL ========== -->
 <li>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="kind()">
-<h3>kind</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="ConstantExpressions.ConstantExpression.ConstantExpressionKind.html" title="enum class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.ConstantExpressionKind</a></span>&nbsp;<span class="element-name">kind</span>()</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="pureMethod()">
-<h3>pureMethod</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="ConstantExpressions.PureMethodInvocation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.PureMethodInvocation</a></span>&nbsp;<span class="element-name">pureMethod</span>()</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="toString()">
-<h3>toString</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
-<dl class="notes">
-<dt>Overrides:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
 <section class="detail" id="accept(com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpressionVisitor)">
 <h3>accept</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">accept</span><wbr><span class="parameters">(<a href="ConstantExpressions.ConstantExpressionVisitor.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpressionVisitor</a>&nbsp;visitor)</span></div>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">accept</span><wbr><span class="parameters">(<a href="ConstantExpressions.ConstantExpressionVisitor.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpressionVisitor</a>&nbsp;visitor)</span></div>
 </div>
 </section>
 </li>
