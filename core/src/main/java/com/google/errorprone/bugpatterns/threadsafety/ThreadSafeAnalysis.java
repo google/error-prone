@@ -235,10 +235,9 @@ public final class ThreadSafeAnalysis {
       ClassSymbol classSym,
       ClassType classType,
       VarSymbol var) {
-    if (bugChecker.isSuppressed(var)
+    if (bugChecker.isSuppressed(var, state)
         || bugChecker.customSuppressionAnnotations().stream()
-            .map(a -> hasAnnotation(var, a.getName(), state))
-            .anyMatch(v -> v)) {
+            .anyMatch(a -> hasAnnotation(var, a.getName(), state))) {
       return Violation.absent();
     }
     if (var.getModifiers().contains(Modifier.STATIC)) {
