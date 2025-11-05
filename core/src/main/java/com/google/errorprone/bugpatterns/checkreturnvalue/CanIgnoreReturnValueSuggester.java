@@ -158,7 +158,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     if (methodAlwaysReturnsInputParam(methodTree, state)) {
       // if the method _only_ returns an input param, bail out
       if (methodTree.getBody() != null && methodTree.getBody().getStatements().size() == 1) {
-        StatementTree onlyStatement = methodTree.getBody().getStatements().get(0);
+        StatementTree onlyStatement = getOnlyElement(methodTree.getBody().getStatements());
         if (onlyStatement instanceof ReturnTree returnTree) {
           if (returnTree.getExpression() instanceof IdentifierTree) {
             return Description.NO_MATCH;
@@ -244,7 +244,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
   private static boolean isSimpleReturnThisMethod(MethodTree methodTree) {
     if (methodTree.getBody() != null && methodTree.getBody().getStatements().size() == 1) {
-      StatementTree onlyStatement = methodTree.getBody().getStatements().get(0);
+      StatementTree onlyStatement = methodTree.getBody().getStatements().getFirst();
       if (onlyStatement instanceof ReturnTree returnTree) {
         return returnsThisOrSelf(returnTree);
       }

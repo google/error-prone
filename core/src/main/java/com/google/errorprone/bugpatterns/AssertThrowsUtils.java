@@ -133,7 +133,7 @@ public final class AssertThrowsUtils {
     } else {
       fix.replace(
           /* startPos= */ state.getEndPosition(getLast(throwingStatements)),
-          /* endPos= */ getStartPosition(catchStatements.get(0)),
+          /* endPos= */ getStartPosition(catchStatements.getFirst()),
           "\n");
       fix.replace(
           state.getEndPosition(getLast(catchStatements)), state.getEndPosition(tryTree), fixSuffix);

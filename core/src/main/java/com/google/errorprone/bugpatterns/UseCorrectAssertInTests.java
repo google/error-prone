@@ -92,7 +92,7 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
       replaceAssert(fix, foundAssert, state);
     }
     // Emit finding on the first assertion rather than on the method (b/175575632).
-    return describeMatch(assertions.get(0), fix.build());
+    return describeMatch(assertions.getFirst(), fix.build());
   }
 
   private static void replaceAssert(
@@ -111,7 +111,7 @@ public class UseCorrectAssertInTests extends BugChecker implements MethodTreeMat
     if (instanceMethod().anyClass().named("equals").matches(expr, state)) {
       JCMethodInvocation equalsCall = ((JCMethodInvocation) expr);
       JCExpression expr1 = ((JCFieldAccess) ((JCMethodInvocation) expr).meth).selected;
-      JCExpression expr2 = equalsCall.getArguments().get(0);
+      JCExpression expr2 = equalsCall.getArguments().getFirst();
 
       addFix(
           fix,

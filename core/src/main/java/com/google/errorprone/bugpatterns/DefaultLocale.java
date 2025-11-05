@@ -277,7 +277,7 @@ public class DefaultLocale extends BugChecker
       // Allow System.out and System.err
       if (SYSTEM_OUT_RECEIVER.matches(tree, state)
           || !shouldRefactorStringFormat(
-              tree.getArguments().get(0),
+              tree.getArguments().getFirst(),
               tree.getArguments().stream().skip(1).collect(toImmutableList()),
               state)) {
         return NO_MATCH;
@@ -439,7 +439,7 @@ public class DefaultLocale extends BugChecker
   }
 
   private Description handleMessageFormatFormat(MethodInvocationTree tree, VisitorState state) {
-    var pattern = tree.getArguments().get(0);
+    var pattern = tree.getArguments().getFirst();
     var arguments = tree.getArguments().stream().skip(1).collect(toImmutableList());
     if (!shouldRefactorStringFormat(pattern, arguments, state)) {
       return NO_MATCH;
@@ -519,7 +519,7 @@ public class DefaultLocale extends BugChecker
   private Fix resourceBundleFix(
       MethodInvocationTree tree, VisitorState state, LocaleFix localeFix) {
     var fix = SuggestedFix.builder().setShortDescription(localeFix.title());
-    fix.postfixWith(tree.getArguments().get(0), ", " + localeFix.replacement(fix, state));
+    fix.postfixWith(tree.getArguments().getFirst(), ", " + localeFix.replacement(fix, state));
     return fix.build();
   }
 
@@ -651,7 +651,7 @@ public class DefaultLocale extends BugChecker
           state.getEndPosition(tree),
           String.format("(%s)", localeFix.replacement(fix, state)));
     } else {
-      fix.prefixWith(arguments.get(0), localeFix.replacement(fix, state) + ", ");
+      fix.prefixWith(arguments.getFirst(), localeFix.replacement(fix, state) + ", ");
     }
     return fix.build();
   }

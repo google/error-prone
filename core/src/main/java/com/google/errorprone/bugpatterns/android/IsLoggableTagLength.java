@@ -70,7 +70,7 @@ public class IsLoggableTagLength extends BugChecker implements MethodInvocationT
       return NO_MATCH;
     }
 
-    ExpressionTree tagArg = tree.getArguments().get(0);
+    ExpressionTree tagArg = tree.getArguments().getFirst();
 
     // Check for constant value.
     String tagConstantValue = ASTHelpers.constValue(tagArg, String.class);

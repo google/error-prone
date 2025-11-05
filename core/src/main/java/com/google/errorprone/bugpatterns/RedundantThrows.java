@@ -80,7 +80,7 @@ public class RedundantThrows extends BugChecker implements MethodTreeMatcher {
     ImmutableList<ExpressionTree> delete =
         ImmutableList.<ExpressionTree>copyOf(
             Iterables.filter(tree.getThrows(), Predicates.in(toRemove)));
-    return buildDescription(delete.get(0))
+    return buildDescription(delete.getFirst())
         .setMessage("Redundant throws clause: " + oxfordJoin("; ", messages))
         .addFix(SuggestedFixes.deleteExceptions(tree, state, delete))
         .build();

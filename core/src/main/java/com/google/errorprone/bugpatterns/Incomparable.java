@@ -82,7 +82,7 @@ public class Incomparable extends BugChecker implements NewClassTreeMatcher {
     if (typeArguments.isEmpty()) {
       return NO_MATCH;
     }
-    Type keyType = typeArguments.get(0);
+    Type keyType = typeArguments.getFirst();
     if (ASTHelpers.isCastable(keyType, state.getSymtab().comparableType, state)) {
       return NO_MATCH;
     }

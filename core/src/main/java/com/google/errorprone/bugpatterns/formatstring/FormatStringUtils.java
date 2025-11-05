@@ -59,7 +59,9 @@ public final class FormatStringUtils {
     ImmutableList<ExpressionTree> args = ImmutableList.copyOf(tree.getArguments());
     // skip the first argument of printf(Locale,String,Object...)
     if (ASTHelpers.isSameType(
-        ASTHelpers.getType(args.get(0)), state.getTypeFromString(Locale.class.getName()), state)) {
+        ASTHelpers.getType(args.getFirst()),
+        state.getTypeFromString(Locale.class.getName()),
+        state)) {
       args = args.subList(1, args.size());
     }
     return args;

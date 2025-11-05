@@ -154,12 +154,12 @@ public final class AnnotationPosition extends BugChecker
       if (methodTree.getReturnType() != null) {
         endPos = getStartPosition(methodTree.getReturnType());
       } else if (!methodTree.getParameters().isEmpty()) {
-        endPos = getStartPosition(methodTree.getParameters().get(0));
+        endPos = getStartPosition(methodTree.getParameters().getFirst());
         if (endPos < annotationEnd) {
           endPos = state.getEndPosition(methodTree);
         }
       } else if (methodTree.getBody() != null && !methodTree.getBody().getStatements().isEmpty()) {
-        endPos = getStartPosition(methodTree.getBody().getStatements().get(0));
+        endPos = getStartPosition(methodTree.getBody().getStatements().getFirst());
       } else {
         endPos = state.getEndPosition(methodTree);
       }
@@ -173,7 +173,7 @@ public final class AnnotationPosition extends BugChecker
       endPos =
           classTree.getMembers().isEmpty()
               ? state.getEndPosition(classTree)
-              : getStartPosition(classTree.getMembers().get(0));
+              : getStartPosition(classTree.getMembers().getFirst());
     } else {
       throw new AssertionError();
     }

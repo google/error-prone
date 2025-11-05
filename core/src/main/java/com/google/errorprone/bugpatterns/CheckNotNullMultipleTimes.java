@@ -65,13 +65,13 @@ public final class CheckNotNullMultipleTimes extends BugChecker implements Metho
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
         List<? extends ExpressionTree> arguments = tree.getArguments();
         if (!arguments.isEmpty()
-            && arguments.get(0) instanceof IdentifierTree
+            && arguments.getFirst() instanceof IdentifierTree
             // Only consider side-effects-only calls to checkNotNull: it turns out people often
             // intentionally write repeated null-checks for the same variable when using the result
             // as a value, and we would have many false positives if we counted those.
             && getCurrentPath().getParentPath().getLeaf() instanceof StatementTree
             && CHECK_NOT_NULL.matches(tree, state)) {
-          Symbol symbol = getSymbol(arguments.get(0));
+          Symbol symbol = getSymbol(arguments.getFirst());
           if (symbol instanceof VarSymbol varSymbol && isConsideredFinal(symbol)) {
             variables.add(varSymbol);
             lastCheck.put(varSymbol, tree);

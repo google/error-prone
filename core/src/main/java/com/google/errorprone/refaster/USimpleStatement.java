@@ -47,7 +47,7 @@ abstract class USimpleStatement extends UTree<JCStatement> implements UStatement
     }
     java.util.List<? extends StatementTree> remainingStatements =
         unconsumedStatements.subList(1, unconsumedStatements.size());
-    return unify(unconsumedStatements.get(0), state.unifier())
+    return unify(unconsumedStatements.getFirst(), state.unifier())
         .map(withUnconsumed(remainingStatements));
   }
 }

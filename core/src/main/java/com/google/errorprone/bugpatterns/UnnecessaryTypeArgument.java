@@ -80,8 +80,8 @@ public class UnnecessaryTypeArgument extends BugChecker
   private static Fix buildFix(Tree tree, List<? extends Tree> arguments, VisitorState state) {
 
     int startAbsolute = getStartPosition(tree);
-    int lower = getStartPosition(arguments.get(0)) - startAbsolute;
-    int upper = state.getEndPosition(arguments.get(arguments.size() - 1)) - startAbsolute;
+    int lower = getStartPosition(arguments.getFirst()) - startAbsolute;
+    int upper = state.getEndPosition(arguments.getLast()) - startAbsolute;
 
     String source = state.getSourceForNode(tree);
 

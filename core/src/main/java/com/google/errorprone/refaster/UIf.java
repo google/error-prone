@@ -83,7 +83,7 @@ abstract class UIf implements UStatement, IfTree {
     }
     ImmutableList<? extends StatementTree> unconsumedStatementsTail =
         unconsumedStatements.subList(1, unconsumedStatements.size());
-    StatementTree firstStatement = unconsumedStatements.get(0);
+    StatementTree firstStatement = unconsumedStatements.getFirst();
     if (!(firstStatement instanceof IfTree ifTree)) {
       return Choice.none();
     }

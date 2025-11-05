@@ -150,7 +150,7 @@ public class JUnitParameterMethodNotFound extends BugChecker implements MethodTr
     }
 
     ClassType classType = (ClassType) getType(paramSourceAssignmentTree.get().getExpression());
-    Type typeArgument = classType.getTypeArguments().get(0);
+    Type typeArgument = classType.getTypeArguments().getFirst();
     return getAllMethodIdentifiersForType(typeArgument, state);
   }
 

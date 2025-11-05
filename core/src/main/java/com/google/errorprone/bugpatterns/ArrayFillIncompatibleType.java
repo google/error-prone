@@ -59,7 +59,7 @@ public class ArrayFillIncompatibleType extends BugChecker implements MethodInvoc
     }
 
     Type arrayComponentType =
-        state.getTypes().elemtype(ASTHelpers.getType(invocationTree.getArguments().get(0)));
+        state.getTypes().elemtype(ASTHelpers.getType(invocationTree.getArguments().getFirst()));
     Tree fillingArgument = Iterables.getLast(invocationTree.getArguments());
     Type fillingObjectType = ASTHelpers.getType(fillingArgument);
 

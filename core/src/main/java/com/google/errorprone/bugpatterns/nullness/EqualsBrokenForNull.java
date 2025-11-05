@@ -151,7 +151,7 @@ public class EqualsBrokenForNull extends BugChecker implements MethodTreeMatcher
       return NO_MATCH;
     }
     String stringAddition = String.format("if (%s == null) { return false; }\n", varSymbol.name);
-    Fix fix = SuggestedFix.prefixWith(tree.getBody().getStatements().get(0), stringAddition);
+    Fix fix = SuggestedFix.prefixWith(tree.getBody().getStatements().getFirst(), stringAddition);
     return describeMatch(tree, fix);
   }
 }

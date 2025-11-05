@@ -133,7 +133,7 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
       return NO_MATCH;
     }
 
-    Description.Builder builder = buildDescription(tree.getCatches().get(0).getParameter());
+    Description.Builder builder = buildDescription(tree.getCatches().getFirst().getParameter());
     if (matchResult.caughtType == JAVA_LANG_THROWABLE) {
       builder.addFix(fixByCatchingException(tree));
     }
@@ -197,7 +197,8 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
     String tail = hasOtherParameters == HasOtherParameters.TRUE ? ", " : "";
     // The above casts were checked earlier by failOrAssert.
     return hasInitialStringParameter(sym, state)
-        ? state.getSourceForNode(((MethodInvocationTree) expression).getArguments().get(0)) + tail
+        ? state.getSourceForNode(((MethodInvocationTree) expression).getArguments().getFirst())
+            + tail
         : "";
   }
 
@@ -214,7 +215,7 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
     Types types = state.getTypes();
     List<VarSymbol> parameters = sym.getParameters();
     return !parameters.isEmpty()
-        && types.isSameType(parameters.get(0).type, state.getSymtab().stringType);
+        && types.isSameType(parameters.getFirst().type, state.getSymtab().stringType);
   }
 
   private static MatchResult tryTreeMatches(TryTree tryTree, VisitorState state) {
@@ -247,7 +248,7 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
       // to be checked - it would either be Throwable or Error.
       return doesNotMatch();
     }
-    CatchTree catchTree = catches.get(0);
+    CatchTree catchTree = catches.getFirst();
     VariableTree catchType = catchTree.getParameter();
     boolean catchesThrowable = javaLangThrowable.matches(catchType, state);
     boolean catchesError = javaLangError.matches(catchType, state);
@@ -310,6 +311,6 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
   }
 
   private static CatchTree getOnlyCatch(TryTree tryTree) {
-    return tryTree.getCatches().get(0);
+    return tryTree.getCatches().getFirst();
   }
 }

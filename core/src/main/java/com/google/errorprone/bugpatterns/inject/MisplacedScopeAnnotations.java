@@ -101,6 +101,6 @@ public class MisplacedScopeAnnotations extends BugChecker
   private Description deleteAll(List<AnnotationTree> scopeAnnotations) {
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     scopeAnnotations.forEach(fixBuilder::delete);
-    return describeMatch(scopeAnnotations.get(0), fixBuilder.build());
+    return describeMatch(scopeAnnotations.getFirst(), fixBuilder.build());
   }
 }

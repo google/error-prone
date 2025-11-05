@@ -59,7 +59,7 @@ public class IdentityHashMapUsage extends BugChecker
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (IHM_ONE_ARG_METHODS.matches(tree, state)
         && !ASTHelpers.isSameType(
-            ASTHelpers.getType(tree.getArguments().get(0)),
+            ASTHelpers.getType(tree.getArguments().getFirst()),
             JAVA_UTIL_IDENTITYHASHMAP.get(state),
             state)) {
       return describeMatch(tree);
@@ -102,7 +102,7 @@ public class IdentityHashMapUsage extends BugChecker
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     if (IHM_CTOR_MAP_ARG.matches(tree, state)
         && !ASTHelpers.isSameType(
-            ASTHelpers.getType(tree.getArguments().get(0)),
+            ASTHelpers.getType(tree.getArguments().getFirst()),
             JAVA_UTIL_IDENTITYHASHMAP.get(state),
             state)) {
       return describeMatch(tree);

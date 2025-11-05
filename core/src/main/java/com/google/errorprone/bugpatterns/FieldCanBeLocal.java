@@ -318,7 +318,7 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
     return state
         .getSourceCode()
         .subSequence(
-            getStartPosition(annotations.get(0)), state.getEndPosition(getLast(annotations)))
+            getStartPosition(annotations.getFirst()), state.getEndPosition(getLast(annotations)))
         .toString();
   }
 }

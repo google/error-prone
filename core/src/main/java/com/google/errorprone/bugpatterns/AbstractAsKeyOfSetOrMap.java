@@ -98,7 +98,7 @@ public abstract class AbstractAsKeyOfSetOrMap extends BugChecker
       if (argumentTypes.isEmpty()) {
         return Description.NO_MATCH;
       }
-      Type typeArg = argumentTypes.get(0);
+      Type typeArg = argumentTypes.getFirst();
       if (isBadType(typeArg, state)) {
         return describeMatch(tree);
       }

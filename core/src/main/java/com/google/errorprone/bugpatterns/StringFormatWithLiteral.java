@@ -56,11 +56,11 @@ public final class StringFormatWithLiteral extends BugChecker
     if (STRING_FORMAT_METHOD_MATCHER.matches(tree, state)) {
       ImmutableList<ExpressionTree> arguments =
           tree.getArguments().stream().skip(1).collect(toImmutableList());
-      if (shouldRefactorStringFormat(tree.getArguments().get(0), arguments)) {
+      if (shouldRefactorStringFormat(tree.getArguments().getFirst(), arguments)) {
         return describeMatch(
             tree,
             SuggestedFix.replace(
-                tree, getFormattedUnifiedString(tree.getArguments().get(0), arguments)));
+                tree, getFormattedUnifiedString(tree.getArguments().getFirst(), arguments)));
       }
     }
     if (FORMATTED.matches(tree, state)) {

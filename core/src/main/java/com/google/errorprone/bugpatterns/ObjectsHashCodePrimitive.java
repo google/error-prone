@@ -57,13 +57,13 @@ public final class ObjectsHashCodePrimitive extends BugChecker
     String argumentClass =
         state
             .getTypes()
-            .boxedTypeOrType(ASTHelpers.getType(tree.getArguments().get(0)))
+            .boxedTypeOrType(ASTHelpers.getType(tree.getArguments().getFirst()))
             .tsym
             .getSimpleName()
             .toString();
     return SuggestedFix.builder()
         .prefixWith(tree, argumentClass + ".hashCode(")
-        .replace(tree, state.getSourceForNode(tree.getArguments().get(0)))
+        .replace(tree, state.getSourceForNode(tree.getArguments().getFirst()))
         .postfixWith(tree, ")")
         .build();
   }

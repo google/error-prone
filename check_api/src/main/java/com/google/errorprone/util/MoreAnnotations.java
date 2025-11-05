@@ -66,7 +66,7 @@ public final class MoreAnnotations {
             groupingBy(c -> c.type.asElement().getQualifiedName(), LinkedHashMap::new, toList()))
         .values()
         .stream()
-        .map(c -> c.get(0));
+        .map(c -> c.getFirst());
   }
 
   /**

@@ -214,7 +214,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
       } else {
         // If it's an expression, we can replace simply with the first argument.
         fixBuilder.replace(
-            methodInvocation, state.getSourceForNode(methodInvocation.getArguments().get(0)));
+            methodInvocation, state.getSourceForNode(methodInvocation.getArguments().getFirst()));
       }
     }
   }
@@ -425,7 +425,8 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
       if (NULL_CHECK_MATCH.matches(node, state)) {
-        Symbol firstArgSymbol = getSymbol(ASTHelpers.stripParentheses(node.getArguments().get(0)));
+        Symbol firstArgSymbol =
+            getSymbol(ASTHelpers.stripParentheses(node.getArguments().getFirst()));
         if (isBoxed(firstArgSymbol, state)) {
           dereferenced.add((VarSymbol) firstArgSymbol);
           fixableNullCheckInvocations.put((VarSymbol) firstArgSymbol, getCurrentPath());

@@ -223,7 +223,7 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
    * }</pre>
    */
   private static SuggestedFix replaceRegexConstant(VariableTree tree, VisitorState state) {
-    ExpressionTree regex = ((MethodInvocationTree) tree.getInitializer()).getArguments().get(0);
+    ExpressionTree regex = ((MethodInvocationTree) tree.getInitializer()).getArguments().getFirst();
     Symbol regexSym = getSymbol(regex);
     if (regexSym == null
         || !regexSym.getKind().equals(ElementKind.FIELD)
@@ -308,7 +308,7 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
    * Pattern.compile(FOO_REGEX)}.
    */
   private static @Nullable String fromInitializer(VariableTree tree) {
-    ExpressionTree regex = ((MethodInvocationTree) tree.getInitializer()).getArguments().get(0);
+    ExpressionTree regex = ((MethodInvocationTree) tree.getInitializer()).getArguments().getFirst();
     if (!(regex instanceof IdentifierTree identifierTree)) {
       return null;
     }
@@ -361,7 +361,7 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
     if (!MATCHER_MATCHER.matches(expressionTree, state)) {
       return null;
     }
-    ExpressionTree matchTree = ((MethodInvocationTree) grandParent).getArguments().get(0);
+    ExpressionTree matchTree = ((MethodInvocationTree) grandParent).getArguments().getFirst();
     if (matchTree instanceof IdentifierTree identifierTree) {
       return convertToConstantName(identifierTree.getName().toString());
     }

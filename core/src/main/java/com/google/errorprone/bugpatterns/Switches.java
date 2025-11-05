@@ -56,7 +56,7 @@ final class Switches {
     if (defaultCase.getBody() != null) {
       endPos = getStartPosition(defaultCase.getBody());
     } else if (!defaultCase.getStatements().isEmpty()) {
-      endPos = getStartPosition(defaultCase.getStatements().get(0));
+      endPos = getStartPosition(defaultCase.getStatements().getFirst());
     } else if (indexOfDefault + 1 < switchTree.getCases().size()) {
       endPos = getStartPosition(switchTree.getCases().get(indexOfDefault + 1));
     } else {
@@ -98,7 +98,7 @@ final class Switches {
     int endPos =
         getStartPosition(
             switch (defaultCase.getCaseKind()) {
-              case STATEMENT -> defaultCase.getStatements().get(0);
+              case STATEMENT -> defaultCase.getStatements().getFirst();
               case RULE -> defaultCase.getBody();
             });
 

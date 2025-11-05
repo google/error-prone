@@ -75,14 +75,14 @@ public class SwitchDefault extends BugChecker implements SwitchTreeMatcher {
       // If there are trailing cases after the default statement group, move the default to the end.
       // Only emit a fix if the default doesn't fall through.
       if (!Reachability.canFallThrough(getLast(defaultStatementGroup))) {
-        int start = getStartPosition(defaultStatementGroup.get(0));
+        int start = getStartPosition(defaultStatementGroup.getFirst());
         int end = state.getEndPosition(getLast(defaultStatementGroup));
         String replacement;
         String source = state.getSourceCode().toString();
 
         // If the default case isn't the last case in its statement group, move it to the end.
         if (idx != defaultStatementGroup.size() - 1) {
-          int caseEnd = getStartPosition(getLast(defaultStatementGroup).getStatements().get(0));
+          int caseEnd = getStartPosition(getLast(defaultStatementGroup).getStatements().getFirst());
           int cutStart = getStartPosition(defaultTree);
           int cutEnd = state.getEndPosition(defaultTree);
           replacement =
@@ -107,14 +107,14 @@ public class SwitchDefault extends BugChecker implements SwitchTreeMatcher {
       fix.delete(defaultTree);
       CaseTree lastCase = getLast(defaultStatementGroup);
       if (!isNullOrEmpty(lastCase.getStatements())) {
-        fix.prefixWith(lastCase.getStatements().get(0), state.getSourceForNode(defaultTree));
+        fix.prefixWith(lastCase.getStatements().getFirst(), state.getSourceForNode(defaultTree));
       } else {
         fix.postfixWith(lastCase, state.getSourceForNode(defaultTree));
       }
     } else {
       return NO_MATCH;
     }
-    Description.Builder description = buildDescription(defaultStatementGroup.get(0));
+    Description.Builder description = buildDescription(defaultStatementGroup.getFirst());
     if (!fix.isEmpty()) {
       description.addFix(fix.build());
     }

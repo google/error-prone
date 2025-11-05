@@ -72,7 +72,7 @@ public final class MockitoDoSetup extends BugChecker implements CompilationUnitT
             || !INSTANCE_WHEN.matches(whenMethod, state)) {
           return;
         }
-        if (isSpy(whenMethod.getArguments().get(0))) {
+        if (isSpy(whenMethod.getArguments().getFirst())) {
           return;
         }
         if (!(whenPath.getParentPath().getParentPath().getLeaf()
@@ -111,7 +111,7 @@ public final class MockitoDoSetup extends BugChecker implements CompilationUnitT
     return state
         .getSourceCode()
         .subSequence(
-            getStartPosition(tree.getArguments().get(0)),
+            getStartPosition(tree.getArguments().getFirst()),
             state.getEndPosition(getLast(tree.getArguments())))
         .toString();
   }
@@ -137,7 +137,7 @@ public final class MockitoDoSetup extends BugChecker implements CompilationUnitT
           var whenCall = getCurrentPath().getParentPath().getParentPath().getLeaf();
           if (whenCall instanceof MethodInvocationTree methodInvocationTree
               && INSTANCE_WHEN.matches(methodInvocationTree, state)) {
-            var whenTarget = getSymbol(methodInvocationTree.getArguments().get(0));
+            var whenTarget = getSymbol(methodInvocationTree.getArguments().getFirst());
             if (whenTarget instanceof VarSymbol varSymbol) {
               spiesOrThrows.add(varSymbol);
             }
@@ -146,7 +146,7 @@ public final class MockitoDoSetup extends BugChecker implements CompilationUnitT
         if (THEN_THROW.matches(tree, state)) {
           var receiver = getReceiver(tree);
           if (STATIC_WHEN.matches(receiver, state)) {
-            var mock = getReceiver(((MethodInvocationTree) receiver).getArguments().get(0));
+            var mock = getReceiver(((MethodInvocationTree) receiver).getArguments().getFirst());
             var mockSymbol = getSymbol(mock);
             if (mockSymbol instanceof VarSymbol varSymbol) {
               spiesOrThrows.add(varSymbol);

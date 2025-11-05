@@ -74,7 +74,8 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
         if (THEN_CALL_REAL_METHOD.matches(tree, state)) {
           var receiver = getReceiver(tree);
           if (receiver != null && WHEN.matches(receiver, state)) {
-            ExpressionTree firstArgument = ((MethodInvocationTree) receiver).getArguments().get(0);
+            ExpressionTree firstArgument =
+                ((MethodInvocationTree) receiver).getArguments().getFirst();
             if (getSymbol(firstArgument) instanceof MethodSymbol methodSymbol) {
               methodsCallingRealImplementations.add(methodSymbol);
             }
