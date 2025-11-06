@@ -46,13 +46,6 @@ import org.jspecify.annotations.Nullable;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 public final class GuardedByBinder {
-
-  /** Stub method to allow removing the GuardedByFlags argument. */
-  public static Optional<GuardedByExpression> bindExpression(
-      JCTree.JCExpression exp, VisitorState visitorState, GuardedByFlags flags) {
-    return bindExpression(exp, visitorState);
-  }
-
   /**
    * Creates a {@link GuardedByExpression} from a bound AST node, or returns {@code
    * Optional.empty()} if the AST node doesn't correspond to a 'simple' lock expression.
@@ -71,12 +64,6 @@ public final class GuardedByBinder {
     } catch (IllegalGuardedBy expected) {
       return Optional.empty();
     }
-  }
-
-  /** Stub method to allow removing the GuardedByFlags argument. */
-  public static Optional<GuardedByExpression> bindString(
-      String string, GuardedBySymbolResolver resolver, GuardedByFlags flags) {
-    return bindString(string, resolver);
   }
 
   /** Creates a {@link GuardedByExpression} from a string, given the resolution context. */
