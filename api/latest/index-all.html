@@ -521,8 +521,6 @@ given matchers do.</div>
 <div class="block">Compose several matchers together, such that the composite matches an AST node iff all the
 given matchers do.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html#allOn()" class="member-name-link">allOn()</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractToString.html#allowableToStringKind(com.google.errorprone.bugpatterns.AbstractToString.ToStringKind)" class="member-name-link">allowableToStringKind(AbstractToString.ToStringKind)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></dt>
 <dd>
 <div class="block">Whether this kind of toString call is allowable for this check.</div>
@@ -1315,10 +1313,6 @@ the way if necessary (i.e., replacing Foo.Bar with Foo$Bar).</div>
 <div class="block">Creates a <a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a bound AST node, or returns <code>
 Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock expression.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html#bindExpression(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">bindExpression(JCTree.JCExpression, VisitorState, GuardedByFlags)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder</a></dt>
-<dd>
-<div class="block">Stub method to allow removing the GuardedByFlags argument.</div>
-</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByUtils.html#bindGuardedByString(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">bindGuardedByString(Tree, String, VisitorState)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByUtils.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByUtils</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Inliner.html#bindings" class="member-name-link">bindings</a> - Variable in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
@@ -1339,10 +1333,6 @@ key and a <code>Bindings.Key</code> subclass, to values of type <code>V</code>.<
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html#bindString(java.lang.String,com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver)" class="member-name-link">bindString(String, GuardedBySymbolResolver)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder</a></dt>
 <dd>
 <div class="block">Creates a <a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>GuardedByExpression</code></a> from a string, given the resolution context.</div>
-</dd>
-<dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html#bindString(java.lang.String,com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">bindString(String, GuardedBySymbolResolver, GuardedByFlags)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder</a></dt>
-<dd>
-<div class="block">Stub method to allow removing the GuardedByFlags argument.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/Enclosing.Block.html#%3Cinit%3E(com.google.errorprone.matchers.Matcher)" class="member-name-link">Block(Matcher)</a> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Enclosing.Block.html" title="class in com.google.errorprone.matchers">Enclosing.Block</a></dt>
 <dd>&nbsp;</dd>
@@ -4385,10 +4375,6 @@ fragile, or violates generally-accepted assumptions of behavior.</div>
 <dd>
 <div class="block">Determine the lock expression that needs to be held when accessing a specific guarded member.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.ExpectedLockCalculator.html#from(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.VisitorState,com.google.errorprone.bugpatterns.threadsafety.GuardedByFlags)" class="member-name-link">from(JCTree.JCExpression, GuardedByExpression, VisitorState, GuardedByFlags)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.ExpectedLockCalculator.html" title="class in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.ExpectedLockCalculator</a></dt>
-<dd>
-<div class="block">Stub method to allow removing the GuardedByFlags argument.</div>
-</dd>
 <dt><a href="com/google/errorprone/refaster/Choice.html#from(java.util.Collection)" class="member-name-link">from(Collection)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html#fromAnnotationMirrors(java.util.List)" class="member-name-link">fromAnnotationMirrors(List)</a> - Static method in class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnnotations</a></dt>
@@ -4425,8 +4411,6 @@ otherwise (for example, when the receiver of the field access contains an array 
 non-AutoValue method call.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html#fromFlags(com.google.errorprone.ErrorProneFlags)" class="member-name-link">fromFlags(ErrorProneFlags)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html#fromFlags(com.google.errorprone.ErrorProneFlags)" class="member-name-link">fromFlags(ErrorProneFlags)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html#fromFlags(com.google.errorprone.ErrorProneFlags)" class="member-name-link">fromFlags(ErrorProneFlags)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/WellKnownMutability.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownMutability</a></dt>
 <dd>&nbsp;</dd>
@@ -5825,13 +5809,6 @@ constructors.</div>
 <dd>
 <div class="block">The base expression for a static member select on a class literal (e.g.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
-<dd>
-<div class="block">Flags that control the behavior of threadsafety utils to facilitate rolling out new
-functionality.</div>
-</dd>
-<dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html#%3Cinit%3E()" class="member-name-link">GuardedByFlags()</a> - Constructor for class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByFlags.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByFlags</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a> - Class in <a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a></dt>
 <dd>
 <div class="block">A symbol resolver used while binding guardedby expressions from string literals.</div>
