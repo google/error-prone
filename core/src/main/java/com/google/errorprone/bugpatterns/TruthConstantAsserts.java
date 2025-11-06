@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -110,7 +111,7 @@ public class TruthConstantAsserts extends BugChecker implements MethodInvocation
         new ConstantExpressionVisitor() {
           @Override
           public void visitIdentifier(Symbol identifier) {
-            if (!(identifier instanceof MethodSymbol)) {
+            if (!(identifier instanceof MethodSymbol) && !isStatic(identifier)) {
               involvesIdentifiers.set(true);
             }
           }

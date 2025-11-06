@@ -129,4 +129,27 @@ public class TruthConstantAssertsPositiveCases {
             """)
         .doTest();
   }
+
+  @Test
+  public void positiveWithEnumOnLeftHandSide() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            public class Test {
+              enum TestEnum {
+                A,
+                B
+              }
+
+              public void test(Object a) {
+                // BUG: Diagnostic contains:
+                assertThat(TestEnum.A).isEqualTo(a);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
