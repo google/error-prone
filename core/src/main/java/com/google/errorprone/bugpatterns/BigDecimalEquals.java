@@ -65,7 +65,7 @@ public final class BigDecimalEquals extends BugChecker implements MethodInvocati
     } else if (instanceEqualsInvocation().matches(tree, state)) {
       handleNulls = false;
       receiver = getReceiver(tree);
-      argument = arguments.get(0);
+      argument = arguments.getFirst();
     } else {
       return NO_MATCH;
     }

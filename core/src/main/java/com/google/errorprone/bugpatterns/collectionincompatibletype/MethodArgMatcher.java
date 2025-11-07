@@ -91,7 +91,7 @@ final class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
 
   @Override
   @Nullable Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
-    return state.getTypes().findDescriptorType(getType(tree)).getParameterTypes().get(0);
+    return state.getTypes().findDescriptorType(getType(tree)).getParameterTypes().getFirst();
   }
 
   @Override

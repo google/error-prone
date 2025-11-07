@@ -41,7 +41,7 @@ public class BareDotMetacharacter extends AbstractPatternSyntaxChecker
   protected final Description matchRegexLiteral(
       MethodInvocationTree tree, VisitorState state, String regex, int flags) {
     if (regex.equals(".")) {
-      return describeMatch(tree, SuggestedFix.replace(tree.getArguments().get(0), "\"\\\\.\""));
+      return describeMatch(tree, SuggestedFix.replace(tree.getArguments().getFirst(), "\"\\\\.\""));
     } else {
       return NO_MATCH;
     }

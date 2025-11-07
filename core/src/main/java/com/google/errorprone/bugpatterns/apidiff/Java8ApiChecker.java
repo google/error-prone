@@ -44,7 +44,8 @@ public class Java8ApiChecker extends ApiDiffChecker {
   private static ApiDiff loadApiDiff(ErrorProneFlags errorProneFlags) {
     try {
       byte[] diffData =
-          Resources.toByteArray(Resources.getResource(Java8ApiChecker.class, "8to11diff.binarypb"));
+          Resources.toByteArray(
+              Resources.getResource(Java8ApiChecker.class, "8-to-lts-diff.binarypb"));
       ApiDiff diff =
           ApiDiff.fromProto(
               ApiDiffProto.Diff.newBuilder()

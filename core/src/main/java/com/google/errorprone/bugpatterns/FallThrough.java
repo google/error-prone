@@ -33,7 +33,6 @@ import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Position;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -67,11 +66,7 @@ public class FallThrough extends BugChecker implements SwitchTreeMatcher {
         break;
       }
       String comments =
-          state
-              .getSourceCode()
-              .subSequence(endPos, ((JCTree) next).getStartPosition())
-              .toString()
-              .trim();
+          state.getSourceCode().subSequence(endPos, getStartPosition(next)).toString().trim();
       if (completes && !FALL_THROUGH_PATTERN.matcher(comments).find()) {
         state.reportMatch(
             buildDescription(next)

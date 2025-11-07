@@ -101,7 +101,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
     if (batchFindings && !descriptions.isEmpty()) {
       SuggestedFix.Builder fix = SuggestedFix.builder();
       descriptions.forEach(d -> fix.merge((SuggestedFix) getOnlyElement(d.fixes)));
-      return describeMatch(descriptions.get(0).position, fix.build());
+      return describeMatch(descriptions.getFirst().position, fix.build());
     }
     descriptions.forEach(state::reportMatch);
     return NO_MATCH;
@@ -113,7 +113,7 @@ public class UngroupedOverloads extends BugChecker implements ClassTreeMatcher {
       return Stream.empty();
     }
     // check if the indices of the overloads in the member list are sequential
-    MemberWithIndex first = overloads.get(0);
+    MemberWithIndex first = overloads.getFirst();
     int prev = -1;
     int group = 0;
     Map<MemberWithIndex, Integer> groups = new LinkedHashMap<>();

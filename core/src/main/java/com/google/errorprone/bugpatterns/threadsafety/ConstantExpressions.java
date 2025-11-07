@@ -36,14 +36,11 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
-import com.google.auto.value.AutoOneOf;
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
-import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression.ConstantExpressionKind;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.suppliers.Supplier;
@@ -102,18 +99,9 @@ public final class ConstantExpressions {
   }
 
   /** Represents sets of things known to be true and false if a boolean statement evaluated true. */
-  @AutoValue
-  public abstract static class Truthiness {
-    public abstract ImmutableSet<ConstantExpression> requiredTrue();
-
-    public abstract ImmutableSet<ConstantExpression> requiredFalse();
-
-    private static Truthiness create(
-        Iterable<ConstantExpression> requiredTrue, Iterable<ConstantExpression> requiredFalse) {
-      return new AutoValue_ConstantExpressions_Truthiness(
-          ImmutableSet.copyOf(requiredTrue), ImmutableSet.copyOf(requiredFalse));
-    }
-  }
+  public record Truthiness(
+      ImmutableSet<ConstantExpression> requiredTrue,
+      ImmutableSet<ConstantExpression> requiredFalse) {}
 
   /**
    * Scans an {@link ExpressionTree} to find anything guaranteed to be false or true if this
@@ -193,61 +181,86 @@ public final class ConstantExpressions {
     }.visit(tree, null);
 
     if (failed.get()) {
-      return Truthiness.create(ImmutableSet.of(), ImmutableSet.of());
+      return new Truthiness(ImmutableSet.of(), ImmutableSet.of());
     }
 
-    return Truthiness.create(requiredTrue.build(), requiredFalse.build());
+    return new Truthiness(requiredTrue.build(), requiredFalse.build());
   }
 
   /** Represents a constant expression. */
-  @AutoOneOf(ConstantExpressionKind.class)
-  public abstract static class ConstantExpression {
-    /** The kind of a constant expression. */
-    public enum ConstantExpressionKind {
-      LITERAL,
-      CONSTANT_EQUALS,
-      PURE_METHOD,
-    }
+  public sealed interface ConstantExpression {
+    /** Represents a constant literal. */
+    public static record Literal(Object object) implements ConstantExpression {
+      @Override
+      public void accept(ConstantExpressionVisitor visitor) {
+        visitor.visitConstant(object());
+      }
 
-    public abstract ConstantExpressionKind kind();
-
-    abstract Object literal();
-
-    private static ConstantExpression literal(Object object) {
-      return AutoOneOf_ConstantExpressions_ConstantExpression.literal(object);
-    }
-
-    abstract ConstantEquals constantEquals();
-
-    private static ConstantExpression constantEquals(ConstantEquals constantEquals) {
-      return AutoOneOf_ConstantExpressions_ConstantExpression.constantEquals(constantEquals);
-    }
-
-    public abstract PureMethodInvocation pureMethod();
-
-    private static ConstantExpression pureMethod(PureMethodInvocation pureMethodInvocation) {
-      return AutoOneOf_ConstantExpressions_ConstantExpression.pureMethod(pureMethodInvocation);
-    }
-
-    @Override
-    public final String toString() {
-      return switch (kind()) {
-        case LITERAL -> literal().toString();
-        case CONSTANT_EQUALS -> constantEquals().toString();
-        case PURE_METHOD -> pureMethod().toString();
-      };
-    }
-
-    public void accept(ConstantExpressionVisitor visitor) {
-      switch (kind()) {
-        case LITERAL -> visitor.visitConstant(literal());
-        case CONSTANT_EQUALS -> {
-          constantEquals().lhs().accept(visitor);
-          constantEquals().rhs().accept(visitor);
-        }
-        case PURE_METHOD -> pureMethod().accept(visitor);
+      @Override
+      public final String toString() {
+        return object().toString();
       }
     }
+
+    /** Represents a binary equals call on two constant expressions. */
+    public static record ConstantEquals(ConstantExpression lhs, ConstantExpression rhs)
+        implements ConstantExpression {
+      @Override
+      public void accept(ConstantExpressionVisitor visitor) {
+        lhs().accept(visitor);
+        rhs().accept(visitor);
+      }
+
+      @Override
+      public final boolean equals(@Nullable Object other) {
+        if (!(other instanceof ConstantEquals that)) {
+          return false;
+        }
+        return (lhs().equals(that.lhs()) && rhs().equals(that.rhs()))
+            || (lhs().equals(that.rhs()) && rhs().equals(that.lhs()));
+      }
+
+      @Override
+      public final String toString() {
+        return format("%s equals %s", lhs(), rhs());
+      }
+
+      @Override
+      public final int hashCode() {
+        return lhs().hashCode() + rhs().hashCode();
+      }
+    }
+
+    /**
+     * Represents both a constant method call or a constant field/local access, depending on the
+     * actual type of {@code symbol}.
+     */
+    public static record PureMethodInvocation(
+        Symbol symbol,
+        ImmutableList<ConstantExpression> arguments,
+        Optional<ConstantExpression> receiver)
+        implements ConstantExpression {
+      @Override
+      public void accept(ConstantExpressionVisitor visitor) {
+        visitor.visitIdentifier(symbol());
+        arguments().forEach(a -> a.accept(visitor));
+        receiver().ifPresent(r -> r.accept(visitor));
+      }
+
+      @Override
+      public final String toString() {
+        String receiver = receiver().map(r -> r + ".").orElse("");
+        if (symbol() instanceof VarSymbol || symbol() instanceof ClassSymbol) {
+          return receiver + symbol().getSimpleName();
+        }
+        return receiver
+            + (isStatic(symbol()) ? symbol().owner.getSimpleName() + "." : "")
+            + symbol().getSimpleName()
+            + arguments().stream().map(Object::toString).collect(joining(", ", "(", ")"));
+      }
+    }
+
+    void accept(ConstantExpressionVisitor visitor);
   }
 
   public Optional<ConstantExpression> constantExpression(ExpressionTree tree, VisitorState state) {
@@ -257,15 +270,14 @@ public final class ConstantExpressions {
       Optional<ConstantExpression> lhs = constantExpression(binaryTree.getLeftOperand(), state);
       Optional<ConstantExpression> rhs = constantExpression(binaryTree.getRightOperand(), state);
       if (lhs.isPresent() && rhs.isPresent()) {
-        return Optional.of(
-            ConstantExpression.constantEquals(ConstantEquals.of(lhs.get(), rhs.get())));
+        return Optional.of(new ConstantExpression.ConstantEquals(lhs.get(), rhs.get()));
       }
     }
     Object value = constValue(tree);
     if (value != null && tree instanceof LiteralTree) {
-      return Optional.of(ConstantExpression.literal(value));
+      return Optional.of(new ConstantExpression.Literal(value));
     }
-    return symbolizeImmutableExpression(tree, state).map(ConstantExpression::pureMethod);
+    return symbolizeImmutableExpression(tree, state).map(x -> x);
   }
 
   /** Returns whether {@code aTree} and {@code bTree} seem to correspond to the same expression. */
@@ -278,81 +290,11 @@ public final class ConstantExpressions {
     return b.isPresent() && a.get().equals(b.get());
   }
 
-  /** Represents a binary equals call on two constant expressions. */
-  @AutoValue
-  public abstract static class ConstantEquals {
-    abstract ConstantExpression lhs();
-
-    abstract ConstantExpression rhs();
-
-    @Override
-    public final boolean equals(@Nullable Object other) {
-      if (!(other instanceof ConstantEquals that)) {
-        return false;
-      }
-      return (lhs().equals(that.lhs()) && rhs().equals(that.rhs()))
-          || (lhs().equals(that.rhs()) && rhs().equals(that.lhs()));
-    }
-
-    @Override
-    public final String toString() {
-      return format("%s equals %s", lhs(), rhs());
-    }
-
-    @Override
-    public final int hashCode() {
-      return lhs().hashCode() + rhs().hashCode();
-    }
-
-    static ConstantEquals of(ConstantExpression lhs, ConstantExpression rhs) {
-      return new AutoValue_ConstantExpressions_ConstantEquals(lhs, rhs);
-    }
-  }
-
-  /**
-   * Represents both a constant method call or a constant field/local access, depending on the
-   * actual type of {@code symbol}.
-   */
-  @AutoValue
-  public abstract static class PureMethodInvocation {
-    public abstract Symbol symbol();
-
-    abstract ImmutableList<ConstantExpression> arguments();
-
-    public abstract Optional<ConstantExpression> receiver();
-
-    @Override
-    public final String toString() {
-      String receiver = receiver().map(r -> r + ".").orElse("");
-      if (symbol() instanceof VarSymbol || symbol() instanceof ClassSymbol) {
-        return receiver + symbol().getSimpleName();
-      }
-      return receiver
-          + (isStatic(symbol()) ? symbol().owner.getSimpleName() + "." : "")
-          + symbol().getSimpleName()
-          + arguments().stream().map(Object::toString).collect(joining(", ", "(", ")"));
-    }
-
-    private static PureMethodInvocation of(
-        Symbol symbol,
-        Iterable<ConstantExpression> arguments,
-        Optional<ConstantExpression> receiver) {
-      return new AutoValue_ConstantExpressions_PureMethodInvocation(
-          symbol, ImmutableList.copyOf(arguments), receiver);
-    }
-
-    public void accept(ConstantExpressionVisitor visitor) {
-      visitor.visitIdentifier(symbol());
-      arguments().forEach(a -> a.accept(visitor));
-      receiver().ifPresent(r -> r.accept(visitor));
-    }
-  }
-
   /**
    * Returns a list of the methods called to get to this expression, as well as a terminating
    * variable if needed.
    */
-  public Optional<PureMethodInvocation> symbolizeImmutableExpression(
+  public Optional<ConstantExpression.PureMethodInvocation> symbolizeImmutableExpression(
       ExpressionTree tree, VisitorState state) {
     var receiver =
         tree instanceof MethodInvocationTree || tree instanceof MemberSelectTree
@@ -372,7 +314,8 @@ public final class ConstantExpressions {
 
     if (isPureIdentifier(tree)) {
       return Optional.of(
-          PureMethodInvocation.of(getSymbol(tree), ImmutableList.of(), receiverConstant));
+          new ConstantExpression.PureMethodInvocation(
+              getSymbol(tree), ImmutableList.of(), receiverConstant));
     } else if (tree instanceof MethodInvocationTree methodInvocationTree
         && pureMethods.matches(tree, state)) {
       ImmutableList.Builder<ConstantExpression> arguments = ImmutableList.builder();
@@ -384,7 +327,8 @@ public final class ConstantExpressions {
         arguments.add(argumentConstant.get());
       }
       return Optional.of(
-          PureMethodInvocation.of(getSymbol(tree), arguments.build(), receiverConstant));
+          new ConstantExpression.PureMethodInvocation(
+              getSymbol(tree), arguments.build(), receiverConstant));
     } else {
       return Optional.empty();
     }

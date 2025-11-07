@@ -23,6 +23,7 @@ import static com.google.errorprone.BugPattern.StandardTags.LIKELY_ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.collect.Iterables;
@@ -37,6 +38,8 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -45,14 +48,13 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TryTree;
 import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.UnionClassType;
-import com.sun.tools.javac.tree.JCTree.JCBlock;
 import com.sun.tools.javac.tree.JCTree.JCCatch;
-import com.sun.tools.javac.tree.JCTree.JCExpressionStatement;
 import com.sun.tools.javac.tree.JCTree.JCTry;
 import java.util.Objects;
 import java.util.Optional;
@@ -130,12 +132,12 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
   // rewrite `try { ..., fail(); } catch (AssertionError e) { ... }`
   // to `AssertionError e = assertThrows(AssertionError.class, () -> ...); ...`.
   private static Optional<Fix> buildFix(
-      JCTry tryStatement, MethodInvocationTree tree, VisitorState state) {
+      TryTree tryStatement, MethodInvocationTree tree, VisitorState state) {
     if (!ASTHelpers.getSymbol(tree).getSimpleName().contentEquals("fail")) {
       // ignore non-failure asserts
       return Optional.empty();
     }
-    JCBlock block = tryStatement.getBlock();
+    BlockTree block = tryStatement.getBlock();
     if (!expressionStatement((t, s) -> t.equals(tree))
         .matches(getLast(block.getStatements()), state)) {
       // the `fail()` should be the last expression statement in the try block
@@ -145,7 +147,7 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
       // the fix is less clear for multiple catch clauses
       return Optional.empty();
     }
-    JCCatch catchTree = Iterables.getOnlyElement(tryStatement.getCatches());
+    CatchTree catchTree = Iterables.getOnlyElement(tryStatement.getCatches());
     if (catchTree.getParameter().getType() instanceof UnionTypeTree) {
       // variables can't have union types
       return Optional.empty();
@@ -153,21 +155,22 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
     SuggestedFix.Builder fix = SuggestedFix.builder();
     boolean expression =
         block.getStatements().size() == 2
-            && block.getStatements().get(0) instanceof ExpressionStatementTree;
+            && block.getStatements().getFirst() instanceof ExpressionStatementTree;
     int startPosition;
     int endPosition;
     if (expression) {
-      JCExpressionStatement expressionTree = (JCExpressionStatement) block.getStatements().get(0);
-      startPosition = expressionTree.getStartPosition();
+      ExpressionStatementTree expressionTree =
+          (ExpressionStatementTree) block.getStatements().getFirst();
+      startPosition = getStartPosition(expressionTree);
       endPosition = state.getEndPosition(expressionTree.getExpression());
     } else {
-      startPosition = block.getStartPosition();
-      endPosition = getLast(tryStatement.getBlock().getStatements()).getStartPosition();
+      startPosition = getStartPosition(block);
+      endPosition = getStartPosition(getLast(tryStatement.getBlock().getStatements()));
     }
     if (catchTree.getBlock().getStatements().isEmpty()) {
       fix.addStaticImport("org.junit.Assert.assertThrows");
       fix.replace(
-              tryStatement.getStartPosition(),
+              getStartPosition(tryStatement),
               startPosition,
               String.format(
                   "assertThrows(%s.class, () -> ",
@@ -177,14 +180,14 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
       fix.addStaticImport("org.junit.Assert.assertThrows")
           .prefixWith(tryStatement, state.getSourceForNode(catchTree.getParameter()))
           .replace(
-              tryStatement.getStartPosition(),
+              getStartPosition(tryStatement),
               startPosition,
               String.format(
                   " = assertThrows(%s.class, () -> ",
                   state.getSourceForNode(catchTree.getParameter().getType())))
           .replace(
               /* startPos= */ endPosition,
-              /* endPos= */ catchTree.getBlock().getStatements().get(0).getStartPosition(),
+              /* endPos= */ getStartPosition(catchTree.getBlock().getStatements().getFirst()),
               (expression ? "" : "}") + ");\n")
           .replace(
               state.getEndPosition(getLast(catchTree.getBlock().getStatements())),

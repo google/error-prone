@@ -37,14 +37,13 @@ import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -103,20 +102,20 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     }
 
     // Primitive constructors are all unary
-    JCTree.JCExpression arg = (JCTree.JCExpression) getOnlyElement(tree.getArguments());
+    ExpressionTree arg = getOnlyElement(tree.getArguments());
     Type argType = getType(arg);
     if (autoboxFix && argType.isPrimitive()) {
       return SuggestedFix.builder()
-          .replace(getStartPosition(tree), arg.getStartPosition(), maybeCast(state, type, argType))
+          .replace(getStartPosition(tree), getStartPosition(arg), maybeCast(state, type, argType))
           .replace(state.getEndPosition(arg), state.getEndPosition(tree), "")
           .build();
     }
 
-    JCTree parent = (JCTree) state.getPath().getParentPath().getParentPath().getLeaf();
+    Tree parent = state.getPath().getParentPath().getParentPath().getLeaf();
     if (TO_STRING.matches(parent, state)) {
       // e.g. new Integer($A).toString() -> String.valueOf($A)
       return SuggestedFix.builder()
-          .replace(parent.getStartPosition(), arg.getStartPosition(), "String.valueOf(")
+          .replace(getStartPosition(parent), getStartPosition(arg), "String.valueOf(")
           .replace(state.getEndPosition(arg), state.getEndPosition(parent), ")")
           .build();
     }
@@ -141,16 +140,16 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
 
       String replacement = String.format("%s.hashCode(", typeName);
       return fix.replace(
-              parent.getStartPosition(), arg.getStartPosition(), replacement + optionalCast)
+              getStartPosition(parent), getStartPosition(arg), replacement + optionalCast)
           .replace(state.getEndPosition(arg), state.getEndPosition(parent), optionalSuffix + ")")
           .build();
     }
 
     if (COMPARE_TO.matches(parent, state)
         && ASTHelpers.getReceiver((ExpressionTree) parent).equals(tree)) {
-      JCMethodInvocation compareTo = (JCMethodInvocation) parent;
+      MethodInvocationTree compareTo = (MethodInvocationTree) parent;
       // e.g. new Integer($A).compareTo($B) -> Integer.compare($A, $B)
-      JCTree.JCExpression rhs = getOnlyElement(compareTo.getArguments());
+      ExpressionTree rhs = getOnlyElement(compareTo.getArguments());
 
       String optionalCast = "";
       String optionalSuffix = "";
@@ -166,12 +165,12 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
 
       return SuggestedFix.builder()
           .replace(
-              compareTo.getStartPosition(),
-              arg.getStartPosition(),
+              getStartPosition(compareTo),
+              getStartPosition(arg),
               String.format("%s.compare(%s", typeName, optionalCast))
           .replace(
               /* startPos= */ state.getEndPosition(arg),
-              /* endPos= */ rhs.getStartPosition(),
+              /* endPos= */ getStartPosition(rhs),
               String.format("%s, ", optionalSuffix))
           .replace(state.getEndPosition(rhs), state.getEndPosition(compareTo), ")")
           .build();
@@ -194,7 +193,7 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     }
 
     return SuggestedFix.builder()
-        .replace(getStartPosition(tree), arg.getStartPosition(), prefixToArg)
+        .replace(getStartPosition(tree), getStartPosition(arg), prefixToArg)
         .postfixWith(arg, suffix)
         .build();
   }

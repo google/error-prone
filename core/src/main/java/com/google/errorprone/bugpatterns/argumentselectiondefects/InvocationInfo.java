@@ -73,7 +73,7 @@ abstract class InvocationInfo {
     pointer for the outer class as the first name (but not the first type). If we see this, then
     just abort */
     if (!formalParameters.isEmpty()
-        && formalParameters.get(0).getSimpleName().toString().matches("this\\$[0-9]+")) {
+        && formalParameters.getFirst().getSimpleName().toString().matches("this\\$[0-9]+")) {
       return ImmutableList.of();
     }
 

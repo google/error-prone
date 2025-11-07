@@ -74,8 +74,8 @@ public class MultiVariableDeclaration extends BugChecker
         continue;
       }
       VariableTree variableTree = (VariableTree) it.next();
-      ArrayList<JCVariableDecl> fragments = new ArrayList<>();
-      fragments.add((JCVariableDecl) variableTree);
+      ArrayList<VariableTree> fragments = new ArrayList<>();
+      fragments.add(variableTree);
       // Javac handles multi-variable declarations by lowering them in the parser into a series of
       // individual declarations, all of which have the same start position. We search for the first
       // declaration in the group, which is either the first variable declared in this scope or has
@@ -83,22 +83,22 @@ public class MultiVariableDeclaration extends BugChecker
       while (it.hasNext()
           && it.peek() instanceof VariableTree
           && getStartPosition(variableTree) == getStartPosition(it.peek())) {
-        fragments.add((JCVariableDecl) it.next());
+        fragments.add((VariableTree) it.next());
       }
       if (fragments.size() == 1) {
         continue;
       }
       Fix fix =
           SuggestedFix.replace(
-              fragments.get(0).getStartPosition(),
+              getStartPosition(fragments.getFirst()),
               state.getEndPosition(Iterables.getLast(fragments)),
               fragments.stream().map(this::pretty).collect(joining("")));
-      state.reportMatch(describeMatch(fragments.get(0), fix));
+      state.reportMatch(describeMatch(fragments.getFirst(), fix));
     }
     return NO_MATCH;
   }
 
-  private String pretty(JCVariableDecl variableDecl) {
+  private String pretty(VariableTree variableDecl) {
     StringWriter sw = new StringWriter();
     try {
       new Pretty(sw, true) {
@@ -115,7 +115,7 @@ public class MultiVariableDeclaration extends BugChecker
             super.visitAnnotation(anno);
           }
         }
-      }.printStat(variableDecl);
+      }.printStat((JCVariableDecl) variableDecl);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }

@@ -87,7 +87,7 @@ public final class JodaPlusMinusLong extends BugChecker implements MethodInvocat
     }
 
     SuggestedFix.Builder builder = SuggestedFix.builder();
-    ExpressionTree firstArgumentTree = tree.getArguments().get(0);
+    ExpressionTree firstArgumentTree = tree.getArguments().getFirst();
     String firstArgumentReplacement;
     if (DURATION_GET_MILLIS_MATCHER.matches(firstArgumentTree, state)) {
       // This is passing {@code someDuration.getMillis()} as the parameter. we can replace this

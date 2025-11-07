@@ -61,7 +61,7 @@ public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocatio
     if (!METHOD_MATCHER.matches(tree, state)) {
       return Description.NO_MATCH;
     }
-    String value = ASTHelpers.constValue(tree.getArguments().get(0), String.class);
+    String value = ASTHelpers.constValue(tree.getArguments().getFirst(), String.class);
     if (value == null) {
       // Value isn't a compile-time constant, so we can't know if it's unsafe.
       return Description.NO_MATCH;
@@ -74,7 +74,7 @@ public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocatio
     Description.Builder builder = buildDescription(tree).setMessage(replacement.message);
     for (String r : replacement.replacements) {
       builder.addFix(
-          SuggestedFix.replace(tree.getArguments().get(0), state.getConstantExpression(r)));
+          SuggestedFix.replace(tree.getArguments().getFirst(), state.getConstantExpression(r)));
     }
     return builder.build();
   }

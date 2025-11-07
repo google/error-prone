@@ -109,4 +109,47 @@ public class TruthConstantAssertsPositiveCases {
             """)
         .doTest();
   }
+
+  @Test
+  public void positiveCase_viaImmutableList() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.collect.ImmutableList;
+
+            public class Test {
+              public void test(Object a) {
+                // BUG: Diagnostic contains:
+                assertThat(ImmutableList.of(1, 2, 3)).isEqualTo(a);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveWithEnumOnLeftHandSide() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            public class Test {
+              enum TestEnum {
+                A,
+                B
+              }
+
+              public void test(Object a) {
+                // BUG: Diagnostic contains:
+                assertThat(TestEnum.A).isEqualTo(a);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

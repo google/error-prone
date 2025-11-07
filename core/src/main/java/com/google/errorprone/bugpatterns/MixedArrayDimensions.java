@@ -68,7 +68,7 @@ public class MixedArrayDimensions extends BugChecker
         continue;
       }
       ImmutableList<ErrorProneToken> tokens = state.getOffsetTokens(start, end);
-      if (tokens.size() > 2 && tokens.get(0).kind() == TokenKind.IDENTIFIER) {
+      if (tokens.size() > 2 && tokens.getFirst().kind() == TokenKind.IDENTIFIER) {
         String dim = source.subSequence(start, end).toString();
         int nonWhitespace = CharMatcher.isNot(' ').indexIn(dim);
         int idx = dim.indexOf("[]", nonWhitespace);

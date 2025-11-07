@@ -405,15 +405,6 @@ public final class HeldLockAnalyzer {
 
     private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
-    /** Stub method to allow removing the GuardedByFlags argument. */
-    public static Optional<GuardedByExpression> from(
-        JCTree.JCExpression guardedMemberExpression,
-        GuardedByExpression guard,
-        VisitorState state,
-        GuardedByFlags flags) {
-      return from(guardedMemberExpression, guard, state);
-    }
-
     /**
      * Determine the lock expression that needs to be held when accessing a specific guarded member.
      *

@@ -163,6 +163,6 @@ public class AppliedFixTest {
   public void shouldThrowIfReplacementOutsideSource() {
     SuggestedFix fix = SuggestedFix.replace(0, 6, "World!");
     assertThrows(
-        IllegalArgumentException.class, () -> AppliedFix.apply("Hello", endPositions, fix));
+        StringIndexOutOfBoundsException.class, () -> AppliedFix.apply("Hello", endPositions, fix));
   }
 }

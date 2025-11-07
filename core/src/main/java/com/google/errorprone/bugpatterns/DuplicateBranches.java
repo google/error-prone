@@ -78,7 +78,7 @@ public class DuplicateBranches extends BugChecker
       if (statements.isEmpty()) {
         start = end;
       } else {
-        start = getStartPosition(statements.get(0));
+        start = getStartPosition(statements.getFirst());
         end = state.getEndPosition(getLast(statements));
       }
     }

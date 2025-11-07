@@ -59,7 +59,7 @@ public final class FloggerLogVarargs extends BugChecker implements MethodInvocat
     }
     // Heuristically, a compile time constant format string might be intended to be used with an
     // actual array, but a non-CTC probably isn't.
-    return ASTHelpers.constValue(tree.getArguments().get(0)) == null
+    return ASTHelpers.constValue(tree.getArguments().getFirst()) == null
         ? describeMatch(tree, SuggestedFixes.renameMethodInvocation(tree, "logVarargs", state))
         : NO_MATCH;
   }

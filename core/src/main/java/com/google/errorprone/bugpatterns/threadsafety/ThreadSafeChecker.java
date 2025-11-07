@@ -296,16 +296,6 @@ public class ThreadSafeChecker extends BugChecker
       if (hasAnnotation(superType.tsym, THREAD_SAFE_ANNOTATION, state)) {
         return superType;
       }
-      // We currently trust that @interface annotations are threadsafe, but don't enforce that
-      // custom interface implementations are also threadsafe. That means the check can be
-      // defeated by writing a custom mutable annotation implementation, and passing it around
-      // using the superclass type.
-      //
-      // TODO(b/25630189): fix this
-      //
-      // if (superType.tsym.getKind() == ElementKind.ANNOTATION_TYPE) {
-      //   return superType;
-      // }
     }
     return null;
   }

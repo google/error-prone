@@ -29,8 +29,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression;
-import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression.ConstantExpressionKind;
-import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.PureMethodInvocation;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression.PureMethodInvocation;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.Truthiness;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
@@ -148,8 +147,7 @@ public final class OptionalNotPresent extends BugChecker implements CompilationU
 
     private Stream<PureMethodInvocation> getMethodInvocations(Multiset<ConstantExpression> truths) {
       return truths.stream()
-          .filter(truth -> truth.kind().equals(ConstantExpressionKind.PURE_METHOD))
-          .map(ConstantExpression::pureMethod);
+          .flatMap(ce -> ce instanceof PureMethodInvocation pmi ? Stream.of(pmi) : Stream.empty());
     }
   }
 }

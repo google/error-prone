@@ -215,7 +215,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
         // and its first statement should be a super() call to the method in question.
         return constructor
             .map(MethodTree::getBody)
-            .map(block -> block.getStatements().get(0))
+            .map(block -> block.getStatements().getFirst())
             .map(ExpressionStatementTree.class::cast)
             .map(ExpressionStatementTree::getExpression)
             .map(MethodInvocationTree.class::cast)
@@ -292,7 +292,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
     if (!ASTHelpers.isVoidType(method.getReturnType(), state)) {
       return Description.NO_MATCH;
     }
-    String message = annotationOnVoid(presentAnnotations.get(0), "methods");
+    String message = annotationOnVoid(presentAnnotations.getFirst(), "methods");
     return buildDescription(tree).setMessage(message).build();
   }
 

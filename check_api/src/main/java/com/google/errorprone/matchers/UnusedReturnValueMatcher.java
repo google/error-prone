@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingMethod;
@@ -228,7 +229,7 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
     BlockTree parentBlock = ASTHelpers.findEnclosingNode(s.getPath(), BlockTree.class);
     return parentBlock != null
         && parentBlock.getStatements().size() == 1
-        && parentBlock.getStatements().get(0) == t;
+        && getOnlyElement(parentBlock.getStatements()) == t;
   }
 
   /** Allow return values to be ignored in tests that expect an exception to be thrown. */

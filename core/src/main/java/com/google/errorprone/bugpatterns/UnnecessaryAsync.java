@@ -17,9 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static java.lang.String.format;
@@ -158,41 +160,34 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
         if (parentTree instanceof MemberSelectTree memberSelectTree) {
           var grandparent =
               (MethodInvocationTree) getCurrentPath().getParentPath().getParentPath().getLeaf();
-          if (memberSelectTree.getIdentifier().contentEquals("set")) {
-            fix.replace(
-                grandparent,
-                format(
-                    "%s = %s",
-                    state.getSourceForNode(tree),
-                    state.getSourceForNode(grandparent.getArguments().get(0))));
-          } else if (memberSelectTree.getIdentifier().contentEquals("get")) {
-            fix.replace(grandparent, state.getSourceForNode(tree));
-          } else if (memberSelectTree.getIdentifier().contentEquals("getAndIncrement")) {
-            fix.replace(grandparent, format("%s++", state.getSourceForNode(tree)));
-          } else if (memberSelectTree.getIdentifier().contentEquals("getAndDecrement")) {
-            fix.replace(grandparent, format("%s--", state.getSourceForNode(tree)));
-          } else if (memberSelectTree.getIdentifier().contentEquals("incrementAndGet")) {
-            fix.replace(grandparent, format("++%s", state.getSourceForNode(tree)));
-          } else if (memberSelectTree.getIdentifier().contentEquals("decrementAndGet")) {
-            fix.replace(grandparent, format("--%s", state.getSourceForNode(tree)));
-          } else if (memberSelectTree.getIdentifier().contentEquals("compareAndSet")) {
-            fix.replace(
-                grandparent,
-                format(
-                    "%s = %s",
-                    state.getSourceForNode(tree),
-                    state.getSourceForNode(grandparent.getArguments().get(1))));
-          } else if (memberSelectTree.getIdentifier().contentEquals("addAndGet")) {
-            fix.replace(
-                grandparent,
-                format(
-                    "%s += %s",
-                    state.getSourceForNode(tree),
-                    state.getSourceForNode(grandparent.getArguments().get(0))));
-          } else {
-            fixable.set(false);
+          String methodName = memberSelectTree.getIdentifier().toString();
+          int receiverEndPos = state.getEndPosition(memberSelectTree.getExpression());
+          int endPos = state.getEndPosition(grandparent);
+          switch (methodName) {
+            case "set" -> {
+              var arg = grandparent.getArguments().getFirst();
+              fix.replace(receiverEndPos, getStartPosition(arg), " = ")
+                  .replace(state.getEndPosition(arg), endPos, "");
+            }
+            case "get" -> fix.replace(receiverEndPos, endPos, "");
+            case "getAndIncrement" -> fix.replace(receiverEndPos, endPos, "++");
+            case "getAndDecrement" -> fix.replace(receiverEndPos, endPos, "--");
+            case "incrementAndGet" ->
+                fix.prefixWith(memberSelectTree, "++").replace(receiverEndPos, endPos, "");
+            case "decrementAndGet" ->
+                fix.prefixWith(memberSelectTree, "--").replace(receiverEndPos, endPos, "");
+            case "compareAndSet" -> {
+              var arg = grandparent.getArguments().get(1);
+              fix.replace(receiverEndPos, getStartPosition(arg), " = ")
+                  .replace(state.getEndPosition(arg), endPos, "");
+            }
+            case "addAndGet" -> {
+              var arg = getOnlyElement(grandparent.getArguments());
+              fix.replace(receiverEndPos, getStartPosition(arg), " += ")
+                  .replace(state.getEndPosition(arg), endPos, "");
+            }
+            default -> fixable.set(false);
           }
-
         } else {
           fixable.set(false);
         }

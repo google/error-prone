@@ -151,7 +151,7 @@ public final class InvalidParam extends BugChecker implements ClassTreeMatcher, 
     public Void visitParam(ParamTree paramTree, Void unused) {
       ImmutableSet<String> paramNames = paramTree.isTypeParameter() ? typeParameters : parameters;
       if (!paramTree.getDescription().isEmpty()) {
-        var firstDescription = paramTree.getDescription().get(0);
+        var firstDescription = paramTree.getDescription().getFirst();
         if (firstDescription instanceof DCText dcText) {
           if (dcText.getBody().startsWith(":")) {
             int colonLocation = Utils.getEndPosition(paramTree.getName(), state);

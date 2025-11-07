@@ -148,10 +148,7 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
       SuggestedFix.Builder fix, VisitorState state, List<? extends Tree> arguments, Tree tree) {
     int idx = arguments.indexOf(tree);
     if (idx == arguments.size() - 1) {
-      fix.replace(
-          state.getEndPosition(arguments.get(arguments.size() - 1)),
-          state.getEndPosition(tree),
-          "");
+      fix.replace(state.getEndPosition(arguments.getLast()), state.getEndPosition(tree), "");
     } else {
       fix.replace(getStartPosition(tree), getStartPosition(arguments.get(idx + 1)), "");
     }

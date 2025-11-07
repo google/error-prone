@@ -19,8 +19,11 @@ package com.google.errorprone.fixes;
 import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.Range;
 import com.sun.tools.javac.tree.EndPosTable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import org.jspecify.annotations.Nullable;
 
@@ -45,20 +48,58 @@ public record AppliedFix(String snippet, boolean isRemoveLine) {
       return null;
     }
 
-    String replaced = applyReplacements(source, endPositions, suggestedFix);
-
-    // Find the changed line containing the first edit
-    String snippet = firstEditedLine(replaced, Iterables.get(replacements, 0));
+    String snippet = snippet(source, replacements);
     if (snippet.isEmpty()) {
       return new AppliedFix("to remove this line", /* isRemoveLine= */ true);
     }
     return new AppliedFix(snippet, /* isRemoveLine= */ false);
   }
 
+  /**
+   * The maximum distance we'll look for a newline before or after the snippet. If we don't find one
+   * the snippet will just start or end in the middle of a line.
+   */
+  public static final int MAX_LINE_LENGTH = 100;
+
+  private static String snippet(
+      CharSequence sourceSequence, ImmutableSet<Replacement> replacements) {
+    Replacement firstEdit = replacements.iterator().next();
+    // Find a subrange of the source that should contain the entire first line that fixes are
+    // applied to, and then only edit source and apply fixes in that range. This is a performance
+    // optimization to avoid applying all of the fixes in very large files just to produce a
+    // snippet.
+    int startOffset = Math.max(0, firstEdit.startPosition() - MAX_LINE_LENGTH);
+    int endOffset = Math.min(firstEdit.endPosition() + MAX_LINE_LENGTH, sourceSequence.length());
+    Range<Integer> trimmed = Range.closedOpen(startOffset, endOffset);
+    List<Replacement> shiftedReplacements = new ArrayList<>();
+    for (Replacement replacement : replacements) {
+      if (!replacement.range().isConnected(trimmed)) {
+        continue;
+      }
+      if (replacement.endPosition() > endOffset) {
+        endOffset = replacement.endPosition();
+      }
+      shiftedReplacements.add(
+          Replacement.create(
+              replacement.startPosition() - startOffset,
+              replacement.endPosition() - startOffset,
+              replacement.replaceWith()));
+    }
+    String replaced =
+        applyReplacements(sourceSequence.subSequence(startOffset, endOffset), shiftedReplacements);
+    // Find the changed line containing the first edit
+    return firstEditedLine(replaced, shiftedReplacements.getFirst());
+  }
+
   public static String applyReplacements(CharSequence source, EndPosTable endPositions, Fix fix) {
+    return applyReplacements(source, fix.getReplacements(endPositions));
+  }
+
+  private static String applyReplacements(
+      CharSequence source, Collection<Replacement> replacements) {
     StringBuilder replaced = new StringBuilder();
     int positionInOriginal = 0;
-    for (Replacement repl : fix.getReplacements(endPositions)) {
+    for (Replacement repl : replacements) {
       checkArgument(
           repl.endPosition() <= source.length(),
           "End [%s] should not exceed source length [%s]",

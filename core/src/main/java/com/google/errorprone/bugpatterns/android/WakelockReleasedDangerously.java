@@ -177,7 +177,7 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
         // Is reference counted, i.e., referenceCounted not explicitly set to false.
         && map.get("setReferenceCounted").stream()
             .noneMatch(
-                m -> Boolean.FALSE.equals(constValue(m.getArguments().get(0), Boolean.class)));
+                m -> Boolean.FALSE.equals(constValue(m.getArguments().getFirst(), Boolean.class)));
   }
 
   private static ClassTree getTopLevelClass(VisitorState state) {

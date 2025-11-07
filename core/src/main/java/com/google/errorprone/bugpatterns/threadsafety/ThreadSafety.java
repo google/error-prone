@@ -492,8 +492,8 @@ public final class ThreadSafety {
     public Violation visitType(Type type, Void s) {
       switch (type.tsym.getKind()) {
         case ANNOTATION_TYPE -> {
-          // assume annotations are always immutable
-          // TODO(b/25630189): add enforcement
+          // Annotations are always immutable
+          // (https://errorprone.info/bugpattern/ImmutableAnnotationChecker)
           return Violation.absent();
         }
         case ENUM -> {
@@ -507,8 +507,8 @@ public final class ThreadSafety {
         }
       }
       if (WellKnownMutability.isAnnotation(state, type)) {
-        // annotation implementations may not have ANNOTATION_TYPE kind, assume they are immutable
-        // TODO(b/25630189): add enforcement
+        // Annotations are always immutable
+        // (https://errorprone.info/bugpattern/ImmutableAnnotationChecker)
         return Violation.absent();
       }
       AnnotationInfo annotation = getMarkerOrAcceptedAnnotation(type.tsym, state);

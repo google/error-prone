@@ -126,7 +126,7 @@ public final class InterruptedExceptionSwallowed extends BugChecker
       MethodTree tree, Set<Type> exceptions, VisitorState state) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.replace(
-        getStartPosition(tree.getThrows().get(0)),
+        getStartPosition(tree.getThrows().getFirst()),
         state.getEndPosition(getLast(tree.getThrows())),
         exceptions.stream().map(t -> qualifyType(state, fix, t)).sorted().collect(joining(", ")));
     return fix.build();
@@ -188,7 +188,7 @@ public final class InterruptedExceptionSwallowed extends BugChecker
     if (block.isEmpty()) {
       return SuggestedFix.replace(catchTree.getBlock(), String.format("{%s}", fix));
     }
-    return SuggestedFix.prefixWith(block.get(0), fix);
+    return SuggestedFix.prefixWith(block.getFirst(), fix);
   }
 
   private static boolean blockChecksForInterruptedException(BlockTree block, VisitorState state) {

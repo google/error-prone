@@ -68,7 +68,7 @@ public class LoopOverCharArray extends BugChecker implements BugChecker.Enhanced
       description.addFix(
           SuggestedFix.replace(
               getStartPosition(tree),
-              getStartPosition(statements.get(0)),
+              getStartPosition(statements.getFirst()),
               String.format(
                   "for (int i = 0; i < %s.length(); i++) { char %s = %s.charAt(i);",
                   state.getSourceForNode(receiver),

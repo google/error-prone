@@ -258,7 +258,7 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
               && constValue(
                       ((MethodInvocationTree) ((ExpressionStatementTree) statement).getExpression())
                           .getArguments()
-                          .get(0))
+                          .getFirst())
                   == FALSE) {
             break;
           }

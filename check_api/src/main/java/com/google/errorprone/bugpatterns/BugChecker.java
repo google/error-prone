@@ -35,7 +35,6 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayAccessTree;
@@ -107,9 +106,7 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Name;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
@@ -258,31 +255,6 @@ public abstract class BugChecker implements Suppressible, Serializable {
   @Override
   public boolean suppressedByAnyOf(Set<Name> annotations, VisitorState s) {
     return checkSuppression.test(annotations, s);
-  }
-
-  /**
-   * @deprecated use {@link #isSuppressed(Tree, VisitorState)} instead
-   */
-  @Deprecated
-  public boolean isSuppressed(Tree tree) {
-    return isSuppressed(ASTHelpers.getAnnotation(tree, SuppressWarnings.class));
-  }
-
-  /**
-   * @deprecated use {@link #isSuppressed(Symbol, VisitorState)} instead
-   */
-  @Deprecated
-  public boolean isSuppressed(Symbol symbol) {
-    return isSuppressed(ASTHelpers.getAnnotation(symbol, SuppressWarnings.class));
-  }
-
-  private boolean isSuppressed(SuppressWarnings suppression) {
-    if (suppression == null || !supportsSuppressWarnings()) {
-      return false;
-    }
-
-    List<String> suppressions = Arrays.asList(suppression.value());
-    return suppressions.contains("all") || !Collections.disjoint(suppressions, allNames());
   }
 
   /**

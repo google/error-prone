@@ -175,7 +175,7 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
 
       /** Adds to result if the call uses a compile-time constant argument. */
       private void handleConstantLookup(MethodInvocationTree tree) {
-        ExpressionTree argumentExpr = tree.getArguments().get(0);
+        ExpressionTree argumentExpr = tree.getArguments().getFirst();
         String argumentValue = ASTHelpers.constValue(argumentExpr, String.class);
         if (argumentValue != null) {
           ExpressionTree methodSelect = tree.getMethodSelect();

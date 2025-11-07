@@ -24,6 +24,7 @@ import static com.google.errorprone.bugpatterns.javadoc.Utils.getDocTreePath;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getStartPosition;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ErrorProneLog.deferredDiagnosticHandler;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -46,6 +47,7 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DCTree.DCText;
+import com.sun.tools.javac.util.Log;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
@@ -143,9 +145,29 @@ public final class InvalidLink extends BugChecker
         return super.visitLink(linkTree, null);
       }
       String reference = linkTree.getReference().getSignature();
-      Element element =
-          JavacTrees.instance(state.context)
-              .getElement(new DocTreePath(getCurrentPath(), linkTree.getReference()));
+      Element element = null;
+      Log log = Log.instance(state.context);
+      // Install a deferred diagnostic handler before calling DocTrees.getElement(DocTreePath)
+
+      Log.DeferredDiagnosticHandler deferredDiagnosticHandler = deferredDiagnosticHandler(log);
+      boolean crashed = false;
+      try {
+        element =
+            JavacTrees.instance(state.context)
+                .getElement(new DocTreePath(getCurrentPath(), linkTree.getReference()));
+      } catch (NullPointerException | AssertionError e) {
+        crashed = true;
+      } finally {
+        log.popDiagnosticHandler(deferredDiagnosticHandler);
+      }
+      if (crashed) {
+        // If the @link crashed javac, report a finding.
+        // TODO: cushon - remove if https://bugs.openjdk.org/browse/JDK-8371248 is fixed
+        state.reportMatch(
+            buildDescription(diagnosticPosition(getCurrentPath(), state))
+                .addFix(replace(linkTree, String.format("{@code %s}", reference), state))
+                .build());
+      }
       // Don't warn about fully qualified types; they won't always be known at compile-time.
       if (element != null || reference.contains(".")) {
         return super.visitLink(linkTree, null);

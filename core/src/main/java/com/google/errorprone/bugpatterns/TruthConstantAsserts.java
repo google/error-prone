@@ -20,18 +20,24 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpressionVisitor;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import java.util.regex.Pattern;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import java.util.concurrent.atomic.AtomicBoolean;
+import javax.inject.Inject;
 
 /**
  * Points out if Truth Library assert is called on a constant.
@@ -47,13 +53,18 @@ public class TruthConstantAsserts extends BugChecker implements MethodInvocation
   private static final Matcher<ExpressionTree> ASSERT_THAT =
       staticMethod().onClass("com.google.common.truth.Truth").named("assertThat");
 
-  private static final Pattern EQ_NEQ = Pattern.compile("isEqualTo|isNotEqualTo");
-
   private static final Matcher<ExpressionTree> TRUTH_SUBJECT_CALL =
       instanceMethod()
           .onDescendantOf("com.google.common.truth.Subject")
-          .withNameMatching(EQ_NEQ)
+          .namedAnyOf("isEqualTo", "isNotEqualTo")
           .withParameters("java.lang.Object");
+
+  private final ConstantExpressions constantExpressions;
+
+  @Inject
+  TruthConstantAsserts(ConstantExpressions constantExpressions) {
+    this.constantExpressions = constantExpressions;
+  }
 
   @Override
   public Description matchMethodInvocation(
@@ -76,15 +87,35 @@ public class TruthConstantAsserts extends BugChecker implements MethodInvocation
       return Description.NO_MATCH;
     }
     // check that argument of assertThat is a constant
-    if (ASTHelpers.constValue(expr) == null) {
+    if (!constantIsh(expr, state)) {
       return Description.NO_MATCH;
     }
     // check that expectation isn't a constant
     ExpressionTree expectation = getOnlyElement(methodInvocationTree.getArguments());
-    if (ASTHelpers.constValue(expectation) != null) {
+    if (constantIsh(expectation, state)) {
       return Description.NO_MATCH;
     }
     SuggestedFix fix = SuggestedFix.swap(expr, expectation, state);
     return describeMatch(methodInvocationTree, fix);
+  }
+
+  private boolean constantIsh(ExpressionTree tree, VisitorState state) {
+    var constant = constantExpressions.constantExpression(tree, state).orElse(null);
+    if (constant == null) {
+      return false;
+    }
+    // Identifiers can be considered constants, but they're exactly what we usually assert on! So
+    // don't consider them to be constants in this context.
+    AtomicBoolean involvesIdentifiers = new AtomicBoolean();
+    constant.accept(
+        new ConstantExpressionVisitor() {
+          @Override
+          public void visitIdentifier(Symbol identifier) {
+            if (!(identifier instanceof MethodSymbol) && !isStatic(identifier)) {
+              involvesIdentifiers.set(true);
+            }
+          }
+        });
+    return !involvesIdentifiers.get();
   }
 }
