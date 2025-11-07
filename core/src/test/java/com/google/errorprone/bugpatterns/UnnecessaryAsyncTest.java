@@ -260,4 +260,36 @@ public final class UnnecessaryAsyncTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void fixOverlap() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.atomic.AtomicInteger;
+
+            class Test {
+              int test() {
+                var ai = new AtomicInteger();
+                ai.set(ai.get() + 1);
+                return ai.get();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.atomic.AtomicInteger;
+
+            class Test {
+              int test() {
+                int ai = 0;
+                ai = ai + 1;
+                return ai;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
