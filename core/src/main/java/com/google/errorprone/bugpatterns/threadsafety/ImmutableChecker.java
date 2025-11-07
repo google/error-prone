@@ -39,7 +39,6 @@ import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -102,40 +101,20 @@ public class ImmutableChecker extends BugChecker
   private final ImmutableAnalysis.Factory immutableAnalysisFactory;
   private final WellKnownMutability wellKnownMutability;
   private final ImmutableSet<String> immutableAnnotations;
-  private final boolean markerAnnotationInherited;
 
   @Inject
   ImmutableChecker(
-      ImmutableAnalysis.Factory immutableAnalysisFactory,
-      WellKnownMutability wellKnownMutability,
-      ErrorProneFlags flags) {
-    this(
-        immutableAnalysisFactory,
-        wellKnownMutability,
-        ImmutableSet.of(Immutable.class.getName()),
-        flags.getBoolean("Immutable:MarkerAnnotationInherited").orElse(true));
+      ImmutableAnalysis.Factory immutableAnalysisFactory, WellKnownMutability wellKnownMutability) {
+    this(immutableAnalysisFactory, wellKnownMutability, ImmutableSet.of(Immutable.class.getName()));
   }
 
   ImmutableChecker(
       ImmutableAnalysis.Factory immutableAnalysisFactory,
       WellKnownMutability wellKnownMutability,
       ImmutableSet<String> immutableAnnotations) {
-    this(
-        immutableAnalysisFactory,
-        wellKnownMutability,
-        immutableAnnotations,
-        /* markerAnnotationInherited= */ true);
-  }
-
-  ImmutableChecker(
-      ImmutableAnalysis.Factory immutableAnalysisFactory,
-      WellKnownMutability wellKnownMutability,
-      ImmutableSet<String> immutableAnnotations,
-      boolean markerAnnotationInherited) {
     this.immutableAnalysisFactory = immutableAnalysisFactory;
     this.wellKnownMutability = wellKnownMutability;
     this.immutableAnnotations = immutableAnnotations;
-    this.markerAnnotationInherited = markerAnnotationInherited;
   }
 
   @Override
@@ -604,9 +583,6 @@ public class ImmutableChecker extends BugChecker
   }
 
   private boolean typeOrSuperHasImmutableAnnotation(TypeSymbol tsym, VisitorState state) {
-    if (!markerAnnotationInherited) {
-      return hasImmutableAnnotation(tsym, state);
-    }
     return hasImmutableAnnotation(tsym, state) || immutableSupertype(tsym, state) != null;
   }
 
