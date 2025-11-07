@@ -150,14 +150,23 @@ public final class InvalidLink extends BugChecker
       // Install a deferred diagnostic handler before calling DocTrees.getElement(DocTreePath)
 
       Log.DeferredDiagnosticHandler deferredDiagnosticHandler = deferredDiagnosticHandler(log);
+      boolean crashed = false;
       try {
         element =
             JavacTrees.instance(state.context)
                 .getElement(new DocTreePath(getCurrentPath(), linkTree.getReference()));
       } catch (NullPointerException | AssertionError e) {
-        // TODO: cushon - remove if https://bugs.openjdk.org/browse/JDK-8371248 is fixed
+        crashed = true;
       } finally {
         log.popDiagnosticHandler(deferredDiagnosticHandler);
+      }
+      if (crashed) {
+        // If the @link crashed javac, report a finding.
+        // TODO: cushon - remove if https://bugs.openjdk.org/browse/JDK-8371248 is fixed
+        state.reportMatch(
+            buildDescription(diagnosticPosition(getCurrentPath(), state))
+                .addFix(replace(linkTree, String.format("{@code %s}", reference), state))
+                .build());
       }
       // Don't warn about fully qualified types; they won't always be known at compile-time.
       if (element != null || reference.contains(".")) {
