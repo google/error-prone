@@ -263,7 +263,7 @@ public class RestrictedApiChecker extends BugChecker
     Optional<Attribute> allowlistAnnotations =
         MoreAnnotations.getValue(api, "allowlistAnnotations");
     // TODO(b/178905039): remove handling of legacy names
-    if (!allowlistAnnotations.isPresent()) {
+    if (allowlistAnnotations.isEmpty()) {
       allowlistAnnotations = MoreAnnotations.getValue(api, "whitelistAnnotations");
     }
     return Matchers.hasAnyAnnotation(
@@ -277,7 +277,7 @@ public class RestrictedApiChecker extends BugChecker
     Optional<Attribute> allowlistWithWarningAnnotations =
         MoreAnnotations.getValue(api, "allowlistWithWarningAnnotations");
     // TODO(b/178905039): remove handling of legacy names
-    if (!allowlistWithWarningAnnotations.isPresent()) {
+    if (allowlistWithWarningAnnotations.isEmpty()) {
       allowlistWithWarningAnnotations =
           MoreAnnotations.getValue(api, "whitelistWithWarningAnnotations");
     }

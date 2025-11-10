@@ -483,7 +483,7 @@ public class MethodInvocationMatcher {
       // First collect all the nodes that accept any token at all
       for (Node node : curr) {
         for (Map.Entry<Optional<Token>, Node> entry : nfa.row(node).entrySet()) {
-          if (!entry.getKey().isPresent()) {
+          if (entry.getKey().isEmpty()) {
             acceptsAny.add(entry.getValue());
           }
         }

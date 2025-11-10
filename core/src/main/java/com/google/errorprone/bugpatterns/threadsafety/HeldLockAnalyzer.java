@@ -127,13 +127,10 @@ public final class HeldLockAnalyzer {
     if (!classSymbol.fullname.contentEquals(MONITOR_GUARD_CLASS)) {
       return locks;
     }
-    Optional<GuardedByExpression> lockExpression =
-        GuardedByBinder.bindExpression(
-            Iterables.getOnlyElement(newClassTree.getArguments()), state);
-    if (!lockExpression.isPresent()) {
-      return locks;
-    }
-    return locks.plus(lockExpression.get());
+    return GuardedByBinder.bindExpression(
+            Iterables.getOnlyElement(newClassTree.getArguments()), state)
+        .map(le -> locks.plus(le))
+        .orElse(locks);
   }
 
   private static class LockScanner extends TreePathScanner<Void, HeldLockSet> {
@@ -264,13 +261,13 @@ public final class HeldLockAnalyzer {
             GuardedByBinder.bindString(
                 guardString,
                 GuardedBySymbolResolver.from(tree, visitorState.withPath(getCurrentPath())));
-        if (!guard.isPresent()) {
+        if (guard.isEmpty()) {
           invalidLock(tree, locks, guardString);
           continue;
         }
         Optional<GuardedByExpression> boundGuard =
             ExpectedLockCalculator.from((JCTree.JCExpression) tree, guard.get(), visitorState);
-        if (!boundGuard.isPresent()) {
+        if (boundGuard.isEmpty()) {
           // We couldn't resolve a guarded by expression in the current scope, so we can't
           // guarantee the access is protected and must report an error to be safe.
           invalidLock(tree, locks, guardString);
@@ -439,7 +436,7 @@ public final class HeldLockAnalyzer {
       Optional<GuardedByExpression> guardedMember =
           GuardedByBinder.bindExpression(guardedMemberExpression, state);
 
-      if (!guardedMember.isPresent()) {
+      if (guardedMember.isEmpty()) {
         return Optional.empty();
       }
 

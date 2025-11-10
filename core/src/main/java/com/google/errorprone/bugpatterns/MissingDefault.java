@@ -56,7 +56,7 @@ public class MissingDefault extends BugChecker implements SwitchTreeMatcher {
       return NO_MATCH;
     }
     Optional<? extends CaseTree> maybeDefault = getSwitchDefault(tree);
-    if (!maybeDefault.isPresent()) {
+    if (maybeDefault.isEmpty()) {
       if (isExhaustive(tree)) {
         return NO_MATCH;
       }

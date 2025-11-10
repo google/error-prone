@@ -119,7 +119,7 @@ public final class GuardedByUtils {
     for (String guard : guards) {
       Optional<GuardedByExpression> boundGuard =
           GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, state));
-      if (!boundGuard.isPresent()) {
+      if (boundGuard.isEmpty()) {
         return GuardedByValidationResult.invalid("could not resolve guard");
       }
       boundGuards.add(boundGuard.get());
@@ -151,12 +151,9 @@ public final class GuardedByUtils {
 
   public static @Nullable Symbol bindGuardedByString(
       Tree tree, String guard, VisitorState visitorState) {
-    Optional<GuardedByExpression> bound =
-        GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState));
-    if (!bound.isPresent()) {
-      return null;
-    }
-    return bound.get().sym();
+    return GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState))
+        .map(bound -> bound.sym())
+        .orElse(null);
   }
 
   private GuardedByUtils() {}

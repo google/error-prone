@@ -1132,7 +1132,7 @@ public final class SuggestedFixes {
                   .replaceFirst("\\(\\)", "(" + parameterPrefix + newArgument(newValues) + ")"));
     }
     Optional<ExpressionTree> maybeExistingArgument = findArgument(annotation, parameterName);
-    if (!maybeExistingArgument.isPresent()) {
+    if (maybeExistingArgument.isEmpty()) {
       return SuggestedFix.builder()
           .prefixWith(
               annotation.getArguments().getFirst(),
@@ -1192,7 +1192,7 @@ public final class SuggestedFixes {
                   + ')');
     }
     Optional<ExpressionTree> maybeExistingArgument = findArgument(annotation, parameterName);
-    if (!maybeExistingArgument.isPresent()) {
+    if (maybeExistingArgument.isEmpty()) {
       return SuggestedFix.builder()
           .prefixWith(
               annotation.getArguments().getFirst(),

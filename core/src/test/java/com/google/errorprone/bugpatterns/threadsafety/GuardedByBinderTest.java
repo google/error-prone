@@ -36,7 +36,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaFileObject;
 import org.junit.Ignore;
@@ -632,20 +631,18 @@ public class GuardedByBinderTest {
       finder.visitTopLevel((JCTree.JCCompilationUnit) compilationUnit);
       for (JCTree.JCClassDecl classDecl : finder.decls) {
         if (classDecl.getSimpleName().contentEquals(className)) {
-          Optional<GuardedByExpression> guardExpression =
+          GuardedByExpression guardExpression =
               GuardedByBinder.bindString(
-                  exprString,
-                  GuardedBySymbolResolver.from(
-                      ASTHelpers.getSymbol(classDecl),
-                      null,
-                      compilationUnit,
-                      task.getContext(),
-                      null,
-                      VisitorState.createForUtilityPurposes(task.getContext())));
-          if (!guardExpression.isPresent()) {
-            throw new IllegalGuardedBy(exprString);
-          }
-          return guardExpression.get().debugPrint();
+                      exprString,
+                      GuardedBySymbolResolver.from(
+                          ASTHelpers.getSymbol(classDecl),
+                          null,
+                          compilationUnit,
+                          task.getContext(),
+                          null,
+                          VisitorState.createForUtilityPurposes(task.getContext())))
+                  .orElseThrow(() -> new IllegalGuardedBy(exprString));
+          return guardExpression.debugPrint();
         }
       }
     }

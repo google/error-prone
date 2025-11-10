@@ -111,7 +111,7 @@ public final class Comments {
 
     CharSequence sourceCode = state.getSourceCode();
     Optional<Integer> endPosition = computeEndPosition(tree, sourceCode, state);
-    if (!endPosition.isPresent()) {
+    if (endPosition.isEmpty()) {
       return noComments(arguments);
     }
 

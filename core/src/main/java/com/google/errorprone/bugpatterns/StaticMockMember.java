@@ -54,7 +54,7 @@ public final class StaticMockMember extends BugChecker implements VariableTreeMa
     Optional<SuggestedFix> optionalFix =
         SuggestedFixes.removeModifiers(varTree, state, Modifier.STATIC);
 
-    if (!optionalFix.isPresent()) {
+    if (optionalFix.isEmpty()) {
       return NO_MATCH;
     }
     if (SuggestedFixes.compilesWithFix(optionalFix.get(), state)) {

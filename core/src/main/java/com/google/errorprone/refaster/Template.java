@@ -126,10 +126,10 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
       String argName = argNames.get(i);
       Optional<JCExpression> singleBinding =
           inliner.getOptionalBinding(new UFreeIdent.Key(argName));
-      if (!singleBinding.isPresent()) {
+      if (singleBinding.isEmpty()) {
         Optional<java.util.List<JCExpression>> exprs =
             inliner.getOptionalBinding(new URepeated.Key(argName));
-        if (!exprs.isPresent() || exprs.get().isEmpty()) {
+        if (exprs.isEmpty() || exprs.get().isEmpty()) {
           // It is a repeated template variable and matches no expressions.
           continue;
         }

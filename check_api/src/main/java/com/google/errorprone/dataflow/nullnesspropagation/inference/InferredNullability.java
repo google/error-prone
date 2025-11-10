@@ -87,20 +87,18 @@ public class InferredNullability {
       result =
           constraintGraph.predecessors(iv).stream()
               .map(this::getNullness)
-              .filter(Optional::isPresent)
-              .map(Optional::get)
+              .flatMap(Optional::stream)
               .reduce(Nullness::leastUpperBound); // use least upper bound (lub) to combine
       // 2. If not, resolve successors and use them as upper bounds
-      if (!result.isPresent()) {
+      if (result.isEmpty()) {
         result =
             constraintGraph.successors(iv).stream()
                 .map(this::getNullness)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .flatMap(Optional::stream)
                 .reduce(Nullness::greatestLowerBound); // use greatest lower bound (glb) to combine
       }
 
-      checkState(!inferredMemoTable.put(iv, result).isPresent());
+      checkState(inferredMemoTable.put(iv, result).isEmpty());
       return result;
     }
   }

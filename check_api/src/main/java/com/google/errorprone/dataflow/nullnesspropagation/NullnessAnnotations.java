@@ -211,7 +211,7 @@ public class NullnessAnnotations {
 
     // If the type variable doesn't have an explicit bound, see if its declaration is in the scope
     // of a default and use that as the bound.
-    return result.isPresent() ? result : fromDefaultAnnotations(typeVar.asElement());
+    return result.or(() -> fromDefaultAnnotations(typeVar.asElement()));
   }
 
   private static Optional<Nullness> fromAnnotationStream(

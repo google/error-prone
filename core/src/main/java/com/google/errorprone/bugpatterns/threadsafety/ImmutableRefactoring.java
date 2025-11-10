@@ -72,7 +72,7 @@ public class ImmutableRefactoring extends BugChecker implements CompilationUnitT
                   return s != null && s.getQualifiedName().contentEquals(JSR_305_IMMUTABLE);
                 })
             .findFirst();
-    if (!immutableImport.isPresent()) {
+    if (immutableImport.isEmpty()) {
       return Description.NO_MATCH;
     }
     Set<ClassTree> notOk = new HashSet<>();
