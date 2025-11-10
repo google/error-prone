@@ -110,12 +110,10 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
                       state)));
 
   private final boolean improvements;
-  private final boolean matchLiteProtos;
 
   @Inject
   RedundantSetterCall(ErrorProneFlags flags) {
     this.improvements = flags.getBoolean("RedundantSetterCall:Improvements").orElse(true);
-    this.matchLiteProtos = flags.getBoolean("OneOfChecks:MatchLiteProtos").orElse(true);
   }
 
   @Override
@@ -187,9 +185,6 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
   }
 
   private ImmutableMap<String, OneOfField> scanForOneOfSetters(Symbol proto, VisitorState state) {
-    if (!matchLiteProtos && isSubtype(proto.type, GENERATED_MESSAGE_LITE.get(state), state)) {
-      return ImmutableMap.of();
-    }
     var builder = ImmutableMap.<String, OneOfField>builder();
     for (Symbol element : getEnclosedElements(proto)) {
       if (!ONE_OF_ENUM.apply(element.type, state)) {
@@ -220,9 +215,6 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
         .map(name -> toUpperCase(name.replaceFirst("_FIELD_NUMBER$", "").replace("_", "")))
         .collect(toImmutableSet());
   }
-
-  private static final Supplier<Type> GENERATED_MESSAGE_LITE =
-      memoize(state -> state.getTypeFromString("com.google.protobuf.GeneratedMessageLite"));
 
   private static final Supplier<Type> MESSAGE_LITE =
       memoize(state -> state.getTypeFromString("com.google.protobuf.MessageLite"));
