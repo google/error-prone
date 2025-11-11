@@ -413,4 +413,24 @@ public class FormatStringAnnotationCheckerTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void notFirstArgument() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.FormatMethod;
+
+            class Test {
+              @FormatMethod
+              void f(Throwable o, String fmt, Object... args) {}
+
+              void test(Throwable t) {
+                f(t.getCause(), "message: %s", t.getMessage());
+              }
+            }
+            """)
+        .doTest();
+  }
 }

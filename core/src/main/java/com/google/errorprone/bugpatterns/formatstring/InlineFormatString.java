@@ -17,17 +17,11 @@
 package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.formatstring.LenientFormatStringUtils.getLenientFormatStringPosition;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
-import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static com.google.errorprone.util.AnnotationNames.FORMAT_METHOD_ANNOTATION;
-import static com.google.errorprone.util.AnnotationNames.FORMAT_STRING_ANNOTATION;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.MultimapBuilder;
@@ -38,7 +32,6 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -49,11 +42,9 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import org.jspecify.annotations.Nullable;
 
@@ -65,53 +56,14 @@ import org.jspecify.annotations.Nullable;
     severity = WARNING)
 public class InlineFormatString extends BugChecker implements CompilationUnitTreeMatcher {
 
-  private static final Matcher<ExpressionTree> PRECONDITIONS_CHECK =
-      allOf(
-          anyOf(
-              staticMethod().onClass("com.google.common.base.Preconditions"),
-              staticMethod().onClass("com.google.common.base.Verify")),
-          InlineFormatString::secondParameterIsString);
-
-  private static boolean secondParameterIsString(ExpressionTree tree, VisitorState state) {
-    Symbol symbol = getSymbol(tree);
-    if (!(symbol instanceof MethodSymbol methodSymbol)) {
-      return false;
-    }
-    return methodSymbol.getParameters().size() >= 2
-        && isSubtype(methodSymbol.getParameters().get(1).type, state.getSymtab().stringType, state);
-  }
-
   private static @Nullable ExpressionTree formatString(
       MethodInvocationTree tree, VisitorState state) {
     ImmutableList<ExpressionTree> args = FormatStringUtils.formatMethodArguments(tree, state);
     if (!args.isEmpty()) {
       return args.get(0);
     }
-    if (PRECONDITIONS_CHECK.matches(tree, state)) {
-      return tree.getArguments().get(1);
-    }
-    return formatMethodAnnotationArguments(tree, state);
-  }
-
-  private static @Nullable ExpressionTree formatMethodAnnotationArguments(
-      MethodInvocationTree tree, VisitorState state) {
-    MethodSymbol sym = getSymbol(tree);
-    if (!hasAnnotation(sym, FORMAT_METHOD_ANNOTATION, state)) {
-      return null;
-    }
-    return tree.getArguments().get(formatStringIndex(state, sym));
-  }
-
-  private static int formatStringIndex(VisitorState state, MethodSymbol sym) {
-    int idx = 0;
-    List<VarSymbol> parameters = sym.getParameters();
-    for (VarSymbol p : parameters) {
-      if (hasAnnotation(p, FORMAT_STRING_ANNOTATION, state)) {
-        return idx;
-      }
-      idx++;
-    }
-    return 0;
+    int index = getLenientFormatStringPosition(tree, state);
+    return index != -1 ? tree.getArguments().get(index) : null;
   }
 
   @Override
