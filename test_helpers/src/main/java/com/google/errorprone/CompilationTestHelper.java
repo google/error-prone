@@ -367,12 +367,11 @@ public class CompilationTestHelper {
     expectedResult.ifPresent(
         expected ->
             assertWithMessage(
-                    String.format(
-                        "Expected compilation result %s, but was %s\n%s\n%s",
-                        expected,
-                        result,
-                        Joiner.on('\n').join(diagnosticHelper.getDiagnostics()),
-                        outputStream))
+                    "Expected compilation result %s, but was %s\n%s\n%s",
+                    expected,
+                    result,
+                    Joiner.on('\n').join(diagnosticHelper.getDiagnostics()),
+                    outputStream)
                 .that(result)
                 .isEqualTo(expected));
   }
