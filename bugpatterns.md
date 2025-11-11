@@ -821,6 +821,9 @@ per() methods are no-ops unless combined with atMostEvery(), every(), or onAvera
 __[FloggerStringConcatenation](bugpattern/FloggerStringConcatenation)__<br>
 Prefer string formatting using printf placeholders (e.g. %s) instead of string concatenation
 
+__[FormatStringShouldUsePlaceholders](bugpattern/FormatStringShouldUsePlaceholders)__<br>
+Using a format string avoids string concatenation in the common case.
+
 __[FragmentInjection](bugpattern/FragmentInjection)__<br>
 Classes extending PreferenceActivity must implement isValidFragment such that it does not unconditionally return true to prevent vulnerability to fragment injection attacks.
 
