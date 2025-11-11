@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
@@ -62,6 +63,16 @@ public final class ExplicitArrayForVarargs extends BugChecker
       return NO_MATCH;
     }
     if (args.isEmpty()) {
+      return NO_MATCH;
+    }
+    // Bail out if we're calling an overload of the same method: it's likely we'll introduce
+    // problems (delegating constructors are a common case).
+    if (stream(state.getPath().getParentPath())
+        .anyMatch(
+            t ->
+                getSymbol(t) instanceof MethodSymbol ms
+                    && ms.owner.equals(symbol.owner)
+                    && ms.name.contentEquals(symbol.name))) {
       return NO_MATCH;
     }
     // The last argument isn't substituting for varargs if it isn't in place of the varargs

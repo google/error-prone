@@ -103,4 +103,21 @@ public final class ExplicitArrayForVarargsTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void refactoringWouldCauseRecursion() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              Test() {
+                this(new String[0]);
+              }
+
+              protected Test(String... xs) {}
+            }
+            """)
+        .doTest();
+  }
 }
