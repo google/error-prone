@@ -516,6 +516,7 @@ import com.google.errorprone.bugpatterns.flogger.FloggerWithoutCause;
 import com.google.errorprone.bugpatterns.formatstring.AnnotateFormatMethod;
 import com.google.errorprone.bugpatterns.formatstring.FormatString;
 import com.google.errorprone.bugpatterns.formatstring.FormatStringAnnotationChecker;
+import com.google.errorprone.bugpatterns.formatstring.FormatStringShouldUsePlaceholders;
 import com.google.errorprone.bugpatterns.formatstring.InlineFormatString;
 import com.google.errorprone.bugpatterns.formatstring.LenientFormatStringValidation;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnConstructors;
@@ -967,6 +968,7 @@ public class BuiltInCheckerSuppliers {
           FloggerArgumentToString.class,
           FloggerPerWithoutRateLimit.class,
           FloggerStringConcatenation.class,
+          FormatStringShouldUsePlaceholders.class,
           FragmentInjection.class,
           FragmentNotInstantiable.class,
           FutureReturnValueIgnored.class,
