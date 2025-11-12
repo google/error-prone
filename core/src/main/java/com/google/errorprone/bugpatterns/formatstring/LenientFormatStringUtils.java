@@ -46,7 +46,7 @@ public final class LenientFormatStringUtils {
           new LenientFormatMethod(
               staticMethod()
                   .onClass("com.google.common.base.Preconditions")
-                  .withNameMatching(compile("^check.*")),
+                  .withNameMatching(compile("^check(?!ElementIndex).*")),
               1),
           new LenientFormatMethod(
               staticMethod()

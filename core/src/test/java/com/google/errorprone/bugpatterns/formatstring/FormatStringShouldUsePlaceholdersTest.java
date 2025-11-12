@@ -111,4 +111,22 @@ public class Test {
 """)
         .doTest();
   }
+
+  @Test
+  public void negativeCheckArgumentIndex() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+"""
+import com.google.common.base.Preconditions;
+
+public class Test {
+  public void checkElementIndex(int i, int j) {
+    Preconditions.checkElementIndex(i, j + 10);
+  }
+}
+""")
+        .expectUnchanged()
+        .doTest();
+  }
 }
