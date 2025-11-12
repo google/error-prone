@@ -1294,53 +1294,6 @@ public class Client {
   }
 
   @Test
-  public void importStatic_getsIncorrectlySuggestedAsImportsInsteadOfStaticImports() {
-    refactoringTestHelper
-        .addInputLines(
-            "KeymasterCrypter.java",
-            """
-            package com.google.security.keymaster;
-
-            import static java.nio.charset.StandardCharsets.US_ASCII;
-            import com.google.errorprone.annotations.InlineMe;
-
-            public final class KeymasterCrypter {
-              @Deprecated
-              public final String decryptASCII(byte[] ciphertext) {
-                return new String(decrypt(ciphertext), US_ASCII);
-              }
-
-              public byte[] decrypt(byte[] ciphertext) {
-                return ciphertext;
-              }
-            }
-
-            """)
-        .addOutputLines(
-            "KeymasterCrypter.java",
-            "package com.google.security.keymaster;",
-            "import static java.nio.charset.StandardCharsets.US_ASCII;",
-            "import com.google.errorprone.annotations.InlineMe;",
-            "public final class KeymasterCrypter {",
-            // TODO(b/242890437): This line is wrong:
-            "  @InlineMe(replacement = \"new String(this.decrypt(ciphertext), US_ASCII)\", imports"
-                + " = \"US_ASCII\")",
-            // It should be this instead:
-            // "  @InlineMe(",
-            // "      replacement = \"new String(this.decrypt(ciphertext), US_ASCII)\",",
-            // "      staticImports =\"java.nio.charset.StandardCharsets.US_ASCII\")",
-            "  @Deprecated",
-            "  public final String decryptASCII(byte[] ciphertext) {",
-            "    return new String(decrypt(ciphertext), US_ASCII);",
-            "  }",
-            "  public byte[] decrypt(byte[] ciphertext) {",
-            "    return ciphertext;",
-            "  }",
-            "}")
-        .doTest();
-  }
-
-  @Test
   public void noInlineMeSuggestionWhenParameterNamesAreArgN() {
     refactoringTestHelper
         .addInputLines(
@@ -1424,11 +1377,6 @@ public class Client {
               }
             }
             """)
-        // TODO: b/459759186 - this is a bug! UTF_8 should be fully qualified in the staticImports
-        // parameter, and not in the imports parameter. The @InlineMe annotation should be:
-        //   @InlineMe(
-        //       replacement = "new String(bytes, offset, length, UTF_8)",
-        //       staticImports = "java.nio.charset.StandardCharsets.UTF_8")
         .addOutputLines(
             "Client.java",
             """
@@ -1437,7 +1385,9 @@ public class Client {
             import com.google.errorprone.annotations.InlineMe;
 
             public final class Client {
-              @InlineMe(replacement = "new String(bytes, offset, length, UTF_8)", imports = "UTF_8")
+              @InlineMe(
+                  replacement = "new String(bytes, offset, length, UTF_8)",
+                  staticImports = "java.nio.charset.StandardCharsets.UTF_8")
               @Deprecated
               public static String getString(byte[] bytes, int offset, int length) {
                 return new String(bytes, offset, length, UTF_8);
