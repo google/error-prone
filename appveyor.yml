@@ -20,10 +20,10 @@ install:
   - cmd: SET JAVA_OPTS=-XX:MaxPermSize=2g -Xmx4g
 
 build_script:
-  - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+  - ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
 test_script:
-  - mvn test -B
+  - ./mvnw test -B
 
 cache:
   - C:\maven\
