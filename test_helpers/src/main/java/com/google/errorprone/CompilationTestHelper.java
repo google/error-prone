@@ -342,12 +342,9 @@ public class CompilationTestHelper {
           .isEqualTo(0);
       assertWithMessage(
               String.format(
-                  "Expected compilation result to be "
-                      + expectedResult.orElse(Result.OK)
-                      + ", but was %s. No diagnostics were emitted."
+                  "Expected compilation result to be %s, but was %s. No diagnostics were emitted."
                       + " OutputStream from Compiler follows.\n\n%s",
-                  result,
-                  outputStream))
+                  expectedResult.orElse(Result.OK), result, outputStream))
           .that(result)
           .isEqualTo(expectedResult.orElse(Result.OK));
     } else {
@@ -359,7 +356,7 @@ public class CompilationTestHelper {
           throw new UncheckedIOException(e);
         }
       }
-      assertWithMessage("Unused error keys: " + diagnosticHelper.getUnusedLookupKeys())
+      assertWithMessage("Unused error keys: %s", diagnosticHelper.getUnusedLookupKeys())
           .that(diagnosticHelper.getUnusedLookupKeys().isEmpty())
           .isTrue();
     }

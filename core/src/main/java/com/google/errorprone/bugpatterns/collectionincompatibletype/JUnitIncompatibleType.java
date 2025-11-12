@@ -119,10 +119,9 @@ public final class JUnitIncompatibleType extends BugChecker implements MethodInv
     return buildDescription(tree)
         .setMessage(
             String.format(
-                "The types of this assertion are mismatched: type `%s` is not compatible with `%s`"
-                    + compatibilityReport.extraReason(),
-                sourceTypeName,
-                targetTypeName))
+                "The types of this assertion are mismatched: type `%s` is not compatible with"
+                    + " `%s`%s",
+                sourceTypeName, targetTypeName, compatibilityReport.extraReason()))
         .build();
   }
 }

@@ -107,7 +107,7 @@ public class ErrorProneCompilerIntegrationTest {
             forResources(BadShiftAmount.class, "testdata/BadShiftAmountPositiveCases.java"));
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
 
-    assertWithMessage("Error should be found. " + diagnosticHelper.describe())
+    assertWithMessage("Error should be found. %s", diagnosticHelper.describe())
         .that(diagnosticHelper.getDiagnostics())
         .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
         .contains("[BadShiftAmount]");
@@ -124,7 +124,7 @@ public class ErrorProneCompilerIntegrationTest {
                 "testdata/NonAtomicVolatileUpdatePositiveCases.java"));
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
 
-    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+    assertWithMessage("Warning should be found. %s", diagnosticHelper.describe())
         .that(diagnosticHelper.getDiagnostics())
         .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
         .contains("[NonAtomicVolatileUpdate]");
@@ -162,7 +162,7 @@ public class ErrorProneCompilerIntegrationTest {
                 "testdata/MultipleTopLevelClassesWithErrors.java",
                 "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
-    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+    assertWithMessage("Warning should be found. %s", diagnosticHelper.describe())
         .that(diagnosticHelper.getDiagnostics())
         .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
         .contains("[SelfAssignment]");
@@ -189,7 +189,7 @@ public class ErrorProneCompilerIntegrationTest {
                 "testdata/ExtendedMultipleTopLevelClassesWithErrors.java"));
 
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
-    assertWithMessage("Error should be reported. " + diagnosticHelper.describe())
+    assertWithMessage("Error should be reported. %s", diagnosticHelper.describe())
         .that(diagnosticHelper.getDiagnostics())
         .comparingElementsUsing(
             Correspondence.<Diagnostic<? extends JavaFileObject>, List<String>>from(
@@ -248,7 +248,7 @@ public class ErrorProneCompilerIntegrationTest {
                     "Test.java", //
                     "public class Test {}")));
 
-    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+    assertWithMessage("Warning should be found. %s", diagnosticHelper.describe())
         .that(diagnosticHelper.getDiagnostics())
         .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
         .doesNotContain("[ConstructorMatcher]");
@@ -336,7 +336,7 @@ public class ErrorProneCompilerIntegrationTest {
     exitCode = compiler.compile(args, fileObjects);
     outputStream.flush();
 
-    assertWithMessage("Error should be found. " + diagnosticHelper.describe())
+    assertWithMessage("Error should be found. %s", diagnosticHelper.describe())
         .that(diagnosticHelper.getDiagnostics())
         .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
         .contains("[EmptyIf]");
@@ -359,7 +359,7 @@ public class ErrorProneCompilerIntegrationTest {
     Result exitCode = compiler.compile(args, fileObjects);
     outputStream.flush();
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
-    assertWithMessage("Warning should be found. " + diagnosticHelper.describe())
+    assertWithMessage("Warning should be found. %s", diagnosticHelper.describe())
         .that(diagnosticHelper.getDiagnostics())
         .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
         .contains("[SelfAssignment]");
@@ -385,7 +385,7 @@ public class ErrorProneCompilerIntegrationTest {
     Result exitCode = compiler.compile(args, fileObjects);
     outputStream.flush();
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
-    assertWithMessage("Error should be found. " + diagnosticHelper.describe())
+    assertWithMessage("Error should be found. %s", diagnosticHelper.describe())
         .that(diagnosticHelper.getDiagnostics())
         .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
         .contains("[EmptyIf]");
@@ -721,7 +721,7 @@ public class ErrorProneCompilerIntegrationTest {
     assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
 
     assertThat(diagnosticHelper.getDiagnostics()).hasSize(2);
-    assertWithMessage("Error should be found. " + diagnosticHelper.describe())
+    assertWithMessage("Error should be found. %s", diagnosticHelper.describe())
         .that(diagnosticHelper.getDiagnostics())
         .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
         .containsExactly("[CPSChecker]", "[CPSChecker]");

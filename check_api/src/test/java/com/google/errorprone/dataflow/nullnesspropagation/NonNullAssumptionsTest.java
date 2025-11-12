@@ -63,9 +63,7 @@ public class NonNullAssumptionsTest {
     for (MemberName member : NullnessPropagationTransfer.NULL_IMPLIES_TRUE_PARAMETERS.keySet()) {
       ImmutableSet<Integer> nullParameters =
           NullnessPropagationTransfer.NULL_IMPLIES_TRUE_PARAMETERS.get(member);
-      assertWithMessage(member.clazz + "#" + member.member + "()")
-          .that(nullParameters)
-          .isNotEmpty();
+      assertWithMessage("%s#%s()", member.clazz, member.member).that(nullParameters).isNotEmpty();
       if (member.clazz.startsWith("android.")) {
         // Can't load Android SDK classes.
         continue;
@@ -81,7 +79,7 @@ public class NonNullAssumptionsTest {
           assertThat(invokeWithSingleNullArgument(method, nullParam)).isEqualTo(Boolean.TRUE);
         }
       }
-      assertWithMessage(member.clazz + "#" + member.member + "()").that(found).isGreaterThan(0);
+      assertWithMessage("%s#%s()", member.clazz, member.member).that(found).isGreaterThan(0);
     }
   }
 
@@ -90,7 +88,7 @@ public class NonNullAssumptionsTest {
     for (MemberName member : NullnessPropagationTransfer.REQUIRED_NON_NULL_PARAMETERS.keySet()) {
       ImmutableSet<Integer> nonNullParameters =
           NullnessPropagationTransfer.REQUIRED_NON_NULL_PARAMETERS.get(member);
-      assertWithMessage(member.clazz + "#" + member.member + "()")
+      assertWithMessage("%s#%s()", member.clazz, member.member)
           .that(nonNullParameters)
           .isNotEmpty();
       int found = 0;
@@ -111,7 +109,7 @@ public class NonNullAssumptionsTest {
           }
         }
       }
-      assertWithMessage(member.clazz + "#" + member.member + "()").that(found).isGreaterThan(0);
+      assertWithMessage("%s#%s()", member.clazz, member.member).that(found).isGreaterThan(0);
     }
   }
 
