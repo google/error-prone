@@ -60,7 +60,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#builder()" tabindex="0">builder()</a></li>
-<li><a href="#threadSafeBuilder(com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety,com.google.errorprone.ErrorProneFlags)" tabindex="0">threadSafeBuilder(WellKnownThreadSafety, ErrorProneFlags)</a></li>
+<li><a href="#threadSafeBuilder(com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)" tabindex="0">threadSafeBuilder(WellKnownThreadSafety)</a></li>
 <li><a href="#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type)" tabindex="0">threadSafeInstantiation(Set, AnnotationInfo, Type)</a></li>
 <li><a href="#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type,java.util.Set)" tabindex="0">threadSafeInstantiation(Set, AnnotationInfo, Type, Set)</a></li>
 <li><a href="#checkSuperInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type)" tabindex="0">checkSuperInstantiation(Set, AnnotationInfo, Type)</a></li>
@@ -215,8 +215,7 @@ class.</div>
 <div class="block">Returns an enclosing instance for the specified type if it is thread-safe.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#threadSafeBuilder(com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety,com.google.errorprone.ErrorProneFlags)" class="member-name-link">threadSafeBuilder</a><wbr>(<a href="WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a>&nbsp;wellKnownThreadSafety,
- <a href="../../ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;flags)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#threadSafeBuilder(com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)" class="member-name-link">threadSafeBuilder</a><wbr>(<a href="WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a>&nbsp;wellKnownThreadSafety)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Violation</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#threadSafeInstantiation(java.util.Set,com.google.errorprone.bugpatterns.threadsafety.AnnotationInfo,com.sun.tools.javac.code.Type)" class="member-name-link">threadSafeInstantiation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;containerTypeParameters,
@@ -263,11 +262,10 @@ type arguments where required by its annotation's containerOf element.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="threadSafeBuilder(com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety,com.google.errorprone.ErrorProneFlags)">
+<section class="detail" id="threadSafeBuilder(com.google.errorprone.bugpatterns.threadsafety.WellKnownThreadSafety)">
 <h3>threadSafeBuilder</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></span>&nbsp;<span class="element-name">threadSafeBuilder</span><wbr><span class="parameters">(<a href="WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a>&nbsp;wellKnownThreadSafety,
- <a href="../../ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a>&nbsp;flags)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></span>&nbsp;<span class="element-name">threadSafeBuilder</span><wbr><span class="parameters">(<a href="WellKnownThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">WellKnownThreadSafety</a>&nbsp;wellKnownThreadSafety)</span></div>
 </div>
 </section>
 </li>
