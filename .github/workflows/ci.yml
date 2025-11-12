@@ -90,6 +90,9 @@ jobs:
       - name: 'Test'
         shell: bash
         run: mvn test -B
+      - name: 'SanityCheck'
+        shell: bash
+        run: mvn rewrite:dryRun
       - name: 'Javadoc'
         shell: bash
         run: mvn -P '!examples' javadoc:javadoc

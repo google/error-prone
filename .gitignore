@@ -8,8 +8,9 @@
 
 # intellij
 .idea/ant.xml
-.idea/codestream.xml
+.idea/checkstyle-idea.xml
 .idea/codeStyleSettings.xml
+.idea/codestream.xml
 .idea/compiler.xml
 .idea/copyright
 .idea/dataSources.ids
@@ -21,6 +22,7 @@
 .idea/libraries
 .idea/misc.xml
 .idea/modules.xml
+.idea/palantir-java-format.xml
 .idea/shelf
 .idea/tasks.xml
 .idea/uiDesigner.xml
