@@ -1408,4 +1408,42 @@ public class Client {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void inlineMeSuggestionStaticImportInConstructor() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+
+            public final class Client {
+              @Deprecated
+              public static String getString(byte[] bytes, int offset, int length) {
+                return new String(bytes, offset, length, UTF_8);
+              }
+            }
+            """)
+        // TODO: b/459759186 - this is a bug! UTF_8 should be fully qualified in the staticImports
+        // parameter, and not in the imports parameter. The @InlineMe annotation should be:
+        //   @InlineMe(
+        //       replacement = "new String(bytes, offset, length, UTF_8)",
+        //       staticImports = "java.nio.charset.StandardCharsets.UTF_8")
+        .addOutputLines(
+            "Client.java",
+            """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(replacement = "new String(bytes, offset, length, UTF_8)", imports = "UTF_8")
+              @Deprecated
+              public static String getString(byte[] bytes, int offset, int length) {
+                return new String(bytes, offset, length, UTF_8);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
