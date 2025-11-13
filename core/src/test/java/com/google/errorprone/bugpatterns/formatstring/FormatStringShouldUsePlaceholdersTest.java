@@ -113,7 +113,7 @@ public class Test {
   }
 
   @Test
-  public void negativeCheckArgumentIndex() {
+  public void negativeCheckElementIndex() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -123,6 +123,24 @@ import com.google.common.base.Preconditions;
 public class Test {
   public void checkElementIndex(int i, int j) {
     Preconditions.checkElementIndex(i, j + 10);
+  }
+}
+""")
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void negativeCheckPositionIndex() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+"""
+import com.google.common.base.Preconditions;
+
+public class Test {
+  public void checkPositionIndex(int i, int j) {
+    Preconditions.checkPositionIndex(i, j + 10);
   }
 }
 """)
