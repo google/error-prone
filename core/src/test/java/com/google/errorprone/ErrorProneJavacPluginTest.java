@@ -50,7 +50,6 @@ import java.io.StringWriter;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.stream.Stream;
@@ -215,7 +214,7 @@ public class ErrorProneJavacPluginTest {
     assertThat(
             Files.readAllLines(patchFile, UTF_8).stream()
                 .filter(l -> l.startsWith("--- "))
-                .map(l -> Paths.get(l.substring("--- ".length())).getFileName().toString())
+                .map(l -> Path.of(l.substring("--- ".length())).getFileName().toString())
                 .collect(toImmutableList()))
         .containsExactly("A.java", "B.java");
   }
