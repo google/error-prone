@@ -51,7 +51,10 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ContinueTree;
+import com.sun.source.tree.DeconstructionPatternTree;
+import com.sun.source.tree.DefaultCaseLabelTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.EnhancedForLoopTree;
@@ -78,6 +81,7 @@ import com.sun.source.tree.OpensTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ProvidesTree;
 import com.sun.source.tree.RequiresTree;
@@ -385,8 +389,20 @@ public abstract class BugChecker implements Suppressible, Serializable {
     Description matchConditionalExpression(ConditionalExpressionTree tree, VisitorState state);
   }
 
+  public interface ConstantCaseLabelTreeMatcher extends Suppressible {
+    Description matchConstantCaseLabel(ConstantCaseLabelTree tree, VisitorState state);
+  }
+
   public interface ContinueTreeMatcher extends Suppressible {
     Description matchContinue(ContinueTree tree, VisitorState state);
+  }
+
+  public interface DeconstructionPatternTreeMatcher extends Suppressible {
+    Description matchDeconstructionPattern(DeconstructionPatternTree tree, VisitorState state);
+  }
+
+  public interface DefaultCaseLabelTreeMatcher extends Suppressible {
+    Description matchDefaultCaseLabel(DefaultCaseLabelTree tree, VisitorState state);
   }
 
   public interface DoWhileLoopTreeMatcher extends Suppressible {
@@ -496,6 +512,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
 
   public interface ParenthesizedTreeMatcher extends Suppressible {
     Description matchParenthesized(ParenthesizedTree tree, VisitorState state);
+  }
+
+  public interface PatternCaseLabelTreeMatcher extends Suppressible {
+    Description matchPatternCaseLabel(PatternCaseLabelTree tree, VisitorState state);
   }
 
   public interface PrimitiveTypeTreeMatcher extends Suppressible {

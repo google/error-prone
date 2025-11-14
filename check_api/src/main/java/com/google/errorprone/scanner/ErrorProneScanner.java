@@ -41,7 +41,10 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ConditionalExpressionTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.ConstantCaseLabelTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ContinueTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.DeconstructionPatternTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.DefaultCaseLabelTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.DoWhileLoopTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.EmptyStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.EnhancedForLoopTreeMatcher;
@@ -68,6 +71,7 @@ import com.google.errorprone.bugpatterns.BugChecker.OpensTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.PackageTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ParameterizedTypeTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ParenthesizedTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.PatternCaseLabelTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.PrimitiveTypeTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ProvidesTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.RequiresTreeMatcher;
@@ -105,7 +109,10 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ContinueTree;
+import com.sun.source.tree.DeconstructionPatternTree;
+import com.sun.source.tree.DefaultCaseLabelTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.EnhancedForLoopTree;
@@ -132,6 +139,7 @@ import com.sun.source.tree.OpensTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.PrimitiveTypeTree;
 import com.sun.source.tree.ProvidesTree;
 import com.sun.source.tree.RequiresTree;
@@ -233,6 +241,7 @@ public class ErrorProneScanner extends Scanner {
     return customSuppressionAnnotations.get(state);
   }
 
+  // keep-sorted start
   private final List<AnnotatedTypeTreeMatcher> annotatedTypeMatchers = new ArrayList<>();
   private final List<AnnotationTreeMatcher> annotationMatchers = new ArrayList<>();
   private final List<ArrayAccessTreeMatcher> arrayAccessMatchers = new ArrayList<>();
@@ -250,7 +259,11 @@ public class ErrorProneScanner extends Scanner {
   private final List<CompoundAssignmentTreeMatcher> compoundAssignmentMatchers = new ArrayList<>();
   private final List<ConditionalExpressionTreeMatcher> conditionalExpressionMatchers =
       new ArrayList<>();
+  private final List<ConstantCaseLabelTreeMatcher> constantCaseLabelMatchers = new ArrayList<>();
   private final List<ContinueTreeMatcher> continueMatchers = new ArrayList<>();
+  private final List<DeconstructionPatternTreeMatcher> deconstructionPatternMatchers =
+      new ArrayList<>();
+  private final List<DefaultCaseLabelTreeMatcher> defaultCaseLabelMatchers = new ArrayList<>();
   private final List<DoWhileLoopTreeMatcher> doWhileLoopMatchers = new ArrayList<>();
   private final List<EmptyStatementTreeMatcher> emptyStatementMatchers = new ArrayList<>();
   private final List<EnhancedForLoopTreeMatcher> enhancedForLoopMatchers = new ArrayList<>();
@@ -268,8 +281,8 @@ public class ErrorProneScanner extends Scanner {
   private final List<LiteralTreeMatcher> literalMatchers = new ArrayList<>();
   private final List<MemberReferenceTreeMatcher> memberReferenceMatchers = new ArrayList<>();
   private final List<MemberSelectTreeMatcher> memberSelectMatchers = new ArrayList<>();
-  private final List<MethodTreeMatcher> methodMatchers = new ArrayList<>();
   private final List<MethodInvocationTreeMatcher> methodInvocationMatchers = new ArrayList<>();
+  private final List<MethodTreeMatcher> methodMatchers = new ArrayList<>();
   private final List<ModifiersTreeMatcher> modifiersMatchers = new ArrayList<>();
   private final List<ModuleTreeMatcher> moduleMatchers = new ArrayList<>();
   private final List<NewArrayTreeMatcher> newArrayMatchers = new ArrayList<>();
@@ -278,6 +291,7 @@ public class ErrorProneScanner extends Scanner {
   private final List<PackageTreeMatcher> packageMatchers = new ArrayList<>();
   private final List<ParameterizedTypeTreeMatcher> parameterizedTypeMatchers = new ArrayList<>();
   private final List<ParenthesizedTreeMatcher> parenthesizedMatchers = new ArrayList<>();
+  private final List<PatternCaseLabelTreeMatcher> patternCaseLabelMatchers = new ArrayList<>();
   private final List<PrimitiveTypeTreeMatcher> primitiveTypeMatchers = new ArrayList<>();
   private final List<ProvidesTreeMatcher> providesMatchers = new ArrayList<>();
   private final List<RequiresTreeMatcher> requiresMatchers = new ArrayList<>();
@@ -297,11 +311,14 @@ public class ErrorProneScanner extends Scanner {
   private final List<WildcardTreeMatcher> wildcardMatchers = new ArrayList<>();
   private final List<YieldTreeMatcher> yieldMatchers = new ArrayList<>();
 
+  // keep-sorted end
+
   private void registerNodeTypes(
       BugChecker checker,
       ImmutableSet.Builder<Class<? extends Annotation>> customSuppressionAnnotationClasses) {
     customSuppressionAnnotationClasses.addAll(checker.customSuppressionAnnotations());
 
+    // keep-sorted start
     if (checker instanceof AnnotatedTypeTreeMatcher annotatedTypeTreeMatcher) {
       annotatedTypeMatchers.add(annotatedTypeTreeMatcher);
     }
@@ -350,8 +367,17 @@ public class ErrorProneScanner extends Scanner {
     if (checker instanceof ConditionalExpressionTreeMatcher conditionalExpressionTreeMatcher) {
       conditionalExpressionMatchers.add(conditionalExpressionTreeMatcher);
     }
+    if (checker instanceof ConstantCaseLabelTreeMatcher constantCaseLabelTreeMatcher) {
+      constantCaseLabelMatchers.add(constantCaseLabelTreeMatcher);
+    }
     if (checker instanceof ContinueTreeMatcher continueTreeMatcher) {
       continueMatchers.add(continueTreeMatcher);
+    }
+    if (checker instanceof DeconstructionPatternTreeMatcher deconstructionPatternTreeMatcher) {
+      deconstructionPatternMatchers.add(deconstructionPatternTreeMatcher);
+    }
+    if (checker instanceof DefaultCaseLabelTreeMatcher defaultCaseLabelTreeMatcher) {
+      defaultCaseLabelMatchers.add(defaultCaseLabelTreeMatcher);
     }
     if (checker instanceof DoWhileLoopTreeMatcher doWhileLoopTreeMatcher) {
       doWhileLoopMatchers.add(doWhileLoopTreeMatcher);
@@ -401,11 +427,11 @@ public class ErrorProneScanner extends Scanner {
     if (checker instanceof MemberSelectTreeMatcher memberSelectTreeMatcher) {
       memberSelectMatchers.add(memberSelectTreeMatcher);
     }
-    if (checker instanceof MethodTreeMatcher methodTreeMatcher) {
-      methodMatchers.add(methodTreeMatcher);
-    }
     if (checker instanceof MethodInvocationTreeMatcher methodInvocationTreeMatcher) {
       methodInvocationMatchers.add(methodInvocationTreeMatcher);
+    }
+    if (checker instanceof MethodTreeMatcher methodTreeMatcher) {
+      methodMatchers.add(methodTreeMatcher);
     }
     if (checker instanceof ModifiersTreeMatcher modifiersTreeMatcher) {
       modifiersMatchers.add(modifiersTreeMatcher);
@@ -430,6 +456,9 @@ public class ErrorProneScanner extends Scanner {
     }
     if (checker instanceof ParenthesizedTreeMatcher parenthesizedTreeMatcher) {
       parenthesizedMatchers.add(parenthesizedTreeMatcher);
+    }
+    if (checker instanceof PatternCaseLabelTreeMatcher patternCaseLabelTreeMatcher) {
+      patternCaseLabelMatchers.add(patternCaseLabelTreeMatcher);
     }
     if (checker instanceof PrimitiveTypeTreeMatcher primitiveTypeTreeMatcher) {
       primitiveTypeMatchers.add(primitiveTypeTreeMatcher);
@@ -485,6 +514,7 @@ public class ErrorProneScanner extends Scanner {
     if (checker instanceof YieldTreeMatcher yieldTreeMatcher) {
       yieldMatchers.add(yieldTreeMatcher);
     }
+    // keep-sorted end
   }
 
   @FunctionalInterface
@@ -655,10 +685,44 @@ public class ErrorProneScanner extends Scanner {
   }
 
   @Override
+  public Void visitConstantCaseLabel(ConstantCaseLabelTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(
+            constantCaseLabelMatchers,
+            tree,
+            ConstantCaseLabelTreeMatcher::matchConstantCaseLabel,
+            visitorState);
+    return super.visitConstantCaseLabel(tree, state);
+  }
+
+  @Override
   public Void visitContinue(ContinueTree tree, VisitorState visitorState) {
     VisitorState state =
         processMatchers(continueMatchers, tree, ContinueTreeMatcher::matchContinue, visitorState);
     return super.visitContinue(tree, state);
+  }
+
+  @Override
+  public Void visitDeconstructionPattern(
+      DeconstructionPatternTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(
+            deconstructionPatternMatchers,
+            tree,
+            DeconstructionPatternTreeMatcher::matchDeconstructionPattern,
+            visitorState);
+    return super.visitDeconstructionPattern(tree, state);
+  }
+
+  @Override
+  public Void visitDefaultCaseLabel(DefaultCaseLabelTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(
+            defaultCaseLabelMatchers,
+            tree,
+            DefaultCaseLabelTreeMatcher::matchDefaultCaseLabel,
+            visitorState);
+    return super.visitDefaultCaseLabel(tree, state);
   }
 
   @Override
@@ -872,6 +936,17 @@ public class ErrorProneScanner extends Scanner {
     VisitorState state =
         processMatchers(packageMatchers, tree, PackageTreeMatcher::matchPackage, visitorState);
     return super.visitPackage(tree, state);
+  }
+
+  @Override
+  public Void visitPatternCaseLabel(PatternCaseLabelTree tree, VisitorState visitorState) {
+    VisitorState state =
+        processMatchers(
+            patternCaseLabelMatchers,
+            tree,
+            PatternCaseLabelTreeMatcher::matchPatternCaseLabel,
+            visitorState);
+    return super.visitPatternCaseLabel(tree, state);
   }
 
   // Intentionally skip visitOther. It seems to be used only for let expressions, which are

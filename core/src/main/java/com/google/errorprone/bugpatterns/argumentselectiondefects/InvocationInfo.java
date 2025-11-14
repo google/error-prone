@@ -16,15 +16,22 @@
 
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
+import static com.google.errorprone.util.ASTHelpers.canonicalConstructor;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+
 import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
+import com.sun.source.tree.BindingPatternTree;
+import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.List;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Holds information about the method invocation (or new class construction) that we are processing.
@@ -62,6 +69,26 @@ abstract class InvocationInfo {
         ImmutableList.copyOf(tree.getArguments()),
         getFormalParametersWithoutVarArgs(symbol),
         state);
+  }
+
+  static @Nullable InvocationInfo createFromDeconstructionPattern(
+      DeconstructionPatternTree tree, VisitorState state) {
+    var symbol = getSymbol(tree.getDeconstructor());
+    if (!(symbol instanceof ClassSymbol cs)) {
+      return null;
+    }
+
+    var constructor = canonicalConstructor(cs, state);
+    ImmutableList.Builder<Tree> actuals = ImmutableList.builder();
+    ImmutableList.Builder<VarSymbol> formals = ImmutableList.builder();
+    for (int i = 0; i < constructor.getParameters().size(); ++i) {
+      // Skip over anything that isn't binding. There might be nested patterns here, or "_"s.
+      if (tree.getNestedPatterns().get(i) instanceof BindingPatternTree) {
+        actuals.add(((BindingPatternTree) tree.getNestedPatterns().get(i)).getVariable());
+        formals.add(constructor.getParameters().get(i));
+      }
+    }
+    return new AutoValue_InvocationInfo(tree, constructor, actuals.build(), formals.build(), state);
   }
 
   private static ImmutableList<VarSymbol> getFormalParametersWithoutVarArgs(
