@@ -335,16 +335,13 @@ public class CompilationTestHelper {
     if (expectNoDiagnostics) {
       List<Diagnostic<? extends JavaFileObject>> diagnostics = diagnosticHelper.getDiagnostics();
       assertWithMessage(
-              String.format(
-                  "Expected no diagnostics produced, but found %d: %s",
-                  diagnostics.size(), diagnostics))
+              "Expected no diagnostics produced, but found %s: %s", diagnostics.size(), diagnostics)
           .that(diagnostics.size())
           .isEqualTo(0);
       assertWithMessage(
-              String.format(
-                  "Expected compilation result to be %s, but was %s. No diagnostics were emitted."
-                      + " OutputStream from Compiler follows.\n\n%s",
-                  expectedResult.orElse(Result.OK), result, outputStream))
+              "Expected compilation result to be %s, but was %s. No diagnostics were emitted."
+                  + " OutputStream from Compiler follows.\n\n%s",
+              expectedResult.orElse(Result.OK), result, outputStream)
           .that(result)
           .isEqualTo(expectedResult.orElse(Result.OK));
     } else {
