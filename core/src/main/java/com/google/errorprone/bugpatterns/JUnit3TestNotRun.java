@@ -31,13 +31,14 @@ import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.methodHasNoParameters;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
-import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.suppliers.Suppliers.VOID_TYPE;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -50,6 +51,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
 /** A bugpattern; see the associated summary. */
@@ -59,6 +61,13 @@ import javax.lang.model.element.Modifier;
             + "(Should be public, non-static, and method name should begin with \"test\").",
     severity = ERROR)
 public final class JUnit3TestNotRun extends BugChecker implements CompilationUnitTreeMatcher {
+
+  private final boolean matchTestsize;
+
+  @Inject
+  JUnit3TestNotRun(ErrorProneFlags flags) {
+    this.matchTestsize = flags.getBoolean("JUnit3TestNotRun:MatchTestsize").orElse(true);
+  }
 
   /**
    * Regular expression for test method name that is misspelled and should be replaced with "test".
@@ -84,8 +93,6 @@ public final class JUnit3TestNotRun extends BugChecker implements CompilationUni
 
   private static final Matcher<MethodTree> LOOKS_LIKE_TEST_CASE =
       allOf(
-          enclosingClass(isJUnit3TestClass),
-          not(isJunit3TestCase),
           anyOf(methodHasNoParameters(), hasModifier(Modifier.PUBLIC)),
           enclosingClass((t, s) -> !getSymbol(t).getSimpleName().toString().endsWith("Base")),
           methodReturns(VOID_TYPE));
@@ -96,6 +103,9 @@ public final class JUnit3TestNotRun extends BugChecker implements CompilationUni
     new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitMethod(MethodTree tree, Void unused) {
+        if (isGeneratedConstructor(tree)) {
+          return super.visitMethod(tree, null);
+        }
         checkMethod(tree, calledMethods, state.withPath(getCurrentPath()))
             .ifPresent(state::reportMatch);
         return super.visitMethod(tree, null);
@@ -128,29 +138,40 @@ public final class JUnit3TestNotRun extends BugChecker implements CompilationUni
    */
   public Optional<Description> checkMethod(
       MethodTree methodTree, ImmutableSet<MethodSymbol> calledMethods, VisitorState state) {
-    if (calledMethods.contains(getSymbol(methodTree))) {
+    if (!enclosingClass(isJUnit3TestClass).matches(methodTree, state)) {
+      return Optional.empty();
+    }
+    if (isJunit3TestCase.matches(methodTree, state)) {
       return Optional.empty();
     }
     if (!LOOKS_LIKE_TEST_CASE.matches(methodTree, state)) {
       return Optional.empty();
     }
+    if (calledMethods.contains(getSymbol(methodTree))) {
+      return Optional.empty();
+    }
     if (!findSuperMethods(getSymbol(methodTree), state.getTypes()).isEmpty()) {
       return Optional.empty();
     }
+    String methodName = methodTree.getName().toString();
+    if (!methodName.startsWith("test")
+        && !MISSPELLED_NAME.matcher(methodName).lookingAt()
+        && !wouldRunInJUnit4.matches(methodTree, state)) {
+      return Optional.empty();
+    }
+    return Optional.of(describeFixes(methodTree, state));
+  }
 
+  private Description describeFixes(MethodTree methodTree, VisitorState state) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
 
     String methodName = methodTree.getName().toString();
     if (!methodName.startsWith("test")) {
       var matcher = MISSPELLED_NAME.matcher(methodName);
-      String fixedName;
-      if (matcher.lookingAt()) {
-        fixedName = matcher.replaceFirst("test");
-      } else if (wouldRunInJUnit4.matches(methodTree, state)) {
-        fixedName = "test" + toUpperCase(methodName.substring(0, 1)) + methodName.substring(1);
-      } else {
-        return Optional.empty();
-      }
+      String fixedName =
+          matcher.lookingAt()
+              ? matcher.replaceFirst("test")
+              : "test" + toUpperCase(methodName.substring(0, 1)) + methodName.substring(1);
       fix.merge(renameMethod(methodTree, fixedName, state));
     }
 
@@ -159,6 +180,6 @@ public final class JUnit3TestNotRun extends BugChecker implements CompilationUni
     // N.B. must occur in separate step because removeModifiers only removes one modifier at a time.
     removeModifiers(methodTree, state, Modifier.STATIC).ifPresent(fix::merge);
 
-    return Optional.of(describeMatch(methodTree, fix.build()));
+    return describeMatch(methodTree, fix.build());
   }
 }
