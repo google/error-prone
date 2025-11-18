@@ -64,6 +64,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
@@ -299,15 +300,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     // One-pass scan through each case in switch
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
-      boolean hasCasePattern =
-          caseTree.getLabels().stream()
-              .anyMatch(
-                  caseLabelTree -> caseLabelTree.getKind().name().equals("PATTERN_CASE_LABEL"));
-      if (hasCasePattern) {
-        // Case patterns are not currently supported by the checker.
-        return DEFAULT_ANALYSIS_RESULT;
-      }
-
       NullDefaultKind nullDefaultKind = analyzeCaseForNullAndDefault(caseTree);
       boolean isDefaultCase =
           nullDefaultKind.equals(NullDefaultKind.KIND_DEFAULT)
@@ -1014,7 +1006,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       }
 
       if (nullDefaultKind.equals(NullDefaultKind.KIND_NEITHER)) {
-        replacementCodeBuilder.append(printCaseExpressions(caseTree, state));
+        replacementCodeBuilder.append(printCaseExpressionsOrPatternAndGuard(caseTree, state));
       }
       Optional<String> commentsAfterCaseOptional =
           extractCommentsAfterCase(switchTree, allSwitchComments, state, caseIndex);
@@ -1159,7 +1151,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       }
 
       if (nullDefaultKind.equals(NullDefaultKind.KIND_NEITHER)) {
-        replacementCodeBuilder.append(printCaseExpressions(caseTree, state));
+        replacementCodeBuilder.append(printCaseExpressionsOrPatternAndGuard(caseTree, state));
       }
 
       Optional<String> commentsAfterCaseOptional =
@@ -1395,7 +1387,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       }
 
       if (nullDefaultKind.equals(NullDefaultKind.KIND_NEITHER)) {
-        replacementCodeBuilder.append(printCaseExpressions(caseTree, state));
+        replacementCodeBuilder.append(printCaseExpressionsOrPatternAndGuard(caseTree, state));
       }
 
       Optional<String> commentsAfterCaseOptional =
@@ -1722,9 +1714,29 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
   }
 
-  /** Prints source for all expressions in a given {@code case}, separated by commas. */
-  private static String printCaseExpressions(CaseTree caseTree, VisitorState state) {
-    return caseTree.getExpressions().stream().map(state::getSourceForNode).collect(joining(", "));
+  private static boolean hasCasePattern(CaseTree caseTree) {
+    return caseTree.getLabels().stream()
+        .anyMatch(caseLabelTree -> caseLabelTree instanceof PatternCaseLabelTree);
+  }
+
+  /**
+   * Prints source for all expressions in a given {@code case}, separated by commas, or the pattern
+   * and guard (if present).
+   */
+  private static String printCaseExpressionsOrPatternAndGuard(
+      CaseTree caseTree, VisitorState state) {
+    if (!hasCasePattern(caseTree)) {
+      return caseTree.getExpressions().stream().map(state::getSourceForNode).collect(joining(", "));
+    }
+    // Currently, `case`s can only have a single pattern, however the compiler's class structure
+    // does not reflect this restriction.
+    StringBuilder sb =
+        new StringBuilder(
+            caseTree.getLabels().stream().map(state::getSourceForNode).collect(joining(", ")));
+    if (caseTree.getGuard() != null) {
+      sb.append(" when ").append(state.getSourceForNode(caseTree.getGuard())).append(" ");
+    }
+    return sb.toString();
   }
 
   /**
