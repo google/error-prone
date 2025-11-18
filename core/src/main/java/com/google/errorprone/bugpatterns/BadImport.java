@@ -87,16 +87,20 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
 
   private static final ImmutableSet<String> BAD_STATIC_IDENTIFIERS =
       ImmutableSet.of(
+          // keep-sorted start
+          "INSTANCE",
           "builder",
-          "create",
           "copyOf",
+          "create",
           "from",
           "getDefaultInstance",
-          "INSTANCE",
           "newBuilder",
           "newInstance",
           "of",
-          "valueOf");
+          "valueOf",
+          "values"
+          // keep-sorted end
+          );
 
   private static final MultiMatcher<Tree, AnnotationTree> HAS_TYPE_USE_ANNOTATION =
       annotations(AT_LEAST_ONE, (t, state) -> isTypeAnnotation(t));
