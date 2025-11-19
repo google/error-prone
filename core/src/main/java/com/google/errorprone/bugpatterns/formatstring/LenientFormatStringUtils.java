@@ -24,6 +24,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
 
 /** Utilities relating to lenient format strings. */
 public final class LenientFormatStringUtils {
@@ -35,7 +36,11 @@ public final class LenientFormatStringUtils {
   public static int getLenientFormatStringPosition(ExpressionTree tree, VisitorState state) {
     for (LenientFormatMethod method : LENIENT_FORMATTING_METHODS) {
       if (method.matcher().matches(tree, state)) {
-        return method.formatStringPosition;
+        if (tree instanceof MethodInvocationTree methodInvocation
+            && method.formatStringPosition < methodInvocation.getArguments().size()) {
+          // e.g. Preconditions.checkNotNull(String) isn't a format method
+          return method.formatStringPosition;
+        }
       }
     }
     return -1;
