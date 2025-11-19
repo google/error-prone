@@ -18,13 +18,15 @@ package com.google.errorprone.fixes;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.Range;
 
-/** A replaced section of a source file. */
-@AutoValue
-public abstract class Replacement {
-
+/**
+ * A replaced section of a source file.
+ *
+ * @param range The {@link Range} to be replaced.
+ * @param replaceWith The source text to appear in the output.
+ */
+public record Replacement(Range<Integer> range, String replaceWith) {
   /**
    * Creates a {@link Replacement}. Start and end positions are represented as code unit indices in
    * a Unicode 16-bit string.
@@ -40,7 +42,7 @@ public abstract class Replacement {
         startPosition,
         endPosition,
         replaceWith);
-    return new AutoValue_Replacement(Range.closedOpen(startPosition, endPosition), replaceWith);
+    return new Replacement(Range.closedOpen(startPosition, endPosition), replaceWith);
   }
 
   /** The beginning of the replacement range. */
@@ -58,14 +60,8 @@ public abstract class Replacement {
     return range().upperEndpoint();
   }
 
-  /** The {@link Range} to be replaced. */
-  public abstract Range<Integer> range();
-
-  /** The source text to appear in the output. */
-  public abstract String replaceWith();
-
   /** Creates a new replacement at the same range with different text. */
   Replacement withDifferentText(String replaceWith) {
-    return new AutoValue_Replacement(range(), replaceWith);
+    return new Replacement(range(), replaceWith);
   }
 }

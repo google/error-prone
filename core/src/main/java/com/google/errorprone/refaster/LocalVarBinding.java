@@ -16,7 +16,6 @@
 
 package com.google.errorprone.refaster;
 
-import com.google.auto.value.AutoValue;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.util.Name;
@@ -26,22 +25,17 @@ import com.sun.tools.javac.util.Name;
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
-@AutoValue
-public abstract class LocalVarBinding {
+public record LocalVarBinding(VarSymbol symbol, ModifiersTree modifiers) {
   public static LocalVarBinding create(VarSymbol symbol, ModifiersTree modifiers) {
-    return new AutoValue_LocalVarBinding(symbol, modifiers);
+    return new LocalVarBinding(symbol, modifiers);
   }
 
-  public abstract VarSymbol getSymbol();
-
-  public abstract ModifiersTree getModifiers();
-
   public Name getName() {
-    return getSymbol().getSimpleName();
+    return this.symbol().getSimpleName();
   }
 
   @Override
   public final String toString() {
-    return getSymbol().getSimpleName().toString();
+    return this.symbol().getSimpleName().toString();
   }
 }

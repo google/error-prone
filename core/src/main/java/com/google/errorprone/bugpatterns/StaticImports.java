@@ -21,7 +21,6 @@ import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
@@ -42,21 +41,19 @@ import org.jspecify.annotations.Nullable;
  */
 public final class StaticImports {
 
-  /** Information about a static import. */
-  @AutoValue
-  public abstract static class StaticImportInfo {
-    /** The fully qualified name used to import the type (possibly non-canonical). */
-    public abstract String importedName();
-
-    /** The fully-qualified canonical name of the type. */
-    public abstract String canonicalName();
-
-    /** The simple name of the imported member. */
-    public abstract Optional<String> simpleName();
-
-    /** The field or variable symbol for a static non-type member import. */
-    public abstract ImmutableSet<Symbol> members();
-
+  /**
+   * Information about a static import.
+   *
+   * @param importedName The fully qualified name used to import the type (possibly non-canonical).
+   * @param canonicalName The fully-qualified canonical name of the type.
+   * @param simpleName The simple name of the imported member.
+   * @param members The field or variable symbol for a static non-type member import.
+   */
+  public record StaticImportInfo(
+      String importedName,
+      String canonicalName,
+      Optional<String> simpleName,
+      ImmutableSet<Symbol> members) {
     /**
      * Returns whether the import is canonical, i.e. the fully qualified name used to import the
      * type matches the scopes it was declared in.
@@ -75,13 +72,13 @@ public final class StaticImports {
     }
 
     private static StaticImportInfo create(String importedName, String canonicalName) {
-      return new AutoValue_StaticImports_StaticImportInfo(
+      return new StaticImportInfo(
           importedName, canonicalName, Optional.<String>absent(), ImmutableSet.<Symbol>of());
     }
 
     private static StaticImportInfo create(
         String importedName, String canonicalName, String simpleName, Iterable<Symbol> members) {
-      return new AutoValue_StaticImports_StaticImportInfo(
+      return new StaticImportInfo(
           importedName, canonicalName, Optional.of(simpleName), ImmutableSet.copyOf(members));
     }
   }

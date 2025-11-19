@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 import static com.google.errorprone.util.ASTHelpers.canonicalConstructor;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.BindingPatternTree;
@@ -38,22 +37,15 @@ import org.jspecify.annotations.Nullable;
  *
  * @author andrewrice@google.com (Andrew Rice)
  */
-@AutoValue
-abstract class InvocationInfo {
-
-  abstract Tree tree();
-
-  abstract MethodSymbol symbol();
-
-  abstract ImmutableList<Tree> actualParameters();
-
-  abstract ImmutableList<VarSymbol> formalParameters();
-
-  abstract VisitorState state();
-
+record InvocationInfo(
+    Tree tree,
+    MethodSymbol symbol,
+    ImmutableList<Tree> actualParameters,
+    ImmutableList<VarSymbol> formalParameters,
+    VisitorState state) {
   static InvocationInfo createFromMethodInvocation(
       MethodInvocationTree tree, MethodSymbol symbol, VisitorState state) {
-    return new AutoValue_InvocationInfo(
+    return new InvocationInfo(
         tree,
         symbol,
         ImmutableList.copyOf(tree.getArguments()),
@@ -63,7 +55,7 @@ abstract class InvocationInfo {
 
   static InvocationInfo createFromNewClass(
       NewClassTree tree, MethodSymbol symbol, VisitorState state) {
-    return new AutoValue_InvocationInfo(
+    return new InvocationInfo(
         tree,
         symbol,
         ImmutableList.copyOf(tree.getArguments()),
@@ -88,7 +80,7 @@ abstract class InvocationInfo {
         formals.add(constructor.getParameters().get(i));
       }
     }
-    return new AutoValue_InvocationInfo(tree, constructor, actuals.build(), formals.build(), state);
+    return new InvocationInfo(tree, constructor, actuals.build(), formals.build(), state);
   }
 
   private static ImmutableList<VarSymbol> getFormalParametersWithoutVarArgs(

@@ -38,7 +38,6 @@ import static com.sun.tools.javac.parser.Tokens.TokenKind.DOT;
 import static java.lang.Boolean.TRUE;
 import static java.util.Objects.requireNonNull;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -270,10 +269,10 @@ class NullnessUtils {
     return enclosingClass(constructedClass) != null && !constructedClass.isStatic();
   }
 
-  @AutoValue
-  abstract static class NullableAnnotationToUse {
+  record NullableAnnotationToUse(
+      @Nullable String importToAdd, String use, boolean isTypeUse, boolean isAlreadyInScope) {
     static NullableAnnotationToUse annotationToBeImported(String qualifiedName, boolean isTypeUse) {
-      return new AutoValue_NullnessUtils_NullableAnnotationToUse(
+      return new NullableAnnotationToUse(
           qualifiedName,
           qualifiedName.replaceFirst(".*[.]", ""),
           isTypeUse,
@@ -282,8 +281,7 @@ class NullnessUtils {
 
     static NullableAnnotationToUse annotationWithoutImporting(
         String name, boolean isTypeUse, boolean isAlreadyInScope) {
-      return new AutoValue_NullnessUtils_NullableAnnotationToUse(
-          null, name, isTypeUse, isAlreadyInScope);
+      return new NullableAnnotationToUse(null, name, isTypeUse, isAlreadyInScope);
     }
 
     /**
@@ -311,14 +309,6 @@ class NullnessUtils {
         Tree tree, VisitorState state, @Nullable String suppressionToRemove) {
       return prepareBuilder(state, suppressionToRemove).prefixWith(tree, "@" + use() + " ").build();
     }
-
-    abstract @Nullable String importToAdd();
-
-    abstract String use();
-
-    abstract boolean isTypeUse();
-
-    abstract boolean isAlreadyInScope();
 
     private SuggestedFix.Builder prepareBuilder(
         VisitorState state, @Nullable String suppressionToRemove) {

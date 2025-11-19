@@ -16,7 +16,6 @@
 
 package com.google.errorprone.refaster;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -34,21 +33,27 @@ import org.jspecify.annotations.Nullable;
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
-@AutoValue
-abstract class UIf implements UStatement, IfTree {
-  public static UIf create(
-      UExpression condition, UStatement thenStatement, UStatement elseStatement) {
-    return new AutoValue_UIf(condition, thenStatement, elseStatement);
+record UIf(UExpression condition, UStatement thenStatement, @Nullable UStatement elseStatement)
+    implements UStatement, IfTree {
+  @Override
+  public UExpression getCondition() {
+    return condition();
   }
 
   @Override
-  public abstract UExpression getCondition();
+  public UStatement getThenStatement() {
+    return thenStatement();
+  }
 
   @Override
-  public abstract UStatement getThenStatement();
+  public @Nullable UStatement getElseStatement() {
+    return elseStatement();
+  }
 
-  @Override
-  public abstract @Nullable UStatement getElseStatement();
+  public static UIf create(
+      UExpression condition, UStatement thenStatement, UStatement elseStatement) {
+    return new UIf(condition, thenStatement, elseStatement);
+  }
 
   @Override
   public <R, D> R accept(TreeVisitor<R, D> visitor, D data) {

@@ -20,7 +20,6 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static java.util.Arrays.asList;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
@@ -66,14 +65,14 @@ import org.jspecify.annotations.Nullable;
 /** Utilities for validating format strings. */
 public final class FormatStringValidation {
 
-  /** Description of an incorrect format method call. */
-  @AutoValue
-  public abstract static class ValidationResult {
-    /** A human-readable diagnostic message. */
-    public abstract String message();
-
+  /**
+   * Description of an incorrect format method call.
+   *
+   * @param message A human-readable diagnostic message.
+   */
+  public record ValidationResult(String message) {
     public static ValidationResult create(String message) {
-      return new AutoValue_FormatStringValidation_ValidationResult(message);
+      return new ValidationResult(message);
     }
   }
 

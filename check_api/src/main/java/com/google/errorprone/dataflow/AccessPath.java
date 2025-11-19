@@ -15,7 +15,6 @@
  */
 package com.google.errorprone.dataflow;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.IdentifierTree;
@@ -55,19 +54,9 @@ import org.jspecify.annotations.Nullable;
  * local variable {@code x} is represented by {base = Some x, fields = "foo" :: "foo()" :: nil}
  *
  * @author bennostein@google.com (Benno Stein)
+ * @param base If present, base of access path is contained Element; if absent, base is `this`
  */
-@AutoValue
-public abstract class AccessPath {
-
-  /** If present, base of access path is contained Element; if absent, base is `this` */
-  public abstract @Nullable Element base();
-
-  public abstract ImmutableList<String> path();
-
-  private static AccessPath create(@Nullable Element base, ImmutableList<String> path) {
-    return new AutoValue_AccessPath(base, path);
-  }
-
+public record AccessPath(@Nullable Element base, ImmutableList<String> path) {
   /**
    * Check whether {@code tree} is an AutoValue accessor. A tree is an AutoValue accessor iff:
    *
@@ -126,7 +115,7 @@ public abstract class AccessPath {
 
       if (tree instanceof IdentifierTree) {
         // Implicit `this` receiver
-        return AccessPath.create(/* base= */ null, pathBuilder.build());
+        return new AccessPath(null, pathBuilder.build());
       }
 
       tree = ((MemberSelectTree) tree).getExpression();
@@ -134,23 +123,23 @@ public abstract class AccessPath {
 
     // Explicit `this` receiver
     if (tree instanceof IdentifierTree id && id.getName().contentEquals("this")) {
-      return AccessPath.create(/* base= */ null, pathBuilder.build());
+      return new AccessPath(null, pathBuilder.build());
     }
 
     // Local variable receiver
     if (tree instanceof IdentifierTree) {
-      return AccessPath.create(TreeUtils.elementFromTree(tree), pathBuilder.build());
+      return new AccessPath(TreeUtils.elementFromTree(tree), pathBuilder.build());
     }
 
     return null;
   }
 
   public static AccessPath fromLocalVariable(LocalVariableNode node) {
-    return AccessPath.create(node.getElement(), ImmutableList.of());
+    return new AccessPath(node.getElement(), ImmutableList.of());
   }
 
   public static AccessPath fromVariableDecl(VariableDeclarationNode node) {
-    return AccessPath.create(TreeUtils.elementFromDeclaration(node.getTree()), ImmutableList.of());
+    return new AccessPath(TreeUtils.elementFromDeclaration(node.getTree()), ImmutableList.of());
   }
 
   /**

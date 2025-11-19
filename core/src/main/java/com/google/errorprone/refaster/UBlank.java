@@ -18,7 +18,6 @@ package com.google.errorprone.refaster;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.DiscreteDomain;
 import com.google.common.collect.ImmutableList;
@@ -34,13 +33,10 @@ import java.util.List;
 import java.util.UUID;
 
 /** Equivalent to a no-arg block placeholder invocation. */
-@AutoValue
-abstract class UBlank implements UStatement {
+record UBlank(UUID unique) implements UStatement {
   static UBlank create() {
-    return new AutoValue_UBlank(UUID.randomUUID());
+    return new UBlank(UUID.randomUUID());
   }
-
-  abstract UUID unique();
 
   Key key() {
     return new Key(unique());

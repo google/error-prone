@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -52,9 +51,7 @@ import java.util.Optional;
  *
  * @author andrewrice@google.com (Andrew Rice)
  */
-@AutoValue
-abstract class Parameter {
-
+record Parameter(String name, Type type, int index, String text, Kind kind, boolean constant) {
   private static final ImmutableSet<String> METHODNAME_PREFIXES_TO_REMOVE =
       ImmutableSet.of("get", "set", "is");
 
@@ -64,23 +61,11 @@ abstract class Parameter {
   /** We use this placeholder to indicate a name which we couldn't get a canonical string for. */
   @VisibleForTesting static final String NAME_NOT_PRESENT = "*NOT_PRESENT*";
 
-  abstract String name();
-
-  abstract Type type();
-
-  abstract int index();
-
-  abstract String text();
-
-  abstract Kind kind();
-
-  abstract boolean constant();
-
   static ImmutableList<Parameter> createListFromVarSymbols(List<VarSymbol> varSymbols) {
     return Streams.mapWithIndex(
             varSymbols.stream(),
             (s, i) ->
-                new AutoValue_Parameter(
+                new Parameter(
                     s.getSimpleName().toString(),
                     s.asType(),
                     (int) i,
@@ -94,7 +79,7 @@ abstract class Parameter {
     return Streams.mapWithIndex(
             trees.stream(),
             (t, i) ->
-                new AutoValue_Parameter(
+                new Parameter(
                     getArgumentName(t),
                     Optional.ofNullable(
                             t instanceof ExpressionTree expressionTree

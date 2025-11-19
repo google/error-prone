@@ -364,14 +364,9 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     fix.replace(tree, unbox(state, type).tsym.getSimpleName().toString());
   }
 
-  @AutoValue
-  abstract static class Getter {
-    abstract MethodTree method();
-
-    abstract SuggestedFix.Builder fix();
-
+  private record Getter(MethodTree method, SuggestedFix.Builder fix) {
     static Getter of(MethodTree method) {
-      return new AutoValue_AutoValueBoxedValues_Getter(method, SuggestedFix.builder());
+      return new Getter(method, SuggestedFix.builder());
     }
   }
 }

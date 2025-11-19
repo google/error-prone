@@ -14,7 +14,6 @@
 
 package com.google.errorprone.refaster;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.ImmutableClassToInstanceMap;
@@ -47,8 +46,13 @@ import java.util.function.Predicate;
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
-@AutoValue
-abstract class PlaceholderMethod implements Serializable {
+record PlaceholderMethod(
+    StringName name,
+    UType returnType,
+    ImmutableMap<UVariableDecl, ImmutableClassToInstanceMap<Annotation>> annotatedParameters,
+    Matcher<ExpressionTree> matcher,
+    ImmutableClassToInstanceMap<Annotation> annotations)
+    implements Serializable {
   static PlaceholderMethod create(
       CharSequence name,
       UType returnType,
@@ -81,24 +85,13 @@ abstract class PlaceholderMethod implements Serializable {
         }
       }
     }
-    return new AutoValue_PlaceholderMethod(
+    return new PlaceholderMethod(
         StringName.of(name),
         returnType,
         parameters,
         new PlaceholderMatcher(),
         ImmutableClassToInstanceMap.<Annotation, Annotation>copyOf(annotations));
   }
-
-  abstract StringName name();
-
-  abstract UType returnType();
-
-  abstract ImmutableMap<UVariableDecl, ImmutableClassToInstanceMap<Annotation>>
-      annotatedParameters();
-
-  abstract Matcher<ExpressionTree> matcher();
-
-  abstract ImmutableClassToInstanceMap<Annotation> annotations();
 
   ImmutableSet<UVariableDecl> parameters() {
     return annotatedParameters().keySet();

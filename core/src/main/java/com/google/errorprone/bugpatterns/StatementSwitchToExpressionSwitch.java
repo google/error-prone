@@ -31,7 +31,6 @@ import static com.sun.source.tree.Tree.Kind.RETURN;
 import static com.sun.source.tree.Tree.Kind.THROW;
 import static java.util.stream.Collectors.joining;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -118,7 +117,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * immutable.
    */
   private static final AssignmentSwitchAnalysisResult DEFAULT_ASSIGNMENT_SWITCH_ANALYSIS_RESULT =
-      AssignmentSwitchAnalysisResult.of(
+      new AssignmentSwitchAnalysisResult(
           /* canConvertToAssignmentSwitch= */ false,
           /* precedingVariableDeclaration= */ Optional.empty(),
           /* assignmentTargetOptional= */ Optional.empty(),
@@ -127,13 +126,13 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
   /** Default (negative) result for overall analysis. Note that the value is immutable. */
   private static final AnalysisResult DEFAULT_ANALYSIS_RESULT =
-      AnalysisResult.of(
-          /* canConvertDirectlyToExpressionSwitch= */ false,
-          /* canConvertToReturnSwitch= */ false,
-          /* canRemoveDefault= */ false,
+      new AnalysisResult(
+          false,
+          false,
+          false,
           DEFAULT_ASSIGNMENT_SWITCH_ANALYSIS_RESULT,
-          /* groupedWithNextCase= */ ImmutableList.of(),
-          /* symbolsToHoist= */ ImmutableBiMap.of());
+          ImmutableList.of(),
+          ImmutableBiMap.of());
 
   private static final String EQUALS_STRING = "=";
   private static final Matcher<ExpressionTree> COMPILE_TIME_CONSTANT_MATCHER =
@@ -289,12 +288,17 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     // Does each case consist solely of returning a (non-void) expression?
     CaseQualifications returnSwitchCaseQualifications = CaseQualifications.NO_CASES_ASSESSED;
     // Does each case consist solely of a throw or the same symbol assigned in the same way?
-    AssignmentSwitchAnalysisState assignmentSwitchAnalysisState =
-        AssignmentSwitchAnalysisState.of(
-            /* assignmentSwitchCaseQualifications= */ CaseQualifications.NO_CASES_ASSESSED,
-            /* assignmentTargetOptional= */ Optional.empty(),
-            /* assignmentKindOptional= */ Optional.empty(),
-            /* assignmentTreeOptional= */ Optional.empty());
+    Optional<ExpressionTree> assignmentTargetOptional = Optional.empty();
+    Optional<Tree.Kind> assignmentKindOptional = Optional.empty();
+    /* assignmentSwitchCaseQualifications= */
+    /* assignmentTargetOptional= */
+    /* assignmentKindOptional= */
+    /* assignmentTreeOptional= */ AssignmentSwitchAnalysisState assignmentSwitchAnalysisState =
+        new AssignmentSwitchAnalysisState(
+            CaseQualifications.NO_CASES_ASSESSED,
+            assignmentTargetOptional,
+            assignmentKindOptional,
+            Optional.empty());
 
     boolean hasDefaultCase = false;
     // One-pass scan through each case in switch
@@ -464,11 +468,11 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
                 target -> findCombinableVariableTree(target, precedingStatements, state))
             : Optional.empty();
 
-    return AnalysisResult.of(
+    return new AnalysisResult(
         canConvertDirectlyToExpressionSwitch,
         canConvertToReturnSwitch,
         canRemoveDefault,
-        AssignmentSwitchAnalysisResult.of(
+        new AssignmentSwitchAnalysisResult(
             canConvertToAssignmentSwitch,
             combinableVariableTree,
             assignmentSwitchAnalysisState.assignmentTargetOptional(),
@@ -699,7 +703,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     if (statements.isEmpty()) {
       return isLastCaseInSwitch
           // An empty last case cannot be an assignment
-          ? AssignmentSwitchAnalysisState.of(
+          ? new AssignmentSwitchAnalysisState(
               CaseQualifications.SOME_OR_ALL_CASES_DONT_QUALIFY,
               assignmentTargetOptional,
               assignmentExpressionKindOptional,
@@ -721,7 +725,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
                 && breakTree.getLabel() == null);
     if (!expressionOrExpressionBreak) {
       // Conversion of this block is not supported
-      return AssignmentSwitchAnalysisState.of(
+      return new AssignmentSwitchAnalysisState(
           CaseQualifications.SOME_OR_ALL_CASES_DONT_QUALIFY,
           assignmentTargetOptional,
           assignmentExpressionKindOptional,
@@ -772,17 +776,15 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
 
     // Save the assignment target/kind in the state, but never overwrite existing target/kind
-    return AssignmentSwitchAnalysisState.of(
+    return new AssignmentSwitchAnalysisState(
         caseQualifications,
-        /* assignmentTargetOptional= */ assignmentTargetOptional.isEmpty()
+        assignmentTargetOptional.isEmpty()
             ? caseAssignmentTargetOptional
             : assignmentTargetOptional,
-        /* assignmentKindOptional= */ assignmentExpressionKindOptional.isEmpty()
+        assignmentExpressionKindOptional.isEmpty()
             ? caseAssignmentKindOptional
             : assignmentExpressionKindOptional,
-        /* assignmentTreeOptional= */ assignmentTreeOptional.isEmpty()
-            ? caseAssignmentTreeOptional
-            : assignmentTreeOptional);
+        assignmentTreeOptional.isEmpty() ? caseAssignmentTreeOptional : assignmentTreeOptional);
   }
 
   /**
@@ -1860,107 +1862,55 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return NullDefaultKind.KIND_NEITHER;
   }
 
-  @AutoValue
-  abstract static class AnalysisResult {
-    /** Whether the statement switch can be directly converted to an expression switch */
-    abstract boolean canConvertDirectlyToExpressionSwitch();
+  /**
+   * @param canConvertDirectlyToExpressionSwitch Whether the statement switch can be directly
+   *     converted to an expression switch
+   * @param canConvertToReturnSwitch Whether the statement switch can be converted to a return
+   *     switch
+   * @param canRemoveDefault Whether the assignment switch is exhaustive even in the absence of the
+   *     default case that exists in the original switch statement
+   * @param assignmentSwitchAnalysisResult Results of the analysis for conversion to an assignment
+   *     switch
+   * @param groupedWithNextCase List of whether each case tree can be grouped with its successor in
+   *     transformed source code
+   * @param symbolsToHoist Bidirectional map from symbols to hoist to the top of the switch
+   *     statement to their declaration trees
+   */
+  record AnalysisResult(
+      boolean canConvertDirectlyToExpressionSwitch,
+      boolean canConvertToReturnSwitch,
+      boolean canRemoveDefault,
+      AssignmentSwitchAnalysisResult assignmentSwitchAnalysisResult,
+      ImmutableList<Boolean> groupedWithNextCase,
+      ImmutableBiMap<VarSymbol, VariableTree> symbolsToHoist) {}
 
-    /** Whether the statement switch can be converted to a return switch */
-    abstract boolean canConvertToReturnSwitch();
+  /**
+   * @param canConvertToAssignmentSwitch Whether the statement switch can be converted to an
+   *     assignment switch
+   * @param precedingVariableDeclaration The immediately preceding variable declaration if this
+   *     switch can be combined with it.
+   * @param assignmentTargetOptional Target of the assignment switch, if any
+   * @param assignmentKindOptional Kind of assignment made by the assignment switch, if any
+   * @param assignmentSourceCodeOptional Java source code of the assignment switch's operator, e.g.
+   *     "+="
+   */
+  record AssignmentSwitchAnalysisResult(
+      boolean canConvertToAssignmentSwitch,
+      Optional<VariableTree> precedingVariableDeclaration,
+      Optional<ExpressionTree> assignmentTargetOptional,
+      Optional<Tree.Kind> assignmentKindOptional,
+      Optional<String> assignmentSourceCodeOptional) {}
 
-    /**
-     * Whether the assignment switch is exhaustive even in the absence of the default case that
-     * exists in the original switch statement
-     */
-    abstract boolean canRemoveDefault();
-
-    /** Results of the analysis for conversion to an assignment switch */
-    abstract AssignmentSwitchAnalysisResult assignmentSwitchAnalysisResult();
-
-    /**
-     * List of whether each case tree can be grouped with its successor in transformed source code
-     */
-    abstract ImmutableList<Boolean> groupedWithNextCase();
-
-    /**
-     * Bidirectional map from symbols to hoist to the top of the switch statement to their
-     * declaration trees
-     */
-    abstract ImmutableBiMap<VarSymbol, VariableTree> symbolsToHoist();
-
-    static AnalysisResult of(
-        boolean canConvertDirectlyToExpressionSwitch,
-        boolean canConvertToReturnSwitch,
-        boolean canRemoveDefault,
-        AssignmentSwitchAnalysisResult assignmentSwitchAnalysisResult,
-        ImmutableList<Boolean> groupedWithNextCase,
-        ImmutableBiMap<VarSymbol, VariableTree> symbolsToHoist) {
-      return new AutoValue_StatementSwitchToExpressionSwitch_AnalysisResult(
-          canConvertDirectlyToExpressionSwitch,
-          canConvertToReturnSwitch,
-          canRemoveDefault,
-          assignmentSwitchAnalysisResult,
-          groupedWithNextCase,
-          symbolsToHoist);
-    }
-  }
-
-  @AutoValue
-  abstract static class AssignmentSwitchAnalysisResult {
-    /** Whether the statement switch can be converted to an assignment switch */
-    abstract boolean canConvertToAssignmentSwitch();
-
-    /** The immediately preceding variable declaration if this switch can be combined with it. */
-    abstract Optional<VariableTree> precedingVariableDeclaration();
-
-    /** Target of the assignment switch, if any */
-    abstract Optional<ExpressionTree> assignmentTargetOptional();
-
-    /** Kind of assignment made by the assignment switch, if any */
-    abstract Optional<Tree.Kind> assignmentKindOptional();
-
-    /** Java source code of the assignment switch's operator, e.g. "+=" */
-    abstract Optional<String> assignmentSourceCodeOptional();
-
-    static AssignmentSwitchAnalysisResult of(
-        boolean canConvertToAssignmentSwitch,
-        Optional<VariableTree> precedingVariableDeclaration,
-        Optional<ExpressionTree> assignmentTargetOptional,
-        Optional<Tree.Kind> assignmentKindOptional,
-        Optional<String> assignmentSourceCodeOptional) {
-      return new AutoValue_StatementSwitchToExpressionSwitch_AssignmentSwitchAnalysisResult(
-          canConvertToAssignmentSwitch,
-          precedingVariableDeclaration,
-          assignmentTargetOptional,
-          assignmentKindOptional,
-          assignmentSourceCodeOptional);
-    }
-  }
-
-  @AutoValue
-  abstract static class AssignmentSwitchAnalysisState {
-    /** Overall qualification of the switch statement for conversion to an assignment switch */
-    abstract CaseQualifications assignmentSwitchCaseQualifications();
-
-    /** Target of the first assignment seen, if any */
-    abstract Optional<ExpressionTree> assignmentTargetOptional();
-
-    /** Kind of the first assignment seen, if any */
-    abstract Optional<Tree.Kind> assignmentExpressionKindOptional();
-
-    /** ExpressionTree of the first assignment seen, if any */
-    abstract Optional<ExpressionTree> assignmentTreeOptional();
-
-    static AssignmentSwitchAnalysisState of(
-        CaseQualifications assignmentSwitchCaseQualifications,
-        Optional<ExpressionTree> assignmentTargetOptional,
-        Optional<Tree.Kind> assignmentKindOptional,
-        Optional<ExpressionTree> assignmentTreeOptional) {
-      return new AutoValue_StatementSwitchToExpressionSwitch_AssignmentSwitchAnalysisState(
-          assignmentSwitchCaseQualifications,
-          assignmentTargetOptional,
-          assignmentKindOptional,
-          assignmentTreeOptional);
-    }
-  }
+  /**
+   * @param assignmentSwitchCaseQualifications Overall qualification of the switch statement for
+   *     conversion to an assignment switch
+   * @param assignmentTargetOptional Target of the first assignment seen, if any
+   * @param assignmentExpressionKindOptional Kind of the first assignment seen, if any
+   * @param assignmentTreeOptional ExpressionTree of the first assignment seen, if any
+   */
+  record AssignmentSwitchAnalysisState(
+      CaseQualifications assignmentSwitchCaseQualifications,
+      Optional<ExpressionTree> assignmentTargetOptional,
+      Optional<Tree.Kind> assignmentExpressionKindOptional,
+      Optional<ExpressionTree> assignmentTreeOptional) {}
 }

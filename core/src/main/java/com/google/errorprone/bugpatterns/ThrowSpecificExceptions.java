@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.VerifyException;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -72,14 +71,9 @@ public final class ThrowSpecificExceptions extends BugChecker implements NewClas
     return Description.NO_MATCH;
   }
 
-  @AutoValue
-  abstract static class AbstractLikeException {
-    abstract Matcher<ExpressionTree> matcher();
-
-    abstract String replacement();
-
+  private record AbstractLikeException(Matcher<ExpressionTree> matcher, String replacement) {
     static AbstractLikeException of(Class<?> abstractLikeException, Class<?> replacement) {
-      return new AutoValue_ThrowSpecificExceptions_AbstractLikeException(
+      return new AbstractLikeException(
           Matchers.constructor().forClass(abstractLikeException.getName()), replacement.getName());
     }
   }

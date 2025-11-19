@@ -16,29 +16,31 @@
 
 package com.google.errorprone.bugpatterns.apidiff;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Multimap;
 import com.google.errorprone.bugpatterns.apidiff.ApiDiffProto.Diff;
 import java.util.Set;
 
-/** The difference between two APIs. */
-@AutoValue
-public abstract class ApiDiff {
-
-  /** A per class unique identifier for a field or method. */
-  @AutoValue
-  public abstract static class ClassMemberKey {
-
-    /** The simple name of the member. */
-    public abstract String identifier();
-
-    /** The JVMS 4.3 member descriptor. */
-    public abstract String descriptor();
-
+/**
+ * The difference between two APIs.
+ *
+ * @param unsupportedClasses Binary names of classes only present in the new API.
+ * @param unsupportedMembersByClass Members only present in the new API, grouped by binary name of
+ *     their declaring class.
+ */
+public record ApiDiff(
+    ImmutableSet<String> unsupportedClasses,
+    ImmutableSetMultimap<String, ClassMemberKey> unsupportedMembersByClass) {
+  /**
+   * A per class unique identifier for a field or method.
+   *
+   * @param identifier The simple name of the member.
+   * @param descriptor The JVMS 4.3 member descriptor.
+   */
+  public record ClassMemberKey(String identifier, String descriptor) {
     public static ClassMemberKey create(String identifier, String descriptor) {
-      return new AutoValue_ApiDiff_ClassMemberKey(identifier, descriptor);
+      return new ClassMemberKey(identifier, descriptor);
     }
 
     @Override
@@ -46,12 +48,6 @@ public abstract class ApiDiff {
       return String.format("%s:%s", identifier(), descriptor());
     }
   }
-
-  /** Binary names of classes only present in the new API. */
-  public abstract ImmutableSet<String> unsupportedClasses();
-
-  /** Members only present in the new API, grouped by binary name of their declaring class. */
-  public abstract ImmutableSetMultimap<String, ClassMemberKey> unsupportedMembersByClass();
 
   /** Returns true if the class with the given binary name is unsupported. */
   boolean isClassUnsupported(String className) {
@@ -67,7 +63,7 @@ public abstract class ApiDiff {
 
   public static ApiDiff fromMembers(
       Set<String> unsupportedClasses, Multimap<String, ClassMemberKey> unsupportedMembersByClass) {
-    return new AutoValue_ApiDiff(
+    return new ApiDiff(
         ImmutableSet.copyOf(unsupportedClasses),
         ImmutableSetMultimap.copyOf(unsupportedMembersByClass));
   }
@@ -91,7 +87,7 @@ public abstract class ApiDiff {
         default -> throw new AssertionError(c.getDiffCase());
       }
     }
-    return new AutoValue_ApiDiff(unsupportedClasses.build(), unsupportedMembersByClass.build());
+    return new ApiDiff(unsupportedClasses.build(), unsupportedMembersByClass.build());
   }
 
   /** Converts a {@link ApiDiff} to a {@link ApiDiffProto.Diff}. */

@@ -16,7 +16,6 @@
 
 package com.google.errorprone.refaster;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Functions;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Collections2;
@@ -38,8 +37,12 @@ import java.util.Optional;
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
-@AutoValue
-abstract class UPlaceholderStatement implements UStatement {
+record UPlaceholderStatement(
+    PlaceholderMethod placeholder,
+    ImmutableMap<UVariableDecl, UExpression> arguments,
+    ControlFlowVisitor.Result implementationFlow)
+    implements UStatement {
+
   static UPlaceholderStatement create(
       PlaceholderMethod placeholder,
       Iterable<? extends UExpression> arguments,
@@ -50,15 +53,8 @@ abstract class UPlaceholderStatement implements UStatement {
     for (int i = 0; i < placeholderParams.size(); i++) {
       builder.put(placeholderParams.get(i), argumentsList.get(i));
     }
-    return new AutoValue_UPlaceholderStatement(
-        placeholder, builder.buildOrThrow(), implementationFlow);
+    return new UPlaceholderStatement(placeholder, builder.buildOrThrow(), implementationFlow);
   }
-
-  abstract PlaceholderMethod placeholder();
-
-  abstract ImmutableMap<UVariableDecl, UExpression> arguments();
-
-  abstract ControlFlowVisitor.Result implementationFlow();
 
   @Override
   public Kind getKind() {
@@ -70,18 +66,13 @@ abstract class UPlaceholderStatement implements UStatement {
     return visitor.visitOther(this, data);
   }
 
-  @AutoValue
-  abstract static class ConsumptionState {
+  record ConsumptionState(int consumedStatements, List<JCStatement> placeholderImplInReverseOrder) {
     static ConsumptionState empty() {
-      return new AutoValue_UPlaceholderStatement_ConsumptionState(0, List.<JCStatement>nil());
+      return new ConsumptionState(0, List.<JCStatement>nil());
     }
 
-    abstract int consumedStatements();
-
-    abstract List<JCStatement> placeholderImplInReverseOrder();
-
     ConsumptionState consume(JCStatement impl) {
-      return new AutoValue_UPlaceholderStatement_ConsumptionState(
+      return new ConsumptionState(
           consumedStatements() + 1, placeholderImplInReverseOrder().prepend(impl));
     }
   }

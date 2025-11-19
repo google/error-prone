@@ -16,7 +16,6 @@
 
 package com.google.errorprone.matchers.method;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.HashMultimap;
@@ -157,12 +156,9 @@ public class MethodInvocationMatcher {
     Object comparisonKey();
 
     /** A token limiting the {@link Kind} of invocation to match. */
-    @AutoValue
-    abstract class Kind implements Token {
-      public abstract MethodKind kind();
-
+    public record Kind(MethodKind kind) implements Token {
       public static Kind create(MethodKind kind) {
-        return new AutoValue_MethodInvocationMatcher_Token_Kind(kind);
+        return new Kind(kind);
       }
 
       @Override
@@ -177,10 +173,7 @@ public class MethodInvocationMatcher {
     }
 
     /** A token limiting the name of the method being invoked. */
-    @AutoValue
-    abstract class MethodName implements Token {
-      public abstract String methodName();
-
+    public record MethodName(String methodName) implements Token {
       @Override
       public Object comparisonKey() {
         return methodName();
@@ -192,15 +185,12 @@ public class MethodInvocationMatcher {
       }
 
       public static MethodName create(String methodName) {
-        return new AutoValue_MethodInvocationMatcher_Token_MethodName(methodName);
+        return new MethodName(methodName);
       }
     }
 
     /** A token limiting the types of the formal parameters of the method being invoked. */
-    @AutoValue
-    abstract class ParameterTypes implements Token {
-      public abstract ImmutableList<String> parameterTypes();
-
+    public record ParameterTypes(ImmutableList<String> parameterTypes) implements Token {
       @Override
       public TokenType type() {
         return TokenType.PARAMETER_TYPES;
@@ -212,17 +202,14 @@ public class MethodInvocationMatcher {
       }
 
       public static ParameterTypes create(ImmutableList<String> types) {
-        return new AutoValue_MethodInvocationMatcher_Token_ParameterTypes(types);
+        return new ParameterTypes(types);
       }
     }
 
     /** A token specifying the class or interface in which the invoked method was defined. */
-    @AutoValue
-    abstract class DefinedIn implements Token {
-      public abstract String owner();
-
+    public record DefinedIn(String owner) implements Token {
       public static DefinedIn create(String owner) {
-        return new AutoValue_MethodInvocationMatcher_Token_DefinedIn(owner);
+        return new DefinedIn(owner);
       }
 
       @Override
@@ -240,12 +227,9 @@ public class MethodInvocationMatcher {
      * A token specifying the exact type of the object on which the method is being invoked (or the
      * class in which it is defined, for static methods).
      */
-    @AutoValue
-    abstract class ReceiverType implements Token {
-      public abstract String receiverType();
-
+    public record ReceiverType(String receiverType) implements Token {
       public static ReceiverType create(String receiverType) {
-        return new AutoValue_MethodInvocationMatcher_Token_ReceiverType(receiverType);
+        return new ReceiverType(receiverType);
       }
 
       @Override
@@ -263,17 +247,14 @@ public class MethodInvocationMatcher {
      * A token specifying that the class of the object on which the method is being invoked must be
      * a subtype of another type.
      */
-    @AutoValue
-    abstract class ReceiverSupertype implements Token {
-      public abstract String receiverSupertype();
-
+    public record ReceiverSupertype(String receiverSupertype) implements Token {
       @Override
       public TokenType type() {
         return TokenType.RECEIVER_SUPERTYPE;
       }
 
       public static ReceiverSupertype create(String receiverSupertype) {
-        return new AutoValue_MethodInvocationMatcher_Token_ReceiverSupertype(receiverSupertype);
+        return new ReceiverSupertype(receiverSupertype);
       }
 
       @Override
@@ -293,16 +274,13 @@ public class MethodInvocationMatcher {
    * Consider using the fluent API from MethodMatcher, and the associated helpers in Matchers, when
    * possible.</strong>
    */
-  @AutoValue
-  public abstract static class Rule {
-
+  public record Rule(ImmutableMap<TokenType, ? extends Set<Token>> required) {
     /** Builds a Rule object from a map. */
     public static Rule create(ImmutableMap<TokenType, ? extends Set<Token>> required) {
-      return new AutoValue_MethodInvocationMatcher_Rule(required);
+      return new Rule(required);
     }
 
     // An absent token means to allow any value for this token type
-    public abstract ImmutableMap<TokenType, ? extends Set<Token>> required();
   }
 
   /** A Node is just a type synonym for Object - it's just a unique pointer. */

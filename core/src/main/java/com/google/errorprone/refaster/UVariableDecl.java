@@ -102,7 +102,7 @@ public abstract class UVariableDecl extends USimpleStatement implements Variable
     Name name;
     TreeMaker maker = inliner.maker();
     if (binding.isPresent()) {
-      modifiers = (JCModifiers) binding.get().getModifiers();
+      modifiers = (JCModifiers) binding.get().modifiers();
       name = binding.get().getName();
     } else {
       modifiers = maker.Modifiers(0L);

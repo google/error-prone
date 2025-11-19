@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Strings;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
@@ -85,22 +84,17 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
     Optional<Reason> forbidReason(Type type, VisitorState state);
   }
 
-  /** An explanation of what type should not be mocked, and the reason why. */
-  @AutoValue
-  public abstract static class Reason {
-
+  /**
+   * An explanation of what type should not be mocked, and the reason why.
+   *
+   * @param unmockableClass A Type object representing the class that should not be mocked.
+   * @param reason The reason this class should not be mocked, which may be as simple as "it is
+   *     annotated to forbid mocking" but may also provide a suggested workaround.
+   */
+  public record Reason(Type unmockableClass, String reason) {
     public static Reason of(Type t, String reason) {
-      return new AutoValue_AbstractMockChecker_Reason(t, reason);
+      return new Reason(t, reason);
     }
-
-    /** A Type object representing the class that should not be mocked. */
-    public abstract Type unmockableClass();
-
-    /**
-     * The reason this class should not be mocked, which may be as simple as "it is annotated to
-     * forbid mocking" but may also provide a suggested workaround.
-     */
-    public abstract String reason();
   }
 
   /**

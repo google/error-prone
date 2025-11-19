@@ -34,7 +34,6 @@ import static com.sun.tools.javac.util.Position.NOPOS;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
@@ -1375,7 +1374,7 @@ public final class SuggestedFixes {
       } catch (IOException e) {
         throw new UncheckedIOException(e);
       }
-      return Result.create(diagnosticListener.getDiagnostics());
+      return new Result(diagnosticListener.getDiagnostics());
     }
 
     private Context createContext() {
@@ -1448,14 +1447,7 @@ public final class SuggestedFixes {
     }
 
     /** The result of the compilation. */
-    @AutoValue
-    public abstract static class Result {
-      public abstract List<Diagnostic<? extends JavaFileObject>> diagnostics();
-
-      private static Result create(List<Diagnostic<? extends JavaFileObject>> diagnostics) {
-        return new AutoValue_SuggestedFixes_FixCompiler_Result(diagnostics);
-      }
-    }
+    public record Result(List<Diagnostic<? extends JavaFileObject>> diagnostics) {}
   }
 
   private static final ImmutableSet<String> SOURCE_TARGET_OPTIONS =

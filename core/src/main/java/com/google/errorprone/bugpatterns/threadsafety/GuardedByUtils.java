@@ -20,7 +20,6 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
@@ -94,18 +93,13 @@ public final class GuardedByUtils {
     return exp;
   }
 
-  @AutoValue
-  abstract static class GuardedByValidationResult {
-    abstract String message();
-
-    abstract boolean isValid();
-
+  record GuardedByValidationResult(String message, boolean isValid) {
     static GuardedByValidationResult invalid(String message) {
-      return new AutoValue_GuardedByUtils_GuardedByValidationResult(message, false);
+      return new GuardedByValidationResult(message, false);
     }
 
     static GuardedByValidationResult ok() {
-      return new AutoValue_GuardedByUtils_GuardedByValidationResult("", true);
+      return new GuardedByValidationResult("", true);
     }
   }
 

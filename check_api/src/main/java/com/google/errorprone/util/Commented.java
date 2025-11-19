@@ -16,15 +16,16 @@
 
 package com.google.errorprone.util;
 
-import com.google.auto.value.AutoValue;
+import com.google.auto.value.AutoBuilder;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.source.tree.Tree;
 
 /** Class to hold AST nodes annotated with the comments that are associated with them */
-@AutoValue
-public abstract class Commented<T extends Tree> {
-
+public record Commented<T extends Tree>(
+    T tree,
+    ImmutableList<ErrorProneComment> beforeComments,
+    ImmutableList<ErrorProneComment> afterComments) {
   /** Identifies the position of a comment relative to the associated treenode. */
   public enum Position {
     BEFORE,
@@ -32,17 +33,11 @@ public abstract class Commented<T extends Tree> {
     ANY
   }
 
-  public abstract T tree();
-
-  public abstract ImmutableList<ErrorProneComment> beforeComments();
-
-  public abstract ImmutableList<ErrorProneComment> afterComments();
-
   static <T extends Tree> Builder<T> builder() {
-    return new AutoValue_Commented.Builder<T>();
+    return new AutoBuilder_Commented_Builder<T>();
   }
 
-  @AutoValue.Builder
+  @AutoBuilder
   abstract static class Builder<T extends Tree> {
 
     abstract Builder<T> setTree(T tree);

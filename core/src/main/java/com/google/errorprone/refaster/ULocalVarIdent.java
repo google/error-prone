@@ -52,8 +52,7 @@ abstract class ULocalVarIdent extends UIdent {
   public Choice<Unifier> visitIdentifier(IdentifierTree ident, Unifier unifier) {
     LocalVarBinding binding = unifier.getBinding(key());
     return Choice.condition(
-        binding != null && Objects.equals(ASTHelpers.getSymbol(ident), binding.getSymbol()),
-        unifier);
+        binding != null && Objects.equals(ASTHelpers.getSymbol(ident), binding.symbol()), unifier);
   }
 
   @Override

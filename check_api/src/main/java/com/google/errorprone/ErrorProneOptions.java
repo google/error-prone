@@ -16,7 +16,7 @@
 
 package com.google.errorprone;
 
-import com.google.auto.value.AutoValue;
+import com.google.auto.value.AutoBuilder;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
@@ -103,31 +103,25 @@ public class ErrorProneOptions {
     ERROR
   }
 
-  @AutoValue
-  abstract static class PatchingOptions {
+  record PatchingOptions(
+      ImmutableSet<String> namedCheckers,
+      boolean inPlace,
+      String baseDirectory,
+      Optional<Supplier<CodeTransformer>> customRefactorer,
+      ImportOrganizer importOrganizer) {
     final boolean doRefactor() {
       return inPlace() || !baseDirectory().isEmpty();
     }
 
-    abstract ImmutableSet<String> namedCheckers();
-
-    abstract boolean inPlace();
-
-    abstract String baseDirectory();
-
-    abstract Optional<Supplier<CodeTransformer>> customRefactorer();
-
-    abstract ImportOrganizer importOrganizer();
-
     static Builder builder() {
-      return new AutoValue_ErrorProneOptions_PatchingOptions.Builder()
+      return new AutoBuilder_ErrorProneOptions_PatchingOptions_Builder()
           .baseDirectory("")
           .inPlace(false)
           .namedCheckers(ImmutableSet.of())
           .importOrganizer(ImportOrganizer.STATIC_FIRST_ORGANIZER);
     }
 
-    @AutoValue.Builder
+    @AutoBuilder
     abstract static class Builder {
 
       abstract Builder namedCheckers(ImmutableSet<String> checkers);

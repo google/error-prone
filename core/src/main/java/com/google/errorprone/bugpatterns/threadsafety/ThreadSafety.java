@@ -21,7 +21,6 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.auto.value.AutoBuilder;
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
@@ -232,12 +231,13 @@ public final class ThreadSafety {
    *
    * <p>An absent explanation indicates either an annotated type with no violations, or a type
    * without the annotation.
+   *
+   * @param path The list of steps in the explanation.
+   *     <p>Example: ["Foo has field 'xs' of type 'int[]'", "arrays are not thread-safe"]
    */
-  @AutoValue
-  public abstract static class Violation {
-
+  public record Violation(ConsPStack<String> path) {
     public static Violation create(ConsPStack<String> path) {
-      return new AutoValue_ThreadSafety_Violation(path);
+      return new Violation(path);
     }
 
     /** Returns true if a violation was found. */
@@ -249,13 +249,6 @@ public final class ThreadSafety {
     public String message() {
       return Joiner.on(", ").join(path());
     }
-
-    /**
-     * The list of steps in the explanation.
-     *
-     * <p>Example: ["Foo has field 'xs' of type 'int[]'", "arrays are not thread-safe"]
-     */
-    public abstract ConsPStack<String> path();
 
     /** Adds a step. */
     public Violation plus(String edge) {

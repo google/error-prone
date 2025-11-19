@@ -15,24 +15,22 @@
  */
 package com.google.errorprone.matchers.method;
 
-import com.google.auto.value.AutoValue;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 
-/** The state that is propagated across a match operation for constructors. */
-@AutoValue
-public abstract class ConstructorMatchState implements MatchState {
+/**
+ * The state that is propagated across a match operation for constructors.
+ *
+ * @param sym The method being matched.
+ */
+public record ConstructorMatchState(MethodSymbol sym) implements MatchState {
   /** The type of the class in which a member method or constructor is declared. */
   @Override
   public Type ownerType() {
     return sym().owner.type;
   }
 
-  /** The method being matched. */
-  @Override
-  public abstract MethodSymbol sym();
-
   static MatchState create(MethodSymbol methodSymbol) {
-    return new AutoValue_ConstructorMatchState(methodSymbol);
+    return new ConstructorMatchState(methodSymbol);
   }
 }

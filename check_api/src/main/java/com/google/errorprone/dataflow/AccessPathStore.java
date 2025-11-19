@@ -19,7 +19,6 @@ package com.google.errorprone.dataflow;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.Sets.intersection;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.LinkedHashMap;
@@ -38,20 +37,10 @@ import org.jspecify.annotations.Nullable;
  *
  * @author bennostein@google.com (Benno Stein)
  */
-@AutoValue
-public abstract class AccessPathStore<V extends AbstractValue<V>>
+public record AccessPathStore<V extends AbstractValue<V>>(ImmutableMap<AccessPath, V> heap)
     implements Store<AccessPathStore<V>>, AccessPathValues<V> {
-
-  public abstract ImmutableMap<AccessPath, V> heap();
-
-  private static <V extends AbstractValue<V>> AccessPathStore<V> create(
-      ImmutableMap<AccessPath, V> heap) {
-    return new AutoValue_AccessPathStore<>(heap);
-  }
-
   @SuppressWarnings({"unchecked", "rawtypes"}) // fully variant
-  private static final AccessPathStore<?> EMPTY =
-      AccessPathStore.<AbstractValue>create(ImmutableMap.of());
+  private static final AccessPathStore<?> EMPTY = new AccessPathStore(ImmutableMap.of());
 
   @SuppressWarnings("unchecked") // fully variant
   public static <V extends AbstractValue<V>> AccessPathStore<V> empty() {
@@ -84,7 +73,7 @@ public abstract class AccessPathStore<V extends AbstractValue<V>>
     for (AccessPath aPath : intersection(heap().keySet(), other.heap().keySet())) {
       resultHeap.put(aPath, heap().get(aPath).leastUpperBound(other.heap().get(aPath)));
     }
-    return AccessPathStore.create(resultHeap.buildOrThrow());
+    return new AccessPathStore<>(resultHeap.buildOrThrow());
   }
 
   @Override
@@ -122,7 +111,7 @@ public abstract class AccessPathStore<V extends AbstractValue<V>>
     }
 
     public AccessPathStore<V> build() {
-      return AccessPathStore.create(ImmutableMap.copyOf(heap));
+      return new AccessPathStore<>(ImmutableMap.copyOf(heap));
     }
   }
 }
