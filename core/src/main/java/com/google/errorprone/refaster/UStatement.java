@@ -14,7 +14,6 @@
 
 package com.google.errorprone.refaster;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.refaster.UStatement.UnifierWithUnconsumedStatements;
@@ -33,17 +32,13 @@ public interface UStatement
         StatementTree,
         Function<UnifierWithUnconsumedStatements, Choice<UnifierWithUnconsumedStatements>> {
   /** Tuple of a Unifier and a list of statements that are still waiting to be matched. */
-  @AutoValue
-  abstract class UnifierWithUnconsumedStatements {
+  public record UnifierWithUnconsumedStatements(
+      Unifier unifier, ImmutableList<? extends StatementTree> unconsumedStatements) {
     public static UnifierWithUnconsumedStatements create(
         Unifier unifier, List<? extends StatementTree> unconsumedStatements) {
-      return new AutoValue_UStatement_UnifierWithUnconsumedStatements(
+      return new UnifierWithUnconsumedStatements(
           unifier, ImmutableList.copyOf(unconsumedStatements));
     }
-
-    public abstract Unifier unifier();
-
-    public abstract ImmutableList<? extends StatementTree> unconsumedStatements();
   }
 
   com.sun.tools.javac.util.List<JCStatement> inlineStatements(Inliner inliner)

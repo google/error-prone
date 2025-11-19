@@ -126,7 +126,7 @@ public class NullablePrimitiveArray extends BugChecker
     }
     Set<String> targets = new HashSet<>();
     Optional<Attribute> value = MoreAnnotations.getValue(attribute, "value");
-    if (!value.isPresent()) {
+    if (value.isEmpty()) {
       return false;
     }
     new SimpleAnnotationValueVisitor8<Void, Void>() {

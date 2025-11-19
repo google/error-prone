@@ -18,7 +18,6 @@ package com.google.errorprone.matchers;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
@@ -39,27 +38,19 @@ public interface MultiMatcher<T extends Tree, N extends Tree> extends Matcher<T>
   /**
    * A result from the call of {@link MultiMatcher#multiMatchResult(Tree, VisitorState)}, containing
    * information about whether it matched, and if so, what nodes matched.
+   *
+   * @param matches True if the MultiMatcher matched the nodes expected.
+   * @param matchingNodes The list of nodes which matched the MultiMatcher's expectations (could be
+   *     empty if the match type was ALL and there were no child nodes). Only sensical if {@link
+   *     #matches()} is true.
    */
-  @AutoValue
-  abstract class MultiMatchResult<N extends Tree> {
-    MultiMatchResult() {}
-
-    /** True if the MultiMatcher matched the nodes expected. */
-    public abstract boolean matches();
-
-    /**
-     * The list of nodes which matched the MultiMatcher's expectations (could be empty if the match
-     * type was ALL and there were no child nodes). Only sensical if {@link #matches()} is true.
-     */
-    public abstract ImmutableList<N> matchingNodes();
-
+  public record MultiMatchResult<N extends Tree>(boolean matches, ImmutableList<N> matchingNodes) {
     public final N onlyMatchingNode() {
       return getOnlyElement(matchingNodes());
     }
 
     static <N extends Tree> MultiMatchResult<N> create(boolean matches, List<N> matchingNodes) {
-      return new AutoValue_MultiMatcher_MultiMatchResult<>(
-          matches, ImmutableList.copyOf(matchingNodes));
+      return new MultiMatchResult<>(matches, ImmutableList.copyOf(matchingNodes));
     }
   }
 }

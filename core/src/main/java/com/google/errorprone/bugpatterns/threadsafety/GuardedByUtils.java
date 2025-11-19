@@ -20,7 +20,6 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
@@ -94,18 +93,13 @@ public final class GuardedByUtils {
     return exp;
   }
 
-  @AutoValue
-  abstract static class GuardedByValidationResult {
-    abstract String message();
-
-    abstract boolean isValid();
-
+  record GuardedByValidationResult(String message, boolean isValid) {
     static GuardedByValidationResult invalid(String message) {
-      return new AutoValue_GuardedByUtils_GuardedByValidationResult(message, false);
+      return new GuardedByValidationResult(message, false);
     }
 
     static GuardedByValidationResult ok() {
-      return new AutoValue_GuardedByUtils_GuardedByValidationResult("", true);
+      return new GuardedByValidationResult("", true);
     }
   }
 
@@ -119,7 +113,7 @@ public final class GuardedByUtils {
     for (String guard : guards) {
       Optional<GuardedByExpression> boundGuard =
           GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, state));
-      if (!boundGuard.isPresent()) {
+      if (boundGuard.isEmpty()) {
         return GuardedByValidationResult.invalid("could not resolve guard");
       }
       boundGuards.add(boundGuard.get());
@@ -151,12 +145,9 @@ public final class GuardedByUtils {
 
   public static @Nullable Symbol bindGuardedByString(
       Tree tree, String guard, VisitorState visitorState) {
-    Optional<GuardedByExpression> bound =
-        GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState));
-    if (!bound.isPresent()) {
-      return null;
-    }
-    return bound.get().sym();
+    return GuardedByBinder.bindString(guard, GuardedBySymbolResolver.from(tree, visitorState))
+        .map(bound -> bound.sym())
+        .orElse(null);
   }
 
   private GuardedByUtils() {}

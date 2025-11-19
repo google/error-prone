@@ -58,17 +58,14 @@ public abstract class AbstractUTreeTest {
   }
 
   public void assertUnifies(String expression, UTree<?> template) {
-    assertWithMessage(
-            String.format("Expected template %s to unify with expression %s", template, expression))
+    assertWithMessage("Expected template %s to unify with expression %s", template, expression)
         .that(template.unify(parseExpression(expression), unifier).findFirst())
         .isPresent();
   }
 
   public void assertInlines(String expression, UTree<?> template) {
     try {
-      assertWithMessage(
-              String.format(
-                  "Expected template %s to inline to expression %s", template, expression))
+      assertWithMessage("Expected template %s to inline to expression %s", template, expression)
           .that(template.inline(inliner).toString())
           .isEqualTo(expression);
     } catch (CouldNotResolveImportException e) {
@@ -79,9 +76,7 @@ public abstract class AbstractUTreeTest {
   public void assertInlines(String expression, UStatement template) {
     try {
       // javac's pretty-printer uses the platform line terminator
-      assertWithMessage(
-              String.format(
-                  "Expected template %s to inline to expression %s", template, expression))
+      assertWithMessage("Expected template %s to inline to expression %s", template, expression)
           .that(Joiner.on(System.lineSeparator()).join(template.inlineStatements(inliner)))
           .isEqualTo(expression);
     } catch (CouldNotResolveImportException e) {

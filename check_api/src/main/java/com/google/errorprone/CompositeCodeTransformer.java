@@ -16,7 +16,6 @@
 
 package com.google.errorprone;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
 import com.sun.source.util.TreePath;
@@ -25,19 +24,15 @@ import java.io.Serializable;
 import java.lang.annotation.Annotation;
 
 /** Combines multiple {@code CodeTransformer}s into one. */
-@AutoValue
-public abstract class CompositeCodeTransformer implements CodeTransformer, Serializable {
+public record CompositeCodeTransformer(ImmutableList<CodeTransformer> transformers)
+    implements CodeTransformer, Serializable {
   public static CodeTransformer compose(CodeTransformer... transformers) {
     return compose(ImmutableList.copyOf(transformers));
   }
 
   public static CodeTransformer compose(Iterable<? extends CodeTransformer> transformers) {
-    return new AutoValue_CompositeCodeTransformer(ImmutableList.copyOf(transformers));
+    return new CompositeCodeTransformer(ImmutableList.copyOf(transformers));
   }
-
-  CompositeCodeTransformer() {}
-
-  public abstract ImmutableList<CodeTransformer> transformers();
 
   @Override
   public void apply(TreePath path, Context context, DescriptionListener listener) {

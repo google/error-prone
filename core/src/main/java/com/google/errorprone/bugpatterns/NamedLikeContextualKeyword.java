@@ -96,7 +96,7 @@ public final class NamedLikeContextualKeyword extends BugChecker
     }
 
     // Don't alert if method is an override (this includes interfaces)
-    if (!streamSuperMethods(methodSymbol, state.getTypes()).findAny().isPresent()
+    if (streamSuperMethods(methodSymbol, state.getTypes()).findAny().isEmpty()
         && DISALLOWED_METHOD_NAME_MATCHER.matches(tree, state)) {
       return describeMatch(tree);
     }

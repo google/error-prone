@@ -54,7 +54,7 @@ public class CommentsTest {
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
       CharSequence sourceCode = state.getSourceCode();
       Optional<Integer> endPosition = Comments.computeEndPosition(tree, sourceCode, state);
-      if (!endPosition.isPresent()) {
+      if (endPosition.isEmpty()) {
         return Description.NO_MATCH;
       }
       int startPosition = endPosition.get();

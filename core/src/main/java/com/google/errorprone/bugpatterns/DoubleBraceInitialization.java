@@ -229,7 +229,7 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
         Arrays.stream(CollectionTypes.values())
             .filter(type -> type.constructorMatcher.matches(tree, state))
             .findFirst();
-    if (!collectionType.isPresent()) {
+    if (collectionType.isEmpty()) {
       return NO_MATCH;
     }
     Description.Builder description = buildDescription(tree);

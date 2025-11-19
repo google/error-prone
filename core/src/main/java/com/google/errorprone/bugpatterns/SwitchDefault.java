@@ -47,7 +47,7 @@ public class SwitchDefault extends BugChecker implements SwitchTreeMatcher {
   @Override
   public Description matchSwitch(SwitchTree tree, VisitorState state) {
     Optional<? extends CaseTree> maybeDefault = getSwitchDefault(tree);
-    if (!maybeDefault.isPresent()) {
+    if (maybeDefault.isEmpty()) {
       return NO_MATCH;
     }
     // Collect all case trees in the statement group containing the default

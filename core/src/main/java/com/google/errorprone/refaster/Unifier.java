@@ -172,7 +172,7 @@ public final class Unifier {
               for (int j = startIndex; j < targets.size(); j++) {
                 Optional<Unifier> forked =
                     repeated.unify((JCTree) targets.get(j), u.fork()).findFirst();
-                if (!forked.isPresent()) {
+                if (forked.isEmpty()) {
                   return Optional.empty();
                 }
                 JCExpression boundExpr = repeated.getUnderlyingBinding(forked.get());

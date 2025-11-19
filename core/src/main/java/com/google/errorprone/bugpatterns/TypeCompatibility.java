@@ -25,7 +25,6 @@ import static com.google.errorprone.util.ASTHelpers.isCastable;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.Streams;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -359,18 +358,15 @@ public final class TypeCompatibility {
             state.getTypes().isSameType(t1, t2) ? 0 : t1.toString().compareTo(t2.toString()));
   }
 
-  @AutoValue
-  public abstract static class TypeCompatibilityReport {
+  /**
+   * The result of a {@link TypeCompatibility#compatibilityOfTypes} call.
+   *
+   * <p>If {@link #isCompatible} is {@code true}, the other fields are {@code null}.
+   */
+  public record TypeCompatibilityReport(
+      boolean isCompatible, @Nullable Type lhs, @Nullable Type rhs, @Nullable String extraReason) {
     private static final TypeCompatibilityReport COMPATIBLE =
-        new AutoValue_TypeCompatibility_TypeCompatibilityReport(true, null, null, null);
-
-    public abstract boolean isCompatible();
-
-    public abstract @Nullable Type lhs();
-
-    public abstract @Nullable Type rhs();
-
-    public abstract @Nullable String extraReason();
+        new TypeCompatibilityReport(true, null, null, null);
 
     static TypeCompatibilityReport compatible() {
       return COMPATIBLE;
@@ -381,7 +377,7 @@ public final class TypeCompatibility {
     }
 
     static TypeCompatibilityReport incompatible(Type lhs, Type rhs, String extraReason) {
-      return new AutoValue_TypeCompatibility_TypeCompatibilityReport(false, lhs, rhs, extraReason);
+      return new TypeCompatibilityReport(false, lhs, rhs, extraReason);
     }
   }
 

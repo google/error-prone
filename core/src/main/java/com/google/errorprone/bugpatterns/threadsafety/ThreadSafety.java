@@ -21,7 +21,6 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 
 import com.google.auto.value.AutoBuilder;
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
@@ -29,7 +28,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.annotations.ImmutableTypeParameter;
@@ -90,8 +88,7 @@ public final class ThreadSafety {
         .acceptedTypeParameterAnnotation(ImmutableSet.of());
   }
 
-  public static Builder threadSafeBuilder(
-      WellKnownThreadSafety wellKnownThreadSafety, ErrorProneFlags flags) {
+  public static Builder threadSafeBuilder(WellKnownThreadSafety wellKnownThreadSafety) {
     Builder builder =
         ThreadSafety.builder()
             .purpose(Purpose.FOR_THREAD_SAFE_CHECKER)
@@ -101,9 +98,7 @@ public final class ThreadSafety {
             .acceptedAnnotations(ImmutableSet.of(Immutable.class.getName()))
             .typeParameterAnnotation(ImmutableSet.of(ThreadSafeTypeParameter.class.getName()))
             .acceptedTypeParameterAnnotation(
-                flags.getBoolean("ThreadSafety:CheckImmutableTypeParameter").orElse(true)
-                    ? ImmutableSet.of(ImmutableTypeParameter.class.getName())
-                    : ImmutableSet.of());
+                ImmutableSet.of(ImmutableTypeParameter.class.getName()));
     return builder;
   }
 
@@ -236,12 +231,13 @@ public final class ThreadSafety {
    *
    * <p>An absent explanation indicates either an annotated type with no violations, or a type
    * without the annotation.
+   *
+   * @param path The list of steps in the explanation.
+   *     <p>Example: ["Foo has field 'xs' of type 'int[]'", "arrays are not thread-safe"]
    */
-  @AutoValue
-  public abstract static class Violation {
-
+  public record Violation(ConsPStack<String> path) {
     public static Violation create(ConsPStack<String> path) {
-      return new AutoValue_ThreadSafety_Violation(path);
+      return new Violation(path);
     }
 
     /** Returns true if a violation was found. */
@@ -253,13 +249,6 @@ public final class ThreadSafety {
     public String message() {
       return Joiner.on(", ").join(path());
     }
-
-    /**
-     * The list of steps in the explanation.
-     *
-     * <p>Example: ["Foo has field 'xs' of type 'int[]'", "arrays are not thread-safe"]
-     */
-    public abstract ConsPStack<String> path();
 
     /** Adds a step. */
     public Violation plus(String edge) {

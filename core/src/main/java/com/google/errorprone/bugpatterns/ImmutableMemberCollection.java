@@ -26,7 +26,6 @@ import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableMap;
@@ -222,17 +221,9 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
     }
   }
 
-  @AutoValue
-  abstract static class ReplaceableVar {
-    abstract Symbol symbol();
-
-    abstract ReplaceableType<?> type();
-
-    abstract Tree declaredType();
-
+  record ReplaceableVar(Symbol symbol, ReplaceableType<?> type, Tree declaredType) {
     static ReplaceableVar create(VariableTree variableTree, ReplaceableType<?> type) {
-      return new AutoValue_ImmutableMemberCollection_ReplaceableVar(
-          getSymbol(variableTree), type, variableTree.getType());
+      return new ReplaceableVar(getSymbol(variableTree), type, variableTree.getType());
     }
 
     private SuggestedFix getFix(ImmutableSet<Tree> initTrees, VisitorState state) {

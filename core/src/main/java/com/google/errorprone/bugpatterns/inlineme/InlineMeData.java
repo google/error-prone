@@ -305,7 +305,8 @@ record InlineMeData(
             qualifications.put(identifierTree, treeMaker.Ident(classSymbol));
           }
         } else {
-          if (parentNode instanceof NewClassTree) {
+          if (parentNode instanceof NewClassTree nct
+              && nct.getIdentifier().equals(identifierTree)) {
             // This Identifier is the class being constructed
             addImport(symbol.getQualifiedName().toString());
           } else {

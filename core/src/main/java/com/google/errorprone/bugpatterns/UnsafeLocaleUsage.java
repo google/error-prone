@@ -50,7 +50,7 @@ public final class UnsafeLocaleUsage extends BugChecker
   private static final Matcher<ExpressionTree> LOCALE_CONSTRUCTOR =
       constructor().forClass("java.util.Locale");
 
-  // Used for both Locale constructors and Locale.of static methods.
+  /** Used for both Locale constructors and Locale.of static methods. */
   private static final String DESCRIPTION =
       " They do not check their arguments for"
           + " well-formedness. Prefer using Locale.forLanguageTag(String)"
@@ -96,7 +96,7 @@ public final class UnsafeLocaleUsage extends BugChecker
     return Description.NO_MATCH;
   }
 
-  // Something that can be called with arguments, for example a method or constructor.
+  /** Something that can be called with arguments, for example a method or constructor. */
   private static void fixCallableWithArguments(
       Description.Builder descriptionBuilder,
       ImmutableList<? extends ExpressionTree> arguments,

@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.Character.isJavaIdentifierPart;
 import static java.lang.Character.isJavaIdentifierStart;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -30,25 +29,17 @@ import com.google.errorprone.annotations.CompileTimeConstant;
  * Represents a Java method or constructor.
  *
  * <p>Provides a method to parse an API from a string format, and emit an API as the same sting.
+ *
+ * @param className Returns the fully qualified type that contains the given method/constructor.
+ * @param methodName Returns the simple name of the method. If the API is a constructor (i.e.,
+ *     {@code isConstructor() == true}), then {@code "<init>"} is returned.
+ * @param parameterTypes Returns the list of fully qualified parameter types for the given
+ *     method/constructor.
  */
 // TODO(kak): do we want to be able to represent classes in addition to methods/constructors?
 // TODO(kak): if not, then consider renaming to `MethodSignature` or something
-@AutoValue
-public abstract class Api {
-
+public record Api(String className, String methodName, ImmutableList<String> parameterTypes) {
   private static final Joiner COMMA_JOINER = Joiner.on(',');
-
-  /** Returns the fully qualified type that contains the given method/constructor. */
-  public abstract String className();
-
-  /**
-   * Returns the simple name of the method. If the API is a constructor (i.e., {@code
-   * isConstructor() == true}), then {@code "<init>"} is returned.
-   */
-  public abstract String methodName();
-
-  /** Returns the list of fully qualified parameter types for the given method/constructor. */
-  public abstract ImmutableList<String> parameterTypes();
 
   @Override
   public final String toString() {
@@ -98,7 +89,7 @@ public abstract class Api {
   }
 
   static Api internalCreate(String className, String methodName, ImmutableList<String> params) {
-    return new AutoValue_Api(className, methodName, params);
+    return new Api(className, methodName, params);
   }
 
   /**

@@ -30,7 +30,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableCollection;
@@ -432,20 +431,14 @@ public final class MixedMutabilityReturnType extends BugChecker
     }
   }
 
-  @AutoValue
-  abstract static class TypeDetails {
-    abstract String immutableType();
-
-    abstract String builderType();
-
-    abstract Matcher<ExpressionTree> appendMethods();
-
-    abstract Matcher<Tree> skipTypes();
-
+  record TypeDetails(
+      String immutableType,
+      String builderType,
+      Matcher<ExpressionTree> appendMethods,
+      Matcher<Tree> skipTypes) {
     static TypeDetails of(
         String immutableType, Matcher<ExpressionTree> appendMethods, Matcher<Tree> skipTypes) {
-      return new AutoValue_MixedMutabilityReturnType_TypeDetails(
-          immutableType, immutableType + ".Builder", appendMethods, skipTypes);
+      return new TypeDetails(immutableType, immutableType + ".Builder", appendMethods, skipTypes);
     }
   }
 }

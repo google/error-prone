@@ -38,7 +38,6 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static java.util.stream.Collectors.joining;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -110,12 +109,10 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
                       state)));
 
   private final boolean improvements;
-  private final boolean matchLiteProtos;
 
   @Inject
   RedundantSetterCall(ErrorProneFlags flags) {
     this.improvements = flags.getBoolean("RedundantSetterCall:Improvements").orElse(true);
-    this.matchLiteProtos = flags.getBoolean("OneOfChecks:MatchLiteProtos").orElse(true);
   }
 
   @Override
@@ -164,7 +161,7 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
       for (FieldType fieldType : FieldType.values()) {
         FieldWithValue match = fieldType.match(methodName, method, state);
         if (match != null) {
-          setters.put(match.getField(), match);
+          setters.put(match.field(), match);
           if (oneOfSetters.containsKey(methodName)) {
             setters.put(oneOfSetters.get(methodName), match);
           }
@@ -187,15 +184,12 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
   }
 
   private ImmutableMap<String, OneOfField> scanForOneOfSetters(Symbol proto, VisitorState state) {
-    if (!matchLiteProtos && isSubtype(proto.type, GENERATED_MESSAGE_LITE.get(state), state)) {
-      return ImmutableMap.of();
-    }
     var builder = ImmutableMap.<String, OneOfField>builder();
     for (Symbol element : getEnclosedElements(proto)) {
       if (!ONE_OF_ENUM.apply(element.type, state)) {
         continue;
       }
-      var oneOfField = OneOfField.of(element.getSimpleName().toString().replaceFirst("Case$", ""));
+      var oneOfField = new OneOfField(element.getSimpleName().toString().replaceFirst("Case$", ""));
       for (String enumName : enumValues(element.type.tsym)) {
         if (enumName.equals("ONEOF_NOT_SET")) {
           continue;
@@ -221,9 +215,6 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
         .collect(toImmutableSet());
   }
 
-  private static final Supplier<Type> GENERATED_MESSAGE_LITE =
-      memoize(state -> state.getTypeFromString("com.google.protobuf.GeneratedMessageLite"));
-
   private static final Supplier<Type> MESSAGE_LITE =
       memoize(state -> state.getTypeFromString("com.google.protobuf.MessageLite"));
 
@@ -236,16 +227,16 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     // where the correct fix is probably to replace the second 'setFoo' with 'setBar'.
     SuggestedFix.Builder fix = SuggestedFix.builder();
     long values =
-        locations.stream().map(l -> state.getSourceForNode(l.getArgument())).distinct().count();
+        locations.stream().map(l -> state.getSourceForNode(l.argument())).distinct().count();
     if (field.identicalValuesShouldBeRemoved() && values == 1) {
       for (FieldWithValue fieldWithValue : Iterables.skip(locations, 1)) {
-        MethodInvocationTree method = fieldWithValue.getMethodInvocation();
+        MethodInvocationTree method = fieldWithValue.methodInvocation();
         int startPos = state.getEndPosition(ASTHelpers.getReceiver(method));
         int endPos = state.getEndPosition(method);
         fix.replace(startPos, endPos, "");
       }
     }
-    return buildDescription(locations.iterator().next().getArgument())
+    return buildDescription(locations.iterator().next().argument())
         .setMessage(
             String.format(
                 "%s was called %s%s. Setting the same field multiple times is redundant, and "
@@ -269,7 +260,8 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
       @Nullable FieldWithValue match(String name, MethodInvocationTree tree, VisitorState state) {
         if ((name.startsWith("set") || isWithinAutoValueBuilder(getSymbol(tree), state))
             && tree.getArguments().size() == 1) {
-          return FieldWithValue.of(SingleField.of(name), tree, tree.getArguments().get(0));
+          Field field = new SingleField(name);
+          return new FieldWithValue(field, tree, tree.getArguments().get(0));
         }
         return null;
       }
@@ -280,8 +272,8 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
         if (name.startsWith("set") && tree.getArguments().size() == 2) {
           Integer index = ASTHelpers.constValue(tree.getArguments().get(0), Integer.class);
           if (index != null) {
-            return FieldWithValue.of(
-                RepeatedField.of(name, index), tree, tree.getArguments().get(1));
+            Field field = new RepeatedField(name, index);
+            return new FieldWithValue(field, tree, tree.getArguments().get(1));
           }
         }
         return null;
@@ -293,7 +285,8 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
         if (name.startsWith("put") && tree.getArguments().size() == 2) {
           Object key = ASTHelpers.constValue(tree.getArguments().get(0), Object.class);
           if (key != null) {
-            return FieldWithValue.of(MapField.of(name, key), tree, tree.getArguments().get(1));
+            Field field = new MapField(name, key);
+            return new FieldWithValue(field, tree, tree.getArguments().get(1));
           }
         }
         return null;
@@ -319,17 +312,10 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     String toString(Iterable<FieldWithValue> locations);
   }
 
-  @AutoValue
-  abstract static class SingleField implements Field {
-    abstract String getName();
-
-    static SingleField of(String name) {
-      return new AutoValue_RedundantSetterCall_SingleField(name);
-    }
-
+  record SingleField(String name) implements Field {
     @Override
     public final String toString(Iterable<FieldWithValue> locations) {
-      return String.format("%s(..)", getName());
+      return String.format("%s(..)", this.name());
     }
 
     @Override
@@ -338,19 +324,10 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     }
   }
 
-  @AutoValue
-  abstract static class RepeatedField implements Field {
-    abstract String getName();
-
-    abstract int getIndex();
-
-    static RepeatedField of(String name, int index) {
-      return new AutoValue_RedundantSetterCall_RepeatedField(name, index);
-    }
-
+  record RepeatedField(String name, int index) implements Field {
     @Override
     public final String toString(Iterable<FieldWithValue> locations) {
-      return String.format("%s(%s, ..)", getName(), getIndex());
+      return String.format("%s(%s, ..)", this.name(), this.index());
     }
 
     @Override
@@ -359,19 +336,10 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     }
   }
 
-  @AutoValue
-  abstract static class MapField implements Field {
-    abstract String getName();
-
-    abstract Object getKey();
-
-    static MapField of(String name, Object key) {
-      return new AutoValue_RedundantSetterCall_MapField(name, key);
-    }
-
+  record MapField(String name, Object key) implements Field {
     @Override
     public final String toString(Iterable<FieldWithValue> locations) {
-      return String.format("%s(%s, ..)", getName(), getKey());
+      return String.format("%s(%s, ..)", this.name(), this.key());
     }
 
     @Override
@@ -380,21 +348,14 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     }
   }
 
-  @AutoValue
-  abstract static class OneOfField implements Field {
-    abstract String oneOfName();
-
-    static OneOfField of(String oneOfName) {
-      return new AutoValue_RedundantSetterCall_OneOfField(oneOfName);
-    }
-
+  record OneOfField(String oneOfName) implements Field {
     @Override
     public final String toString(Iterable<FieldWithValue> locations) {
       return String.format(
           "The oneof `%s` (set via %s)",
           oneOfName(),
           stream(locations)
-              .map(l -> getSymbol(l.getMethodInvocation()).getSimpleName().toString())
+              .map(l -> getSymbol(l.methodInvocation()).getSimpleName().toString())
               .distinct()
               .sorted()
               .collect(joining(", ")));
@@ -406,18 +367,6 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     }
   }
 
-  @AutoValue
-  abstract static class FieldWithValue {
-    abstract Field getField();
-
-    abstract MethodInvocationTree getMethodInvocation();
-
-    abstract ExpressionTree getArgument();
-
-    static FieldWithValue of(
-        Field field, MethodInvocationTree methodInvocationTree, ExpressionTree argumentTree) {
-      return new AutoValue_RedundantSetterCall_FieldWithValue(
-          field, methodInvocationTree, argumentTree);
-    }
-  }
+  record FieldWithValue(
+      Field field, MethodInvocationTree methodInvocation, ExpressionTree argument) {}
 }

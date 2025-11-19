@@ -62,7 +62,7 @@ public final class RedundantOverride extends BugChecker implements MethodTreeMat
     Types types = state.getTypes();
     Optional<MethodSymbol> maybeSuperMethod =
         streamSuperMethods(methodSymbol, types).filter(t -> !t.owner.isInterface()).findFirst();
-    if (!maybeSuperMethod.isPresent()) {
+    if (maybeSuperMethod.isEmpty()) {
       return NO_MATCH;
     }
     MethodSymbol superMethod = maybeSuperMethod.get();

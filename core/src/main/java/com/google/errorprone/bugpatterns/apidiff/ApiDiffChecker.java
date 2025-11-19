@@ -106,7 +106,7 @@ public abstract class ApiDiffChecker extends BugChecker
   }
 
   private boolean classOrEnclosingClassIsForbiddenByAnnotation(Symbol clazz, VisitorState state) {
-    if (!alsoForbidApisAnnotated.isPresent()) {
+    if (alsoForbidApisAnnotated.isEmpty()) {
       return false;
     }
     for (; clazz instanceof ClassSymbol; clazz = clazz.owner) {

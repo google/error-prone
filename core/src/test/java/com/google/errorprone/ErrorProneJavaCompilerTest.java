@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.DiagnosticTestHelper.DIAGNOSTIC_CONTAINING;
 import static com.google.errorprone.FileObjects.forResources;
@@ -156,7 +157,7 @@ public class ErrorProneJavaCompilerTest {
             Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
             Arrays.asList("-Xep:SelfAssignment:OFF"),
             Collections.<Class<? extends BugChecker>>emptyList());
-    assertThat(result.succeeded).isTrue();
+    assertSucceeded(result);
   }
 
   @Test
@@ -166,7 +167,7 @@ public class ErrorProneJavaCompilerTest {
             Arrays.asList("bugpatterns/testdata/WaitNotInLoopPositiveCases.java"),
             Collections.<String>emptyList(),
             Collections.<Class<? extends BugChecker>>emptyList());
-    assertThat(result.succeeded).isTrue();
+    assertSucceeded(result);
     assertThat(result.diagnosticHelper.getDiagnostics())
         .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
         .contains("[WaitNotInLoop]");
@@ -199,7 +200,7 @@ public class ErrorProneJavaCompilerTest {
             Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
             Arrays.asList("-Xep:SelfAssignment:WARN"),
             Collections.<Class<? extends BugChecker>>emptyList());
-    assertThat(result.succeeded).isTrue();
+    assertSucceeded(result);
     assertThat(result.diagnosticHelper.getDiagnostics())
         .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
         .contains("[SelfAssignment]");
@@ -212,7 +213,7 @@ public class ErrorProneJavaCompilerTest {
             Arrays.asList("bugpatterns/testdata/EmptyIfStatementPositiveCases.java"),
             Collections.<String>emptyList(),
             Collections.<Class<? extends BugChecker>>emptyList());
-    assertThat(result.succeeded).isTrue();
+    assertSucceeded(result);
     assertThat(result.diagnosticHelper.getDiagnostics()).isEmpty();
 
     result =
@@ -282,7 +283,7 @@ public class ErrorProneJavaCompilerTest {
             Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
             Collections.<String>emptyList(),
             Arrays.<Class<? extends BugChecker>>asList(Finally.class));
-    assertThat(result.succeeded).isTrue();
+    assertSucceeded(result);
     assertThat(result.diagnosticHelper.getDiagnostics()).isEmpty();
   }
 
@@ -406,7 +407,7 @@ public class ErrorProneJavaCompilerTest {
             Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
             Arrays.asList("-XepExcludedPaths:.*/bugpatterns/.*"),
             Collections.<Class<? extends BugChecker>>emptyList());
-    assertThat(result.succeeded).isTrue();
+    assertSucceeded(result);
 
     // ensure regexp must match the full path
     result =
@@ -449,7 +450,7 @@ public class ErrorProneJavaCompilerTest {
             Collections.singleton(fileObject),
             Arrays.asList("-XepPatchChecks:", "-XepPatchLocation:IN_PLACE"),
             ImmutableList.of(AssignmentUpdater.class));
-    assertThat(result.succeeded).isTrue();
+    assertSucceeded(result);
     assertThat(Files.readString(Path.of(fileObject.toUri())))
         .isEqualTo(
             """
@@ -476,7 +477,7 @@ public class ErrorProneJavaCompilerTest {
             Arrays.asList(
                 "-XepPatchChecks:", "-XepPatchLocation:IN_PLACE", "-Xep:AssignmentUpdater:OFF"),
             ImmutableList.of(AssignmentUpdater.class));
-    assertThat(result.succeeded).isTrue();
+    assertSucceeded(result);
     assertThat(Files.readString(Path.of(fileObject.toUri())))
         .isEqualTo(
             """
@@ -503,7 +504,7 @@ public class ErrorProneJavaCompilerTest {
             ImmutableList.of(
                 "-XepPatchChecks:", "-XepPatchLocation:IN_PLACE", "-XepDisableAllChecks"),
             ImmutableList.of(AssignmentUpdater.class));
-    assertThat(result.succeeded).isTrue();
+    assertSucceeded(result);
     assertThat(Files.readString(Path.of(fileObject.toUri())))
         .isEqualTo(
             """
@@ -532,7 +533,7 @@ public class ErrorProneJavaCompilerTest {
                 "-XepPatchLocation:IN_PLACE",
                 "-Xep:AssignmentUpdater:OFF"),
             ImmutableList.of(AssignmentUpdater.class));
-    assertThat(result.succeeded).isTrue();
+    assertSucceeded(result);
     assertThat(Files.readString(Path.of(fileObject.toUri())))
         .isEqualTo(
             """
@@ -561,7 +562,7 @@ public class ErrorProneJavaCompilerTest {
                 "-XepPatchLocation:IN_PLACE",
                 "-XepOpt:AssignmentUpdater:NewValue=new-value"),
             ImmutableList.of(AssignmentUpdater.class));
-    assertThat(result.succeeded).isTrue();
+    assertSucceeded(result);
     assertThat(Files.readString(Path.of(fileObject.toUri())))
         .isEqualTo(
             """
@@ -588,15 +589,13 @@ public class ErrorProneJavaCompilerTest {
     };
   }
 
-  private static class CompilationResult {
-    final boolean succeeded;
-    final String output;
-    final DiagnosticTestHelper diagnosticHelper;
-
-    CompilationResult(boolean succeeded, String output, DiagnosticTestHelper diagnosticHelper) {
-      this.succeeded = succeeded;
-      this.output = output;
-      this.diagnosticHelper = diagnosticHelper;
+  private static record CompilationResult(
+      boolean succeeded, String output, DiagnosticTestHelper diagnosticHelper) {
+    @Override
+    public String toString() {
+      return String.format(
+          "CompilationResult{succeeded=%s, output=%s, diagnostics=%s}",
+          succeeded, output, diagnosticHelper.getDiagnostics());
     }
   }
 
@@ -630,5 +629,11 @@ public class ErrorProneJavaCompilerTest {
 
     return new CompilationResult(
         task.call(), new String(outputStream.toByteArray(), UTF_8), diagnosticHelper);
+  }
+
+  private static void assertSucceeded(CompilationResult result) {
+    assertWithMessage("Compilation should have succeeded, but had result %s", result)
+        .that(result.succeeded)
+        .isTrue();
   }
 }

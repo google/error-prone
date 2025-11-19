@@ -732,6 +732,26 @@ class BadImportPositiveCases {
   }
 
   @Test
+  public void enumValues() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static java.util.concurrent.TimeUnit.values;
+
+            import java.util.concurrent.TimeUnit;
+
+            class Test {
+              void foo() {
+                // BUG: Diagnostic contains: TimeUnit.values()
+                TimeUnit[] timeUnits = values();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void doesNotMatchProtos() {
     compilationTestHelper
         .addSourceLines(

@@ -23,7 +23,6 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSuper;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
@@ -55,14 +54,10 @@ import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
 /** Whether an API can have {@code @InlineMe} applied to it or not. */
-@AutoValue
-abstract class InlinabilityResult {
-
-  abstract @Nullable InlineValidationErrorReason error();
-
-  abstract @Nullable ExpressionTree body();
-
-  abstract @Nullable String additionalErrorInfo();
+record InlinabilityResult(
+    @Nullable InlineValidationErrorReason error,
+    @Nullable ExpressionTree body,
+    @Nullable String additionalErrorInfo) {
 
   final String errorMessage() {
     checkState(error() != null);
@@ -84,11 +79,11 @@ abstract class InlinabilityResult {
 
   static InlinabilityResult fromError(
       InlineValidationErrorReason errorReason, ExpressionTree body, String additionalErrorInfo) {
-    return new AutoValue_InlinabilityResult(errorReason, body, additionalErrorInfo);
+    return new InlinabilityResult(errorReason, body, additionalErrorInfo);
   }
 
   static InlinabilityResult inlinable(ExpressionTree body) {
-    return new AutoValue_InlinabilityResult(null, body, null);
+    return new InlinabilityResult(null, body, null);
   }
 
   boolean isValidForSuggester() {

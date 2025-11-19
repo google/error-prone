@@ -266,4 +266,23 @@ public class InlineFormatStringTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void nonFormatMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              void f(Object obj) {
+                String format = "hello %s";
+                Preconditions.checkNotNull(format);
+                Preconditions.checkNotNull(obj, format);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

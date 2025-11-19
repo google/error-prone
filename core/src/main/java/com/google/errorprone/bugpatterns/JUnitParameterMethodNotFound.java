@@ -91,7 +91,7 @@ public class JUnitParameterMethodNotFound extends BugChecker implements MethodTr
             .filter(annotationTree -> PARAMETERS_ANNOTATION_MATCHER.matches(annotationTree, state))
             .findFirst();
 
-    if (!parametersAnnotation.isPresent()) {
+    if (parametersAnnotation.isEmpty()) {
       return Description.NO_MATCH;
     }
 
@@ -145,7 +145,7 @@ public class JUnitParameterMethodNotFound extends BugChecker implements MethodTr
     Optional<? extends AssignmentTree> paramSourceAssignmentTree =
         getParamAssignmentTree(annotationsArguments, /* parameterName= */ "source");
 
-    if (!paramSourceAssignmentTree.isPresent()) {
+    if (paramSourceAssignmentTree.isEmpty()) {
       return ImmutableSet.of();
     }
 

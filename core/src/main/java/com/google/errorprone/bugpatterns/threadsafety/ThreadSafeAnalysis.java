@@ -21,7 +21,6 @@ import static com.google.errorprone.util.AnnotationNames.LAZY_INIT_ANNOTATION;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadSafety.Violation;
@@ -52,16 +51,14 @@ public final class ThreadSafeAnalysis {
   /** Factory for {@link ThreadSafeAnalysis}. */
   public static final class Factory {
     private final WellKnownThreadSafety wellKnownThreadSafety;
-    private final ErrorProneFlags errorProneFlags;
 
     @Inject
-    Factory(WellKnownThreadSafety wellKnownThreadSafety, ErrorProneFlags errorProneFlags) {
+    Factory(WellKnownThreadSafety wellKnownThreadSafety) {
       this.wellKnownThreadSafety = wellKnownThreadSafety;
-      this.errorProneFlags = errorProneFlags;
     }
 
     public ThreadSafeAnalysis create(BugChecker bugChecker, VisitorState state) {
-      return new ThreadSafeAnalysis(bugChecker, state, wellKnownThreadSafety, errorProneFlags);
+      return new ThreadSafeAnalysis(bugChecker, state, wellKnownThreadSafety);
     }
   }
 
@@ -71,16 +68,12 @@ public final class ThreadSafeAnalysis {
   private final ThreadSafety threadSafety;
 
   private ThreadSafeAnalysis(
-      BugChecker bugChecker,
-      VisitorState state,
-      WellKnownThreadSafety wellKnownThreadSafety,
-      ErrorProneFlags errorProneFlags) {
+      BugChecker bugChecker, VisitorState state, WellKnownThreadSafety wellKnownThreadSafety) {
     this.bugChecker = bugChecker;
     this.state = state;
     this.wellKnownThreadSafety = wellKnownThreadSafety;
 
-    this.threadSafety =
-        ThreadSafety.threadSafeBuilder(wellKnownThreadSafety, errorProneFlags).build(state);
+    this.threadSafety = ThreadSafety.threadSafeBuilder(wellKnownThreadSafety).build(state);
   }
 
   boolean hasThreadSafeTypeParameterAnnotation(TypeVariableSymbol sym) {

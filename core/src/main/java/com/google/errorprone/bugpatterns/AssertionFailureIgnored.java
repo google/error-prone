@@ -91,7 +91,7 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
     }
     Optional<JCCatch> maybeCatchTree =
         catchesType(tryStatement, state.getSymtab().assertionErrorType, state);
-    if (!maybeCatchTree.isPresent()) {
+    if (maybeCatchTree.isEmpty()) {
       return NO_MATCH;
     }
     JCCatch catchTree = maybeCatchTree.get();

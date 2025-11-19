@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
-import com.google.auto.value.AutoValue;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Matcher;
@@ -100,23 +99,17 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
    * Encapsulates the result of matching a {@link Collection#contains}-like call, including the
    * source and target types.
    */
-  @AutoValue
-  public abstract static class MatchResult {
-    public abstract ExpressionTree sourceTree();
-
-    public abstract Type sourceType();
-
-    public abstract Type targetType();
-
-    public abstract AbstractCollectionIncompatibleTypeMatcher matcher();
-
+  public record MatchResult(
+      ExpressionTree sourceTree,
+      Type sourceType,
+      Type targetType,
+      AbstractCollectionIncompatibleTypeMatcher matcher) {
     public static MatchResult create(
         ExpressionTree sourceTree,
         Type sourceType,
         Type targetType,
         AbstractCollectionIncompatibleTypeMatcher matcher) {
-      return new AutoValue_AbstractCollectionIncompatibleTypeMatcher_MatchResult(
-          sourceTree, sourceType, targetType, matcher);
+      return new MatchResult(sourceTree, sourceType, targetType, matcher);
     }
 
     public String message(String sourceType, String targetType) {

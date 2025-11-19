@@ -24,6 +24,7 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.AnnotationNames.FORMAT_METHOD_ANNOTATION;
 import static com.google.errorprone.util.AnnotationNames.FORMAT_STRING_ANNOTATION;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -58,41 +59,19 @@ public final class FormatStringAnnotationChecker extends BugChecker
       MethodSymbol symbol,
       List<? extends ExpressionTree> args,
       VisitorState state) {
-    if (!hasAnnotation(symbol, FORMAT_METHOD_ANNOTATION, state)) {
-      return Description.NO_MATCH;
-    }
-
-    int formatString = formatStringIndex(symbol, state);
-    if (formatString == -1) {
-      // will be an error at call site
+    ImmutableList<ExpressionTree> formatArgs =
+        FormatStringUtils.formatMethodAnnotationArguments(tree, symbol, args, state);
+    if (formatArgs.isEmpty()) {
       return NO_MATCH;
     }
-
     FormatStringValidation.ValidationResult result =
         StrictFormatStringValidation.validate(
-            args.get(formatString), args.subList(formatString + 1, args.size()), state);
-
+            formatArgs.get(0), formatArgs.subList(1, formatArgs.size()), state);
     if (result != null) {
       return buildDescription(tree).setMessage(result.message()).build();
     } else {
       return Description.NO_MATCH;
     }
-  }
-
-  private static int formatStringIndex(MethodSymbol symbol, VisitorState state) {
-    Type stringType = state.getSymtab().stringType;
-    List<VarSymbol> params = symbol.getParameters();
-    int firstStringIndex = -1;
-    for (int i = 0; i < params.size(); i++) {
-      VarSymbol param = params.get(i);
-      if (hasAnnotation(param, FORMAT_STRING_ANNOTATION, state)) {
-        return i;
-      }
-      if (firstStringIndex < 0 && isSameType(param.type, stringType, state)) {
-        firstStringIndex = i;
-      }
-    }
-    return firstStringIndex;
   }
 
   @Override

@@ -131,14 +131,9 @@ public class UnnecessaryAnonymousClass extends BugChecker implements VariableTre
     fixBuilder.merge(trimToMethodDef(tree, state, implementation));
 
     // Replace all uses of the identifier with a method reference.
-    Optional<SuggestedFix> methodReferenceReplacement =
-        replaceUsesWithMethodReference(newName, varSym, implementation, state);
-    if (!methodReferenceReplacement.isPresent()) {
-      return NO_MATCH;
-    }
-    fixBuilder.merge(methodReferenceReplacement.get());
-
-    return describeMatch(tree, fixBuilder.build());
+    return replaceUsesWithMethodReference(newName, varSym, implementation, state)
+        .map(mrr -> describeMatch(tree, fixBuilder.merge(mrr).build()))
+        .orElse(NO_MATCH);
   }
 
   /** Remove anonymous class definition beginning and end, leaving only the method definition. */

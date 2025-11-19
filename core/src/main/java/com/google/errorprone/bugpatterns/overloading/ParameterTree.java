@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.overloading;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.base.Preconditions;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.Tree;
@@ -42,14 +41,7 @@ import javax.lang.model.element.Name;
  *
  * @author hanuszczak@google.com (Łukasz Hanuszczak)
  */
-@AutoValue
-abstract class ParameterTree {
-
-  public abstract Name getName();
-
-  public abstract Tree getType();
-
-  public abstract boolean isVarArgs();
+record ParameterTree(Name name, Tree type, boolean varArgs) {
 
   public static ParameterTree create(VariableTree variableTree) {
     Preconditions.checkArgument(isValidParameterTree(variableTree));
@@ -57,7 +49,7 @@ abstract class ParameterTree {
     Name name = variableTree.getName();
     Tree type = variableTree.getType();
     boolean isVarargs = isVariableTreeVarArgs(variableTree);
-    return new AutoValue_ParameterTree(name, type, isVarargs);
+    return new ParameterTree(name, type, isVarargs);
   }
 
   private static boolean isValidParameterTree(VariableTree variableTree) {
@@ -73,11 +65,11 @@ abstract class ParameterTree {
 
   @Override
   public final String toString() {
-    String type = getType().toString();
-    String name = getName().toString();
+    String type = this.type().toString();
+    String name = this.name().toString();
 
     // Hacky fix to improve pretty-printing of varargs (otherwise they are printed as Type[]).
-    if (isVarArgs()) {
+    if (this.varArgs()) {
       type = type.substring(0, type.length() - 2) + "...";
     }
 

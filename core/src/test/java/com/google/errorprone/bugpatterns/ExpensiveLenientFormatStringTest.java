@@ -35,13 +35,13 @@ public class ExpensiveLenientFormatStringTest {
   public void refactoring() {
     refactoringHelper
         .addInputLines(
-            "PreconditionsExpensiveStringTest.java",
+            "Test.java",
 """
 package com.google.devtools.javatools.refactory.refaster.cleanups;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-class PreconditionsExpensiveStringTest {
+class Test {
   void f() {
     checkNotNull(this, "%s", "hello");
   }
@@ -60,13 +60,13 @@ class PreconditionsExpensiveStringTest {
 }
 """)
         .addOutputLines(
-            "PreconditionsExpensiveStringTest.java",
+            "Test.java",
 """
 package com.google.devtools.javatools.refactory.refaster.cleanups;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-class PreconditionsExpensiveStringTest {
+class Test {
   void f() {
     checkNotNull(this, "%s", "hello");
   }
@@ -91,7 +91,7 @@ class PreconditionsExpensiveStringTest {
   public void positive() {
     testHelper
         .addSourceLines(
-            "PreconditionsExpensiveStringPositiveCase1.java",
+            "Test.java",
 """
 package com.google.errorprone.bugpatterns.testdata;
 
@@ -99,10 +99,8 @@ import com.google.common.base.Preconditions;
 
 /**
  * Test for methodIs call involving String.format() and %s
- *
- * @author sjnickerson@google.com (Simon Nickerson)
  */
-public class PreconditionsExpensiveStringPositiveCase1 {
+public class Test {
   public void error() {
     int foo = 42;
     int bar = 78;
@@ -118,7 +116,7 @@ public class PreconditionsExpensiveStringPositiveCase1 {
   public void negative1() {
     testHelper
         .addSourceLines(
-            "PreconditionsExpensiveStringNegativeCase1.java",
+            "Test.java",
 """
 package com.google.errorprone.bugpatterns.testdata;
 
@@ -126,10 +124,8 @@ import com.google.common.base.Preconditions;
 
 /**
  * Preconditions calls which shouldn't be picked up for expensive string operations
- *
- * @author sjnickerson@google.com (Simon Nickerson)
  */
-public class PreconditionsExpensiveStringNegativeCase1 {
+public class Test {
   public void error() {
     int foo = 42;
     Preconditions.checkState(true, "The foo %s foo  is not a good foo", foo);
@@ -150,7 +146,7 @@ public class PreconditionsExpensiveStringNegativeCase1 {
   public void negative2() {
     testHelper
         .addSourceLines(
-            "PreconditionsExpensiveStringNegativeCase2.java",
+            "Test.java",
 """
 package com.google.errorprone.bugpatterns.testdata;
 
@@ -159,10 +155,8 @@ import com.google.common.base.Preconditions;
 /**
  * Test for methodIs call including string concatenation. (Not yet supported, so this is a negative
  * case)
- *
- * @author sjnickerson@google.com (Simon Nickerson)
  */
-public class PreconditionsExpensiveStringNegativeCase2 {
+public class Test {
   public void error() {
     int foo = 42;
     Preconditions.checkState(true, "The foo" + foo + " is not a good foo");

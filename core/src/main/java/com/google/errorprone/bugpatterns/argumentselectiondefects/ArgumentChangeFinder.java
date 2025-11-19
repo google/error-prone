@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
-import com.google.auto.value.AutoValue;
+import com.google.auto.value.AutoBuilder;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import java.util.function.Function;
@@ -29,24 +29,18 @@ import java.util.function.Function;
  * match on the bi-partite graph mapping parameters to assignable arguments.
  *
  * @author andrewrice@google.com (Andrew Rice)
+ * @param distanceFunction The distance function to use when comparing formal and actual parameters.
+ *     The function should return 0 for highly similar names and larger positive values as names are
+ *     more different.
+ * @param heuristics List of heuristics to apply to eliminate spurious suggestions.
  */
-@AutoValue
-abstract class ArgumentChangeFinder {
-
-  /**
-   * The distance function to use when comparing formal and actual parameters. The function should
-   * return 0 for highly similar names and larger positive values as names are more different.
-   */
-  abstract Function<ParameterPair, Double> distanceFunction();
-
-  /** List of heuristics to apply to eliminate spurious suggestions. */
-  abstract ImmutableList<Heuristic> heuristics();
-
+record ArgumentChangeFinder(
+    Function<ParameterPair, Double> distanceFunction, ImmutableList<Heuristic> heuristics) {
   static Builder builder() {
-    return new AutoValue_ArgumentChangeFinder.Builder();
+    return new AutoBuilder_ArgumentChangeFinder_Builder();
   }
 
-  @AutoValue.Builder
+  @AutoBuilder
   abstract static class Builder {
 
     /** Set the distance function that {@link ArgumentChangeFinder} should use. */

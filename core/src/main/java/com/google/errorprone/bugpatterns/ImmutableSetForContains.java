@@ -134,10 +134,7 @@ public final class ImmutableSetForContains extends BugChecker implements ClassTr
         fix.merge(convertListToSetInit(var, state));
       }
     }
-    if (!firstReplacement.isPresent()) {
-      return Description.NO_MATCH;
-    }
-    return describeMatch(firstReplacement.get(), fix.build());
+    return firstReplacement.map(fr -> describeMatch(fr, fix.build())).orElse(Description.NO_MATCH);
   }
 
   private static SuggestedFix convertListToSetInit(VariableTree var, VisitorState state) {

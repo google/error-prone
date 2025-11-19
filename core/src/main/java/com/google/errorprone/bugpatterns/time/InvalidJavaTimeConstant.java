@@ -35,7 +35,7 @@ import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
 import static java.time.temporal.ChronoField.YEAR;
 import static java.util.Arrays.stream;
 
-import com.google.auto.value.AutoValue;
+import com.google.auto.value.AutoBuilder;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
@@ -68,43 +68,28 @@ import java.util.List;
 public final class InvalidJavaTimeConstant extends BugChecker
     implements MethodInvocationTreeMatcher {
 
-  @AutoValue
-  abstract static class MatcherWithUnits {
-    abstract Matcher<ExpressionTree> matcher();
+  record MatcherWithUnits(Matcher<ExpressionTree> matcher, ImmutableList<ChronoField> units) {}
 
-    abstract ImmutableList<ChronoField> units();
-  }
-
-  @AutoValue
-  abstract static class Param {
-    abstract String type();
-
-    abstract ChronoField unit();
-  }
+  record Param(String type, ChronoField unit) {}
 
   private static Param intP(ChronoField unit) {
-    return new AutoValue_InvalidJavaTimeConstant_Param("int", unit);
+    return new Param("int", unit);
   }
 
   private static Param longP(ChronoField unit) {
-    return new AutoValue_InvalidJavaTimeConstant_Param("long", unit);
+    return new Param("long", unit);
   }
 
   private static Param monthP(ChronoField unit) {
-    return new AutoValue_InvalidJavaTimeConstant_Param("java.time.Month", unit);
+    return new Param("java.time.Month", unit);
   }
 
-  @AutoValue
-  abstract static class JavaTimeType {
-    abstract String className();
-
-    abstract ImmutableList<MatcherWithUnits> methods();
-
+  record JavaTimeType(String className, ImmutableList<MatcherWithUnits> methods) {
     public static Builder builder() {
-      return new AutoValue_InvalidJavaTimeConstant_JavaTimeType.Builder();
+      return new AutoBuilder_InvalidJavaTimeConstant_JavaTimeType_Builder();
     }
 
-    @AutoValue.Builder
+    @AutoBuilder
     public abstract static class Builder {
       public abstract Builder setClassName(String className);
 
@@ -116,7 +101,7 @@ public final class InvalidJavaTimeConstant extends BugChecker
       public Builder addStaticMethod(String methodName, Param... params) {
         methodsBuilder()
             .add(
-                new AutoValue_InvalidJavaTimeConstant_MatcherWithUnits(
+                new MatcherWithUnits(
                     staticMethod()
                         .onClass(className())
                         .named(methodName)
@@ -129,7 +114,7 @@ public final class InvalidJavaTimeConstant extends BugChecker
       public Builder addInstanceMethod(String methodName, Param... params) {
         methodsBuilder()
             .add(
-                new AutoValue_InvalidJavaTimeConstant_MatcherWithUnits(
+                new MatcherWithUnits(
                     instanceMethod()
                         .onExactClass(className())
                         .named(methodName)

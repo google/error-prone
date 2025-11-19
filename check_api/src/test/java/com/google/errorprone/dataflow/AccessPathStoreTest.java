@@ -16,8 +16,8 @@
 package com.google.errorprone.dataflow;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.mock;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,8 +37,8 @@ public class AccessPathStoreTest {
   @Test
   public void buildAndGet() {
     AccessPathStore.Builder<Nullness> builder = newStore().toBuilder();
-    AccessPath path1 = mock(AccessPath.class);
-    AccessPath path2 = mock(AccessPath.class);
+    AccessPath path1 = new AccessPath(null, ImmutableList.of("foo"));
+    AccessPath path2 = new AccessPath(null, ImmutableList.of("bar"));
     builder.setInformation(path1, Nullness.NULL);
     builder.setInformation(path2, Nullness.NONNULL);
     assertThat(builder.build().valueOfAccessPath(path1, Nullness.BOTTOM)).isEqualTo(Nullness.NULL);

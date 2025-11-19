@@ -25,7 +25,6 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -84,9 +83,7 @@ import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
 
 /** An expression's target type, see {@link #targetType}. */
-@AutoValue
-public abstract class TargetType {
-
+public record TargetType(Type type, TreePath path) {
   /**
    * Returns the target type of the tree at the given {@link VisitorState}'s path, or else {@code
    * null}.
@@ -130,12 +127,8 @@ public abstract class TargetType {
     return create(type, parent);
   }
 
-  public abstract Type type();
-
-  public abstract TreePath path();
-
   static TargetType create(Type type, TreePath path) {
-    return new AutoValue_TargetType(type, path);
+    return new TargetType(type, path);
   }
 
   private static final @Nullable Class<?> CONSTANT_CASE_LABEL_TREE = constantCaseLabelTree();

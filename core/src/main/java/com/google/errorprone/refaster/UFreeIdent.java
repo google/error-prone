@@ -88,7 +88,7 @@ public abstract class UFreeIdent extends UIdent {
                   Symbol identSym = ASTHelpers.getSymbol(ident);
                   for (ULocalVarIdent.Key key :
                       Iterables.filter(unifier.getBindings().keySet(), ULocalVarIdent.Key.class)) {
-                    if (identSym == unifier.getBinding(key).getSymbol()) {
+                    if (identSym == unifier.getBinding(key).symbol()) {
                       return false;
                     }
                   }

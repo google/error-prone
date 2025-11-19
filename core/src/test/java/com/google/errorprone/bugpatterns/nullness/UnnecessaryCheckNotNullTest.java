@@ -560,14 +560,14 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
 
     private static void assertMatch(ExpressionTree node, List<String> expected) {
       List<IdentifierTree> uses = UnnecessaryCheckNotNull.getVariableUses(node);
-      assertWithMessage("variables used in " + node)
+      assertWithMessage("variables used in %s", node)
           .that(Lists.transform(uses, Functions.toStringFunction()))
           .isEqualTo(expected);
     }
 
     void assertFoundAll() {
       for (Map.Entry<String, Match> entry : matches.entrySet()) {
-        assertWithMessage("found " + entry.getKey()).that(entry.getValue().found).isTrue();
+        assertWithMessage("found %s", entry.getKey()).that(entry.getValue().found).isTrue();
       }
     }
   }

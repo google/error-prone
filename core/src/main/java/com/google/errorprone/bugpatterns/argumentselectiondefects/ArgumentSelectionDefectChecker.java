@@ -22,12 +22,14 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.DeconstructionPatternTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.names.NamingConventions;
 import com.google.errorprone.names.NeedlemanWunschEditDistance;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -54,7 +56,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
     summary = "Arguments are in the wrong order or could be commented for clarity.",
     severity = WARNING)
 public class ArgumentSelectionDefectChecker extends BugChecker
-    implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
+    implements DeconstructionPatternTreeMatcher, MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
   private final ArgumentChangeFinder argumentChangeFinder;
 
@@ -97,6 +99,13 @@ public class ArgumentSelectionDefectChecker extends BugChecker
     }
 
     return visit(InvocationInfo.createFromNewClass(tree, symbol, state));
+  }
+
+  @Override
+  public Description matchDeconstructionPattern(
+      DeconstructionPatternTree tree, VisitorState state) {
+    var deconstructor = InvocationInfo.createFromDeconstructionPattern(tree, state);
+    return deconstructor == null ? Description.NO_MATCH : visit(deconstructor);
   }
 
   private Description visit(InvocationInfo invocationInfo) {

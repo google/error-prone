@@ -400,6 +400,36 @@ record Foo(String first, String second) {}
         .doTest();
   }
 
+  @Test
+  public void recordDeconstruction() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+"""
+class Test {
+  void test(Foo foo) {
+    switch (foo) {
+      // BUG: Diagnostic contains: may have been swapped
+      case Foo(String second, String first, _) -> {}
+      default -> {}
+    }
+  }
+
+  void test2(Foo foo) {
+    switch (foo) {
+      // BUG: Diagnostic contains: may have been swapped
+      case Foo(_, _, Foo(String second, String first, _)) -> {}
+      default -> {}
+    }
+  }
+}
+
+record Foo(String first, String second, Foo foo) {}
+""")
+        .setArgs("--enable-preview", "--release", Integer.toString(Runtime.version().feature()))
+        .doTest();
+  }
+
   public record Foo(String first, String second) {}
 
   @Test

@@ -20,7 +20,6 @@ import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.R
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope.GLOBAL;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope.METHOD;
 
-import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
 
@@ -142,25 +141,17 @@ public abstract class ResultUseRule<C, S> {
    * An evaluation that a rule makes.
    *
    * @param <S> the type of symbols
+   * @param rule The rule that made this evaluation.
+   * @param scope The scope at which the evaluation was made.
+   * @param element The specific element in the scope for which the evaluation was made.
+   * @param policy The policy the rule selected.
    */
-  @AutoValue
-  public abstract static class Evaluation<S> {
+  public record Evaluation<S>(
+      ResultUseRule<?, S> rule, RuleScope scope, S element, ResultUsePolicy policy) {
     /** Creates a new {@link Evaluation}. */
     public static <S> Evaluation<S> create(
         ResultUseRule<?, S> rule, RuleScope scope, S element, ResultUsePolicy policy) {
-      return new AutoValue_ResultUseRule_Evaluation<>(rule, scope, element, policy);
+      return new Evaluation<>(rule, scope, element, policy);
     }
-
-    /** The rule that made this evaluation. */
-    public abstract ResultUseRule<?, S> rule();
-
-    /** The scope at which the evaluation was made. */
-    public abstract RuleScope scope();
-
-    /** The specific element in the scope for which the evaluation was made. */
-    public abstract S element();
-
-    /** The policy the rule selected. */
-    public abstract ResultUsePolicy policy();
   }
 }

@@ -82,8 +82,7 @@ public final class ProtoTruthMixedDescriptors extends BugChecker
     ImmutableSet<TypeSymbol> types =
         arguments.stream()
             .map(t -> protoType(t, state))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+            .flatMap(Optional::stream)
             .collect(toImmutableSet());
     if (types.size() > 1) {
       return describeMatch(tree);

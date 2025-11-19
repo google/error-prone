@@ -153,14 +153,14 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
     Optional<Nullness> fromAnnotations =
         extractExplicitNullness(declaredType, argSelector.isEmpty() ? decl : null);
-    if (!fromAnnotations.isPresent()) {
+    if (fromAnnotations.isEmpty()) {
       // Check declared type before inferred type so that type annotations on the declaration take
       // precedence (just like declaration annotations) over annotations on the inferred type.
       // For instance, we want a @Nullable T m() to take precedence over annotations on T's inferred
       // type (e.g., @NotNull String), whether @Nullable is a declaration or type annotation.
       fromAnnotations = NullnessAnnotations.fromAnnotationsOn(inferredType);
     }
-    if (!fromAnnotations.isPresent()) {
+    if (fromAnnotations.isEmpty()) {
       if (declaredType instanceof TypeVariable typeVariable) {
         // Check bounds second so explicit annotations take precedence. Even for bounds we still use
         // equality constraint below since we have to assume the bound as the "worst" case.
@@ -359,7 +359,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
         new ArrayDeque<>(),
         null,
         (typeVarRef, selector, unused) -> {
-          if (!extractExplicitNullness(typeVarRef, selector.isEmpty() ? decl : null).isPresent()) {
+          if (extractExplicitNullness(typeVarRef, selector.isEmpty() ? decl : null).isEmpty()) {
             result.add(TypeArgInferenceVar.create(ImmutableList.copyOf(selector), sourceNode));
           }
         });
@@ -378,7 +378,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
         new ArrayDeque<>(),
         ((JCExpression) sourceNode).type,
         (declaredType, selector, inferredType) -> {
-          if (!extractExplicitNullness(type, selector.isEmpty() ? decl : null).isPresent()) {
+          if (extractExplicitNullness(type, selector.isEmpty() ? decl : null).isEmpty()) {
             consumer.accept(TypeArgInferenceVar.create(ImmutableList.copyOf(selector), sourceNode));
           }
 
@@ -482,7 +482,7 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
     boolean isBound = false;
     Optional<Nullness> fromAnnotations =
         extractExplicitNullness(lType, argSelector.isEmpty() ? decl : null);
-    if (!fromAnnotations.isPresent()) {
+    if (fromAnnotations.isEmpty()) {
       if (lType instanceof TypeVariable typeVariable) {
         fromAnnotations = NullnessAnnotations.getUpperBound(typeVariable);
         isBound = true;

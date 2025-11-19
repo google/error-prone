@@ -335,19 +335,13 @@ public class CompilationTestHelper {
     if (expectNoDiagnostics) {
       List<Diagnostic<? extends JavaFileObject>> diagnostics = diagnosticHelper.getDiagnostics();
       assertWithMessage(
-              String.format(
-                  "Expected no diagnostics produced, but found %d: %s",
-                  diagnostics.size(), diagnostics))
+              "Expected no diagnostics produced, but found %s: %s", diagnostics.size(), diagnostics)
           .that(diagnostics.size())
           .isEqualTo(0);
       assertWithMessage(
-              String.format(
-                  "Expected compilation result to be "
-                      + expectedResult.orElse(Result.OK)
-                      + ", but was %s. No diagnostics were emitted."
-                      + " OutputStream from Compiler follows.\n\n%s",
-                  result,
-                  outputStream))
+              "Expected compilation result to be %s, but was %s. No diagnostics were emitted."
+                  + " OutputStream from Compiler follows.\n\n%s",
+              expectedResult.orElse(Result.OK), result, outputStream)
           .that(result)
           .isEqualTo(expectedResult.orElse(Result.OK));
     } else {
@@ -359,7 +353,7 @@ public class CompilationTestHelper {
           throw new UncheckedIOException(e);
         }
       }
-      assertWithMessage("Unused error keys: " + diagnosticHelper.getUnusedLookupKeys())
+      assertWithMessage("Unused error keys: %s", diagnosticHelper.getUnusedLookupKeys())
           .that(diagnosticHelper.getUnusedLookupKeys().isEmpty())
           .isTrue();
     }
@@ -367,12 +361,11 @@ public class CompilationTestHelper {
     expectedResult.ifPresent(
         expected ->
             assertWithMessage(
-                    String.format(
-                        "Expected compilation result %s, but was %s\n%s\n%s",
-                        expected,
-                        result,
-                        Joiner.on('\n').join(diagnosticHelper.getDiagnostics()),
-                        outputStream))
+                    "Expected compilation result %s, but was %s\n%s\n%s",
+                    expected,
+                    result,
+                    Joiner.on('\n').join(diagnosticHelper.getDiagnostics()),
+                    outputStream)
                 .that(result)
                 .isEqualTo(expected));
   }
