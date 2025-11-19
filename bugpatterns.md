@@ -241,7 +241,7 @@ __[InexactVarargsConditional](bugpattern/InexactVarargsConditional)__<br>
 Conditional expression in varargs call contains array and non-array arguments
 
 __[InfiniteRecursion](bugpattern/InfiniteRecursion)__<br>
-This method always recurses, and will cause a StackOverflowError
+This method calls itself unconditionally; it will throw StackOverflowError
 
 __[InjectMoreThanOneScopeAnnotationOnClass](bugpattern/InjectMoreThanOneScopeAnnotationOnClass)__<br>
 A class can be annotated with at most one scope annotation.

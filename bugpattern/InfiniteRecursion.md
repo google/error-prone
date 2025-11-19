@@ -1,6 +1,6 @@
 ---
 title: InfiniteRecursion
-summary: This method always recurses, and will cause a StackOverflowError
+summary: This method calls itself unconditionally; it will throw StackOverflowError
 layout: bugpattern
 tags: ''
 severity: ERROR
