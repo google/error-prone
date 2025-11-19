@@ -52,7 +52,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    summary = "This method always recurses, and will cause a StackOverflowError",
+    summary = "This method calls itself unconditionally; it will throw StackOverflowError",
     severity = ERROR)
 public class InfiniteRecursion extends BugChecker implements MethodTreeMatcher {
   @Override
@@ -225,15 +225,15 @@ public class InfiniteRecursion extends BugChecker implements MethodTreeMatcher {
          * in practice, but consider the following example:
          */
         // sealed class Parent {
-        //   void go(boolean recurse) {
+        //   void go(boolean recur) {
         //     go(false); // call to the "same method" on the same object but not infinite recursion
         //   }
         // }
         //
         // class Child extends Parent {
         //   @Override
-        //   void go(boolean recurse) {
-        //     if (recurse) {
+        //   void go(boolean recur) {
+        //     if (recur) {
         //       super.go(true);
         //     }
         //   }
