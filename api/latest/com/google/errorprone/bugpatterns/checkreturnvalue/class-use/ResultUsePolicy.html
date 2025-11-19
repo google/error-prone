@@ -119,10 +119,10 @@ apply to it.</div>
 <div class="col-last odd-row-color">
 <div class="block">Returns the <a href="../ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> for the method used in the given <code>expression</code>.</div>
 </div>
-<div class="col-first even-row-color"><code>abstract <a href="../ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a></code></div>
+<div class="col-first even-row-color"><code><a href="../ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ResultUseRule.Evaluation.</span><code><a href="../ResultUseRule.Evaluation.html#policy()" class="member-name-link">policy</a>()</code></div>
 <div class="col-last even-row-color">
-<div class="block">The policy the rule selected.</div>
+<div class="block">Returns the value of the <a href="../../../../../../com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html#param-policy"><code>policy</code></a> record component.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ResultUsePolicy.</span><code><a href="../ResultUsePolicy.html#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
@@ -206,6 +206,20 @@ policy</code>.</div>
 <div class="col-last even-row-color">
 <div class="block">Returns a simple global rule that always returns the given defaults for methods and
 constructors.</div>
+</div>
+</div>
+<div class="caption"><span>Constructors in <a href="../package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a> with parameters of type <a href="../ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier</div>
+<div class="table-header col-second">Constructor</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../ResultUseRule.Evaluation.html#%3Cinit%3E(com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUseRule.RuleScope,S,com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy)" class="member-name-link">Evaluation</a><wbr>(<a href="../ResultUseRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule</a>&lt;?,<wbr><a href="../ResultUseRule.Evaluation.html#type-param-S" title="type parameter in ResultUseRule.Evaluation">S</a>&gt;&nbsp;rule,
+ <a href="../ResultUseRule.RuleScope.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.RuleScope</a>&nbsp;scope,
+ <a href="../ResultUseRule.Evaluation.html#type-param-S" title="type parameter in ResultUseRule.Evaluation">S</a>&nbsp;element,
+ <a href="../ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUsePolicy</a>&nbsp;policy)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Creates an instance of a <code>Evaluation</code> record class.</div>
 </div>
 </div>
 </section>

@@ -76,7 +76,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-first even-row-color"><code>final record&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../CompositeCodeTransformer.html" class="type-name-link" title="class in com.google.errorprone">CompositeCodeTransformer</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">Combines multiple <code>CodeTransformer</code>s into one.</div>
@@ -99,9 +99,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>abstract com.google.common.collect.ImmutableList<wbr>&lt;<a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a>&gt;</code></div>
+<div class="col-first even-row-color"><code>com.google.common.collect.ImmutableList<wbr>&lt;<a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">CompositeCodeTransformer.</span><code><a href="../CompositeCodeTransformer.html#transformers()" class="member-name-link">transformers</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Returns the value of the <code>transformers</code> record component.</div>
+</div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">com.google.errorprone</a> with parameters of type <a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a></span></div>
 <div class="summary-table three-column-summary">
@@ -120,6 +122,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static <a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">CompositeCodeTransformer.</span><code><a href="../CompositeCodeTransformer.html#compose(java.lang.Iterable)" class="member-name-link">compose</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a>&gt;&nbsp;transformers)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+</div>
+<div class="caption"><span>Constructor parameters in <a href="../package-summary.html">com.google.errorprone</a> with type arguments of type <a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier</div>
+<div class="table-header col-second">Constructor</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../CompositeCodeTransformer.html#%3Cinit%3E(com.google.common.collect.ImmutableList)" class="member-name-link">CompositeCodeTransformer</a><wbr>(com.google.common.collect.ImmutableList&lt;<a href="../CodeTransformer.html" title="interface in com.google.errorprone">CodeTransformer</a>&gt;&nbsp;transformers)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Creates an instance of a <code>CompositeCodeTransformer</code> record class.</div>
+</div>
 </div>
 </section>
 </li>

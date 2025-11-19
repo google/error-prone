@@ -73,33 +73,33 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../MethodInvocationMatcher.Token.DefinedIn.html" class="type-name-link" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.DefinedIn</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">A token specifying the class or interface in which the invoked method was defined.</div>
 </div>
-<div class="col-first odd-row-color"><code>static class&nbsp;</code></div>
+<div class="col-first odd-row-color"><code>static final record&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../MethodInvocationMatcher.Token.Kind.html" class="type-name-link" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.Kind</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">A token limiting the <a href="../MethodInvocationMatcher.Token.Kind.html" title="class in com.google.errorprone.matchers.method"><code>MethodInvocationMatcher.Token.Kind</code></a> of invocation to match.</div>
 </div>
-<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../MethodInvocationMatcher.Token.MethodName.html" class="type-name-link" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.MethodName</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">A token limiting the name of the method being invoked.</div>
 </div>
-<div class="col-first odd-row-color"><code>static class&nbsp;</code></div>
+<div class="col-first odd-row-color"><code>static final record&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../MethodInvocationMatcher.Token.ParameterTypes.html" class="type-name-link" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.ParameterTypes</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">A token limiting the types of the formal parameters of the method being invoked.</div>
 </div>
-<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../MethodInvocationMatcher.Token.ReceiverSupertype.html" class="type-name-link" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.ReceiverSupertype</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">A token specifying that the class of the object on which the method is being invoked must be
 a subtype of another type.</div>
 </div>
-<div class="col-first odd-row-color"><code>static class&nbsp;</code></div>
+<div class="col-first odd-row-color"><code>static final record&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../MethodInvocationMatcher.Token.ReceiverType.html" class="type-name-link" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.ReceiverType</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">A token specifying the exact type of the object on which the method is being invoked (or the
@@ -111,9 +111,11 @@ class in which it is defined, for static methods).</div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>abstract com.google.common.collect.ImmutableMap<wbr>&lt;<a href="../MethodInvocationMatcher.TokenType.html" title="enum class in com.google.errorprone.matchers.method">MethodInvocationMatcher.TokenType</a>, ? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../MethodInvocationMatcher.Token.html" title="interface in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token</a>&gt;&gt;</code></div>
+<div class="col-first even-row-color"><code>com.google.common.collect.ImmutableMap<wbr>&lt;<a href="../MethodInvocationMatcher.TokenType.html" title="enum class in com.google.errorprone.matchers.method">MethodInvocationMatcher.TokenType</a>, ? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../MethodInvocationMatcher.Token.html" title="interface in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token</a>&gt;&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">MethodInvocationMatcher.Rule.</span><code><a href="../MethodInvocationMatcher.Rule.html#required()" class="member-name-link">required</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Returns the value of the <code>required</code> record component.</div>
+</div>
 </div>
 <div class="caption"><span>Method parameters in <a href="../package-summary.html">com.google.errorprone.matchers.method</a> with type arguments of type <a href="../MethodInvocationMatcher.Token.html" title="interface in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token</a></span></div>
 <div class="summary-table three-column-summary">
@@ -124,6 +126,17 @@ class in which it is defined, for static methods).</div>
 <div class="col-second even-row-color"><span class="type-name-label">MethodInvocationMatcher.Rule.</span><code><a href="../MethodInvocationMatcher.Rule.html#create(com.google.common.collect.ImmutableMap)" class="member-name-link">create</a><wbr>(com.google.common.collect.ImmutableMap&lt;<a href="../MethodInvocationMatcher.TokenType.html" title="enum class in com.google.errorprone.matchers.method">MethodInvocationMatcher.TokenType</a>, ? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../MethodInvocationMatcher.Token.html" title="interface in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token</a>&gt;&gt;&nbsp;required)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Builds a Rule object from a map.</div>
+</div>
+</div>
+<div class="caption"><span>Constructor parameters in <a href="../package-summary.html">com.google.errorprone.matchers.method</a> with type arguments of type <a href="../MethodInvocationMatcher.Token.html" title="interface in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier</div>
+<div class="table-header col-second">Constructor</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../MethodInvocationMatcher.Rule.html#%3Cinit%3E(com.google.common.collect.ImmutableMap)" class="member-name-link">Rule</a><wbr>(com.google.common.collect.ImmutableMap&lt;<a href="../MethodInvocationMatcher.TokenType.html" title="enum class in com.google.errorprone.matchers.method">MethodInvocationMatcher.TokenType</a>, ? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../MethodInvocationMatcher.Token.html" title="interface in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token</a>&gt;&gt;&nbsp;required)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Creates an instance of a <code>Rule</code> record class.</div>
 </div>
 </div>
 </section>
