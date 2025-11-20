@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE_ARRAY;
 import static com.google.errorprone.suppliers.Suppliers.arrayOf;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
@@ -63,7 +64,7 @@ public final class DistinctVarargsChecker extends BugChecker
           staticMethod()
               .onClass("com.google.common.collect.Ordering")
               .named("explicit")
-              .withParametersOfType(ImmutableList.of(OBJECT_TYPE, arrayOf(OBJECT_TYPE))));
+              .withParametersOfType(ImmutableList.of(OBJECT_TYPE, OBJECT_TYPE_ARRAY)));
   private static final Matcher<ExpressionTree> EVEN_PARITY_DISTINCT_ARG_MATCHER =
       anyOf(
           // ImmutableMap.of is covered by AlwaysThrows.

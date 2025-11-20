@@ -26,8 +26,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
-import static com.google.errorprone.suppliers.Suppliers.arrayOf;
+import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE_ARRAY;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
@@ -179,7 +178,7 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
           staticMethod()
               .onClass("org.mockito.Mockito")
               .named("mock")
-              .withParametersOfType(ImmutableList.of(arrayOf(OBJECT_TYPE))));
+              .withParametersOfType(ImmutableList.of(OBJECT_TYPE_ARRAY)));
 
   private static final Matcher<MethodInvocationTree> DO_CALL_REAL_METHOD =
       anyOf(

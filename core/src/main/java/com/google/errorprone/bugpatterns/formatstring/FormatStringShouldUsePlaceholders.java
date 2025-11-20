@@ -17,7 +17,10 @@
 package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE_ARRAY;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -86,6 +89,10 @@ public class FormatStringShouldUsePlaceholders extends BugChecker
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     final ImmutableList<? extends ExpressionTree> arguments = formatArguments(tree, state);
     if (arguments.isEmpty()) {
+      return Description.NO_MATCH;
+    }
+    if (arguments.size() == 2
+        && isSameType(getType(arguments.get(1)), OBJECT_TYPE_ARRAY.get(state), state)) {
       return Description.NO_MATCH;
     }
     ExpressionTree formatString = arguments.getFirst();
