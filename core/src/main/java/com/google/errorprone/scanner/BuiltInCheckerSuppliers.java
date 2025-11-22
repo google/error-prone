@@ -174,6 +174,7 @@ import com.google.errorprone.bugpatterns.IdentifierName;
 import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
 import com.google.errorprone.bugpatterns.IdentityHashMapBoxing;
 import com.google.errorprone.bugpatterns.IdentityHashMapUsage;
+import com.google.errorprone.bugpatterns.IfChainToSwitch;
 import com.google.errorprone.bugpatterns.IgnoredPureGetter;
 import com.google.errorprone.bugpatterns.ImmutableMemberCollection;
 import com.google.errorprone.bugpatterns.ImmutableSetForContains;
@@ -978,6 +979,7 @@ public class BuiltInCheckerSuppliers {
           HidingField.class,
           ICCProfileGetInstance.class,
           IdentityHashMapUsage.class,
+          IfChainToSwitch.class,
           IgnoredPureGetter.class,
           ImmutableAnnotationChecker.class,
           ImmutableEnumChecker.class,
