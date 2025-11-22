@@ -565,4 +565,40 @@ public abstract class JUnit3TestNotRunNegativeCase4 extends TestCase {
             """)
         .doTest();
   }
+
+  @Test
+  public void junit4Test_withTestsizeAnnotation_shouldBeIgnored() {
+    compilationHelper
+        .addSourceLines(
+            "ExampleTest.java",
+            """
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+            import org.junit.runners.JUnit4;
+            import com.google.testing.testsize.SmallTest;
+
+            @RunWith(JUnit4.class)
+            public class ExampleTest {
+              @Test
+
+              public void testSomething() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void setupMethod_shouldBeIgnored() {
+    compilationHelper
+        .addSourceLines(
+            "ExampleTest.java",
+            """
+            import junit.framework.TestCase;
+
+            public class ExampleTest extends TestCase {
+              protected void setup() {}
+            }
+            """)
+        .doTest();
+  }
 }
