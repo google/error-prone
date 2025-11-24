@@ -2130,7 +2130,9 @@ public class ASTHelpers {
 
   /** Returns whether the given tree has an explicit source code representation. */
   public static boolean hasExplicitSource(Tree tree, VisitorState state) {
-    return getStartPosition(tree) != Position.NOPOS && state.getEndPosition(tree) != Position.NOPOS;
+    int pos = getStartPosition(tree);
+    int endPos = state.getEndPosition(tree);
+    return pos != Position.NOPOS && endPos != Position.NOPOS && pos != endPos;
   }
 
   /** Returns {@code true} if this symbol was declared in Kotlin source. */

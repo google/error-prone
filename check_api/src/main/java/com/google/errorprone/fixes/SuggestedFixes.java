@@ -768,7 +768,7 @@ public final class SuggestedFixes {
     int endPos =
         tree.getMembers().stream()
             .map(state::getEndPosition)
-            .filter(p -> p != NOPOS)
+            .filter(p -> p != NOPOS && p != basePos)
             .findFirst()
             .orElse(state.getEndPosition(tree));
     List<ErrorProneToken> tokens = state.getOffsetTokens(basePos, endPos);
