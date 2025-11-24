@@ -565,4 +565,19 @@ public abstract class JUnit3TestNotRunNegativeCase4 extends TestCase {
             """)
         .doTest();
   }
+
+  @Test
+  public void setupMethod_shouldBeIgnored() {
+    compilationHelper
+        .addSourceLines(
+            "ExampleTest.java",
+            """
+            import junit.framework.TestCase;
+
+            public class ExampleTest extends TestCase {
+              protected void setup() {}
+            }
+            """)
+        .doTest();
+  }
 }
