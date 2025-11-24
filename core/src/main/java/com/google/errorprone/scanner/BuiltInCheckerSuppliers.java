@@ -494,6 +494,7 @@ import com.google.errorprone.bugpatterns.checkreturnvalue.CanIgnoreReturnValueSu
 import com.google.errorprone.bugpatterns.checkreturnvalue.NoCanIgnoreReturnValueOnClasses;
 import com.google.errorprone.bugpatterns.checkreturnvalue.UnnecessarilyUsedValue;
 import com.google.errorprone.bugpatterns.checkreturnvalue.UsingJsr305CheckReturnValue;
+import com.google.errorprone.bugpatterns.collectionincompatibletype.AssertSameIncompatible;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionUndefinedEquality;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CompatibleWithMisuse;
@@ -894,6 +895,7 @@ public class BuiltInCheckerSuppliers {
           ArrayAsKeyOfSetOrMap.class,
           ArrayRecordComponent.class,
           AssertEqualsArgumentOrderChecker.class,
+          AssertSameIncompatible.class,
           AssertThrowsMultipleStatements.class,
           AssertionFailureIgnored.class,
           AssignmentExpression.class,
