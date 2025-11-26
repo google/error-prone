@@ -46,6 +46,23 @@ public class AlwaysThrowsTest {
   }
 
   @Test
+  public void negative_nonLiteral() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.time.Instant;
+
+            class T {
+              void f() {
+                Instant.parse(toString() + "foo");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void immutableMapThrows() {
     testHelper
         .addSourceLines(
@@ -214,6 +231,21 @@ public class AlwaysThrowsTest {
             class Test {
               // BUG: Diagnostic contains:
               private final UUID uuid = UUID.fromString("foo");
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void uuidFromString_withNonLiteral() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.UUID;
+
+            class Test {
+              private final UUID uuid = UUID.fromString(toString());
             }
             """)
         .doTest();
