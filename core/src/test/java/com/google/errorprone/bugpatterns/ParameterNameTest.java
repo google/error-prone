@@ -974,4 +974,40 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void enumConstructor() {
+    testHelper
+        .addSourceLines(
+            "E.java",
+            """
+            package test.a;
+
+            public enum E {
+              // BUG: Diagnostic contains:
+              ONE(/* foo= */ 1);
+
+              E(int bar) {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void enumConstructor_requiresImplicitSource() {
+    testHelper
+        .addSourceLines(
+            "E.java",
+            """
+            package test.a;
+
+            public enum E {
+              ONE(/* foo= */ 1);
+
+              E(int bar) {}
+            }
+            """)
+        .setArgs("-XepOpt:ParameterName:matchImplicitSource=false")
+        .doTest();
+  }
 }
