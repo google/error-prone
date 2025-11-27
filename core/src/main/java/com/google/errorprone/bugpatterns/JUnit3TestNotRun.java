@@ -38,7 +38,6 @@ import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -51,7 +50,6 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
 import java.util.regex.Pattern;
-import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
 /** A bugpattern; see the associated summary. */
@@ -61,13 +59,6 @@ import javax.lang.model.element.Modifier;
             + "(Should be public, non-static, and method name should begin with \"test\").",
     severity = ERROR)
 public final class JUnit3TestNotRun extends BugChecker implements CompilationUnitTreeMatcher {
-
-  private final boolean matchTestsize;
-
-  @Inject
-  JUnit3TestNotRun(ErrorProneFlags flags) {
-    this.matchTestsize = flags.getBoolean("JUnit3TestNotRun:MatchTestsize").orElse(true);
-  }
 
   /**
    * Regular expression for test method name that is misspelled and should be replaced with "test".
