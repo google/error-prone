@@ -60,6 +60,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#findCommentsForArguments(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)" tabindex="0">findCommentsForArguments(NewClassTree, VisitorState)</a></li>
 <li><a href="#findCommentsForArguments(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" tabindex="0">findCommentsForArguments(MethodInvocationTree, VisitorState)</a></li>
+<li><a href="#findCommentsForArguments(com.sun.source.tree.DeconstructionPatternTree,com.google.errorprone.VisitorState)" tabindex="0">findCommentsForArguments(DeconstructionPatternTree, VisitorState)</a></li>
 <li><a href="#getTextFromComment(com.google.errorprone.util.ErrorProneComment)" tabindex="0">getTextFromComment(ErrorProneComment)</a></li>
 </ol>
 </li>
@@ -98,21 +99,25 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findCommentsForArguments(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">findCommentsForArguments</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;methodInvocationTree,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findCommentsForArguments(com.sun.source.tree.DeconstructionPatternTree,com.google.errorprone.VisitorState)" class="member-name-link">findCommentsForArguments</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/DeconstructionPatternTree.html" title="class or interface in com.sun.source.tree" class="external-link">DeconstructionPatternTree</a>&nbsp;deconstructionPatternTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Attach comments to nodes on arguments of method calls.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findCommentsForArguments(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)" class="member-name-link">findCommentsForArguments</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/NewClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">NewClassTree</a>&nbsp;newClassTree,
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findCommentsForArguments(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">findCommentsForArguments</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;methodInvocationTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Attach comments to nodes on arguments of method calls.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findCommentsForArguments(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)" class="member-name-link">findCommentsForArguments</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/NewClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">NewClassTree</a>&nbsp;newClassTree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Attach comments to nodes on arguments of constructor calls.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTextFromComment(com.google.errorprone.util.ErrorProneComment)" class="member-name-link">getTextFromComment</a><wbr>(<a href="ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a>&nbsp;comment)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTextFromComment(com.google.errorprone.util.ErrorProneComment)" class="member-name-link">getTextFromComment</a><wbr>(<a href="ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a>&nbsp;comment)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Extract the text body from a comment.</div>
 </div>
 </div>
@@ -136,7 +141,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="findCommentsForArguments(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)">
 <h3>findCommentsForArguments</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&gt;</span>&nbsp;<span class="element-name">findCommentsForArguments</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/NewClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">NewClassTree</a>&nbsp;newClassTree,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&gt;</span>&nbsp;<span class="element-name">findCommentsForArguments</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/NewClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">NewClassTree</a>&nbsp;newClassTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Attach comments to nodes on arguments of constructor calls. Calls such as <code>new Test(
 param1 /* c1 *&amp;#47;, /* c2 *&amp;#47; param2)</code> will attach the comment c1 to <code>param1</code> and the
@@ -154,7 +159,7 @@ relative to the whole file.</div>
 <section class="detail" id="findCommentsForArguments(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">
 <h3>findCommentsForArguments</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&gt;</span>&nbsp;<span class="element-name">findCommentsForArguments</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;methodInvocationTree,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&gt;</span>&nbsp;<span class="element-name">findCommentsForArguments</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;methodInvocationTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Attach comments to nodes on arguments of method calls. Calls such as <code>test(param1 /* c1
 *&amp;#47;, /* c2 *&amp;#47; param2)</code> will attach the comment c1 to <code>param1</code> and the comment c2
@@ -165,6 +170,15 @@ to <code>param2</code>.
 <p>Currently this method will only tokenize the source code of the method call itself. However,
 the source positions in the returned <code>Comment</code> objects are adjusted so that they are
 relative to the whole file.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="findCommentsForArguments(com.sun.source.tree.DeconstructionPatternTree,com.google.errorprone.VisitorState)">
+<h3>findCommentsForArguments</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="Commented.html" title="class in com.google.errorprone.util">Commented</a>&gt;</span>&nbsp;<span class="element-name">findCommentsForArguments</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/DeconstructionPatternTree.html" title="class or interface in com.sun.source.tree" class="external-link">DeconstructionPatternTree</a>&nbsp;deconstructionPatternTree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 </div>
 </section>
 </li>

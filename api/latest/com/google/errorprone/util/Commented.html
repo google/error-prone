@@ -60,7 +60,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(T,com.google.common.collect.ImmutableList,com.google.common.collect.ImmutableList)" tabindex="0">Commented(T, ImmutableList, ImmutableList)</a></li>
+<li><a href="#%3Cinit%3E(com.sun.source.tree.Tree,com.google.common.collect.ImmutableList,com.google.common.collect.ImmutableList)" tabindex="0">Commented(Tree, ImmutableList, ImmutableList)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -78,17 +78,17 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<h1 title="Record Class Commented" class="title">Record Class Commented&lt;<span id="type-param-T">T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a></span>&gt;</h1>
+<h1 title="Record Class Commented" class="title">Record Class Commented</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">java.lang.Record</a>
-<div class="inheritance">com.google.errorprone.util.Commented&lt;T&gt;</div>
+<div class="inheritance">com.google.errorprone.util.Commented</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">Commented&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>(<a href="#type-param-T" title="type parameter in Commented">T</a> extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree, com.google.common.collect.ImmutableList&lt;<a href="ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a>&gt;&nbsp;beforeComments, com.google.common.collect.ImmutableList&lt;<a href="ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a>&gt;&nbsp;afterComments)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">Commented</span>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree, com.google.common.collect.ImmutableList&lt;<a href="ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a>&gt;&nbsp;beforeComments, com.google.common.collect.ImmutableList&lt;<a href="ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a>&gt;&nbsp;afterComments)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
 <div class="block">Class to hold AST nodes annotated with the comments that are associated with them</div>
 </div>
@@ -120,7 +120,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(T,com.google.common.collect.ImmutableList,com.google.common.collect.ImmutableList)" class="member-name-link">Commented</a><wbr>(<a href="#type-param-T" title="type parameter in Commented">T</a>&nbsp;tree,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.sun.source.tree.Tree,com.google.common.collect.ImmutableList,com.google.common.collect.ImmutableList)" class="member-name-link">Commented</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  com.google.common.collect.ImmutableList&lt;<a href="ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a>&gt;&nbsp;beforeComments,
  com.google.common.collect.ImmutableList&lt;<a href="ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a>&gt;&nbsp;afterComments)</code></div>
 <div class="col-last even-row-color">
@@ -165,7 +165,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a string representation of this record class.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#type-param-T" title="type parameter in Commented">T</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tree()" class="member-name-link">tree</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>tree</code> record component.</div>
@@ -188,10 +188,10 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(T,com.google.common.collect.ImmutableList,com.google.common.collect.ImmutableList)">
-<h3 id="&lt;init&gt;(com.sun.source.tree.Tree,com.google.common.collect.ImmutableList,com.google.common.collect.ImmutableList)">Commented</h3>
+<section class="detail" id="&lt;init&gt;(com.sun.source.tree.Tree,com.google.common.collect.ImmutableList,com.google.common.collect.ImmutableList)">
+<h3>Commented</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Commented</span><wbr><span class="parameters">(<a href="#type-param-T" title="type parameter in Commented">T</a>&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Commented</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  com.google.common.collect.ImmutableList&lt;<a href="ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a>&gt;&nbsp;beforeComments,
  com.google.common.collect.ImmutableList&lt;<a href="ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a>&gt;&nbsp;afterComments)</span></div>
 <div class="block">Creates an instance of a <code>Commented</code> record class.</div>
@@ -263,7 +263,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="tree()">
 <h3>tree</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="#type-param-T" title="type parameter in Commented">T</a></span>&nbsp;<span class="element-name">tree</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a></span>&nbsp;<span class="element-name">tree</span>()</div>
 <div class="block">Returns the value of the <code>tree</code> record component.</div>
 <dl class="notes">
 <dt>Returns:</dt>
