@@ -1,6 +1,6 @@
 ---
 title: AlwaysThrows
-summary: Detects calls that will fail at runtime
+summary: Statically detects calls that will always fail at runtime.
 layout: bugpattern
 tags: ''
 severity: ERROR

@@ -16,7 +16,7 @@ after we've vetted them against Google's codebase.
 ## On by default : ERROR
 
 __[AlwaysThrows](bugpattern/AlwaysThrows)__<br>
-Detects calls that will fail at runtime
+Statically detects calls that will always fail at runtime.
 
 __[AndroidInjectionBeforeSuper](bugpattern/AndroidInjectionBeforeSuper)__<br>
 AndroidInjection.inject() should always be invoked before calling super.lifecycleMethod()
