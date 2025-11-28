@@ -63,6 +63,36 @@ public class AlwaysThrowsTest {
   }
 
   @Test
+  public void instantWithPeriodThrows() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.time.Duration;
+            import java.time.Instant;
+            import java.time.Period;
+
+            class T {
+              void f() {
+                Instant instant = Instant.now();
+                instant = instant.plus(Duration.ofDays(1));
+                instant = instant.plus(Period.ofDays(1));
+                instant = instant.plus(Period.ofWeeks(1));
+                // BUG: Diagnostic contains: fail at runtime with a UnsupportedTemporalTypeException
+                instant = instant.plus(Period.ofMonths(1));
+                // BUG: Diagnostic contains: fail at runtime with a UnsupportedTemporalTypeException
+                instant = instant.plus(Period.ofYears(1));
+                // BUG: Diagnostic contains: fail at runtime with a UnsupportedTemporalTypeException
+                instant = instant.minus(Period.ofMonths(1));
+                // BUG: Diagnostic contains: fail at runtime with a UnsupportedTemporalTypeException
+                instant = instant.minus(Period.ofYears(1));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void immutableMapThrows() {
     testHelper
         .addSourceLines(
