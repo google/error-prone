@@ -22,7 +22,6 @@ import com.google.errorprone.util.Commented;
 import com.google.errorprone.util.Comments;
 import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.ErrorProneComment.ErrorProneCommentStyle;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Arrays;
 import java.util.Optional;
@@ -97,7 +96,7 @@ public final class NamedParameterComment {
    * Determine the kind of match we have between the comments on this argument and the formal
    * parameter name.
    */
-  static MatchedComment match(Commented<ExpressionTree> actual, String formal) {
+  static MatchedComment match(Commented actual, String formal) {
     Optional<ErrorProneComment> lastBlockComment =
         Streams.findLast(
             actual.beforeComments().stream()

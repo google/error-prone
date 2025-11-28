@@ -22,8 +22,8 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.source.tree.Tree;
 
 /** Class to hold AST nodes annotated with the comments that are associated with them */
-public record Commented<T extends Tree>(
-    T tree,
+public record Commented(
+    Tree tree,
     ImmutableList<ErrorProneComment> beforeComments,
     ImmutableList<ErrorProneComment> afterComments) {
   /** Identifies the position of a comment relative to the associated treenode. */
@@ -33,21 +33,21 @@ public record Commented<T extends Tree>(
     ANY
   }
 
-  static <T extends Tree> Builder<T> builder() {
-    return new AutoBuilder_Commented_Builder<T>();
+  static Builder builder() {
+    return new AutoBuilder_Commented_Builder();
   }
 
   @AutoBuilder
-  abstract static class Builder<T extends Tree> {
+  abstract static class Builder {
 
-    abstract Builder<T> setTree(T tree);
+    abstract Builder setTree(Tree tree);
 
     protected abstract ImmutableList.Builder<ErrorProneComment> beforeCommentsBuilder();
 
     protected abstract ImmutableList.Builder<ErrorProneComment> afterCommentsBuilder();
 
     @CanIgnoreReturnValue
-    Builder<T> addComment(
+    Builder addComment(
         ErrorProneComment comment, int nodePosition, int tokenizingOffset, Position position) {
       ErrorProneComment offsetComment = comment.withOffset(tokenizingOffset);
 
@@ -64,7 +64,7 @@ public record Commented<T extends Tree>(
     }
 
     @CanIgnoreReturnValue
-    Builder<T> addAllComment(
+    Builder addAllComment(
         Iterable<ErrorProneComment> comments,
         int nodePosition,
         int tokenizingOffset,
@@ -75,6 +75,6 @@ public record Commented<T extends Tree>(
       return this;
     }
 
-    abstract Commented<T> build();
+    abstract Commented build();
   }
 }

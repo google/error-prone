@@ -27,7 +27,6 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import java.util.Optional;
@@ -150,7 +149,7 @@ public class CommentsTest {
     }
 
     @SuppressWarnings("TreeToString") // explicitly want to strip comments in tree.
-    private static String commentsToString(ImmutableList<Commented<ExpressionTree>> comments) {
+    private static String commentsToString(ImmutableList<Commented> comments) {
       return comments.stream()
           .map(
               c ->
@@ -557,8 +556,7 @@ public class CommentsTest {
           .build();
     }
 
-    private static String commentsToString(
-        ImmutableList<Commented<ExpressionTree>> comments, VisitorState state) {
+    private static String commentsToString(ImmutableList<Commented> comments, VisitorState state) {
       return comments.stream()
           .map(
               c ->
