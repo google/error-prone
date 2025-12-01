@@ -1259,6 +1259,9 @@ Returned Rx objects must be checked. Ignoring a returned Rx value means it is ne
 __[SameNameButDifferent](bugpattern/SameNameButDifferent)__<br>
 This type name shadows another in a way that may be confusing.
 
+__[ScannerUseDelimiter](bugpattern/ScannerUseDelimiter)__<br>
+Scanner.useDelimiter is not an efficient way to read an entire InputStream
+
 __[SelfAlwaysReturnsThis](bugpattern/SelfAlwaysReturnsThis)__<br>
 Non-abstract instance methods named &#39;self()&#39; or &#39;getThis()&#39; that return the enclosing class must always &#39;return this&#39;
 
