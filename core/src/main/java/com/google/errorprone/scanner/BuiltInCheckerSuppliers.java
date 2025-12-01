@@ -352,6 +352,7 @@ import com.google.errorprone.bugpatterns.RobolectricShadowDirectlyOn;
 import com.google.errorprone.bugpatterns.RuleNotRun;
 import com.google.errorprone.bugpatterns.RxReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SameNameButDifferent;
+import com.google.errorprone.bugpatterns.ScannerUseDelimiter;
 import com.google.errorprone.bugpatterns.SelfAlwaysReturnsThis;
 import com.google.errorprone.bugpatterns.SelfAssertion;
 import com.google.errorprone.bugpatterns.SelfAssignment;
@@ -1113,6 +1114,7 @@ public class BuiltInCheckerSuppliers {
           RuleNotRun.class,
           RxReturnValueIgnored.class,
           SameNameButDifferent.class,
+          ScannerUseDelimiter.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           SelfAlwaysReturnsThis.class,
           SelfSet.class,
