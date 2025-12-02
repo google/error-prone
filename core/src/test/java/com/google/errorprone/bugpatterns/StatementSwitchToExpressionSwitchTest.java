@@ -5144,6 +5144,23 @@ public final class StatementSwitchToExpressionSwitchTest {
         .doTest(TEXT_MATCH);
   }
 
+  @Test
+  public void emptySwitch_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo() {
+                switch (0) {
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .doTest();
+  }
+
   /**
    * Asserts that there is exactly one suggested fix and returns it.
    *
