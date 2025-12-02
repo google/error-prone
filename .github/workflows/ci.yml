@@ -86,13 +86,16 @@ jobs:
           cache: 'maven'
       - name: 'Install'
         shell: bash
-        run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+        run: ./mvnw install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
       - name: 'Test'
         shell: bash
-        run: mvn test -B
+        run: ./mvnw test -B
+      - name: 'SanityCheck'
+        shell: bash
+        run: ./mvnw rewrite:dryRun
       - name: 'Javadoc'
         shell: bash
-        run: mvn -P '!examples' javadoc:javadoc
+        run: ./mvnw -P '!examples' javadoc:javadoc
 
   publish_snapshot:
     name: 'Publish snapshot'
@@ -121,7 +124,7 @@ jobs:
         env:
           CI_DEPLOY_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
           CI_DEPLOY_PASSWORD: ${{ secrets.CI_DEPLOY_PASSWORD }}
-        run: mvn source:jar deploy -B -DskipTests=true -Dinvoker.skip=true
+        run: ./mvnw source:jar deploy -B -DskipTests=true -Dinvoker.skip=true
 
   generate_docs:
     permissions:
