@@ -20,10 +20,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 /** Describes a position that only has a start and end index. */
-public class IndexedPosition implements DiagnosticPosition {
+public class IndexedPosition implements ErrorPronePosition {
 
   final int startPos;
   final int endPos;
@@ -48,6 +47,11 @@ public class IndexedPosition implements DiagnosticPosition {
   @Override
   public int getPreferredPosition() {
     throw new UnsupportedOperationException();
+  }
+
+  @Override
+  public int getEndPosition(ErrorProneEndPosTable endPosTable) {
+    return endPos;
   }
 
   @Override

@@ -22,7 +22,7 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 /** A {@link DiagnosticPosition} with a fixed position. */
-public final class FixedPosition implements DiagnosticPosition {
+public final class FixedPosition implements ErrorPronePosition {
   private final JCTree tree;
   private final int startPosition;
 
@@ -43,6 +43,11 @@ public final class FixedPosition implements DiagnosticPosition {
 
   @Override
   public int getPreferredPosition() {
+    return startPosition;
+  }
+
+  @Override
+  public int getEndPosition(ErrorProneEndPosTable endPosTable) {
     return startPosition;
   }
 

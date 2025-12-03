@@ -39,7 +39,15 @@ public interface Fix {
 
   Replacements.CoalescePolicy getCoalescePolicy();
 
-  ImmutableSet<Replacement> getReplacements(EndPosTable endPositions);
+  ImmutableSet<Replacement> getReplacements(ErrorProneEndPosTable endPositions);
+
+  /**
+   * @deprecated use {@link #getReplacements(ErrorProneEndPosTable) instead}
+   */
+  @Deprecated
+  default ImmutableSet<Replacement> getReplacements(EndPosTable endPositions) {
+    return getReplacements(ErrorProneEndPosTable.create(endPositions));
+  }
 
   ImmutableSet<String> getImportsToAdd();
 

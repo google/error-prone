@@ -18,7 +18,6 @@ package com.google.errorprone.fixes;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +29,7 @@ import java.lang.reflect.Proxy;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.ArgumentMatchers;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -39,14 +39,15 @@ public class AppliedFixTest {
 
   // This is unused by the test, it just needs to be non-null.
   // The proxy is necessary since the interface contains breaking changes across JDK versions.
-  final EndPosTable endPositions =
-      (EndPosTable)
-          Proxy.newProxyInstance(
-              AppliedFixTest.class.getClassLoader(),
-              new Class<?>[] {EndPosTable.class},
-              (proxy, method, args) -> {
-                throw new UnsupportedOperationException();
-              });
+  final ErrorProneEndPosTable endPositions =
+      ErrorProneEndPosTable.create(
+          (EndPosTable)
+              Proxy.newProxyInstance(
+                  AppliedFixTest.class.getClassLoader(),
+                  new Class<?>[] {EndPosTable.class},
+                  (proxy, method, args) -> {
+                    throw new UnsupportedOperationException();
+                  }));
 
   // TODO(b/67738557): consolidate helpers for creating fake trees
   JCTree node(int startPos, int endPos) {
@@ -152,7 +153,8 @@ public class AppliedFixTest {
         ImmutableSet.of(Replacement.create(0, 1, ""), Replacement.create(1, 1, ""));
 
     Fix mockFix = mock(Fix.class);
-    when(mockFix.getReplacements(any())).thenReturn(replacements);
+    when(mockFix.getReplacements(ArgumentMatchers.<ErrorProneEndPosTable>any()))
+        .thenReturn(replacements);
 
     // If the fixes had been applied in the wrong order, this would fail.
     // But it succeeds, so they were applied in the right order.

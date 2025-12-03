@@ -22,6 +22,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Streams.stream;
+import static com.google.errorprone.fixes.ErrorProneEndPosTable.getEndPosition;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
@@ -98,7 +99,6 @@ import com.sun.tools.javac.parser.Tokens;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
@@ -497,9 +497,7 @@ public final class SuggestedFixes {
   private static int endPosition(
       DCTree.DCEndPosTree<?> node, DCTree.DCDocComment comment, DocTreePath docPath) {
     JCDiagnostic.DiagnosticPosition pos = node.pos(comment);
-    EndPosTable endPositions =
-        ((JCCompilationUnit) docPath.getTreePath().getCompilationUnit()).endPositions;
-    return pos.getEndPosition(endPositions);
+    return getEndPosition(pos, docPath.getTreePath().getCompilationUnit());
   }
 
   /**

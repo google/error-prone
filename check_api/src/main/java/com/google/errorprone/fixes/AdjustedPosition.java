@@ -18,10 +18,9 @@ package com.google.errorprone.fixes;
 
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 /** Describes a tree position with adjustments to the start and end indices. */
-public class AdjustedPosition implements DiagnosticPosition {
+public class AdjustedPosition implements ErrorPronePosition {
   protected final JCTree position;
   protected final int startPositionAdjustment;
   protected final int endPositionAdjustment;
@@ -50,5 +49,10 @@ public class AdjustedPosition implements DiagnosticPosition {
   @Override
   public int getEndPosition(EndPosTable endPositions) {
     return position.getEndPosition(endPositions) + endPositionAdjustment;
+  }
+
+  @Override
+  public int getEndPosition(ErrorProneEndPosTable endPositions) {
+    return endPositions.getEndPosition(position) + endPositionAdjustment;
   }
 }

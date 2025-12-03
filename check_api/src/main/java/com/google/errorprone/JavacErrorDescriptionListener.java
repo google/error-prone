@@ -22,10 +22,10 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.fixes.AppliedFix;
+import com.google.errorprone.fixes.ErrorProneEndPosTable;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ImportTree;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.JCDiagnostic;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
@@ -68,7 +68,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
 
   private JavacErrorDescriptionListener(
       Log log,
-      EndPosTable endPositions,
+      ErrorProneEndPosTable endPositions,
       JavaFileObject sourceFile,
       Context context,
       boolean dontUseErrors) {
@@ -169,12 +169,20 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   static Factory provider(Context context) {
     return (log, compilation) ->
         new JavacErrorDescriptionListener(
-            log, compilation.endPositions, compilation.getSourceFile(), context, false);
+            log,
+            ErrorProneEndPosTable.create(compilation),
+            compilation.getSourceFile(),
+            context,
+            false);
   }
 
   static Factory providerForRefactoring(Context context) {
     return (log, compilation) ->
         new JavacErrorDescriptionListener(
-            log, compilation.endPositions, compilation.getSourceFile(), context, true);
+            log,
+            ErrorProneEndPosTable.create(compilation),
+            compilation.getSourceFile(),
+            context,
+            true);
   }
 }

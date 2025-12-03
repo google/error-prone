@@ -28,7 +28,6 @@ import com.google.errorprone.fixes.Replacements.CoalescePolicy;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
@@ -70,7 +69,7 @@ public abstract class SuggestedFix implements Fix {
   @Override
   public String toString(JCCompilationUnit compilationUnit) {
     StringBuilder result = new StringBuilder("replace ");
-    for (Replacement replacement : getReplacements(compilationUnit.endPositions)) {
+    for (Replacement replacement : getReplacements(ErrorProneEndPosTable.create(compilationUnit))) {
       result.append(
           String.format(
               "position %d:%d with \"%s\" ",
@@ -87,7 +86,7 @@ public abstract class SuggestedFix implements Fix {
   public abstract int hashCode();
 
   @Override
-  public ImmutableSet<Replacement> getReplacements(EndPosTable endPositions) {
+  public ImmutableSet<Replacement> getReplacements(ErrorProneEndPosTable endPositions) {
     if (endPositions == null) {
       throw new IllegalArgumentException(
           "Cannot produce correct replacements without endPositions.");
@@ -229,7 +228,7 @@ public abstract class SuggestedFix implements Fix {
     @CanIgnoreReturnValue
     public Builder replace(Tree node, String replaceWith) {
       checkNotSyntheticConstructor(node);
-      return with(ReplacementFix.create((DiagnosticPosition) node, replaceWith));
+      return with(ReplacementFix.create(ErrorPronePosition.from(node), replaceWith));
     }
 
     /**
@@ -242,7 +241,7 @@ public abstract class SuggestedFix implements Fix {
      */
     @CanIgnoreReturnValue
     public Builder replace(int startPos, int endPos, String replaceWith) {
-      DiagnosticPosition pos = new IndexedPosition(startPos, endPos);
+      IndexedPosition pos = new IndexedPosition(startPos, endPos);
       return with(ReplacementFix.create(pos, replaceWith));
     }
 
@@ -292,8 +291,10 @@ public abstract class SuggestedFix implements Fix {
     public Builder swap(Tree node1, Tree node2, VisitorState state) {
       checkNotSyntheticConstructor(node1);
       checkNotSyntheticConstructor(node2);
-      fixes.add(ReplacementFix.create((DiagnosticPosition) node1, state.getSourceForNode(node2)));
-      fixes.add(ReplacementFix.create((DiagnosticPosition) node2, state.getSourceForNode(node1)));
+      fixes.add(
+          ReplacementFix.create(ErrorPronePosition.from(node1), state.getSourceForNode(node2)));
+      fixes.add(
+          ReplacementFix.create(ErrorPronePosition.from(node2), state.getSourceForNode(node1)));
       return this;
     }
 
@@ -385,19 +386,19 @@ public abstract class SuggestedFix implements Fix {
   /** Models a single fix operation. */
   interface FixOperation {
     /** Calculate the replacement operation once end positions are available. */
-    Replacement getReplacement(EndPosTable endPositions);
+    Replacement getReplacement(ErrorProneEndPosTable endPositions);
   }
 
   /** Inserts new text at a specific insertion point (e.g. prefix or postfix). */
   abstract static class InsertionFix implements FixOperation {
-    protected abstract int getInsertionIndex(EndPosTable endPositions);
+    protected abstract int getInsertionIndex(ErrorProneEndPosTable endPositions);
 
     protected abstract DiagnosticPosition position();
 
     protected abstract String insertion();
 
     @Override
-    public Replacement getReplacement(EndPosTable endPositions) {
+    public Replacement getReplacement(ErrorProneEndPosTable endPositions) {
       int insertionIndex = getInsertionIndex(endPositions);
       return Replacement.create(insertionIndex, insertionIndex, insertion());
     }
@@ -412,8 +413,8 @@ public abstract class SuggestedFix implements Fix {
     }
 
     @Override
-    protected int getInsertionIndex(EndPosTable endPositions) {
-      return position().getEndPosition(endPositions);
+    protected int getInsertionIndex(ErrorProneEndPosTable endPositions) {
+      return endPositions.getEndPosition(position());
     }
   }
 
@@ -426,24 +427,24 @@ public abstract class SuggestedFix implements Fix {
     }
 
     @Override
-    protected int getInsertionIndex(EndPosTable endPositions) {
+    protected int getInsertionIndex(ErrorProneEndPosTable endPositions) {
       return position().getStartPosition();
     }
   }
 
   /** Replaces an entire diagnostic position (from start to end) with the given string. */
-  private record ReplacementFix(DiagnosticPosition original, String replacement)
+  private record ReplacementFix(ErrorPronePosition original, String replacement)
       implements FixOperation {
     ReplacementFix {
       checkArgument(original.getStartPosition() >= 0, "invalid start position");
     }
 
-    static ReplacementFix create(DiagnosticPosition original, String replacement) {
+    static ReplacementFix create(ErrorPronePosition original, String replacement) {
       return new ReplacementFix(original, replacement);
     }
 
     @Override
-    public Replacement getReplacement(EndPosTable endPositions) {
+    public Replacement getReplacement(ErrorProneEndPosTable endPositions) {
       return Replacement.create(
           original().getStartPosition(), original().getEndPosition(endPositions), replacement());
     }
