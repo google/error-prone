@@ -20,16 +20,9 @@ import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 
 /** Describes a tree position with adjustments to the start and end indices. */
-public class AdjustedPosition implements ErrorPronePosition {
-  protected final JCTree position;
-  protected final int startPositionAdjustment;
-  protected final int endPositionAdjustment;
-
-  public AdjustedPosition(JCTree position, int startPosAdjustment, int endPosAdjustment) {
-    this.position = position;
-    this.startPositionAdjustment = startPosAdjustment;
-    this.endPositionAdjustment = endPosAdjustment;
-  }
+public record AdjustedPosition(
+    JCTree position, int startPositionAdjustment, int endPositionAdjustment)
+    implements ErrorPronePosition {
 
   @Override
   public int getStartPosition() {

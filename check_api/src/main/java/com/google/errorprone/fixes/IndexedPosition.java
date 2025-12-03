@@ -22,16 +22,11 @@ import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 
 /** Describes a position that only has a start and end index. */
-public class IndexedPosition implements ErrorPronePosition {
+public record IndexedPosition(int startPos, int endPos) implements ErrorPronePosition {
 
-  final int startPos;
-  final int endPos;
-
-  public IndexedPosition(int startPos, int endPos) {
+  public IndexedPosition {
     checkArgument(startPos >= 0, "Start [%s] should not be less than zero", startPos);
     checkArgument(startPos <= endPos, "Start [%s] should not be after end [%s]", startPos, endPos);
-    this.startPos = startPos;
-    this.endPos = endPos;
   }
 
   @Override

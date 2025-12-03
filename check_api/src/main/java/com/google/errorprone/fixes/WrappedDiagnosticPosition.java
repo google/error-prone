@@ -16,32 +16,34 @@
 
 package com.google.errorprone.fixes;
 
-import com.sun.source.tree.Tree;
+import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
-/** A compatibility wrapper around {@link DiagnosticPosition}. */
-public interface ErrorPronePosition extends DiagnosticPosition {
-  static ErrorPronePosition from(Tree node) {
-    return from((DiagnosticPosition) node);
-  }
+record WrappedDiagnosticPosition(DiagnosticPosition pos) implements ErrorPronePosition {
 
-  static ErrorPronePosition from(JCTree node) {
-    return from((DiagnosticPosition) node);
-  }
-
-  static ErrorPronePosition from(DiagnosticPosition pos) {
-    return new WrappedDiagnosticPosition(pos);
+  @Override
+  public int getStartPosition() {
+    return pos.getStartPosition();
   }
 
   @Override
-  int getStartPosition();
+  public int getPreferredPosition() {
+    return pos.getPreferredPosition();
+  }
 
   @Override
-  int getPreferredPosition();
+  public JCTree getTree() {
+    return pos.getTree();
+  }
 
   @Override
-  JCTree getTree();
+  public int getEndPosition(EndPosTable endPosTable) {
+    return pos.getEndPosition(endPosTable);
+  }
 
-  int getEndPosition(ErrorProneEndPosTable endPosTable);
+  @Override
+  public int getEndPosition(ErrorProneEndPosTable endPosTable) {
+    return endPosTable.getEndPosition(pos);
+  }
 }

@@ -22,19 +22,15 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 /** A {@link DiagnosticPosition} with a fixed position. */
-public final class FixedPosition implements ErrorPronePosition {
-  private final JCTree tree;
-  private final int startPosition;
-  private final int endPosition;
+public record FixedPosition(JCTree tree, int startPosition, int endPosition)
+    implements ErrorPronePosition {
 
   public FixedPosition(Tree tree, int startPosition) {
-    this(tree, startPosition, startPosition);
+    this((JCTree) tree, startPosition, startPosition);
   }
 
   public FixedPosition(Tree tree, int startPosition, int endPosition) {
-    this.tree = (JCTree) tree;
-    this.startPosition = startPosition;
-    this.endPosition = endPosition;
+    this((JCTree) tree, startPosition, startPosition);
   }
 
   @Override
