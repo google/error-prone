@@ -52,6 +52,7 @@ import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Attribute;
@@ -84,6 +85,11 @@ public class DoNotCallChecker extends BugChecker
   // then add it to this Map with an explanation.
   private static final ImmutableMap<Matcher<ExpressionTree>, String> THIRD_PARTY_METHODS =
       ImmutableMap.<Matcher<ExpressionTree>, String>builder()
+          .put(
+              DoNotCallChecker::truthLiteProtoEqualityCheck,
+              "A Builder can never compare equal to a MessageLite instance. Use `build()`, or"
+                  + " `buildPartial()` on the argument to get a `MessageLite` for comparison"
+                  + " instead. Or, if you are passing `null`, use `isNull()`.")
           .put(
               staticMethod()
                   .onClass("org.junit.Assert")
@@ -412,5 +418,19 @@ public class DoNotCallChecker extends BugChecker
           .orElse("");
     }
     throw new IllegalStateException();
+  }
+
+  private static final Matcher<ExpressionTree> TRUTH_LITE_PROTO_EQUALITY_MATCHER =
+      instanceMethod()
+          .onExactClass("com.google.common.truth.extensions.proto.LiteProtoSubject")
+          .namedAnyOf("isEqualTo", "isNotEqualTo")
+          .withParameters("com.google.protobuf.MessageLite.Builder");
+
+  private static boolean truthLiteProtoEqualityCheck(ExpressionTree tree, VisitorState state) {
+    if (TRUTH_LITE_PROTO_EQUALITY_MATCHER.matches(tree, state)) {
+      ExpressionTree argument = ((MethodInvocationTree) tree).getArguments().get(0);
+      return argument.getKind() != Tree.Kind.NULL_LITERAL;
+    }
+    return false;
   }
 }
