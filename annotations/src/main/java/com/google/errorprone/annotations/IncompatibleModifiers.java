@@ -45,12 +45,6 @@ import java.lang.annotation.Target;
 public @interface IncompatibleModifiers {
 
   /**
-   * @deprecated use {@link #modifier} instead
-   */
-  @Deprecated
-  javax.lang.model.element.Modifier[] value() default {};
-
-  /**
    * The incompatible modifiers. The annotated element is illegal with the presence of any one or
    * more of these modifiers.
    *
