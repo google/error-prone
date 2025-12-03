@@ -74,6 +74,9 @@ public final class BadInstanceofTest {
         .addSourceLines(
             "Test.java",
 """
+import static java.lang.annotation.ElementType.TYPE_USE;
+import java.lang.annotation.Target;
+
 class A {
   // BUG: Diagnostic contains: `new C()` is a non-null instance of C which is a subtype of A
   boolean t = new C() instanceof A;
@@ -87,6 +90,22 @@ class A {
     // BUG: Diagnostic contains: `c` is an instance of C which is a subtype of A
     return !(c instanceof A);
   }
+
+  // False-positive
+  String g() {
+    // BUG: Diagnostic contains: `maybeString()` is an instance of String which is a subtype of String
+    if (maybeString() instanceof String present) {
+      return present;
+    }
+    return "absent";
+  }
+
+  @Nullable String maybeString() {
+    return null;
+  }
+
+  @Target(TYPE_USE)
+  @interface Nullable {}
 }
 
 class C extends A {}
