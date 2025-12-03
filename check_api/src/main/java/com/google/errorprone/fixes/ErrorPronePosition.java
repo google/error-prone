@@ -24,7 +24,14 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 /** A compatibility wrapper around {@link DiagnosticPosition}. */
 public interface ErrorPronePosition extends DiagnosticPosition {
   static ErrorPronePosition from(Tree node) {
-    DiagnosticPosition pos = (DiagnosticPosition) node;
+    return from((DiagnosticPosition) node);
+  }
+
+  static ErrorPronePosition from(JCTree node) {
+    return from((DiagnosticPosition) node);
+  }
+
+  static ErrorPronePosition from(DiagnosticPosition pos) {
     return new ErrorPronePosition() {
       @Override
       public int getStartPosition() {
@@ -52,6 +59,15 @@ public interface ErrorPronePosition extends DiagnosticPosition {
       }
     };
   }
+
+  @Override
+  int getStartPosition();
+
+  @Override
+  int getPreferredPosition();
+
+  @Override
+  JCTree getTree();
 
   int getEndPosition(ErrorProneEndPosTable endPosTable);
 }

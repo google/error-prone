@@ -30,7 +30,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -146,7 +145,12 @@ public abstract class SuggestedFix implements Fix {
 
   /** {@link Builder#delete(Tree)} */
   public static SuggestedFix delete(Tree node) {
-    return builder().delete(node).build();
+    return delete(ErrorPronePosition.from(node));
+  }
+
+  /** {@link Builder#delete(ErrorPronePosition)} */
+  public static SuggestedFix delete(ErrorPronePosition position) {
+    return builder().delete(position).build();
   }
 
   /** {@link Builder#swap(Tree, Tree, VisitorState)} */
@@ -227,8 +231,13 @@ public abstract class SuggestedFix implements Fix {
 
     @CanIgnoreReturnValue
     public Builder replace(Tree node, String replaceWith) {
-      checkNotSyntheticConstructor(node);
-      return with(ReplacementFix.create(ErrorPronePosition.from(node), replaceWith));
+      return replace(ErrorPronePosition.from(node), replaceWith);
+    }
+
+    @CanIgnoreReturnValue
+    public Builder replace(ErrorPronePosition position, String replaceWith) {
+      checkNotSyntheticConstructor(position.getTree());
+      return with(ReplacementFix.create(position, replaceWith));
     }
 
     /**
@@ -271,19 +280,34 @@ public abstract class SuggestedFix implements Fix {
 
     @CanIgnoreReturnValue
     public Builder prefixWith(Tree node, String prefix) {
-      checkNotSyntheticConstructor(node);
-      return with(PrefixInsertion.create((DiagnosticPosition) node, prefix));
+      return prefixWith(ErrorPronePosition.from(node), prefix);
+    }
+
+    @CanIgnoreReturnValue
+    public Builder prefixWith(ErrorPronePosition position, String prefix) {
+      checkNotSyntheticConstructor(position.getTree());
+      return with(PrefixInsertion.create(position, prefix));
     }
 
     @CanIgnoreReturnValue
     public Builder postfixWith(Tree node, String postfix) {
-      checkNotSyntheticConstructor(node);
-      return with(PostfixInsertion.create((DiagnosticPosition) node, postfix));
+      return postfixWith(ErrorPronePosition.from(node), postfix);
+    }
+
+    @CanIgnoreReturnValue
+    public Builder postfixWith(ErrorPronePosition position, String postfix) {
+      checkNotSyntheticConstructor(position.getTree());
+      return with(PostfixInsertion.create(position, postfix));
     }
 
     @CanIgnoreReturnValue
     public Builder delete(Tree node) {
-      checkNotSyntheticConstructor(node);
+      return delete(ErrorPronePosition.from(node));
+    }
+
+    @CanIgnoreReturnValue
+    public Builder delete(ErrorPronePosition node) {
+      checkNotSyntheticConstructor(node.getTree());
       return replace(node, "");
     }
 
@@ -393,7 +417,7 @@ public abstract class SuggestedFix implements Fix {
   abstract static class InsertionFix implements FixOperation {
     protected abstract int getInsertionIndex(ErrorProneEndPosTable endPositions);
 
-    protected abstract DiagnosticPosition position();
+    protected abstract ErrorPronePosition position();
 
     protected abstract String insertion();
 
@@ -407,21 +431,21 @@ public abstract class SuggestedFix implements Fix {
   @AutoValue
   abstract static class PostfixInsertion extends InsertionFix {
 
-    public static PostfixInsertion create(DiagnosticPosition position, String insertion) {
+    public static PostfixInsertion create(ErrorPronePosition position, String insertion) {
       checkArgument(position.getStartPosition() >= 0, "invalid start position");
       return new AutoValue_SuggestedFix_PostfixInsertion(position, insertion);
     }
 
     @Override
     protected int getInsertionIndex(ErrorProneEndPosTable endPositions) {
-      return endPositions.getEndPosition(position());
+      return position().getEndPosition(endPositions);
     }
   }
 
   @AutoValue
   abstract static class PrefixInsertion extends InsertionFix {
 
-    public static PrefixInsertion create(DiagnosticPosition position, String insertion) {
+    public static PrefixInsertion create(ErrorPronePosition position, String insertion) {
       checkArgument(position.getStartPosition() >= 0, "invalid start position");
       return new AutoValue_SuggestedFix_PrefixInsertion(position, insertion);
     }

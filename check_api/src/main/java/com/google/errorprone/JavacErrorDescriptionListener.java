@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.fixes.AppliedFix;
 import com.google.errorprone.fixes.ErrorProneEndPosTable;
+import com.google.errorprone.fixes.ErrorPronePosition;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ImportTree;
@@ -106,7 +107,8 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     JavaFileObject originalSource = log.useSource(sourceFile);
     try {
       JCDiagnostic.Factory factory = JCDiagnostic.Factory.instance(context);
-      DiagnosticPosition pos = description.position;
+      DiagnosticPosition pos =
+          new JCDiagnostic.SimpleDiagnosticPosition(description.position.getPreferredPosition());
       JCDiagnostic.DiagnosticType type =
           switch (description.severity()) {
             case ERROR ->
@@ -136,7 +138,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
   // b/79407644: Because AppliedFix doesn't consider imports, just don't display a
   // suggested fix to an ImportTree when the fix reports imports to remove/add. Imports can still
   // be fixed if they were specified via SuggestedFix.replace, for example.
-  private static boolean shouldSkipImportTreeFix(DiagnosticPosition position, Fix f) {
+  private static boolean shouldSkipImportTreeFix(ErrorPronePosition position, Fix f) {
     if (position.getTree() != null && !(position.getTree() instanceof ImportTree)) {
       return false;
     }

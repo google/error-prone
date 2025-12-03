@@ -25,10 +25,16 @@ import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 public final class FixedPosition implements ErrorPronePosition {
   private final JCTree tree;
   private final int startPosition;
+  private final int endPosition;
 
   public FixedPosition(Tree tree, int startPosition) {
+    this(tree, startPosition, startPosition);
+  }
+
+  public FixedPosition(Tree tree, int startPosition, int endPosition) {
     this.tree = (JCTree) tree;
     this.startPosition = startPosition;
+    this.endPosition = endPosition;
   }
 
   @Override
@@ -48,11 +54,11 @@ public final class FixedPosition implements ErrorPronePosition {
 
   @Override
   public int getEndPosition(ErrorProneEndPosTable endPosTable) {
-    return startPosition;
+    return endPosition;
   }
 
   @Override
   public int getEndPosition(EndPosTable endPosTable) {
-    return startPosition;
+    return endPosition;
   }
 }
