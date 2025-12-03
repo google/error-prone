@@ -37,11 +37,11 @@ public class IncompatibleModifiersCheckerTest {
               """
               package test;
 
-              import static javax.lang.model.element.Modifier.FINAL;
-              import static javax.lang.model.element.Modifier.PRIVATE;
+              import static com.google.errorprone.annotations.Modifier.FINAL;
+              import static com.google.errorprone.annotations.Modifier.PRIVATE;
               import com.google.errorprone.annotations.IncompatibleModifiers;
 
-              @IncompatibleModifiers({PRIVATE, FINAL})
+              @IncompatibleModifiers(modifier = {PRIVATE, FINAL})
               public @interface NotPrivateOrFinal {}
               """)
           .addSourceLines(
@@ -49,11 +49,11 @@ public class IncompatibleModifiersCheckerTest {
               """
               package test;
 
-              import static javax.lang.model.element.Modifier.FINAL;
-              import static javax.lang.model.element.Modifier.PUBLIC;
+              import static com.google.errorprone.annotations.Modifier.FINAL;
+              import static com.google.errorprone.annotations.Modifier.PUBLIC;
               import com.google.errorprone.annotations.IncompatibleModifiers;
 
-              @IncompatibleModifiers({PUBLIC, FINAL})
+              @IncompatibleModifiers(modifier = {PUBLIC, FINAL})
               public @interface NotPublicOrFinal {}
               """)
           .addSourceLines(
@@ -61,10 +61,10 @@ public class IncompatibleModifiersCheckerTest {
               """
               package test;
 
-              import static javax.lang.model.element.Modifier.ABSTRACT;
+              import static com.google.errorprone.annotations.Modifier.ABSTRACT;
               import com.google.errorprone.annotations.IncompatibleModifiers;
 
-              @IncompatibleModifiers(ABSTRACT)
+              @IncompatibleModifiers(modifier = ABSTRACT)
               public @interface NotAbstract {}
               """);
 
@@ -212,10 +212,10 @@ public class IncompatibleModifiersTestCase {
             """
             package test;
 
-            import static javax.lang.model.element.Modifier.ABSTRACT;
+            import static com.google.errorprone.annotations.Modifier.ABSTRACT;
             import com.google.errorprone.annotations.IncompatibleModifiers;
 
-            @IncompatibleModifiers(ABSTRACT)
+            @IncompatibleModifiers(modifier = ABSTRACT)
             public @interface NotAbstract {}
             """)
         .expectUnchanged()
