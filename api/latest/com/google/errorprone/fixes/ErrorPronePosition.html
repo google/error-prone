@@ -59,10 +59,12 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#from(com.sun.source.tree.Tree)" tabindex="0">from(Tree)</a></li>
-<li><a href="#getEndPosition(com.google.errorprone.fixes.ErrorProneEndPosTable)" tabindex="0">getEndPosition(ErrorProneEndPosTable)</a></li>
-<li><a href="#getTree()" tabindex="0">getTree()</a></li>
+<li><a href="#from(com.sun.tools.javac.tree.JCTree)" tabindex="0">from(JCTree)</a></li>
+<li><a href="#from(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)" tabindex="0">from(JCDiagnostic.DiagnosticPosition)</a></li>
 <li><a href="#getStartPosition()" tabindex="0">getStartPosition()</a></li>
 <li><a href="#getPreferredPosition()" tabindex="0">getPreferredPosition()</a></li>
+<li><a href="#getTree()" tabindex="0">getTree()</a></li>
+<li><a href="#getEndPosition(com.google.errorprone.fixes.ErrorProneEndPosTable)" tabindex="0">getEndPosition(ErrorProneEndPosTable)</a></li>
 <li><a href="#getEndPosition(com.sun.tools.javac.tree.EndPosTable)" tabindex="0">getEndPosition(EndPosTable)</a></li>
 </ol>
 </li>
@@ -99,6 +101,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static <a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#from(com.sun.source.tree.Tree)" class="member-name-link">from</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static <a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#from(com.sun.tools.javac.tree.JCTree)" class="member-name-link">from</a><wbr>(com.sun.tools.javac.tree.JCTree&nbsp;node)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static <a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#from(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)" class="member-name-link">from</a><wbr>(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;pos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getEndPosition(com.google.errorprone.fixes.ErrorProneEndPosTable)" class="member-name-link">getEndPosition</a><wbr>(<a href="ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a>&nbsp;endPosTable)</code></div>
@@ -138,18 +146,18 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getEndPosition(com.google.errorprone.fixes.ErrorProneEndPosTable)">
-<h3>getEndPosition</h3>
+<section class="detail" id="from(com.sun.tools.javac.tree.JCTree)">
+<h3>from</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">getEndPosition</span><wbr><span class="parameters">(<a href="ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a>&nbsp;endPosTable)</span></div>
+<div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></span>&nbsp;<span class="element-name">from</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree&nbsp;node)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="getTree()">
-<h3>getTree</h3>
+<section class="detail" id="from(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)">
+<h3>from</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="return-type">com.sun.tools.javac.tree.JCTree</span>&nbsp;<span class="element-name">getTree</span>()</div>
+<div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></span>&nbsp;<span class="element-name">from</span><wbr><span class="parameters">(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;pos)</span></div>
 </div>
 </section>
 </li>
@@ -166,6 +174,22 @@ loadScripts(document, 'script');</script>
 <h3>getPreferredPosition</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">getPreferredPosition</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getTree()">
+<h3>getTree</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type">com.sun.tools.javac.tree.JCTree</span>&nbsp;<span class="element-name">getTree</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getEndPosition(com.google.errorprone.fixes.ErrorProneEndPosTable)">
+<h3>getEndPosition</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">getEndPosition</span><wbr><span class="parameters">(<a href="ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a>&nbsp;endPosTable)</span></div>
 </div>
 </section>
 </li>

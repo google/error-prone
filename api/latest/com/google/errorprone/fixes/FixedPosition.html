@@ -60,6 +60,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
 <li><a href="#%3Cinit%3E(com.sun.source.tree.Tree,int)" tabindex="0">FixedPosition(Tree, int)</a></li>
+<li><a href="#%3Cinit%3E(com.sun.source.tree.Tree,int,int)" tabindex="0">FixedPosition(Tree, int, int)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -107,6 +108,10 @@ implements <a href="ErrorPronePosition.html" title="interface in com.google.erro
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.sun.source.tree.Tree,int)" class="member-name-link">FixedPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  int&nbsp;startPosition)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.sun.source.tree.Tree,int,int)" class="member-name-link">FixedPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+ int&nbsp;startPosition,
+ int&nbsp;endPosition)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -162,6 +167,16 @@ implements <a href="ErrorPronePosition.html" title="interface in com.google.erro
 </div>
 </section>
 </li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.sun.source.tree.Tree,int,int)">
+<h3>FixedPosition</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">FixedPosition</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+ int&nbsp;startPosition,
+ int&nbsp;endPosition)</span></div>
+</div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -175,6 +190,10 @@ implements <a href="ErrorPronePosition.html" title="interface in com.google.erro
 <h3>getTree</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.tree.JCTree</span>&nbsp;<span class="element-name">getTree</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="ErrorPronePosition.html#getTree()">getTree</a></code>&nbsp;in interface&nbsp;<code><a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></code></dd>
+</dl>
 </div>
 </section>
 </li>
@@ -183,6 +202,10 @@ implements <a href="ErrorPronePosition.html" title="interface in com.google.erro
 <h3>getStartPosition</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getStartPosition</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="ErrorPronePosition.html#getStartPosition()">getStartPosition</a></code>&nbsp;in interface&nbsp;<code><a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></code></dd>
+</dl>
 </div>
 </section>
 </li>
@@ -191,6 +214,10 @@ implements <a href="ErrorPronePosition.html" title="interface in com.google.erro
 <h3>getPreferredPosition</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getPreferredPosition</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="ErrorPronePosition.html#getPreferredPosition()">getPreferredPosition</a></code>&nbsp;in interface&nbsp;<code><a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></code></dd>
+</dl>
 </div>
 </section>
 </li>

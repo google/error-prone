@@ -59,13 +59,49 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Package</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.fixes">com.google.errorprone.fixes</a></div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns</a></div>
 <div class="col-last even-row-color">
+<div class="block">Checks added to the java compiler which detect common bug patterns.</div>
+</div>
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.fixes">com.google.errorprone.fixes</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Support code for providing automated corrections for defects we find.</div>
+</div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.matchers">com.google.errorprone.matchers</a></div>
+<div class="col-last even-row-color">
+<div class="block">A predicate DSL for matching javac AST nodes.</div>
 </div>
 </div>
 <section class="class-uses">
 <ul class="block-list">
+<li>
+<section class="detail" id="com.google.errorprone.bugpatterns">
+<h2>Uses of <a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a> in <a href="../../bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></h2>
+<div class="caption"><span>Methods in <a href="../../bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a> with parameters of type <a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code><a href="../../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">BugChecker.</span><code><a href="../../bugpatterns/BugChecker.html#buildDescription(com.google.errorprone.fixes.ErrorPronePosition)" class="member-name-link">buildDescription</a><wbr>(<a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Returns a Description builder, which allows you to customize the diagnostic with a custom
+message or multiple fixes.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">BugChecker.</span><code><a href="../../bugpatterns/BugChecker.html#describeMatch(com.google.errorprone.fixes.ErrorPronePosition)" class="member-name-link">describeMatch</a><wbr>(<a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Helper to create a Description for the common case where there is no fix.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">BugChecker.</span><code><a href="../../bugpatterns/BugChecker.html#describeMatch(com.google.errorprone.fixes.ErrorPronePosition,com.google.errorprone.fixes.Fix)" class="member-name-link">describeMatch</a><wbr>(<a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position,
+ <a href="../Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Helper to create a Description for the common case where there is a fix.</div>
+</div>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="com.google.errorprone.fixes">
 <h2>Uses of <a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a> in <a href="../package-summary.html">com.google.errorprone.fixes</a></h2>
@@ -98,6 +134,68 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static <a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ErrorPronePosition.</span><code><a href="../ErrorPronePosition.html#from(com.sun.source.tree.Tree)" class="member-name-link">from</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static <a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ErrorPronePosition.</span><code><a href="../ErrorPronePosition.html#from(com.sun.tools.javac.tree.JCTree)" class="member-name-link">from</a><wbr>(com.sun.tools.javac.tree.JCTree&nbsp;node)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ErrorPronePosition.</span><code><a href="../ErrorPronePosition.html#from(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)" class="member-name-link">from</a><wbr>(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;pos)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+<div class="caption"><span>Methods in <a href="../package-summary.html">com.google.errorprone.fixes</a> with parameters of type <a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#delete(com.google.errorprone.fixes.ErrorPronePosition)" class="member-name-link">delete</a><wbr>(<a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;node)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static <a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../SuggestedFix.html#delete(com.google.errorprone.fixes.ErrorPronePosition)" class="member-name-link">delete</a><wbr>(<a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position)</code></div>
+<div class="col-last odd-row-color">
+<div class="block"><a href="../SuggestedFix.Builder.html#delete(com.google.errorprone.fixes.ErrorPronePosition)"><code>SuggestedFix.Builder.delete(ErrorPronePosition)</code></a></div>
+</div>
+<div class="col-first even-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#postfixWith(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)" class="member-name-link">postfixWith</a><wbr>(<a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;postfix)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#prefixWith(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)" class="member-name-link">prefixWith</a><wbr>(<a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../SuggestedFix.Builder.html#replace(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)" class="member-name-link">replace</a><wbr>(<a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.matchers">
+<h2>Uses of <a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a> in <a href="../../matchers/package-summary.html">com.google.errorprone.matchers</a></h2>
+<div class="caption"><span>Fields in <a href="../../matchers/package-summary.html">com.google.errorprone.matchers</a> declared as <a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>final <a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Description.</span><code><a href="../../matchers/Description.html#position" class="member-name-link">position</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">The position of the match.</div>
+</div>
+</div>
+<div class="caption"><span>Methods in <a href="../../matchers/package-summary.html">com.google.errorprone.matchers</a> with parameters of type <a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static <a href="../../matchers/Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Description.</span><code><a href="../../matchers/Description.html#builder(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">builder</a><wbr>(<a href="../ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;link,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Returns a new builder for <a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
+</div>
 </div>
 </section>
 </li>

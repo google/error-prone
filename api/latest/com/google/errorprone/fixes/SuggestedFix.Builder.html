@@ -70,11 +70,15 @@ loadScripts(document, 'script');</script>
 <li><a href="#setShortDescription(java.lang.String)" tabindex="0">setShortDescription(String)</a></li>
 <li><a href="#setCoalescePolicy(com.google.errorprone.fixes.Replacements.CoalescePolicy)" tabindex="0">setCoalescePolicy(Replacements.CoalescePolicy)</a></li>
 <li><a href="#replace(com.sun.source.tree.Tree,java.lang.String)" tabindex="0">replace(Tree, String)</a></li>
+<li><a href="#replace(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)" tabindex="0">replace(ErrorPronePosition, String)</a></li>
 <li><a href="#replace(int,int,java.lang.String)" tabindex="0">replace(int, int, String)</a></li>
 <li><a href="#replace(com.sun.source.tree.Tree,java.lang.String,int,int)" tabindex="0">replace(Tree, String, int, int)</a></li>
 <li><a href="#prefixWith(com.sun.source.tree.Tree,java.lang.String)" tabindex="0">prefixWith(Tree, String)</a></li>
+<li><a href="#prefixWith(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)" tabindex="0">prefixWith(ErrorPronePosition, String)</a></li>
 <li><a href="#postfixWith(com.sun.source.tree.Tree,java.lang.String)" tabindex="0">postfixWith(Tree, String)</a></li>
+<li><a href="#postfixWith(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)" tabindex="0">postfixWith(ErrorPronePosition, String)</a></li>
 <li><a href="#delete(com.sun.source.tree.Tree)" tabindex="0">delete(Tree)</a></li>
+<li><a href="#delete(com.google.errorprone.fixes.ErrorPronePosition)" tabindex="0">delete(ErrorPronePosition)</a></li>
 <li><a href="#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" tabindex="0">swap(Tree, Tree, VisitorState)</a></li>
 <li><a href="#addImport(java.lang.String)" tabindex="0">addImport(String)</a></li>
 <li><a href="#addStaticImport(java.lang.String)" tabindex="0">addStaticImport(String)</a></li>
@@ -152,47 +156,62 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#build()" class="member-name-link">build</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#delete(com.sun.source.tree.Tree)" class="member-name-link">delete</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#delete(com.google.errorprone.fixes.ErrorPronePosition)" class="member-name-link">delete</a><wbr>(<a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;node)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#delete(com.sun.source.tree.Tree)" class="member-name-link">delete</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#merge(com.google.errorprone.fixes.SuggestedFix)" class="member-name-link">merge</a><wbr>(@Nullable <a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;other)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#merge(com.google.errorprone.fixes.SuggestedFix)" class="member-name-link">merge</a><wbr>(@Nullable <a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&nbsp;other)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#merge(com.google.errorprone.fixes.SuggestedFix.Builder)" class="member-name-link">merge</a><wbr>(@Nullable <a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;other)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#merge(com.google.errorprone.fixes.SuggestedFix.Builder)" class="member-name-link">merge</a><wbr>(@Nullable <a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;other)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Merges all edits from <code>other</code> into <code>this</code>.</div>
-</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#postfixWith(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)" class="member-name-link">postfixWith</a><wbr>(<a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;postfix)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#postfixWith(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">postfixWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;postfix)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#prefixWith(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">prefixWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#prefixWith(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)" class="member-name-link">prefixWith</a><wbr>(<a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeImport(java.lang.String)" class="member-name-link">removeImport</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importString)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#prefixWith(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">prefixWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeImport(java.lang.String)" class="member-name-link">removeImport</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importString)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Remove an import statement as part of this SuggestedFix.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeStaticImport(java.lang.String)" class="member-name-link">removeStaticImport</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importString)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeStaticImport(java.lang.String)" class="member-name-link">removeStaticImport</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importString)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Remove a static import statement as part of this SuggestedFix.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#replace(int,int,java.lang.String)" class="member-name-link">replace</a><wbr>(int&nbsp;startPos,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#replace(int,int,java.lang.String)" class="member-name-link">replace</a><wbr>(int&nbsp;startPos,
  int&nbsp;endPos,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
 string.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#replace(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)" class="member-name-link">replace</a><wbr>(<a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#replace(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">replace</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</code></div>
@@ -300,6 +319,16 @@ fixes from the same finding.
 </section>
 </li>
 <li>
+<section class="detail" id="replace(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)">
+<h3>replace</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></span>&nbsp;<span class="element-name">replace</span><wbr><span class="parameters">(<a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replaceWith)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="replace(int,int,java.lang.String)">
 <h3>replace</h3>
 <div class="horizontal-scroll">
@@ -355,6 +384,16 @@ characters at index 15 through 25 with "replacement":
 </section>
 </li>
 <li>
+<section class="detail" id="prefixWith(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)">
+<h3>prefixWith</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></span>&nbsp;<span class="element-name">prefixWith</span><wbr><span class="parameters">(<a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="postfixWith(com.sun.source.tree.Tree,java.lang.String)">
 <h3>postfixWith</h3>
 <div class="horizontal-scroll">
@@ -365,11 +404,30 @@ characters at index 15 through 25 with "replacement":
 </section>
 </li>
 <li>
+<section class="detail" id="postfixWith(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)">
+<h3>postfixWith</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></span>&nbsp;<span class="element-name">postfixWith</span><wbr><span class="parameters">(<a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;postfix)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="delete(com.sun.source.tree.Tree)">
 <h3>delete</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></span>&nbsp;<span class="element-name">delete</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="delete(com.google.errorprone.fixes.ErrorPronePosition)">
+<h3>delete</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></span>&nbsp;<span class="element-name">delete</span><wbr><span class="parameters">(<a href="ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;node)</span></div>
 </div>
 </section>
 </li>

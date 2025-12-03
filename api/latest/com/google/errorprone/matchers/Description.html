@@ -74,9 +74,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#getRawMessage()" tabindex="0">getRawMessage()</a></li>
 <li><a href="#getMessageWithoutCheckName()" tabindex="0">getMessageWithoutCheckName()</a></li>
 <li><a href="#applySeverityOverride(com.google.errorprone.BugPattern.SeverityLevel)" tabindex="0">applySeverityOverride(BugPattern.SeverityLevel)</a></li>
-<li><a href="#builder(com.sun.source.tree.Tree,java.lang.String,java.lang.String,java.lang.String)" tabindex="0">builder(Tree, String, String, String)</a></li>
-<li><a href="#builder(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,java.lang.String,java.lang.String,java.lang.String)" tabindex="0">builder(JCDiagnostic.DiagnosticPosition, String, String, String)</a></li>
-<li><a href="#builder(com.sun.tools.javac.tree.JCTree,java.lang.String,java.lang.String,java.lang.String)" tabindex="0">builder(JCTree, String, String, String)</a></li>
+<li><a href="#builder(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String,java.lang.String,java.lang.String)" tabindex="0">builder(ErrorPronePosition, String, String, String)</a></li>
 </ol>
 </li>
 </ol>
@@ -145,7 +143,7 @@ UI, or output in structured format for use by tools.</div>
 <div class="col-last even-row-color">
 <div class="block">Describes the sentinel value of the case where the match failed.</div>
 </div>
-<div class="col-first odd-row-color"><code>final com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition</code></div>
+<div class="col-first odd-row-color"><code>final <a href="../fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#position" class="member-name-link">position</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">The position of the match.</div>
@@ -170,23 +168,7 @@ UI, or output in structured format for use by tools.</div>
 <div class="block">Internal-only.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#builder(com.sun.source.tree.Tree,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">builder</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
- @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;link,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns a new builder for <a href="Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#builder(com.sun.tools.javac.tree.JCTree,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">builder</a><wbr>(com.sun.tools.javac.tree.JCTree&nbsp;tree,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
- @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;link,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns a new builder for <a href="Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#builder(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">builder</a><wbr>(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;position,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#builder(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">builder</a><wbr>(<a href="../fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;link,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
@@ -246,7 +228,7 @@ UI, or output in structured format for use by tools.</div>
 <section class="detail" id="position">
 <h3>position</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition</span>&nbsp;<span class="element-name">position</span></div>
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="../fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></span>&nbsp;<span class="element-name">position</span></div>
 <div class="block">The position of the match.</div>
 </div>
 </section>
@@ -334,34 +316,10 @@ Includes the name of the check and a link for more information.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="builder(com.sun.source.tree.Tree,java.lang.String,java.lang.String,java.lang.String)">
+<section class="detail" id="builder(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String,java.lang.String,java.lang.String)">
 <h3>builder</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="element-name">builder</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
- @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;link,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</span></div>
-<div class="block">Returns a new builder for <a href="Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="builder(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,java.lang.String,java.lang.String,java.lang.String)">
-<h3>builder</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="element-name">builder</span><wbr><span class="parameters">(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;position,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
- @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;link,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</span></div>
-<div class="block">Returns a new builder for <a href="Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="builder(com.sun.tools.javac.tree.JCTree,java.lang.String,java.lang.String,java.lang.String)">
-<h3>builder</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="element-name">builder</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="element-name">builder</span><wbr><span class="parameters">(<a href="../fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>&nbsp;position,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;link,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</span></div>

@@ -1642,6 +1642,11 @@ test.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#build(com.google.errorprone.VisitorState)" class="member-name-link">build(VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/BugChecker.html#buildDescription(com.google.errorprone.fixes.ErrorPronePosition)" class="member-name-link">buildDescription(ErrorPronePosition)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
+<dd>
+<div class="block">Returns a Description builder, which allows you to customize the diagnostic with a custom
+message or multiple fixes.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/BugChecker.html#buildDescription(com.sun.source.tree.Tree)" class="member-name-link">buildDescription(Tree)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>
 <div class="block">Returns a Description builder, which allows you to customize the diagnostic with a custom
@@ -1669,15 +1674,7 @@ message or multiple fixes.</div>
 <dd>
 <div class="block">Returns a new <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.Builder.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicyEvaluator.Builder</code></a> for creating a <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicyEvaluator.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicyEvaluator</code></a>.</div>
 </dd>
-<dt><a href="com/google/errorprone/matchers/Description.html#builder(com.sun.source.tree.Tree,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">builder(Tree, String, String, String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></dt>
-<dd>
-<div class="block">Returns a new builder for <a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
-</dd>
-<dt><a href="com/google/errorprone/matchers/Description.html#builder(com.sun.tools.javac.tree.JCTree,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">builder(JCTree, String, String, String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></dt>
-<dd>
-<div class="block">Returns a new builder for <a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
-</dd>
-<dt><a href="com/google/errorprone/matchers/Description.html#builder(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">builder(JCDiagnostic.DiagnosticPosition, String, String, String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></dt>
+<dt><a href="com/google/errorprone/matchers/Description.html#builder(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String,java.lang.String,java.lang.String)" class="member-name-link">builder(ErrorPronePosition, String, String, String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></dt>
 <dd>
 <div class="block">Returns a new builder for <a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers"><code>Description</code></a>s.</div>
 </dd>
@@ -2988,6 +2985,12 @@ expression is not equal to another expression with this <code>Nullness</code>.</
 </dd>
 <dt><a href="com/google/errorprone/refaster/Bindings.html#delegate()" class="member-name-link">delegate()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#delete(com.google.errorprone.fixes.ErrorPronePosition)" class="member-name-link">delete(ErrorPronePosition)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFix.html#delete(com.google.errorprone.fixes.ErrorPronePosition)" class="member-name-link">delete(ErrorPronePosition)</a> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
+<dd>
+<div class="block"><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#delete(com.google.errorprone.fixes.ErrorPronePosition)"><code>SuggestedFix.Builder.delete(ErrorPronePosition)</code></a></div>
+</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#delete(com.sun.source.tree.Tree)" class="member-name-link">delete(Tree)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.html#delete(com.sun.source.tree.Tree)" class="member-name-link">delete(Tree)</a> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
@@ -3047,6 +3050,14 @@ method.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/SelfAssignment.html#describeForVarDecl(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">describeForVarDecl(VariableTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SelfAssignment.html" title="class in com.google.errorprone.bugpatterns">SelfAssignment</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/BugChecker.html#describeMatch(com.google.errorprone.fixes.ErrorPronePosition)" class="member-name-link">describeMatch(ErrorPronePosition)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
+<dd>
+<div class="block">Helper to create a Description for the common case where there is no fix.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/BugChecker.html#describeMatch(com.google.errorprone.fixes.ErrorPronePosition,com.google.errorprone.fixes.Fix)" class="member-name-link">describeMatch(ErrorPronePosition, Fix)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
+<dd>
+<div class="block">Helper to create a Description for the common case where there is a fix.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/BugChecker.html#describeMatch(com.sun.source.tree.Tree)" class="member-name-link">describeMatch(Tree)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a></dt>
 <dd>
 <div class="block">Helper to create a Description for the common case where there is no fix.</div>
@@ -4276,6 +4287,8 @@ used further on).</div>
 </dd>
 <dt><a href="com/google/errorprone/fixes/FixedPosition.html#%3Cinit%3E(com.sun.source.tree.Tree,int)" class="member-name-link">FixedPosition(Tree, int)</a> - Constructor for class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes">FixedPosition</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/FixedPosition.html#%3Cinit%3E(com.sun.source.tree.Tree,int,int)" class="member-name-link">FixedPosition(Tree, int, int)</a> - Constructor for class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes">FixedPosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Description.html#fixes" class="member-name-link">fixes</a> - Variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></dt>
 <dd>
 <div class="block">A list of fixes to suggest in an error message or use in automated refactoring.</div>
@@ -4549,10 +4562,14 @@ fragile, or violates generally-accepted assumptions of behavior.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html#from(com.sun.tools.javac.code.Symbol.ClassSymbol,com.google.errorprone.bugpatterns.threadsafety.GuardedBySymbolResolver.MethodInfo,com.sun.source.tree.CompilationUnitTree,com.sun.tools.javac.util.Context,com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">from(Symbol.ClassSymbol, GuardedBySymbolResolver.MethodInfo, CompilationUnitTree, Context, Tree, VisitorState)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#from(com.sun.tools.javac.tree.JCTree)" class="member-name-link">from(JCTree)</a> - Static method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.ExpectedLockCalculator.html#from(com.sun.tools.javac.tree.JCTree.JCExpression,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.VisitorState)" class="member-name-link">from(JCTree.JCExpression, GuardedByExpression, VisitorState)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.ExpectedLockCalculator.html" title="class in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.ExpectedLockCalculator</a></dt>
 <dd>
 <div class="block">Determine the lock expression that needs to be held when accessing a specific guarded member.</div>
 </dd>
+<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#from(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)" class="member-name-link">from(JCDiagnostic.DiagnosticPosition)</a> - Static method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Choice.html#from(java.util.Collection)" class="member-name-link">from(Collection)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html#fromAnnotationMirrors(java.util.List)" class="member-name-link">fromAnnotationMirrors(List)</a> - Static method in class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnnotations</a></dt>
@@ -5653,13 +5670,13 @@ of the tree within the overall source.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/AdjustedPosition.html#getPreferredPosition()" class="member-name-link">getPreferredPosition()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#getPreferredPosition()" class="member-name-link">getPreferredPosition()</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/FixedPosition.html#getPreferredPosition()" class="member-name-link">getPreferredPosition()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes">FixedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/IndexedPosition.html#getPreferredPosition()" class="member-name-link">getPreferredPosition()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html#getPreferredPosition()" class="member-name-link">getPreferredPosition()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html" title="class in com.google.errorprone.refaster">UPlaceholderExpression.PlaceholderParamIdent</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#getPreferredPosition()" class="member-name-link">getPreferredPosition()</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#getPrettyName(com.sun.tools.javac.code.Symbol)" class="member-name-link">getPrettyName(Symbol)</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>
@@ -5763,13 +5780,13 @@ to the user.</div>
 </dd>
 <dt><a href="com/google/errorprone/fixes/AdjustedPosition.html#getStartPosition()" class="member-name-link">getStartPosition()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#getStartPosition()" class="member-name-link">getStartPosition()</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/FixedPosition.html#getStartPosition()" class="member-name-link">getStartPosition()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes">FixedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/IndexedPosition.html#getStartPosition()" class="member-name-link">getStartPosition()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html#getStartPosition()" class="member-name-link">getStartPosition()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html" title="class in com.google.errorprone.refaster">UPlaceholderExpression.PlaceholderParamIdent</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#getStartPosition()" class="member-name-link">getStartPosition()</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#getStartPosition(com.sun.source.tree.Tree)" class="member-name-link">getStartPosition(Tree)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
@@ -5873,13 +5890,13 @@ source within the overall file.</div>
 </dd>
 <dt><a href="com/google/errorprone/fixes/AdjustedPosition.html#getTree()" class="member-name-link">getTree()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#getTree()" class="member-name-link">getTree()</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/FixedPosition.html#getTree()" class="member-name-link">getTree()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes">FixedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/IndexedPosition.html#getTree()" class="member-name-link">getTree()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html#getTree()" class="member-name-link">getTree()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html" title="class in com.google.errorprone.refaster">UPlaceholderExpression.PlaceholderParamIdent</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#getTree()" class="member-name-link">getTree()</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/VisitorState.html#getTreeMaker()" class="member-name-link">getTreeMaker()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
@@ -11961,6 +11978,8 @@ together.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/OperatorPrecedence.html#POSTFIX" class="member-name-link">POSTFIX</a> - Enum constant in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#postfixWith(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)" class="member-name-link">postfixWith(ErrorPronePosition, String)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#postfixWith(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">postfixWith(Tree, String)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.html#postfixWith(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">postfixWith(Tree, String)</a> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
@@ -11996,6 +12015,8 @@ together.</div>
 <div class="block">Tightens types which refer to an Iterable, Map, Multimap, etc.</div>
 </dd>
 <dt><a href="com/google/errorprone/ErrorProneFlags.html#PREFIX" class="member-name-link">PREFIX</a> - Static variable in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#prefixWith(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)" class="member-name-link">prefixWith(ErrorPronePosition, String)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#prefixWith(com.sun.source.tree.Tree,java.lang.String)" class="member-name-link">prefixWith(Tree, String)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>&nbsp;</dd>
@@ -12515,6 +12536,8 @@ string.</div>
 <div class="block">Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
 string.</div>
 </dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#replace(com.google.errorprone.fixes.ErrorPronePosition,java.lang.String)" class="member-name-link">replace(ErrorPronePosition, String)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/BlockTemplate.html#replace(com.google.errorprone.refaster.BlockTemplateMatch)" class="member-name-link">replace(BlockTemplateMatch)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/BlockTemplate.html" title="class in com.google.errorprone.refaster">BlockTemplate</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/ExpressionTemplate.html#replace(com.google.errorprone.refaster.ExpressionTemplateMatch)" class="member-name-link">replace(ExpressionTemplateMatch)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ExpressionTemplate.html" title="class in com.google.errorprone.refaster">ExpressionTemplate</a></dt>
