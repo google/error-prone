@@ -61,6 +61,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#toString(com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" tabindex="0">toString(JCTree.JCCompilationUnit)</a></li>
 <li><a href="#getShortDescription()" tabindex="0">getShortDescription()</a></li>
 <li><a href="#getCoalescePolicy()" tabindex="0">getCoalescePolicy()</a></li>
+<li><a href="#getReplacements(com.google.errorprone.fixes.ErrorProneEndPosTable)" tabindex="0">getReplacements(ErrorProneEndPosTable)</a></li>
 <li><a href="#getReplacements(com.sun.tools.javac.tree.EndPosTable)" tabindex="0">getReplacements(EndPosTable)</a></li>
 <li><a href="#getImportsToAdd()" tabindex="0">getImportsToAdd()</a></li>
 <li><a href="#getImportsToRemove()" tabindex="0">getImportsToRemove()</a></li>
@@ -96,7 +97,7 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button><button id="method-summary-table-tab5" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab5', 3)" class="table-tab">Default Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -112,20 +113,27 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getImportsToRemove()" class="member-name-link">getImportsToRemove</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>com.google.common.collect.ImmutableSet<wbr>&lt;<a href="Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getReplacements(com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">getReplacements</a><wbr>(com.sun.tools.javac.tree.EndPosTable&nbsp;endPositions)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getReplacements(com.google.errorprone.fixes.ErrorProneEndPosTable)" class="member-name-link">getReplacements</a><wbr>(<a href="ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a>&nbsp;endPositions)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getShortDescription()" class="member-name-link">getShortDescription</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5 method-summary-table-tab6"><code>default com.google.common.collect.ImmutableSet<wbr>&lt;<a href="Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5 method-summary-table-tab6"><code><a href="#getReplacements(com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">getReplacements</a><wbr>(com.sun.tools.javac.tree.EndPosTable&nbsp;endPositions)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#getReplacements(com.google.errorprone.fixes.ErrorProneEndPosTable)"><code>instead</code></a></div>
+</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getShortDescription()" class="member-name-link">getShortDescription</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">A short description which can be attached to the Fix to differentiate multiple fixes provided
 to the user.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#toString(com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" class="member-name-link">toString</a><wbr>(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#toString(com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" class="member-name-link">toString</a><wbr>(com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -169,10 +177,22 @@ to the user.
 </section>
 </li>
 <li>
+<section class="detail" id="getReplacements(com.google.errorprone.fixes.ErrorProneEndPosTable)">
+<h3>getReplacements</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&gt;</span>&nbsp;<span class="element-name">getReplacements</span><wbr><span class="parameters">(<a href="ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a>&nbsp;endPositions)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getReplacements(com.sun.tools.javac.tree.EndPosTable)">
 <h3>getReplacements</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&gt;</span>&nbsp;<span class="element-name">getReplacements</span><wbr><span class="parameters">(com.sun.tools.javac.tree.EndPosTable&nbsp;endPositions)</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">default</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="Replacement.html" title="class in com.google.errorprone.fixes">Replacement</a>&gt;</span>&nbsp;<span class="element-name">getReplacements</span><wbr><span class="parameters">(com.sun.tools.javac.tree.EndPosTable&nbsp;endPositions)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#getReplacements(com.google.errorprone.fixes.ErrorProneEndPosTable)"><code>instead</code></a></div>
+</div>
 </div>
 </section>
 </li>

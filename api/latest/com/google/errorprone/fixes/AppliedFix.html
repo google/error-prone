@@ -70,8 +70,8 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#apply(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable,com.google.errorprone.fixes.Fix)" tabindex="0">apply(CharSequence, EndPosTable, Fix)</a></li>
-<li><a href="#applyReplacements(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable,com.google.errorprone.fixes.Fix)" tabindex="0">applyReplacements(CharSequence, EndPosTable, Fix)</a></li>
+<li><a href="#apply(java.lang.CharSequence,com.google.errorprone.fixes.ErrorProneEndPosTable,com.google.errorprone.fixes.Fix)" tabindex="0">apply(CharSequence, ErrorProneEndPosTable, Fix)</a></li>
+<li><a href="#applyReplacements(java.lang.CharSequence,com.google.errorprone.fixes.ErrorProneEndPosTable,com.google.errorprone.fixes.Fix)" tabindex="0">applyReplacements(CharSequence, ErrorProneEndPosTable, Fix)</a></li>
 <li><a href="#toString()" tabindex="0">toString()</a></li>
 <li><a href="#hashCode()" tabindex="0">hashCode()</a></li>
 <li><a href="#equals(java.lang.Object)" tabindex="0">equals(Object)</a></li>
@@ -151,15 +151,15 @@ generate the "Did you mean?" snippet in the error message.</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#apply(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable,com.google.errorprone.fixes.Fix)" class="member-name-link">apply</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;source,
- com.sun.tools.javac.tree.EndPosTable&nbsp;endPositions,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#apply(java.lang.CharSequence,com.google.errorprone.fixes.ErrorProneEndPosTable,com.google.errorprone.fixes.Fix)" class="member-name-link">apply</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;source,
+ <a href="ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a>&nbsp;endPositions,
  <a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;suggestedFix)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Applies the suggestedFix to the source.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#applyReplacements(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable,com.google.errorprone.fixes.Fix)" class="member-name-link">applyReplacements</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;source,
- com.sun.tools.javac.tree.EndPosTable&nbsp;endPositions,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#applyReplacements(java.lang.CharSequence,com.google.errorprone.fixes.ErrorProneEndPosTable,com.google.errorprone.fixes.Fix)" class="member-name-link">applyReplacements</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;source,
+ <a href="ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a>&nbsp;endPositions,
  <a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
@@ -254,11 +254,11 @@ the snippet will just start or end in the middle of a line.</div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="apply(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable,com.google.errorprone.fixes.Fix)">
+<section class="detail" id="apply(java.lang.CharSequence,com.google.errorprone.fixes.ErrorProneEndPosTable,com.google.errorprone.fixes.Fix)">
 <h3>apply</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;source,
- com.sun.tools.javac.tree.EndPosTable&nbsp;endPositions,
+ <a href="ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a>&nbsp;endPositions,
  <a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;suggestedFix)</span></div>
 <div class="block">Applies the suggestedFix to the source. Returns null if applying the fix results in no change
 to the source, or a change only to imports.</div>
@@ -266,11 +266,11 @@ to the source, or a change only to imports.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="applyReplacements(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable,com.google.errorprone.fixes.Fix)">
+<section class="detail" id="applyReplacements(java.lang.CharSequence,com.google.errorprone.fixes.ErrorProneEndPosTable,com.google.errorprone.fixes.Fix)">
 <h3>applyReplacements</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">applyReplacements</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;source,
- com.sun.tools.javac.tree.EndPosTable&nbsp;endPositions,
+ <a href="ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a>&nbsp;endPositions,
  <a href="Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</span></div>
 </div>
 </section>

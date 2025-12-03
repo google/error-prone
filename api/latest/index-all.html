@@ -890,7 +890,7 @@ specified template expressions, in order, and succeed at the first match.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/predicates/TypePredicate.html#apply(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">apply(Type, VisitorState)</a> - Method in interface com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/fixes/AppliedFix.html#apply(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable,com.google.errorprone.fixes.Fix)" class="member-name-link">apply(CharSequence, EndPosTable, Fix)</a> - Static method in record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
+<dt><a href="com/google/errorprone/fixes/AppliedFix.html#apply(java.lang.CharSequence,com.google.errorprone.fixes.ErrorProneEndPosTable,com.google.errorprone.fixes.Fix)" class="member-name-link">apply(CharSequence, ErrorProneEndPosTable, Fix)</a> - Static method in record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
 <dd>
 <div class="block">Applies the suggestedFix to the source.</div>
 </dd>
@@ -904,7 +904,7 @@ specified template expressions, in order, and succeed at the first match.</div>
 <dd>
 <div class="block">Applies options to this <a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a>.</div>
 </dd>
-<dt><a href="com/google/errorprone/fixes/AppliedFix.html#applyReplacements(java.lang.CharSequence,com.sun.tools.javac.tree.EndPosTable,com.google.errorprone.fixes.Fix)" class="member-name-link">applyReplacements(CharSequence, EndPosTable, Fix)</a> - Static method in record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
+<dt><a href="com/google/errorprone/fixes/AppliedFix.html#applyReplacements(java.lang.CharSequence,com.google.errorprone.fixes.ErrorProneEndPosTable,com.google.errorprone.fixes.Fix)" class="member-name-link">applyReplacements(CharSequence, ErrorProneEndPosTable, Fix)</a> - Static method in record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AppliedFix.html" title="class in com.google.errorprone.fixes">AppliedFix</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Description.html#applySeverityOverride(com.google.errorprone.BugPattern.SeverityLevel)" class="member-name-link">applySeverityOverride(BugPattern.SeverityLevel)</a> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></dt>
 <dd>
@@ -2718,6 +2718,8 @@ inlined as an identifier.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/scanner/ErrorProneScannerTransformer.html#create(com.google.errorprone.scanner.Scanner)" class="member-name-link">create(Scanner)</a> - Static method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScannerTransformer.html" title="class in com.google.errorprone.scanner">ErrorProneScannerTransformer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html#create(com.sun.source.tree.CompilationUnitTree)" class="member-name-link">create(CompilationUnitTree)</a> - Static method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AbstractCollectionIncompatibleTypeMatcher.MatchResult.html#create(com.sun.source.tree.ExpressionTree,com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher)" class="member-name-link">create(ExpressionTree, Type, Type, AbstractCollectionIncompatibleTypeMatcher)</a> - Static method in record class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/ULiteral.html#create(com.sun.source.tree.Tree.Kind,java.lang.Object)" class="member-name-link">create(Tree.Kind, Object)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ULiteral.html" title="class in com.google.errorprone.refaster">ULiteral</a></dt>
@@ -2737,6 +2739,8 @@ inlined as an identifier.</div>
 <dt><a href="com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html#create(com.sun.tools.javac.code.Type)" class="member-name-link">create(Type)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html" title="class in com.google.errorprone.refaster">UTypeVar.TypeWithExpression</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html#create(com.sun.tools.javac.code.Type,com.sun.tools.javac.tree.JCTree.JCExpression)" class="member-name-link">create(Type, JCTree.JCExpression)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html" title="class in com.google.errorprone.refaster">UTypeVar.TypeWithExpression</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html#create(com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">create(EndPosTable)</a> - Static method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/apply/ImportStatements.html#create(com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" class="member-name-link">create(JCTree.JCCompilationUnit)</a> - Static method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/ImportStatements.html" title="class in com.google.errorprone.apply">ImportStatements</a></dt>
 <dd>&nbsp;</dd>
@@ -3779,6 +3783,10 @@ list.</div>
 <dd>
 <div class="block">A compatibility wrapper for <code>Tokens.Comment.CommentStyle</code>.</div>
 </dd>
+<dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" class="type-name-link" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a> - Interface in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
+<dd>
+<div class="block">A compatibility wrapper around <code>EndPosTable</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/ErrorProneError.html" class="type-name-link" title="class in com.google.errorprone">ErrorProneError</a> - Exception Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">Wraps an unrecoverable error that occurs during analysis with the source position that triggered
@@ -3835,6 +3843,10 @@ the crash.</div>
 <dt><a href="com/google/errorprone/ErrorPronePlugins.html" class="type-name-link" title="class in com.google.errorprone">ErrorPronePlugins</a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">Loads custom Error Prone checks from the annotation processor classpath.</div>
+</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html" class="type-name-link" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a> - Interface in <a href="com/google/errorprone/fixes/package-summary.html">com.google.errorprone.fixes</a></dt>
+<dd>
+<div class="block">A compatibility wrapper around <code>JCDiagnostic.DiagnosticPosition</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/scanner/ErrorProneScanner.html" class="type-name-link" title="class in com.google.errorprone.scanner">ErrorProneScanner</a> - Class in <a href="com/google/errorprone/scanner/package-summary.html">com.google.errorprone.scanner</a></dt>
 <dd>
@@ -4529,6 +4541,8 @@ fragile, or violates generally-accepted assumptions of behavior.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UTemplater.html#freeExpressionVariables(com.sun.source.tree.MethodTree)" class="member-name-link">freeExpressionVariables(MethodTree)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTemplater.html" title="class in com.google.errorprone.refaster">UTemplater</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#from(com.sun.source.tree.Tree)" class="member-name-link">from(Tree)</a> - Static method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/OperatorPrecedence.html#from(com.sun.source.tree.Tree.Kind)" class="member-name-link">from(Tree.Kind)</a> - Static method in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html#from(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">from(Tree, VisitorState)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedBySymbolResolver.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedBySymbolResolver</a></dt>
@@ -5097,10 +5111,22 @@ covariant overrides in subtypes of <code>Symbol</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/ErrorProneComment.html#getEndPos()" class="member-name-link">getEndPos()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/AdjustedPosition.html#getEndPosition(com.google.errorprone.fixes.ErrorProneEndPosTable)" class="member-name-link">getEndPosition(ErrorProneEndPosTable)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#getEndPosition(com.google.errorprone.fixes.ErrorProneEndPosTable)" class="member-name-link">getEndPosition(ErrorProneEndPosTable)</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/FixedPosition.html#getEndPosition(com.google.errorprone.fixes.ErrorProneEndPosTable)" class="member-name-link">getEndPosition(ErrorProneEndPosTable)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes">FixedPosition</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/IndexedPosition.html#getEndPosition(com.google.errorprone.fixes.ErrorProneEndPosTable)" class="member-name-link">getEndPosition(ErrorProneEndPosTable)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html#getEndPosition(com.sun.source.tree.Tree)" class="member-name-link">getEndPosition(Tree)</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/VisitorState.html#getEndPosition(com.sun.source.tree.Tree)" class="member-name-link">getEndPosition(Tree)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>
 <div class="block">Returns the end position of the node, or -1 if it is not available.</div>
 </dd>
+<dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html#getEndPosition(com.sun.source.tree.Tree,com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getEndPosition(Tree, CompilationUnitTree)</a> - Static method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/AdjustedPosition.html#getEndPosition(com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">getEndPosition(EndPosTable)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AdjustedPosition.html" title="class in com.google.errorprone.fixes">AdjustedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/FixedPosition.html#getEndPosition(com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">getEndPosition(EndPosTable)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" title="class in com.google.errorprone.fixes">FixedPosition</a></dt>
@@ -5108,6 +5134,16 @@ covariant overrides in subtypes of <code>Symbol</code>.</div>
 <dt><a href="com/google/errorprone/fixes/IndexedPosition.html#getEndPosition(com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">getEndPosition(EndPosTable)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html#getEndPosition(com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">getEndPosition(EndPosTable)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html" title="class in com.google.errorprone.refaster">UPlaceholderExpression.PlaceholderParamIdent</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#getEndPosition(com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">getEndPosition(EndPosTable)</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html#getEndPosition(com.sun.tools.javac.tree.JCTree)" class="member-name-link">getEndPosition(JCTree)</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html#getEndPosition(com.sun.tools.javac.tree.JCTree,com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getEndPosition(JCTree, CompilationUnitTree)</a> - Static method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html#getEndPosition(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)" class="member-name-link">getEndPosition(JCDiagnostic.DiagnosticPosition)</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html#getEndPosition(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getEndPosition(JCDiagnostic.DiagnosticPosition, CompilationUnitTree)</a> - Static method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/ErrorProneFlags.html#getEnum(java.lang.String,java.lang.Class)" class="member-name-link">getEnum(String, Class)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
 <dd>
@@ -5623,6 +5659,8 @@ of the tree within the overall source.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html#getPreferredPosition()" class="member-name-link">getPreferredPosition()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html" title="class in com.google.errorprone.refaster">UPlaceholderExpression.PlaceholderParamIdent</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#getPreferredPosition()" class="member-name-link">getPreferredPosition()</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#getPrettyName(com.sun.tools.javac.code.Symbol)" class="member-name-link">getPrettyName(Symbol)</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>
 <div class="block">Gets a human-friendly name for the given <code>Symbol</code> to use in diagnostics.</div>
@@ -5651,10 +5689,16 @@ of the tree within the overall source.</div>
 </dd>
 <dt><a href="com/google/errorprone/ErrorProneOptions.html#getRemainingArgs()" class="member-name-link">getRemainingArgs()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/Fix.html#getReplacements(com.google.errorprone.fixes.ErrorProneEndPosTable)" class="member-name-link">getReplacements(ErrorProneEndPosTable)</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFix.html#getReplacements(com.google.errorprone.fixes.ErrorProneEndPosTable)" class="member-name-link">getReplacements(ErrorProneEndPosTable)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/Fix.html#getReplacements(com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">getReplacements(EndPosTable)</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/fixes/SuggestedFix.html#getReplacements(com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">getReplacements(EndPosTable)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="com/google/errorprone/fixes/Fix.html#getReplacements(com.google.errorprone.fixes.ErrorProneEndPosTable)"><code>instead</code></a></div>
+</div>
+</dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#getResultType(com.sun.source.tree.ExpressionTree)" class="member-name-link">getResultType(ExpressionTree)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Returns the type that this expression tree will evaluate to.</div>
@@ -5724,6 +5768,8 @@ to the user.</div>
 <dt><a href="com/google/errorprone/fixes/IndexedPosition.html#getStartPosition()" class="member-name-link">getStartPosition()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html#getStartPosition()" class="member-name-link">getStartPosition()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html" title="class in com.google.errorprone.refaster">UPlaceholderExpression.PlaceholderParamIdent</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#getStartPosition()" class="member-name-link">getStartPosition()</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#getStartPosition(com.sun.source.tree.Tree)" class="member-name-link">getStartPosition(Tree)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
@@ -5832,6 +5878,8 @@ source within the overall file.</div>
 <dt><a href="com/google/errorprone/fixes/IndexedPosition.html#getTree()" class="member-name-link">getTree()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" title="class in com.google.errorprone.fixes">IndexedPosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html#getTree()" class="member-name-link">getTree()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html" title="class in com.google.errorprone.refaster">UPlaceholderExpression.PlaceholderParamIdent</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorPronePosition.html#getTree()" class="member-name-link">getTree()</a> - Method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/VisitorState.html#getTreeMaker()" class="member-name-link">getTreeMaker()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>

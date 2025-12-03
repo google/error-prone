@@ -147,7 +147,7 @@ loadScripts(document, 'script');</script>
 </ul>
 </li>
 <li class="circle">com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.Builder.html" class="type-name-link" title="class in com.google.errorprone.dataflow">AccessPathStore.Builder</a>&lt;V&gt;</li>
-<li class="circle">com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AdjustedPosition.html" class="type-name-link" title="class in com.google.errorprone.fixes">AdjustedPosition</a></li>
+<li class="circle">com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/AdjustedPosition.html" class="type-name-link" title="class in com.google.errorprone.fixes">AdjustedPosition</a> (implements com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>)</li>
 <li class="circle">com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/AnnotationDoesNotHaveArgument.html" class="type-name-link" title="class in com.google.errorprone.matchers">AnnotationDoesNotHaveArgument</a> (implements com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;)</li>
 <li class="circle">com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/AnnotationHasArgumentWithValue.html" class="type-name-link" title="class in com.google.errorprone.matchers">AnnotationHasArgumentWithValue</a> (implements com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;)</li>
 <li class="circle">com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></li>
@@ -913,7 +913,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.google.errorprone.<a href="com/google/errorprone/FileManagers.html" class="type-name-link" title="class in com.google.errorprone">FileManagers</a></li>
 <li class="circle">com.google.errorprone.<a href="com/google/errorprone/FileObjects.html" class="type-name-link" title="class in com.google.errorprone">FileObjects</a></li>
 <li class="circle">com.google.errorprone.util.<a href="com/google/errorprone/util/FindIdentifiers.html" class="type-name-link" title="class in com.google.errorprone.util">FindIdentifiers</a></li>
-<li class="circle">com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" class="type-name-link" title="class in com.google.errorprone.fixes">FixedPosition</a></li>
+<li class="circle">com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/FixedPosition.html" class="type-name-link" title="class in com.google.errorprone.fixes">FixedPosition</a> (implements com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>)</li>
 <li class="circle">com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringUtils.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringUtils</a></li>
 <li class="circle">com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation</a></li>
 <li class="circle">com.google.common.collect.ForwardingObject
@@ -952,7 +952,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.google.errorprone.apply.<a href="com/google/errorprone/apply/ImportOrganizer.Import.html" class="type-name-link" title="class in com.google.errorprone.apply">ImportOrganizer.Import</a></li>
 <li class="circle">com.google.errorprone.apply.<a href="com/google/errorprone/apply/ImportOrganizer.OrganizedImports.html" class="type-name-link" title="class in com.google.errorprone.apply">ImportOrganizer.OrganizedImports</a></li>
 <li class="circle">com.google.errorprone.apply.<a href="com/google/errorprone/apply/ImportStatements.html" class="type-name-link" title="class in com.google.errorprone.apply">ImportStatements</a></li>
-<li class="circle">com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" class="type-name-link" title="class in com.google.errorprone.fixes">IndexedPosition</a></li>
+<li class="circle">com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/IndexedPosition.html" class="type-name-link" title="class in com.google.errorprone.fixes">IndexedPosition</a> (implements com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a>)</li>
 <li class="circle">com.google.errorprone.dataflow.nullnesspropagation.inference.<a href="com/google/errorprone/dataflow/nullnesspropagation/inference/InferredNullability.html" class="type-name-link" title="class in com.google.errorprone.dataflow.nullnesspropagation.inference">InferredNullability</a></li>
 <li class="circle">com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" class="type-name-link" title="class in com.google.errorprone.matchers">InjectMatchers</a></li>
 <li class="circle">com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" class="type-name-link" title="class in com.google.errorprone.refaster">Inliner</a></li>
@@ -1145,6 +1145,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.google.errorprone.<a href="com/google/errorprone/DescriptionListener.Factory.html" class="type-name-link" title="interface in com.google.errorprone">DescriptionListener.Factory</a></li>
 <li class="circle">com.google.errorprone.apply.<a href="com/google/errorprone/apply/Diff.html" class="type-name-link" title="interface in com.google.errorprone.apply">Diff</a></li>
 <li class="circle">com.google.errorprone.apply.<a href="com/google/errorprone/apply/DiffSupplier.html" class="type-name-link" title="interface in com.google.errorprone.apply">DiffSupplier</a></li>
+<li class="circle">com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" class="type-name-link" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></li>
 <li class="circle">com.google.errorprone.apply.<a href="com/google/errorprone/apply/FileDestination.html" class="type-name-link" title="interface in com.google.errorprone.apply">FileDestination</a></li>
 <li class="circle">com.google.errorprone.apply.<a href="com/google/errorprone/apply/FileSource.html" class="type-name-link" title="interface in com.google.errorprone.apply">FileSource</a></li>
 <li class="circle">com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Fix.html" class="type-name-link" title="interface in com.google.errorprone.fixes">Fix</a></li>
@@ -1161,6 +1162,11 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.LockEventListener.html" class="type-name-link" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a></li>
 <li class="circle">com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.ViolationReporter.html" class="type-name-link" title="interface in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis.ViolationReporter</a></li>
 <li class="circle">com.google.errorprone.apply.<a href="com/google/errorprone/apply/ImportOrganizer.html" class="type-name-link" title="interface in com.google.errorprone.apply">ImportOrganizer</a></li>
+<li class="circle">com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition
+<ul>
+<li class="circle">com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" class="type-name-link" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></li>
+</ul>
+</li>
 <li class="circle">com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MatchState.html" class="type-name-link" title="interface in com.google.errorprone.matchers.method">MatchState</a></li>
 <li class="circle">com.google.protobuf.MessageLiteOrBuilder
 <ul>
