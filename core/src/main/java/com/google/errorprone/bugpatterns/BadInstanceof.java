@@ -73,6 +73,9 @@ public final class BadInstanceof extends BugChecker implements InstanceOfTreeMat
   }
 
   private static SuggestedFix getFix(InstanceOfTree tree, VisitorState state) {
+    if (tree.getPattern() != null) {
+      return SuggestedFix.emptyFix();
+    }
     Tree parent = state.getPath().getParentPath().getLeaf();
     Tree grandParent = state.getPath().getParentPath().getParentPath().getLeaf();
     if (parent instanceof ParenthesizedTree && grandParent.getKind() == Kind.LOGICAL_COMPLEMENT) {

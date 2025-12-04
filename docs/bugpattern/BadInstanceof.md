@@ -27,3 +27,22 @@ foo instanceof Foo
 ```java
 foo != null
 ```
+
+Pattern-matching `instanceof`s introduce some extra complexity into this. It may
+be tempting to use an `instanceof` check to define a narrowly-scoped local
+variable which gets reused within an expression, for example,
+
+```java
+return proto.getSubMessage() instanceof SubMessage sm
+    && sm.getForename().equals("John")
+    && sm.getSurname().equals("Smith");
+```
+
+We feel this urge should be resisted. While this is a clever trick to avoid an
+extra line, it is not a true `instanceof` check, and declaring a variable
+normally is clearer:
+
+```java
+SubMessage sm = proto.getSubMessage();
+return sm.getForename().equals("John") && sm.getSurname().equals("Smith");
+```
