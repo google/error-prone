@@ -21,7 +21,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
-import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -68,7 +67,6 @@ public class ParameterName extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
   private final ImmutableList<String> exemptPackages;
-  private final boolean matchImplicitSource;
 
   @Inject
   ParameterName(ErrorProneFlags flags) {
@@ -78,7 +76,6 @@ public class ParameterName extends BugChecker
             // com.foobar
             .map(p -> p.endsWith(".") ? p : p + ".")
             .collect(toImmutableList());
-    this.matchImplicitSource = flags.getBoolean("ParameterName:matchImplicitSource").orElse(true);
   }
 
   @Override
@@ -96,9 +93,6 @@ public class ParameterName extends BugChecker
   }
 
   int argListStartPosition(Tree tree, VisitorState state) {
-    if (!matchImplicitSource && !hasExplicitSource(tree, state)) {
-      return Position.NOPOS;
-    }
     int pos = state.getEndPosition(tree);
     if (pos != Position.NOPOS) {
       return pos;
