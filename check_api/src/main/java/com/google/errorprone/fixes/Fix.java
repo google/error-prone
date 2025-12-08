@@ -17,7 +17,6 @@
 package com.google.errorprone.fixes;
 
 import com.google.common.collect.ImmutableSet;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 
 /**
@@ -40,14 +39,6 @@ public interface Fix {
   Replacements.CoalescePolicy getCoalescePolicy();
 
   ImmutableSet<Replacement> getReplacements(ErrorProneEndPosTable endPositions);
-
-  /**
-   * @deprecated use {@link #getReplacements(ErrorProneEndPosTable) instead}
-   */
-  @Deprecated
-  default ImmutableSet<Replacement> getReplacements(EndPosTable endPositions) {
-    return getReplacements(ErrorProneEndPosTable.create(endPositions));
-  }
 
   ImmutableSet<String> getImportsToAdd();
 

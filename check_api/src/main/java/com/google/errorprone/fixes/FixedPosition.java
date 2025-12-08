@@ -17,7 +17,6 @@
 package com.google.errorprone.fixes;
 
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
@@ -50,11 +49,6 @@ public record FixedPosition(JCTree tree, int startPosition, int endPosition)
 
   @Override
   public int getEndPosition(ErrorProneEndPosTable endPosTable) {
-    return endPosition;
-  }
-
-  @Override
-  public int getEndPosition(EndPosTable endPosTable) {
     return endPosition;
   }
 }

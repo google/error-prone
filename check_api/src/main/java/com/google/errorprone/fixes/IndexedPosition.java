@@ -18,7 +18,6 @@ package com.google.errorprone.fixes;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 
 /** Describes a position that only has a start and end index. */
@@ -46,11 +45,6 @@ public record IndexedPosition(int startPos, int endPos) implements ErrorPronePos
 
   @Override
   public int getEndPosition(ErrorProneEndPosTable endPosTable) {
-    return endPos;
-  }
-
-  @Override
-  public int getEndPosition(EndPosTable endPosTable) {
     return endPos;
   }
 }

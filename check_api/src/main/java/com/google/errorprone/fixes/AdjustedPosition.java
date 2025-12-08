@@ -16,7 +16,6 @@
 
 package com.google.errorprone.fixes;
 
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 
 /** Describes a tree position with adjustments to the start and end indices. */
@@ -37,11 +36,6 @@ public record AdjustedPosition(
   @Override
   public int getPreferredPosition() {
     return position.getPreferredPosition();
-  }
-
-  @Override
-  public int getEndPosition(EndPosTable endPositions) {
-    return position.getEndPosition(endPositions) + endPositionAdjustment;
   }
 
   @Override

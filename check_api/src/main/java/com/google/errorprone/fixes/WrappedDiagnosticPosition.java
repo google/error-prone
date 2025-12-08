@@ -16,7 +16,6 @@
 
 package com.google.errorprone.fixes;
 
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
@@ -35,11 +34,6 @@ record WrappedDiagnosticPosition(DiagnosticPosition pos) implements ErrorPronePo
   @Override
   public JCTree getTree() {
     return pos.getTree();
-  }
-
-  @Override
-  public int getEndPosition(EndPosTable endPosTable) {
-    return pos.getEndPosition(endPosTable);
   }
 
   @Override

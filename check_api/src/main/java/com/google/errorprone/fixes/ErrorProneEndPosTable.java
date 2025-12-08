@@ -18,19 +18,15 @@ package com.google.errorprone.fixes;
 
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic;
 
-/** A compatibility wrapper around {@link EndPosTable}. */
+/** A compatibility wrapper around {@code EndPosTable}. */
 public interface ErrorProneEndPosTable {
 
   static ErrorProneEndPosTable create(CompilationUnitTree unit) {
-    EndPosTable endPosTable = ((JCTree.JCCompilationUnit) unit).endPositions;
-    return pos -> pos.getEndPosition(endPosTable);
-  }
-
-  static ErrorProneEndPosTable create(EndPosTable endPosTable) {
+    com.sun.tools.javac.tree.EndPosTable endPosTable =
+        ((JCTree.JCCompilationUnit) unit).endPositions;
     return pos -> pos.getEndPosition(endPosTable);
   }
 
