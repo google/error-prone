@@ -59,7 +59,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#create(com.sun.source.tree.CompilationUnitTree)" tabindex="0">create(CompilationUnitTree)</a></li>
-<li><a href="#create(com.sun.tools.javac.tree.EndPosTable)" tabindex="0">create(EndPosTable)</a></li>
 <li><a href="#getEndPosition(com.sun.source.tree.Tree)" tabindex="0">getEndPosition(Tree)</a></li>
 <li><a href="#getEndPosition(com.sun.tools.javac.tree.JCTree)" tabindex="0">getEndPosition(JCTree)</a></li>
 <li><a href="#getEndPosition(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)" tabindex="0">getEndPosition(JCDiagnostic.DiagnosticPosition)</a></li>
@@ -98,30 +97,27 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static <a href="ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#create(com.sun.source.tree.CompilationUnitTree)" class="member-name-link">create</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;unit)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static <a href="ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#create(com.sun.tools.javac.tree.EndPosTable)" class="member-name-link">create</a><wbr>(com.sun.tools.javac.tree.EndPosTable&nbsp;endPosTable)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getEndPosition(com.sun.source.tree.Tree)" class="member-name-link">getEndPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#getEndPosition(com.sun.source.tree.Tree,com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getEndPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getEndPosition(com.sun.source.tree.Tree)" class="member-name-link">getEndPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#getEndPosition(com.sun.source.tree.Tree,com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getEndPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;unit)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getEndPosition(com.sun.tools.javac.tree.JCTree)" class="member-name-link">getEndPosition</a><wbr>(com.sun.tools.javac.tree.JCTree&nbsp;tree)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#getEndPosition(com.sun.tools.javac.tree.JCTree,com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getEndPosition</a><wbr>(com.sun.tools.javac.tree.JCTree&nbsp;tree,
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getEndPosition(com.sun.tools.javac.tree.JCTree)" class="member-name-link">getEndPosition</a><wbr>(com.sun.tools.javac.tree.JCTree&nbsp;tree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#getEndPosition(com.sun.tools.javac.tree.JCTree,com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getEndPosition</a><wbr>(com.sun.tools.javac.tree.JCTree&nbsp;tree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;unit)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getEndPosition(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)" class="member-name-link">getEndPosition</a><wbr>(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#getEndPosition(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getEndPosition</a><wbr>(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;pos,
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getEndPosition(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)" class="member-name-link">getEndPosition</a><wbr>(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;pos)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#getEndPosition(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition,com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getEndPosition</a><wbr>(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition&nbsp;pos,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;unit)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -141,14 +137,6 @@ loadScripts(document, 'script');</script>
 <h3>create</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></span>&nbsp;<span class="element-name">create</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;unit)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="create(com.sun.tools.javac.tree.EndPosTable)">
-<h3>create</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></span>&nbsp;<span class="element-name">create</span><wbr><span class="parameters">(com.sun.tools.javac.tree.EndPosTable&nbsp;endPosTable)</span></div>
 </div>
 </section>
 </li>
