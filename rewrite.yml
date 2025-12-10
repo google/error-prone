@@ -1,0 +1,8 @@
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: com.google.openrewrite.SanityCheck
+displayName: Apply Java & Maven best practices
+description: Comprehensive code quality recipe combining modernization, security, and best practices.
+recipeList:
+  - org.openrewrite.maven.UpdateMavenWrapper
+---

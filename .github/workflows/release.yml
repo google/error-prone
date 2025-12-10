@@ -44,7 +44,7 @@ jobs:
      
       - name: Bump Version Number
         run: |
-          mvn --no-transfer-progress versions:set versions:commit -DnewVersion="${{ github.event.inputs.version }}"
+          ./mvnw --no-transfer-progress versions:set versions:commit -DnewVersion="${{ github.event.inputs.version }}"
           git ls-files | grep 'pom.xml$' | xargs git add
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git config --global user.name "${{ github.actor }}"
@@ -59,7 +59,7 @@ jobs:
           CI_DEPLOY_PASSWORD: ${{ secrets.CI_DEPLOY_PASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run:
-          mvn --no-transfer-progress -P release clean deploy -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}"
+          ./mvnw --no-transfer-progress -P release clean deploy -Dgpg.passphrase="${{ secrets.GPG_PASSPHRASE }}"
 
       - name: Push tag
         run: |
