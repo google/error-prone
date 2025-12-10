@@ -50,6 +50,12 @@
       <version>${jspecify.version}</version>
     </dependency>
     <dependency>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
+      <version>1.3.5</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <!-- GPLv2 with Classpath Exception -->
       <groupId>io.github.eisop</groupId>
       <artifactId>dataflow-errorprone</artifactId>
@@ -101,6 +107,12 @@
       <groupId>com.google.truth.extensions</groupId>
       <artifactId>truth-java8-extension</artifactId>
       <version>${truth.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.inject</groupId>
+      <artifactId>jakarta.inject-api</artifactId>
+      <version>1.0.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
