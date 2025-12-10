@@ -854,6 +854,9 @@ This method searches the class path for the given file, prefer to read the file 
 __[IdentityHashMapUsage](bugpattern/IdentityHashMapUsage)__<br>
 IdentityHashMap usage shouldn&#39;t be intermingled with Map
 
+__[IfChainToSwitch](bugpattern/IfChainToSwitch)__<br>
+This if-chain may be converted into a switch
+
 __[IgnoredPureGetter](bugpattern/IgnoredPureGetter)__<br>
 Getters on AutoValues, AutoBuilders, and Protobuf Messages are side-effect free, so there is no point in calling them if the return value is ignored. While there are no side effects from the getter, the receiver may have side effects.
 

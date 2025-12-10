@@ -6549,6 +6549,10 @@ IntelliJ IDEA.</div>
 <dd>
 <div class="block">Supplies what was given.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/IfChainToSwitch.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">IfChainToSwitch</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Checks for chains of if statements that may be converted to a switch.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/IgnoredPureGetter.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">IgnoredPureGetter</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Flags ignored return values from pure getters.</div>
@@ -7069,6 +7073,10 @@ catching a supertype, and not specially handled.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/Interruption.html#%3Cinit%3E()" class="member-name-link">Interruption()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/Interruption.html" title="class in com.google.errorprone.bugpatterns">Interruption</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/IfChainToSwitch.html#intersectTypes(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">intersectTypes(Type, Type, VisitorState)</a> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/IfChainToSwitch.html" title="class in com.google.errorprone.bugpatterns">IfChainToSwitch</a></dt>
+<dd>
+<div class="block">Finds the intersection of two types, or <code>null</code> if there is no such intersection.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/IntFloatConversion.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">IntFloatConversion</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
@@ -7296,6 +7304,10 @@ return value should be used or not.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/ErrorProneOptions.html#isDisableAllWarnings()" class="member-name-link">isDisableAllWarnings()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/IfChainToSwitch.html#isDominatedBy(com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr,com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr,com.google.errorprone.VisitorState,com.sun.source.tree.ExpressionTree)" class="member-name-link">isDominatedBy(IfChainToSwitch.CaseIr, IfChainToSwitch.CaseIr, VisitorState, ExpressionTree)</a> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/IfChainToSwitch.html" title="class in com.google.errorprone.bugpatterns">IfChainToSwitch</a></dt>
+<dd>
+<div class="block">Compute whether the RHS is dominated by the LHS.</div>
+</dd>
 <dt><a href="com/google/errorprone/ErrorProneOptions.html#isDropErrorsToWarnings()" class="member-name-link">isDropErrorsToWarnings()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#isEffectivelyPrivate(com.sun.tools.javac.code.Symbol)" class="member-name-link">isEffectivelyPrivate(Symbol)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
@@ -8944,6 +8956,8 @@ annotated parameter.</div>
 <dt><a href="com/google/errorprone/bugpatterns/DuplicateBranches.html#matchIf(com.sun.source.tree.IfTree,com.google.errorprone.VisitorState)" class="member-name-link">matchIf(IfTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/DuplicateBranches.html" title="class in com.google.errorprone.bugpatterns">DuplicateBranches</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/flogger/FloggerRedundantIsEnabled.html#matchIf(com.sun.source.tree.IfTree,com.google.errorprone.VisitorState)" class="member-name-link">matchIf(IfTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.flogger.<a href="com/google/errorprone/bugpatterns/flogger/FloggerRedundantIsEnabled.html" title="class in com.google.errorprone.bugpatterns.flogger">FloggerRedundantIsEnabled</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/IfChainToSwitch.html#matchIf(com.sun.source.tree.IfTree,com.google.errorprone.VisitorState)" class="member-name-link">matchIf(IfTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/IfChainToSwitch.html" title="class in com.google.errorprone.bugpatterns">IfChainToSwitch</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ImplementAssertionWithChaining.html#matchIf(com.sun.source.tree.IfTree,com.google.errorprone.VisitorState)" class="member-name-link">matchIf(IfTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ImplementAssertionWithChaining.html" title="class in com.google.errorprone.bugpatterns">ImplementAssertionWithChaining</a></dt>
 <dd>&nbsp;</dd>
@@ -11035,6 +11049,11 @@ comments in the right format.</div>
 <dd>
 <div class="block">The Needleman-Wunsch algorithm for finding least-cost string edit distances between pairs of
 strings.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/IfChainToSwitch.html#needsBracesForArrowRhs(com.sun.source.tree.StatementTree)" class="member-name-link">needsBracesForArrowRhs(StatementTree)</a> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/IfChainToSwitch.html" title="class in com.google.errorprone.bugpatterns">IfChainToSwitch</a></dt>
+<dd>
+<div class="block">Determines whether the given statement tree needs to be wrapped in braces when used on the
+right hand side of the arrow of a `case`.</div>
 </dd>
 <dt><a href="com/google/errorprone/refaster/UAnyOf.html#negate()" class="member-name-link">negate()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UAnyOf.html" title="class in com.google.errorprone.refaster">UAnyOf</a></dt>
 <dd>&nbsp;</dd>
