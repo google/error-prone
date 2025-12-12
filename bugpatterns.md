@@ -1751,6 +1751,9 @@ The non-constant portion of a comparison generally comes first. For equality, pr
 
 ## Experimental : SUGGESTION
 
+__[AddNullMarkedToClass](bugpattern/AddNullMarkedToClass)__<br>
+Apply @NullMarked to this class
+
 __[AddNullMarkedToPackageInfo](bugpattern/AddNullMarkedToPackageInfo)__<br>
 Apply @NullMarked to this package
 
