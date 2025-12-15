@@ -147,15 +147,13 @@ public record AccessPath(@Nullable Element base, ImmutableList<String> path) {
    * path and null otherwise
    */
   public static @Nullable AccessPath fromNodeIfTrackable(Node node) {
-    if (node instanceof LocalVariableNode localVariableNode) {
-      return fromLocalVariable(localVariableNode);
-    } else if (node instanceof VariableDeclarationNode variableDeclarationNode) {
-      return fromVariableDecl(variableDeclarationNode);
-    } else if (node instanceof FieldAccessNode fieldAccessNode) {
-      return fromFieldAccess(fieldAccessNode);
-    } else if (node instanceof AssignmentNode assignmentNode) {
-      return fromNodeIfTrackable(assignmentNode.getTarget());
-    }
-    return null;
+    return switch (node) {
+      case LocalVariableNode localVariableNode -> fromLocalVariable(localVariableNode);
+      case VariableDeclarationNode variableDeclarationNode ->
+          fromVariableDecl(variableDeclarationNode);
+      case FieldAccessNode fieldAccessNode -> fromFieldAccess(fieldAccessNode);
+      case AssignmentNode assignmentNode -> fromNodeIfTrackable(assignmentNode.getTarget());
+      default -> null;
+    };
   }
 }
