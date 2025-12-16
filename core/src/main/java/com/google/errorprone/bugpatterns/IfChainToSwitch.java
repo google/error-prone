@@ -57,7 +57,6 @@ import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
-import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -852,12 +851,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
     boolean hasElse = elseOptional.isPresent();
     boolean hasElseIf = hasElse && (elseOptional.get() instanceof IfTree);
-    ExpressionTree at = predicate;
 
     // Strip any surrounding parentheses e.g. `if(((x == 1)))`
-    while (at instanceof ParenthesizedTree) {
-      at = ((ParenthesizedTree) at).getExpression();
-    }
+    ExpressionTree at = ASTHelpers.stripParentheses(predicate);
 
     InstanceOfTree instanceOfTree = null;
     if (at instanceof InstanceOfTree iot) {
