@@ -39,6 +39,7 @@ import com.sun.tools.javac.code.Symbol.PackageSymbol;
     summary = "Usage of internal proprietary API which may be removed in a future release",
     severity = WARNING)
 public class SunApi extends BugChecker implements MemberSelectTreeMatcher, IdentifierTreeMatcher {
+
   @Override
   public Description matchIdentifier(IdentifierTree tree, VisitorState state) {
     return match(tree, state);
