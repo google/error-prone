@@ -21,6 +21,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.ErrorPronePosition;
 import com.google.errorprone.fixes.FixedPosition;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.util.ASTHelpers;
@@ -119,7 +120,7 @@ final class Utils {
    * Gets a {@link DiagnosticPosition} for the {@link DocTree} pointed to by {@code path}, attached
    * to the {@link Tree} which it documents.
    */
-  static DiagnosticPosition diagnosticPosition(DocTreePath path, VisitorState state) {
+  static ErrorPronePosition diagnosticPosition(DocTreePath path, VisitorState state) {
     int startPosition = getStartPosition(path.getLeaf(), state);
     Tree tree = path.getTreePath().getLeaf();
     if (startPosition == Position.NOPOS) {
@@ -130,7 +131,7 @@ final class Utils {
     return getDiagnosticPosition(startPosition, tree);
   }
 
-  static DiagnosticPosition getDiagnosticPosition(int startPosition, Tree tree) {
+  static ErrorPronePosition getDiagnosticPosition(int startPosition, Tree tree) {
     return new FixedPosition(tree, startPosition);
   }
 

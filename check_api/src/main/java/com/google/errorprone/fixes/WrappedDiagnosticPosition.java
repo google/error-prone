@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 The Error Prone Authors.
+ * Copyright 2025 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,35 +16,28 @@
 
 package com.google.errorprone.fixes;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
-/** Describes a position that only has a start and end index. */
-public record IndexedPosition(int startPos, int endPos) implements ErrorPronePosition {
-
-  public IndexedPosition {
-    checkArgument(startPos >= 0, "Start [%s] should not be less than zero", startPos);
-    checkArgument(startPos <= endPos, "Start [%s] should not be after end [%s]", startPos, endPos);
-  }
-
-  @Override
-  public JCTree getTree() {
-    throw new UnsupportedOperationException();
-  }
+record WrappedDiagnosticPosition(DiagnosticPosition pos) implements ErrorPronePosition {
 
   @Override
   public int getStartPosition() {
-    return startPos;
+    return pos.getStartPosition();
   }
 
   @Override
   public int getPreferredPosition() {
-    throw new UnsupportedOperationException();
+    return pos.getPreferredPosition();
+  }
+
+  @Override
+  public JCTree getTree() {
+    return pos.getTree();
   }
 
   @Override
   public int getEndPosition(ErrorProneEndPosTable endPosTable) {
-    return endPos;
+    return endPosTable.getEndPosition(pos);
   }
 }

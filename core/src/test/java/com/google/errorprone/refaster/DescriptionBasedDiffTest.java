@@ -23,12 +23,10 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.apply.DescriptionBasedDiff;
 import com.google.errorprone.apply.ImportOrganizer;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.fixes.FixedPosition;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.sun.tools.javac.tree.EndPosTable;
-import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -286,30 +284,6 @@ public class DescriptionBasedDiffTest extends CompilerBasedTest {
   static final class DummyChecker extends BugChecker {}
 
   private static Description dummyDescription(SuggestedFix fix) {
-    return new DummyChecker()
-        .buildDescription(
-            new DiagnosticPosition() {
-              @Override
-              public JCTree getTree() {
-                return null;
-              }
-
-              @Override
-              public int getStartPosition() {
-                return 0;
-              }
-
-              @Override
-              public int getPreferredPosition() {
-                return 0;
-              }
-
-              @Override
-              public int getEndPosition(EndPosTable endPosTable) {
-                return 0;
-              }
-            })
-        .addFix(fix)
-        .build();
+    return new DummyChecker().buildDescription(new FixedPosition(null, 0)).addFix(fix).build();
   }
 }

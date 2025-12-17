@@ -48,7 +48,7 @@ public class NonCanonicalStaticMemberImport extends BugChecker implements Import
         .setMessage(
             String.format(
                 "Static import of '%s' uses non-canonical name; prefer '%s'",
-                importInfo.simpleName(), importInfo.canonicalName()))
+                importInfo.simpleName().get(), importInfo.canonicalName()))
         .build();
   }
 }

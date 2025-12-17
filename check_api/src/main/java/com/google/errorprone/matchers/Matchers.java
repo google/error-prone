@@ -80,7 +80,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
-import com.sun.tools.javac.processing.JavacProcessingEnvironment;
+import com.sun.tools.javac.model.JavacElements;
+import com.sun.tools.javac.model.JavacTypes;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
@@ -724,12 +725,12 @@ public class Matchers {
   public static Matcher<Tree> hasAnnotation(TypeMirror annotationMirror) {
     String annotationName = annotationMirror.toString();
     return (Tree tree, VisitorState state) -> {
-      JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(state.context);
-      TypeElement typeElem = (TypeElement) javacEnv.getTypeUtils().asElement(annotationMirror);
+      TypeElement typeElem =
+          (TypeElement) JavacTypes.instance(state.context).asElement(annotationMirror);
       String name;
       if (typeElem != null) {
         // Get the binary name if possible ($ to separate nested members). See b/36160747
-        name = javacEnv.getElementUtils().getBinaryName(typeElem).toString();
+        name = JavacElements.instance(state.context).getBinaryName(typeElem).toString();
       } else {
         name = annotationName;
       }

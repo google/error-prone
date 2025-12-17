@@ -17,6 +17,7 @@
 package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.errorprone.fixes.ErrorProneEndPosTable.getEndPosition;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
@@ -51,8 +52,7 @@ class BlockTemplateMatch extends TemplateMatch {
       JCTree firstStatement = statements.getFirst();
       JCTree lastStatement = Iterables.getLast(statements);
       return sequence
-          .subSequence(
-              firstStatement.getStartPosition(), lastStatement.getEndPosition(unit.endPositions))
+          .subSequence(firstStatement.getStartPosition(), getEndPosition(lastStatement, unit))
           .toString();
     } catch (IOException e) {
       throw new RuntimeException(e);

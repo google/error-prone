@@ -530,16 +530,14 @@ public class ASTHelpers {
    * <p>TODO(eaftan): Are there other places this could be used?
    */
   public static Type getReturnType(ExpressionTree expressionTree) {
-    if (expressionTree instanceof JCFieldAccess methodCall) {
-      return methodCall.type.getReturnType();
-    } else if (expressionTree instanceof JCIdent methodCall) {
-      return methodCall.type.getReturnType();
-    } else if (expressionTree instanceof JCMethodInvocation jCMethodInvocation) {
-      return getReturnType(jCMethodInvocation.getMethodSelect());
-    } else if (expressionTree instanceof JCMemberReference jCMemberReference) {
-      return jCMemberReference.sym.type.getReturnType();
-    }
-    throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
+    return switch (expressionTree) {
+      case JCFieldAccess methodCall -> methodCall.type.getReturnType();
+      case JCIdent methodCall -> methodCall.type.getReturnType();
+      case JCMethodInvocation jCMethodInvocation ->
+          getReturnType(jCMethodInvocation.getMethodSelect());
+      case JCMemberReference jCMemberReference -> jCMemberReference.sym.type.getReturnType();
+      default -> throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
+    };
   }
 
   /**
@@ -574,17 +572,16 @@ public class ASTHelpers {
    * }</pre>
    */
   public static Type getReceiverType(ExpressionTree expressionTree) {
-    if (expressionTree instanceof JCFieldAccess methodSelectFieldAccess) {
-      return methodSelectFieldAccess.selected.type;
-    } else if (expressionTree instanceof JCIdent methodCall) {
-      return methodCall.sym.owner.type;
-    } else if (expressionTree instanceof JCMethodInvocation jCMethodInvocation) {
-      return getReceiverType(jCMethodInvocation.getMethodSelect());
-    } else if (expressionTree instanceof JCMemberReference jCMemberReference) {
-      return jCMemberReference.getQualifierExpression().type;
-    }
-    throw new IllegalArgumentException(
-        "Expected a JCFieldAccess or JCIdent from expression " + expressionTree);
+    return switch (expressionTree) {
+      case JCFieldAccess methodSelectFieldAccess -> methodSelectFieldAccess.selected.type;
+      case JCIdent methodCall -> methodCall.sym.owner.type;
+      case JCMethodInvocation jCMethodInvocation ->
+          getReceiverType(jCMethodInvocation.getMethodSelect());
+      case JCMemberReference jCMemberReference -> jCMemberReference.getQualifierExpression().type;
+      default ->
+          throw new IllegalArgumentException(
+              "Expected a JCFieldAccess or JCIdent from expression " + expressionTree);
+    };
   }
 
   /**
@@ -606,22 +603,19 @@ public class ASTHelpers {
    * }</pre>
    */
   public static @Nullable ExpressionTree getReceiver(ExpressionTree expressionTree) {
-    if (expressionTree instanceof MethodInvocationTree methodInvocationTree) {
-      ExpressionTree methodSelect = methodInvocationTree.getMethodSelect();
-      if (methodSelect instanceof IdentifierTree) {
-        return null;
-      }
-      return getReceiver(methodSelect);
-    } else if (expressionTree instanceof MemberSelectTree memberSelectTree) {
-      return memberSelectTree.getExpression();
-    } else if (expressionTree instanceof MemberReferenceTree memberReferenceTree) {
-      return memberReferenceTree.getQualifierExpression();
-    } else {
-      throw new IllegalStateException(
-          String.format(
-              "Expected expression '%s' to be a method invocation or field access, but was %s",
-              expressionTree, expressionTree.getKind()));
-    }
+    return switch (expressionTree) {
+      case MethodInvocationTree methodInvocationTree ->
+          methodInvocationTree.getMethodSelect() instanceof IdentifierTree
+              ? null
+              : getReceiver(methodInvocationTree.getMethodSelect());
+      case MemberSelectTree memberSelectTree -> memberSelectTree.getExpression();
+      case MemberReferenceTree memberReferenceTree -> memberReferenceTree.getQualifierExpression();
+      default ->
+          throw new IllegalStateException(
+              String.format(
+                  "Expected expression '%s' to be a method invocation or field access, but was %s",
+                  expressionTree, expressionTree.getKind()));
+    };
   }
 
   /**
@@ -2130,7 +2124,9 @@ public class ASTHelpers {
 
   /** Returns whether the given tree has an explicit source code representation. */
   public static boolean hasExplicitSource(Tree tree, VisitorState state) {
-    return getStartPosition(tree) != Position.NOPOS && state.getEndPosition(tree) != Position.NOPOS;
+    int pos = getStartPosition(tree);
+    int endPos = state.getEndPosition(tree);
+    return pos != Position.NOPOS && endPos != Position.NOPOS && pos != endPos;
   }
 
   /** Returns {@code true} if this symbol was declared in Kotlin source. */

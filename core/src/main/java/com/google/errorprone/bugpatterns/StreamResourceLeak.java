@@ -74,88 +74,100 @@ public class StreamResourceLeak extends AbstractMustBeClosedChecker implements M
     Tree parent = parentPath.getLeaf();
     SuggestedFix.Builder fix = SuggestedFix.builder();
     String streamType = SuggestedFixes.prettyType(state, fix, ASTHelpers.getReturnType(tree));
-    if (parent instanceof MemberSelectTree) {
-      StatementTree statement = state.findEnclosing(StatementTree.class);
-      if (statement instanceof VariableTree var) {
-        // Variables need to be declared outside the try-with-resources:
-        // e.g. `int count = Files.lines(p).count();`
-        // -> `int count; try (Stream<String> stream = Files.lines(p)) { count = stream.count(); }`
-        int pos = getStartPosition(var);
-        int initPos = getStartPosition(var.getInitializer());
-        int eqPos = pos + state.getSourceForNode(var).substring(0, initPos - pos).lastIndexOf('=');
-        fix.replace(
-            eqPos,
-            initPos,
-            String.format(
-                ";\ntry (%s stream = %s) {\n%s =",
-                streamType, state.getSourceForNode(tree), var.getName()));
-      } else {
-        // the non-variable case, e.g. `return Files.lines(p).count()`
-        // -> try (Stream<Stream> stream = Files.lines(p)) { return stream.count(); }`
-        fix.prefixWith(
-            statement,
-            String.format("try (%s stream = %s) {\n", streamType, state.getSourceForNode(tree)));
-      }
-      fix.replace(tree, "stream");
-      fix.postfixWith(statement, "}");
-      return fix.build();
-    } else if (parent instanceof VariableTree variableTree) {
-      // If the stream is assigned to a variable, wrap the variable in a try-with-resources
-      // that includes all statements in the same block that reference the variable.
-      Tree grandParent = parentPath.getParentPath().getLeaf();
-      if (!(grandParent instanceof BlockTree blockTree)) {
-        return SuggestedFix.emptyFix();
-      }
-      List<? extends StatementTree> statements = blockTree.getStatements();
-      int idx = statements.indexOf(parent);
-      int lastUse = idx;
-      for (int i = idx + 1; i < statements.size(); i++) {
-        boolean[] found = {false};
-        statements
-            .get(i)
-            .accept(
-                new TreeScanner<Void, Void>() {
-                  @Override
-                  public Void visitIdentifier(IdentifierTree tree, Void unused) {
-                    if (Objects.equals(ASTHelpers.getSymbol(tree), ASTHelpers.getSymbol(parent))) {
-                      found[0] = true;
-                    }
-                    return null;
-                  }
-                },
-                null);
-        if (found[0]) {
-          lastUse = i;
+    return switch (parent) {
+      case MemberSelectTree unused -> {
+        StatementTree statement = state.findEnclosing(StatementTree.class);
+        if (statement instanceof VariableTree var) {
+          // Variables need to be declared outside the try-with-resources:
+          // e.g. `int count = Files.lines(p).count();`
+          // -> `int count; try (Stream<String> stream = Files.lines(p)) { count = stream.count();
+          // }`
+          int pos = getStartPosition(var);
+          int initPos = getStartPosition(var.getInitializer());
+          int eqPos =
+              pos + state.getSourceForNode(var).substring(0, initPos - pos).lastIndexOf('=');
+          fix.replace(
+              eqPos,
+              initPos,
+              String.format(
+                  ";\ntry (%s stream = %s) {\n%s =",
+                  streamType, state.getSourceForNode(tree), var.getName()));
+        } else {
+          // the non-variable case, e.g. `return Files.lines(p).count()`
+          // -> try (Stream<Stream> stream = Files.lines(p)) { return stream.count(); }`
+          fix.prefixWith(
+              statement,
+              String.format("try (%s stream = %s) {\n", streamType, state.getSourceForNode(tree)));
         }
+        fix.replace(tree, "stream");
+        fix.postfixWith(statement, "}");
+        yield fix.build();
       }
-      fix.prefixWith(parent, "try (");
-      fix.replace(
-          state.getEndPosition(variableTree.getInitializer()), state.getEndPosition(parent), ") {");
-      fix.postfixWith(statements.get(lastUse), "}");
-      return fix.build();
-    } else if (parent instanceof EnhancedForLoopTree) {
-      // If the stream is used in a loop (e.g. directory streams), wrap the loop in
-      // try-with-resources.
-      fix.prefixWith(
-          parent,
-          String.format("try (%s stream = %s) {\n", streamType, state.getSourceForNode(tree)));
-      fix.replace(tree, "stream");
-      fix.postfixWith(parent, "}");
-      return fix.build();
-    } else if (parent instanceof MethodInvocationTree) {
-      // If the stream is used in a method that is called in an expression statement, wrap it in
-      // try-with-resources.
-      Tree grandParent = parentPath.getParentPath().getLeaf();
-      if (!(grandParent instanceof ExpressionStatementTree)) {
-        return SuggestedFix.emptyFix();
+      case VariableTree variableTree -> {
+        // If the stream is assigned to a variable, wrap the variable in a try-with-resources
+        // that includes all statements in the same block that reference the variable.
+        Tree grandParent = parentPath.getParentPath().getLeaf();
+        if (!(grandParent instanceof BlockTree blockTree)) {
+          yield SuggestedFix.emptyFix();
+        }
+        List<? extends StatementTree> statements = blockTree.getStatements();
+        int idx = statements.indexOf(parent);
+        int lastUse = idx;
+        for (int i = idx + 1; i < statements.size(); i++) {
+          boolean[] found = {false};
+          statements
+              .get(i)
+              .accept(
+                  new TreeScanner<Void, Void>() {
+                    @Override
+                    public Void visitIdentifier(IdentifierTree tree, Void unused) {
+                      if (Objects.equals(
+                          ASTHelpers.getSymbol(tree), ASTHelpers.getSymbol(parent))) {
+                        found[0] = true;
+                      }
+                      return null;
+                    }
+                  },
+                  null);
+          if (found[0]) {
+            lastUse = i;
+          }
+        }
+        fix.prefixWith(parent, "try (");
+        fix.replace(
+            state.getEndPosition(variableTree.getInitializer()),
+            state.getEndPosition(parent),
+            ") {");
+        fix.postfixWith(statements.get(lastUse), "}");
+        yield fix.build();
       }
-      fix.prefixWith(
-          parent,
-          String.format("try (%s stream = %s) {\n", streamType, state.getSourceForNode(tree)));
-      fix.replace(tree, "stream");
-      fix.postfixWith(grandParent, "}");
-      return fix.build();
-    }
-    return SuggestedFix.emptyFix();
+      case EnhancedForLoopTree unused -> {
+        // If the stream is used in a loop (e.g. directory streams), wrap the loop in
+        // try-with-resources.
+        fix.prefixWith(
+            parent,
+            String.format("try (%s stream = %s) {\n", streamType, state.getSourceForNode(tree)));
+        fix.replace(tree, "stream");
+        fix.postfixWith(parent, "}");
+        yield fix.build();
+      }
+      case MethodInvocationTree unused -> {
+        // If the stream is used in a method that is called in an expression statement, wrap it in
+        // try-with-resources.
+        Tree grandParent = parentPath.getParentPath().getLeaf();
+        if (!(grandParent instanceof ExpressionStatementTree)) {
+          yield SuggestedFix.emptyFix();
+        }
+        fix.prefixWith(
+            parent,
+            String.format("try (%s stream = %s) {\n", streamType, state.getSourceForNode(tree)));
+        fix.replace(tree, "stream");
+        fix.postfixWith(grandParent, "}");
+        yield fix.build();
+      }
+      default -> {
+        yield SuggestedFix.emptyFix();
+      }
+    };
   }
 }

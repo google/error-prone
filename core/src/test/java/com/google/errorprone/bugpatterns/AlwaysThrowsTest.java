@@ -46,6 +46,53 @@ public class AlwaysThrowsTest {
   }
 
   @Test
+  public void negative_nonLiteral() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.time.Instant;
+
+            class T {
+              void f() {
+                Instant.parse(toString() + "foo");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void instantWithPeriodThrows() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.time.Duration;
+            import java.time.Instant;
+            import java.time.Period;
+
+            class T {
+              void f() {
+                Instant instant = Instant.now();
+                instant = instant.plus(Duration.ofDays(1));
+                instant = instant.plus(Period.ofDays(1));
+                instant = instant.plus(Period.ofWeeks(1));
+                // BUG: Diagnostic contains: fail at runtime with a UnsupportedTemporalTypeException
+                instant = instant.plus(Period.ofMonths(1));
+                // BUG: Diagnostic contains: fail at runtime with a UnsupportedTemporalTypeException
+                instant = instant.plus(Period.ofYears(1));
+                // BUG: Diagnostic contains: fail at runtime with a UnsupportedTemporalTypeException
+                instant = instant.minus(Period.ofMonths(1));
+                // BUG: Diagnostic contains: fail at runtime with a UnsupportedTemporalTypeException
+                instant = instant.minus(Period.ofYears(1));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void immutableMapThrows() {
     testHelper
         .addSourceLines(
@@ -214,6 +261,21 @@ public class AlwaysThrowsTest {
             class Test {
               // BUG: Diagnostic contains:
               private final UUID uuid = UUID.fromString("foo");
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void uuidFromString_withNonLiteral() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.UUID;
+
+            class Test {
+              private final UUID uuid = UUID.fromString(toString());
             }
             """)
         .doTest();

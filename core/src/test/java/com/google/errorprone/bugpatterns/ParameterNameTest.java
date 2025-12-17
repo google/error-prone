@@ -974,4 +974,22 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void enumConstructor() {
+    testHelper
+        .addSourceLines(
+            "E.java",
+            """
+            package test.a;
+
+            public enum E {
+              // BUG: Diagnostic contains:
+              ONE(/* foo= */ 1);
+
+              E(int bar) {}
+            }
+            """)
+        .doTest();
+  }
 }

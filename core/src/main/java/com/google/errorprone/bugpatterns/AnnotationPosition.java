@@ -150,32 +150,35 @@ public final class AnnotationPosition extends BugChecker
   private static ImmutableList<ErrorProneToken> annotationTokens(
       Tree tree, VisitorState state, int annotationEnd) {
     int endPos;
-    if (tree instanceof MethodTree methodTree) {
-      if (methodTree.getReturnType() != null) {
-        endPos = getStartPosition(methodTree.getReturnType());
-      } else if (!methodTree.getParameters().isEmpty()) {
-        endPos = getStartPosition(methodTree.getParameters().getFirst());
-        if (endPos < annotationEnd) {
+    switch (tree) {
+      case MethodTree methodTree -> {
+        if (methodTree.getReturnType() != null) {
+          endPos = getStartPosition(methodTree.getReturnType());
+        } else if (!methodTree.getParameters().isEmpty()) {
+          endPos = getStartPosition(methodTree.getParameters().getFirst());
+          if (endPos < annotationEnd) {
+            endPos = state.getEndPosition(methodTree);
+          }
+        } else if (methodTree.getBody() != null
+            && !methodTree.getBody().getStatements().isEmpty()) {
+          endPos = getStartPosition(methodTree.getBody().getStatements().getFirst());
+        } else {
           endPos = state.getEndPosition(methodTree);
         }
-      } else if (methodTree.getBody() != null && !methodTree.getBody().getStatements().isEmpty()) {
-        endPos = getStartPosition(methodTree.getBody().getStatements().getFirst());
-      } else {
-        endPos = state.getEndPosition(methodTree);
       }
-    } else if (tree instanceof VariableTree variableTree) {
-      endPos = getStartPosition(variableTree.getType());
-      if (endPos == -1) {
-        // handle 'var'
-        endPos = state.getEndPosition(variableTree.getModifiers());
+      case VariableTree variableTree -> {
+        endPos = getStartPosition(variableTree.getType());
+        if (endPos == -1) {
+          // handle 'var'
+          endPos = state.getEndPosition(variableTree.getModifiers());
+        }
       }
-    } else if (tree instanceof ClassTree classTree) {
-      endPos =
-          classTree.getMembers().isEmpty()
-              ? state.getEndPosition(classTree)
-              : getStartPosition(classTree.getMembers().getFirst());
-    } else {
-      throw new AssertionError();
+      case ClassTree classTree ->
+          endPos =
+              classTree.getMembers().isEmpty()
+                  ? state.getEndPosition(classTree)
+                  : getStartPosition(classTree.getMembers().getFirst());
+      default -> throw new AssertionError();
     }
     return state.getOffsetTokens(annotationEnd, endPos);
   }

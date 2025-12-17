@@ -18,18 +18,15 @@ package com.google.errorprone.fixes;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableSet;
-import com.sun.source.tree.TreeVisitor;
-import com.sun.tools.javac.tree.EndPosTable;
-import com.sun.tools.javac.tree.JCTree;
-import java.lang.reflect.Proxy;
+import com.sun.tools.javac.util.Position;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.ArgumentMatchers;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -38,54 +35,15 @@ import org.junit.runners.JUnit4;
 public class AppliedFixTest {
 
   // This is unused by the test, it just needs to be non-null.
-  // The proxy is necessary since the interface contains breaking changes across JDK versions.
-  final EndPosTable endPositions =
-      (EndPosTable)
-          Proxy.newProxyInstance(
-              AppliedFixTest.class.getClassLoader(),
-              new Class<?>[] {EndPosTable.class},
-              (proxy, method, args) -> {
-                throw new UnsupportedOperationException();
-              });
+  final ErrorProneEndPosTable endPositions = tree -> Position.NOPOS;
 
-  // TODO(b/67738557): consolidate helpers for creating fake trees
-  JCTree node(int startPos, int endPos) {
-    return new JCTree() {
-      @Override
-      public Tag getTag() {
-        throw new UnsupportedOperationException();
-      }
-
-      @Override
-      public void accept(Visitor v) {
-        throw new UnsupportedOperationException();
-      }
-
-      @Override
-      public <R, D> R accept(TreeVisitor<R, D> v, D d) {
-        throw new UnsupportedOperationException();
-      }
-
-      @Override
-      public Kind getKind() {
-        throw new UnsupportedOperationException();
-      }
-
-      @Override
-      public int getStartPosition() {
-        return startPos;
-      }
-
-      @Override
-      public int getEndPosition(EndPosTable endPosTable) {
-        return endPos;
-      }
-    };
+  ErrorPronePosition node(int startPos, int endPos) {
+    return new FixedPosition(null, startPos, endPos);
   }
 
   @Test
   public void shouldApplySingleFixOnALine() {
-    JCTree node = node(11, 14);
+    ErrorPronePosition node = node(11, 14);
 
     AppliedFix fix = AppliedFix.apply("import org.me.B;", endPositions, SuggestedFix.delete(node));
     assertThat(fix.snippet()).isEqualTo("import org.B;");
@@ -93,7 +51,7 @@ public class AppliedFixTest {
 
   @Test
   public void shouldReportOnlyTheChangedLineInNewSnippet() {
-    JCTree node = node(25, 26);
+    ErrorPronePosition node = node(25, 26);
 
     AppliedFix fix =
         AppliedFix.apply(
@@ -132,7 +90,7 @@ public class AppliedFixTest {
 
   @Test
   public void shouldSuggestToRemoveLastLineIfAsked() {
-    JCTree node = node(21, 42);
+    ErrorPronePosition node = node(21, 42);
 
     AppliedFix fix =
         AppliedFix.apply(
@@ -152,7 +110,8 @@ public class AppliedFixTest {
         ImmutableSet.of(Replacement.create(0, 1, ""), Replacement.create(1, 1, ""));
 
     Fix mockFix = mock(Fix.class);
-    when(mockFix.getReplacements(any())).thenReturn(replacements);
+    when(mockFix.getReplacements(ArgumentMatchers.<ErrorProneEndPosTable>any()))
+        .thenReturn(replacements);
 
     // If the fixes had been applied in the wrong order, this would fail.
     // But it succeeds, so they were applied in the right order.

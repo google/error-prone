@@ -38,10 +38,10 @@ public class RequiredModifiersCheckerTest {
               """
               package test;
 
-              import static javax.lang.model.element.Modifier.ABSTRACT;
               import com.google.errorprone.annotations.RequiredModifiers;
+              import static com.google.errorprone.annotations.Modifier.ABSTRACT;
 
-              @RequiredModifiers(ABSTRACT)
+              @RequiredModifiers(modifier = ABSTRACT)
               public @interface AbstractRequired {}
               """)
           .addSourceLines(
@@ -49,11 +49,11 @@ public class RequiredModifiersCheckerTest {
               """
               package test;
 
-              import static javax.lang.model.element.Modifier.FINAL;
-              import static javax.lang.model.element.Modifier.PUBLIC;
+              import static com.google.errorprone.annotations.Modifier.PUBLIC;
+              import static com.google.errorprone.annotations.Modifier.FINAL;
               import com.google.errorprone.annotations.RequiredModifiers;
 
-              @RequiredModifiers({PUBLIC, FINAL})
+              @RequiredModifiers(modifier = {PUBLIC, FINAL})
               public @interface PublicAndFinalRequired {}
               """);
 
@@ -263,10 +263,10 @@ public class RequiredModifiersTestCase {
             """
             package test;
 
-            import static javax.lang.model.element.Modifier.ABSTRACT;
+            import static com.google.errorprone.annotations.Modifier.ABSTRACT;
             import com.google.errorprone.annotations.RequiredModifiers;
 
-            @RequiredModifiers(ABSTRACT)
+            @RequiredModifiers(modifier = ABSTRACT)
             public @interface AbstractRequired {}
             """)
         .expectUnchanged()

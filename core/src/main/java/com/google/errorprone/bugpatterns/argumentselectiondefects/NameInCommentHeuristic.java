@@ -21,7 +21,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.NamedParameterComment.MatchType;
 import com.google.errorprone.util.Commented;
 import com.google.errorprone.util.Comments;
-import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
@@ -44,7 +44,7 @@ final class NameInCommentHeuristic implements Heuristic {
       Changes changes, Tree node, MethodSymbol symbol, VisitorState state) {
     // Now check to see if there is a comment in the position of any actual parameter we want to
     // change which matches the formal parameter
-    ImmutableList<Commented<ExpressionTree>> comments = findCommentsForArguments(node, state);
+    ImmutableList<Commented> comments = findCommentsForArguments(node, state);
 
     return changes.changedPairs().stream()
         .noneMatch(
@@ -56,15 +56,16 @@ final class NameInCommentHeuristic implements Heuristic {
             });
   }
 
-  private static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(
-      Tree tree, VisitorState state) {
+  private static ImmutableList<Commented> findCommentsForArguments(Tree tree, VisitorState state) {
     return switch (tree) {
       case MethodInvocationTree methodInvocationTree ->
           Comments.findCommentsForArguments(methodInvocationTree, state);
       case NewClassTree newClassTree -> Comments.findCommentsForArguments(newClassTree, state);
+      case DeconstructionPatternTree deconstructionPatternTree ->
+          Comments.findCommentsForArguments(deconstructionPatternTree, state);
       default ->
           throw new IllegalArgumentException(
-              "Only MethodInvocationTree or NewClassTree is supported");
+              "Only MethodInvocationTree or NewClassTree is supported, saw " + tree.getClass());
     };
   }
 }

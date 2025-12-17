@@ -27,7 +27,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.Commented.Position;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
-import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
@@ -57,7 +57,7 @@ public final class Comments {
    * the source positions in the returned {@code Comment} objects are adjusted so that they are
    * relative to the whole file.
    */
-  public static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(
+  public static ImmutableList<Commented> findCommentsForArguments(
       NewClassTree newClassTree, VisitorState state) {
     int startPosition = getStartPosition(newClassTree);
     return findCommentsForArguments(
@@ -75,11 +75,21 @@ public final class Comments {
    * the source positions in the returned {@code Comment} objects are adjusted so that they are
    * relative to the whole file.
    */
-  public static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(
+  public static ImmutableList<Commented> findCommentsForArguments(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     int startPosition = state.getEndPosition(methodInvocationTree.getMethodSelect());
     return findCommentsForArguments(
         methodInvocationTree, methodInvocationTree.getArguments(), startPosition, state);
+  }
+
+  public static ImmutableList<Commented> findCommentsForArguments(
+      DeconstructionPatternTree deconstructionPatternTree, VisitorState state) {
+    int startPosition = state.getEndPosition(deconstructionPatternTree.getDeconstructor());
+    return findCommentsForArguments(
+        deconstructionPatternTree,
+        deconstructionPatternTree.getNestedPatterns(),
+        startPosition,
+        state);
   }
 
   /**
@@ -99,11 +109,8 @@ public final class Comments {
     };
   }
 
-  private static ImmutableList<Commented<ExpressionTree>> findCommentsForArguments(
-      Tree tree,
-      List<? extends ExpressionTree> arguments,
-      int invocationStart,
-      VisitorState state) {
+  private static ImmutableList<Commented> findCommentsForArguments(
+      Tree tree, List<? extends Tree> arguments, int invocationStart, VisitorState state) {
 
     if (arguments.isEmpty()) {
       return ImmutableList.of();
@@ -193,10 +200,9 @@ public final class Comments {
     return argumentTracker.build();
   }
 
-  private static ImmutableList<Commented<ExpressionTree>> noComments(
-      List<? extends ExpressionTree> arguments) {
+  private static ImmutableList<Commented> noComments(List<? extends Tree> arguments) {
     return arguments.stream()
-        .map(a -> Commented.<ExpressionTree>builder().setTree(a).build())
+        .map(a -> Commented.builder().setTree(a).build())
         .collect(toImmutableList());
   }
 
@@ -382,24 +388,20 @@ public final class Comments {
   private static class ArgumentTracker {
 
     private final VisitorState state;
-    private final Iterator<? extends ExpressionTree> argumentsIterator;
+    private final Iterator<? extends Tree> argumentsIterator;
     private final int offset;
     private final LineMap lineMap;
 
-    private Commented.Builder<ExpressionTree> currentCommentedResultBuilder = null;
-    private Commented.Builder<ExpressionTree> previousCommentedResultBuilder = null;
-    private final ImmutableList.Builder<Commented<ExpressionTree>> resultBuilder =
-        ImmutableList.builder();
+    private Commented.Builder currentCommentedResultBuilder = null;
+    private Commented.Builder previousCommentedResultBuilder = null;
+    private final ImmutableList.Builder<Commented> resultBuilder = ImmutableList.builder();
 
     private int currentArgumentStartPosition = -1;
     private int currentArgumentEndPosition = -1;
     private int previousArgumentEndPosition = -1;
 
     ArgumentTracker(
-        Iterable<? extends ExpressionTree> arguments,
-        int offset,
-        VisitorState state,
-        LineMap lineMap) {
+        Iterable<? extends Tree> arguments, int offset, VisitorState state, LineMap lineMap) {
       this.state = state;
       this.offset = offset;
       this.argumentsIterator = arguments.iterator();
@@ -407,7 +409,7 @@ public final class Comments {
     }
 
     void advance() {
-      ExpressionTree nextArgument = argumentsIterator.next();
+      Tree nextArgument = argumentsIterator.next();
 
       currentArgumentEndPosition = state.getEndPosition(nextArgument) - offset;
       previousArgumentEndPosition = currentArgumentStartPosition;
@@ -417,11 +419,11 @@ public final class Comments {
         resultBuilder.add(previousCommentedResultBuilder.build());
       }
       previousCommentedResultBuilder = currentCommentedResultBuilder;
-      currentCommentedResultBuilder = Commented.<ExpressionTree>builder().setTree(nextArgument);
+      currentCommentedResultBuilder = Commented.builder().setTree(nextArgument);
     }
 
     /** Returns the final result. The object should not be used after calling this method */
-    ImmutableList<Commented<ExpressionTree>> build() {
+    ImmutableList<Commented> build() {
       if (previousCommentedResultBuilder != null) {
         resultBuilder.add(previousCommentedResultBuilder.build());
       }

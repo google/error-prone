@@ -231,6 +231,7 @@ interface Test {
   // https://bugs.openjdk.org/browse/JDK-8371248
   @Test
   public void crash() {
+    assume().that(Runtime.version().feature()).isLessThan(26);
     helper
         .addSourceLines(
             "Test.java",

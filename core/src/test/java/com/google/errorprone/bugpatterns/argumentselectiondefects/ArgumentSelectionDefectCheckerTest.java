@@ -453,4 +453,53 @@ record Foo(String first, String second, Foo foo) {}
         .setArgs("--enable-preview", "--release", Integer.toString(Runtime.version().feature()))
         .doTest();
   }
+
+  @Test
+  public void recordPattern_comments() {
+    CompilationTestHelper.newInstance(
+            ArgumentSelectionDefectWithNameInCommentsHeuristic.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            import %s;
+
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              String test(Object o) {
+                return switch (o) {
+                  // BUG: Diagnostic contains:
+                  case Foo(/* second= */ String second, /* first= */ String first) -> first;
+                  default -> "";
+                };
+              }
+            }
+            """
+                .formatted(Foo.class.getCanonicalName()))
+        .doTest();
+  }
+
+  @Test
+  public void recordPattern_comments_negative() {
+    CompilationTestHelper.newInstance(
+            ArgumentSelectionDefectWithNameInCommentsHeuristic.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            import %s;
+
+            abstract class Test {
+              abstract void target(Object first, Object second);
+
+              String test(Object o) {
+                return switch (o) {
+                  case Foo(/* first= */ String second, /* second= */ String first) -> first;
+                  default -> "";
+                };
+              }
+            }
+            """
+                .formatted(Foo.class.getCanonicalName()))
+        .doTest();
+  }
 }

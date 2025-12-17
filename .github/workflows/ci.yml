@@ -64,11 +64,11 @@ jobs:
           java-version: 25
           distribution: 'zulu'
           cache: 'maven'
-      - name: 'Set up JDK 26 from jdk.java.net'
+      - name: 'Set up JDK 27 from jdk.java.net'
         uses: oracle-actions/setup-java@v1
         with:
           website: jdk.java.net
-          release: 26
+          release: 27
           cache: 'maven'
       - name: 'Set up JDK ${{ matrix.java }} from jdk.java.net'
         if: ${{ matrix.java == 'EA' }}

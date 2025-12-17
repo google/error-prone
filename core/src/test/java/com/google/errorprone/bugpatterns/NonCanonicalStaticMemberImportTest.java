@@ -39,6 +39,10 @@ public class NonCanonicalStaticMemberImportTest {
               public static final int foo() {
                 return 42;
               }
+
+              public static final int bar() {
+                return 42;
+              }
             }
             """)
         .addSourceLines(
@@ -57,6 +61,8 @@ public class NonCanonicalStaticMemberImportTest {
 
             // BUG: Diagnostic contains: import static a.A.foo;
             import static b.B.foo;
+            // BUG: Diagnostic contains: of 'bar'
+            import static b.B.bar;
 
             class Test {}
             """)

@@ -174,6 +174,7 @@ import com.google.errorprone.bugpatterns.IdentifierName;
 import com.google.errorprone.bugpatterns.IdentityBinaryExpression;
 import com.google.errorprone.bugpatterns.IdentityHashMapBoxing;
 import com.google.errorprone.bugpatterns.IdentityHashMapUsage;
+import com.google.errorprone.bugpatterns.IfChainToSwitch;
 import com.google.errorprone.bugpatterns.IgnoredPureGetter;
 import com.google.errorprone.bugpatterns.ImmutableMemberCollection;
 import com.google.errorprone.bugpatterns.ImmutableSetForContains;
@@ -352,6 +353,7 @@ import com.google.errorprone.bugpatterns.RobolectricShadowDirectlyOn;
 import com.google.errorprone.bugpatterns.RuleNotRun;
 import com.google.errorprone.bugpatterns.RxReturnValueIgnored;
 import com.google.errorprone.bugpatterns.SameNameButDifferent;
+import com.google.errorprone.bugpatterns.ScannerUseDelimiter;
 import com.google.errorprone.bugpatterns.SelfAlwaysReturnsThis;
 import com.google.errorprone.bugpatterns.SelfAssertion;
 import com.google.errorprone.bugpatterns.SelfAssignment;
@@ -494,6 +496,7 @@ import com.google.errorprone.bugpatterns.checkreturnvalue.CanIgnoreReturnValueSu
 import com.google.errorprone.bugpatterns.checkreturnvalue.NoCanIgnoreReturnValueOnClasses;
 import com.google.errorprone.bugpatterns.checkreturnvalue.UnnecessarilyUsedValue;
 import com.google.errorprone.bugpatterns.checkreturnvalue.UsingJsr305CheckReturnValue;
+import com.google.errorprone.bugpatterns.collectionincompatibletype.AssertSameIncompatible;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionUndefinedEquality;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CompatibleWithMisuse;
@@ -573,6 +576,7 @@ import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
 import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.UnrecognisedJavadocTag;
 import com.google.errorprone.bugpatterns.javadoc.UrlInSee;
+import com.google.errorprone.bugpatterns.nullness.AddNullMarkedToClass;
 import com.google.errorprone.bugpatterns.nullness.AddNullMarkedToPackageInfo;
 import com.google.errorprone.bugpatterns.nullness.DereferenceWithNullBranch;
 import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
@@ -894,6 +898,7 @@ public class BuiltInCheckerSuppliers {
           ArrayAsKeyOfSetOrMap.class,
           ArrayRecordComponent.class,
           AssertEqualsArgumentOrderChecker.class,
+          AssertSameIncompatible.class,
           AssertThrowsMultipleStatements.class,
           AssertionFailureIgnored.class,
           AssignmentExpression.class,
@@ -978,6 +983,7 @@ public class BuiltInCheckerSuppliers {
           HidingField.class,
           ICCProfileGetInstance.class,
           IdentityHashMapUsage.class,
+          IfChainToSwitch.class,
           IgnoredPureGetter.class,
           ImmutableAnnotationChecker.class,
           ImmutableEnumChecker.class,
@@ -1111,6 +1117,7 @@ public class BuiltInCheckerSuppliers {
           RuleNotRun.class,
           RxReturnValueIgnored.class,
           SameNameButDifferent.class,
+          ScannerUseDelimiter.class,
           ScopeAnnotationOnInterfaceOrAbstractClass.class,
           SelfAlwaysReturnsThis.class,
           SelfSet.class,
@@ -1184,6 +1191,7 @@ public class BuiltInCheckerSuppliers {
   public static final ImmutableSet<BugCheckerInfo> DISABLED_CHECKS =
       getSuppliers(
           // keep-sorted start
+          AddNullMarkedToClass.class,
           AddNullMarkedToPackageInfo.class,
           AnnotationMirrorToString.class,
           AnnotationPosition.class,

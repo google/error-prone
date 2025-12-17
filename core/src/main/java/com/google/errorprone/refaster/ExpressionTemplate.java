@@ -262,28 +262,23 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
     // a different value than "0L + Integer.MIN_VALUE + Integer.MIN_VALUE" due
     // to integer promotion rules.
 
-    if (parent instanceof JCConditional conditional) {
-      // This intentionally differs from Pretty, because Pretty appears buggy:
-      // https://mail.openjdk.java.net/pipermail/compiler-dev/2013-September/007303.html
-      return TreeInfo.condPrec + ((conditional.cond == leaf) ? 1 : 0);
-    } else if (parent instanceof JCAssign assign) {
-      return TreeInfo.assignPrec + ((assign.lhs == leaf) ? 1 : 0);
-    } else if (parent instanceof JCAssignOp assignOp) {
-      return TreeInfo.assignopPrec + ((assignOp.lhs == leaf) ? 1 : 0);
-    } else if (parent instanceof JCUnary) {
-      return TreeInfo.opPrec(parent.getTag());
-    } else if (parent instanceof JCBinary binary) {
-      return TreeInfo.opPrec(parent.getTag()) + ((binary.rhs == leaf) ? 1 : 0);
-    } else if (parent instanceof JCTypeCast typeCast) {
-      return (typeCast.expr == leaf) ? TreeInfo.prefixPrec : TreeInfo.noPrec;
-    } else if (parent instanceof JCInstanceOf instanceOf) {
-      return TreeInfo.ordPrec + ((instanceOf.getType() == leaf) ? 1 : 0);
-    } else if (parent instanceof JCArrayAccess arrayAccess) {
-      return (arrayAccess.indexed == leaf) ? TreeInfo.postfixPrec : TreeInfo.noPrec;
-    } else if (parent instanceof JCFieldAccess fieldAccess) {
-      return (fieldAccess.selected == leaf) ? TreeInfo.postfixPrec : TreeInfo.noPrec;
-    } else {
-      return TreeInfo.noPrec;
-    }
+    return switch (parent) {
+      case JCConditional conditional -> {
+        // This intentionally differs from Pretty, because Pretty appears buggy:
+        // https://mail.openjdk.java.net/pipermail/compiler-dev/2013-September/007303.html
+        yield TreeInfo.condPrec + ((conditional.cond == leaf) ? 1 : 0);
+      }
+      case JCAssign assign -> TreeInfo.assignPrec + ((assign.lhs == leaf) ? 1 : 0);
+      case JCAssignOp assignOp -> TreeInfo.assignopPrec + ((assignOp.lhs == leaf) ? 1 : 0);
+      case JCUnary unused -> TreeInfo.opPrec(parent.getTag());
+      case JCBinary binary -> TreeInfo.opPrec(parent.getTag()) + ((binary.rhs == leaf) ? 1 : 0);
+      case JCTypeCast typeCast -> (typeCast.expr == leaf) ? TreeInfo.prefixPrec : TreeInfo.noPrec;
+      case JCInstanceOf instanceOf -> TreeInfo.ordPrec + ((instanceOf.getType() == leaf) ? 1 : 0);
+      case JCArrayAccess arrayAccess ->
+          (arrayAccess.indexed == leaf) ? TreeInfo.postfixPrec : TreeInfo.noPrec;
+      case JCFieldAccess fieldAccess ->
+          (fieldAccess.selected == leaf) ? TreeInfo.postfixPrec : TreeInfo.noPrec;
+      default -> TreeInfo.noPrec;
+    };
   }
 }

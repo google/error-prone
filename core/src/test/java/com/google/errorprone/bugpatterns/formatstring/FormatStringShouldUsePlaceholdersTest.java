@@ -147,4 +147,28 @@ public class Test {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void negativeVarargs() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+"""
+import com.google.common.base.Preconditions;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
+
+public class Test {
+  public void checkPositionIndex(int i, String moreFormat, Object moreArgs) {
+    List<Object> args = new ArrayList<>();
+    args.add(i);
+    Collections.addAll(args, moreArgs);
+    Preconditions.checkArgument(false, String.format("%s: %s" + moreFormat, args.toArray()));
+  }
+}
+""")
+        .expectUnchanged()
+        .doTest();
+  }
 }

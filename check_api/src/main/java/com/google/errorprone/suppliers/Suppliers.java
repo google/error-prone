@@ -266,6 +266,15 @@ public final class Suppliers {
     };
   }
 
+  public static final Supplier<Type> OBJECT_TYPE_ARRAY =
+      arrayOf(
+          new Supplier<Type>() {
+            @Override
+            public Type get(VisitorState state) {
+              return state.getSymtab().objectType;
+            }
+          });
+
   public static ImmutableList<Supplier<Type>> fromStrings(Iterable<String> types) {
     return ImmutableList.copyOf(
         Iterables.transform(

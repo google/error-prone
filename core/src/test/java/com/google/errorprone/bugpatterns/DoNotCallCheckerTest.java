@@ -895,4 +895,28 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void truthLiteProtoSubjectIsEqualToBuilder() {
+    testHelper
+        .addSourceLines(
+            "TestClass.java",
+            """
+            import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+
+            public class TestClass {
+              public void badApis(com.google.protobuf.MessageLite message) {
+                // BUG: Diagnostic contains: A Builder can never compare equal to a MessageLite
+                assertThat(message).isEqualTo(message.toBuilder());
+                assertThat(message).isEqualTo(null);
+                assertThat(message).isEqualTo(message);
+                // BUG: Diagnostic contains: A Builder can never compare equal to a MessageLite
+                assertThat(message).isNotEqualTo(message.toBuilder());
+                assertThat(message).isNotEqualTo(null);
+                assertThat(message).isNotEqualTo(message);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

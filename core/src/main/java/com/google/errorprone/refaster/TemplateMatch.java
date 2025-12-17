@@ -17,6 +17,7 @@
 package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.errorprone.fixes.ErrorProneEndPosTable.getEndPosition;
 
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
@@ -52,7 +53,7 @@ public abstract class TemplateMatch {
     try {
       CharSequence sequence = unit.getSourceFile().getCharContent(true);
       return sequence
-          .subSequence(location.getStartPosition(), location.getEndPosition(unit.endPositions))
+          .subSequence(location.getStartPosition(), getEndPosition(location, unit))
           .toString();
     } catch (IOException e) {
       throw new RuntimeException(e);

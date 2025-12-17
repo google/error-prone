@@ -68,14 +68,13 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.Trees;
+import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import java.util.Objects;
 import java.util.Set;
 import javax.lang.model.element.Name;
@@ -633,8 +632,7 @@ class NullnessUtils {
   }
 
   static @Nullable VariableTree findDeclaration(VisitorState state, Symbol sym) {
-    JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(state.context);
-    TreePath declPath = Trees.instance(javacEnv).getPath(sym);
+    TreePath declPath = JavacTrees.instance(state.context).getPath(sym);
     // Skip fields declared in other compilation units since we can't make a fix for them here.
     if (declPath != null
         && declPath.getCompilationUnit() == state.getPath().getCompilationUnit()

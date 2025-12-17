@@ -32,6 +32,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isInStaticInitializer;
@@ -70,7 +71,6 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.Position;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -507,7 +507,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     }
     Tree declTree = decl.getType();
     String declType =
-        state.getEndPosition(declTree) == Position.NOPOS ? "var" : state.getSourceForNode(declTree);
+        !hasExplicitSource(declTree, state) ? "var" : state.getSourceForNode(declTree);
 
     return Change.builder(
             SuggestedFix.builder()
