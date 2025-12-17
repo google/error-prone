@@ -461,7 +461,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     // default for the switch.  We conform to that convention here, too.
     if (!hasPattern && !hasDefault && !allEnumValuesPresent) {
       List<CaseIr> casesCopy = new ArrayList<>(cases);
-      int previousCaseEndIndex =
+      int previousCaseEndPosition =
           cases.stream()
               .map(CaseIr::caseSourceCodeRange)
               .mapToInt(Range::upperEndpoint)
@@ -476,7 +476,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ Optional.empty(),
               /* caseSourceCodeRange= */ Range.closedOpen(
-                  previousCaseEndIndex, previousCaseEndIndex)));
+                  previousCaseEndPosition, previousCaseEndPosition)));
       cases = casesCopy;
     }
 
@@ -744,7 +744,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
     // Is the predicate sensible?
     Set<String> handledEnumValues = new HashSet<>(ifChainAnalysisState.handledEnumValues());
-    int caseStartIndex =
+    int caseStartPosition =
         cases.isEmpty()
             ? ifTreeRange.lowerEndpoint()
             : cases.getLast().caseSourceCodeRange().upperEndpoint();
@@ -759,7 +759,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             /* arrowRhsOptional= */ Optional.ofNullable(conditionalBlock),
             handledEnumValues,
             ifTreeRange,
-            caseStartIndex);
+            caseStartPosition);
     if (newSubjectOptional.isEmpty()) {
       // Not sensible, return invalid state
       return new IfChainAnalysisState(
@@ -840,9 +840,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       Optional<StatementTree> arrowRhsOptional,
       Set<String> handledEnumValues,
       Range<Integer> ifTreeRange,
-      int caseStartIndex) {
+      int caseStartPosition) {
 
-    int caseEndIndex =
+    int caseEndPosition =
         elseOptional.isPresent()
             ? getStartPosition(elseOptional.get())
             : (arrowRhsOptional.isPresent()
@@ -880,7 +880,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               elseOptional,
               arrowRhsOptional,
               ifTreeRange,
-              caseEndIndex,
+              caseEndPosition,
               hasElse,
               hasElseIf);
         } else {
@@ -896,7 +896,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
                 arrowRhsOptional,
                 handledEnumValues,
                 ifTreeRange,
-                caseEndIndex,
+                caseEndPosition,
                 hasElse,
                 hasElseIf);
           }
@@ -920,7 +920,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
                   arrowRhsOptional,
                   handledEnumValues,
                   ifTreeRange,
-                  /* caseStartIndex= */ caseStartIndex);
+                  /* caseStartPosition= */ caseStartPosition);
           if (rv.isPresent()) {
             CaseIr oldLastCase = cases.get(currentCasesSize);
             // Update last case to attach the guard
@@ -950,7 +950,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
           elseOptional,
           arrowRhsOptional,
           ifTreeRange,
-          caseEndIndex,
+          caseEndPosition,
           hasElse,
           hasElseIf);
     }
@@ -968,7 +968,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       Optional<StatementTree> elseOptional,
       Optional<StatementTree> arrowRhsOptional,
       Range<Integer> ifTreeRange,
-      int caseEndIndex,
+      int caseEndPosition,
       boolean hasElse,
       boolean hasElseIf) {
 
@@ -983,7 +983,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
     if (instanceOfTree.getPattern() instanceof BindingPatternTree bpt) {
       boolean addDefault = hasElse && !hasElseIf;
-      int previousCaseEndIndex =
+      int previousCaseEndPosition =
           cases.isEmpty()
               ? ifTreeRange.lowerEndpoint()
               : cases.getLast().caseSourceCodeRange().upperEndpoint();
@@ -997,10 +997,11 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
-              /* caseSourceCodeRange= */ Range.closedOpen(previousCaseEndIndex, caseEndIndex)));
+              /* caseSourceCodeRange= */ Range.closedOpen(
+                  previousCaseEndPosition, caseEndPosition)));
 
       if (addDefault) {
-        previousCaseEndIndex =
+        previousCaseEndPosition =
             cases.isEmpty()
                 ? ifTreeRange.lowerEndpoint()
                 : cases.getLast().caseSourceCodeRange().upperEndpoint();
@@ -1013,14 +1014,14 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
                 /* expressionsOptional= */ Optional.empty(),
                 /* arrowRhsOptional= */ elseOptional,
                 /* caseSourceCodeRange= */ Range.closedOpen(
-                    caseEndIndex,
+                    caseEndPosition,
                     elseOptional.isPresent()
                         ? getStartPosition(elseOptional.get())
-                        : caseEndIndex)));
+                        : caseEndPosition)));
       }
     } else if (instanceOfTree.getType() != null) {
       boolean addDefault = hasElse && !hasElseIf;
-      int previousCaseEndIndex =
+      int previousCaseEndPosition =
           cases.isEmpty()
               ? ifTreeRange.lowerEndpoint()
               : cases.getLast().caseSourceCodeRange().upperEndpoint();
@@ -1033,7 +1034,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
-              /* caseSourceCodeRange= */ Range.closedOpen(previousCaseEndIndex, caseEndIndex)));
+              /* caseSourceCodeRange= */ Range.closedOpen(
+                  previousCaseEndPosition, caseEndPosition)));
       if (addDefault) {
         cases.add(
             new CaseIr(
@@ -1044,10 +1046,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
                 /* expressionsOptional= */ Optional.empty(),
                 /* arrowRhsOptional= */ elseOptional,
                 /* caseSourceCodeRange= */ Range.closedOpen(
-                    caseEndIndex,
+                    caseEndPosition,
                     elseOptional.isPresent()
                         ? state.getEndPosition(elseOptional.get())
-                        : caseEndIndex)));
+                        : caseEndPosition)));
       }
     } else {
       // Neither a binding pattern tree nor a type (possibly a record); unsupported
@@ -1066,7 +1068,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       Optional<StatementTree> elseOptional,
       Optional<StatementTree> arrowRhsOptional,
       Range<Integer> ifTreeRange,
-      int caseEndIndex,
+      int caseEndPosition,
       boolean hasElse,
       boolean hasElseIf) {
     boolean compileTimeConstantOnLhs = COMPILE_TIME_CONSTANT_MATCHER.matches(lhs, state);
@@ -1097,7 +1099,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     }
 
     boolean addDefault = hasElse && !hasElseIf;
-    int previousCaseEndIndex =
+    int previousCaseEndPosition =
         cases.isEmpty()
             ? ifTreeRange.lowerEndpoint()
             : cases.getLast().caseSourceCodeRange().upperEndpoint();
@@ -1109,9 +1111,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             /* guardOptional= */ Optional.empty(),
             /* expressionsOptional= */ Optional.of(ImmutableList.of(compileTimeConstant)),
             /* arrowRhsOptional= */ arrowRhsOptional,
-            /* caseSourceCodeRange= */ Range.openClosed(previousCaseEndIndex, caseEndIndex)));
+            /* caseSourceCodeRange= */ Range.openClosed(previousCaseEndPosition, caseEndPosition)));
     if (addDefault) {
-      previousCaseEndIndex =
+      previousCaseEndPosition =
           cases.isEmpty()
               ? ifTreeRange.lowerEndpoint()
               : cases.getLast().caseSourceCodeRange().upperEndpoint();
@@ -1124,8 +1126,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ elseOptional,
               /* caseSourceCodeRange= */ Range.openClosed(
-                  previousCaseEndIndex,
-                  elseOptional.isPresent() ? getStartPosition(elseOptional.get()) : caseEndIndex)));
+                  previousCaseEndPosition,
+                  elseOptional.isPresent()
+                      ? getStartPosition(elseOptional.get())
+                      : caseEndPosition)));
     }
 
     return Optional.of(testExpression);
@@ -1141,7 +1145,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       Optional<StatementTree> arrowRhsOptional,
       Set<String> handledEnumValues,
       Range<Integer> ifTreeRange,
-      int caseEndIndex,
+      int caseEndPosition,
       boolean hasElse,
       boolean hasElseIf) {
     boolean lhsIsEnumConstant =
@@ -1183,7 +1187,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             .collect(toImmutableSet()));
 
     boolean addDefault = hasElse && !hasElseIf;
-    int previousCaseEndIndex =
+    int previousCaseEndPosition =
         cases.isEmpty()
             ? ifTreeRange.lowerEndpoint()
             : cases.getLast().caseSourceCodeRange().upperEndpoint();
@@ -1195,10 +1199,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             /* guardOptional= */ Optional.empty(),
             /* expressionsOptional= */ Optional.of(ImmutableList.of(compileTimeConstant)),
             /* arrowRhsOptional= */ arrowRhsOptional,
-            /* caseSourceCodeRange= */ Range.closedOpen(previousCaseEndIndex, caseEndIndex)));
+            /* caseSourceCodeRange= */ Range.closedOpen(previousCaseEndPosition, caseEndPosition)));
 
     if (addDefault) {
-      previousCaseEndIndex =
+      previousCaseEndPosition =
           cases.isEmpty()
               ? ifTreeRange.lowerEndpoint()
               : cases.getLast().caseSourceCodeRange().upperEndpoint();
@@ -1211,10 +1215,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ elseOptional,
               /* caseSourceCodeRange= */ Range.closedOpen(
-                  caseEndIndex,
+                  caseEndPosition,
                   elseOptional.isPresent()
                       ? state.getEndPosition(elseOptional.get())
-                      : caseEndIndex)));
+                      : caseEndPosition)));
     }
     return Optional.of(testExpression);
   }
