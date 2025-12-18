@@ -165,16 +165,14 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       }
     }
 
-    List<SuggestedFix> suggestedFixes = new ArrayList<>();
-    if (ifChainAnalysisState.validity().equals(Validity.VALID)
+    if (!ifChainAnalysisState.validity().equals(Validity.VALID)
         // Exclude short if-chains, since they may be more readable as-is
-        && ifChainAnalysisState.depth() >= 3) {
-
-      suggestedFixes =
-          deepAnalysisOfIfChain(
-              cases, ifChainAnalysisState, ifTree, state, ifTreeSourceRange, suggestedFixes);
+        || ifChainAnalysisState.depth() < 3) {
+      return NO_MATCH;
     }
 
+    List<SuggestedFix> suggestedFixes =
+        deepAnalysisOfIfChain(cases, ifChainAnalysisState, ifTree, state, ifTreeSourceRange);
     return suggestedFixes.isEmpty()
         ? NO_MATCH
         : buildDescription(ifTree).addAllFixes(suggestedFixes).build();
@@ -1290,8 +1288,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       IfChainAnalysisState finalIfChainAnalysisState,
       IfTree ifTree,
       VisitorState state,
-      Range<Integer> ifTreeSourceRange,
-      List<SuggestedFix> suggestedFixes) {
+      Range<Integer> ifTreeSourceRange) {
 
     // Wrapping break/yield in a switch can potentially change its semantics.  A deeper analysis of
     // whether semantics are preserved is not attempted here
@@ -1359,7 +1356,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
                           ifTreeSourceRange));
     }
 
-    return maybeBuildAndAddSuggestedFix(
+    List<SuggestedFix> suggestedFixes = new ArrayList<>();
+    maybeBuildAndAddSuggestedFix(
         fixedCasesOptional,
         pullupDisabled ? suggestedFixBuilderWithoutPullup : suggestedFixBuilderWithPullupEnabled,
         finalIfChainAnalysisState,
@@ -1367,12 +1365,13 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         state,
         ifTreeSourceRange,
         suggestedFixes);
+    return suggestedFixes;
   }
 
   /**
    * If a finding is available, build a {@code SuggestedFix} for it and add to the suggested fixes.
    */
-  private static List<SuggestedFix> maybeBuildAndAddSuggestedFix(
+  private static void maybeBuildAndAddSuggestedFix(
       Optional<List<CaseIr>> fixedCasesOptional,
       SuggestedFix.Builder suggestedFixBuilder,
       IfChainAnalysisState ifChainAnalysisState,
@@ -1398,13 +1397,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               ifTreeSourceRange,
               allComments));
 
-      // Defensive copy
-      List<SuggestedFix> suggestedFixesCopy = new ArrayList<>(suggestedFixes);
-      suggestedFixesCopy.add(suggestedFixBuilder.build());
-      suggestedFixes = suggestedFixesCopy;
+      suggestedFixes.add(suggestedFixBuilder.build());
     }
-
-    return suggestedFixes;
   }
 
   /**
