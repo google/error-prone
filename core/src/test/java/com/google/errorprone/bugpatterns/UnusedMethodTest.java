@@ -695,4 +695,47 @@ public final class UnusedMethodTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void overriddenRecordGetter_isUsedByDestructuring() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private record R(int x, int y) {
+                @Override
+                public int x() {
+                  return x;
+                }
+              }
+
+              int f(R r) {
+                return switch (r) {
+                  case R(int x, int y) -> x;
+                  default -> 0;
+                };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void otherOverriddenMethod_stillFlagged() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private record R(int x, int y) {
+                // BUG: Diagnostic contains:
+                public int frobnicator() {
+                  return x;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }

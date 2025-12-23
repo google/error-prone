@@ -28,10 +28,12 @@ import static com.google.errorprone.fixes.SuggestedFixes.replaceIncludingComment
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
+import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
+import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.MoreAnnotations.asStrings;
 import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
@@ -49,10 +51,12 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.DeconstructionPatternTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -278,6 +282,25 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
       public Void visitAssignment(AssignmentTree tree, Void unused) {
         handle(getSymbol(tree.getVariable()));
         return super.visitAssignment(tree, null);
+      }
+
+      @Override
+      public Void visitDeconstructionPattern(DeconstructionPatternTree tree, Void unused) {
+        var symbol = getSymbol(tree.getDeconstructor());
+        if (isRecord(symbol)) {
+          ImmutableSet<Name> componentNames =
+              getEnclosedElements(symbol).stream()
+                  .filter(ASTHelpers::isRecord)
+                  .map(Symbol::getSimpleName)
+                  .collect(toImmutableSet());
+          for (Symbol e : getEnclosedElements(symbol)) {
+            if (componentNames.contains(e.getSimpleName())) {
+              handle(e);
+            }
+          }
+        }
+
+        return super.visitDeconstructionPattern(tree, null);
       }
 
       private void handle(Symbol symbol) {
