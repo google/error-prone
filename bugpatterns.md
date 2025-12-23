@@ -743,6 +743,9 @@ AutoValue classes represent pure data classes, so mocking them should not be nec
 __[DoubleCheckedLocking](bugpattern/DoubleCheckedLocking)__<br>
 Double-checked locking on non-volatile fields is unsafe
 
+__[DuplicateAssertion](bugpattern/DuplicateAssertion)__<br>
+This assertion is duplicate.
+
 __[DuplicateBranches](bugpattern/DuplicateBranches)__<br>
 Both branches contain identical code
 
