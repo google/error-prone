@@ -51,6 +51,7 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
@@ -91,10 +92,12 @@ import javax.lang.model.element.Name;
     severity = WARNING,
     documentSuppression = false)
 public final class UnusedMethod extends BugChecker implements CompilationUnitTreeMatcher {
-  private static final String GWT_JAVASCRIPT_OBJECT = "com.google.gwt.core.client.JavaScriptObject";
+  private static final Supplier<Type> GWT_JAVASCRIPT_OBJECT =
+      Suppliers.typeFromString("com.google.gwt.core.client.JavaScriptObject");
   private static final String EXEMPT_PREFIX = "unused";
   private static final String JUNIT_PARAMS_VALUE = "value";
-  private static final String JUNIT_PARAMS_ANNOTATION_TYPE = "junitparams.Parameters";
+  private static final Supplier<Type> JUNIT_PARAMS_ANNOTATION_TYPE =
+      Suppliers.typeFromString("junitparams.Parameters");
 
   /**
    * Class annotations which exempt methods within the annotated class from findings.
@@ -173,11 +176,10 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         for (AnnotationTree tree : annotations) {
           JCAnnotation annotation = (JCAnnotation) tree;
           if (annotation.getAnnotationType().type != null
-              && annotation
-                  .getAnnotationType()
-                  .type
-                  .toString()
-                  .equals(JUNIT_PARAMS_ANNOTATION_TYPE)) {
+              && isSubtype(
+                  annotation.getAnnotationType().type,
+                  JUNIT_PARAMS_ANNOTATION_TYPE.get(state),
+                  state)) {
             if (annotation.getArguments().isEmpty()) {
               // @Parameters, which uses implicit provider methods
               return true;
@@ -222,7 +224,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         // Ignore this method if the last parameter is a GWT JavaScriptObject.
         if (!tree.getParameters().isEmpty()) {
           Type lastParamType = getType(getLast(tree.getParameters()));
-          if (lastParamType != null && lastParamType.toString().equals(GWT_JAVASCRIPT_OBJECT)) {
+          if (lastParamType != null
+              && isSubtype(lastParamType, GWT_JAVASCRIPT_OBJECT.get(state), state)) {
             return false;
           }
         }
