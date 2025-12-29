@@ -115,7 +115,7 @@ public class InjectedConstructorAnnotationsTest {
                 @TestAnnotation
                 public TestClass4() {}
               }
-            }\
+            }
             """)
         .doTest();
   }

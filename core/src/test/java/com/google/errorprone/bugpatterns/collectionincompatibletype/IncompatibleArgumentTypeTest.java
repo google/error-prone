@@ -83,7 +83,7 @@ public class IncompatibleArgumentTypeGenericMethod {
     // OK, everything compatible w/ Object
     Object o = stringA.varargs("foo", 2L, 1.0d, "a");
   }
-}\
+}
 """)
         .doTest();
   }
@@ -158,7 +158,7 @@ public class IncompatibleArgumentTypeEnclosingTypes {
     // enforce it here.
     new Foo<String>().new Sub<Integer>().new SubSub<Boolean>().<Set<?>>methodVarIsFree(123);
   }
-}\
+}
 """)
         .doTest();
   }
@@ -238,7 +238,7 @@ public class IncompatibleArgumentTypeMultimapIntegration {
     Integer[] keys = {123, 345};
     intToString.containsAllKeys(123, (Object[]) keys);
   }
-}\
+}
 """)
         .doTest();
   }
@@ -298,7 +298,7 @@ public class IncompatibleArgumentTypeIntersectionTypes {
     // BUG: Diagnostic contains: String[] is not compatible with the required type: Number[]
     arrayTest.doSomething(strings);
   }
-}\
+}
 """)
         .doTest();
   }

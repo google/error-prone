@@ -133,7 +133,7 @@ class J4OverriddenSetUpPublic extends BaseTestClass {
               public void setUp() {}
             }
 
-            @interface Before {}\
+            @interface Before {}
             """)
         .doTest();
   }
@@ -201,7 +201,7 @@ class J4OverriddenSetUpPublic extends BaseTestClass {
               protected void badVisibility() {}
             }
 
-            @interface Before {}\
+            @interface Before {}
             """)
         .doTest();
   }
@@ -289,7 +289,7 @@ abstract class SetUpAnnotatedBaseClass {
 @RunWith(JUnit4.class)
 class J4SetUpExtendsAnnotatedMethod extends SetUpAnnotatedBaseClass {
   public void setUp() {}
-}\
+}
 """)
         .doTest();
   }

@@ -89,7 +89,7 @@ public class OptionalNotPresentTest {
                 }
                 return "";
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -197,7 +197,7 @@ public class OptionalNotPresentTest {
                 }
                 return optional.get();
               }
-            }\
+            }
             """)
         .doTest();
   }

@@ -140,7 +140,7 @@ public class AsyncFunctionReturnsNullTest {
               interface MyNonAsyncFunction<I, O> {
                 ListenableFuture<O> apply(@Nullable I input) throws Exception;
               }
-            }\
+            }
             """)
         .doTest();
   }

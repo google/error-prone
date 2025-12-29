@@ -116,7 +116,7 @@ public class ModifySourceCollectionInStreamPositiveCases {
   private List<Integer> getMutableValues() {
     return mutableValues;
   }
-}\
+}
 """)
         .doTest();
   }
@@ -225,7 +225,7 @@ public class ModifySourceCollectionInStreamNegativeCases {
 
     boolean add(T t);
   }
-}\
+}
 """)
         .doTest();
   }

@@ -237,7 +237,7 @@ public class RxReturnValueIgnoredPositiveCases {
     // BUG: Diagnostic contains: Rx objects must be checked.
     map4.get(null);
   }
-}\
+}
 """)
         .doTest();
   }
@@ -343,7 +343,7 @@ public class RxReturnValueIgnoredPositiveCases {
                 getFlowable();
                 getMaybe();
               }
-            }\
+            }
             """)
         .doTest();
   }

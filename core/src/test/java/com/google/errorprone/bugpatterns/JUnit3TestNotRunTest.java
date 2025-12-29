@@ -66,7 +66,7 @@ public class JUnit3TestNotRunTest {
               // tentative - can cause false positives
               // BUG: Diagnostic contains: JUnit3TestNotRun
               public void textName() {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -402,7 +402,7 @@ public class JUnit3TestNotRunTest {
               @Ignore
               @Test
               public void ignoredTest() {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -439,7 +439,7 @@ public class JUnit3TestNotRunTest {
 
               @Test
               public void TestName() {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -472,7 +472,7 @@ public class JUnit3TestNotRunTest {
 
               @Test
               public void tesBothIssuesAtOnce() {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -502,7 +502,7 @@ public abstract class JUnit3TestNotRunNegativeCase4 extends TestCase {
 
   @Test
   public void tesBothIssuesAtOnce() {}
-}\
+}
 """)
         .doTest();
   }
@@ -535,7 +535,7 @@ public abstract class JUnit3TestNotRunNegativeCase4 extends TestCase {
 
               @Test
               public void tesBothIssuesAtOnce() {}
-            }\
+            }
             """)
         // needed as a dependency
         .addSourceLines(
@@ -561,7 +561,7 @@ public abstract class JUnit3TestNotRunNegativeCase4 extends TestCase {
 
               @Test
               public void tesBothIssuesAtOnce() {}
-            }\
+            }
             """)
         .doTest();
   }

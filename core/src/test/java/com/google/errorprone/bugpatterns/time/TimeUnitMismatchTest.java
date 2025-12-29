@@ -133,7 +133,7 @@ public class TimeUnitMismatchTest {
                 // BUG: Diagnostic contains: expected milliseconds but was nanoseconds
                 long millis = maybeNanos.get();
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -219,7 +219,7 @@ public class TimeUnitMismatchTest {
                 Optional<Long> maybeNanos = Optional.of(0L);
                 long nanos = maybeNanos.get();
               }
-            }\
+            }
             """)
         .doTest();
   }

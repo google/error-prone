@@ -239,7 +239,7 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
                 // BUG: Diagnostic contains: remove this line
                 java.util.Objects.requireNonNull("string literal");
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -289,7 +289,7 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
                 com.google.common.base.Verify.verifyNotNull(testObj, "this is ok");
                 java.util.Objects.requireNonNull(testObj, "this is ok");
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -431,7 +431,7 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
                   return tester;
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -458,7 +458,7 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
                 Preconditions.checkNotNull(obj1, "%s should not be null", "obj1");
                 Preconditions.checkNotNull(obj1.toString());
               }
-            }\
+            }
             """)
         .doTest();
   }

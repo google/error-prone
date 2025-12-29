@@ -111,7 +111,7 @@ public class ClassCanBeStaticTest {
                   }
                 }
               }
-            }\
+            }
             """)
         .setArgs("--release", "11")
         .doTest();
@@ -137,7 +137,7 @@ public class ClassCanBeStaticTest {
               class Inner1 {
                 int innerVar;
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -168,7 +168,7 @@ public class ClassCanBeStaticTest {
                   return outerVar2;
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }

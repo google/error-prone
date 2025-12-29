@@ -154,7 +154,7 @@ public class SuppressWarningsDeprecatedTest {
                 class Bar {}
                 Bar b = null;
               }
-            }\
+            }
             """)
         .doTest();
   }

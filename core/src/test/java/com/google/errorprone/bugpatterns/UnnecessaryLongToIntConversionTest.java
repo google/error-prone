@@ -109,7 +109,7 @@ public class UnnecessaryLongToIntConversionPositiveCases {
     // BUG: Diagnostic contains: UnnecessaryLongToIntConversion
     acceptsLong(x.intValue());
   }
-}\
+}
 """)
         .doTest();
   }
@@ -225,7 +225,7 @@ public class UnnecessaryLongToIntConversionNegativeCases {
     long x = 1;
     acceptsInt(Math.toIntExact(x));
   }
-}\
+}
 """)
         .doTest();
   }

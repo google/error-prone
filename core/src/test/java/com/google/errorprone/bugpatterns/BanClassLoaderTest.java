@@ -83,7 +83,7 @@ class BanClassLoaderPositiveCases {
     // BUG: Diagnostic contains: BanClassLoader
     return MethodHandles.lookup().defineClass(bytes);
   }
-}\
+}
 """)
         .doTest();
   }
@@ -114,7 +114,7 @@ class BanClassLoaderPositiveCases {
   private class NotClassLoader {
     protected void loadClass() {}
   }
-}\
+}
 """)
         .doTest();
   }

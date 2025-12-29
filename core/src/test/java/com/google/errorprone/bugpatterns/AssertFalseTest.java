@@ -50,7 +50,7 @@ public class AssertFalseTest {
               public void assertFalseFromCondition() {
                 assert 0 == 1;
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -71,7 +71,7 @@ public class AssertFalseTest {
                 // BUG: Diagnostic contains: throw new AssertionError()
                 assert false;
               }
-            }\
+            }
             """)
         .doTest();
   }

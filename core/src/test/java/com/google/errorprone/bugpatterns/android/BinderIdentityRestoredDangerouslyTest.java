@@ -41,7 +41,7 @@ public final class BinderIdentityRestoredDangerouslyTest {
                 }
 
                 public static final void restoreCallingIdentity(long token) {}
-              }\
+              }
               """)
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 

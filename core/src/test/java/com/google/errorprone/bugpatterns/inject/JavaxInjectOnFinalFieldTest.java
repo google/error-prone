@@ -87,7 +87,7 @@ public class JavaxInjectOnFinalFieldTest {
                 @Inject
                 final void method() {}
               }
-            }\
+            }
             """)
         .doTest();
   }

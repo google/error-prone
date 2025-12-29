@@ -87,7 +87,7 @@ public class PrivateSecurityContractProtoAccessPositiveCases {
     // BUG: Diagnostic contains: Forbidden access to a private proto field
     return safeHtmlProto.getPrivateDoNotAccessOrElseSafeHtmlWrappedValueBytes();
   }
-}\
+}
 """)
         .doTest();
   }
@@ -116,7 +116,7 @@ public class PrivateSecurityContractProtoAccessPositiveCases {
               static {
                 safeHtml = SafeHtmls.fromProto(safeHtmlProto);
               }
-            }\
+            }
             """)
         .doTest();
   }

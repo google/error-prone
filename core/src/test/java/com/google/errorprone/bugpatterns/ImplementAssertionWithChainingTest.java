@@ -125,7 +125,7 @@ public class ImplementAssertionWithChainingPositiveCases {
   }
 
   private enum Kind {}
-}\
+}
 """)
         .doTest();
   }
@@ -199,7 +199,7 @@ public class ImplementAssertionWithChainingPositiveCases {
                   return this;
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }

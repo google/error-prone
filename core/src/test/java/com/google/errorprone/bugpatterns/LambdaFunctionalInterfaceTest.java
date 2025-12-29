@@ -196,7 +196,7 @@ public class LambdaFunctionalInterfacePositiveCases {
       return sumAll(o -> 2);
     }
   }
-}\
+}
 """)
         .doTest();
   }
@@ -294,7 +294,7 @@ public class LambdaFunctionalInterfaceNegativeCases {
       return findOptimalMuLambda(mu -> 0L, 3.0);
     }
   }
-}\
+}
 """)
         .doTest();
   }

@@ -173,7 +173,7 @@ public class SizeGreaterThanOrEqualsZeroPositiveCases {
       return intList;
     }
   }
-}\
+}
 """)
         .doTest();
   }
@@ -266,7 +266,7 @@ public class SizeGreaterThanOrEqualsZeroNegativeCases {
       return length;
     }
   }
-}\
+}
 """)
         .doTest();
   }

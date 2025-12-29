@@ -60,7 +60,7 @@ public class LockOnNonEnclosingClassLiteralPositiveCases {
       }
     }
   }
-}\
+}
 """)
         .doTest();
   }
@@ -94,7 +94,7 @@ public class LockOnNonEnclosingClassLiteralPositiveCases {
                   }
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }

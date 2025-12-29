@@ -103,7 +103,7 @@ public class NonAtomicVolatileUpdateTest {
                 // BUG: Diagnostic contains:
                 myVolatileString = myVolatileString + "update";
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -168,7 +168,7 @@ public class NonAtomicVolatileUpdateTest {
                   myVolatileString = myVolatileString + "update";
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }

@@ -73,7 +73,7 @@ public class OverridesJavaxInjectableMethodPositiveCases {
     // BUG: Diagnostic contains: @Inject
     public void foo() {}
   }
-}\
+}
 """)
         .doTest();
   }
@@ -141,7 +141,7 @@ public class OverridesJavaxInjectableMethodPositiveCases {
                 @SuppressWarnings("OverridesJavaxInjectableMethod")
                 public void foo() {}
               }
-            }\
+            }
             """)
         .doTest();
   }

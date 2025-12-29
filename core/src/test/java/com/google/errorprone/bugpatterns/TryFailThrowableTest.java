@@ -216,7 +216,7 @@ public class TryFailThrowablePositiveCases {
       } catch (Error e) {
       }
   }
-}\
+}
 """)
         .doTest();
   }
@@ -396,7 +396,7 @@ public class TryFailThrowablePositiveCases {
               private static void dummyRecover() {}
 
               private static void dummyMethod() {}
-            }\
+            }
             """)
         .doTest();
   }

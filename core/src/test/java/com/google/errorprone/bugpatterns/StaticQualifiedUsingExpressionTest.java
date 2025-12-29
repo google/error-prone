@@ -199,7 +199,7 @@ public class StaticQualifiedUsingExpressionTest {
                 // x = C.foo();
                 int x = new C<String>().foo();
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -228,7 +228,7 @@ public class StaticQualifiedUsingExpressionTest {
                 // return TestClass.staticTestMethod()
                 return new TestClass().staticTestMethod();
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -280,7 +280,7 @@ public class StaticQualifiedUsingExpressionTest {
               public void testEclipseAltname() {
                 this.staticTestMethod();
               }
-            }\
+            }
             """)
         .doTest();
   }

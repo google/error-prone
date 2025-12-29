@@ -137,7 +137,7 @@ public class FloggerRedundantIsEnabledTest {
                   logger.atSevere().log("test");
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -233,7 +233,7 @@ public class FloggerRedundantIsEnabledNegativeCases {
       return true;
     }
   }
-}\
+}
 """)
         .doTest();
   }
@@ -343,7 +343,7 @@ public class FloggerRedundantIsEnabledNegativeCases {
                   logger.atSevere().log("test");
                 }
               }
-            }\
+            }
             """)
         .addOutputLines(
             "FloggerRedundantIsEnabledPositiveCases_expected.java",
@@ -418,7 +418,7 @@ public class FloggerRedundantIsEnabledNegativeCases {
               public void checkSevere(FluentLogger logger) {
                 logger.atSevere().log("test");
               }
-            }\
+            }
             """)
         .doTest(TestMode.AST_MATCH);
   }

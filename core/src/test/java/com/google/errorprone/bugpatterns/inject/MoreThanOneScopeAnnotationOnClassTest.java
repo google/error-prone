@@ -67,7 +67,7 @@ public class MoreThanOneScopeAnnotationOnClassTest {
               @SessionScoped
               // BUG: Diagnostic contains:
               class TestClass3 {}
-            }\
+            }
             """)
         .doTest();
   }

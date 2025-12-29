@@ -92,7 +92,7 @@ public class SelfAssignmentTest {
                 // BUG: Diagnostic contains: this.a = (int) x;
                 this.a = (int) a;
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -204,7 +204,7 @@ public class SelfAssignmentTest {
                 Foo foo;
                 Bar bar;
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -307,7 +307,7 @@ public class SelfAssignmentTest {
                   return new int[10];
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -327,7 +327,7 @@ public class SelfAssignmentTest {
                 // BUG: Diagnostic contains:
                 this.foo = foo;
               }
-            }\
+            }
             """)
         .doTest();
   }

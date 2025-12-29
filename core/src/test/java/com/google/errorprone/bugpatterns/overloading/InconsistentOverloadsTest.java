@@ -66,7 +66,7 @@ public final class InconsistentOverloadsTest {
               public void norf(int x, int y) {}
 
               public void norf(Object object, String string) {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -111,7 +111,7 @@ public final class InconsistentOverloadsTest {
 
               // BUG: Diagnostic contains: norf(String string, Object object)
               abstract int norf(Object object, @Baz @Bar String string);
-            }\
+            }
             """)
         .doTest();
   }
@@ -153,7 +153,7 @@ public final class InconsistentOverloadsTest {
 
               // BUG: Diagnostic contains: quux(int x, int y, Object object)
               public void quux(Object object, int y, int x) {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -182,7 +182,7 @@ public final class InconsistentOverloadsPositiveCasesGenerics {
 
   // BUG: Diagnostic contains: bar(int x, List<? extends java.util.ArrayList<String>> strings)
   public void bar(List<? extends java.util.ArrayList<String>> strings, int x) {}
-}\
+}
 """)
         .doTest();
   }
@@ -217,7 +217,7 @@ public final class InconsistentOverloadsPositiveCasesGenerics {
               public void bar(int x, int y, String string, Object object) {}
 
               public void baz(int x) {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -239,7 +239,7 @@ public final class InconsistentOverloadsPositiveCasesGenerics {
 
               // BUG: Diagnostic contains: foo(Object object, int x, int y, String string)
               public void foo(String string, int y, Object object, int x) {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -270,7 +270,7 @@ public final class InconsistentOverloadsPositiveCasesGenerics {
               abstract void bar(float y, String string, float x, float z);
 
               abstract void bar(Object... rest);
-            }\
+            }
             """)
         .doTest();
   }
@@ -308,7 +308,7 @@ public class InconsistentOverloadsPositiveCasesOverrides {
     // String> fizz)
     void someMethod(int bar, String foo, List<String> baz, Map<String, String> fizz) {}
   }
-}\
+}
 """)
         .doTest();
   }

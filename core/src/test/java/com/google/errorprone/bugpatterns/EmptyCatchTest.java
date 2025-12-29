@@ -68,7 +68,7 @@ public class EmptyCatchTest {
                 } catch (Exception expected) {
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
