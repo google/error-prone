@@ -65,8 +65,8 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#provideFix(com.sun.source.tree.ReturnTree)" tabindex="0">provideFix(ReturnTree)</a></li>
 <li><a href="#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)" tabindex="0">matchReturn(ReturnTree, VisitorState)</a></li>
+<li><a href="#provideFix(com.sun.source.tree.ExpressionTree)" tabindex="0">provideFix(ExpressionTree)</a></li>
 </ol>
 </li>
 </ol>
@@ -140,8 +140,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)" class="member-name-link">matchReturn</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ReturnTree.html" title="class or interface in com.sun.source.tree" class="external-link">ReturnTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#provideFix(com.sun.source.tree.ReturnTree)" class="member-name-link">provideFix</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ReturnTree.html" title="class or interface in com.sun.source.tree" class="external-link">ReturnTree</a>&nbsp;tree)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#provideFix(com.sun.source.tree.ExpressionTree)" class="member-name-link">provideFix</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -183,14 +183,6 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="provideFix(com.sun.source.tree.ReturnTree)">
-<h3>provideFix</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</span>&nbsp;<span class="element-name">provideFix</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ReturnTree.html" title="class or interface in com.sun.source.tree" class="external-link">ReturnTree</a>&nbsp;tree)</span></div>
-</div>
-</section>
-</li>
-<li>
 <section class="detail" id="matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">
 <h3>matchReturn</h3>
 <div class="horizontal-scroll">
@@ -200,6 +192,14 @@ loadScripts(document, 'script');</script>
 <dt>Specified by:</dt>
 <dd><code><a href="BugChecker.ReturnTreeMatcher.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">matchReturn</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a></code></dd>
 </dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="provideFix(com.sun.source.tree.ExpressionTree)">
+<h3>provideFix</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></span>&nbsp;<span class="element-name">provideFix</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree)</span></div>
 </div>
 </section>
 </li>
