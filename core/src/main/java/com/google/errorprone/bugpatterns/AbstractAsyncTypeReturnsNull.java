@@ -16,53 +16,59 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.Description;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import java.util.Optional;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.util.TreePath;
 
 /**
  * Superclass for checks that {@code AsyncCallable} and {@code AsyncFunction} implementations do not
  * directly {@code return null}.
  */
-abstract class AbstractAsyncTypeReturnsNull extends AbstractMethodReturnsNull {
+abstract class AbstractAsyncTypeReturnsNull extends BugChecker implements ReturnTreeMatcher {
+  private final Class<?> asyncClass;
 
   AbstractAsyncTypeReturnsNull(Class<?> asyncClass) {
-    super(overridesMethodOfClass(asyncClass));
+    this.asyncClass = asyncClass;
   }
 
   @Override
-  protected Optional<Fix> provideFix(ReturnTree tree) {
-    return Optional.of(
-        SuggestedFix.builder()
-            .replace(tree.getExpression(), "immediateFuture(null)")
-            .addStaticImport(Futures.class.getName() + ".immediateFuture")
-            .build());
+  public final Description matchReturn(ReturnTree tree, VisitorState state) {
+    if (tree.getExpression() == null || tree.getExpression().getKind() != NULL_LITERAL) {
+      return NO_MATCH;
+    }
+    TreePath path = state.getPath();
+    while (path != null && path.getLeaf() instanceof StatementTree) {
+      path = path.getParentPath();
+    }
+    if (path == null || !(path.getLeaf() instanceof MethodTree methodTree)) {
+      return NO_MATCH;
+    }
+    if (findSuperMethods(getSymbol(methodTree), state.getTypes()).stream()
+        .noneMatch(
+            superMethod ->
+                superMethod.owner != null
+                    && superMethod.owner.getQualifiedName().contentEquals(asyncClass.getName()))) {
+      return NO_MATCH;
+    }
+    return describeMatch(tree, provideFix(tree.getExpression()));
   }
 
-  private static Matcher<MethodTree> overridesMethodOfClass(Class<?> clazz) {
-    checkNotNull(clazz);
-    return new Matcher<MethodTree>() {
-      @Override
-      public boolean matches(MethodTree tree, VisitorState state) {
-        MethodSymbol symbol = getSymbol(tree);
-        for (MethodSymbol superMethod : findSuperMethods(symbol, state.getTypes())) {
-          if (superMethod.owner != null
-              && superMethod.owner.getQualifiedName().contentEquals(clazz.getName())) {
-            return true;
-          }
-        }
-        return false;
-      }
-    };
+  protected SuggestedFix provideFix(ExpressionTree tree) {
+    return SuggestedFix.builder()
+        .replace(tree, "immediateFuture(null)")
+        .addStaticImport(Futures.class.getName() + ".immediateFuture")
+        .build();
   }
 }
