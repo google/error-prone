@@ -475,7 +475,6 @@ interface Test {
         .doTest();
   }
 
-  // TODO(b/168625474): 'sealed' doesn't have a TokenKind
   @Test
   public void sealedInterface() {
     refactoringHelper
@@ -491,11 +490,35 @@ interface Test {
             "Test.java",
             """
             /** Javadoc! */
-            sealed @Deprecated interface Test {
+            @Deprecated
+            sealed interface Test {
               final class A implements Test {}
             }
             """)
-        .setArgs("--enable-preview", "--release", Integer.toString(Runtime.version().feature()))
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void nonSealedInterface() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            /** Javadoc! */
+            sealed @Deprecated interface Test {
+              non-sealed @Deprecated class A implements Test {}
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /** Javadoc! */
+            @Deprecated
+            sealed interface Test {
+              @Deprecated
+              non-sealed class A implements Test {}
+            }
+            """)
         .doTest(TEXT_MATCH);
   }
 
