@@ -39,8 +39,8 @@ import java.util.regex.Pattern;
 /** Matches misuse of link tags within throws tags. */
 @BugPattern(
     summary =
-        "Javadoc links to exceptions in @throws without a @link tag (@throws Exception, not"
-            + " @throws {@link Exception}).",
+        "Don't use {@link} or {@code} in @throws tags; mention the exception name directly (e.g.,"
+            + " @throws IOException, not @throws {@link IOException}).",
     severity = WARNING,
     tags = StandardTags.STYLE,
     documentSuppression = false)
@@ -79,5 +79,5 @@ public final class InvalidThrowsLink extends BugChecker implements MethodTreeMat
     }
   }
 
-  private static final Pattern THROWS_LINK = Pattern.compile("^@throws \\{@link ([^}]+)}");
+  private static final Pattern THROWS_LINK = Pattern.compile("^@throws \\{@(?:link|code) ([^}]+)}");
 }
