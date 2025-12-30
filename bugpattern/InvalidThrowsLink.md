@@ -1,7 +1,7 @@
 ---
 title: InvalidThrowsLink
-summary: Javadoc links to exceptions in @throws without a @link tag (@throws Exception,
-  not @throws {@link Exception}).
+summary: Don't use {@link} or {@code} in @throws tags; mention the exception name
+  directly (e.g., @throws IOException, not @throws {@link IOException}).
 layout: bugpattern
 tags: Style
 severity: WARNING

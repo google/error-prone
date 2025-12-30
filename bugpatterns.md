@@ -945,7 +945,7 @@ __[InvalidThrows](bugpattern/InvalidThrows)__<br>
 The documented method doesn&#39;t actually throw this checked exception.
 
 __[InvalidThrowsLink](bugpattern/InvalidThrowsLink)__<br>
-Javadoc links to exceptions in @throws without a @link tag (@throws Exception, not @throws {@link Exception}).
+Don&#39;t use {@link} or {@code} in @throws tags; mention the exception name directly (e.g., @throws IOException, not @throws {@link IOException}).
 
 __[IterableAndIterator](bugpattern/IterableAndIterator)__<br>
 Class should not implement both &#96;Iterable&#96; and &#96;Iterator&#96;
