@@ -65,6 +65,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#matchLambdaExpression(com.sun.source.tree.LambdaExpressionTree,com.google.errorprone.VisitorState)" tabindex="0">matchLambdaExpression(LambdaExpressionTree, VisitorState)</a></li>
 <li><a href="#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)" tabindex="0">matchReturn(ReturnTree, VisitorState)</a></li>
 <li><a href="#provideFix(com.sun.source.tree.ExpressionTree)" tabindex="0">provideFix(ExpressionTree)</a></li>
 </ol>
@@ -84,7 +85,7 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a>, <a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="BugChecker.LambdaExpressionTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.LambdaExpressionTreeMatcher</a>, <a href="BugChecker.ReturnTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ReturnTreeMatcher</a>, <a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
@@ -137,12 +138,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)" class="member-name-link">matchReturn</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ReturnTree.html" title="class or interface in com.sun.source.tree" class="external-link">ReturnTree</a>&nbsp;tree,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchLambdaExpression(com.sun.source.tree.LambdaExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matchLambdaExpression</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/LambdaExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">LambdaExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#provideFix(com.sun.source.tree.ExpressionTree)" class="member-name-link">provideFix</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final <a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)" class="member-name-link">matchReturn</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ReturnTree.html" title="class or interface in com.sun.source.tree" class="external-link">ReturnTree</a>&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#provideFix(com.sun.source.tree.ExpressionTree)" class="member-name-link">provideFix</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -182,6 +187,19 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="matchLambdaExpression(com.sun.source.tree.LambdaExpressionTree,com.google.errorprone.VisitorState)">
+<h3>matchLambdaExpression</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchLambdaExpression</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/LambdaExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">LambdaExpressionTree</a>&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="BugChecker.LambdaExpressionTreeMatcher.html#matchLambdaExpression(com.sun.source.tree.LambdaExpressionTree,com.google.errorprone.VisitorState)">matchLambdaExpression</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.LambdaExpressionTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.LambdaExpressionTreeMatcher</a></code></dd>
+</dl>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)">
 <h3>matchReturn</h3>
