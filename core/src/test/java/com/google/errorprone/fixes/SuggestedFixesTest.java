@@ -16,6 +16,7 @@
 
 package com.google.errorprone.fixes;
 
+import static com.google.common.collect.Streams.stream;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
@@ -102,7 +103,7 @@ public class SuggestedFixesTest {
   /** Test checker that adds or removes modifiers. */
   @BugPattern(summary = "Edits modifiers", severity = ERROR)
   public static final class EditModifiersChecker extends BugChecker
-      implements VariableTreeMatcher, MethodTreeMatcher {
+      implements ClassTreeMatcher, VariableTreeMatcher, MethodTreeMatcher {
 
     static final ImmutableMap<String, Modifier> MODIFIERS_BY_NAME = createModifiersByName();
 
@@ -124,10 +125,26 @@ public class SuggestedFixesTest {
       return editModifiers(tree, state);
     }
 
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      return editModifiers(tree, state);
+    }
+
     private Description editModifiers(Tree tree, VisitorState state) {
       EditModifiers editModifiers =
-          ASTHelpers.getAnnotation(
-              ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class), EditModifiers.class);
+          stream(state.getPath())
+              .skip(1)
+              .map(
+                  t ->
+                      t instanceof ClassTree ct
+                          ? ASTHelpers.getAnnotation(ct, EditModifiers.class)
+                          : null)
+              .filter(x -> x != null)
+              .findFirst()
+              .orElse(null);
+      if (editModifiers == null) {
+        return NO_MATCH;
+      }
       SuggestedFix.Builder fix = SuggestedFix.builder();
       Modifier[] mods =
           Arrays.stream(editModifiers.value())
@@ -137,7 +154,7 @@ public class SuggestedFixesTest {
         case ADD -> fix.merge(SuggestedFixes.addModifiers(tree, state, mods).orElse(null));
         case REMOVE -> fix.merge(SuggestedFixes.removeModifiers(tree, state, mods).orElse(null));
       }
-      return describeMatch(tree, fix.build());
+      return fix.isEmpty() ? NO_MATCH : describeMatch(tree, fix.build());
     }
   }
 
@@ -196,6 +213,47 @@ public class SuggestedFixesTest {
               public Object four;
               // BUG: Diagnostic contains: public final @Nullable Object five
               public @Nullable Object five;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void addModifiers_nonSealed() {
+    CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+            import javax.annotation.Nullable;
+
+            @EditModifiers(value = "non-sealed", kind = EditModifiers.EditKind.ADD)
+            sealed interface Test {
+              // BUG: Diagnostic contains: non-sealed final class One
+              final class One extends Object {}
+
+              public non-sealed class Two implements Test {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void addModifiers_nonSealedClass() {
+    // Note the wrong ordering.
+    CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+
+            @EditModifiers(value = "public", kind = EditModifiers.EditKind.ADD)
+            class Test {
+              // BUG: Diagnostic contains: sealed public interface A
+              sealed interface A {}
+
+              // BUG: Diagnostic contains: non-sealed public class B
+              non-sealed class B implements A {}
             }
             """)
         .doTest();
