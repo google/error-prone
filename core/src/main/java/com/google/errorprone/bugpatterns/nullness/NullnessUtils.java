@@ -85,7 +85,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author awturner@google.com (Andy Turner)
  */
-class NullnessUtils {
+final class NullnessUtils {
   private NullnessUtils() {}
 
   private static final Matcher<ExpressionTree> OPTIONAL_OR_NULL =

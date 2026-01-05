@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.common.collect.Streams.concat;
 import static com.google.common.collect.Streams.stream;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
+import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -25,8 +27,10 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.util.concurrent.Futures;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -41,8 +45,8 @@ import com.sun.tools.javac.code.Type;
 import java.util.stream.Stream;
 
 /**
- * Superclass for checks that {@code AsyncCallable} and {@code AsyncFunction} implementations do not
- * directly {@code return null}.
+ * Superclass for checks that implementations of null-hostile abstract methods do not return
+ * definitely null values.
  */
 abstract class AbstractAsyncTypeReturnsNull extends BugChecker
     implements ReturnTreeMatcher, LambdaExpressionTreeMatcher {
@@ -54,7 +58,12 @@ abstract class AbstractAsyncTypeReturnsNull extends BugChecker
 
   @Override
   public final Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
-    if (tree.getBody().getKind() != NULL_LITERAL) {
+    if (!(tree.getBody() instanceof ExpressionTree body)
+        || !hasDefinitelyNullBranch(
+            body,
+            /* definitelyNullVars= */ ImmutableSet.of(),
+            /* varsProvenNullByParentIf= */ ImmutableSet.of(),
+            state)) {
       return NO_MATCH;
     }
     Type functionalInterfaceType = ASTHelpers.getType(tree);
@@ -66,12 +75,18 @@ abstract class AbstractAsyncTypeReturnsNull extends BugChecker
       return NO_MATCH;
     }
 
-    return describeMatch(tree, provideFix((ExpressionTree) tree.getBody()));
+    return describeMatch(tree, provideFix(body));
   }
 
   @Override
   public final Description matchReturn(ReturnTree tree, VisitorState state) {
-    if (tree.getExpression() == null || tree.getExpression().getKind() != NULL_LITERAL) {
+    if (tree.getExpression() == null
+        || !hasDefinitelyNullBranch(
+            tree.getExpression(),
+            // TODO: cpovirk - Maybe populate sets to pass here and even above.
+            /* definitelyNullVars= */ ImmutableSet.of(),
+            /* varsProvenNullByParentIf= */ ImmutableSet.of(),
+            state)) {
       return NO_MATCH;
     }
     Type asyncType = state.getTypeFromString(asyncClass.getName());
@@ -116,9 +131,15 @@ abstract class AbstractAsyncTypeReturnsNull extends BugChecker
   }
 
   protected SuggestedFix provideFix(ExpressionTree tree) {
-    return SuggestedFix.builder()
-        .replace(tree, "immediateFuture(null)")
-        .addStaticImport(Futures.class.getName() + ".immediateFuture")
-        .build();
+    return tree.getKind() == NULL_LITERAL
+        ? SuggestedFix.builder()
+            .replace(tree, "immediateFuture(null)")
+            .addStaticImport(Futures.class.getName() + ".immediateFuture")
+            .build()
+        /*
+         * TODO: cpovirk - Provide a variant of hasDefinitelyNullBranch that returns a Set<Tree> of
+         * definitely null locations, and then generate a fix for those locations.
+         */
+        : emptyFix();
   }
 }
