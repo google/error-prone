@@ -313,16 +313,6 @@ result in an ArrayStoreException.</div>
 <div class="col-last odd-row-color">
 <div class="block">A BugPattern; see the summary</div>
 </div>
-<div class="col-first even-row-color"><code>final class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../AsyncCallableReturnsNull.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">AsyncCallableReturnsNull</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">Checks that <code>AsyncCallable</code> implementations do not directly <code>return null</code>.</div>
-</div>
-<div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../AsyncFunctionReturnsNull.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">AsyncFunctionReturnsNull</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Checks that <code>AsyncFunction</code> implementations do not directly <code>return null</code>.</div>
-</div>
 <div class="col-first even-row-color"><code>class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../AttemptedNegativeZero.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">AttemptedNegativeZero</a></code></div>
 <div class="col-last even-row-color">
@@ -3028,6 +3018,16 @@ annotated with @com.google.inject.Inject</div>
 <div class="block">Refactoring to add <code>@NullMarked</code> annotation to package-info.java files.</div>
 </div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../nullness/AsyncCallableReturnsNull.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.nullness">AsyncCallableReturnsNull</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Checks that <code>AsyncCallable</code> implementations do not return definitely null values.</div>
+</div>
+<div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../nullness/AsyncFunctionReturnsNull.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.nullness">AsyncFunctionReturnsNull</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Checks that <code>AsyncFunction</code> implementations do not return definitely null values.</div>
+</div>
+<div class="col-first even-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../nullness/DereferenceWithNullBranch.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.nullness">DereferenceWithNullBranch</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
@@ -3492,7 +3492,7 @@ throw an <code>UnsupportedTemporalTypeException</code>.</div>
 </section>
 <footer role="contentinfo">
 <hr>
-<p class="legal-copy"><small>Copyright &#169; 2025 <a href="https://www.google.com">Google LLC</a>. All rights reserved.</small></p>
+<p class="legal-copy"><small>Copyright &#169; 2026 <a href="https://www.google.com">Google LLC</a>. All rights reserved.</small></p>
 </footer>
 </main>
 </div>
