@@ -702,8 +702,6 @@ to a void-returning method.</div>
 </dd>
 <dt><a href="com/google/errorprone/CompositeCodeTransformer.html#annotations()" class="member-name-link">annotations()</a> - Method in record class com.google.errorprone.<a href="com/google/errorprone/CompositeCodeTransformer.html" title="class in com.google.errorprone">CompositeCodeTransformer</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/dataflow/nullnesspropagation/MethodInfo.html#annotations()" class="member-name-link">annotations()</a> - Method in interface com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/MethodInfo.html" title="interface in com.google.errorprone.dataflow.nullnesspropagation">MethodInfo</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/RefasterRule.html#annotations()" class="member-name-link">annotations()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/RefasterRule.html" title="class in com.google.errorprone.refaster">RefasterRule</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Template.html#annotations()" class="member-name-link">annotations()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Template.html" title="class in com.google.errorprone.refaster">Template</a></dt>
@@ -1735,11 +1733,11 @@ array, or when the buffer wasn't initialized using ByteBuffer.wrap() or ByteBuff
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
-<dt><a href="com/google/errorprone/bugpatterns/CacheLoaderNull.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">CacheLoaderNull</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/nullness/CacheLoaderNull.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.nullness">CacheLoaderNull</a> - Class in <a href="com/google/errorprone/bugpatterns/nullness/package-summary.html">com.google.errorprone.bugpatterns.nullness</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/CacheLoaderNull.html#%3Cinit%3E()" class="member-name-link">CacheLoaderNull()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CacheLoaderNull.html" title="class in com.google.errorprone.bugpatterns">CacheLoaderNull</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/nullness/CacheLoaderNull.html#%3Cinit%3E()" class="member-name-link">CacheLoaderNull()</a> - Constructor for class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/CacheLoaderNull.html" title="class in com.google.errorprone.bugpatterns.nullness">CacheLoaderNull</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/AnnotationNames.html#CAN_IGNORE_RETURN_VALUE_ANNOTATION" class="member-name-link">CAN_IGNORE_RETURN_VALUE_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
 <dd>&nbsp;</dd>
@@ -9024,6 +9022,8 @@ match the given <code>predicate</code>.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/AsyncFunctionReturnsNull.html#matchLambdaExpression(com.sun.source.tree.LambdaExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matchLambdaExpression(LambdaExpressionTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/AsyncFunctionReturnsNull.html" title="class in com.google.errorprone.bugpatterns.nullness">AsyncFunctionReturnsNull</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/nullness/CacheLoaderNull.html#matchLambdaExpression(com.sun.source.tree.LambdaExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matchLambdaExpression(LambdaExpressionTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/CacheLoaderNull.html" title="class in com.google.errorprone.bugpatterns.nullness">CacheLoaderNull</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/UnsafeWildcard.html#matchLambdaExpression(com.sun.source.tree.LambdaExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matchLambdaExpression(LambdaExpressionTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/UnsafeWildcard.html" title="class in com.google.errorprone.bugpatterns.nullness">UnsafeWildcard</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StreamToIterable.html#matchLambdaExpression(com.sun.source.tree.LambdaExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matchLambdaExpression(LambdaExpressionTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StreamToIterable.html" title="class in com.google.errorprone.bugpatterns">StreamToIterable</a></dt>
@@ -9137,8 +9137,6 @@ TestCase.</div>
 <dt><a href="com/google/errorprone/bugpatterns/AvoidObjectArrays.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod(MethodTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AvoidObjectArrays.html" title="class in com.google.errorprone.bugpatterns">AvoidObjectArrays</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod(MethodTree, VisitorState)</a> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/CacheLoaderNull.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod(MethodTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CacheLoaderNull.html" title="class in com.google.errorprone.bugpatterns">CacheLoaderNull</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod(MethodTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ChainingConstructorIgnoresParameter.html" title="class in com.google.errorprone.bugpatterns">ChainingConstructorIgnoresParameter</a></dt>
 <dd>&nbsp;</dd>
@@ -10012,6 +10010,8 @@ multidimensional.</div>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/AsyncCallableReturnsNull.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)" class="member-name-link">matchReturn(ReturnTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/AsyncCallableReturnsNull.html" title="class in com.google.errorprone.bugpatterns.nullness">AsyncCallableReturnsNull</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/AsyncFunctionReturnsNull.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)" class="member-name-link">matchReturn(ReturnTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/AsyncFunctionReturnsNull.html" title="class in com.google.errorprone.bugpatterns.nullness">AsyncFunctionReturnsNull</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/nullness/CacheLoaderNull.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)" class="member-name-link">matchReturn(ReturnTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/CacheLoaderNull.html" title="class in com.google.errorprone.bugpatterns.nullness">CacheLoaderNull</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/UnsafeWildcard.html#matchReturn(com.sun.source.tree.ReturnTree,com.google.errorprone.VisitorState)" class="member-name-link">matchReturn(ReturnTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/UnsafeWildcard.html" title="class in com.google.errorprone.bugpatterns.nullness">UnsafeWildcard</a></dt>
 <dd>&nbsp;</dd>
@@ -11396,6 +11396,8 @@ annotated parameter.</div>
 <dd>
 <div class="block">Utilities to extract <a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation"><code>Nullness</code></a> from annotations.</div>
 </dd>
+<dt><a href="com/google/errorprone/dataflow/nullnesspropagation/MethodInfo.html#nullnessFromDirectAnnotations()" class="member-name-link">nullnessFromDirectAnnotations()</a> - Method in interface com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/MethodInfo.html" title="interface in com.google.errorprone.dataflow.nullnesspropagation">MethodInfo</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/NullnessMatcher.html" class="type-name-link" title="class in com.google.errorprone.matchers">NullnessMatcher</a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
 <div class="block">Matches an expression based on the result of the nullness dataflow analysis.</div>
@@ -12229,6 +12231,8 @@ proto.</div>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/AsyncCallableReturnsNull.html#provideFix(com.sun.source.tree.ExpressionTree)" class="member-name-link">provideFix(ExpressionTree)</a> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/AsyncCallableReturnsNull.html" title="class in com.google.errorprone.bugpatterns.nullness">AsyncCallableReturnsNull</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/AsyncFunctionReturnsNull.html#provideFix(com.sun.source.tree.ExpressionTree)" class="member-name-link">provideFix(ExpressionTree)</a> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/AsyncFunctionReturnsNull.html" title="class in com.google.errorprone.bugpatterns.nullness">AsyncFunctionReturnsNull</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/nullness/CacheLoaderNull.html#provideFix(com.sun.source.tree.ExpressionTree)" class="member-name-link">provideFix(ExpressionTree)</a> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/CacheLoaderNull.html" title="class in com.google.errorprone.bugpatterns.nullness">CacheLoaderNull</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/guice/ProvidesMethodOutsideOfModule.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject.guice">ProvidesMethodOutsideOfModule</a> - Class in <a href="com/google/errorprone/bugpatterns/inject/guice/package-summary.html">com.google.errorprone.bugpatterns.inject.guice</a></dt>
 <dd>&nbsp;</dd>
