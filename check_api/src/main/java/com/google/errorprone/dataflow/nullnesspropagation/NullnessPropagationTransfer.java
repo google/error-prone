@@ -17,7 +17,6 @@
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.BOTTOM;
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNULL;
@@ -32,7 +31,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.base.Verify;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.io.Files;
@@ -44,7 +42,6 @@ import com.google.errorprone.dataflow.AccessPathStore;
 import com.google.errorprone.dataflow.AccessPathValues;
 import com.google.errorprone.dataflow.nullnesspropagation.inference.InferredNullability;
 import com.google.errorprone.dataflow.nullnesspropagation.inference.NullnessQualifierInference;
-import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -202,8 +199,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     @Override
     public boolean test(MethodInfo methodInfo) {
       // Any method explicitly annotated is trusted to behave as advertised.
-      Optional<Nullness> fromAnnotations =
-          NullnessAnnotations.fromAnnotationMirrors(methodInfo.annotations());
+      Optional<Nullness> fromAnnotations = methodInfo.nullnessFromDirectAnnotations();
       if (fromAnnotations.isPresent()) {
         return fromAnnotations.get() == NONNULL;
       }
@@ -568,7 +564,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   Nullness visitMethodInvocation(
       MethodInvocationNode node, Updates thenUpdates, Updates elseUpdates, Updates bothUpdates) {
     ClassAndMethod callee = tryGetMethodSymbol(node.getTree(), Types.instance(context));
-    if (callee != null && !callee.isStatic) {
+    if (callee != null && !callee.isStatic()) {
       setNonnullIfTrackable(bothUpdates, node.getTarget().getReceiver());
     }
     setUnconditionalArgumentNullness(bothUpdates, node.getArguments(), callee);
@@ -771,8 +767,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     if (callee == null) {
       return defaultAssumption;
     }
-    Optional<Nullness> declaredNullness =
-        NullnessAnnotations.fromAnnotationMirrors(callee.annotations);
+    Optional<Nullness> declaredNullness = callee.nullnessFromDirectAnnotations();
     if (declaredNullness.isPresent()) {
       return declaredNullness.get();
     }
@@ -782,7 +777,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
 
     Nullness assumedNullness = methodReturnsNonNull.test(callee) ? NONNULL : NULLABLE;
-    if (!callee.isGenericResult) {
+    if (!callee.isGenericResult()) {
       // We only care about inference results for methods that return a type variable.
       return assumedNullness;
     }
@@ -973,50 +968,13 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
   }
 
-  static final class ClassAndMethod implements Member, MethodInfo {
-    final String clazz;
-    final String method;
-    final ImmutableList<AnnotationMirror> annotations;
-    final boolean isStatic;
-    final boolean isPrimitive;
-    final boolean isBoolean;
-    final boolean isGenericResult;
-    final boolean isNonNullReturning;
-
-    private ClassAndMethod(
-        String clazz,
-        String method,
-        ImmutableList<AnnotationMirror> annotations,
-        boolean isStatic,
-        boolean isPrimitive,
-        boolean isBoolean,
-        boolean isGenericResult,
-        boolean isNonNullReturning) {
-      this.clazz = clazz;
-      this.method = method;
-      this.annotations = annotations;
-      this.isStatic = isStatic;
-      this.isPrimitive = isPrimitive;
-      this.isBoolean = isBoolean;
-      this.isGenericResult = isGenericResult;
-      this.isNonNullReturning = isNonNullReturning;
-    }
+  static final record ClassAndMethod(
+      MethodSymbol methodSymbol, ClassSymbol classSymbol, @Nullable Types types)
+      implements Member, MethodInfo {
 
     static ClassAndMethod make(MethodSymbol methodSymbol, @Nullable Types types) {
-      // TODO(b/71812955): consider just wrapping methodSymbol instead of copying everything out.
-      ImmutableList<AnnotationMirror> annotations =
-          MoreAnnotations.getDeclarationAndTypeAttributes(methodSymbol).collect(toImmutableList());
-
       ClassSymbol clazzSymbol = (ClassSymbol) methodSymbol.owner;
-      return new ClassAndMethod(
-          clazzSymbol.getQualifiedName().toString(),
-          methodSymbol.getSimpleName().toString(),
-          annotations,
-          methodSymbol.isStatic(),
-          methodSymbol.getReturnType().isPrimitive(),
-          methodSymbol.getReturnType().getTag() == BOOLEAN,
-          hasGenericResult(methodSymbol),
-          knownNonNullMethod(methodSymbol, clazzSymbol, types));
+      return new ClassAndMethod(methodSymbol, clazzSymbol, types);
     }
 
     /**
@@ -1055,36 +1013,44 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
 
     @Override
     public boolean isStatic() {
-      return isStatic;
+      return methodSymbol.isStatic();
     }
 
     MemberName name() {
-      return new MemberName(this.clazz, this.method);
+      return new MemberName(clazz(), method());
     }
 
     @Override
     public String clazz() {
-      return clazz;
+      return classSymbol.getQualifiedName().toString();
     }
 
     @Override
     public String method() {
-      return method;
+      return methodSymbol.getSimpleName().toString();
     }
 
     @Override
-    public ImmutableList<AnnotationMirror> annotations() {
-      return annotations;
+    public Optional<Nullness> nullnessFromDirectAnnotations() {
+      return NullnessAnnotations.fromAnnotationsOn(methodSymbol);
     }
 
     @Override
     public boolean isPrimitive() {
-      return isPrimitive;
+      return methodSymbol.getReturnType().isPrimitive();
     }
 
     @Override
     public boolean isKnownNonNullReturning() {
-      return isNonNullReturning;
+      return knownNonNullMethod(methodSymbol, classSymbol, types);
+    }
+
+    public boolean isGenericResult() {
+      return hasGenericResult(methodSymbol);
+    }
+
+    public boolean isBoolean() {
+      return methodSymbol.getReturnType().hasTag(BOOLEAN);
     }
   }
 
