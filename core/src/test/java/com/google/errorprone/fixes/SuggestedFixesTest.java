@@ -240,7 +240,6 @@ public class SuggestedFixesTest {
 
   @Test
   public void addModifiers_nonSealedClass() {
-    // Note the wrong ordering.
     CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
         .addSourceLines(
             "Test.java",
@@ -249,11 +248,29 @@ public class SuggestedFixesTest {
 
             @EditModifiers(value = "public", kind = EditModifiers.EditKind.ADD)
             class Test {
-              // BUG: Diagnostic contains: sealed public interface A
+              // BUG: Diagnostic contains: public sealed interface A
               sealed interface A {}
 
-              // BUG: Diagnostic contains: non-sealed public class B
+              // BUG: Diagnostic contains: public non-sealed class B
               non-sealed class B implements A {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void removeModifiers_nonSealed() {
+    CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+            import javax.annotation.Nullable;
+
+            @EditModifiers(value = "non-sealed", kind = EditModifiers.EditKind.REMOVE)
+            sealed interface Test {
+              // BUG: Diagnostic contains: public class One
+              public non-sealed class One implements Test {}
             }
             """)
         .doTest();
