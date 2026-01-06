@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.nullness;
 
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -43,6 +43,13 @@ public class CacheLoaderNullTest {
                   public String load(String key) {
                     // BUG: Diagnostic contains:
                     return null;
+                  }
+                };
+                new CacheLoader<String, String>() {
+                  @Override
+                  public String load(String key) {
+                    // BUG: Diagnostic contains:
+                    return key.equals("") ? null : key;
                   }
                 };
                 abstract class MyCacheLoader extends CacheLoader<String, String> {}
@@ -92,7 +99,7 @@ public class CacheLoaderNullTest {
                         return null;
                       }
                     }
-                    ;
+
                     return "";
                   }
                 };
