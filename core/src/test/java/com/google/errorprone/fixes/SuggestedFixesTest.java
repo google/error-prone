@@ -75,7 +75,6 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
 import javax.lang.model.element.Modifier;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -1317,7 +1316,6 @@ class Test {
   }
 
   @Test
-  @Ignore("There appears to be an issue parsing lambda comments")
   public void suppressWarningsFix() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
         BugCheckerRefactoringTestHelper.newInstance(SuppressMe.class, getClass());
