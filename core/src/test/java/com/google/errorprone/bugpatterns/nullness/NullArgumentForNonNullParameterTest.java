@@ -324,4 +324,125 @@ public class NullArgumentForNonNullParameterTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void positiveNullMarkedClassWithUnboundedTypeParameter() {
+    aggressiveHelper
+        .addSourceLines(
+            "Foo.java",
+            """
+            import org.jspecify.annotations.NullMarked;
+
+            @NullMarked
+            class Foo<T> {
+              void consume(T s) {}
+
+              void foo() {
+                // BUG: Diagnostic contains:
+                consume(null);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeNullMarkedClassWithNullableBoundedTypeParameter() {
+    aggressiveHelper
+        .addSourceLines(
+            "Foo.java",
+            """
+            import org.jspecify.annotations.NullMarked;
+            import org.jspecify.annotations.Nullable;
+
+            @NullMarked
+            class Foo<T extends @Nullable Object> {
+              void consume(T s) {}
+
+              void foo() {
+                consume(null);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveNullMarkedTypeParameter() {
+    aggressiveHelper
+        .addSourceLines(
+            "Foo.java",
+            """
+            import org.jspecify.annotations.NonNull;
+
+            class Foo<T extends @NonNull Object> {
+              void consume(T s) {}
+
+              void foo() {
+                // BUG: Diagnostic contains:
+                consume(null);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveNullMarkedTypeParameterIntersection() {
+    aggressiveHelper
+        .addSourceLines(
+            "Foo.java",
+            """
+            import org.jspecify.annotations.NonNull;
+            import java.io.Serializable;
+
+            class Foo<T extends @NonNull Object & Serializable> {
+              void consume(T s) {}
+
+              void foo() {
+                // BUG: Diagnostic contains:
+                consume(null);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveRecursiveTypeParameter() {
+    aggressiveHelper
+        .addSourceLines(
+            "Foo.java",
+            """
+            import org.jspecify.annotations.NonNull;
+            import java.io.Serializable;
+
+            class Foo<V extends @NonNull Object, T extends V> {
+              void consume(T s) {}
+
+              void foo() {
+                // BUG: Diagnostic contains:
+                consume(null);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeUnboundedTypeParameter() {
+    aggressiveHelper
+        .addSourceLines(
+            "Foo.java",
+            """
+            class Foo<T> {
+              void consume(T s) {}
+
+              void foo() {
+                consume(null);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
