@@ -72,6 +72,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     javacOpts = defaultToLatestSupportedLanguageLevel(javacOpts);
     javacOpts = setCompilePolicyToByFile(javacOpts);
     javacOpts = setShouldStopIfErrorPolicyToFlow(javacOpts);
+    javacOpts = setAddTypeAnnotationsToSymbol(javacOpts);
     JavacTask task =
         (JavacTask)
             javacTool.getTask(
@@ -83,9 +84,11 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
   static void addTaskListener(
       JavacTask javacTask, ScannerSupplier scannerSupplier, ErrorProneOptions errorProneOptions) {
     Context context = ((BasicJavacTask) javacTask).getContext();
-    checkCompilePolicy(Options.instance(context).get("compilePolicy"));
-    checkShouldStopIfErrorPolicy(Options.instance(context).get("should-stop.ifError"));
     setupMessageBundle(context);
+    Options options = Options.instance(context);
+    checkCompilePolicy(options.get("compilePolicy"));
+    checkShouldStopIfErrorPolicy(options.get("should-stop.ifError"));
+    checkAddTypeAnnotationsToSymbol(options.get("addTypeAnnotationsToSymbol"));
     RefactoringCollection[] refactoringCollection = {null};
     javacTask.addTaskListener(
         ErrorProneAnalyzer.createAnalyzer(
@@ -218,6 +221,34 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
       }
     }
     return ImmutableList.<String>builder().addAll(args).add("--should-stop=ifError=FLOW").build();
+  }
+
+  private static ImmutableList<String> setAddTypeAnnotationsToSymbol(ImmutableList<String> args) {
+    for (String arg : args) {
+      if (arg.startsWith("-XDaddTypeAnnotationsToSymbol")) {
+        String value = arg.substring(arg.indexOf('=') + 1);
+        checkAddTypeAnnotationsToSymbol(value);
+        return args; // don't do anything if a valid policy is already set
+      }
+    }
+    return ImmutableList.<String>builder()
+        .addAll(args)
+        .add("-XDaddTypeAnnotationsToSymbol=true")
+        .build();
+  }
+
+  private static void checkAddTypeAnnotationsToSymbol(String value) {
+    if (value == null) {
+      if (Runtime.version().feature() <= 21) {
+        throw new InvalidCommandLineOptionException(
+            "-XDaddTypeAnnotationsToSymbol=true is required by Error Prone on JDK 21");
+      }
+      return;
+    }
+    if (!Boolean.parseBoolean(value)) {
+      throw new InvalidCommandLineOptionException(
+          "-XDaddTypeAnnotationsToSymbol must be set to true, was: " + value);
+    }
   }
 
   /** Registers our message bundle. */

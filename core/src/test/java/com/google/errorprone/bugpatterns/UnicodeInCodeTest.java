@@ -163,7 +163,10 @@ public final class UnicodeInCodeTest {
                 fileManager,
                 diagnosticCollector,
                 ImmutableList.of(
-                    "-Xplugin:ErrorProne", "-XDcompilePolicy=simple", "--should-stop=ifError=FLOW"),
+                    "-Xplugin:ErrorProne",
+                    "-XDcompilePolicy=simple",
+                    "--should-stop=ifError=FLOW",
+                    "-XDaddTypeAnnotationsToSymbol=true"),
                 ImmutableList.of(),
                 ImmutableList.of(
                     new SimpleJavaFileObject(

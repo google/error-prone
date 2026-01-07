@@ -551,6 +551,33 @@ public class ErrorProneCompilerIntegrationTest {
   }
 
   @Test
+  public void addTypeAnnotationsToSymbol_true() {
+    Result exitCode =
+        compiler.compile(
+            new String[] {"-XDaddTypeAnnotationsToSymbol=true"},
+            Arrays.asList(
+                forSourceLines(
+                    "Test.java",
+                    """
+                    package test;
+                    class Test {}
+                    """)));
+    outputStream.flush();
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
+  }
+
+  @Test
+  public void addTypeAnnotationsToSymbol_false() {
+    InvalidCommandLineOptionException e =
+        assertThrows(
+            InvalidCommandLineOptionException.class,
+            () ->
+                compiler.compile(
+                    new String[] {"-XDaddTypeAnnotationsToSymbol=false"}, ImmutableList.of()));
+    assertThat(e).hasMessageThat().contains("-XDaddTypeAnnotationsToSymbol must be set to true");
+  }
+
+  @Test
   public void compilePolicy_simple() {
     Result exitCode =
         compiler.compile(
