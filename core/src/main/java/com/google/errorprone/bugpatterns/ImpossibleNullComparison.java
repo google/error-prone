@@ -241,7 +241,7 @@ public final class ImpossibleNullComparison extends BugChecker
             .filter(unused -> getFixer(withoutParens, subState).isPresent())
             .ifPresent(
                 e ->
-                    // NOTE:  user ->`.
+                    // NOTE: This fix is possibly too big: you can write `case null, default ->`.
                     state.reportMatch(describeMatch(caseTree, SuggestedFix.delete(caseTree))));
       }
     }
