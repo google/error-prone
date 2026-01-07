@@ -1630,7 +1630,7 @@ __[Interruption](bugpattern/Interruption)__<br>
 Always pass &#39;false&#39; to &#39;Future.cancel()&#39;, unless you are propagating a cancellation-with-interrupt from another caller
 
 __[MissingDefault](bugpattern/MissingDefault)__<br>
-The Google Java Style Guide requires that each switch statement includes a default statement group, even if it contains no code. (This requirement is lifted for any switch statement that covers all values of an enum.)
+The Google Java Style Guide requires that each switch statement includes a default statement group (even if it contains no code) unless the switch statement covers all values of an enum.
 
 __[MockitoDoSetup](bugpattern/MockitoDoSetup)__<br>
 Prefer using when/thenReturn over doReturn/when for additional type safety.
