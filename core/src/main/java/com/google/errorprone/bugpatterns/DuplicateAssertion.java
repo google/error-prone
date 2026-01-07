@@ -107,10 +107,14 @@ public final class DuplicateAssertion extends BugChecker implements BlockTreeMat
 
   /** Returns the number of arguments to skip so we ignore {@code message} arguments. */
   private static int argumentsToSkip(MethodInvocationTree tree, VisitorState state) {
-    return ASTHelpers.isSameType(
-            getSymbol(tree).getParameters().getFirst().type, state.getSymtab().stringType, state)
-        ? 1
-        : 0;
+    var parameters = getSymbol(tree).getParameters();
+    if (!ASTHelpers.isSameType(parameters.getFirst().type, state.getSymtab().stringType, state)) {
+      return 0;
+    }
+    if (parameters.size() == 2) {
+      return 0;
+    }
+    return 1;
   }
 
   private record Assertion(String line, ConstantExpression assertee) {}

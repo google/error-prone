@@ -125,4 +125,25 @@ public final class DuplicateAssertionTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void twoStringParameters() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import junit.framework.Assert;
+            import java.nio.file.Files;
+            import java.nio.file.Path;
+            import java.io.IOException;
+
+            class Test {
+              public final void checkContents(String relativePath, String expectedContents) throws IOException {
+                String actualContents = Files.readString(Path.of(relativePath));
+                Assert.assertEquals(expectedContents, actualContents);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
