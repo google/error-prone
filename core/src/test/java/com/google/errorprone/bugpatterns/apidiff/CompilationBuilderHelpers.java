@@ -31,7 +31,6 @@ import java.io.StringWriter;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -62,7 +61,7 @@ public final class CompilationBuilderHelpers {
 
     @CanIgnoreReturnValue
     public SourceBuilder addSourceLines(String name, String... lines) throws IOException {
-      Path filePath = Paths.get(tempFolder.getAbsolutePath(), name);
+      Path filePath = Path.of(tempFolder.getAbsolutePath(), name);
       sources.add(filePath);
       Files.write(filePath, Arrays.asList(lines), UTF_8, StandardOpenOption.CREATE);
       return this;
