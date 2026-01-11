@@ -318,7 +318,7 @@ public final class UnusedMethodTest {
             package org.junit.jupiter.params.provider;
 
             public @interface MethodSource {
-              String[] value();
+              String[] value() default "";
             }
             """)
         .addSourceLines(
@@ -340,6 +340,36 @@ public final class UnusedMethodTest {
   }
 
   @Test
+  public void implicitMethodSource() {
+    helper
+        .addSourceLines(
+            "MethodSource.java",
+            """
+            package org.junit.jupiter.params.provider;
+
+            public @interface MethodSource {
+              String[] value() default "";
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.stream.Stream;
+            import org.junit.jupiter.params.provider.MethodSource;
+
+            class Test {
+              @MethodSource
+              void test() {}
+
+              private static Stream<String> test() {
+                return Stream.of();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void qualifiedMethodSource() {
     helper
         .addSourceLines(
@@ -348,7 +378,7 @@ public final class UnusedMethodTest {
             package org.junit.jupiter.params.provider;
 
             public @interface MethodSource {
-              String[] value();
+              String[] value() default "";
             }
             """)
         .addSourceLines(
@@ -378,7 +408,7 @@ public final class UnusedMethodTest {
             package org.junit.jupiter.params.provider;
 
             public @interface MethodSource {
-              String[] value();
+              String[] value() default "";
             }
             """)
         .addSourceLines(
