@@ -57,6 +57,8 @@ Edit your `pom.xml` file to add settings to the maven-compiler-plugin:
             <arg>-XDcompilePolicy=simple</arg>
             <arg>--should-stop=ifError=FLOW</arg>
             <arg>-Xplugin:ErrorProne</arg>
+            <!-- necessary only if building with JDK21: https://github.com/google/error-prone/issues/5426 -->
+            <arg>-XDaddTypeAnnotationsToSymbol=true</arg>
           </compilerArgs>
           <annotationProcessorPaths>
             <path>
