@@ -101,11 +101,13 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   private final boolean enableMain;
+  private final boolean enableSafe;
   private final int maxChainLength;
 
   @Inject
   IfChainToSwitch(ErrorProneFlags flags) {
     enableMain = flags.getBoolean("IfChainToSwitch:EnableMain").orElse(false);
+    enableSafe = flags.getBoolean("IfChainToSwitch:EnableSafe").orElse(false);
     maxChainLength = flags.getInteger("IfChainToSwitch:MaxChainLength").orElse(50);
   }
 
@@ -255,7 +257,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     StringBuilder sb = new StringBuilder();
     sb.append("switch (").append(state.getSourceForNode(subject)).append(") {\n");
     for (CaseIr caseIr : cases) {
-      if (caseIr.hasCaseNull()) {
+      if (caseIr.hasCaseNull() && caseIr.hasDefault()) {
+        sb.append("case null, default");
+      } else if (caseIr.hasCaseNull()) {
         sb.append("case null");
       } else if (caseIr.hasDefault()) {
         sb.append("default");
@@ -400,12 +404,36 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
-   * Analyzes the supplied case IRs for a switch statement for issues related default/unconditional
-   * cases. If deemed necessary, this method injects a `default` case into the supplied case IRs. If
-   * the supplied case IRs cannot be used to form a syntactically valid switch statement, returns
-   * `Optional.empty()`.
+   * Determines whether a {@code switch} having the given {@code subject} and {@code cases} would
+   * implicitly throw in the event that the {@code subject} is {@code null} at runtime. Here,
+   * implicitly throwing means that an exception would be thrown, and further that the {@code throw}
+   * would not be caused by logic in any of the supplied {@code cases}. (If the subject cannot be
+   * assigned {@code null}, returns {@code false}.)
    */
-  private static Optional<List<CaseIr>> maybeFixDefaultAndUnconditional(
+  private static boolean switchOnNullWouldImplicitlyThrow(
+      ExpressionTree subject, List<CaseIr> cases) {
+    Type type = getType(subject);
+    if (type.isPrimitive()) {
+      return false;
+    }
+
+    // If there is an explicit `case null` already, then there can't be an implicit throw caused by
+    // null
+    boolean hasCaseNull = cases.stream().anyMatch(CaseIr::hasCaseNull);
+    if (hasCaseNull) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Analyzes the supplied case IRs for a switch statement for issues related default/unconditional
+   * cases. If deemed necessary, this method injects a `default` and/or `case null` into the
+   * supplied case IRs. If the supplied case IRs cannot be used to form a syntactically valid switch
+   * statement, returns `Optional.empty()`.
+   */
+  private Optional<List<CaseIr>> maybeFixDefaultNullAndUnconditional(
       List<CaseIr> cases,
       ExpressionTree subject,
       StatementTree ifTree,
@@ -417,6 +445,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       Range<Integer> ifTreeSourceRange) {
 
     boolean hasDefault = cases.stream().anyMatch(CaseIr::hasDefault);
+    boolean hasCaseNull = cases.stream().anyMatch(CaseIr::hasCaseNull);
+    boolean recheckDominanceNeeded = false;
+
+    boolean switchOnNullWouldImplicitlyThrow = switchOnNullWouldImplicitlyThrow(subject, cases);
 
     // Has an unconditional case, meaning that any non-null value of the subject will be matched
     long unconditionalCount =
@@ -467,7 +499,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               .orElse(ifTreeSourceRange.lowerEndpoint());
       casesCopy.add(
           new CaseIr(
-              /* hasCaseNull= */ false,
+              /* hasCaseNull= */ !hasCaseNull && (enableSafe && switchOnNullWouldImplicitlyThrow),
               /* hasDefault= */ true,
               /* instanceOfOptional= */ Optional.empty(),
               /* guardOptional= */ Optional.empty(),
@@ -475,6 +507,45 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* arrowRhsOptional= */ Optional.empty(),
               /* caseSourceCodeRange= */ Range.closedOpen(
                   previousCaseEndPosition, previousCaseEndPosition)));
+      cases = casesCopy;
+      recheckDominanceNeeded = true;
+    } else if (enableSafe && !hasCaseNull && switchOnNullWouldImplicitlyThrow) {
+      List<CaseIr> casesCopy = new ArrayList<>(cases);
+      if (hasDefault) {
+        // Upgrade existing `default` to `case null, default`.
+        casesCopy =
+            casesCopy.stream()
+                .map(
+                    caseIr -> {
+                      if (caseIr.hasDefault()) {
+                        return new CaseIr(
+                            /* hasCaseNull= */ true,
+                            /* hasDefault= */ true,
+                            /* instanceOfOptional= */ caseIr.instanceOfOptional(),
+                            /* guardOptional= */ caseIr.guardOptional(),
+                            /* expressionsOptional= */ caseIr.expressionsOptional(),
+                            /* arrowRhsOptional= */ caseIr.arrowRhsOptional(),
+                            /* caseSourceCodeRange= */ caseIr.caseSourceCodeRange());
+                      }
+                      return caseIr;
+                    })
+                .collect(toImmutableList());
+        recheckDominanceNeeded = true;
+      } else {
+        // Invariant: enableSafe=true
+        // Inject new empty `case null`
+        casesCopy.add(
+            new CaseIr(
+                /* hasCaseNull= */ true,
+                /* hasDefault= */ false,
+                /* instanceOfOptional= */ Optional.empty(),
+                /* guardOptional= */ Optional.empty(),
+                /* expressionsOptional= */ Optional.empty(),
+                /* arrowRhsOptional= */ Optional.empty(),
+                /* caseSourceCodeRange= */ Range.closedOpen(
+                    ifTreeSourceRange.lowerEndpoint(), ifTreeSourceRange.lowerEndpoint())));
+        recheckDominanceNeeded = true;
+      }
       cases = casesCopy;
     }
 
@@ -548,7 +619,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       }
     }
 
-    return Optional.of(cases);
+    return recheckDominanceNeeded ? maybeFixDominance(cases, state, subject) : Optional.of(cases);
   }
 
   /**
@@ -558,7 +629,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
    * original case IRs. Note that this method does not fully validate the resulting case IRs, but
    * rather only partially validates them with respect to pull-up.
    */
-  private static Optional<List<CaseIr>> maybePullUp(
+  private Optional<List<CaseIr>> maybePullUp(
       List<CaseIr> cases,
       VisitorState state,
       IfChainAnalysisState ifChainAnalysisState,
@@ -584,7 +655,6 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             // Statements containing break or yield cannot be pulled up
             break;
           }
-
           int startPos =
               casesCopy.isEmpty()
                   ? ifTreeRange.lowerEndpoint()
@@ -592,7 +662,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
           int endPos = state.getEndPosition(statement);
           casesCopy.add(
               new CaseIr(
-                  /* hasCaseNull= */ false,
+                  /* hasCaseNull= */ enableSafe
+                      && switchOnNullWouldImplicitlyThrow(
+                          ifChainAnalysisState.subjectOptional().get(), cases),
                   /* hasDefault= */ true,
                   /* instanceOfOptional= */ Optional.empty(),
                   /* guardOptional= */ Optional.empty(),
@@ -1283,7 +1355,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /** Performs a detailed analysis of the if-chain, generating suggested fixes as needed. */
-  private static List<SuggestedFix> deepAnalysisOfIfChain(
+  private List<SuggestedFix> deepAnalysisOfIfChain(
       List<CaseIr> cases,
       IfChainAnalysisState finalIfChainAnalysisState,
       IfTree ifTree,
@@ -1322,7 +1394,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             .flatMap(caseList -> maybeFixDominance(caseList, state, subject))
             .flatMap(
                 x ->
-                    maybeFixDefaultAndUnconditional(
+                    maybeFixDefaultNullAndUnconditional(
                         x,
                         subject,
                         ifTree,
@@ -1344,7 +1416,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               .flatMap(caseList -> maybeFixDominance(caseList, state, subject))
               .flatMap(
                   caseList ->
-                      maybeFixDefaultAndUnconditional(
+                      maybeFixDefaultNullAndUnconditional(
                           caseList,
                           subject,
                           ifTree,
@@ -1353,7 +1425,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
                           /* numberPulledUp= */ 0,
                           finalIfChainAnalysisState.handledEnumValues(),
                           switchType,
-                          ifTreeSourceRange));
+                          ifTreeSourceRange))
+              // Changing default/null can affect dominance
+              .flatMap(caseList -> maybeFixDominance(caseList, state, subject));
     }
 
     List<SuggestedFix> suggestedFixes = new ArrayList<>();
