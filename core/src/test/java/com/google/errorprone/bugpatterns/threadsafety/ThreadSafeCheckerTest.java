@@ -1077,7 +1077,6 @@ class Test {
   // javac makes it annoying to figure this out - since null isn't a compile-time constant,
   // none of that machinery can be used. Instead, we need to look at the actual AST node
   // for the member declaration to see that it's initialized to null.
-  @Ignore
   @Test
   public void immutableNull() {
     compilationHelper
@@ -1088,6 +1087,7 @@ class Test {
 
             @ThreadSafe
             class Test {
+              // BUG: Diagnostic contains: arrays are not thread-safe
               final int[] xs = null;
             }
             """)
@@ -1238,7 +1238,6 @@ class Test {
         .doTest();
   }
 
-  @Ignore("b/26797524 - add tests for generic arguments")
   @Test
   public void threadSafeTypeParam() {
     compilationHelper
@@ -1247,11 +1246,13 @@ class Test {
             """
             import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.ThreadSafe;
+            import com.google.errorprone.annotations.ThreadSafeTypeParameter;
 
-            public class X {
-              final ImmutableList<@ThreadSafeTypeParameter ?> unknownSafeType;
+            @ThreadSafe
+            public class X<@ThreadSafeTypeParameter T> {
+              final ImmutableList<T> unknownSafeType;
 
-              X(ImmutableList<@ThreadSafeTypeParameter ?> unknownSafeType) {
+              X(ImmutableList<T> unknownSafeType) {
                 this.unknownSafeType = unknownSafeType;
               }
             }
@@ -1262,13 +1263,12 @@ class Test {
             import com.google.common.collect.ImmutableList;
 
             class Test {
-              final X badX = new X(ImmutableList.of(ImmutableList.<String>of()));
+              final X<?> badX = new X<>(ImmutableList.of(ImmutableList.<String>of()));
             }
             """)
         .doTest();
   }
 
-  @Ignore("b/26797524 - add tests for generic arguments")
   @Test
   public void mutableTypeParam() {
     compilationHelper
@@ -1277,11 +1277,13 @@ class Test {
             """
             import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.ThreadSafe;
+            import com.google.errorprone.annotations.ThreadSafeTypeParameter;
 
-            public class X {
-              final ImmutableList<@ThreadSafe ?> unknownSafeType;
+            @ThreadSafe
+            public class X<@ThreadSafeTypeParameter T> {
+              final ImmutableList<T> unknownSafeType;
 
-              X(ImmutableList<@ThreadSafe ?> unknownSafeType) {
+              X(ImmutableList<T> unknownSafeType) {
                 this.unknownSafeType = unknownSafeType;
               }
             }
@@ -1294,7 +1296,7 @@ class Test {
 
             class Test {
               // BUG: Diagnostic contains:
-              final X badX = new X(ImmutableList.of(new ArrayList<String>()));
+              final X<?> badX = new X<>(ImmutableList.of(new ArrayList<String>()));
             }
             """)
         .doTest();
