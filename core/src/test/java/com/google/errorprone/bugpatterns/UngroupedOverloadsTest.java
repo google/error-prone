@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -693,25 +692,6 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
               void baz() {}
             }
             """)
-        .doTest();
-  }
-
-  @Ignore // TODO(b/71818169): fix and re-enable
-  @Test
-  public void staticAndNonStatic() {
-    refactoringHelper
-        .addInputLines(
-            "Test.java",
-            """
-            class Test {
-              void foo() {}
-
-              void bar() {}
-
-              static void foo(int x) {}
-            }
-            """)
-        .expectUnchanged()
         .doTest();
   }
 
