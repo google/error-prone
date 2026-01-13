@@ -34,7 +34,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -93,15 +92,15 @@ public final class DocGenTool {
     Options options = new Options();
     new JCommander(options).parse(args);
 
-    Path bugPatterns = Paths.get(options.bugPatterns);
+    Path bugPatterns = Path.of(options.bugPatterns);
     if (!Files.exists(bugPatterns)) {
       usage("Cannot find bugPatterns file: " + options.bugPatterns);
     }
-    Path explanationDir = Paths.get(options.explanations);
+    Path explanationDir = Path.of(options.explanations);
     if (!Files.exists(explanationDir)) {
       usage("Cannot find explanations dir: " + options.explanations);
     }
-    Path wikiDir = Paths.get(options.docsRepository);
+    Path wikiDir = Path.of(options.docsRepository);
     Files.createDirectories(wikiDir);
     Path bugpatternDir = wikiDir.resolve("bugpattern");
     if (!Files.exists(bugpatternDir)) {
