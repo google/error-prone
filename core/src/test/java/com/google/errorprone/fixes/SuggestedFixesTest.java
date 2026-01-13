@@ -16,6 +16,7 @@
 
 package com.google.errorprone.fixes;
 
+import static com.google.common.collect.Streams.stream;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
@@ -99,9 +100,9 @@ public class SuggestedFixesTest {
   }
 
   /** Test checker that adds or removes modifiers. */
-  @BugPattern(name = "EditModifiers", summary = "Edits modifiers", severity = ERROR)
-  public static class EditModifiersChecker extends BugChecker
-      implements VariableTreeMatcher, MethodTreeMatcher {
+  @BugPattern(summary = "Edits modifiers", severity = ERROR)
+  public static final class EditModifiersChecker extends BugChecker
+      implements ClassTreeMatcher, VariableTreeMatcher, MethodTreeMatcher {
 
     static final ImmutableMap<String, Modifier> MODIFIERS_BY_NAME = createModifiersByName();
 
@@ -123,10 +124,26 @@ public class SuggestedFixesTest {
       return editModifiers(tree, state);
     }
 
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      return editModifiers(tree, state);
+    }
+
     private Description editModifiers(Tree tree, VisitorState state) {
       EditModifiers editModifiers =
-          ASTHelpers.getAnnotation(
-              ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class), EditModifiers.class);
+          stream(state.getPath())
+              .skip(1)
+              .map(
+                  t ->
+                      t instanceof ClassTree ct
+                          ? ASTHelpers.getAnnotation(ct, EditModifiers.class)
+                          : null)
+              .filter(x -> x != null)
+              .findFirst()
+              .orElse(null);
+      if (editModifiers == null) {
+        return NO_MATCH;
+      }
       SuggestedFix.Builder fix = SuggestedFix.builder();
       Modifier[] mods =
           Arrays.stream(editModifiers.value())
@@ -136,7 +153,7 @@ public class SuggestedFixesTest {
         case ADD -> fix.merge(SuggestedFixes.addModifiers(tree, state, mods).orElse(null));
         case REMOVE -> fix.merge(SuggestedFixes.removeModifiers(tree, state, mods).orElse(null));
       }
-      return describeMatch(tree, fix.build());
+      return fix.isEmpty() ? NO_MATCH : describeMatch(tree, fix.build());
     }
   }
 
@@ -144,27 +161,33 @@ public class SuggestedFixesTest {
   public void addAtBeginningOfLine() {
     BugCheckerRefactoringTestHelper.newInstance(EditModifiersChecker.class, getClass())
         .addInputLines(
-            "in/Test.java",
-            "import javax.annotation.Nullable;",
-            String.format("import %s;", EditModifiers.class.getCanonicalName()),
-            "@EditModifiers(value=\"final\", kind=EditModifiers.EditKind.ADD)",
-            "class Test {",
-            "  @Nullable",
-            "  int foo() {",
-            "    return 10;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import javax.annotation.Nullable;
+            import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+
+            @EditModifiers(value = "final", kind = EditModifiers.EditKind.ADD)
+            class Test {
+              @Nullable
+              int foo() {
+                return 10;
+              }
+            }
+            """)
         .addOutputLines(
-            "out/Test.java",
-            "import javax.annotation.Nullable;",
-            String.format("import %s;", EditModifiers.class.getCanonicalName()),
-            "@EditModifiers(value=\"final\", kind=EditModifiers.EditKind.ADD)",
-            "class Test {",
-            "  @Nullable",
-            "  final int foo() {",
-            "    return 10;",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            import javax.annotation.Nullable;
+            import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+
+            @EditModifiers(value = "final", kind = EditModifiers.EditKind.ADD)
+            class Test {
+              @Nullable
+              final int foo() {
+                return 10;
+              }
+            }
+            """)
         .doTest(TestMode.TEXT_MATCH);
   }
 
@@ -173,21 +196,82 @@ public class SuggestedFixesTest {
     CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            String.format("import %s;", EditModifiers.class.getCanonicalName()),
-            "import javax.annotation.Nullable;",
-            "@EditModifiers(value=\"final\", kind=EditModifiers.EditKind.ADD)",
-            "class Test {",
-            "  // BUG: Diagnostic contains: final Object one",
-            "  Object one;",
-            "  // BUG: Diagnostic contains: @Nullable final Object two",
-            "  @Nullable Object two;",
-            "  // BUG: Diagnostic contains: @Nullable public final Object three",
-            "  @Nullable public Object three;",
-            "  // BUG: Diagnostic contains: public final Object four",
-            "  public Object four;",
-            "  // BUG: Diagnostic contains: public final @Nullable Object five",
-            "  public @Nullable Object five;",
-            "}")
+            """
+            import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+            import javax.annotation.Nullable;
+
+            @EditModifiers(value = "final", kind = EditModifiers.EditKind.ADD)
+            class Test {
+              // BUG: Diagnostic contains: final Object one
+              Object one;
+              // BUG: Diagnostic contains: @Nullable final Object two
+              @Nullable Object two;
+              // BUG: Diagnostic contains: @Nullable public final Object three
+              @Nullable public Object three;
+              // BUG: Diagnostic contains: public final Object four
+              public Object four;
+              // BUG: Diagnostic contains: public final @Nullable Object five
+              public @Nullable Object five;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void addModifiers_nonSealed() {
+    CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+            import javax.annotation.Nullable;
+
+            @EditModifiers(value = "non-sealed", kind = EditModifiers.EditKind.ADD)
+            sealed interface Test {
+              // BUG: Diagnostic contains: non-sealed final class One
+              final class One extends Object {}
+
+              public non-sealed class Two implements Test {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void addModifiers_nonSealedClass() {
+    CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+
+            @EditModifiers(value = "public", kind = EditModifiers.EditKind.ADD)
+            class Test {
+              // BUG: Diagnostic contains: public sealed interface A
+              sealed interface A {}
+
+              // BUG: Diagnostic contains: public non-sealed class B
+              non-sealed class B implements A {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void removeModifiers_nonSealed() {
+    CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+            import javax.annotation.Nullable;
+
+            @EditModifiers(value = "non-sealed", kind = EditModifiers.EditKind.REMOVE)
+            sealed interface Test {
+              // BUG: Diagnostic contains: public class One
+              public non-sealed class One implements Test {}
+            }
+            """)
         .doTest();
   }
 
@@ -196,17 +280,18 @@ public class SuggestedFixesTest {
     CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            String.format("import %s;", EditModifiers.class.getCanonicalName()),
-            "import javax.annotation.Nullable;",
-            "@EditModifiers(value=\"final\", kind=EditModifiers.EditKind.ADD)",
-            "class Test {",
-            "  // BUG: Diagnostic contains:"
-                + " private @Deprecated /*comment*/ final volatile Object one;",
-            "  private @Deprecated /*comment*/ volatile Object one;",
-            "  // BUG: Diagnostic contains:"
-                + " private @Deprecated /*comment*/ static final Object two = null;",
-            "  private @Deprecated /*comment*/ static Object two = null;",
-            "}")
+            """
+            import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+            import javax.annotation.Nullable;
+
+            @EditModifiers(value = "final", kind = EditModifiers.EditKind.ADD)
+            class Test {
+              // BUG: Diagnostic contains: private @Deprecated /*comment*/ final volatile Object one;
+              private @Deprecated /*comment*/ volatile Object one;
+              // BUG: Diagnostic contains: private @Deprecated /*comment*/ static final Object two = null;
+              private @Deprecated /*comment*/ static Object two = null;
+            }
+            """)
         .doTest();
   }
 
@@ -215,13 +300,16 @@ public class SuggestedFixesTest {
     CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            String.format("import %s;", EditModifiers.class.getCanonicalName()),
-            "import javax.annotation.Nullable;",
-            "@EditModifiers(value=\"public\", kind=EditModifiers.EditKind.ADD)",
-            "class Test {",
-            "  // BUG: Diagnostic contains: public static final transient Object one",
-            "  static final transient Object one = null;",
-            "}")
+            """
+            import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+            import javax.annotation.Nullable;
+
+            @EditModifiers(value = "public", kind = EditModifiers.EditKind.ADD)
+            class Test {
+              // BUG: Diagnostic contains: public static final transient Object one
+              static final transient Object one = null;
+            }
+            """)
         .doTest();
   }
 
@@ -230,19 +318,22 @@ public class SuggestedFixesTest {
     CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            String.format("import %s;", EditModifiers.class.getCanonicalName()),
-            "import javax.annotation.Nullable;",
-            "@EditModifiers(value=\"final\", kind=EditModifiers.EditKind.REMOVE)",
-            "class Test {",
-            "  // BUG: Diagnostic contains: Object one",
-            "  final Object one = null;",
-            "  // BUG: Diagnostic contains: @Nullable Object two",
-            "  @Nullable final Object two = null;",
-            "  // BUG: Diagnostic contains: @Nullable public Object three",
-            "  @Nullable public final Object three = null;",
-            "  // BUG: Diagnostic contains: public Object four",
-            "  public final Object four = null;",
-            "}")
+            """
+            import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+            import javax.annotation.Nullable;
+
+            @EditModifiers(value = "final", kind = EditModifiers.EditKind.REMOVE)
+            class Test {
+              // BUG: Diagnostic contains: Object one
+              final Object one = null;
+              // BUG: Diagnostic contains: @Nullable Object two
+              @Nullable final Object two = null;
+              // BUG: Diagnostic contains: @Nullable public Object three
+              @Nullable public final Object three = null;
+              // BUG: Diagnostic contains: public Object four
+              public final Object four = null;
+            }
+            """)
         .doTest();
   }
 
@@ -251,13 +342,18 @@ public class SuggestedFixesTest {
     CompilationTestHelper.newInstance(EditModifiersChecker.class, getClass())
         .addSourceLines(
             "Test.java",
-            String.format("import %s;", EditModifiers.class.getCanonicalName()),
-            "import javax.annotation.Nullable;",
-            "@EditModifiers(value={\"final\", \"static\"}, kind=EditModifiers.EditKind.REMOVE)",
-            "class Test {",
-            "  // BUG: Diagnostic contains: private Object one = null;",
-            "  private static final Object one = null;",
-            "}")
+            """
+            import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+            import javax.annotation.Nullable;
+
+            @EditModifiers(
+                value = {"final", "static"},
+                kind = EditModifiers.EditKind.REMOVE)
+            class Test {
+              // BUG: Diagnostic contains: private Object one = null;
+              private static final Object one = null;
+            }
+            """)
         .doTest();
   }
 
@@ -281,7 +377,7 @@ public class SuggestedFixesTest {
   }
 
   /** Test checker that casts returned expression. */
-  @BugPattern(name = "CastReturn", severity = ERROR, summary = "Adds casts to returned expressions")
+  @BugPattern(severity = ERROR, summary = "Adds casts to returned expressions")
   public static class CastReturnFullType extends BugChecker implements ReturnTreeMatcher {
 
     @Override
@@ -1167,7 +1263,7 @@ public class SuggestedFixesTest {
   public void qualifyJavadocTest() {
     BugCheckerRefactoringTestHelper.newInstance(JavadocQualifier.class, getClass())
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             import java.util.List;
             import java.util.Map;
@@ -1178,7 +1274,7 @@ public class SuggestedFixesTest {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
 """
 import java.util.List;
 import java.util.Map;
@@ -1220,13 +1316,12 @@ class Test {
   }
 
   @Test
-  @org.junit.Ignore("There appears to be an issue parsing lambda comments")
   public void suppressWarningsFix() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
         BugCheckerRefactoringTestHelper.newInstance(SuppressMe.class, getClass());
     refactorTestHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             public class Test {
               static final int BEST_NUMBER = 42;
@@ -1255,7 +1350,7 @@ class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             public class Test {
               @SuppressWarnings("SuppressMe")
@@ -1314,7 +1409,7 @@ class Test {
             new SuppressMeWithComment("b/XXXX: fix me!"), getClass());
     refactorTestHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             public class Test {
               int BEST_NUMBER = 42;
@@ -1324,7 +1419,7 @@ class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             public class Test {
               // b/XXXX: fix me!
@@ -1346,7 +1441,7 @@ class Test {
             new SuppressMeWithComment("b/XXXX: fix me!"), getClass());
     refactorTestHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             public class Test {
               // This comment was here already.
@@ -1358,7 +1453,7 @@ class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             public class Test {
               // This comment was here already.
@@ -1385,14 +1480,14 @@ class Test {
             getClass());
     refactorTestHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             public class Test {
               int BEST = 42;
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
 """
 public class Test {
   // Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
@@ -1422,7 +1517,7 @@ public class Test {
         BugCheckerRefactoringTestHelper.newInstance(RemoveSuppressFromMe.class, getClass());
     refactorTestHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             public class Test {
               @SuppressWarnings("RemoveMe")
@@ -1430,7 +1525,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             public class Test {
               int BEST = 42;
@@ -1445,7 +1540,7 @@ public class Test {
         BugCheckerRefactoringTestHelper.newInstance(RemoveSuppressFromMe.class, getClass());
     refactorTestHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             public class Test {
               @SuppressWarnings({"RemoveMe", "KeepMe"})
@@ -1453,7 +1548,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             public class Test {
               @SuppressWarnings("KeepMe")
@@ -1469,7 +1564,7 @@ public class Test {
         BugCheckerRefactoringTestHelper.newInstance(RemoveSuppressFromMe.class, getClass());
     refactorTestHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             public class Test {
               @SuppressWarnings({"RemoveMe", "KeepMe1", "KeepMe2"})
@@ -1477,7 +1572,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             public class Test {
               @SuppressWarnings({"KeepMe1", "KeepMe2"})
@@ -1493,7 +1588,7 @@ public class Test {
         BugCheckerRefactoringTestHelper.newInstance(RemoveSuppressFromMe.class, getClass());
     refactorTestHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             public class Test {
               @SuppressWarnings({"RemoveMe"})
@@ -1501,7 +1596,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             public class Test {
               int BEST = 42;
@@ -1516,7 +1611,7 @@ public class Test {
         BugCheckerRefactoringTestHelper.newInstance(RemoveSuppressFromMe.class, getClass());
     refactorTestHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             public class Test {
               @SuppressWarnings(value = {"RemoveMe", "KeepMe"})
@@ -1524,7 +1619,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             public class Test {
               @SuppressWarnings(value = "KeepMe")
@@ -1535,8 +1630,8 @@ public class Test {
   }
 
   /** A {@link BugChecker} for testing. */
-  @BugPattern(name = "UpdateDoNotCallArgument", summary = "", severity = ERROR)
-  public static final class UpdateDoNotCallArgumentChecker extends BugChecker
+  @BugPattern(summary = "", severity = ERROR)
+  public static final class UpdateDoNotCallArgument extends BugChecker
       implements AnnotationTreeMatcher {
     @Override
     public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
@@ -1550,11 +1645,10 @@ public class Test {
   @Test
   public void updateAnnotationArgumentValues_noArguments() {
     BugCheckerRefactoringTestHelper refactorTestHelper =
-        BugCheckerRefactoringTestHelper.newInstance(
-            UpdateDoNotCallArgumentChecker.class, getClass());
+        BugCheckerRefactoringTestHelper.newInstance(UpdateDoNotCallArgument.class, getClass());
     refactorTestHelper
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             import com.google.errorprone.annotations.DoNotCall;
 
@@ -1564,7 +1658,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             import com.google.errorprone.annotations.DoNotCall;
 
@@ -1592,7 +1686,7 @@ public class Test {
   public void compilesWithFixTest() {
     BugCheckerRefactoringTestHelper.newInstance(CompilesWithFixChecker.class, getClass())
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             class Test {
               void f() {
@@ -1603,7 +1697,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             class Test {
               void f() {
@@ -1620,7 +1714,7 @@ public class Test {
     BugCheckerRefactoringTestHelper.newInstance(CompilesWithFixChecker.class, getClass())
         .setArgs("--release", "9")
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             class Test {
               void f() {
@@ -1631,7 +1725,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             class Test {
               void f() {
@@ -1644,7 +1738,7 @@ public class Test {
   }
 
   /** A test bugchecker that deletes an exception from throws. */
-  @BugPattern(name = "RemovesExceptionChecker", summary = "", severity = ERROR)
+  @BugPattern(summary = "", severity = ERROR)
   public static class RemovesExceptionsChecker extends BugChecker implements MethodTreeMatcher {
 
     private final int index;
@@ -1669,7 +1763,7 @@ public class Test {
   public void deleteExceptionsRemoveFirstCheckerTest() {
     BugCheckerRefactoringTestHelper.newInstance(new RemovesExceptionsChecker(0), getClass())
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             import java.io.IOException;
 
@@ -1684,7 +1778,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             import java.io.IOException;
 
@@ -1705,7 +1799,7 @@ public class Test {
   public void deleteExceptionsRemoveSecondCheckerTest() {
     BugCheckerRefactoringTestHelper.newInstance(new RemovesExceptionsChecker(1), getClass())
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             import java.io.IOException;
 
@@ -1720,7 +1814,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             import java.io.IOException;
 
@@ -1779,7 +1873,7 @@ public class Test {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             class Test {
               void m() {
@@ -1792,7 +1886,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             class Test {
               void m() {
@@ -1812,7 +1906,7 @@ public class Test {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             class Test {
               void m() {
@@ -1826,7 +1920,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             class Test {
               void m() {
@@ -1847,7 +1941,7 @@ public class Test {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             class Test {
               void m(Integer replace) {
@@ -1856,7 +1950,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             class Test {
               void m(Integer renamed) {
@@ -1872,7 +1966,7 @@ public class Test {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", AutoCloseable.class), getClass())
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             abstract class Test {
               abstract AutoCloseable open();
@@ -1886,7 +1980,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             abstract class Test {
               abstract AutoCloseable open();
@@ -1907,7 +2001,7 @@ public class Test {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             import java.util.function.Function;
 
@@ -1916,7 +2010,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             import java.util.function.Function;
 
@@ -1932,7 +2026,7 @@ public class Test {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", Integer.class), getClass())
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             import java.util.function.Function;
 
@@ -1941,7 +2035,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             import java.util.function.Function;
 
@@ -1957,7 +2051,7 @@ public class Test {
     BugCheckerRefactoringTestHelper.newInstance(
             new RenamesVariableChecker("replace", "renamed", Throwable.class), getClass())
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             class Test {
               void m() {
@@ -1969,7 +2063,7 @@ public class Test {
             }
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             class Test {
               void m() {
@@ -2000,8 +2094,16 @@ public class Test {
   @Test
   public void removeAddModifier_rangesCompatible() {
     BugCheckerRefactoringTestHelper.newInstance(RemoveAddModifier.class, getClass())
-        .addInputLines("in/Test.java", "public class Test {}")
-        .addOutputLines("out/Test.java", "abstract class Test {}")
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            abstract class Test {}
+            """)
         .doTest();
   }
 
@@ -2023,14 +2125,14 @@ public class Test {
   public void prefixAddImport() throws IOException {
     BugCheckerRefactoringTestHelper.newInstance(PrefixAddImportCheck.class, getClass())
         .addInputLines(
-            "in/Test.java",
+            "Test.java",
             """
             package p;
 
             class Test {}
             """)
         .addOutputLines(
-            "out/Test.java",
+            "Test.java",
             """
             package p;
 
@@ -2282,12 +2384,13 @@ public class Test {
 
   @Test
   public void compilesWithFix_onlyInSameCompilationUnit() {
-    String[] unrelatedFile = {
-      "class ClassContainingRawType {",
-      // This unsuppressed raw type would prevent compilation.
-      "  java.util.List list;",
-      "}",
-    };
+    String unrelatedFile =
+        """
+        class ClassContainingRawType {
+          // This unsuppressed raw type would prevent compilation.
+          java.util.List list;
+        }
+        """;
 
     // This compilation will succeed because we only consider the compilation errors in the first
     // class.
@@ -2306,11 +2409,13 @@ public class Test {
     CompilationTestHelper.newInstance(
             AddSuppressWarningsIfCompilationSucceedsOnlyInSameCompilationUnit.class, getClass())
         .addSourceLines(
-            "OnlyInSameCompilationUnit.java", //
-            "class OnlyInSameCompilationUnit {",
-            // This unsuppressed raw type prevents compilation.
-            "  java.util.List list;",
-            "}")
+            "OnlyInSameCompilationUnit.java",
+            """
+            class OnlyInSameCompilationUnit {
+              // This unsuppressed raw type prevents compilation.
+              java.util.List list;
+            }
+            """)
         .addSourceLines("ClassContainingRawType.java", unrelatedFile)
         .doTest();
   }
@@ -2337,11 +2442,13 @@ public class Test {
             class InAllCompilationUnits {}
             """)
         .addSourceLines(
-            "ClassContainingRawType.java", //
-            "class ClassContainingRawType {",
-            // This unsuppressed raw type prevents re-compilation, so the other class is unchanged.
-            "  java.util.List list;",
-            "}")
+            "ClassContainingRawType.java",
+            """
+            class ClassContainingRawType {
+              // This unsuppressed raw type prevents re-compilation, so the other class is unchanged.
+              java.util.List list;
+            }
+            """)
         .doTest();
   }
 

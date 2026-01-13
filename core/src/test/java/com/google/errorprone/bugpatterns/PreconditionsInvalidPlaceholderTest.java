@@ -59,7 +59,7 @@ public class PreconditionsInvalidPlaceholderTest {
                 // BUG: Diagnostic contains:
                 Verify.verify(x > 0, "%d > 0", x);
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -96,7 +96,7 @@ public class PreconditionsInvalidPlaceholderNegativeCase1 {
   public void checkSelf() {
     checkNotNull(foo, "Foo", this);
   }
-}\
+}
 """)
         .doTest();
   }

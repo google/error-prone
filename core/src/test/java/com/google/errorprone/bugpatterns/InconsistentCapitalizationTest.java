@@ -194,7 +194,7 @@ public class InconsistentCapitalizationNegativeCases {
       }
     }
   }
-}\
+}
 """)
         .doTest();
   }

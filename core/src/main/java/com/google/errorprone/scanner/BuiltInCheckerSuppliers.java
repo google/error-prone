@@ -40,8 +40,6 @@ import com.google.errorprone.bugpatterns.AssertFalse;
 import com.google.errorprone.bugpatterns.AssertThrowsMultipleStatements;
 import com.google.errorprone.bugpatterns.AssertionFailureIgnored;
 import com.google.errorprone.bugpatterns.AssignmentExpression;
-import com.google.errorprone.bugpatterns.AsyncCallableReturnsNull;
-import com.google.errorprone.bugpatterns.AsyncFunctionReturnsNull;
 import com.google.errorprone.bugpatterns.AttemptedNegativeZero;
 import com.google.errorprone.bugpatterns.AutoValueBoxedValues;
 import com.google.errorprone.bugpatterns.AutoValueBuilderDefaultsInConstructor;
@@ -67,7 +65,6 @@ import com.google.errorprone.bugpatterns.BoxedPrimitiveEquality;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugPatternNaming;
 import com.google.errorprone.bugpatterns.ByteBufferBackingArray;
-import com.google.errorprone.bugpatterns.CacheLoaderNull;
 import com.google.errorprone.bugpatterns.CannotMockFinalClass;
 import com.google.errorprone.bugpatterns.CannotMockMethod;
 import com.google.errorprone.bugpatterns.CanonicalDuration;
@@ -122,6 +119,7 @@ import com.google.errorprone.bugpatterns.DoNotClaimAnnotations;
 import com.google.errorprone.bugpatterns.DoNotMockAutoValue;
 import com.google.errorprone.bugpatterns.DoNotMockChecker;
 import com.google.errorprone.bugpatterns.DoubleBraceInitialization;
+import com.google.errorprone.bugpatterns.DuplicateAssertion;
 import com.google.errorprone.bugpatterns.DuplicateBranches;
 import com.google.errorprone.bugpatterns.DuplicateDateFormatField;
 import com.google.errorprone.bugpatterns.DuplicateMapKeys;
@@ -578,6 +576,9 @@ import com.google.errorprone.bugpatterns.javadoc.UnrecognisedJavadocTag;
 import com.google.errorprone.bugpatterns.javadoc.UrlInSee;
 import com.google.errorprone.bugpatterns.nullness.AddNullMarkedToClass;
 import com.google.errorprone.bugpatterns.nullness.AddNullMarkedToPackageInfo;
+import com.google.errorprone.bugpatterns.nullness.AsyncCallableReturnsNull;
+import com.google.errorprone.bugpatterns.nullness.AsyncFunctionReturnsNull;
+import com.google.errorprone.bugpatterns.nullness.CacheLoaderNull;
 import com.google.errorprone.bugpatterns.nullness.DereferenceWithNullBranch;
 import com.google.errorprone.bugpatterns.nullness.EqualsBrokenForNull;
 import com.google.errorprone.bugpatterns.nullness.EqualsMissingNullable;
@@ -946,6 +947,7 @@ public class BuiltInCheckerSuppliers {
           DoNotClaimAnnotations.class,
           DoNotMockAutoValue.class,
           DoubleCheckedLocking.class,
+          DuplicateAssertion.class,
           DuplicateBranches.class,
           DuplicateDateFormatField.class,
           EffectivelyPrivate.class,

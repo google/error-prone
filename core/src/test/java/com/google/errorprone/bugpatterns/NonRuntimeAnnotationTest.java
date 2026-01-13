@@ -65,7 +65,7 @@ public class NonRuntimeAnnotationPositiveCases {
 
   /** Annotation that is implicitly NOT retained at runtime */
   public @interface NotSpecified {}
-}\
+}
 """)
         .doTest();
   }
@@ -94,7 +94,7 @@ public class NonRuntimeAnnotationNegativeCases {
   /** Annotation that is retained at runtime */
   @Retention(RetentionPolicy.RUNTIME)
   public @interface Runtime {}
-}\
+}
 """)
         .doTest();
   }

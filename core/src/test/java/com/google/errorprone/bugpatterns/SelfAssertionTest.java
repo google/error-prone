@@ -96,7 +96,7 @@ public class SelfAssertionTest {
                 // BUG: Diagnostic contains:
                 assertWithMessage("msg").that(test).isNotSameInstanceAs(test);
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -125,7 +125,7 @@ public class SelfAssertionTest {
               public void testNeq() {
                 assertThat(Boolean.TRUE.toString()).isNotEqualTo(Boolean.FALSE.toString());
               }
-            }\
+            }
             """)
         .doTest();
   }

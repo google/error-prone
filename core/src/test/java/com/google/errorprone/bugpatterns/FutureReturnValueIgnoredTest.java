@@ -238,7 +238,7 @@ public class FutureReturnValueIgnoredPositiveCases {
             },
             runnable -> runnable.run());
   }
-}\
+}
 """)
         .doTest();
   }

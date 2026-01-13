@@ -306,7 +306,7 @@ public class FinallyPositiveCase1 {
                   }
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -396,7 +396,7 @@ public class FinallyPositiveCase1 {
                   }
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -466,7 +466,7 @@ public class FinallyPositiveCase1 {
                   }
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }

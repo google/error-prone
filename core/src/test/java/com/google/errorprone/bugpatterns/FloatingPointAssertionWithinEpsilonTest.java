@@ -90,7 +90,7 @@ public final class FloatingPointAssertionWithinEpsilonTest {
                 // BUG: Diagnostic contains: 1.1e-16
                 assertEquals("equal!", 1.0, 1.0, TOLERANCE2);
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -146,7 +146,7 @@ public final class FloatingPointAssertionWithinEpsilonTest {
 
                 assertEquals(1f, 1f, 0f);
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -209,7 +209,7 @@ public final class FloatingPointAssertionWithinEpsilonTest {
                 // BUG: Diagnostic contains: 1.1e-16
                 assertEquals("equal!", 1.0, 1.0, TOLERANCE2);
               }
-            }\
+            }
             """)
         .addOutputLines(
             "FloatingPointAssertionWithinEpsilonPositiveCases_expected.java",
@@ -248,7 +248,7 @@ public final class FloatingPointAssertionWithinEpsilonTest {
                 assertEquals(1.0, 1.0, 0);
                 assertEquals("equal!", 1.0, 1.0, 0);
               }
-            }\
+            }
             """)
         .doTest(TestMode.AST_MATCH);
   }

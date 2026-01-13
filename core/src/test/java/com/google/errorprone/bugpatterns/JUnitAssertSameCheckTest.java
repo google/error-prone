@@ -59,7 +59,7 @@ public class JUnitAssertSameCheckPositiveCase {
     // BUG: Diagnostic contains: An object is tested for reference equality to itself using JUnit
     junit.framework.Assert.assertSame("message", obj, obj);
   }
-}\
+}
 """)
         .doTest();
   }
@@ -85,7 +85,7 @@ public class JUnitAssertSameCheckPositiveCase {
                 junit.framework.Assert.assertSame(obj1, obj2);
                 junit.framework.Assert.assertSame("message", obj1, obj2);
               }
-            }\
+            }
             """)
         .doTest();
   }

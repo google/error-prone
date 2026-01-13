@@ -113,7 +113,7 @@ public class InjectOnMemberAndConstructorPositiveCases {
                 @Inject
                 public MixedInject() {}
               }
-            }\
+            }
             """)
         .doTest();
   }

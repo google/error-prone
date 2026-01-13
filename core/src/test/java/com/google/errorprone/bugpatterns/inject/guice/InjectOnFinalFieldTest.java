@@ -57,7 +57,7 @@ public class InjectOnFinalFieldTest {
                 // BUG: Diagnostic contains: Object c
                 final Object c = null;
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -95,7 +95,7 @@ public class InjectOnFinalFieldTest {
                 @Inject
                 final void method() {}
               }
-            }\
+            }
             """)
         .doTest();
   }

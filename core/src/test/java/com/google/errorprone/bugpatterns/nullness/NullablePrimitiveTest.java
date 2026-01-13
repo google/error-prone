@@ -82,7 +82,7 @@ public class NullablePrimitiveTest {
               public Integer method() {
                 return Integer.valueOf(0);
               }
-            }\
+            }
             """)
         .doTest();
   }

@@ -180,7 +180,7 @@ public class UnsafeReflectiveConstructionCastNegativeCases {
       }
     }
   }
-}\
+}
 """)
         .doTest();
   }

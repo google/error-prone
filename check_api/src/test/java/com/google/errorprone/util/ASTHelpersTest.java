@@ -22,7 +22,6 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.canonicalConstructor;
-import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -79,17 +78,12 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
-import com.sun.tools.javac.api.BasicJavacTask;
-import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.main.Main.Result;
-import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree.JCLiteral;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -1277,47 +1271,6 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         @B("four") @A(11) Object @A(10) [] param2) {
       return null;
     }
-  }
-
-  @Test
-  public void getDeclarationAndTypeAttributesTest() {
-    BasicJavacTask tool =
-        (BasicJavacTask) JavacTool.create().getTask(null, null, null, null, null, null);
-    ClassSymbol element =
-        JavacElements.instance(tool.getContext()).getTypeElement(Lib.class.getCanonicalName());
-    VarSymbol field =
-        (VarSymbol)
-            getEnclosedElements(element).stream()
-                .filter(e -> e.getSimpleName().contentEquals("field"))
-                .findAny()
-                .get();
-    assertThat(ASTHelpers.getDeclarationAndTypeAttributes(field).map(String::valueOf))
-        .containsExactly(
-            "@com.google.errorprone.util.ASTHelpersTest.B(\"one\")",
-            "@com.google.errorprone.util.ASTHelpersTest.A(1)");
-
-    MethodSymbol method =
-        (MethodSymbol)
-            getEnclosedElements(element).stream()
-                .filter(e -> e.getSimpleName().contentEquals("method"))
-                .findAny()
-                .get();
-    assertThat(ASTHelpers.getDeclarationAndTypeAttributes(method).map(String::valueOf))
-        .containsExactly(
-            "@com.google.errorprone.util.ASTHelpersTest.B(\"two\")",
-            "@com.google.errorprone.util.ASTHelpersTest.A(4)");
-    assertThat(
-            ASTHelpers.getDeclarationAndTypeAttributes(method.getParameters().get(0))
-                .map(String::valueOf))
-        .containsExactly(
-            "@com.google.errorprone.util.ASTHelpersTest.B(\"three\")",
-            "@com.google.errorprone.util.ASTHelpersTest.A(7)");
-    assertThat(
-            ASTHelpers.getDeclarationAndTypeAttributes(method.getParameters().get(1))
-                .map(String::valueOf))
-        .containsExactly(
-            "@com.google.errorprone.util.ASTHelpersTest.B(\"four\")",
-            "@com.google.errorprone.util.ASTHelpersTest.A(10)");
   }
 
   /** A {@link BugChecker} that prints if the method can be overridden. */

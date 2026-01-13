@@ -37,6 +37,7 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
@@ -84,6 +85,11 @@ public final class CheckNotNullMultipleTimes extends BugChecker implements Metho
       // top-level conditional branches.
       @Override
       public Void visitSwitch(SwitchTree tree, Void unused) {
+        return null;
+      }
+
+      @Override
+      public Void visitSwitchExpression(SwitchExpressionTree tree, Void unused) {
         return null;
       }
 

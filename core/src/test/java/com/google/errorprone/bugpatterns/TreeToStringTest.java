@@ -151,7 +151,7 @@ public class TreeToStringPositiveCases {
           }
         };
   }
-}\
+}
 """)
         .doTest();
   }
@@ -180,7 +180,7 @@ public class TreeToStringPositiveCases {
                   ASTHelpers.getSymbol(tree).getSimpleName().toString();
                 }
               }
-            }\
+            }
             """)
         .addModules(
             "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")

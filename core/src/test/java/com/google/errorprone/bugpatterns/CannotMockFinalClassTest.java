@@ -54,7 +54,7 @@ public class CannotMockFinalClassTest {
                 // BUG: Diagnostic contains: Mockito cannot mock
                 FinalClass local = Mockito.mock(FinalClass.class);
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -102,7 +102,7 @@ public class CannotMockFinalClassTest {
               public void method() {
                 NonFinalClass local = Mockito.mock(NonFinalClass.class);
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -125,7 +125,7 @@ public class CannotMockFinalClassTest {
               public void method() {
                 FinalClass local = Mockito.mock(FinalClass.class);
               }
-            }\
+            }
             """)
         .doTest();
   }

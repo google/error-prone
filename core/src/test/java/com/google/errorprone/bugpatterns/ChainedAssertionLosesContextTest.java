@@ -126,7 +126,7 @@ public class ChainedAssertionLosesContextPositiveCases {
       return this;
     }
   }
-}\
+}
 """)
         .doTest();
   }
@@ -191,7 +191,7 @@ public class ChainedAssertionLosesContextPositiveCases {
                   return this;
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }

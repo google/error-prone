@@ -51,7 +51,7 @@ public class WakelockReleasedDangerouslyTest {
 
                   public void setReferenceCounted(boolean referenceCounted) {}
                 }
-              }\
+              }
               """)
           .expectUnchanged();
   private final CompilationTestHelper compilationHelper =
@@ -75,7 +75,7 @@ public class WakelockReleasedDangerouslyTest {
 
                   public void setReferenceCounted(boolean referenceCounted) {}
                 }
-              }\
+              }
               """)
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 

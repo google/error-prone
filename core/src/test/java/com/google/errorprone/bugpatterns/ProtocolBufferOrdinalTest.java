@@ -67,7 +67,7 @@ public class ProtocolBufferOrdinalTest {
                   return number;
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -88,7 +88,7 @@ public class ProtocolBufferOrdinalTest {
               public static void checkProtoEnum() {
                 TestEnum.TEST_ENUM_VAL.getNumber();
               }
-            }\
+            }
             """)
         .doTest();
   }

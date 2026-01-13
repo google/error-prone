@@ -40,6 +40,7 @@ public final class InvalidThrowsLinkTest {
             interface Test {
               /**
                * @throws {@link IOException} when failed
+               * @throws {@code IllegalArgumentException} if a < 0
                */
               void foo(int a, int b) throws IOException;
             }
@@ -52,6 +53,7 @@ public final class InvalidThrowsLinkTest {
             interface Test {
               /**
                * @throws IOException when failed
+               * @throws IllegalArgumentException if a < 0
                */
               void foo(int a, int b) throws IOException;
             }

@@ -41,7 +41,7 @@ public final class IsLoggableTagLengthTest {
                 }
 
                 public static final int INFO = 0;
-              }\
+              }
               """)
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 

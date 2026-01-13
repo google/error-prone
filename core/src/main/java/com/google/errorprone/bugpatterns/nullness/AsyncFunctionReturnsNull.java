@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 
 import com.google.common.util.concurrent.AsyncFunction;
 import com.google.errorprone.BugPattern;
 
-/** Checks that {@link AsyncFunction} implementations do not directly {@code return null}. */
+/** Checks that {@link AsyncFunction} implementations do not return definitely null values. */
 @BugPattern(
     summary = "AsyncFunction should not return a null Future, only a Future whose result is null.",
     severity = ERROR)

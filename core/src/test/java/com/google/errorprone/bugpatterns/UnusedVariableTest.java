@@ -1727,7 +1727,7 @@ public class Test {
             "SimpleRecord.java", //
             """
             //            public record SimpleRecord(Integer foo, Long bar) {}
-            //\
+            //
             """)
         .expectNoDiagnostics()
         .doTest();

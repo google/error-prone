@@ -169,7 +169,7 @@ class BanJNDIPositiveCases {
     // BUG: Diagnostic contains: BanJNDI
     return c.lookup("hello");
   }
-}\
+}
 """)
         .doTest();
   }

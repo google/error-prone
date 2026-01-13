@@ -49,26 +49,23 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.util.Name;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 import javax.inject.Inject;
+import javax.lang.model.type.TypeMirror;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Null is not permitted for this parameter.", severity = ERROR)
 public final class NullArgumentForNonNullParameter extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
   private static final Supplier<Type> JAVA_OPTIONAL_TYPE = typeFromString("java.util.Optional");
-  private static final Supplier<Type> GUAVA_OPTIONAL_TYPE =
-      typeFromString("com.google.common.base.Optional");
   private static final Supplier<Type> ARGUMENT_CAPTOR_CLASS =
       typeFromString("org.mockito.ArgumentCaptor");
   private static final Supplier<Name> OF_NAME = memoize(state -> state.getName("of"));
   private static final Supplier<Name> FOR_CLASS_NAME = memoize(state -> state.getName("forClass"));
-  private static final Supplier<Name> BUILDER_NAME = memoize(state -> state.getName("Builder"));
-  private static final Supplier<Name> GUAVA_COLLECT_IMMUTABLE_PREFIX =
-      memoize(state -> state.getName("com.google.common.collect.Immutable"));
-  private static final Supplier<Name> GUAVA_GRAPH_IMMUTABLE_PREFIX =
-      memoize(state -> state.getName("com.google.common.graph.Immutable"));
   private static final Supplier<Name> PROTO_NONNULL_API_NAME =
       memoize(state -> state.getName("com.google.protobuf.Internal$ProtoNonnullApi"));
   private static final Supplier<Name> NULL_MARKED_NAME =
@@ -167,49 +164,26 @@ public final class NullArgumentForNonNullParameter extends BugChecker
     }
 
     /*
-     * Though we get most of our nullness information from annotations, there are technical
-     * obstacles to relying purely on them, including around type variables (see comments below)—not
-     * to mention that there are no annotations on JDK classes.
-     *
-     * As a workaround, we can hardcode specific APIs that feel worth the effort. Most of the
-     * hardcoding is below, but one bit is at the top of this method.
+     * Since not all the classes that we care about have nullness annotations, we can hardcode
+     * specific APIs that feel worth the effort, such as those in the JDK. Here's where we put such
+     * hardcoding (for the tiny bit we have), aside from one case appears at the top of this method
+     * instead so that it can cover test code. (But see the TODO about test code above.)
      */
 
-    // Hardcoding #1: Optional.of
+    // Hardcoding: Optional.of
     if (sym.owner.name.equals(OF_NAME.get(state))
-        && (isParameterOfMethodOnType(sym, JAVA_OPTIONAL_TYPE, state)
-            || isParameterOfMethodOnType(sym, GUAVA_OPTIONAL_TYPE, state))) {
+        && isParameterOfMethodOnType(sym, JAVA_OPTIONAL_TYPE, state)) {
       return true;
     }
 
-    // Hardcoding #2: Immutable*.of
-    if (sym.owner.name.equals(OF_NAME.get(state))
-        && (isParameterOfMethodOnTypeStartingWith(sym, GUAVA_COLLECT_IMMUTABLE_PREFIX, state)
-            || isParameterOfMethodOnTypeStartingWith(sym, GUAVA_GRAPH_IMMUTABLE_PREFIX, state))) {
-      return true;
-    }
-
-    // Hardcoding #3: Immutable*.Builder.*
-    if (enclosingClass(sym).name.equals(BUILDER_NAME.get(state))
-        && (isParameterOfMethodOnTypeStartingWith(sym, GUAVA_COLLECT_IMMUTABLE_PREFIX, state)
-            || isParameterOfMethodOnTypeStartingWith(sym, GUAVA_GRAPH_IMMUTABLE_PREFIX, state))) {
-      return true;
-    }
-
-    /*
-     * TODO(b/203207989): In theory, we should program this check to exclude inner classes until we
-     * fix the bug in MoreAnnotations.getDeclarationAndTypeAttributes, which is used by
-     * fromAnnotationsOn. In practice, annotations on both inner classes and outer classes are rare
-     * (especially when NullableOnContainingClass is enabled!), so this code currently still looks
-     * at parameters that are inner types, even though we might misinterpret them.
-     */
     Nullness nullness = NullnessAnnotations.fromAnnotationsOn(sym).orElse(null);
 
     if (nullness == Nullness.NONNULL && !beingConservative) {
       /*
        * Much code in the wild has @NonNull annotations on parameters that are apparently
        * legitimately passed null arguments. Thus, we don't trust such annotations when running in
-       * conservative mode.
+       * conservative mode (except on type variables, just because that's more convenient to our
+       * implementation).
        *
        * TODO(cpovirk): Instead of ignoring @NonNull annotations entirely, add special cases for
        * specific badly annotated APIs. Or better yet, get the annotations fixed.
@@ -221,12 +195,7 @@ public final class NullArgumentForNonNullParameter extends BugChecker
     }
 
     if (sym.asType().getKind() == TYPEVAR) {
-      /*
-       * TODO(cpovirk): We could sometimes return true if we looked for @NullMarked and for any
-       * annotations on the type-parameter bounds. But looking at type-parameter bounds is hard
-       * because of JDK-8225377.
-       */
-      return false;
+      return isNonNull(sym.asType(), /* typeUseSite= */ sym, state);
     }
 
     if (enclosingAnnotationDefaultsNonTypeVariablesToNonNull(sym, state)) {
@@ -236,15 +205,27 @@ public final class NullArgumentForNonNullParameter extends BugChecker
     return false;
   }
 
+  // https://jspecify.dev/docs/spec/#null-exclusive-under-every-parameterization, "all worlds"
+  // but using enclosingAnnotationDefaultsNonTypeVariablesToNonNull instead of isInNullMarkedScope
+  private boolean isNonNull(TypeMirror type, Symbol typeUseSite, VisitorState state) {
+    Optional<Nullness> nullness = NullnessAnnotations.fromAnnotationsOn(type);
+    if (nullness.isPresent()) {
+      return nullness.get().equals(Nullness.NONNULL);
+    }
+    if (type instanceof TypeVar typeVar) {
+      Type upperBound = typeVar.getUpperBound();
+      return (upperBound instanceof Type.IntersectionClassType intersectionType
+              ? intersectionType.getBounds().stream()
+              : Stream.of(upperBound))
+          .anyMatch(t -> isNonNull(t, /* typeUseSite= */ typeVar.tsym, state));
+    }
+    return enclosingAnnotationDefaultsNonTypeVariablesToNonNull(typeUseSite, state);
+  }
+
   private static boolean isParameterOfMethodOnType(
       VarSymbol sym, Supplier<Type> typeSupplier, VisitorState state) {
     Type target = typeSupplier.get(state);
     return target != null && state.getTypes().isSameType(enclosingClass(sym).type, target);
-  }
-
-  private static boolean isParameterOfMethodOnTypeStartingWith(
-      VarSymbol sym, Supplier<Name> nameSupplier, VisitorState state) {
-    return enclosingClass(sym).fullname.startsWith(nameSupplier.get(state));
   }
 
   /*

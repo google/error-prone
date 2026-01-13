@@ -109,7 +109,7 @@ public class NestedInstanceOfConditionsTest {
               static class ClassB {}
 
               static class ClassC {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -208,7 +208,7 @@ public class NestedInstanceOfConditionsNegativeCases {
   /** test class */
   public static class DisjointClass {}
   ;
-}\
+}
 """)
         .doTest();
   }

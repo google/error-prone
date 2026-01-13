@@ -78,7 +78,7 @@ public class BadShiftAmountTest {
                 // BUG: Diagnostic contains: (long) c >>> 32
                 result += c >>> 32;
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -105,7 +105,7 @@ public class BadShiftAmountTest {
                 result += x >>> 3;
                 result += (long) (x & 0xff) >> 40;
               }
-            }\
+            }
             """)
         .doTest();
   }

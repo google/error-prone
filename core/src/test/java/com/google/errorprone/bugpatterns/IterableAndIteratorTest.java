@@ -143,7 +143,7 @@ public class IterableAndIteratorPositiveCases {
       return this;
     }
   }
-}\
+}
 """)
         .doTest();
   }
@@ -215,7 +215,7 @@ public class IterableAndIteratorPositiveCases {
                   return l;
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }

@@ -229,7 +229,7 @@ public class CheckReturnValuePositiveCases {
       check();
     }
   }
-}\
+}
 """)
         .doTest();
   }
@@ -356,7 +356,7 @@ public class CheckReturnValuePositiveCases {
                 callSupplier(this::mustCheck);
                 callSupplier(predicate ? this::mustCheck : this::nothingToCheck);
               }
-            }\
+            }
             """)
         .doTest();
   }

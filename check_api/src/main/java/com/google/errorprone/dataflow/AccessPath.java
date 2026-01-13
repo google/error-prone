@@ -16,7 +16,6 @@
 package com.google.errorprone.dataflow;
 
 import com.google.common.collect.ImmutableList;
-import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -29,6 +28,7 @@ import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.TypeElement;
 import org.checkerframework.errorprone.dataflow.cfg.node.AssignmentNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.FieldAccessNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.LocalVariableNode;
@@ -88,9 +88,12 @@ public record AccessPath(@Nullable Element base, ImmutableList<String> path) {
         && // class, not interface
         rcvrType.tsym.getKind() == ElementKind.CLASS
         && // annotated @AutoValue
-        MoreAnnotations.getDeclarationAndTypeAttributes(rcvrType.tsym)
-            .map(Object::toString)
-            .anyMatch("@com.google.auto.value.AutoValue"::equals);
+        rcvrType.tsym.getAnnotationMirrors().stream()
+            .anyMatch(
+                a ->
+                    ((TypeElement) a.getAnnotationType().asElement())
+                        .getQualifiedName()
+                        .contentEquals("com.google.auto.value.AutoValue"));
   }
 
   /**

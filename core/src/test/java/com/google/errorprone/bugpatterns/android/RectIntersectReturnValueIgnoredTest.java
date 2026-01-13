@@ -44,7 +44,7 @@ public class RectIntersectReturnValueIgnoredTest {
                 }
 
                 public void setEmpty() {}
-              }\
+              }
               """)
           .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
 
@@ -94,7 +94,7 @@ public class RectIntersectReturnValueIgnoredPositiveCases {
     container.rect.intersect(
         container.xPos, container.yPos, container.xPos + 10, container.yPos + 20);
   }
-}\
+}
 """)
         .doTest();
   }
@@ -158,7 +158,7 @@ public class RectIntersectReturnValueIgnoredPositiveCases {
                 RectContainer container = new RectContainer();
                 container.intersect(length, width);
               }
-            }\
+            }
             """)
         .doTest();
   }

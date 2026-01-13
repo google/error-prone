@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.bugpatterns;
+package com.google.errorprone.bugpatterns.nullness;
 
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -140,7 +140,7 @@ public class AsyncFunctionReturnsNullTest {
               interface MyNonAsyncFunction<I, O> {
                 ListenableFuture<O> apply(@Nullable I input) throws Exception;
               }
-            }\
+            }
             """)
         .doTest();
   }

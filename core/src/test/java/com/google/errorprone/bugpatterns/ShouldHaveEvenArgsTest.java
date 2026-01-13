@@ -85,7 +85,7 @@ public class ShouldHaveEvenArgsTest {
                     // BUG: Diagnostic contains: even number of arguments
                     .containsExactly("hello", "there", "hello", "there", "rest");
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -141,7 +141,7 @@ public class ShouldHaveEvenArgsTest {
                 assertThat(map).containsExactly(key, value, (Object[]) args);
                 assertThat(map).containsExactly(key, value, key, value, key, value);
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -201,7 +201,7 @@ public class ShouldHaveEvenArgsTest {
                     // BUG: Diagnostic contains: even number of arguments
                     .containsExactly("hello", "there", "hello", "there", "rest");
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -254,7 +254,7 @@ public class ShouldHaveEvenArgsTest {
                 assertThat(multimap).containsExactly(key, value, (Object[]) args);
                 assertThat(multimap).containsExactly(key, value, key, value, key, value);
               }
-            }\
+            }
             """)
         .doTest();
   }
