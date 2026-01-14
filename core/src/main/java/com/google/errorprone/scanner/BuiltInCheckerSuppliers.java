@@ -426,6 +426,7 @@ import com.google.errorprone.bugpatterns.UngroupedOverloads;
 import com.google.errorprone.bugpatterns.UnicodeDirectionalityCharacters;
 import com.google.errorprone.bugpatterns.UnicodeEscape;
 import com.google.errorprone.bugpatterns.UnicodeInCode;
+import com.google.errorprone.bugpatterns.UnnamedVariable;
 import com.google.errorprone.bugpatterns.UnnecessarilyFullyQualified;
 import com.google.errorprone.bugpatterns.UnnecessarilyVisible;
 import com.google.errorprone.bugpatterns.UnnecessaryAnonymousClass;
@@ -1160,6 +1161,7 @@ public class BuiltInCheckerSuppliers {
           URLEqualsHashCode.class,
           UndefinedEquals.class,
           UnicodeEscape.class,
+          UnnamedVariable.class,
           UnnecessaryAssignment.class,
           UnnecessaryAsync.class,
           UnnecessaryBreakInSwitch.class,
