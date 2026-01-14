@@ -98,12 +98,23 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
 
     Types types = state.getTypes();
 
+    boolean useCapture = typeCompatibility.useCapture();
     if (!populateTypesToEnforce(
-        declaredMethod, calledMethodType, calledClazzType, requiredTypesAtCallSite, state)) {
+        declaredMethod,
+        calledMethodType,
+        calledClazzType,
+        requiredTypesAtCallSite,
+        state,
+        useCapture)) {
       // No annotations on this method, try the supers;
       for (MethodSymbol method : ASTHelpers.findSuperMethods(declaredMethod, types)) {
         if (populateTypesToEnforce(
-            method, calledMethodType, calledClazzType, requiredTypesAtCallSite, state)) {
+            method,
+            calledMethodType,
+            calledClazzType,
+            requiredTypesAtCallSite,
+            state,
+            useCapture)) {
           break;
         }
       }
@@ -166,7 +177,8 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
       Type calledMethodType,
       Type calledReceiverType,
       List<RequiredType> argumentTypeRequirements,
-      VisitorState state) {
+      VisitorState state,
+      boolean useCapture) {
     boolean foundAnyTypeToEnforce = false;
     List<VarSymbol> params = declaredMethod.params();
     for (int i = 0; i < params.size(); i++) {
@@ -179,7 +191,12 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
         // method call's projection of this generic type.
         RequiredType requiredType =
             resolveRequiredTypeForThisCall(
-                state, calledMethodType, calledReceiverType, declaredMethod, anno.value());
+                state,
+                calledMethodType,
+                calledReceiverType,
+                declaredMethod,
+                anno.value(),
+                useCapture);
 
         // @CW is on the varags parameter
         if (declaredMethod.isVarArgs() && i == params.size() - 1) {
@@ -209,14 +226,19 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
       Type calledMethodType,
       Type calledReceiverType,
       MethodSymbol declaredMethod,
-      String typeArgName) {
+      String typeArgName,
+      boolean useCapture) {
     RequiredType requiredType =
         resolveTypeFromGenericMethod(calledMethodType, declaredMethod, typeArgName);
 
     if (requiredType == null) {
       requiredType =
           resolveTypeFromClass(
-              calledReceiverType, (ClassSymbol) declaredMethod.owner, typeArgName, state);
+              calledReceiverType,
+              (ClassSymbol) declaredMethod.owner,
+              typeArgName,
+              state,
+              useCapture);
     }
     return requiredType;
   }
@@ -248,12 +270,17 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
   // class Foo<X> { void something(@CW("X") Object x); }
   // new Foo<String>().something(123);
   private static @Nullable RequiredType resolveTypeFromClass(
-      Type calledType, ClassSymbol clazzSymbol, String typeArgName, VisitorState state) {
+      Type calledType,
+      ClassSymbol clazzSymbol,
+      String typeArgName,
+      VisitorState state,
+      boolean useCapture) {
     // Try on the class
     int tyargIndex = findTypeArgInList(clazzSymbol, typeArgName);
     if (tyargIndex != -1) {
       return RequiredType.create(
-          extractTypeArgAsMemberOfSupertype(calledType, clazzSymbol, tyargIndex, state.getTypes()));
+          extractTypeArgAsMemberOfSupertype(
+              calledType, clazzSymbol, tyargIndex, state.getTypes(), useCapture));
     }
 
     while (clazzSymbol.isInner()) {

@@ -43,22 +43,26 @@ final class BinopMatcher extends AbstractCollectionIncompatibleTypeMatcher {
   }
 
   @Override
-  @Nullable Type extractSourceType(MethodInvocationTree tree, VisitorState state) {
+  @Nullable Type extractSourceType(
+      MethodInvocationTree tree, VisitorState state, boolean useCapture) {
     return extractTypeArgAsMemberOfSupertype(
         getType(tree.getArguments().get(0)),
         state.getSymbolFromString(collectionType),
         0,
-        state.getTypes());
+        state.getTypes(),
+        useCapture);
   }
 
   @Override
-  @Nullable Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
+  @Nullable Type extractSourceType(
+      MemberReferenceTree tree, VisitorState state, boolean useCapture) {
     Type descriptorType = state.getTypes().findDescriptorType(getType(tree));
     return extractTypeArgAsMemberOfSupertype(
         descriptorType.getParameterTypes().get(0),
         state.getSymbolFromString(collectionType),
         0,
-        state.getTypes());
+        state.getTypes(),
+        useCapture);
   }
 
   @Override
@@ -72,22 +76,26 @@ final class BinopMatcher extends AbstractCollectionIncompatibleTypeMatcher {
   }
 
   @Override
-  @Nullable Type extractTargetType(MethodInvocationTree tree, VisitorState state) {
+  @Nullable Type extractTargetType(
+      MethodInvocationTree tree, VisitorState state, boolean useCapture) {
     return extractTypeArgAsMemberOfSupertype(
         getType(tree.getArguments().get(1)),
         state.getSymbolFromString(collectionType),
         0,
-        state.getTypes());
+        state.getTypes(),
+        useCapture);
   }
 
   @Override
-  @Nullable Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
+  @Nullable Type extractTargetType(
+      MemberReferenceTree tree, VisitorState state, boolean useCapture) {
     Type descriptorType = state.getTypes().findDescriptorType(getType(tree));
     return extractTypeArgAsMemberOfSupertype(
         descriptorType.getParameterTypes().get(1),
         state.getSymbolFromString(collectionType),
         0,
-        state.getTypes());
+        state.getTypes(),
+        useCapture);
   }
 
   @Override
