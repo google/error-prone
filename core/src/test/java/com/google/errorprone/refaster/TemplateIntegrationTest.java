@@ -33,7 +33,6 @@ import com.sun.source.tree.Tree;
 import java.io.IOException;
 import java.util.List;
 import javax.tools.JavaFileObject;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -300,7 +299,6 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
 
   @Test
-  @Ignore("TODO(b/67786978): investigate JDK 9 test failures")
   public void samePackageImports() throws IOException {
     runTest("SamePackageImportsTemplate");
   }
