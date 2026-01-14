@@ -15,8 +15,10 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.TruthJUnit.assume;
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
@@ -1956,6 +1958,7 @@ public class Test {
 
   @Test
   public void unusedFunctionalInterfaceParameter() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
     helper
         .addSourceLines(
             "Test.java",
@@ -2010,6 +2013,7 @@ public class Test {
 
   @Test
   public void unusedFunctionalInterfaceParameter_noFix() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -2020,7 +2024,7 @@ public class Test {
 
             class Test {
               public void test(List<Integer> xs) {
-                Collections.sort(xs, (a, b) -> a > a ? 1 : 0);
+                Collections.sort(xs, (a, unused) -> a > a ? 1 : 0);
                 Collections.sort(xs, (a, unused) -> a > a ? 1 : 0);
                 Collections.sort(
                     xs,
@@ -2140,5 +2144,51 @@ public class Test {
             """)
         .expectUnchanged()
         .doTest();
+  }
+
+  @Test
+  public void suggestUnderscoreVariable() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.function.Function;
+
+            class Test {
+
+              static void sink(Object... o) {}
+
+              public static void main(String[] args) {
+                int x;
+                var foo = new Object();
+                Function<String, Integer> f = s -> 1;
+                Function<String, Integer> g = (String s) -> 1;
+                Function<String, Integer> h = (s) -> 1;
+                sink(f, g, h);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.function.Function;
+
+            class Test {
+
+              static void sink(Object... o) {}
+
+              public static void main(String[] args) {
+
+                var _ = new Object();
+                Function<String, Integer> f = _ -> 1;
+                Function<String, Integer> g = (String _) -> 1;
+                Function<String, Integer> h = (_) -> 1;
+                sink(f, g, h);
+              }
+            }
+            """)
+        .setFixChooser(Iterables::getLast)
+        .doTest(TEXT_MATCH);
   }
 }
