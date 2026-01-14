@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -360,9 +359,8 @@ public class FallThroughTest {
         .doTest();
   }
 
-  @Ignore("https://github.com/google/error-prone/issues/2638")
   @Test
-  public void i2118() {
+  public void fallingThroughSwitch_withArrowSwitch() {
     testHelper
         .addSourceLines(
             "Test.java",
@@ -380,6 +378,7 @@ public class FallThroughTest {
                       case ONE -> m(c);
                       case TWO -> m(c);
                     }
+                  // fall through
                   default:
                     assert false;
                 }
