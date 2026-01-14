@@ -58,6 +58,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#firstNonNullMatchResult(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,boolean)" tabindex="0">firstNonNullMatchResult(ExpressionTree, VisitorState, boolean)</a></li>
 <li><a href="#firstNonNullMatchResult(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" tabindex="0">firstNonNullMatchResult(ExpressionTree, VisitorState)</a></li>
 </ol>
 </li>
@@ -95,7 +96,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#firstNonNullMatchResult(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">firstNonNullMatchResult</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Backwards compatibility overload for external callers.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#firstNonNullMatchResult(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,boolean)" class="member-name-link">firstNonNullMatchResult</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+ <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ boolean&nbsp;useCapture)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -114,11 +122,22 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="firstNonNullMatchResult(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,boolean)">
+<h3>firstNonNullMatchResult</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a></span>&nbsp;<span class="element-name">firstNonNullMatchResult</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+ <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ boolean&nbsp;useCapture)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="firstNonNullMatchResult(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
 <h3>firstNonNullMatchResult</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable <a href="AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a></span>&nbsp;<span class="element-name">firstNonNullMatchResult</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Backwards compatibility overload for external callers.</div>
 </div>
 </section>
 </li>
