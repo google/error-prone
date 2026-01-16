@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: InnerClassMayBeStatic_
 
 ## The problem
 An inner class should be static unless it references members of its enclosing
