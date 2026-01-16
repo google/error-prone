@@ -56,18 +56,10 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
 <li><a href="#field-summary" tabindex="0">Field Summary</a></li>
-<li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#field-detail" tabindex="0">Field Details</a>
 <ol class="toc-list">
 <li><a href="#context" tabindex="0">context</a></li>
-</ol>
-</li>
-<li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
-<ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.sun.tools.javac.util.Context)" tabindex="0">VisitorState(Context)</a></li>
-<li><a href="#%3Cinit%3E(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)" tabindex="0">VisitorState(Context, DescriptionListener)</a></li>
-<li><a href="#%3Cinit%3E(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener,java.util.Map,com.google.errorprone.ErrorProneOptions)" tabindex="0">VisitorState(Context, DescriptionListener, Map, ErrorProneOptions)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -147,40 +139,6 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>final com.sun.tools.javac.util.Context</code></div>
 <div class="col-second even-row-color"><code><a href="#context" class="member-name-link">context</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
-<!-- ======== CONSTRUCTOR SUMMARY ======== -->
-<li>
-<section class="constructor-summary" id="constructor-summary">
-<h2>Constructor Summary</h2>
-<div class="caption"><span>Constructors</span></div>
-<div class="summary-table two-column-summary">
-<div class="table-header col-first">Constructor</div>
-<div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.sun.tools.javac.util.Context)" class="member-name-link">VisitorState</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">If VisitorState is needed, use <a href="#createForUtilityPurposes(com.sun.tools.javac.util.Context)"><code>createForUtilityPurposes(Context)</code></a>, otherwise just
-    use utility methods in ASTHelpers that don't need VisitorSate.</div>
-</div>
-</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)" class="member-name-link">VisitorState</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context,
- <a href="DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">Use the equivalent factory method <a href="#createForCustomFindingCollection(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)"><code>createForCustomFindingCollection(Context, DescriptionListener)</code></a>.</div>
-</div>
-</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener,java.util.Map,com.google.errorprone.ErrorProneOptions)" class="member-name-link">VisitorState</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context,
- <a href="DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, <a href="BugPattern.SeverityLevel.html" title="enum class in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;&nbsp;severityMap,
- <a href="ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">Use the equivalent factory method <a href="#createConfiguredForCompilation(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener,java.util.Map,com.google.errorprone.ErrorProneOptions)"><code>createConfiguredForCompilation(Context, DescriptionListener, Map, ErrorProneOptions)</code></a>.</div>
-</div>
-</div>
 </div>
 </section>
 </li>
@@ -395,59 +353,6 @@ compilation, but requires a <a href="VisitorState.html" title="class in com.goog
 <h3>context</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">com.sun.tools.javac.util.Context</span>&nbsp;<span class="element-name">context</span></div>
-</div>
-</section>
-</li>
-</ul>
-</section>
-</li>
-<!-- ========= CONSTRUCTOR DETAIL ======== -->
-<li>
-<section class="constructor-details" id="constructor-detail">
-<h2>Constructor Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="&lt;init&gt;(com.sun.tools.javac.util.Context)">
-<h3>VisitorState</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">VisitorState</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context)</span></div>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">If VisitorState is needed, use <a href="#createForUtilityPurposes(com.sun.tools.javac.util.Context)"><code>createForUtilityPurposes(Context)</code></a>, otherwise just
-    use utility methods in ASTHelpers that don't need VisitorSate.</div>
-</div>
-<div class="block">Return a VisitorState that has no Error Prone configuration, and can't report results.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="&lt;init&gt;(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)">
-<h3>VisitorState</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">VisitorState</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context,
- <a href="DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener)</span></div>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">Use the equivalent factory method <a href="#createForCustomFindingCollection(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener)"><code>createForCustomFindingCollection(Context, DescriptionListener)</code></a>.</div>
-</div>
-<div class="block">Return a VisitorState that has no Error Prone configuration, but can report findings to <code>
-listener</code>.</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="&lt;init&gt;(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener,java.util.Map,com.google.errorprone.ErrorProneOptions)">
-<h3>VisitorState</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">VisitorState</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context,
- <a href="DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a>&nbsp;listener,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, <a href="BugPattern.SeverityLevel.html" title="enum class in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;&nbsp;severityMap,
- <a href="ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a>&nbsp;errorProneOptions)</span></div>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">Use the equivalent factory method <a href="#createConfiguredForCompilation(com.sun.tools.javac.util.Context,com.google.errorprone.DescriptionListener,java.util.Map,com.google.errorprone.ErrorProneOptions)"><code>createConfiguredForCompilation(Context, DescriptionListener, Map, ErrorProneOptions)</code></a>.</div>
-</div>
-<div class="block">Return a VisitorState configured for a new compilation, including Error Prone configuration.</div>
 </div>
 </section>
 </li>
