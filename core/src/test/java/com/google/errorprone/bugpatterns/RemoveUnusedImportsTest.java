@@ -19,6 +19,7 @@ import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEX
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -608,6 +609,72 @@ public class RemoveUnusedImportsTest {
               }
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  @Ignore
+  public void redundantImportInSwitch() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.annotation.ElementType;
+
+            import static java.lang.annotation.ElementType.FIELD;
+            import static java.lang.annotation.ElementType.METHOD;
+
+            class Test {
+              public void test(ElementType test) {
+                String result =
+                    switch (test) {
+                      case METHOD -> "m";
+                      case FIELD -> "f";
+                      default -> "o";
+                    };
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.annotation.ElementType;
+
+            class Test {
+              public void test(ElementType test) {
+                String result =
+                    switch (test) {
+                      case METHOD -> "m";
+                      case FIELD -> "f";
+                      default -> "o";
+                    };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nonRedundantImportInSwitch() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static java.lang.annotation.ElementType.FIELD;
+            import static java.lang.annotation.ElementType.METHOD;
+
+            class Test {
+              public void test(Object test) {
+                String result =
+                    switch (test) {
+                      case METHOD -> "m";
+                      case FIELD -> "f";
+                      default -> "o";
+                    };
+              }
+            }
+            """)
+        .expectUnchanged()
         .doTest();
   }
 }
