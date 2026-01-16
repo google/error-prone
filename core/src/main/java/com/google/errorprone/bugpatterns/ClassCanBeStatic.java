@@ -43,7 +43,9 @@ import javax.lang.model.element.NestingKind;
 @BugPattern(
     summary = "Inner class is non-static but does not reference enclosing class",
     severity = WARNING,
-    tags = {StandardTags.STYLE, StandardTags.PERFORMANCE})
+    tags = {StandardTags.STYLE, StandardTags.PERFORMANCE},
+    // https://www.jetbrains.com/help/inspectopedia/InnerClassMayBeStatic.html
+    altNames = {"InnerClassMayBeStatic"})
 public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
 
   private static final String REFASTER_ANNOTATION =
