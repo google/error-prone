@@ -18,15 +18,14 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 
-import com.google.common.base.Objects;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TypeCastTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
@@ -36,7 +35,6 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.LiteralTree;
-import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.UnaryTree;
@@ -56,87 +54,65 @@ public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeC
 
   @Override
   public Description matchTypeCast(TypeCastTree typeCastTree, VisitorState visitorState) {
-    CastingMatcher castingMatcher = new CastingMatcher();
+    // finds path from first enclosing node to the top level tree
+    TreePath pathToTop =
+        ASTHelpers.findPathFromEnclosingNodeToTopLevel(visitorState.getPath(), IfTree.class);
+    while (pathToTop != null) {
+      IfTree ifTree = (IfTree) pathToTop.getLeaf();
 
-    if (!(typeCastTree.getExpression() instanceof IdentifierTree
-        || typeCastTree.getExpression() instanceof ArrayAccessTree)) {
-      return Description.NO_MATCH;
-    }
-    if (castingMatcher.matches(typeCastTree, visitorState)) {
-      return describeMatch(
-          typeCastTree,
-          SuggestedFix.replace(
-              castingMatcher.nodeToReplace, visitorState.getSourceForNode(typeCastTree.getType())));
+      ExpressionTree expressionTree = ASTHelpers.stripParentheses(ifTree.getCondition());
+      TreeScannerInstanceOfWrongType treeScannerInstanceOfWrongType =
+          new TreeScannerInstanceOfWrongType(visitorState);
+      treeScannerInstanceOfWrongType.scan(expressionTree, typeCastTree.getExpression());
+
+      InstanceOfTree instanceOfTree = treeScannerInstanceOfWrongType.getRelevantTree();
+
+      // check to make sure that the if tree encountered has a relevant instanceof statement
+      // in the condition
+      if (instanceOfTree == null) {
+        pathToTop = ASTHelpers.findPathFromEnclosingNodeToTopLevel(pathToTop, IfTree.class);
+        continue;
+      }
+
+      // if the specific TypeCastTree is in the else statement, then ignore
+      if (ifTree.getElseStatement() != null
+          && Iterables.contains(visitorState.getPath(), ifTree.getElseStatement())) {
+        pathToTop = ASTHelpers.findPathFromEnclosingNodeToTopLevel(pathToTop, IfTree.class);
+        continue;
+      }
+
+      Types types = visitorState.getTypes();
+
+      // Scan for earliest assignment expression in "then" block of if statement
+      treeScannerInstanceOfWrongType.scan(
+          ifTree.getThenStatement(), instanceOfTree.getExpression());
+      int pos = treeScannerInstanceOfWrongType.earliestStart;
+      if (pos < getStartPosition(typeCastTree)) {
+        pathToTop = ASTHelpers.findPathFromEnclosingNodeToTopLevel(pathToTop, IfTree.class);
+        continue;
+      }
+
+      var targetType =
+          getType(
+              instanceOfTree.getType() == null
+                  ? instanceOfTree.getPattern()
+                  : instanceOfTree.getType());
+
+      boolean isCastable =
+          types.isCastable(types.erasure(targetType), types.erasure(getType(typeCastTree)));
+
+      ExpressionTree typeCastExp = typeCastTree.getExpression();
+      boolean isSameExpression = expressionsEqual(typeCastExp, instanceOfTree.getExpression());
+      if (isSameExpression) {
+        if (!isCastable) {
+          return describeMatch(typeCastTree);
+        } else {
+          return Description.NO_MATCH;
+        }
+      }
+      pathToTop = ASTHelpers.findPathFromEnclosingNodeToTopLevel(pathToTop, IfTree.class);
     }
     return Description.NO_MATCH;
-  }
-
-  /** Matches any Tree that casts to a type that is disjoint from the stored type. */
-  private static class CastingMatcher implements Matcher<Tree> {
-
-    Tree nodeToReplace;
-
-    /**
-     * This method matches a TypeCastTree, then iterates up to the nearest if tree with a condition
-     * that looks for an instanceof pattern that matches the expression acted upon. It then checks
-     * to see if the cast is plausible (if the classes are not disjoint)
-     *
-     * @param tree TypeCastTree that is matched
-     * @param state VisitorState
-     */
-    @Override
-    public boolean matches(Tree tree, VisitorState state) {
-
-      // finds path from first enclosing node to the top level tree
-      TreePath pathToTop =
-          ASTHelpers.findPathFromEnclosingNodeToTopLevel(state.getPath(), IfTree.class);
-      while (pathToTop != null) {
-
-        IfTree ifTree = (IfTree) pathToTop.getLeaf();
-
-        ExpressionTree expressionTree = ASTHelpers.stripParentheses(ifTree.getCondition());
-        TreeScannerInstanceOfWrongType treeScannerInstanceOfWrongType =
-            new TreeScannerInstanceOfWrongType(state);
-        treeScannerInstanceOfWrongType.scan(expressionTree, ((TypeCastTree) tree).getExpression());
-
-        Tree treeInstance = treeScannerInstanceOfWrongType.getRelevantTree();
-
-        // check to make sure that the if tree encountered has a relevant instanceof statement
-        // in the condition
-        if (treeInstance == null) {
-          pathToTop = ASTHelpers.findPathFromEnclosingNodeToTopLevel(pathToTop, IfTree.class);
-          continue;
-        }
-
-        // if the specific TypeCastTree is in the else statement, then ignore
-        if (ifTree.getElseStatement() != null
-            && Iterables.contains(state.getPath(), ifTree.getElseStatement())) {
-          return false;
-        }
-
-        Types types = state.getTypes();
-        InstanceOfTree instanceOfTree = (InstanceOfTree) treeInstance;
-        nodeToReplace = instanceOfTree.getType();
-
-        // Scan for earliest assignment expression in "then" block of if statement
-        treeScannerInstanceOfWrongType.scan(
-            ifTree.getThenStatement(), instanceOfTree.getExpression());
-        int pos = treeScannerInstanceOfWrongType.earliestStart;
-        if (pos < getStartPosition(tree)) {
-          return false;
-        }
-
-        boolean isCastable =
-            types.isCastable(
-                types.erasure(ASTHelpers.getType(instanceOfTree.getType())),
-                types.erasure(ASTHelpers.getType(tree)));
-
-        ExpressionTree typeCastExp = ((TypeCastTree) tree).getExpression();
-        boolean isSameExpression = expressionsEqual(typeCastExp, instanceOfTree.getExpression());
-        return isSameExpression && !isCastable;
-      }
-      return false;
-    }
   }
 
   static class TreeScannerInstanceOfWrongType extends TreeScanner<Void, ExpressionTree> {
@@ -197,27 +173,21 @@ public class InstanceOfAndCastMatchWrongType extends BugChecker implements TypeC
    * other cases.
    */
   private static boolean expressionsEqual(ExpressionTree expr1, ExpressionTree expr2) {
-    if (!expr1.getKind().equals(expr2.getKind())) {
-      return false;
-    }
-
-    if (!(expr1 instanceof ArrayAccessTree)
-        && !(expr1 instanceof IdentifierTree)
-        && !(expr1 instanceof LiteralTree)) {
-      return false;
-    }
-
-    if (expr1 instanceof ArrayAccessTree arrayAccessTree1) {
-      ArrayAccessTree arrayAccessTree2 = (ArrayAccessTree) expr2;
+    if (expr1 instanceof ArrayAccessTree arrayAccessTree1
+        && expr2 instanceof ArrayAccessTree arrayAccessTree2) {
       return expressionsEqual(arrayAccessTree1.getExpression(), arrayAccessTree2.getExpression())
           && expressionsEqual(arrayAccessTree1.getIndex(), arrayAccessTree2.getIndex());
     }
 
-    if (expr1 instanceof LiteralTree literalTree1) {
-      LiteralTree literalTree2 = (LiteralTree) expr2;
+    if (expr1 instanceof LiteralTree literalTree1 && expr2 instanceof LiteralTree literalTree2) {
       return literalTree1.getValue().equals(literalTree2.getValue());
     }
 
-    return Objects.equal(ASTHelpers.getSymbol(expr1), ASTHelpers.getSymbol(expr2));
+    if (expr1 instanceof IdentifierTree identifierTree1
+        && expr2 instanceof IdentifierTree identifierTree2) {
+      return getSymbol(identifierTree1).equals(getSymbol(identifierTree2));
+    }
+
+    return false;
   }
 }
