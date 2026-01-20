@@ -19,7 +19,6 @@ import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEX
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -613,7 +612,6 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
-  @Ignore
   public void redundantImportInSwitch() {
     testHelper
         .addInputLines(
