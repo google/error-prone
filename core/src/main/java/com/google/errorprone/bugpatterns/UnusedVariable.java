@@ -248,13 +248,10 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (!unusedElements.containsKey(unusedSymbol)) {
         isEverUsed.add(unusedSymbol);
       }
-      boolean suggestUnderscore =
-          suggestUnderscore(state, isEverUsed, unusedSymbol, specs, allUsageSites);
       SuggestedFix makeFirstAssignmentDeclaration =
           makeAssignmentDeclaration(unusedSymbol, specs, allUsageSites, state);
       // Don't complain if this is a public method and we only overwrote it once.
-      if ((onlyCheckForReassignments.contains(unusedSymbol) && specs.size() <= 1)
-          && !suggestUnderscore) {
+      if (onlyCheckForReassignments.contains(unusedSymbol) && specs.size() <= 1) {
         continue;
       }
       Tree unused = specs.iterator().next().assignmentPath().getLeaf();
@@ -267,7 +264,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       } else {
         fixes.addAll(buildUnusedVarFixes(symbol, allUsageSites, state));
       }
-      if (suggestUnderscore) {
+      if (suggestUnderscore(state, isEverUsed, unusedSymbol, specs, allUsageSites)) {
         fixes.add(SuggestedFixes.renameVariable((VariableTree) unused, "_", state));
       }
       state.reportMatch(
@@ -657,8 +654,11 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       VarSymbol symbol = getSymbol(variableTree);
       var parent = getCurrentPath().getParentPath().getLeaf();
       if (parent instanceof LambdaExpressionTree) {
-        unusedElements.put(symbol, getCurrentPath());
-        usageSites.put(symbol, getCurrentPath());
+        if (FUNCTIONAL_INTERFACE_TYPES_TO_CHECK.stream()
+            .anyMatch(t -> isSubtype(getType(parent), state.getTypeFromString(t), state))) {
+          unusedElements.put(symbol, getCurrentPath());
+          usageSites.put(symbol, getCurrentPath());
+        }
         return;
       }
       if (symbol.getKind() == ElementKind.FIELD

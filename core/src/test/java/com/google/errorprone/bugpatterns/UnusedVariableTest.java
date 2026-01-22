@@ -1958,7 +1958,6 @@ public class Test {
 
   @Test
   public void unusedFunctionalInterfaceParameter() {
-    assume().that(Runtime.version().feature()).isAtLeast(22);
     helper
         .addSourceLines(
             "Test.java",
@@ -2153,15 +2152,50 @@ public class Test {
         .addInputLines(
             "Test.java",
             """
+            import java.util.Arrays;
+            import java.util.Collections;
             import java.util.function.Function;
 
             class Test {
-
-              static void sink(Object... o) {}
-
               public static void main(String[] args) {
                 int x;
                 var foo = new Object();
+
+                Collections.sort(Arrays.asList(args), (a, b) -> a.isEmpty() ? 1 : 0);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.Arrays;
+            import java.util.Collections;
+            import java.util.function.Function;
+
+            class Test {
+              public static void main(String[] args) {
+                var _ = new Object();
+
+                Collections.sort(Arrays.asList(args), (a, _) -> a.isEmpty() ? 1 : 0);
+              }
+            }
+            """)
+        .setFixChooser(Iterables::getLast)
+        .doTest();
+  }
+
+  @Test
+  public void lambdaParameter_noFinding() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.function.Function;
+
+            class Test {
+              static void sink(Object... o) {}
+
+              public static void main(String[] args) {
                 Function<String, Integer> f = s -> 1;
                 Function<String, Integer> g = (String s) -> 1;
                 Function<String, Integer> h = (s) -> 1;
@@ -2169,26 +2203,7 @@ public class Test {
               }
             }
             """)
-        .addOutputLines(
-            "Test.java",
-            """
-            import java.util.function.Function;
-
-            class Test {
-
-              static void sink(Object... o) {}
-
-              public static void main(String[] args) {
-
-                var _ = new Object();
-                Function<String, Integer> f = _ -> 1;
-                Function<String, Integer> g = (String _) -> 1;
-                Function<String, Integer> h = (_) -> 1;
-                sink(f, g, h);
-              }
-            }
-            """)
-        .setFixChooser(Iterables::getLast)
+        .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
 }
