@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.BugPattern;
@@ -24,43 +25,33 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Type;
 import javax.lang.model.element.Name;
 
 /** Check for variables and types with the same name */
 @BugPattern(
     summary =
-        "variableName and type with the same name "
-            + "would refer to the static field instead of the class",
+        "variableName and type with the same name would refer to the static field instead of the"
+            + " class",
     severity = WARNING)
 public class VariableNameSameAsType extends BugChecker implements VariableTreeMatcher {
 
   @Override
   public Description matchVariable(VariableTree varTree, VisitorState state) {
-
+    Type varType = getType(varTree);
+    if (varType == null) {
+      return NO_MATCH;
+    }
     Name varName = varTree.getName();
-    Matcher<VariableTree> nameSameAsType =
-        Matchers.variableType(
-            (typeTree, s) -> {
-              Symbol typeSymbol = ASTHelpers.getSymbol(typeTree);
-              if (typeSymbol != null) {
-                return typeSymbol.getSimpleName().contentEquals(varName);
-              }
-              return false;
-            });
-
-    if (!nameSameAsType.matches(varTree, state)) {
-      return Description.NO_MATCH;
+    if (!varType.asElement().getSimpleName().contentEquals(varName)) {
+      return NO_MATCH;
     }
     String message =
         String.format(
             "Variable named %s has the type %s. Calling methods using \"%s.something\" are "
                 + "difficult to distinguish between static and instance methods.",
-            varName, SuggestedFixes.prettyType(getType(varTree), /* state= */ null), varName);
+            varName, SuggestedFixes.prettyType(varType, /* state= */ null), varName);
     return buildDescription(varTree).setMessage(message).build();
   }
 }
