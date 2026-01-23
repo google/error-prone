@@ -128,7 +128,8 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
   }
 
   private static boolean isSuppressedViaName(VariableTree parameter) {
-    return parameter.getName().toString().startsWith("unused");
+    String name = parameter.getName().toString();
+    return name.isEmpty() || name.startsWith("unused");
   }
 
   private static Optional<SuggestedFix> fixConstructor(

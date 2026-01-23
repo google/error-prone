@@ -247,6 +247,25 @@ public final class UnusedExceptionTest {
   }
 
   @Test
+  public void suppressibleByLeavingExceptionUnamed() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                try {
+                } catch (Exception _) {
+                  throw new RuntimeException("foo");
+                }
+              }
+            }
+            """)
+        .setArgs("--enable-preview", "--release", Integer.toString(Runtime.version().feature()))
+        .doTest();
+  }
+
+  @Test
   public void anonymousClass() {
     refactoringHelper
         .addInputLines(
