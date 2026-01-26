@@ -222,6 +222,7 @@ public class FormatStringTest {
                 String.format("%s", new Object());
                 String.format("%c", 'c');
                 String.format(b ? "%s" : "%d", 42);
+                String.format("%#s", this);
               }
             }
             """)
