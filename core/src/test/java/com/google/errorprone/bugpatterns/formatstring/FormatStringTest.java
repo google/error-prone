@@ -158,6 +158,13 @@ public class FormatStringTest {
   }
 
   @Test
+  public void stringAlternateFormat() throws Exception {
+    testFormat(
+        "format specifier '%s' is not compatible with the given flag(s): #",
+        "String.format(\"%#s\", \"foo\");");
+  }
+
+  @Test
   public void missingArguments() {
     compilationHelper
         .addSourceLines(
