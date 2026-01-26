@@ -21,8 +21,14 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.constructor;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.BYTE_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.arrayOf;
+import static java.util.Arrays.asList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -30,6 +36,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -66,7 +73,10 @@ import org.jspecify.annotations.Nullable;
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Suggests alternatives to obsolete JDK classes.", severity = WARNING)
 public class JdkObsolete extends BugChecker
-    implements NewClassTreeMatcher, ClassTreeMatcher, MemberReferenceTreeMatcher {
+    implements NewClassTreeMatcher,
+        ClassTreeMatcher,
+        MemberReferenceTreeMatcher,
+        MethodInvocationTreeMatcher {
 
   static class Obsolete {
     final String qualifiedName;
@@ -136,6 +146,101 @@ public class JdkObsolete extends BugChecker
           .stream()
           .collect(toImmutableMap(Obsolete::qualifiedName, x -> x));
 
+  private record ObsoleteApi(Matcher<ExpressionTree> matcher, String message) {}
+
+  // TODO(kak): add Charset-related methods from java.util.Formatter and java.util.Properties
+  // TODO(kak): provide a suggested fix for the obsolete Charset-related methods and constructors.
+  // We could just store the index of the `String csName` parameter along w/ the matcher.
+  // That being said, it'd be _really_ tricky (if not impossible) to handle the code no longer
+  // throwing a checked UnsupportedEncodingException.
+  private static final ImmutableList<ObsoleteApi> OBSOLETE_METHODS =
+      ImmutableList.of(
+          new ObsoleteApi(
+              instanceMethod()
+                  .onExactClass("java.io.ByteArrayOutputStream")
+                  .named("toString")
+                  .withParameters("java.lang.String"),
+              "Use ByteArrayOutputStream.toString(Charset) instead."),
+          new ObsoleteApi(
+              instanceMethod()
+                  .onExactClass("java.lang.String")
+                  .named("getBytes")
+                  .withParameters("java.lang.String"),
+              "Use String.getBytes(Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass("java.net.URLDecoder")
+                  .named("decode")
+                  .withParameters("java.lang.String", "java.lang.String"),
+              "Use URLDecoder.decode(String, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass("java.net.URLEncoder")
+                  .named("encode")
+                  .withParameters("java.lang.String", "java.lang.String"),
+              "Use URLEncoder.encode(String, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass("java.nio.channels.Channels")
+                  .named("newReader")
+                  .withParameters("java.nio.channels.ReadableByteChannel", "java.lang.String"),
+              "Use Channels.newReader(ReadableByteChannel, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass("java.nio.channels.Channels")
+                  .named("newWriter")
+                  .withParameters("java.nio.channels.WritableByteChannel", "java.lang.String"),
+              "Use Channels.newWriter(WritableByteChannel, Charset) instead."));
+
+  private static final ImmutableList<ObsoleteApi> OBSOLETE_CONSTRUCTORS =
+      ImmutableList.of(
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.lang.String")
+                  .withParametersOfType(asList(arrayOf(BYTE_TYPE), STRING_TYPE)),
+              "Use new String(byte[], Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.lang.String")
+                  .withParametersOfType(
+                      asList(arrayOf(BYTE_TYPE), INT_TYPE, INT_TYPE, STRING_TYPE)),
+              "Use new String(byte[], int, int, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.io.InputStreamReader")
+                  .withParameters("java.io.InputStream", "java.lang.String"),
+              "Use new InputStreamReader(InputStream, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.io.OutputStreamWriter")
+                  .withParameters("java.io.OutputStream", "java.lang.String"),
+              "Use new OutputStreamWriter(OutputStream, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.io.PrintStream")
+                  .withParameters("java.io.OutputStream", "boolean", "java.lang.String"),
+              "Use new PrintStream(OutputStream, boolean, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.io.PrintStream")
+                  .withParameters("java.lang.String", "java.lang.String"),
+              "Use new PrintStream(String, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.io.PrintStream")
+                  .withParameters("java.io.File", "java.lang.String"),
+              "Use new PrintStream(File, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.io.PrintWriter")
+                  .withParameters("java.lang.String", "java.lang.String"),
+              "Use new PrintWriter(String, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.io.PrintWriter")
+                  .withParameters("java.io.File", "java.lang.String"),
+              "Use new PrintWriter(File, Charset) instead."));
+
   static final Matcher<ExpressionTree> MATCHER_STRINGBUFFER =
       anyOf(
           // a pre-JDK-8039124 concession
@@ -159,9 +264,13 @@ public class JdkObsolete extends BugChecker
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
+    Description description = matchObsoleteApi(tree, state, OBSOLETE_CONSTRUCTORS);
+    if (description != NO_MATCH) {
+      return description;
+    }
     MethodSymbol constructor = ASTHelpers.getSymbol(tree);
     Symbol owner = constructor.owner;
-    Description description =
+    description =
         describeIfObsolete(
             // don't refactor anonymous implementations of LinkedList
             tree.getClassBody() == null ? tree.getIdentifier() : null,
@@ -422,5 +531,19 @@ public class JdkObsolete extends BugChecker
       return false;
     }
     return true;
+  }
+
+  @Override
+  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+    return matchObsoleteApi(tree, state, OBSOLETE_METHODS);
+  }
+
+  private Description matchObsoleteApi(
+      ExpressionTree tree, VisitorState state, ImmutableList<ObsoleteApi> obsoleteApis) {
+    return obsoleteApis.stream()
+        .filter(api -> api.matcher().matches(tree, state))
+        .map(api -> buildDescription(tree).setMessage(api.message()).build())
+        .findFirst()
+        .orElse(NO_MATCH);
   }
 }
