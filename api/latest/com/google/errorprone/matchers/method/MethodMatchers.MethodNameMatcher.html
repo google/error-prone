@@ -63,6 +63,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#withParameters(java.lang.String,java.lang.String...)" tabindex="0">withParameters(String, String...)</a></li>
 <li><a href="#withParameters(java.lang.Iterable)" tabindex="0">withParameters(Iterable)</a></li>
 <li><a href="#withParametersOfType(java.lang.Iterable)" tabindex="0">withParametersOfType(Iterable)</a></li>
+<li><a href="#withParametersOfType(com.google.errorprone.suppliers.Supplier,com.google.errorprone.suppliers.Supplier...)" tabindex="0">withParametersOfType(Supplier, Supplier...)</a></li>
 </ol>
 </li>
 </ol>
@@ -124,10 +125,17 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
 <div class="block">Match methods whose formal parameters have the given types.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#withParametersOfType(java.lang.Iterable)" class="member-name-link">withParametersOfType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;&nbsp;parameters)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#withParametersOfType(com.google.errorprone.suppliers.Supplier,com.google.errorprone.suppliers.Supplier...)" class="member-name-link">withParametersOfType</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;first,
+ <a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;...&nbsp;rest)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span></div>
-<div class="block">Match constructors whose formal parameters have the given types.</div>
+<div class="block">Match methods whose formal parameters have the given types.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#withParametersOfType(java.lang.Iterable)" class="member-name-link">withParametersOfType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;&nbsp;parameters)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match methods whose formal parameters have the given types.</div>
 </div>
 </div>
 </div>
@@ -183,7 +191,18 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type"><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></span>&nbsp;<span class="element-name">withParametersOfType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;&nbsp;parameters)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
-<div class="block">Match constructors whose formal parameters have the given types.</div>
+<div class="block">Match methods whose formal parameters have the given types.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withParametersOfType(com.google.errorprone.suppliers.Supplier,com.google.errorprone.suppliers.Supplier...)">
+<h3>withParametersOfType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></span>&nbsp;<span class="element-name">withParametersOfType</span><wbr><span class="parameters">(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;first,
+ <a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;...&nbsp;rest)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match methods whose formal parameters have the given types.</div>
 </div>
 </section>
 </li>
