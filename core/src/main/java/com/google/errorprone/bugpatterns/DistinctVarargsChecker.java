@@ -24,7 +24,6 @@ import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE_ARRAY;
 import static com.google.errorprone.suppliers.Suppliers.arrayOf;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -58,13 +57,11 @@ public final class DistinctVarargsChecker extends BugChecker
               .onClass("com.google.common.util.concurrent.Futures")
               .namedAnyOf("whenAllSucceed", "whenAllComplete")
               .withParametersOfType(
-                  ImmutableList.of(
-                      arrayOf(
-                          typeFromString("com.google.common.util.concurrent.ListenableFuture")))),
+                  arrayOf(typeFromString("com.google.common.util.concurrent.ListenableFuture"))),
           staticMethod()
               .onClass("com.google.common.collect.Ordering")
               .named("explicit")
-              .withParametersOfType(ImmutableList.of(OBJECT_TYPE, OBJECT_TYPE_ARRAY)));
+              .withParametersOfType(OBJECT_TYPE, OBJECT_TYPE_ARRAY));
   private static final Matcher<ExpressionTree> EVEN_PARITY_DISTINCT_ARG_MATCHER =
       anyOf(
           // ImmutableMap.of is covered by AlwaysThrows.

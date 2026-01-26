@@ -184,8 +184,11 @@ public final class MethodMatchers {
     /** Match methods whose formal parameters have the given types. */
     ParameterMatcher withParameters(Iterable<String> parameters);
 
-    /** Match constructors whose formal parameters have the given types. */
+    /** Match methods whose formal parameters have the given types. */
     ParameterMatcher withParametersOfType(Iterable<Supplier<Type>> parameters);
+
+    /** Match methods whose formal parameters have the given types. */
+    ParameterMatcher withParametersOfType(Supplier<Type> first, Supplier<Type>... rest);
   }
 
   /**
@@ -219,6 +222,9 @@ public final class MethodMatchers {
 
     /** Match constructors whose formal parameters have the given types. */
     ParameterMatcher withParametersOfType(Iterable<Supplier<Type>> parameters);
+
+    /** Match constructors whose formal parameters have the given types. */
+    ParameterMatcher withParametersOfType(Supplier<Type> first, Supplier<Type>... rest);
   }
 
   /**

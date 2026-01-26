@@ -28,7 +28,6 @@ import static com.google.errorprone.suppliers.Suppliers.BYTE_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.arrayOf;
-import static java.util.Arrays.asList;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -197,13 +196,12 @@ public class JdkObsolete extends BugChecker
           new ObsoleteApi(
               constructor()
                   .forClass("java.lang.String")
-                  .withParametersOfType(asList(arrayOf(BYTE_TYPE), STRING_TYPE)),
+                  .withParametersOfType(arrayOf(BYTE_TYPE), STRING_TYPE),
               "Use new String(byte[], Charset) instead."),
           new ObsoleteApi(
               constructor()
                   .forClass("java.lang.String")
-                  .withParametersOfType(
-                      asList(arrayOf(BYTE_TYPE), INT_TYPE, INT_TYPE, STRING_TYPE)),
+                  .withParametersOfType(arrayOf(BYTE_TYPE), INT_TYPE, INT_TYPE, STRING_TYPE),
               "Use new String(byte[], int, int, Charset) instead."),
           new ObsoleteApi(
               constructor()

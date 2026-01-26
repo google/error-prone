@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -50,8 +49,7 @@ public class StringCharset extends BugChecker
   private static final Matcher<ExpressionTree> CONSTRUCTOR_MATCHER =
       constructor()
           .forClass("java.lang.String")
-          .withParametersOfType(
-              ImmutableList.of(Suppliers.arrayOf(Suppliers.BYTE_TYPE), Suppliers.STRING_TYPE));
+          .withParametersOfType(Suppliers.arrayOf(Suppliers.BYTE_TYPE), Suppliers.STRING_TYPE);
 
   private static final Matcher<ExpressionTree> METHOD_MATCHER =
       instanceMethod()

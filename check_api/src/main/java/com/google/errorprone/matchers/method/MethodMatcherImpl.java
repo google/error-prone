@@ -263,6 +263,11 @@ final class MethodMatcherImpl
   }
 
   @Override
+  public ParameterMatcher withParametersOfType(Supplier<Type> first, Supplier<Type>... rest) {
+    return withParametersOfType(Lists.asList(first, rest));
+  }
+
+  @Override
   public ConstructorClassMatcher forClass(TypePredicate predicate) {
     return append((m, s) -> predicate.apply(m.ownerType(), s));
   }
