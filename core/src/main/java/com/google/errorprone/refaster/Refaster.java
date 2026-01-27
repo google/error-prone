@@ -230,4 +230,66 @@ public class Refaster {
   public static void emitComment(String literal) {
     throw new UnsupportedOperationException();
   }
+
+  /**
+   * Indicates that Refaster should attempt to concatenate the given expressions, joining literals
+   * if possible.
+   *
+   * <p>For example, instead of writing
+   *
+   * <pre><code>
+   * {@literal @}AfterTemplate void exampleConcatLiterals(boolean b, String msg, Object o) {
+   *     Preconditions.checkArgument(b, msg + "%s", o);
+   *  }
+   * </code></pre>
+   *
+   * <p>you could write
+   *
+   * <pre><code>
+   * {@literal @}AfterTemplate String exampleConcatLiterals(boolean b, String msg, Object o) {
+   *    Preconditions.checkArgument(b, Refaster.concatLiterals(msg, "%s"), o);
+   * }
+   * </code></pre>
+   *
+   * Since the plus operator is left-associative, the first or second operand must be a string to
+   * ensure that all operands are string-concatenated. (E.g., if the first two operands were
+   * numerical, addition would be performed.) This method enforces that the first operand is a
+   * string. For the other case, see {@link #concatLiterals(Object, String)}.
+   *
+   * @see #concatLiterals(Object, String)
+   */
+  public static String concatLiterals(String str, Object... expressions) {
+    throw new UnsupportedOperationException();
+  }
+
+  /**
+   * Indicates that Refaster should attempt to concatenate the given expressions, joining literals
+   * if possible.
+   *
+   * <p>For example, instead of writing
+   *
+   * <pre><code>
+   * {@literal @}AfterTemplate void exampleConcatLiterals(boolean b, String msg, Object o) {
+   *     Preconditions.checkArgument(b, msg + "%s", o1);
+   *  }
+   * </code></pre>
+   *
+   * <p>you could write
+   *
+   * <pre><code>
+   * {@literal @}AfterTemplate String exampleConcatLiterals(boolean b, String msg, Object o) {
+   *    Preconditions.checkArgument(b, Refaster.concatLiterals(msg, "%s"), o);
+   * }
+   * </code></pre>
+   *
+   * Since the plus operator is left-associative, the first or second operand must be a string to
+   * ensure that all operands are string-concatenated. (E.g., if the first two operands were
+   * numerical, addition would be performed.) This method enforces that the second operand is a
+   * string. For the other case, see {@link #concatLiterals(String, Object...)}.
+   *
+   * @see #concatLiterals(String, Object...)
+   */
+  public static String concatLiterals(Object o, String str) {
+    throw new UnsupportedOperationException();
+  }
 }
