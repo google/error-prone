@@ -339,6 +339,7 @@ import com.google.errorprone.bugpatterns.RedundantControlFlow;
 import com.google.errorprone.bugpatterns.RedundantOverride;
 import com.google.errorprone.bugpatterns.RedundantSetterCall;
 import com.google.errorprone.bugpatterns.RedundantThrows;
+import com.google.errorprone.bugpatterns.RefactorSwitch;
 import com.google.errorprone.bugpatterns.ReferenceEquality;
 import com.google.errorprone.bugpatterns.RemoveUnusedImports;
 import com.google.errorprone.bugpatterns.RequiredModifiersChecker;
@@ -1112,6 +1113,7 @@ public class BuiltInCheckerSuppliers {
           QualifierOrScopeOnInjectMethod.class,
           ReachabilityFenceUsage.class,
           RedundantControlFlow.class,
+          RefactorSwitch.class,
           ReferenceEquality.class,
           RethrowReflectiveOperationExceptionAsLinkageError.class,
           ReturnAtTheEndOfVoidFunction.class,
