@@ -1241,6 +1241,9 @@ reachabilityFence should always be called inside a finally block
 __[RedundantControlFlow](bugpattern/RedundantControlFlow)__<br>
 This continue statement is redundant and can be removed. It may be misleading.
 
+__[RefactorSwitch](bugpattern/RefactorSwitch)__<br>
+This switch can be refactored to be more readable
+
 __[ReferenceEquality](bugpattern/ReferenceEquality)__<br>
 Comparison using reference equality instead of value equality
 

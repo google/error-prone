@@ -10013,6 +10013,8 @@ statementMatcher</code>.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/MissingDefault.html#matchSwitch(com.sun.source.tree.SwitchTree,com.google.errorprone.VisitorState)" class="member-name-link">matchSwitch(SwitchTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingDefault.html" title="class in com.google.errorprone.bugpatterns">MissingDefault</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/RefactorSwitch.html#matchSwitch(com.sun.source.tree.SwitchTree,com.google.errorprone.VisitorState)" class="member-name-link">matchSwitch(SwitchTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RefactorSwitch.html" title="class in com.google.errorprone.bugpatterns">RefactorSwitch</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StatementSwitchToExpressionSwitch.html#matchSwitch(com.sun.source.tree.SwitchTree,com.google.errorprone.VisitorState)" class="member-name-link">matchSwitch(SwitchTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StatementSwitchToExpressionSwitch.html" title="class in com.google.errorprone.bugpatterns">StatementSwitchToExpressionSwitch</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/SwitchDefault.html#matchSwitch(com.sun.source.tree.SwitchTree,com.google.errorprone.VisitorState)" class="member-name-link">matchSwitch(SwitchTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SwitchDefault.html" title="class in com.google.errorprone.bugpatterns">SwitchDefault</a></dt>
@@ -10024,6 +10026,8 @@ statementMatcher</code>.</div>
 <dt><a href="com/google/errorprone/bugpatterns/BugChecker.SwitchExpressionTreeMatcher.html#matchSwitchExpression(com.sun.source.tree.SwitchExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matchSwitchExpression(SwitchExpressionTree, VisitorState)</a> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.SwitchExpressionTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.SwitchExpressionTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html#matchSwitchExpression(com.sun.source.tree.SwitchExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matchSwitchExpression(SwitchExpressionTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingCasesInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">MissingCasesInEnumSwitch</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/RefactorSwitch.html#matchSwitchExpression(com.sun.source.tree.SwitchExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matchSwitchExpression(SwitchExpressionTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RefactorSwitch.html" title="class in com.google.errorprone.bugpatterns">RefactorSwitch</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/UnnecessaryDefaultInEnumSwitch.html#matchSwitchExpression(com.sun.source.tree.SwitchExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matchSwitchExpression(SwitchExpressionTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryDefaultInEnumSwitch.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryDefaultInEnumSwitch</a></dt>
 <dd>&nbsp;</dd>
@@ -12431,6 +12435,10 @@ call.</div>
 </dd>
 <dt><a href="com/google/errorprone/ErrorProneAnalyzer.RefactoringTask.html#%3Cinit%3E(com.sun.tools.javac.util.Context,com.google.errorprone.RefactoringCollection)" class="member-name-link">RefactoringTask(Context, RefactoringCollection)</a> - Constructor for class com.google.errorprone.<a href="com/google/errorprone/ErrorProneAnalyzer.RefactoringTask.html" title="class in com.google.errorprone">ErrorProneAnalyzer.RefactoringTask</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/RefactorSwitch.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">RefactorSwitch</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Checks for refactorings that can be applied to simplify arrow switches.</div>
+</dd>
 <dt><a href="com/google/errorprone/refaster/Refaster.html" class="type-name-link" title="class in com.google.errorprone.refaster">Refaster</a> - Class in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
 <dd>
 <div class="block">Static utilities to indicate special handling in Refaster templates.</div>
@@ -13809,6 +13817,10 @@ it is safe.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/SwitchDefault.html#%3Cinit%3E()" class="member-name-link">SwitchDefault()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SwitchDefault.html" title="class in com.google.errorprone.bugpatterns">SwitchDefault</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/SwitchUtils.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">SwitchUtils</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">Utility methods for refactoring switches.</div>
+</dd>
 <dt><a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html#sym" class="member-name-link">sym</a> - Variable in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html" title="class in com.google.errorprone.refaster">UPlaceholderExpression.PlaceholderParamIdent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Erroneous.html#sym()" class="member-name-link">sym()</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Erroneous.html" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Erroneous</a></dt>
