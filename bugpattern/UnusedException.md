@@ -43,8 +43,8 @@ Prefer wrapping the original exception instead,
 
 ## Suppression
 
-If the exception is deliberately unused, rename it `unused` to suppress this
-diagnostic.
+If the exception is deliberately unused, rename it `_` or `unused` to suppress
+this diagnostic.
 
 ```java
 static <T extends Enum<T>> T tryForName(Class<T> enumType, String name) {
