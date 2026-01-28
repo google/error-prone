@@ -38,6 +38,8 @@ public class WaitNotInLoopTest {
 """
 package com.google.errorprone.bugpatterns.testdata;
 
+import com.google.common.util.concurrent.Uninterruptibles;
+import java.time.Duration;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
@@ -110,6 +112,20 @@ public class WaitNotInLoopPositiveCases {
     // BUG: Diagnostic contains: awaitUntil(java.util.Date) must always be called in a loop
     cond.awaitUntil(new Date());
   }
+
+  public void testUninterruptiblesAwait(Condition cond) throws Exception {
+    // BUG: Diagnostic contains:
+    // awaitUninterruptibly(java.util.concurrent.locks.Condition,long,java.util.concurrent.TimeUnit)
+    // must always be called in a loop
+    Uninterruptibles.awaitUninterruptibly(cond, 1, TimeUnit.SECONDS);
+  }
+
+  public void testUninterruptiblesAwaitDuration(Condition cond) throws Exception {
+    // BUG: Diagnostic contains:
+    // awaitUninterruptibly(java.util.concurrent.locks.Condition,java.time.Duration) must
+    // always be called in a loop
+    Uninterruptibles.awaitUninterruptibly(cond, Duration.ofSeconds(1));
+  }
 }
 """)
         .doTest();
@@ -122,6 +138,11 @@ public class WaitNotInLoopPositiveCases {
             "WaitNotInLoopNegativeCases.java",
 """
 package com.google.errorprone.bugpatterns.testdata;
+
+import com.google.common.util.concurrent.Uninterruptibles;
+import java.time.Duration;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -211,6 +232,18 @@ public class WaitNotInLoopNegativeCases {
   }
 
   private void wait(Object obj) {}
+
+  public void testUninterruptiblesAwait_countDownLatch(CountDownLatch latch) {
+    Uninterruptibles.awaitUninterruptibly(latch);
+  }
+
+  public void testUninterruptiblesAwait_countDownLatch_timeout(CountDownLatch latch) {
+    Uninterruptibles.awaitUninterruptibly(latch, 1, TimeUnit.SECONDS);
+  }
+
+  public void testUninterruptiblesAwait_countDownLatch_duration(CountDownLatch latch) {
+    Uninterruptibles.awaitUninterruptibly(latch, Duration.ofSeconds(1));
+  }
 
   public void testNotObjectWait() {
     wait(new Object());

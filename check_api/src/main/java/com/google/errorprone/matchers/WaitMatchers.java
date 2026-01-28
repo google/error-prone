@@ -29,13 +29,26 @@ public final class WaitMatchers {
   private static final String OBJECT_FQN = "java.lang.Object";
   private static final String CONDITION_FQN = "java.util.concurrent.locks.Condition";
 
+  private static final Matcher<MethodInvocationTree> UNINTERRUPTIBLES_AWAIT_CONDITION =
+      anyOf(
+          staticMethod()
+              .onClass("com.google.common.util.concurrent.Uninterruptibles")
+              .named("awaitUninterruptibly")
+              .withParameters(
+                  "java.util.concurrent.locks.Condition", "long", "java.util.concurrent.TimeUnit"),
+          staticMethod()
+              .onClass("com.google.common.util.concurrent.Uninterruptibles")
+              .named("awaitUninterruptibly")
+              .withParameters("java.util.concurrent.locks.Condition", "java.time.Duration"));
+
   /** Matches any wait/await method. */
   public static final Matcher<MethodInvocationTree> WAIT_METHOD =
       anyOf(
           instanceMethod().onExactClass(OBJECT_FQN).named("wait"),
           instanceMethod()
               .onDescendantOf(CONDITION_FQN)
-              .withNameMatching(Pattern.compile("await.*")));
+              .withNameMatching(Pattern.compile("await.*")),
+          UNINTERRUPTIBLES_AWAIT_CONDITION);
 
   /** Matches wait/await methods that have a timeout. */
   public static final Matcher<MethodInvocationTree> WAIT_METHOD_WITH_TIMEOUT =
@@ -48,7 +61,8 @@ public final class WaitMatchers {
               .withParameters("long", "java.util.concurrent.TimeUnit"),
           instanceMethod().onDescendantOf(CONDITION_FQN).named("awaitNanos"),
           instanceMethod().onDescendantOf(CONDITION_FQN).named("awaitUntil"),
-          staticMethod().onClass("com.google.common.time.Durations").named("wait"));
+          staticMethod().onClass("com.google.common.time.Durations").named("wait"),
+          UNINTERRUPTIBLES_AWAIT_CONDITION);
 
   private WaitMatchers() {}
 }
