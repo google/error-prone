@@ -25,20 +25,6 @@ import java.util.stream.Stream;
 /** Describes Javadoc tags, and contains lists of valid tags. */
 @Immutable
 record JavadocTag(String name, TagType type) {
-  /** Non-standard commonly-used tags which we should allow. */
-  static final ImmutableSet<JavadocTag> KNOWN_OTHER_TAGS =
-      ImmutableSet.of(
-          blockTag("apiNote"),
-          blockTag("attr"), // commonly used by Android
-          blockTag("contact"),
-          blockTag("fails"), // commonly used tag for denoting async failure modes
-          blockTag("hide"),
-          blockTag("implNote"),
-          blockTag("implSpec"),
-          blockTag("removed"), // Used in the android framework (metalava)
-          blockTag("required"),
-          blockTag("team"));
-
   private static final ImmutableSet<JavadocTag> COMMON_TAGS =
       ImmutableSet.of(
           inlineTag("code"),
