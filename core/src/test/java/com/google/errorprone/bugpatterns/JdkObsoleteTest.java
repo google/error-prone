@@ -411,6 +411,7 @@ public class JdkObsoleteTest {
             import java.io.*;
             import java.net.*;
             import java.nio.channels.*;
+            import java.util.*;
 
             class Test {
               private static final String UTF8_NAME = UTF_8.name();
@@ -473,6 +474,26 @@ public class JdkObsoleteTest {
                 new PrintWriter(fileName, UTF8_NAME);
                 // BUG: Diagnostic contains: new PrintWriter(File, Charset)
                 new PrintWriter(new File(fileName), UTF8_NAME);
+              }
+
+              void formatter(String fileName, File file, OutputStream os) throws Exception {
+                // BUG: Diagnostic contains: new Formatter(String, Charset)
+                new Formatter(fileName, UTF8_NAME);
+                // BUG: Diagnostic contains: new Formatter(String, Charset, Locale)
+                new Formatter(fileName, UTF8_NAME, Locale.US);
+                // BUG: Diagnostic contains: new Formatter(File, Charset)
+                new Formatter(file, UTF8_NAME);
+                // BUG: Diagnostic contains: new Formatter(File, Charset, Locale)
+                new Formatter(file, UTF8_NAME, Locale.US);
+                // BUG: Diagnostic contains: new Formatter(OutputStream, Charset)
+                new Formatter(os, UTF8_NAME);
+                // BUG: Diagnostic contains: new Formatter(OutputStream, Charset, Locale)
+                new Formatter(os, UTF8_NAME, Locale.US);
+              }
+
+              void properties(OutputStream os) throws Exception {
+                // BUG: Diagnostic contains: Properties.storeToXML(OutputStream, String, Charset)
+                new Properties().storeToXML(os, "comment", UTF8_NAME);
               }
             }
             """)

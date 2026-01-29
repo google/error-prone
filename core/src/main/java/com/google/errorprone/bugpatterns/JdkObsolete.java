@@ -189,7 +189,13 @@ public class JdkObsolete extends BugChecker
                   .onClass("java.nio.channels.Channels")
                   .named("newWriter")
                   .withParameters("java.nio.channels.WritableByteChannel", "java.lang.String"),
-              "Use Channels.newWriter(WritableByteChannel, Charset) instead."));
+              "Use Channels.newWriter(WritableByteChannel, Charset) instead."),
+          new ObsoleteApi(
+              instanceMethod()
+                  .onExactClass("java.util.Properties")
+                  .named("storeToXML")
+                  .withParameters("java.io.OutputStream", "java.lang.String", "java.lang.String"),
+              "Use Properties.storeToXML(OutputStream, String, Charset) instead."));
 
   private static final ImmutableList<ObsoleteApi> OBSOLETE_CONSTRUCTORS =
       ImmutableList.of(
@@ -237,7 +243,37 @@ public class JdkObsolete extends BugChecker
               constructor()
                   .forClass("java.io.PrintWriter")
                   .withParameters("java.io.File", "java.lang.String"),
-              "Use new PrintWriter(File, Charset) instead."));
+              "Use new PrintWriter(File, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.util.Formatter")
+                  .withParameters("java.lang.String", "java.lang.String"),
+              "Use new Formatter(String, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.util.Formatter")
+                  .withParameters("java.lang.String", "java.lang.String", "java.util.Locale"),
+              "Use new Formatter(String, Charset, Locale) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.util.Formatter")
+                  .withParameters("java.io.File", "java.lang.String"),
+              "Use new Formatter(File, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.util.Formatter")
+                  .withParameters("java.io.File", "java.lang.String", "java.util.Locale"),
+              "Use new Formatter(File, Charset, Locale) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.util.Formatter")
+                  .withParameters("java.io.OutputStream", "java.lang.String"),
+              "Use new Formatter(OutputStream, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.util.Formatter")
+                  .withParameters("java.io.OutputStream", "java.lang.String", "java.util.Locale"),
+              "Use new Formatter(OutputStream, Charset, Locale) instead."));
 
   static final Matcher<ExpressionTree> MATCHER_STRINGBUFFER =
       anyOf(
