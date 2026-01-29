@@ -36,12 +36,15 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.model.JavacElements;
 
 /** A BugPattern; see the summary */
 @BugPattern(summary = "Prefer ASTHelpers instead of calling this API directly", severity = WARNING)
@@ -68,6 +71,12 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
   private static final ImmutableMap<String, String> NAMES =
       ImmutableMap.of("packge", "enclosingPackage");
 
+  private static final String AST_HELPERS_NAME = ASTHelpers.class.getName();
+
+  private static final Supplier<Symbol> AST_HELPERS =
+      VisitorState.memoize(
+          state -> JavacElements.instance(state.context).getTypeElement(AST_HELPERS_NAME));
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     ExpressionTree receiver = getReceiver(tree);
@@ -76,7 +85,10 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
     }
     ClassSymbol outermost =
         outermostClass(getSymbol(findEnclosingNode(state.getPath(), ClassTree.class)));
-    if (outermost.getQualifiedName().contentEquals("com.google.errorprone.util.ASTHelpers")) {
+    if (outermost.getQualifiedName().contentEquals(AST_HELPERS_NAME)) {
+      return NO_MATCH;
+    }
+    if (AST_HELPERS.get(state) == null) {
       return NO_MATCH;
     }
     if (SYMBOL.matches(tree, state)) {
@@ -86,7 +98,7 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
       return describeMatch(
           tree,
           SuggestedFix.builder()
-              .addStaticImport("com.google.errorprone.util.ASTHelpers." + name)
+              .addStaticImport(AST_HELPERS_NAME + "." + name)
               .prefixWith(tree, name + "(")
               .replace(state.getEndPosition(receiver), state.getEndPosition(tree), ")")
               .build());
@@ -100,7 +112,7 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
           return describeMatch(
               tree,
               SuggestedFix.builder()
-                  .addStaticImport("com.google.errorprone.util.ASTHelpers.enclosingClass")
+                  .addStaticImport(AST_HELPERS_NAME + ".enclosingClass")
                   .prefixWith(tree, "enclosingClass(")
                   .replace(state.getEndPosition(receiver2), state.getEndPosition(tree), ")")
                   .build());
