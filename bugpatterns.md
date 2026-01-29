@@ -926,6 +926,9 @@ Consider using a literal of the desired type instead of casting an int literal
 __[IntLongMath](bugpattern/IntLongMath)__<br>
 Expression of type int may overflow before being assigned to a long
 
+__[InterruptedInCatchBlock](bugpattern/InterruptedInCatchBlock)__<br>
+Did you mean to call Thread.currentThread().interrupt() instead of Thread.interrupted()?
+
 __[InvalidBlockTag](bugpattern/InvalidBlockTag)__<br>
 This tag is invalid.
 
