@@ -198,6 +198,7 @@ import com.google.errorprone.bugpatterns.IntLiteralCast;
 import com.google.errorprone.bugpatterns.IntLongMath;
 import com.google.errorprone.bugpatterns.InterfaceWithOnlyStatics;
 import com.google.errorprone.bugpatterns.InterruptedExceptionSwallowed;
+import com.google.errorprone.bugpatterns.InterruptedInCatchBlock;
 import com.google.errorprone.bugpatterns.Interruption;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.InvalidTimeZoneID;
@@ -1007,6 +1008,7 @@ public class BuiltInCheckerSuppliers {
           IntFloatConversion.class,
           IntLiteralCast.class,
           IntLongMath.class,
+          InterruptedInCatchBlock.class,
           InvalidBlockTag.class,
           InvalidInlineTag.class,
           InvalidLink.class,
