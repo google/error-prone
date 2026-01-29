@@ -18,10 +18,11 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.inLoop;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.not;
-import static com.google.errorprone.matchers.WaitMatchers.WAIT_METHOD;
-import static com.google.errorprone.matchers.WaitMatchers.WAIT_METHOD_WITH_TIMEOUT;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
@@ -35,6 +36,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree.JCIf;
+import java.util.regex.Pattern;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -47,6 +49,41 @@ import com.sun.tools.javac.tree.JCTree.JCIf;
     severity = WARNING,
     tags = StandardTags.FRAGILE_CODE)
 public class WaitNotInLoop extends BugChecker implements MethodInvocationTreeMatcher {
+  private static final String OBJECT_FQN = "java.lang.Object";
+  private static final String CONDITION_FQN = "java.util.concurrent.locks.Condition";
+
+  private static final Matcher<MethodInvocationTree> UNINTERRUPTIBLES_AWAIT_CONDITION =
+      anyOf(
+          staticMethod()
+              .onClass("com.google.common.util.concurrent.Uninterruptibles")
+              .named("awaitUninterruptibly")
+              .withParameters(
+                  "java.util.concurrent.locks.Condition", "long", "java.util.concurrent.TimeUnit"),
+          staticMethod()
+              .onClass("com.google.common.util.concurrent.Uninterruptibles")
+              .named("awaitUninterruptibly")
+              .withParameters("java.util.concurrent.locks.Condition", "java.time.Duration"));
+
+  private static final Matcher<MethodInvocationTree> WAIT_METHOD =
+      anyOf(
+          instanceMethod().onExactClass(OBJECT_FQN).named("wait"),
+          instanceMethod()
+              .onDescendantOf(CONDITION_FQN)
+              .withNameMatching(Pattern.compile("await.*")),
+          UNINTERRUPTIBLES_AWAIT_CONDITION);
+
+  private static final Matcher<MethodInvocationTree> WAIT_METHOD_WITH_TIMEOUT =
+      anyOf(
+          instanceMethod().onExactClass(OBJECT_FQN).named("wait").withParameters("long"),
+          instanceMethod().onExactClass(OBJECT_FQN).named("wait").withParameters("long", "int"),
+          instanceMethod()
+              .onDescendantOf(CONDITION_FQN)
+              .named("await")
+              .withParameters("long", "java.util.concurrent.TimeUnit"),
+          instanceMethod().onDescendantOf(CONDITION_FQN).named("awaitNanos"),
+          instanceMethod().onDescendantOf(CONDITION_FQN).named("awaitUntil"),
+          staticMethod().onClass("com.google.common.time.Durations").named("wait"),
+          UNINTERRUPTIBLES_AWAIT_CONDITION);
 
   private static final Matcher<MethodInvocationTree> matcher = allOf(WAIT_METHOD, not(inLoop()));
 
