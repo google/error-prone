@@ -101,11 +101,13 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   private final boolean enableMain;
+  private final boolean enableSafe;
   private final int maxChainLength;
 
   @Inject
   IfChainToSwitch(ErrorProneFlags flags) {
     enableMain = flags.getBoolean("IfChainToSwitch:EnableMain").orElse(false);
+    enableSafe = flags.getBoolean("IfChainToSwitch:EnableSafe").orElse(false);
     maxChainLength = flags.getInteger("IfChainToSwitch:MaxChainLength").orElse(50);
   }
 
@@ -255,7 +257,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     StringBuilder sb = new StringBuilder();
     sb.append("switch (").append(state.getSourceForNode(subject)).append(") {\n");
     for (CaseIr caseIr : cases) {
-      if (caseIr.hasCaseNull()) {
+      if (caseIr.hasCaseNull() && caseIr.hasDefault()) {
+        sb.append("case null, default");
+      } else if (caseIr.hasCaseNull()) {
         sb.append("case null");
       } else if (caseIr.hasDefault()) {
         sb.append("default");
@@ -269,14 +273,14 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       } else if (caseIr.instanceOfOptional().isPresent()) {
         InstanceOfIr instanceOfIr = caseIr.instanceOfOptional().get();
         sb.append("case ");
-        if (instanceOfIr.patternVariable() != null) {
+        if (instanceOfIr.patternVariable().isPresent()) {
           sb.append(
               printRawTypesAsWildcards(
-                  getType(instanceOfIr.patternVariable()), state, suggestedFixBuilder));
+                  getType(instanceOfIr.patternVariable().get()), state, suggestedFixBuilder));
 
-          Symbol sym = ASTHelpers.getSymbol(instanceOfIr.patternVariable());
+          Symbol sym = ASTHelpers.getSymbol(instanceOfIr.patternVariable().get());
           sb.append(" ").append(sym.getSimpleName()).append(" ");
-        } else if (instanceOfIr.type() != null && instanceOfIr.expression() != null) {
+        } else if (instanceOfIr.expression().isPresent()) {
           sb.append(
               printRawTypesAsWildcards(getType(instanceOfIr.type()), state, suggestedFixBuilder));
           // It's possible that "unused" could conflict with an existing local variable name;
@@ -400,12 +404,37 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
-   * Analyzes the supplied case IRs for a switch statement for issues related default/unconditional
-   * cases. If deemed necessary, this method injects a `default` case into the supplied case IRs. If
-   * the supplied case IRs cannot be used to form a syntactically valid switch statement, returns
-   * `Optional.empty()`.
+   * Determines whether a {@code switch} having the given {@code subject} and {@code cases} would
+   * implicitly throw in the event that the {@code subject} is {@code null} at runtime. Here,
+   * implicitly throwing means that an exception would be thrown, and further that the {@code throw}
+   * would not be caused by logic in any of the supplied {@code cases}. (If the subject cannot be
+   * assigned {@code null}, returns {@code false}.)
    */
-  private static Optional<List<CaseIr>> maybeFixDefaultAndUnconditional(
+  private static boolean switchOnNullWouldImplicitlyThrow(
+      ExpressionTree subject, List<CaseIr> cases) {
+    Type type = getType(subject);
+    if (type.isPrimitive()) {
+      return false;
+    }
+
+    // If there is an explicit `case null` already, then there can't be an implicit throw caused by
+    // null
+    boolean hasCaseNull = cases.stream().anyMatch(CaseIr::hasCaseNull);
+    if (hasCaseNull) {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Analyzes the supplied case IRs for a switch statement for issues related default/unconditional
+   * cases. If deemed necessary, this method injects a `default` and/or `case null` into the
+   * supplied case IRs. If the supplied case IRs cannot be used to form a syntactically valid switch
+   * statement, returns `Optional.empty()`. Precondition: the list of supplied cases must not
+   * contain any dominance violations.
+   */
+  private Optional<List<CaseIr>> maybeFixDefaultNullAndUnconditional(
       List<CaseIr> cases,
       ExpressionTree subject,
       StatementTree ifTree,
@@ -417,6 +446,11 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       Range<Integer> ifTreeSourceRange) {
 
     boolean hasDefault = cases.stream().anyMatch(CaseIr::hasDefault);
+    boolean hasCaseNull = cases.stream().anyMatch(CaseIr::hasCaseNull);
+    // NOMUTANTS -- this is a performance optimization
+    boolean recheckDominanceNeeded = false;
+
+    boolean switchOnNullWouldImplicitlyThrow = switchOnNullWouldImplicitlyThrow(subject, cases);
 
     // Has an unconditional case, meaning that any non-null value of the subject will be matched
     long unconditionalCount =
@@ -467,7 +501,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               .orElse(ifTreeSourceRange.lowerEndpoint());
       casesCopy.add(
           new CaseIr(
-              /* hasCaseNull= */ false,
+              /* hasCaseNull= */ !hasCaseNull && (enableSafe && switchOnNullWouldImplicitlyThrow),
               /* hasDefault= */ true,
               /* instanceOfOptional= */ Optional.empty(),
               /* guardOptional= */ Optional.empty(),
@@ -475,6 +509,44 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* arrowRhsOptional= */ Optional.empty(),
               /* caseSourceCodeRange= */ Range.closedOpen(
                   previousCaseEndPosition, previousCaseEndPosition)));
+      cases = casesCopy;
+    } else if (enableSafe && !hasCaseNull && switchOnNullWouldImplicitlyThrow) {
+      List<CaseIr> casesCopy = new ArrayList<>(cases);
+      if (hasDefault) {
+        // Upgrade existing `default` to `case null, default`.
+        casesCopy =
+            casesCopy.stream()
+                .map(
+                    caseIr -> {
+                      if (caseIr.hasDefault()) {
+                        return new CaseIr(
+                            /* hasCaseNull= */ true,
+                            /* hasDefault= */ true,
+                            /* instanceOfOptional= */ caseIr.instanceOfOptional(),
+                            /* guardOptional= */ caseIr.guardOptional(),
+                            /* expressionsOptional= */ caseIr.expressionsOptional(),
+                            /* arrowRhsOptional= */ caseIr.arrowRhsOptional(),
+                            /* caseSourceCodeRange= */ caseIr.caseSourceCodeRange());
+                      }
+                      return caseIr;
+                    })
+                .collect(toImmutableList());
+        recheckDominanceNeeded = true;
+      } else {
+        // Invariant: enableSafe=true
+        // Inject new empty `case null`
+        casesCopy.add(
+            new CaseIr(
+                /* hasCaseNull= */ true,
+                /* hasDefault= */ false,
+                /* instanceOfOptional= */ Optional.empty(),
+                /* guardOptional= */ Optional.empty(),
+                /* expressionsOptional= */ Optional.empty(),
+                /* arrowRhsOptional= */ Optional.empty(),
+                /* caseSourceCodeRange= */ Range.closedOpen(
+                    ifTreeSourceRange.lowerEndpoint(), ifTreeSourceRange.lowerEndpoint())));
+        recheckDominanceNeeded = true;
+      }
       cases = casesCopy;
     }
 
@@ -548,7 +620,11 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       }
     }
 
-    return Optional.of(cases);
+    return recheckDominanceNeeded
+        // If there is a dominance violation, then we must have caused it by adding a case, so
+        // fixing it merely puts the new case in the correct position
+        ? maybeFixDominance(cases, state, subject, /* canReorderCases= */ true)
+        : Optional.of(cases);
   }
 
   /**
@@ -558,7 +634,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
    * original case IRs. Note that this method does not fully validate the resulting case IRs, but
    * rather only partially validates them with respect to pull-up.
    */
-  private static Optional<List<CaseIr>> maybePullUp(
+  private Optional<List<CaseIr>> maybePullUp(
       List<CaseIr> cases,
       VisitorState state,
       IfChainAnalysisState ifChainAnalysisState,
@@ -584,7 +660,6 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             // Statements containing break or yield cannot be pulled up
             break;
           }
-
           int startPos =
               casesCopy.isEmpty()
                   ? ifTreeRange.lowerEndpoint()
@@ -592,7 +667,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
           int endPos = state.getEndPosition(statement);
           casesCopy.add(
               new CaseIr(
-                  /* hasCaseNull= */ false,
+                  /* hasCaseNull= */ enableSafe
+                      && switchOnNullWouldImplicitlyThrow(
+                          ifChainAnalysisState.subjectOptional().get(), cases),
                   /* hasDefault= */ true,
                   /* instanceOfOptional= */ Optional.empty(),
                   /* guardOptional= */ Optional.empty(),
@@ -644,12 +721,13 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
-   * Analyzes the supplied case IRs for dominance violations. If a dominance violation is detected,
-   * attempts to fix the problem by reordering them so that the violation does not occur. If the
-   * dominance violation cannot be corrected by this algorithm, returns {@code Optional.empty()}.
+   * Analyzes the supplied case IRs for dominance violations. If a dominance violation is detected
+   * and {@code canReorderCases} is {@code true}, attempts to fix the problem by reordering cases so
+   * that no violation is present. If a dominance violation exists and cannot be corrected by this
+   * algorithm, returns {@code Optional.empty()}.
    */
   private static Optional<List<CaseIr>> maybeFixDominance(
-      List<CaseIr> cases, VisitorState state, ExpressionTree subject) {
+      List<CaseIr> cases, VisitorState state, ExpressionTree subject, boolean canReorderCases) {
 
     List<CaseIr> casesCopy = new ArrayList<>(cases);
     List<CaseIr> casesToInsert = new ArrayList<>();
@@ -659,8 +737,12 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       // they were encountered in the if-chain)
       casesToInsert.add(casesCopy.get(insert));
 
+      // Violation found when trying to insert @insert?
       if (hasDominanceViolation(casesToInsert, state, subject)) {
-        // Violation found when trying to insert @insert
+        if (!canReorderCases) {
+          // Dominance violation exists and not allowed to fix
+          return Optional.empty();
+        }
         casesToInsert.remove(casesToInsert.size() - 1);
 
         // Slow path: try to clean up by moving insertion around.  The idea is a bit like an
@@ -991,7 +1073,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* hasDefault= */ false,
               /* instanceOfOptional= */ Optional.of(
                   new InstanceOfIr(
-                      instanceOfTree.getExpression(), bpt.getVariable(), instanceOfTree.getType())),
+                      Optional.ofNullable(instanceOfTree.getExpression()),
+                      Optional.ofNullable(bpt.getVariable()),
+                      instanceOfTree.getType())),
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
@@ -1028,7 +1112,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* hasCaseNull= */ false,
               /* hasDefault= */ false,
               /* instanceOfOptional= */ Optional.of(
-                  new InstanceOfIr(instanceOfTree.getExpression(), null, instanceOfTree.getType())),
+                  new InstanceOfIr(
+                      Optional.ofNullable(instanceOfTree.getExpression()),
+                      Optional.empty(),
+                      instanceOfTree.getType())),
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
@@ -1283,7 +1370,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /** Performs a detailed analysis of the if-chain, generating suggested fixes as needed. */
-  private static List<SuggestedFix> deepAnalysisOfIfChain(
+  private List<SuggestedFix> deepAnalysisOfIfChain(
       List<CaseIr> cases,
       IfChainAnalysisState finalIfChainAnalysisState,
       IfTree ifTree,
@@ -1319,10 +1406,12 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     Optional<List<CaseIr>> fixedCasesOptional =
         casesWithPullupMaybeApplied
             .flatMap(caseList -> maybeDetectDuplicateConstants(caseList))
-            .flatMap(caseList -> maybeFixDominance(caseList, state, subject))
+            .flatMap(
+                caseList ->
+                    maybeFixDominance(caseList, state, subject, /* canReorderCases= */ !enableSafe))
             .flatMap(
                 x ->
-                    maybeFixDefaultAndUnconditional(
+                    maybeFixDefaultNullAndUnconditional(
                         x,
                         subject,
                         ifTree,
@@ -1341,10 +1430,13 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       fixedCasesOptional =
           Optional.of(cases)
               .flatMap(caseList -> maybeDetectDuplicateConstants(caseList))
-              .flatMap(caseList -> maybeFixDominance(caseList, state, subject))
               .flatMap(
                   caseList ->
-                      maybeFixDefaultAndUnconditional(
+                      maybeFixDominance(
+                          caseList, state, subject, /* canReorderCases= */ !enableSafe))
+              .flatMap(
+                  caseList ->
+                      maybeFixDefaultNullAndUnconditional(
                           caseList,
                           subject,
                           ifTree,
@@ -1353,7 +1445,12 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
                           /* numberPulledUp= */ 0,
                           finalIfChainAnalysisState.handledEnumValues(),
                           switchType,
-                          ifTreeSourceRange));
+                          ifTreeSourceRange))
+              // Changing default/null can affect dominance
+              .flatMap(
+                  caseList ->
+                      maybeFixDominance(
+                          caseList, state, subject, /* canReorderCases= */ !enableSafe));
     }
 
     List<SuggestedFix> suggestedFixes = new ArrayList<>();
@@ -1445,8 +1542,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
                 // Cannot unbox LHS pattern, so RHS primitive constant should come before it
                 return true;
               }
-            } else if (instanceOfIr.patternVariable() != null) {
-              VariableTree patternVariable = instanceOfIr.patternVariable();
+            } else if (instanceOfIr.patternVariable().isPresent()) {
+              VariableTree patternVariable = instanceOfIr.patternVariable().get();
               Type patternType = getType(patternVariable);
               if (isSubtype(getType(constantExpression), patternType, state)) {
                 // RHS constant can be assigned to LHS pattern
@@ -1523,12 +1620,12 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       Type lhsType =
           lhs.instanceOfOptional().get().type() != null
               ? getType(lhs.instanceOfOptional().get().type())
-              : getType(lhs.instanceOfOptional().get().patternVariable().getType());
+              : getType(lhs.instanceOfOptional().get().patternVariable().get().getType());
       var rhsInstanceOf = rhs.instanceOfOptional().get();
       Type rhsType =
           rhsInstanceOf.type() != null
               ? getType(rhsInstanceOf.type())
-              : getType(rhsInstanceOf.patternVariable().getType());
+              : getType(rhsInstanceOf.patternVariable().get().getType());
       if (isSubtype(rhsType, lhsType, state)) {
         // The LHS type is a subtype of the RHS type, so the LHS dominates the RHS
         return true;
@@ -1545,9 +1642,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
    */
   record InstanceOfIr(
       // In the example above, the expression would be `y`.
-      @Nullable ExpressionTree expression,
+      Optional<ExpressionTree> expression,
       // In the example above, the variable tree would be `Y y`.
-      @Nullable VariableTree patternVariable,
+      Optional<VariableTree> patternVariable,
       // In the example above, the type would be `Y`.
       Tree type) {
 
