@@ -74,17 +74,12 @@ import org.jspecify.annotations.Nullable;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class VisitorState {
-  private static final ThreadLocal<ArrayDeque<SuppressionInfo.Suppressed>>
-      SUPPRESSED_STATE_OVERRIDES = ThreadLocal.withInitial(ArrayDeque::new);
-  private static final ThreadLocal<ArrayDeque<Suppressible>> CURRENT_SUPPRESSIBLES =
-      ThreadLocal.withInitial(ArrayDeque::new);
-
-  static SuppressionInfo.Suppressed peekSuppressedStateOverride() {
-    return SUPPRESSED_STATE_OVERRIDES.get().peek();
+  private SuppressionInfo.Suppressed peekSuppressedStateOverride() {
+    return sharedState.suppressedStateOverrides.peek();
   }
 
-  public static AutoCloseable pushSuppressedStateOverride(SuppressionInfo.Suppressed suppressed) {
-    ArrayDeque<SuppressionInfo.Suppressed> overrides = SUPPRESSED_STATE_OVERRIDES.get();
+  public AutoCloseable pushSuppressedStateOverride(SuppressionInfo.Suppressed suppressed) {
+    ArrayDeque<SuppressionInfo.Suppressed> overrides = sharedState.suppressedStateOverrides;
     overrides.push(suppressed);
     return () -> {
       SuppressionInfo.Suppressed popped = overrides.pop();
@@ -94,12 +89,12 @@ public class VisitorState {
     };
   }
 
-  static @Nullable Suppressible peekCurrentSuppressible() {
-    return CURRENT_SUPPRESSIBLES.get().peek();
+  private @Nullable Suppressible peekCurrentSuppressible() {
+    return sharedState.currentSuppressibles.peek();
   }
 
-  public static AutoCloseable pushCurrentSuppressible(Suppressible suppressible) {
-    ArrayDeque<Suppressible> stack = CURRENT_SUPPRESSIBLES.get();
+  public AutoCloseable pushCurrentSuppressible(Suppressible suppressible) {
+    ArrayDeque<Suppressible> stack = sharedState.currentSuppressibles;
     stack.push(suppressible);
     return () -> {
       Suppressible popped = stack.pop();
@@ -751,8 +746,10 @@ public class VisitorState {
     private final StatisticsCollector statisticsCollector;
     private final Map<String, SeverityLevel> severityMap;
     private final ErrorProneOptions errorProneOptions;
-    private final ThreadLocal<SuppressionInfo> currentSuppressions =
-        ThreadLocal.withInitial(() -> SuppressionInfo.EMPTY);
+    private SuppressionInfo currentSuppressions = SuppressionInfo.EMPTY;
+    private final ArrayDeque<SuppressionInfo.Suppressed> suppressedStateOverrides =
+        new ArrayDeque<>();
+    private final ArrayDeque<Suppressible> currentSuppressibles = new ArrayDeque<>();
     private final Map<Symbol, Set<String>> usedSuppressionsBySymbol = new IdentityHashMap<>();
 
     // TODO(ronshapiro): should we presize this with a reasonable size? We can check for the
@@ -782,11 +779,11 @@ public class VisitorState {
   }
 
   public SuppressionInfo getCurrentSuppressions() {
-    return sharedState.currentSuppressions.get();
+    return sharedState.currentSuppressions;
   }
 
   public void setCurrentSuppressions(SuppressionInfo suppressionInfo) {
-    sharedState.currentSuppressions.set(suppressionInfo);
+    sharedState.currentSuppressions = suppressionInfo;
   }
 
   public Set<String> getOrCreateUsedSuppressions(Symbol sym) {

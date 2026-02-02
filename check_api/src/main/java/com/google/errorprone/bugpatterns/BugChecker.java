@@ -671,14 +671,14 @@ public abstract class BugChecker implements Suppressible, Serializable {
       AutoCloseable override = null;
       AutoCloseable suppressibleOverride = null;
       try {
-        suppressibleOverride = VisitorState.pushCurrentSuppressible(BugChecker.this);
+        suppressibleOverride = stateWithPath.pushCurrentSuppressible(BugChecker.this);
         SuppressionInfo.SuppressedState suppressedState = suppressedState(tree, stateWithPath);
         if (suppressedState.isSuppressed()) {
           suppressed = (SuppressionInfo.Suppressed) suppressedState;
           if (!shouldScanSuppressed(stateWithPath, suppressed)) {
             return null;
           }
-          override = VisitorState.pushSuppressedStateOverride(suppressed);
+          override = stateWithPath.pushSuppressedStateOverride(suppressed);
         }
         return super.scan(tree, param);
       } finally {
