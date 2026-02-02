@@ -21,7 +21,9 @@ import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Description;
+import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.VariableTree;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -68,6 +70,35 @@ public class WarnOnUnneededSuppressionsTest {
     }
   }
 
+  @BugPattern(
+      name = "SuppressibleTps",
+      summary = "Uses SuppressibleTreePathScanner",
+      severity = BugPattern.SeverityLevel.ERROR)
+  static final class SuppressibleTreePathScannerChecker extends BugChecker
+      implements BugChecker.CompilationUnitTreeMatcher {
+    @Override
+    public Description matchCompilationUnit(
+        CompilationUnitTree tree, VisitorState stateForCompilationUnit) {
+      new SuppressibleTreePathScanner<Void, Void>(stateForCompilationUnit) {
+        @Override
+        public Void visitVariable(VariableTree tree, Void unused) {
+          state().reportMatch(describeMatch(tree));
+          return null;
+        }
+
+        private VisitorState state() {
+          return stateForCompilationUnit.withPath(getCurrentPath());
+        }
+      }.scan(tree, null);
+      return Description.NO_MATCH;
+    }
+
+    @Override
+    public boolean supportsUnneededSuppressionWarnings() {
+      return true;
+    }
+  }
+
   private final CompilationTestHelper testHelperSupported =
       CompilationTestHelper.newInstance(NoCallsToFoo.class, getClass())
           .setArgs("-XepWarnOnUnneededSuppressions")
@@ -75,6 +106,11 @@ public class WarnOnUnneededSuppressionsTest {
 
   private final CompilationTestHelper testHelperUnsupported =
       CompilationTestHelper.newInstance(NoCallsToFooUnsupported.class, getClass())
+          .setArgs("-XepWarnOnUnneededSuppressions")
+          .matchAllDiagnostics();
+
+  private final CompilationTestHelper testHelperSuppressibleScanner =
+      CompilationTestHelper.newInstance(SuppressibleTreePathScannerChecker.class, getClass())
           .setArgs("-XepWarnOnUnneededSuppressions")
           .matchAllDiagnostics();
 
@@ -202,6 +238,20 @@ public class WarnOnUnneededSuppressionsTest {
                 Object x = foo();
               }
               Object foo() { return null; }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void suppressibleTreePathScannerSuppression() {
+    testHelperSuppressibleScanner
+        .addSourceLines(
+            "TestNegative.java",
+            """
+            class TestNegative {
+              @SuppressWarnings("SuppressibleTps")
+              int value = 0;
             }
             """)
         .doTest();
