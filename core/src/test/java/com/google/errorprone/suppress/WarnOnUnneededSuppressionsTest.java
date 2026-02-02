@@ -22,6 +22,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.VariableTree;
 import org.junit.Test;
@@ -99,6 +100,40 @@ public class WarnOnUnneededSuppressionsTest {
     }
   }
 
+  @BugPattern(
+      name = "MixedSuppression",
+      summary = "Uses both matchVariable and SuppressibleTreePathScanner",
+      severity = BugPattern.SeverityLevel.ERROR)
+  static final class MixedSuppressionChecker extends BugChecker
+      implements BugChecker.CompilationUnitTreeMatcher, BugChecker.VariableTreeMatcher {
+    @Override
+    public Description matchCompilationUnit(
+        CompilationUnitTree tree, VisitorState stateForCompilationUnit) {
+      new SuppressibleTreePathScanner<Void, Void>(stateForCompilationUnit) {
+        @Override
+        public Void visitMethod(MethodTree tree, Void unused) {
+          state().reportMatch(describeMatch(tree));
+          return null;
+        }
+
+        private VisitorState state() {
+          return stateForCompilationUnit.withPath(getCurrentPath());
+        }
+      }.scan(tree, null);
+      return Description.NO_MATCH;
+    }
+
+    @Override
+    public Description matchVariable(VariableTree tree, VisitorState state) {
+      return describeMatch(tree);
+    }
+
+    @Override
+    public boolean supportsUnneededSuppressionWarnings() {
+      return true;
+    }
+  }
+
   private final CompilationTestHelper testHelperSupported =
       CompilationTestHelper.newInstance(NoCallsToFoo.class, getClass())
           .setArgs("-XepWarnOnUnneededSuppressions")
@@ -111,6 +146,11 @@ public class WarnOnUnneededSuppressionsTest {
 
   private final CompilationTestHelper testHelperSuppressibleScanner =
       CompilationTestHelper.newInstance(SuppressibleTreePathScannerChecker.class, getClass())
+          .setArgs("-XepWarnOnUnneededSuppressions")
+          .matchAllDiagnostics();
+
+  private final CompilationTestHelper testHelperMixedSuppression =
+      CompilationTestHelper.newInstance(MixedSuppressionChecker.class, getClass())
           .setArgs("-XepWarnOnUnneededSuppressions")
           .matchAllDiagnostics();
 
@@ -252,6 +292,25 @@ public class WarnOnUnneededSuppressionsTest {
             class TestNegative {
               @SuppressWarnings("SuppressibleTps")
               int value = 0;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void suppressibleTreePathScannerAndMatcherSuppression() {
+    testHelperMixedSuppression
+        .addSourceLines(
+            "TestNegative.java",
+            """
+            @SuppressWarnings("MixedSuppression")
+            class TestNegative {
+              void test() {
+                int local = 0;
+              }
+
+              @SuppressWarnings("MixedSuppression")
+              void suppressedMethod() {}
             }
             """)
         .doTest();

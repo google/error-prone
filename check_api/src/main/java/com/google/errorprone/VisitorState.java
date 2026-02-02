@@ -59,10 +59,14 @@ import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
+import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import javax.lang.model.util.Elements;
 import org.jspecify.annotations.Nullable;
 
@@ -70,6 +74,40 @@ import org.jspecify.annotations.Nullable;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class VisitorState {
+  private static final ThreadLocal<ArrayDeque<SuppressionInfo.Suppressed>>
+      SUPPRESSED_STATE_OVERRIDES = ThreadLocal.withInitial(ArrayDeque::new);
+  private static final ThreadLocal<ArrayDeque<Suppressible>> CURRENT_SUPPRESSIBLES =
+      ThreadLocal.withInitial(ArrayDeque::new);
+
+  static SuppressionInfo.Suppressed peekSuppressedStateOverride() {
+    return SUPPRESSED_STATE_OVERRIDES.get().peek();
+  }
+
+  public static AutoCloseable pushSuppressedStateOverride(SuppressionInfo.Suppressed suppressed) {
+    ArrayDeque<SuppressionInfo.Suppressed> overrides = SUPPRESSED_STATE_OVERRIDES.get();
+    overrides.push(suppressed);
+    return () -> {
+      SuppressionInfo.Suppressed popped = overrides.pop();
+      if (popped != suppressed) {
+        throw new IllegalStateException("SuppressedState override stack corrupted.");
+      }
+    };
+  }
+
+  static @Nullable Suppressible peekCurrentSuppressible() {
+    return CURRENT_SUPPRESSIBLES.get().peek();
+  }
+
+  public static AutoCloseable pushCurrentSuppressible(Suppressible suppressible) {
+    ArrayDeque<Suppressible> stack = CURRENT_SUPPRESSIBLES.get();
+    stack.push(suppressible);
+    return () -> {
+      Suppressible popped = stack.pop();
+      if (popped != suppressible) {
+        throw new IllegalStateException("CurrentSuppressible stack corrupted.");
+      }
+    };
+  }
 
   private final SharedState sharedState;
   public final Context context;
@@ -166,7 +204,26 @@ public class VisitorState {
 
   public VisitorState withPath(TreePath path) {
     checkNotNull(path);
-    return new VisitorState(context, path, suppressedState, sharedState);
+    SuppressedState effectiveSuppressedState = suppressedState;
+    if (!suppressedState.isSuppressed()) {
+      SuppressionInfo.Suppressed suppressedOverride = peekSuppressedStateOverride();
+      if (suppressedOverride != null) {
+        effectiveSuppressedState = suppressedOverride;
+      } else {
+        Suppressible suppressible = peekCurrentSuppressible();
+        if (suppressible != null) {
+          SeverityLevel severityLevel =
+              sharedState.severityMap.getOrDefault(suppressible.canonicalName(), SeverityLevel.ERROR);
+          boolean suppressedInGeneratedCode =
+              errorProneOptions().disableWarningsInGeneratedCode()
+                  && severityLevel != SeverityLevel.ERROR;
+          effectiveSuppressedState =
+              getCurrentSuppressions()
+                  .suppressedState(suppressible, suppressedInGeneratedCode, this);
+        }
+      }
+    }
+    return new VisitorState(context, path, effectiveSuppressedState, sharedState);
   }
 
   private VisitorState withNoPathForMemoization() {
@@ -237,9 +294,22 @@ public class VisitorState {
     if (override != null) {
       description = description.applySeverityOverride(override);
     }
-    if (suppressedState.isSuppressed()) {
+    SuppressedState effectiveSuppressedState = suppressedState;
+    if (!suppressedState.isSuppressed()) {
+      SuppressionInfo.Suppressed suppressedOverride = peekSuppressedStateOverride();
+      if (suppressedOverride != null) {
+        effectiveSuppressedState = suppressedOverride;
+      }
+    }
+    if (effectiveSuppressedState.isSuppressed()) {
       // we used it
-      ((SuppressionInfo.Suppressed) suppressedState).setAsUsed();
+      SuppressionInfo.Suppressed suppressed = (SuppressionInfo.Suppressed) effectiveSuppressedState;
+      suppressed.setAsUsed();
+      try {
+        getCurrentSuppressions().updatedUsedSuppressions(suppressed);
+      } catch (IllegalArgumentException unused) {
+        // Suppression wasn't tracked in current suppressions; ignore.
+      }
       if (errorProneOptions().isWarnOnUnneededSuppressions()) {
         // For now, don't report suppressed findings if we're going to warn on unused suppressions.
         return;
@@ -681,6 +751,9 @@ public class VisitorState {
     private final StatisticsCollector statisticsCollector;
     private final Map<String, SeverityLevel> severityMap;
     private final ErrorProneOptions errorProneOptions;
+    private final ThreadLocal<SuppressionInfo> currentSuppressions =
+        ThreadLocal.withInitial(() -> SuppressionInfo.EMPTY);
+    private final Map<Symbol, Set<String>> usedSuppressionsBySymbol = new IdentityHashMap<>();
 
     // TODO(ronshapiro): should we presize this with a reasonable size? We can check for the
     // smallest build and see how many types are loaded and use that. Or perhaps a heuristic
@@ -706,6 +779,18 @@ public class VisitorState {
       this.severityMap = severityMap;
       this.errorProneOptions = errorProneOptions;
     }
+  }
+
+  public SuppressionInfo getCurrentSuppressions() {
+    return sharedState.currentSuppressions.get();
+  }
+
+  public void setCurrentSuppressions(SuppressionInfo suppressionInfo) {
+    sharedState.currentSuppressions.set(suppressionInfo);
+  }
+
+  public Set<String> getOrCreateUsedSuppressions(Symbol sym) {
+    return sharedState.usedSuppressionsBySymbol.computeIfAbsent(sym, unused -> new HashSet<>());
   }
 
   /**

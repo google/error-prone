@@ -80,17 +80,19 @@ public class SuppressionInfo {
   static class SuppressionInfoForSymbol {
     private final @Nullable Symbol symbol;
     private final ImmutableSet<String> suppressWarningStringsForSymbol;
-    private final Set<String> usedSuppressWarningStrings = new HashSet<>();
+    private final Set<String> usedSuppressWarningStrings;
     private final ImmutableSet<Name> customSuppressionsForSymbol;
     private final @Nullable SuppressionInfoForSymbol parent;
 
     public SuppressionInfoForSymbol(
         @Nullable Symbol symbol,
         ImmutableSet<String> suppressWarningStringsForSymbol,
+        Set<String> usedSuppressWarningStrings,
         ImmutableSet<Name> customSuppressionsForSymbol,
         @Nullable SuppressionInfoForSymbol parent) {
       this.symbol = symbol;
       this.suppressWarningStringsForSymbol = suppressWarningStringsForSymbol;
+      this.usedSuppressWarningStrings = usedSuppressWarningStrings;
       this.customSuppressionsForSymbol = customSuppressionsForSymbol;
       this.parent = parent;
     }
@@ -288,6 +290,7 @@ public class SuppressionInfo {
         new SuppressionInfoForSymbol(
             sym,
             ImmutableSet.copyOf(newWarnOnUnneededSuppressions),
+            state.getOrCreateUsedSuppressions(sym),
             ImmutableSet.copyOf(newlyPresent),
             infoForClosestSymbol);
     return new SuppressionInfo(

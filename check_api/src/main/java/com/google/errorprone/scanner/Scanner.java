@@ -63,6 +63,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
         currentSuppressions.warnOnUnusedSuppressions(state);
       }
       currentSuppressions = prevSuppressionInfo;
+      state.setCurrentSuppressions(currentSuppressions);
     }
   }
 
@@ -83,6 +84,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
         currentSuppressions.warnOnUnusedSuppressions(state);
       }
       currentSuppressions = prevSuppressionInfo;
+      state.setCurrentSuppressions(currentSuppressions);
     }
   }
 
@@ -105,6 +107,7 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
                 getWarnOnUnneededSuppressWarningStrings());
       }
     }
+    state.setCurrentSuppressions(currentSuppressions);
     return prevSuppressionInfo;
   }
 
