@@ -132,64 +132,6 @@ public class VisitorState {
   }
 
   /**
-   * Return a VisitorState that has no Error Prone configuration, and can't report results.
-   *
-   * @deprecated If VisitorState is needed, use {@link #createForUtilityPurposes}, otherwise just
-   *     use utility methods in ASTHelpers that don't need VisitorSate.
-   */
-  @Deprecated
-  public VisitorState(Context context) {
-    this(
-        context,
-        VisitorState::nullListener,
-        ImmutableMap.of(),
-        ErrorProneOptions.empty(),
-        // Can't use this VisitorState to report results, so no-op collector.
-        StatisticsCollector.createNoOpCollector(),
-        null,
-        UNSUPPRESSED);
-  }
-
-  /**
-   * Return a VisitorState that has no Error Prone configuration, but can report findings to {@code
-   * listener}.
-   *
-   * @deprecated Use the equivalent factory method {@link #createForCustomFindingCollection}.
-   */
-  @Deprecated
-  public VisitorState(Context context, DescriptionListener listener) {
-    this(
-        context,
-        listener,
-        ImmutableMap.of(),
-        ErrorProneOptions.empty(),
-        StatisticsCollector.createCollector(),
-        null,
-        UNSUPPRESSED);
-  }
-
-  /**
-   * Return a VisitorState configured for a new compilation, including Error Prone configuration.
-   *
-   * @deprecated Use the equivalent factory method {@link #createConfiguredForCompilation}.
-   */
-  @Deprecated
-  public VisitorState(
-      Context context,
-      DescriptionListener listener,
-      Map<String, SeverityLevel> severityMap,
-      ErrorProneOptions errorProneOptions) {
-    this(
-        context,
-        listener,
-        severityMap,
-        errorProneOptions,
-        StatisticsCollector.createCollector(),
-        null,
-        UNSUPPRESSED);
-  }
-
-  /**
    * The constructor used for brand-new VisitorState objects from outside. It builds a new
    * SharedState.
    */
