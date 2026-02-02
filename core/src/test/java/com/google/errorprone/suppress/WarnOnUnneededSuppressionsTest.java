@@ -112,7 +112,9 @@ public class WarnOnUnneededSuppressionsTest {
       new SuppressibleTreePathScanner<Void, Void>(stateForCompilationUnit) {
         @Override
         public Void visitMethod(MethodTree tree, Void unused) {
-          state().reportMatch(describeMatch(tree));
+          if (tree.getName().contentEquals("suppressedMethod")) {
+            state().reportMatch(describeMatch(tree));
+          }
           return null;
         }
 
@@ -303,9 +305,12 @@ public class WarnOnUnneededSuppressionsTest {
         .addSourceLines(
             "TestNegative.java",
             """
-            @SuppressWarnings("MixedSuppression")
             class TestNegative {
+              @SuppressWarnings("MixedSuppression")
+              int field = 0;
+
               void test() {
+                @SuppressWarnings("MixedSuppression")
                 int local = 0;
               }
 
