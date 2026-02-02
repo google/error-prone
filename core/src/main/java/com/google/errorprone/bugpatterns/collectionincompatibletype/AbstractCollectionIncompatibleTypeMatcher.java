@@ -56,9 +56,11 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
    *
    * @return the source type or null if not available
    */
-  abstract @Nullable Type extractSourceType(MethodInvocationTree tree, VisitorState state);
+  abstract @Nullable Type extractSourceType(
+      MethodInvocationTree tree, VisitorState state, boolean useCapture);
 
-  abstract @Nullable Type extractSourceType(MemberReferenceTree tree, VisitorState state);
+  abstract @Nullable Type extractSourceType(
+      MemberReferenceTree tree, VisitorState state, boolean useCapture);
 
   /**
    * Returns the AST node from which the source type was extracted. Needed to produce readable error
@@ -91,9 +93,11 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
    *
    * @return the target type or null if not available
    */
-  abstract @Nullable Type extractTargetType(MethodInvocationTree tree, VisitorState state);
+  abstract @Nullable Type extractTargetType(
+      MethodInvocationTree tree, VisitorState state, boolean useCapture);
 
-  abstract @Nullable Type extractTargetType(MemberReferenceTree tree, VisitorState state);
+  abstract @Nullable Type extractTargetType(
+      MemberReferenceTree tree, VisitorState state, boolean useCapture);
 
   /**
    * Encapsulates the result of matching a {@link Collection#contains}-like call, including the
@@ -121,7 +125,8 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
     }
   }
 
-  public final @Nullable MatchResult matches(ExpressionTree tree, VisitorState state) {
+  public final @Nullable MatchResult matches(
+      ExpressionTree tree, VisitorState state, boolean useCapture) {
     if (!methodMatcher().matches(tree, state)) {
       return null;
     }
@@ -132,8 +137,8 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
           MethodInvocationTree methodInvocationTree, Void unused) {
         return getMatchResult(
             extractSourceTree(methodInvocationTree, state),
-            extractSourceType(methodInvocationTree, state),
-            extractTargetType(methodInvocationTree, state));
+            extractSourceType(methodInvocationTree, state, useCapture),
+            extractTargetType(methodInvocationTree, state, useCapture));
       }
 
       @Override
@@ -141,8 +146,8 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
           MemberReferenceTree memberReferenceTree, Void unused) {
         return getMatchResult(
             extractSourceTree(memberReferenceTree, state),
-            extractSourceType(memberReferenceTree, state),
-            extractTargetType(memberReferenceTree, state));
+            extractSourceType(memberReferenceTree, state, useCapture),
+            extractTargetType(memberReferenceTree, state, useCapture));
       }
     }.visit(tree, null);
   }
@@ -168,8 +173,9 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
    * @return the type argument, if defined, or null otherwise
    */
   protected static @Nullable Type extractTypeArgAsMemberOfSupertype(
-      Type type, Symbol superTypeSym, int typeArgIndex, Types types) {
-    Type collectionType = types.asSuper(type, superTypeSym);
+      Type type, Symbol superTypeSym, int typeArgIndex, Types types, boolean useCapture) {
+    Type toSuper = useCapture ? types.capture(type) : type;
+    Type collectionType = types.asSuper(toSuper, superTypeSym);
     if (collectionType == null) {
       return null;
     }

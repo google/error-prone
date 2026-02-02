@@ -108,7 +108,7 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
   @Override
   public Void visitMethod(MethodTree tree, Void v) {
     try {
-      VisitorState state = new VisitorState(context);
+      VisitorState state = VisitorState.createForUtilityPurposes(context);
       logger.log(FINE, "Discovered method with name {0}", tree.getName());
       if (hasAnnotation(tree, "com.google.errorprone.refaster.annotation.Placeholder", state)) {
         checkArgument(

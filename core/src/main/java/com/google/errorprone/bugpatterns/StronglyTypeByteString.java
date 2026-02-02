@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -45,7 +44,7 @@ public final class StronglyTypeByteString extends BugChecker implements Compilat
           staticMethod()
               .onClass("com.google.protobuf.ByteString")
               .namedAnyOf("copyFrom")
-              .withParametersOfType(ImmutableSet.of(Suppliers.arrayOf(Suppliers.BYTE_TYPE))));
+              .withParametersOfType(Suppliers.arrayOf(Suppliers.BYTE_TYPE)));
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {

@@ -39,7 +39,7 @@ import com.sun.source.tree.MethodInvocationTree;
     explanation =
         "Joda-Time's 'duration.withMillis(long)' method is often a source of bugs because it "
             + "doesn't mutate the current instance but rather returns a new immutable Duration "
-            + "instance."
+            + "instance. "
             + "Please use Duration.millis(long) instead. If your Duration is better expressed in "
             + "terms of other units, use standardSeconds(long), standardMinutes(long), "
             + "standardHours(long), or standardDays(long) instead.",

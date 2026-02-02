@@ -43,3 +43,5 @@ excerpt using `<pre>{@code ... }</pre>`:
 
 Suppress by applying `@SuppressWarnings("InvalidInlineTag")` to the element
 being documented.
+
+If you use nonstandard tags, you can exempt them globally using the `Javadoc:customInlineTags` tag, for example `-XepOpt:Javadoc:customInlineTags=todo,bugid`.

@@ -198,6 +198,7 @@ import com.google.errorprone.bugpatterns.IntLiteralCast;
 import com.google.errorprone.bugpatterns.IntLongMath;
 import com.google.errorprone.bugpatterns.InterfaceWithOnlyStatics;
 import com.google.errorprone.bugpatterns.InterruptedExceptionSwallowed;
+import com.google.errorprone.bugpatterns.InterruptedInCatchBlock;
 import com.google.errorprone.bugpatterns.Interruption;
 import com.google.errorprone.bugpatterns.InvalidPatternSyntax;
 import com.google.errorprone.bugpatterns.InvalidTimeZoneID;
@@ -339,6 +340,7 @@ import com.google.errorprone.bugpatterns.RedundantControlFlow;
 import com.google.errorprone.bugpatterns.RedundantOverride;
 import com.google.errorprone.bugpatterns.RedundantSetterCall;
 import com.google.errorprone.bugpatterns.RedundantThrows;
+import com.google.errorprone.bugpatterns.RefactorSwitch;
 import com.google.errorprone.bugpatterns.ReferenceEquality;
 import com.google.errorprone.bugpatterns.RemoveUnusedImports;
 import com.google.errorprone.bugpatterns.RequiredModifiersChecker;
@@ -426,6 +428,7 @@ import com.google.errorprone.bugpatterns.UngroupedOverloads;
 import com.google.errorprone.bugpatterns.UnicodeDirectionalityCharacters;
 import com.google.errorprone.bugpatterns.UnicodeEscape;
 import com.google.errorprone.bugpatterns.UnicodeInCode;
+import com.google.errorprone.bugpatterns.UnnamedVariable;
 import com.google.errorprone.bugpatterns.UnnecessarilyFullyQualified;
 import com.google.errorprone.bugpatterns.UnnecessarilyVisible;
 import com.google.errorprone.bugpatterns.UnnecessaryAnonymousClass;
@@ -1005,6 +1008,7 @@ public class BuiltInCheckerSuppliers {
           IntFloatConversion.class,
           IntLiteralCast.class,
           IntLongMath.class,
+          InterruptedInCatchBlock.class,
           InvalidBlockTag.class,
           InvalidInlineTag.class,
           InvalidLink.class,
@@ -1111,6 +1115,7 @@ public class BuiltInCheckerSuppliers {
           QualifierOrScopeOnInjectMethod.class,
           ReachabilityFenceUsage.class,
           RedundantControlFlow.class,
+          RefactorSwitch.class,
           ReferenceEquality.class,
           RethrowReflectiveOperationExceptionAsLinkageError.class,
           ReturnAtTheEndOfVoidFunction.class,
@@ -1160,6 +1165,7 @@ public class BuiltInCheckerSuppliers {
           URLEqualsHashCode.class,
           UndefinedEquals.class,
           UnicodeEscape.class,
+          UnnamedVariable.class,
           UnnecessaryAssignment.class,
           UnnecessaryAsync.class,
           UnnecessaryBreakInSwitch.class,

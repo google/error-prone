@@ -46,6 +46,11 @@ public final class SourceVersion {
     return sourceIsAtLeast(context, 21);
   }
 
+  /** Returns true if the compiler source version level supports unnamed variables and patterns. */
+  public static boolean supportsUnnamedVariablesAndPatterns(Context context) {
+    return sourceIsAtLeast(context, 22);
+  }
+
   /** Returns true if the compiler source version level supports instance main methods. */
   public static boolean supportsInstanceMainMethods(Context context) {
     return sourceIsAtLeast(context, 25);

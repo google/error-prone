@@ -20,6 +20,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableSet;
@@ -36,9 +38,13 @@ import com.sun.source.doctree.DocCommentTree;
 import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.ImportTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
@@ -74,7 +80,7 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
     }
 
     LinkedHashSet<ImportTree> unusedImports = new LinkedHashSet<>(importedSymbols.keySet());
-    new TreeSymbolScanner(JavacTrees.instance(state.context))
+    new TreeSymbolScanner(JavacTrees.instance(state.context), state)
         .scan(
             compilationUnitTree,
             new SymbolSink() {
@@ -139,12 +145,14 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
   }
 
   private static final class TreeSymbolScanner extends TreePathScanner<Void, SymbolSink> {
-    final DocTreeSymbolScanner docTreeSymbolScanner;
-    final JavacTrees trees;
+    private final DocTreeSymbolScanner docTreeSymbolScanner;
+    private final JavacTrees trees;
+    private final VisitorState state;
 
-    private TreeSymbolScanner(JavacTrees trees) {
+    private TreeSymbolScanner(JavacTrees trees, VisitorState state) {
       this.docTreeSymbolScanner = new DocTreeSymbolScanner();
       this.trees = trees;
+      this.state = state;
     }
 
     /** Skip the imports themselves when checking for usage. */
@@ -162,8 +170,29 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
       if (symbol == null) {
         return null;
       }
+      var path = getCurrentPath();
+      if (path.getParentPath().getLeaf() instanceof ConstantCaseLabelTree caseLabelTree) {
+        var caseType = getType(caseLabelTree.getConstantExpression());
+        var switchType =
+            getType(
+                getSwitchExpression(
+                    path.getParentPath().getParentPath().getParentPath().getLeaf()));
+        // Exceptionally, a ConstantCaseLabel used in an enum of a matching switch type does not
+        // require an import.
+        if (caseType.tsym.isEnum() && isSameType(caseType, switchType, state)) {
+          return null;
+        }
+      }
       sink.accept(symbol.baseSymbol());
       return null;
+    }
+
+    private static ExpressionTree getSwitchExpression(Tree tree) {
+      return switch (tree) {
+        case SwitchTree switchTree -> switchTree.getExpression();
+        case SwitchExpressionTree switchExpressionTree -> switchExpressionTree.getExpression();
+        default -> throw new AssertionError("Case not inside switch statement");
+      };
     }
 
     @Override

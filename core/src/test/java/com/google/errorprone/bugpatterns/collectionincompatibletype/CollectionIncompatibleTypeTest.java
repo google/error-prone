@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -665,9 +664,7 @@ public class CollectionIncompatibleTypeNegativeCases {
         .doTest(TestMode.TEXT_MATCH);
   }
 
-  // This test is disabled because calling Types#asSuper in the check removes the upper bound on K.
   @Test
-  @Ignore
   public void boundedTypeParameters() {
     compilationHelper
         .addSourceLines(

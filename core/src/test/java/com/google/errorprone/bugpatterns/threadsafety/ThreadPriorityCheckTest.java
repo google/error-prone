@@ -84,6 +84,37 @@ public final class ThreadPriorityCheckTest {
   }
 
   @Test
+  public void ofPlatformPriority() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo() {
+                // BUG: Diagnostic contains: ThreadPriorityCheck
+                Thread.ofPlatform().priority(Thread.MAX_PRIORITY);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void threadFactoryBuilderSetPriority() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            "import com.google.common.util.concurrent.ThreadFactoryBuilder;",
+            "class Test {",
+            "  public void foo() {",
+            "    // BUG: Diagnostic contains: ThreadPriorityCheck",
+            "    new ThreadFactoryBuilder().setPriority(Thread.MAX_PRIORITY);",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     compilationHelper
         .addSourceLines(

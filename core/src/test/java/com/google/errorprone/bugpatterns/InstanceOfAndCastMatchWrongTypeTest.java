@@ -535,4 +535,41 @@ public class InstanceOfAndCastMatchWrongTypeNegativeCases {
             """)
         .doTest();
   }
+
+  @Test
+  public void handlesRecordDestructuring_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            record Test(int x, int y) {
+              static int getX(Object o) {
+                if (o instanceof Test(int x, int y)) {
+                  return ((Test) o).x();
+                }
+                return 0;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void handlesRecordDestructuring_finding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            record Test(int x, int y) {
+              static int getX(Object o) {
+                if (o instanceof Test(int x, int y)) {
+                  // BUG: Diagnostic contains:
+                  return ((String) o).length();
+                }
+                return 0;
+              }
+            }
+            """)
+        .doTest();
+  }
 }

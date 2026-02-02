@@ -49,6 +49,7 @@ import com.sun.tools.javac.util.JCDiagnostic;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import javax.inject.Inject;
 
 /**
  * Matches invalid Javadoc tags, and tries to suggest fixes.
@@ -64,6 +65,13 @@ public final class InvalidBlockTag extends BugChecker
    * tags.
    */
   private static final ImmutableSet<String> CODE_TAGS = ImmutableSet.of("code", "pre");
+
+  private final KnownTags knownTags;
+
+  @Inject
+  InvalidBlockTag(KnownTags knownTags) {
+    this.knownTags = knownTags;
+  }
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {
@@ -157,7 +165,7 @@ public final class InvalidBlockTag extends BugChecker
     public Void visitUnknownBlockTag(UnknownBlockTagTree unknownBlockTagTree, Void unused) {
       String tagName = unknownBlockTagTree.getTagName();
       JavadocTag tag = blockTag(tagName);
-      if (JavadocTag.KNOWN_OTHER_TAGS.contains(tag)) {
+      if (knownTags.isKnownTag(tag)) {
         return super.visitUnknownBlockTag(unknownBlockTagTree, null);
       }
       if (codeTagNestedDepth > 0) {
@@ -262,8 +270,9 @@ public final class InvalidBlockTag extends BugChecker
       if (!(docTree instanceof BlockTagTree blockTagTree)) {
         return null;
       }
-      JavadocTag tag = blockTag(blockTagTree.getTagName());
-      if (validTags.contains(tag) || JavadocTag.KNOWN_OTHER_TAGS.contains(tag)) {
+      String tagName = blockTagTree.getTagName();
+      JavadocTag tag = blockTag(tagName);
+      if (validTags.contains(tag) || knownTags.isKnownTag(tag)) {
         return null;
       }
       String message =

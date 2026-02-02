@@ -26,7 +26,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Files;
 import com.google.errorprone.BugPattern;
@@ -139,20 +138,17 @@ public class DefaultCharset extends BugChecker
       anyOf(
           constructor()
               .forClass(String.class.getName())
-              .withParametersOfType(ImmutableList.of(Suppliers.arrayOf(Suppliers.BYTE_TYPE))),
+              .withParametersOfType(Suppliers.arrayOf(Suppliers.BYTE_TYPE)),
           constructor()
               .forClass(String.class.getName())
               .withParametersOfType(
-                  ImmutableList.of(
-                      Suppliers.arrayOf(Suppliers.BYTE_TYPE),
-                      Suppliers.INT_TYPE,
-                      Suppliers.INT_TYPE)),
+                  Suppliers.arrayOf(Suppliers.BYTE_TYPE), Suppliers.INT_TYPE, Suppliers.INT_TYPE),
           constructor()
               .forClass(OutputStreamWriter.class.getName())
-              .withParametersOfType(ImmutableList.of(Suppliers.typeFromClass(OutputStream.class))),
+              .withParametersOfType(Suppliers.typeFromClass(OutputStream.class)),
           constructor()
               .forClass(InputStreamReader.class.getName())
-              .withParametersOfType(ImmutableList.of(Suppliers.typeFromClass(InputStream.class))));
+              .withParametersOfType(Suppliers.typeFromClass(InputStream.class)));
 
   private static final Matcher<ExpressionTree> BYTESTRING_COPY_FROM =
       staticMethod().onClass("com.google.protobuf.ByteString").named("copyFrom");

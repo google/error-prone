@@ -24,7 +24,6 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
@@ -56,14 +55,11 @@ public class LockOnBoxedPrimitive extends BugChecker
 
   private static final Matcher<ExpressionTree> LOCKING_METHOD =
       anyOf(
+          instanceMethod().anyClass().named("wait").withParametersOfType(Suppliers.LONG_TYPE),
           instanceMethod()
               .anyClass()
               .named("wait")
-              .withParametersOfType(ImmutableList.of(Suppliers.LONG_TYPE)),
-          instanceMethod()
-              .anyClass()
-              .named("wait")
-              .withParametersOfType(ImmutableList.of(Suppliers.LONG_TYPE, Suppliers.INT_TYPE)),
+              .withParametersOfType(Suppliers.LONG_TYPE, Suppliers.INT_TYPE),
           instanceMethod().anyClass().namedAnyOf("wait", "notify", "notifyAll").withNoParameters());
 
   private static final Matcher<ExpressionTree> BOXED_PRIMITIVE = isBoxedPrimitiveType();

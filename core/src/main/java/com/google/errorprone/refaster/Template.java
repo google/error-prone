@@ -20,6 +20,7 @@ import static com.google.errorprone.util.ErrorProneLog.deferredDiagnosticHandler
 import static com.google.errorprone.util.ErrorProneLog.getDiagnostics;
 import static java.util.logging.Level.FINE;
 
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -37,7 +38,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ForAll;
-import com.sun.tools.javac.code.Type.MethodType;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Attr;
@@ -45,7 +45,6 @@ import com.sun.tools.javac.comp.AttrContext;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Env;
 import com.sun.tools.javac.comp.Resolve;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCCatch;
@@ -71,6 +70,10 @@ import java.io.Serializable;
 import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.invoke.VarHandle;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -288,16 +291,9 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
 
         @Override
         public void printExpr(JCTree tree, int prec) throws IOException {
-          EndPosTable endPositions = unit.endPositions;
-          /*
-           * Modifiers, and specifically flags like final, appear to just need weird special
-           * handling.
-           *
-           * Note: we can't use {@code TreeInfo.getEndPos()} or {@code JCTree.getEndPosition()}
-           * here, because they will return the end position of an enclosing AST node for trees
-           * whose real end positions aren't stored.
-           */
-          int endPos = endPositions.getEndPos(tree);
+          // Modifiers, and specifically flags like final, appear to just need weird special
+          // handling.
+          int endPos = getEndPos(tree, unit);
           boolean hasRealEndPosition = endPos != Position.NOPOS;
           if (!(tree instanceof ModifiersTree) && hasRealEndPosition) {
             writer.append(unitContents.substring(tree.getStartPosition(), endPos));
@@ -437,7 +433,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     Symtab symtab = inliner.symtab();
 
     Type methodType =
-        new MethodType(expectedArgTypes, returnType, List.<Type>nil(), symtab.methodClass);
+        new Type.MethodType(expectedArgTypes, returnType, List.<Type>nil(), symtab.methodClass);
     if (!freeTypeVariables.isEmpty()) {
       methodType = new ForAll(freeTypeVariables, methodType);
     }
@@ -478,7 +474,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     Log.DeferredDiagnosticHandler handler =
         deferredDiagnosticHandler(Log.instance(inliner.getContext()));
     try {
-      MethodType result =
+      Type.MethodType result =
           callCheckMethod(warner, inliner, resultInfo, actualArgTypes, methodSymbol, site, env);
       Collection<JCDiagnostic> diagnostics = getDiagnostics(handler);
       if (!diagnostics.isEmpty()) {
@@ -509,7 +505,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
    * Reflectively invoke Resolve.checkMethod(), which despite being package-private is apparently
    * the only useful entry-point into javac8's type inference implementation.
    */
-  private MethodType callCheckMethod(
+  private Type.MethodType callCheckMethod(
       Warner warner,
       Inliner inliner,
       Object resultInfo,
@@ -532,7 +528,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
               List.class,
               Warner.class);
       checkMethod.setAccessible(true);
-      return (MethodType)
+      return (Type.MethodType)
           checkMethod.invoke(
               Resolve.instance(inliner.getContext()),
               env,
@@ -576,5 +572,58 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
       fix.addStaticImport(staticImportToAdd);
     }
     return fix.build();
+  }
+
+  /**
+   * Note: we can't use {@code TreeInfo.getEndPos()} or {@code JCTree.getEndPosition()} here,
+   * because they will return the end position of an enclosing AST node for trees whose real end
+   * positions aren't stored.
+   */
+  private static int getEndPos(JCTree tree, JCCompilationUnit unit) {
+    try {
+      return (int) GET_END_POS_HANDLE.invokeExact(unit, tree);
+    } catch (Throwable e) {
+      Throwables.throwIfUnchecked(e);
+      throw new AssertionError(e);
+    }
+  }
+
+  private static final MethodHandle GET_END_POS_HANDLE = getEndPosMethodHandle();
+
+  private static MethodHandle getEndPosMethodHandle() {
+    Class<?> endPosTableClass;
+    try {
+      endPosTableClass = Class.forName("com.sun.tools.javac.tree.EndPosTable");
+    } catch (ClassNotFoundException e) {
+      endPosTableClass = null;
+    }
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    if (endPosTableClass == null) {
+      try {
+        // JDK versions after https://bugs.openjdk.org/browse/JDK-8372948
+        // (unit, tree) -> tree.endpos
+        return MethodHandles.dropArguments(
+            lookup
+                .findVarHandle(JCTree.class, "endpos", int.class)
+                .toMethodHandle(VarHandle.AccessMode.GET),
+            0,
+            JCCompilationUnit.class);
+      } catch (ReflectiveOperationException e) {
+        throw new LinkageError(e.getMessage(), e);
+      }
+    }
+    try {
+      // JDK versions before https://bugs.openjdk.org/browse/JDK-8372948
+      // (unit, tree) -> unit.endPositions.getEndPos(tree)
+      return MethodHandles.filterArguments(
+          lookup.findVirtual(
+              endPosTableClass, "getEndPos", MethodType.methodType(int.class, JCTree.class)),
+          0,
+          lookup
+              .findVarHandle(JCCompilationUnit.class, "endPositions", endPosTableClass)
+              .toMethodHandle(VarHandle.AccessMode.GET));
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
   }
 }

@@ -64,6 +64,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.ArrayAccessTree;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BindingPatternTree;
@@ -255,13 +256,16 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       }
       Tree unused = specs.iterator().next().assignmentPath().getLeaf();
       VarSymbol symbol = (VarSymbol) unusedSymbol;
-      ImmutableList<SuggestedFix> fixes;
+      ImmutableList.Builder<SuggestedFix> fixes = ImmutableList.builder();
       if (symbol.getKind() == ElementKind.PARAMETER
           && !onlyCheckForReassignments.contains(unusedSymbol)
           && !isEverUsed.contains(unusedSymbol)) {
-        fixes = buildUnusedParameterFixes(symbol, allUsageSites, state);
+        fixes.addAll(buildUnusedParameterFixes(symbol, allUsageSites, state));
       } else {
-        fixes = buildUnusedVarFixes(symbol, allUsageSites, state);
+        fixes.addAll(buildUnusedVarFixes(symbol, allUsageSites, state));
+      }
+      if (suggestUnderscore(state, isEverUsed, unusedSymbol, specs, allUsageSites)) {
+        fixes.add(SuggestedFixes.renameVariable((VariableTree) unused, "_", state));
       }
       state.reportMatch(
           buildDescription(unused)
@@ -272,12 +276,47 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
                       describeVariable(symbol),
                       symbol.name))
               .addAllFixes(
-                  fixes.stream()
+                  fixes.build().stream()
                       .map(f -> SuggestedFix.merge(makeFirstAssignmentDeclaration, f))
                       .collect(toImmutableList()))
               .build());
     }
     return Description.NO_MATCH;
+  }
+
+  private static boolean suggestUnderscore(
+      VisitorState state,
+      Set<Symbol> isEverUsed,
+      Symbol symbol,
+      Collection<UnusedSpec> specs,
+      ImmutableList<TreePath> allUsageSites) {
+    TreePath unusedPath = specs.iterator().next().assignmentPath();
+    Tree unused = unusedPath.getLeaf();
+    if (!(unused instanceof VariableTree variableTree)) {
+      return false;
+    }
+    if (isEverUsed.contains(symbol) || specs.size() != 1 || allUsageSites.size() > 1) {
+      return false;
+    }
+    if (!SourceVersion.supportsUnnamedVariablesAndPatterns(state.context)) {
+      return false;
+    }
+    if (!allowsUnderscore((VarSymbol) symbol, unusedPath)) {
+      return false;
+    }
+    if (symbol.getKind().equals(ElementKind.LOCAL_VARIABLE)
+        && variableTree.getInitializer() == null) {
+      return false;
+    }
+    return true;
+  }
+
+  private static boolean allowsUnderscore(VarSymbol symbol, TreePath path) {
+    return switch (symbol.getKind()) {
+      case LOCAL_VARIABLE -> true;
+      case PARAMETER -> path.getParentPath().getLeaf() instanceof LambdaExpressionTree;
+      default -> false;
+    };
   }
 
   private static SuggestedFix makeAssignmentDeclaration(

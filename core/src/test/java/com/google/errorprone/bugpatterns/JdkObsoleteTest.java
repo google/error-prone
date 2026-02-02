@@ -399,4 +399,104 @@ public class JdkObsoleteTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void preferCharsetAcceptingApis() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+
+            import java.io.*;
+            import java.net.*;
+            import java.nio.channels.*;
+            import java.util.*;
+
+            class Test {
+              private static final String UTF8_NAME = UTF_8.name();
+
+              void string(byte[] bytes) throws Exception {
+                // BUG: Diagnostic contains: String.getBytes(Charset)
+                "foo".getBytes(UTF8_NAME);
+                // BUG: Diagnostic contains: new String(byte[], Charset)
+                new String(bytes, UTF8_NAME);
+                // BUG: Diagnostic contains: new String(byte[], int, int, Charset)
+                new String(bytes, 0, 1, UTF8_NAME);
+              }
+
+              void byteArrayOutputStream(String UTF8_NAME) throws Exception {
+                // BUG: Diagnostic contains: ByteArrayOutputStream.toString(Charset)
+                new ByteArrayOutputStream().toString(UTF8_NAME);
+              }
+
+              void urlDecoder(String UTF8_NAME) throws Exception {
+                // BUG: Diagnostic contains: URLDecoder.decode(String, Charset)
+                URLDecoder.decode("foo", UTF8_NAME);
+              }
+
+              void urlEncoder(String UTF8_NAME) throws Exception {
+                // BUG: Diagnostic contains: URLEncoder.encode(String, Charset)
+                URLEncoder.encode("foo", UTF8_NAME);
+              }
+
+              void newReader(ReadableByteChannel rbc) throws Exception {
+                // BUG: Diagnostic contains: Channels.newReader(ReadableByteChannel, Charset)
+                Channels.newReader(rbc, UTF8_NAME);
+              }
+
+              void newWriter(WritableByteChannel wbc) throws Exception {
+                // BUG: Diagnostic contains: Channels.newWriter(WritableByteChannel, Charset)
+                Channels.newWriter(wbc, UTF8_NAME);
+              }
+
+              void inputStreamReader(InputStream is) throws Exception {
+                // BUG: Diagnostic contains: new InputStreamReader(InputStream, Charset)
+                new InputStreamReader(is, UTF8_NAME);
+              }
+
+              void outputStreamWriter(OutputStream os) throws Exception {
+                // BUG: Diagnostic contains: new OutputStreamWriter(OutputStream, Charset)
+                new OutputStreamWriter(os, UTF8_NAME);
+              }
+
+              void printStream(OutputStream os, String fileName) throws Exception {
+                // BUG: Diagnostic contains: new PrintStream(OutputStream, boolean, Charset)
+                new PrintStream(os, false, UTF8_NAME);
+                // BUG: Diagnostic contains: new PrintStream(String, Charset)
+                new PrintStream(fileName, UTF8_NAME);
+                // BUG: Diagnostic contains: new PrintStream(File, Charset)
+                new PrintStream(new File(fileName), UTF8_NAME);
+              }
+
+              void printWriter(String fileName) throws Exception {
+                // BUG: Diagnostic contains: new PrintWriter(String, Charset)
+                new PrintWriter(fileName, UTF8_NAME);
+                // BUG: Diagnostic contains: new PrintWriter(File, Charset)
+                new PrintWriter(new File(fileName), UTF8_NAME);
+              }
+
+              void formatter(String fileName, File file, OutputStream os) throws Exception {
+                // BUG: Diagnostic contains: new Formatter(String, Charset)
+                new Formatter(fileName, UTF8_NAME);
+                // BUG: Diagnostic contains: new Formatter(String, Charset, Locale)
+                new Formatter(fileName, UTF8_NAME, Locale.US);
+                // BUG: Diagnostic contains: new Formatter(File, Charset)
+                new Formatter(file, UTF8_NAME);
+                // BUG: Diagnostic contains: new Formatter(File, Charset, Locale)
+                new Formatter(file, UTF8_NAME, Locale.US);
+                // BUG: Diagnostic contains: new Formatter(OutputStream, Charset)
+                new Formatter(os, UTF8_NAME);
+                // BUG: Diagnostic contains: new Formatter(OutputStream, Charset, Locale)
+                new Formatter(os, UTF8_NAME, Locale.US);
+              }
+
+              void properties(OutputStream os) throws Exception {
+                // BUG: Diagnostic contains: Properties.storeToXML(OutputStream, String, Charset)
+                new Properties().storeToXML(os, "comment", UTF8_NAME);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

@@ -288,4 +288,21 @@ public final class InvalidInlineTagTest {
             + " names inline.",
         InvalidInlineTag.getMessageForInvalidTag("type"));
   }
+
+  @Test
+  public void customTag() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /**
+             * {@customTag1} {@customTag2 this is a custom tag}
+             *
+             * @arbitraryBlockTag
+             */
+            class Test {}
+            """)
+        .setArgs("-XepOpt:Javadoc:customInlineTags=customTag1,customTag2")
+        .doTest();
+  }
 }

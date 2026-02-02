@@ -52,3 +52,5 @@ javadoc prior to JDK 15, you may escape the symbol using `{@literal @}`
 
 Suppress by applying `@SuppressWarnings("InvalidBlockTag")` to the element being
 documented.
+
+If you use nonstandard tags, you can exempt them globally using the `Javadoc:customBlockTags` tag, for example `-XepOpt:Javadoc:customBlockTags=todo,bugid`.

@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -24,7 +25,9 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class ASTHelpersSuggestionsTest {
   private final BugCheckerRefactoringTestHelper testHelper =
-      BugCheckerRefactoringTestHelper.newInstance(ASTHelpersSuggestions.class, getClass());
+      BugCheckerRefactoringTestHelper.newInstance(ASTHelpersSuggestions.class, getClass())
+          .addModules(
+              "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util");
 
   @Test
   public void positive() {
@@ -55,8 +58,6 @@ public class ASTHelpersSuggestionsTest {
               }
             }
             """)
-        .addModules(
-            "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
   }
 
@@ -88,8 +89,6 @@ public class ASTHelpersSuggestionsTest {
               }
             }
             """)
-        .addModules(
-            "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
   }
 
@@ -119,8 +118,6 @@ public class ASTHelpersSuggestionsTest {
               }
             }
             """)
-        .addModules(
-            "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
   }
 
@@ -141,8 +138,6 @@ public class ASTHelpersSuggestionsTest {
             }
             """)
         .expectUnchanged()
-        .addModules(
-            "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
   }
 
@@ -172,6 +167,24 @@ public class ASTHelpersSuggestionsTest {
               }
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeNoErrorProneDependencies() {
+    CompilationTestHelper.newInstance(ASTHelpersSuggestions.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.sun.tools.javac.code.Symbol.ClassSymbol;
+
+            class Test {
+              void f(ClassSymbol symbol) {
+                ClassSymbol enclosing = symbol.owner.enclClass();
+              }
+            }
+            """)
+        .withClasspath()
         .addModules(
             "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
         .doTest();
