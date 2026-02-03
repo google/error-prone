@@ -25,9 +25,11 @@ import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.BYTE_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.CHAR_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.arrayOf;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -147,7 +149,8 @@ public class JdkObsolete extends BugChecker
 
   private record ObsoleteApi(Matcher<ExpressionTree> matcher, String message) {}
 
-  // TODO(kak): add Charset-related methods from java.util.Formatter and java.util.Properties
+  private static final String IO_UTILS = "org.apache.commons.io.IOUtils";
+
   // TODO(kak): provide a suggested fix for the obsolete Charset-related methods and constructors.
   // We could just store the index of the `String csName` parameter along w/ the matcher.
   // That being said, it'd be _really_ tricky (if not impossible) to handle the code no longer
@@ -195,7 +198,111 @@ public class JdkObsolete extends BugChecker
                   .onExactClass("java.util.Properties")
                   .named("storeToXML")
                   .withParameters("java.io.OutputStream", "java.lang.String", "java.lang.String"),
-              "Use Properties.storeToXML(OutputStream, String, Charset) instead."));
+              "Use Properties.storeToXML(OutputStream, String, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("lineIterator")
+                  .withParameters("java.io.InputStream", "java.lang.String"),
+              "Use IOUtils.lineIterator(InputStream, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("readLines")
+                  .withParameters("java.io.InputStream", "java.lang.String"),
+              "Use IOUtils.readLines(InputStream, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("toByteArray")
+                  .withParameters("java.io.Reader", "java.lang.String"),
+              "Use IOUtils.toByteArray(Reader, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("toCharArray")
+                  .withParameters("java.io.InputStream", "java.lang.String"),
+              "Use IOUtils.toCharArray(InputStream, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("toInputStream")
+                  .withParameters("java.lang.CharSequence", "java.lang.String"),
+              "Use IOUtils.toInputStream(CharSequence, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("toInputStream")
+                  .withParameters("java.lang.String", "java.lang.String"),
+              "Use IOUtils.toInputStream(String, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("toString")
+                  .withParameters("java.io.InputStream", "java.lang.String"),
+              "Use IOUtils.toString(InputStream, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("toString")
+                  .withParameters("java.net.URI", "java.lang.String"),
+              "Use IOUtils.toString(URI, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("toString")
+                  .withParametersOfType(arrayOf(BYTE_TYPE), STRING_TYPE),
+              "Use IOUtils.toString(byte[], Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("toString")
+                  .withParameters("java.net.URL", "java.lang.String"),
+              "Use IOUtils.toString(URL, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("write")
+                  .withParametersOfType(
+                      arrayOf(BYTE_TYPE), typeFromString("java.io.Writer"), STRING_TYPE),
+              "Use IOUtils.write(byte[], Writer, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("write")
+                  .withParametersOfType(
+                      arrayOf(CHAR_TYPE), typeFromString("java.io.OutputStream"), STRING_TYPE),
+              "Use IOUtils.write(char[], OutputStream, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("write")
+                  .withParameters(
+                      "java.lang.CharSequence", "java.io.OutputStream", "java.lang.String"),
+              "Use IOUtils.write(CharSequence, OutputStream, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("write")
+                  .withParameters("java.lang.String", "java.io.OutputStream", "java.lang.String"),
+              "Use IOUtils.write(String, OutputStream, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("write")
+                  .withParameters(
+                      "java.lang.StringBuffer", "java.io.OutputStream", "java.lang.String"),
+              "Use IOUtils.write(StringBuffer, OutputStream, Charset) instead."),
+          new ObsoleteApi(
+              staticMethod()
+                  .onClass(IO_UTILS)
+                  .named("writeLines")
+                  .withParameters(
+                      "java.util.Collection",
+                      "java.lang.String",
+                      "java.io.OutputStream",
+                      "java.lang.String"),
+              "Use IOUtils.writeLines(Collection, String, OutputStream, Charset) instead."));
 
   private static final ImmutableList<ObsoleteApi> OBSOLETE_CONSTRUCTORS =
       ImmutableList.of(
