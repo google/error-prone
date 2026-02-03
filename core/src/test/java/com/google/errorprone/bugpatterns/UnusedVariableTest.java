@@ -1325,6 +1325,23 @@ public class UnusedVariableTest {
   }
 
   @Test
+  public void unusedParameterImplicitAssignment() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: The parameter 'a' is reassigned before being read
+              private int test(int a) {
+                a = 1;
+                return a;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void unusedAssignment_nulledOut_noWarning() {
     helper
         .addSourceLines(

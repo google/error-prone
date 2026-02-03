@@ -267,14 +267,21 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (suggestUnderscore(state, isEverUsed, unusedSymbol, specs, allUsageSites)) {
         fixes.add(SuggestedFixes.renameVariable((VariableTree) unused, "_", state));
       }
+      String message;
+      if (!isEverUsed.contains(symbol)) {
+        message =
+            String.format("The %s '%s' is never read.", describeVariable(symbol), symbol.name);
+      } else if (unused instanceof VariableTree && symbol.getKind() == ElementKind.PARAMETER) {
+        message = String.format("The parameter '%s' is reassigned before being read.", symbol.name);
+      } else {
+        message =
+            String.format(
+                "This assignment to the %s '%s' is never read.",
+                describeVariable(symbol), symbol.name);
+      }
       state.reportMatch(
           buildDescription(unused)
-              .setMessage(
-                  String.format(
-                      "%s %s '%s' is never read.",
-                      isEverUsed.contains(symbol) ? "This assignment to the" : "The",
-                      describeVariable(symbol),
-                      symbol.name))
+              .setMessage(message)
               .addAllFixes(
                   fixes.build().stream()
                       .map(f -> SuggestedFix.merge(makeFirstAssignmentDeclaration, f))
