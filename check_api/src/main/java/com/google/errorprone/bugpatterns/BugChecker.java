@@ -701,7 +701,40 @@ public abstract class BugChecker implements Suppressible, Serializable {
 
     @Override
     public R scan(TreePath treePath, P param) {
-      return treePath == null ? null : super.scan(treePath, param);
+      Tree leaf = treePath.getLeaf();
+      VisitorState stateWithPath = state.withPath(treePath);
+      SuppressionInfo prevSuppressionInfo = updateSuppressions(leaf, stateWithPath);
+      SuppressionInfo currentSuppressions = stateWithPath.getCurrentSuppressions();
+      SuppressionInfo.Suppressed suppressed = null;
+      AutoCloseable override = null;
+      AutoCloseable suppressibleOverride = null;
+      try {
+        suppressibleOverride = stateWithPath.pushCurrentSuppressible(BugChecker.this);
+        SuppressionInfo.SuppressedState suppressedState = suppressedState(leaf, stateWithPath);
+        if (suppressedState.isSuppressed()) {
+          suppressed = (SuppressionInfo.Suppressed) suppressedState;
+          if (!shouldScanSuppressed(stateWithPath, suppressed)) {
+            return null;
+          }
+          override = stateWithPath.pushSuppressedStateOverride(suppressed);
+        }
+        return super.scan(treePath, param);
+      } finally {
+        if (override != null) {
+          closeOverride(override);
+        }
+        if (suppressibleOverride != null) {
+          closeOverride(suppressibleOverride);
+        }
+        if (suppressed != null && suppressed.isUsed()) {
+          try {
+            currentSuppressions.updatedUsedSuppressions(suppressed);
+          } catch (IllegalArgumentException unused) {
+            // Suppression wasn't tracked in currentSuppressions; ignore for now.
+          }
+        }
+        stateWithPath.setCurrentSuppressions(prevSuppressionInfo);
+      }
     }
 
     private SuppressionInfo updateSuppressions(Tree tree, VisitorState stateWithPath) {
