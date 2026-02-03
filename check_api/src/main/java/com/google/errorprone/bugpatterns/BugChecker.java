@@ -681,9 +681,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
       SuppressionInfo currentSuppressions = stateWithPath.getCurrentSuppressions();
       SuppressionInfo.Suppressed suppressed = null;
       AutoCloseable override = null;
-      AutoCloseable suppressibleOverride = null;
+      boolean suppressibleSet = false;
       try {
-        suppressibleOverride = stateWithPath.pushCurrentSuppressible(BugChecker.this);
+        stateWithPath.setCurrentSuppressible(BugChecker.this);
+        suppressibleSet = true;
         SuppressionInfo.SuppressedState suppressedState = suppressedState(tree, stateWithPath);
         if (suppressedState.isSuppressed()) {
           suppressed = (SuppressionInfo.Suppressed) suppressedState;
@@ -697,8 +698,8 @@ public abstract class BugChecker implements Suppressible, Serializable {
         if (override != null) {
           closeOverride(override);
         }
-        if (suppressibleOverride != null) {
-          closeOverride(suppressibleOverride);
+        if (suppressibleSet) {
+          stateWithPath.clearCurrentSuppressible();
         }
         if (suppressed != null && suppressed.isUsed()) {
           try {

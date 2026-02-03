@@ -90,18 +90,15 @@ public class VisitorState {
   }
 
   private @Nullable Suppressible peekCurrentSuppressible() {
-    return sharedState.currentSuppressibles.peek();
+    return sharedState.currentSuppressible;
   }
 
-  public AutoCloseable pushCurrentSuppressible(Suppressible suppressible) {
-    ArrayDeque<Suppressible> stack = sharedState.currentSuppressibles;
-    stack.push(suppressible);
-    return () -> {
-      Suppressible popped = stack.pop();
-      if (popped != suppressible) {
-        throw new IllegalStateException("CurrentSuppressible stack corrupted.");
-      }
-    };
+  public void setCurrentSuppressible(Suppressible suppressible) {
+    sharedState.currentSuppressible = suppressible;
+  }
+
+  public void clearCurrentSuppressible() {
+    sharedState.currentSuppressible = null;
   }
 
   private final SharedState sharedState;
@@ -749,7 +746,7 @@ public class VisitorState {
     private SuppressionInfo currentSuppressions = SuppressionInfo.EMPTY;
     private final ArrayDeque<SuppressionInfo.Suppressed> suppressedStateOverrides =
         new ArrayDeque<>();
-    private final ArrayDeque<Suppressible> currentSuppressibles = new ArrayDeque<>();
+    private @Nullable Suppressible currentSuppressible;
     private final Map<Symbol, Set<String>> usedSuppressionsBySymbol = new IdentityHashMap<>();
 
     // TODO(ronshapiro): should we presize this with a reasonable size? We can check for the
