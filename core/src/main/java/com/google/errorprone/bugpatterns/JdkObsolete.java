@@ -201,6 +201,26 @@ public class JdkObsolete extends BugChecker
       ImmutableList.of(
           new ObsoleteApi(
               constructor()
+                  .forClass("java.util.Scanner")
+                  .withParameters("java.io.InputStream", "java.lang.String"),
+              "Use new Scanner(InputStream, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.util.Scanner")
+                  .withParameters("java.io.File", "java.lang.String"),
+              "Use new Scanner(File, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.util.Scanner")
+                  .withParameters("java.nio.file.Path", "java.lang.String"),
+              "Use new Scanner(Path, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
+                  .forClass("java.util.Scanner")
+                  .withParameters("java.nio.channels.ReadableByteChannel", "java.lang.String"),
+              "Use new Scanner(ReadableByteChannel, Charset) instead."),
+          new ObsoleteApi(
+              constructor()
                   .forClass("java.lang.String")
                   .withParametersOfType(arrayOf(BYTE_TYPE), STRING_TYPE),
               "Use new String(byte[], Charset) instead."),

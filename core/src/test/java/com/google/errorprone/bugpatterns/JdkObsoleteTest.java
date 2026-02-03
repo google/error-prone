@@ -411,6 +411,7 @@ public class JdkObsoleteTest {
             import java.io.*;
             import java.net.*;
             import java.nio.channels.*;
+            import java.nio.file.Path;
             import java.util.*;
 
             class Test {
@@ -494,6 +495,18 @@ public class JdkObsoleteTest {
               void properties(OutputStream os) throws Exception {
                 // BUG: Diagnostic contains: Properties.storeToXML(OutputStream, String, Charset)
                 new Properties().storeToXML(os, "comment", UTF8_NAME);
+              }
+
+              void scanner(InputStream is, String fileName, File file, Path path, ReadableByteChannel rbc)
+                  throws Exception {
+                // BUG: Diagnostic contains: new Scanner(InputStream, Charset)
+                new Scanner(is, UTF8_NAME);
+                // BUG: Diagnostic contains: new Scanner(File, Charset)
+                new Scanner(file, UTF8_NAME);
+                // BUG: Diagnostic contains: new Scanner(Path, Charset)
+                new Scanner(path, UTF8_NAME);
+                // BUG: Diagnostic contains: new Scanner(ReadableByteChannel, Charset)
+                new Scanner(rbc, UTF8_NAME);
               }
             }
             """)
