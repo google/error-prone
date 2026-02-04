@@ -19,10 +19,10 @@ package com.google.errorprone.refaster;
 import static com.google.common.truth.Truth.assertWithMessage;
 
 import com.google.common.base.Joiner;
+import com.google.errorprone.util.ErrorProneParser;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.parser.Parser;
-import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
 import com.sun.tools.javac.util.Context;
@@ -86,12 +86,12 @@ public abstract class AbstractUTreeTest {
 
   protected JCExpression parseExpression(String contents) {
     Parser parser =
-        ParserFactory.instance(context)
-            .newParser(
-                contents,
-                /* keepDocComments= */ false,
-                /* keepEndPos= */ false,
-                /* keepLineMap= */ true);
+        ErrorProneParser.newParser(
+            context,
+            contents,
+            /* keepDocComments= */ false,
+            /* keepEndPos= */ false,
+            /* keepLineMap= */ true);
     return parser.parseExpression();
   }
 

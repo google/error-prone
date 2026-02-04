@@ -49,6 +49,7 @@ import com.google.errorprone.fixes.ErrorProneEndPosTable;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ErrorProneParser;
 import com.google.errorprone.util.MoreAnnotations;
 import com.google.errorprone.util.OperatorPrecedence;
 import com.sun.source.tree.AssignmentTree;
@@ -67,7 +68,6 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.parser.JavacParser;
-import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayList;
 import java.util.List;
@@ -373,12 +373,12 @@ public final class Inliner extends BugChecker
   }
 
   private static JavacParser newParser(String replacement, VisitorState state) {
-    return ParserFactory.instance(state.context)
-        .newParser(
-            replacement,
-            /* keepDocComments= */ true,
-            /* keepEndPos= */ true,
-            /* keepLineMap= */ true);
+    return ErrorProneParser.newParser(
+        state.context,
+        replacement,
+        /* keepDocComments= */ true,
+        /* keepEndPos= */ true,
+        /* keepLineMap= */ true);
   }
 
   private static List<? extends ExpressionTree> getArguments(Tree tree) {
