@@ -125,6 +125,8 @@ public final class IfChainToSwitchTest {
                   return;
                 } else if (suit instanceof Object) {
                   throw new RuntimeException("It's an object!");
+                } else if (suit == null) {
+                  throw new RuntimeException("It's null!");
                 }
                 // Farewell to this comment
                 System.out.println("Delete me");
@@ -148,6 +150,7 @@ public final class IfChainToSwitchTest {
                     return;
                   }
                   case Object unused -> throw new RuntimeException("It's an object!");
+                  case null -> throw new RuntimeException("It's null!");
                 }
               }
             }
@@ -178,6 +181,8 @@ public final class IfChainToSwitchTest {
                   return;
                 } else if (suit instanceof Object) {
                   throw new RuntimeException("It's an object!");
+                } else if (suit == null) {
+                  throw new RuntimeException("It's null!");
                 }
                 // LINT.Something(...)
 
@@ -202,6 +207,7 @@ public final class IfChainToSwitchTest {
                     return;
                   }
                   case Object unused -> throw new RuntimeException("It's an object!");
+                  case null -> throw new RuntimeException("It's null!");
                 }
                 // LINT.Something(...)
 
@@ -366,6 +372,61 @@ public final class IfChainToSwitchTest {
   }
 
   @Test
+  public void ifChain_dontAlwaysPullUpSafe_error() {
+    // Pull up should not occur if it would result in a conflict
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              private Object suit;
+
+              public void foo(Suit s) {
+                this.suit = null;
+                System.out.println("yo");
+                if (this.suit instanceof String) {
+                  System.out.println("It's a string!");
+                } else if (suit instanceof Number) {
+                  System.out.println("It's a number!");
+                } else if (suit instanceof Suit) {
+                  System.out.println("It's a Suit!");
+                } else if (this.suit instanceof Object o) {
+                  System.out.println("It's an object!");
+                }
+                throw new AssertionError();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              private Object suit;
+
+              public void foo(Suit s) {
+                this.suit = null;
+                System.out.println("yo");
+                switch (suit) {
+                  case String unused -> System.out.println("It's a string!");
+                  case Number unused -> System.out.println("It's a number!");
+                  case Suit unused -> System.out.println("It's a Suit!");
+                  case Object o -> System.out.println("It's an object!");
+                  case null -> {}
+                }
+                throw new AssertionError();
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void ifChain_nonexhausivePattern_noError() {
     // Pulling up the throw would change semantics
     helper
@@ -416,6 +477,8 @@ public final class IfChainToSwitchTest {
                   System.out.println("It's a number!");
                 } else if (suit instanceof Object) {
                   System.out.println("It's an object!");
+                } else if (suit == null) {
+                  System.out.println("It's null!");
                 }
                 System.out.println("Don't delete me!");
                 System.out.println("Don't delete me either!");
@@ -437,6 +500,7 @@ public final class IfChainToSwitchTest {
                   case String unused -> System.out.println("It's a string!");
                   case Number unused -> System.out.println("It's a number!");
                   case Object unused -> System.out.println("It's an object!");
+                  case null -> System.out.println("It's null!");
                 }
                 System.out.println("Don't delete me!");
                 System.out.println("Don't delete me either!");
@@ -502,6 +566,60 @@ public final class IfChainToSwitchTest {
   }
 
   @Test
+  public void ifChain_bindingPatternTreeSafe_error() {
+    // Note `instanceof Number n`, otherwise same as ifChain_twoLinesAfterDefault_error
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              private Object suit;
+
+              public void foo(Suit s) {
+                this.suit = s;
+                System.out.println("yo");
+                if (this.suit instanceof String) {
+                  System.out.println("It's a string!");
+                } else if (suit instanceof Number n) {
+                  System.out.println("It's a number!");
+                } else if (suit instanceof Object) {
+                  System.out.println("It's an object!");
+                }
+                System.out.println("Don't delete me!");
+                System.out.println("Don't delete me either!");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              private Object suit;
+
+              public void foo(Suit s) {
+                this.suit = s;
+                System.out.println("yo");
+                switch (suit) {
+                  case String unused -> System.out.println("It's a string!");
+                  case Number n -> System.out.println("It's a number!");
+                  case Object unused -> System.out.println("It's an object!");
+                  case null -> {}
+                }
+                System.out.println("Don't delete me!");
+                System.out.println("Don't delete me either!");
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void ifChain_removesParens_error() {
     // Removes redundant parens around if condition
     refactoringHelper
@@ -543,6 +661,52 @@ public final class IfChainToSwitchTest {
             }
             """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_removesParensSafe_error() {
+    // Removes redundant parens around if condition
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                if (suit instanceof String) {
+                  System.out.println("It's a string!");
+                } else if ((suit instanceof Number)) {
+                  System.out.println("It's a number!");
+                } else if (suit instanceof Suit) {
+                  System.out.println("It's a Suit!");
+                } else throw new AssertionError();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                switch (suit) {
+                  case String unused -> System.out.println("It's a string!");
+                  case Number unused -> System.out.println("It's a number!");
+                  case Suit unused -> System.out.println("It's a Suit!");
+                  case null, default -> throw new AssertionError();
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest(TEXT_MATCH);
   }
@@ -597,6 +761,55 @@ public final class IfChainToSwitchTest {
   }
 
   @Test
+  public void ifChain_equalitySafe_error() {
+    // Enum equality
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                if (suit instanceof String) {
+                  System.out.println("It's a string!");
+                } else if (suit == Suit.DIAMOND) {
+                  System.out.println("It's a diamond!");
+                } else if ((suit instanceof Number)) {
+                  System.out.println("It's a number!");
+                } else if (suit instanceof Suit) {
+                  System.out.println("It's a Suit!");
+                } else throw new AssertionError();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                switch (suit) {
+                  case String unused -> System.out.println("It's a string!");
+                  case Suit.DIAMOND -> System.out.println("It's a diamond!");
+                  case Number unused -> System.out.println("It's a number!");
+                  case Suit unused -> System.out.println("It's a Suit!");
+                  case null, default -> throw new AssertionError();
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void ifChain_exhaustiveEnum_error() {
     // Enum equality
     refactoringHelper
@@ -636,6 +849,50 @@ class Test {
 }
 """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_exhaustiveEnumSafe_error() {
+    // Enum equality
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit suit) {
+                if (suit == Suit.CLUB) {
+                  System.out.println("It's a club!");
+                } else if (suit == Suit.DIAMOND) {
+                  System.out.println("It's a diamond!");
+                } else if ((suit == Suit.HEART)) {
+                  System.out.println("It's a heart!");
+                } else { // c1
+                  {
+                    System.out.println("It's a diamond!");
+                  }
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+class Test {
+  public void foo(Suit suit) {
+    switch (suit) {
+      case Suit.CLUB -> System.out.println("It's a club!");
+      case Suit.DIAMOND -> System.out.println("It's a diamond!");
+      case Suit.HEART -> System.out.println("It's a heart!");
+      case null, default ->
+          // c1
+          System.out.println("It's a diamond!");
+    }
+  }
+}
+""")
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest(TEXT_MATCH);
   }
@@ -949,6 +1206,52 @@ class Test {
             }
             """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_legalDuplicateSafe_error() {
+    // Although the guard effectively duplicates the diamond constant case, this construction is
+    // legal
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                if (s == Suit.DIAMOND) {
+                  System.out.println("Diamond");
+                } else if (s instanceof Suit r) {
+                  System.out.println("It's some black suit");
+                } else if (s == Suit.HEART) {
+                  System.out.println("Heart");
+                } else if (s instanceof Suit ss && ss == Suit.DIAMOND) {
+                  System.out.println("Technically allowed");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                switch (s) {
+                  case Suit.DIAMOND -> System.out.println("Diamond");
+                  case Suit.HEART -> System.out.println("Heart");
+                  case Suit ss when ss == Suit.DIAMOND -> System.out.println("Technically allowed");
+                  case Suit r -> System.out.println("It's some black suit");
+                  case null -> {}
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest(TEXT_MATCH);
   }
@@ -1349,7 +1652,56 @@ class Test {
   }
 
   @Test
+  public void ifChain_elseBecomesDefaultSafe_error() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                if (suit instanceof String) {
+                  System.out.println("It's a string!");
+                } else if (suit == Suit.DIAMOND) {
+                  System.out.println("It's a diamond!");
+                } else if ((suit instanceof Number)) {
+                  System.out.println("It's a number!");
+                } else if (suit instanceof Suit) {
+                  System.out.println("It's a Suit!");
+                } else {
+                  throw new AssertionError();
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                switch (suit) {
+                  case String unused -> System.out.println("It's a string!");
+                  case Suit.DIAMOND -> System.out.println("It's a diamond!");
+                  case Number unused -> System.out.println("It's a number!");
+                  case Suit unused -> System.out.println("It's a Suit!");
+                  case null, default -> throw new AssertionError();
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void ifChain_commentHandling_error() {
+
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -1437,6 +1789,94 @@ class Test {
   }
 
   @Test
+  public void ifChain_commentHandlingSafe_error() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                // alpha
+                /* beta */ if /* gamma */ (suit /* delta */ instanceof String /* epsilon */) {
+                  // zeta
+                  return;
+                  /* eta */
+                } /* nu */ else /* theta */ if (suit == /* iota */ Suit.DIAMOND) {
+                  /* kappa */ {
+                    return; // lambda
+                  }
+                } else if (((suit instanceof Number) /* tao */)) {
+                  // Square
+                  throw new NullPointerException(/* chi */ );
+                } else if (suit /* omicron */ instanceof Suit /* pi */) {
+                  /* mu */
+                  return;
+                  /* nu */
+                }
+                return;
+                /* xi */
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                // alpha
+                /* beta */ switch (suit) {
+                  case String unused ->
+                  /* gamma */
+                  /* delta */
+                  /* epsilon */
+                  /* nu */
+                  /* theta */
+                  {
+                    // zeta
+                    return;
+                    /* eta */
+                  }
+                  case Suit.DIAMOND ->
+                  /* iota */
+                  /* kappa */
+                  {
+                    return; // lambda
+                  }
+                  case Number unused ->
+                      /* tao */
+                      // Square
+                      throw new NullPointerException(/* chi */ );
+                  case Suit unused ->
+                  /* omicron */
+                  /* pi */
+                  {
+                    /* mu */
+                    return;
+                    /* nu */
+                  }
+                  case null, default -> {
+                    return;
+                  }
+                }
+
+                /* xi */
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void ifChain_pullUp_error() {
 
     refactoringHelper
@@ -1497,7 +1937,183 @@ class Test {
   }
 
   @Test
-  public void ifChain_pullUpReachability_error() {
+  public void ifChain_pullUpHasExplicitNullCheck_error() {
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                if (suit == Suit.SPADE) {
+                  return;
+                } else if (suit == Suit.DIAMOND) {
+                  return;
+                } else if (suit == Suit.HEART) {
+                  return;
+                } else if (suit == null) {
+                  throw new NullPointerException();
+                }
+                return;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                switch (suit) {
+                  case Suit.SPADE -> {
+                    return;
+                  }
+                  case Suit.DIAMOND -> {
+                    return;
+                  }
+                  case Suit.HEART -> {
+                    return;
+                  }
+                  case null -> throw new NullPointerException();
+                  default -> {
+                    return;
+                  }
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe=false")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_pullUpHasExplicitNullCheckSafe_error() {
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                if (suit == Suit.SPADE) {
+                  return;
+                } else if (suit == Suit.DIAMOND) {
+                  return;
+                } else if (suit == Suit.HEART) {
+                  return;
+                } else if (suit == null) {
+                  throw new NullPointerException();
+                }
+                return;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                switch (suit) {
+                  case Suit.SPADE -> {
+                    return;
+                  }
+                  case Suit.DIAMOND -> {
+                    return;
+                  }
+                  case Suit.HEART -> {
+                    return;
+                  }
+                  case null -> throw new NullPointerException();
+                  default -> {
+                    return;
+                  }
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_pullUpSafe2_error() {
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                if (suit instanceof String) {
+                  return;
+                } else if (suit == Suit.DIAMOND) {
+                  return;
+                } else if ((suit instanceof Number)) {
+                  return;
+                } else if (suit instanceof Suit) {
+                  return;
+                }
+                return;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                switch (suit) {
+                  case String unused -> {
+                    return;
+                  }
+                  case Suit.DIAMOND -> {
+                    return;
+                  }
+                  case Number unused -> {
+                    return;
+                  }
+                  case Suit unused -> {
+                    return;
+                  }
+                  case null, default -> {
+                    return;
+                  }
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_pullUpReachabilityUnchanged_error() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -1520,7 +2136,7 @@ class Test {
                   System.out.println("this will become unreachable");
                   System.out.println("this will too");
                 }
-                System.out.println("this will vanish");
+                System.out.println("this will too");
               }
             }
             """)
@@ -1552,6 +2168,125 @@ class Test {
             }
             """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_pullUpReachabilityChanges_error() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                {
+                  Suit suit = s;
+                  if (Suit.SPADE == suit) {
+                    return;
+                  } else if (suit == Suit.DIAMOND) {
+                    return;
+                  } else if (suit == Suit.HEART) {
+                    return;
+                  } else if (suit == Suit.CLUB) {
+                    return;
+                  } else if (suit == null) {
+                    return;
+                  }
+                  System.out.println("this will become unreachable");
+                  System.out.println("this will too");
+                }
+                System.out.println("this will vanish");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                {
+                  Suit suit = s;
+                  switch (suit) {
+                    case Suit.SPADE -> {
+                      return;
+                    }
+                    case Suit.DIAMOND -> {
+                      return;
+                    }
+                    case Suit.HEART -> {
+                      return;
+                    }
+                    case Suit.CLUB -> {
+                      return;
+                    }
+                    case null -> {
+                      return;
+                    }
+                  }
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_instanceOfWithGuardSafe_error() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                if (suit instanceof String) {
+                  System.out.println("It's a string!");
+                } else if (suit instanceof Suit && suit == Suit.SPADE) {
+                  System.out.println("It's a diamond!");
+                } else if ((suit instanceof Number)) {
+                  {
+                    {
+                      /* stay silent about numbers */
+                    }
+                  }
+                } else if (suit instanceof Suit) {
+                  System.out.println("It's a Suit!");
+                } else throw new AssertionError();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                switch (suit) {
+                  case String unused -> System.out.println("It's a string!");
+                  case Suit unused when suit == Suit.SPADE -> System.out.println("It's a diamond!");
+                  case Number unused -> {
+                    /* stay silent about numbers */
+                  }
+                  case Suit unused -> System.out.println("It's a Suit!");
+                  case null, default -> throw new AssertionError();
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest(TEXT_MATCH);
   }
@@ -1660,6 +2395,66 @@ class Test {
   }
 
   @Test
+  public void ifChain_parameterizedTypeSafe_error() {
+    // Raw types are converted to the wildcard type.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+            import java.util.List;
+            import java.util.ArrayList;
+
+            class Test {
+              public void foo(Suit s) {
+                List<Integer> list = new ArrayList<>();
+                if (list instanceof ArrayList<Integer> && list.size() == 0) {
+                  System.out.println("int empty array list");
+                } else if (list instanceof ArrayList && list.size() == 0) {
+                  System.out.println("raw empty array list");
+                } else if (list instanceof ArrayList<?> && list.size() == 1) {
+                  System.out.println("wildcard element array list");
+                } else if (list instanceof ArrayList<? extends Number> && list.size() == 1) {
+                  System.out.println("number element array list");
+                } else if (list instanceof List<Integer> l && l.hashCode() == 17) {
+                  System.out.println("hash 17 list");
+                } else if (list instanceof List l) {
+                  System.out.println("list");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+import java.lang.Number;
+import java.util.List;
+import java.util.ArrayList;
+
+class Test {
+  public void foo(Suit s) {
+    List<Integer> list = new ArrayList<>();
+    switch (list) {
+      case ArrayList<Integer> unused when list.size() == 0 ->
+          System.out.println("int empty array list");
+      case ArrayList<?> unused when list.size() == 0 -> System.out.println("raw empty array list");
+      case ArrayList<?> unused when list.size() == 1 ->
+          System.out.println("wildcard element array list");
+      case ArrayList<? extends Number> unused when list.size() == 1 ->
+          System.out.println("number element array list");
+      case List<Integer> l when l.hashCode() == 17 -> System.out.println("hash 17 list");
+      case List<?> l -> System.out.println("list");
+      case null -> {}
+    }
+  }
+}
+""")
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void ifChain_parameterizedType_error() {
     // Raw types are converted to the wildcard type.
     refactoringHelper
@@ -1714,6 +2509,66 @@ class Test {
 }
 """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_multiParameterizedTypeSafe_error() {
+    // Raw types are converted to the wildcard type.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+            import java.util.Map;
+            import java.util.HashMap;
+
+            class Test {
+              public void foo(Suit s) {
+                Map<Integer, String> map = new HashMap<>();
+                if (map instanceof HashMap && map.size() == 0) {
+                  System.out.println("empty hash map");
+                } else if (map instanceof HashMap<Integer, String> && map.size() == 0) {
+                  System.out.println("empty hash map with type parameters");
+                } else if (map instanceof HashMap<?, String> && map.size() == 0) {
+                  System.out.println("empty hash map with wildcard");
+                } else if (map instanceof HashMap && map.size() == 1) {
+                  System.out.println("one element hash map");
+                } else if (map instanceof Map<Integer, ? extends Object> m && m.hashCode() == 17) {
+                  System.out.println("hash 17");
+                } else if (map instanceof Map m) {
+                  System.out.println("map");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+import java.lang.Number;
+import java.util.Map;
+import java.util.HashMap;
+
+class Test {
+  public void foo(Suit s) {
+    Map<Integer, String> map = new HashMap<>();
+    switch (map) {
+      case HashMap<?, ?> unused when map.size() == 0 -> System.out.println("empty hash map");
+      case HashMap<Integer, String> unused when map.size() == 0 ->
+          System.out.println("empty hash map with type parameters");
+      case HashMap<?, String> unused when map.size() == 0 ->
+          System.out.println("empty hash map with wildcard");
+      case HashMap<?, ?> unused when map.size() == 1 -> System.out.println("one element hash map");
+      case Map<Integer, ? extends Object> m when m.hashCode() == 17 ->
+          System.out.println("hash 17");
+      case Map<?, ?> m -> System.out.println("map");
+      case null -> {}
+    }
+  }
+}
+""")
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest(TEXT_MATCH);
   }
@@ -1801,6 +2656,57 @@ class Test {
             """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
         .doTest();
+  }
+
+  @Test
+  public void ifChain_domination1Safe_error() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                if (suit instanceof String) {
+                  System.out.println("It's a string!");
+                } else if (suit instanceof Suit) {
+                  System.out.println("It's a diamond!");
+                } else if ((suit instanceof Number)) {
+                  System.out.println("It's a number!");
+                } else if (suit instanceof Suit && suit == Suit.DIAMOND) {
+                  System.out.println("It's a Suit!");
+                } else if (suit instanceof Suit suity && suit == Suit.SPADE) {
+                  System.out.println("It's a Suity!");
+                } else throw new AssertionError();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                switch (suit) {
+                  case String unused -> System.out.println("It's a string!");
+                  case Suit unused when suit == Suit.DIAMOND -> System.out.println("It's a Suit!");
+                  case Suit suity when suit == Suit.SPADE -> System.out.println("It's a Suity!");
+                  case Suit unused -> System.out.println("It's a diamond!");
+                  case Number unused -> System.out.println("It's a number!");
+                  case null, default -> throw new AssertionError();
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
   }
 
   @Test
@@ -1985,6 +2891,46 @@ class Test {
             """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
         .doTest();
+  }
+
+  @Test
+  public void ifChain_javadocOrdering_error() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Object obj) {
+                if (obj instanceof Object) {
+                  System.out.println("It's an object!");
+                } else if (obj instanceof Number n) {
+                  System.out.println("It's a number!");
+                } else if (obj instanceof String) {
+                  System.out.println("It's a string!");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Object obj) {
+                switch (obj) {
+                  case Number n -> System.out.println("It's a number!");
+                  case String unused -> System.out.println("It's a string!");
+                  case Object unused -> System.out.println("It's an object!");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
   }
 
   /**
