@@ -695,6 +695,11 @@ public class JdkObsolete extends BugChecker
   }
 
   @Override
+  public boolean supportsUnneededSuppressionWarnings() {
+    return true;
+  }
+
+  @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     return matchObsoleteApi(tree, state, OBSOLETE_METHODS);
   }
