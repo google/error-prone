@@ -65,8 +65,8 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,boolean)" tabindex="0">matches(ExpressionTree, VisitorState, boolean)</a></li>
-<li><a href="#extractTypeArgAsMemberOfSupertype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol,int,com.sun.tools.javac.code.Types,boolean)" tabindex="0">extractTypeArgAsMemberOfSupertype(Type, Symbol, int, Types, boolean)</a></li>
+<li><a href="#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" tabindex="0">matches(ExpressionTree, VisitorState)</a></li>
+<li><a href="#extractTypeArgAsMemberOfSupertype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol,int,com.sun.tools.javac.code.Types)" tabindex="0">extractTypeArgAsMemberOfSupertype(Type, Symbol, int, Types)</a></li>
 <li><a href="#message(com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.MatchResult,java.lang.String,java.lang.String)" tabindex="0">message(AbstractCollectionIncompatibleTypeMatcher.MatchResult, String, String)</a></li>
 </ol>
 </li>
@@ -134,18 +134,16 @@ source and target types.</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static @Nullable com.sun.tools.javac.code.Type</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractTypeArgAsMemberOfSupertype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol,int,com.sun.tools.javac.code.Types,boolean)" class="member-name-link">extractTypeArgAsMemberOfSupertype</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractTypeArgAsMemberOfSupertype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol,int,com.sun.tools.javac.code.Types)" class="member-name-link">extractTypeArgAsMemberOfSupertype</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
  com.sun.tools.javac.code.Symbol&nbsp;superTypeSym,
  int&nbsp;typeArgIndex,
- com.sun.tools.javac.code.Types&nbsp;types,
- boolean&nbsp;useCapture)</code></div>
+ com.sun.tools.javac.code.Types&nbsp;types)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Extracts the appropriate type argument from a specific supertype of the given <code>type</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final @Nullable <a href="AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,boolean)" class="member-name-link">matches</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
- <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
- boolean&nbsp;useCapture)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matches</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+ <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#message(com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.MatchResult,java.lang.String,java.lang.String)" class="member-name-link">message</a><wbr>(<a href="AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a>&nbsp;result,
@@ -186,24 +184,22 @@ source and target types.</div>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState,boolean)">
+<section class="detail" id="matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
 <h3>matches</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type">@Nullable <a href="AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a></span>&nbsp;<span class="element-name">matches</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
- <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
- boolean&nbsp;useCapture)</span></div>
+ <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="extractTypeArgAsMemberOfSupertype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol,int,com.sun.tools.javac.code.Types,boolean)">
+<section class="detail" id="extractTypeArgAsMemberOfSupertype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol,int,com.sun.tools.javac.code.Types)">
 <h3>extractTypeArgAsMemberOfSupertype</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">extractTypeArgAsMemberOfSupertype</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type&nbsp;type,
  com.sun.tools.javac.code.Symbol&nbsp;superTypeSym,
  int&nbsp;typeArgIndex,
- com.sun.tools.javac.code.Types&nbsp;types,
- boolean&nbsp;useCapture)</span></div>
+ com.sun.tools.javac.code.Types&nbsp;types)</span></div>
 <div class="block">Extracts the appropriate type argument from a specific supertype of the given <code>type</code>.
 This handles the case when a subtype has different type arguments than the expected type. For
 example, <code>ClassToInstanceMap&lt;T&gt;</code> implements <code>Map&lt;Class&lt;? extends T&gt;, T&gt;</code>.</div>

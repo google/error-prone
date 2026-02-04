@@ -73,6 +73,24 @@ Note that with the new `switch` style (`->`), one gets exhaustiveness checking
 the `switch` would raise a compile-time error, whereas the original chain of
 `if` statements would need to be manually detected and edited.
 
+If the flag `EnableSafe` is set, the output will include an empty `case null`;
+this more closely matches the behavior of the original if-chain when `suit` is
+`null`, although is more verbose and may not match the intent.
+
+``` {.good}
+enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
+
+private void foo(Suit suit) {
+  switch (suit) {
+    case Suit.SPADE -> System.out.println("spade");
+    case Suit.DIAMOND -> System.out.println("diamond");
+    case Suit.HEART -> System.out.println("heart");
+    case Suit.CLUB -> System.out.println("club");
+    case null -> {}
+  }
+}
+```
+
 #### 2. Patterns
 
 This conversion works for `instanceof`s too:
@@ -131,8 +149,22 @@ private void describeObject(Object obj) {
 When calling `describeObject("hello")`, one might expect to have `It's a
 string!` printed, but this is not what happens. Because the `Object` check
 happens first in code, it matches, resulting in `It's an object!`. This behavior
-is most likely a bug, and can sometimes be hard to spot. (This check can be
-suppressed if the behavior is intentional.)
+is most likely a bug, and can sometimes be hard to spot. This checker will
+automatically reorder `case`s if needed to correct the issue, like this:
+
+``` {.good}
+private void describeObject(Object obj) {
+
+  switch(obj) {
+    case Number n -> System.out.println("It's a number!");
+    case String unused -> System.out.println("It's a string!");
+    case Object unused -> System.out.println("It's an object!");
+  }
+}
+```
+
+In this way, the behavior of the switch (`It's a string!`) and the original
+if-chain (`It's an object!`) are different.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("IfChainToSwitch")` to the enclosing element.
