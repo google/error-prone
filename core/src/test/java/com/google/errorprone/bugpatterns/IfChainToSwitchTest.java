@@ -1211,11 +1211,10 @@ class Test {
   }
 
   @Test
-  public void ifChain_legalDuplicateSafe_error() {
-    // Although the guard effectively duplicates the diamond constant case, this construction is
-    // legal
-    refactoringHelper
-        .addInputLines(
+  public void ifChain_legalDuplicateSafe_noError() {
+    // Cannot reorder cases to fix dominance when safe mode is enabled
+    helper
+        .addSourceLines(
             "Test.java",
             """
             import java.lang.Number;
@@ -1234,26 +1233,8 @@ class Test {
               }
             }
             """)
-        .addOutputLines(
-            "Test.java",
-            """
-            import java.lang.Number;
-
-            class Test {
-              public void foo(Suit s) {
-                switch (s) {
-                  case Suit.DIAMOND -> System.out.println("Diamond");
-                  case Suit.HEART -> System.out.println("Heart");
-                  case Suit ss when ss == Suit.DIAMOND -> System.out.println("Technically allowed");
-                  case Suit r -> System.out.println("It's some black suit");
-                  case null -> {}
-                }
-              }
-            }
-            """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
-        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2659,9 +2640,10 @@ class Test {
   }
 
   @Test
-  public void ifChain_domination1Safe_error() {
-    refactoringHelper
-        .addInputLines(
+  public void ifChain_domination1Safe_noError() {
+    // Domination violation, but safe mode enabled, so no error
+    helper
+        .addSourceLines(
             "Test.java",
             """
             import java.lang.Number;
@@ -2684,29 +2666,8 @@ class Test {
               }
             }
             """)
-        .addOutputLines(
-            "Test.java",
-            """
-            import java.lang.Number;
-
-            class Test {
-              public void foo(Suit s) {
-                Object suit = s;
-                System.out.println("yo");
-                switch (suit) {
-                  case String unused -> System.out.println("It's a string!");
-                  case Suit unused when suit == Suit.DIAMOND -> System.out.println("It's a Suit!");
-                  case Suit suity when suit == Suit.SPADE -> System.out.println("It's a Suity!");
-                  case Suit unused -> System.out.println("It's a diamond!");
-                  case Number unused -> System.out.println("It's a number!");
-                  case null, default -> throw new AssertionError();
-                }
-              }
-            }
-            """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
-        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test

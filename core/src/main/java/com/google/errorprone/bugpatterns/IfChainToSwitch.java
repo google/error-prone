@@ -422,7 +422,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
    * Analyzes the supplied case IRs for a switch statement for issues related default/unconditional
    * cases. If deemed necessary, this method injects a `default` and/or `case null` into the
    * supplied case IRs. If the supplied case IRs cannot be used to form a syntactically valid switch
-   * statement, returns `Optional.empty()`.
+   * statement, returns `Optional.empty()`. Precondition: the list of supplied cases must not
+   * contain any dominance violations.
    */
   private Optional<List<CaseIr>> maybeFixDefaultNullAndUnconditional(
       List<CaseIr> cases,
@@ -608,7 +609,11 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       }
     }
 
-    return recheckDominanceNeeded ? maybeFixDominance(cases, state, subject) : Optional.of(cases);
+    return recheckDominanceNeeded
+        // If there is a dominance violation, then we must have caused it by adding a case, so
+        // fixing it merely puts the new case in the correct position
+        ? maybeFixDominance(cases, state, subject, /* canReorderCases= */ true)
+        : Optional.of(cases);
   }
 
   /**
@@ -705,12 +710,13 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
-   * Analyzes the supplied case IRs for dominance violations. If a dominance violation is detected,
-   * attempts to fix the problem by reordering them so that the violation does not occur. If the
-   * dominance violation cannot be corrected by this algorithm, returns {@code Optional.empty()}.
+   * Analyzes the supplied case IRs for dominance violations. If a dominance violation is detected
+   * and {@code canReorderCases} is {@code true}, attempts to fix the problem by reordering cases so
+   * that no violation is present. If a dominance violation exists and cannot be corrected by this
+   * algorithm, returns {@code Optional.empty()}.
    */
   private static Optional<List<CaseIr>> maybeFixDominance(
-      List<CaseIr> cases, VisitorState state, ExpressionTree subject) {
+      List<CaseIr> cases, VisitorState state, ExpressionTree subject, boolean canReorderCases) {
 
     List<CaseIr> casesCopy = new ArrayList<>(cases);
     List<CaseIr> casesToInsert = new ArrayList<>();
@@ -720,8 +726,12 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       // they were encountered in the if-chain)
       casesToInsert.add(casesCopy.get(insert));
 
+      // Violation found when trying to insert @insert?
       if (hasDominanceViolation(casesToInsert, state, subject)) {
-        // Violation found when trying to insert @insert
+        if (!canReorderCases) {
+          // Dominance violation exists and not allowed to fix
+          return Optional.empty();
+        }
         casesToInsert.remove(casesToInsert.size() - 1);
 
         // Slow path: try to clean up by moving insertion around.  The idea is a bit like an
@@ -1380,7 +1390,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     Optional<List<CaseIr>> fixedCasesOptional =
         casesWithPullupMaybeApplied
             .flatMap(caseList -> maybeDetectDuplicateConstants(caseList))
-            .flatMap(caseList -> maybeFixDominance(caseList, state, subject))
+            .flatMap(
+                caseList ->
+                    maybeFixDominance(caseList, state, subject, /* canReorderCases= */ !enableSafe))
             .flatMap(
                 x ->
                     maybeFixDefaultNullAndUnconditional(
@@ -1402,7 +1414,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       fixedCasesOptional =
           Optional.of(cases)
               .flatMap(caseList -> maybeDetectDuplicateConstants(caseList))
-              .flatMap(caseList -> maybeFixDominance(caseList, state, subject))
+              .flatMap(
+                  caseList ->
+                      maybeFixDominance(
+                          caseList, state, subject, /* canReorderCases= */ !enableSafe))
               .flatMap(
                   caseList ->
                       maybeFixDefaultNullAndUnconditional(
@@ -1416,7 +1431,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
                           switchType,
                           ifTreeSourceRange))
               // Changing default/null can affect dominance
-              .flatMap(caseList -> maybeFixDominance(caseList, state, subject));
+              .flatMap(
+                  caseList ->
+                      maybeFixDominance(
+                          caseList, state, subject, /* canReorderCases= */ !enableSafe));
     }
 
     List<SuggestedFix> suggestedFixes = new ArrayList<>();
