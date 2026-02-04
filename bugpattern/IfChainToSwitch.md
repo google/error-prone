@@ -73,9 +73,10 @@ Note that with the new `switch` style (`->`), one gets exhaustiveness checking
 the `switch` would raise a compile-time error, whereas the original chain of
 `if` statements would need to be manually detected and edited.
 
-If the flag `EnableSafe` is set, the output will include an empty `case null`;
-this more closely matches the behavior of the original if-chain when `suit` is
-`null`, although is more verbose and may not match the intent.
+If the flag `-XepOpt:IfChainToSwitch:EnableSafe=true` is set, the output will
+include an empty `case null`; this more closely matches the behavior of the
+original if-chain when `suit` is `null`, although is more verbose and may not
+match the intent.
 
 ``` {.good}
 enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
@@ -164,7 +165,8 @@ private void describeObject(Object obj) {
 ```
 
 In this way, the behavior of the switch (`It's a string!`) and the original
-if-chain (`It's an object!`) are different.
+if-chain (`It's an object!`) are different. To prevent the checker from changing
+behavior in this way, set the flag `-XepOpt:IfChainToSwitch:EnableSafe=true`.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("IfChainToSwitch")` to the enclosing element.
