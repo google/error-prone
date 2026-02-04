@@ -98,45 +98,39 @@ class TypeArgOfMethodArgMatcher extends AbstractCollectionIncompatibleTypeMatche
   }
 
   @Override
-  Type extractSourceType(MethodInvocationTree tree, VisitorState state, boolean useCapture) {
+  Type extractSourceType(MethodInvocationTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         getType(Iterables.get(tree.getArguments(), methodArgIndex)),
         state.getSymbolFromString(methodArgTypeName),
         methodArgTypeArgIndex,
-        state.getTypes(),
-        useCapture);
+        state.getTypes());
   }
 
   @Override
-  @Nullable Type extractSourceType(
-      MemberReferenceTree tree, VisitorState state, boolean useCapture) {
+  @Nullable Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         getType(tree).allparams().get(methodArgIndex),
         state.getSymbolFromString(methodArgTypeName),
         methodArgTypeArgIndex,
-        state.getTypes(),
-        useCapture);
+        state.getTypes());
   }
 
   @Override
-  Type extractTargetType(MethodInvocationTree tree, VisitorState state, boolean useCapture) {
+  Type extractTargetType(MethodInvocationTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         ASTHelpers.getReceiverType(tree),
         state.getSymbolFromString(receiverTypeName),
         receiverTypeArgIndex,
-        state.getTypes(),
-        useCapture);
+        state.getTypes());
   }
 
   @Override
-  @Nullable Type extractTargetType(
-      MemberReferenceTree tree, VisitorState state, boolean useCapture) {
+  @Nullable Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         ASTHelpers.getReceiverType(tree),
         state.getSymbolFromString(receiverTypeName),
         receiverTypeArgIndex,
-        state.getTypes(),
-        useCapture);
+        state.getTypes());
   }
 
   String getMethodArgTypeName() {

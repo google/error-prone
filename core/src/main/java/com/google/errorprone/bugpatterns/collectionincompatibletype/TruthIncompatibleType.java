@@ -170,19 +170,18 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    boolean useCapture = typeCompatibility.useCapture();
     Streams.concat(
             matchEquality(tree, state),
             matchIsAnyOf(tree, state),
-            matchIsIn(tree, state, useCapture),
-            matchVectorContains(tree, state, useCapture),
-            matchArrayContains(tree, state, useCapture),
-            matchScalarContains(tree, state, useCapture),
-            matchCorrespondence(tree, state, useCapture),
-            matchMapVectorContains(tree, state, useCapture),
-            matchMapScalarContains(tree, state, useCapture),
-            matchMapContainsKey(tree, state, useCapture),
-            matchHasCount(tree, state, useCapture))
+            matchIsIn(tree, state),
+            matchVectorContains(tree, state),
+            matchArrayContains(tree, state),
+            matchScalarContains(tree, state),
+            matchCorrespondence(tree, state),
+            matchMapVectorContains(tree, state),
+            matchMapScalarContains(tree, state),
+            matchMapContainsKey(tree, state),
+            matchHasCount(tree, state))
         .forEach(state::reportMatch);
     return NO_MATCH;
   }
@@ -228,8 +227,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
     return matchScalarContains(tree, targetType, state);
   }
 
-  private Stream<Description> matchIsIn(
-      MethodInvocationTree tree, VisitorState state, boolean useCapture) {
+  private Stream<Description> matchIsIn(MethodInvocationTree tree, VisitorState state) {
     if (!IS_IN.matches(tree, state)) {
       return Stream.empty();
     }
@@ -244,13 +242,11 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         getIterableTypeArg(
             getType(getOnlyElement(tree.getArguments())),
             getOnlyElement(tree.getArguments()),
-            state,
-            useCapture);
+            state);
     return checkCompatibility(getOnlyElement(tree.getArguments()), targetType, sourceType, state);
   }
 
-  private Stream<Description> matchVectorContains(
-      MethodInvocationTree tree, VisitorState state, boolean useCapture) {
+  private Stream<Description> matchVectorContains(MethodInvocationTree tree, VisitorState state) {
     if (!VECTOR_CONTAINS.matches(tree, state)) {
       return Stream.empty();
     }
@@ -263,19 +259,16 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         getIterableTypeArg(
             getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type,
             ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments()), state),
-            state,
-            useCapture);
+            state);
     Type sourceType =
         getIterableTypeArg(
             getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type,
             getOnlyElement(tree.getArguments()),
-            state,
-            useCapture);
+            state);
     return checkCompatibility(getOnlyElement(tree.getArguments()), targetType, sourceType, state);
   }
 
-  private Stream<Description> matchArrayContains(
-      MethodInvocationTree tree, VisitorState state, boolean useCapture) {
+  private Stream<Description> matchArrayContains(MethodInvocationTree tree, VisitorState state) {
     if (!ARRAY_CONTAINS.matches(tree, state)) {
       return Stream.empty();
     }
@@ -288,14 +281,12 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         getIterableTypeArg(
             getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type,
             ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments()), state),
-            state,
-            useCapture);
+            state);
     Type sourceType = ((ArrayType) getType(getOnlyElement(tree.getArguments()))).elemtype;
     return checkCompatibility(getOnlyElement(tree.getArguments()), targetType, sourceType, state);
   }
 
-  private Stream<Description> matchScalarContains(
-      MethodInvocationTree tree, VisitorState state, boolean useCapture) {
+  private Stream<Description> matchScalarContains(MethodInvocationTree tree, VisitorState state) {
     if (!SCALAR_CONTAINS.matches(tree, state)) {
       return Stream.empty();
     }
@@ -307,8 +298,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         getIterableTypeArg(
             getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type,
             ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments()), state),
-            state,
-            useCapture);
+            state);
     return matchScalarContains(tree, targetType, state);
   }
 
@@ -326,8 +316,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         .flatMap(x -> x);
   }
 
-  private Stream<Description> matchCorrespondence(
-      MethodInvocationTree tree, VisitorState state, boolean useCapture) {
+  private Stream<Description> matchCorrespondence(MethodInvocationTree tree, VisitorState state) {
     if (!COMPARING_ELEMENTS_USING.matches(tree, state)) {
       return Stream.empty();
     }
@@ -340,14 +329,13 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         getIterableTypeArg(
             getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type,
             ignoringCasts(getOnlyElement(((MethodInvocationTree) receiver).getArguments()), state),
-            state,
-            useCapture);
+            state);
     if (targetType == null) {
       // The target collection may be raw.
       return Stream.empty();
     }
     ExpressionTree argument = getOnlyElement(tree.getArguments());
-    Type sourceType = getCorrespondenceTypeArg(argument, state, useCapture);
+    Type sourceType = getCorrespondenceTypeArg(argument, state);
     // This is different to the others: we're checking for castability, not possible equality.
     if (sourceType == null || isCastable(targetType, sourceType, state)) {
       return Stream.empty();
@@ -370,7 +358,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   }
 
   private Stream<Description> matchMapVectorContains(
-      MethodInvocationTree tree, VisitorState state, boolean useCapture) {
+      MethodInvocationTree tree, VisitorState state) {
     if (!MAP_VECTOR_CONTAINS.matches(tree, state)) {
       return Stream.empty();
     }
@@ -384,32 +372,22 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type.tsym;
     Type targetKeyType =
         extractTypeArgAsMemberOfSupertype(
-            ignoringCasts(assertee, state),
-            assertionType,
-            /* typeArgIndex= */ 0,
-            state.getTypes(),
-            useCapture);
+            ignoringCasts(assertee, state), assertionType, /* typeArgIndex= */ 0, state.getTypes());
     Type targetValueType =
         extractTypeArgAsMemberOfSupertype(
-            ignoringCasts(assertee, state),
-            assertionType,
-            /* typeArgIndex= */ 1,
-            state.getTypes(),
-            useCapture);
+            ignoringCasts(assertee, state), assertionType, /* typeArgIndex= */ 1, state.getTypes());
     Type sourceKeyType =
         extractTypeArgAsMemberOfSupertype(
             getType(getOnlyElement(tree.getArguments())),
             assertionType,
             /* typeArgIndex= */ 0,
-            state.getTypes(),
-            useCapture);
+            state.getTypes());
     Type sourceValueType =
         extractTypeArgAsMemberOfSupertype(
             getType(getOnlyElement(tree.getArguments())),
             assertionType,
             /* typeArgIndex= */ 1,
-            state.getTypes(),
-            useCapture);
+            state.getTypes());
     return concat(
         checkCompatibility(
             getOnlyElement(tree.getArguments()), targetKeyType, sourceKeyType, state),
@@ -417,8 +395,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
             getOnlyElement(tree.getArguments()), targetValueType, sourceValueType, state));
   }
 
-  private Stream<Description> matchMapContainsKey(
-      MethodInvocationTree tree, VisitorState state, boolean useCapture) {
+  private Stream<Description> matchMapContainsKey(MethodInvocationTree tree, VisitorState state) {
     if (!MAP_SCALAR_KEYS.matches(tree, state)) {
       return Stream.empty();
     }
@@ -432,11 +409,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type.tsym;
     Type targetKeyType =
         extractTypeArgAsMemberOfSupertype(
-            ignoringCasts(assertee, state),
-            assertionType,
-            /* typeArgIndex= */ 0,
-            state.getTypes(),
-            useCapture);
+            ignoringCasts(assertee, state), assertionType, /* typeArgIndex= */ 0, state.getTypes());
     return checkCompatibility(
         getOnlyElement(tree.getArguments()),
         targetKeyType,
@@ -445,7 +418,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
   }
 
   private Stream<Description> matchMapScalarContains(
-      MethodInvocationTree tree, VisitorState state, boolean useCapture) {
+      MethodInvocationTree tree, VisitorState state) {
     if (!MAP_SCALAR_CONTAINS.matches(tree, state)) {
       return Stream.empty();
     }
@@ -459,18 +432,10 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type.tsym;
     Type targetKeyType =
         extractTypeArgAsMemberOfSupertype(
-            ignoringCasts(assertee, state),
-            assertionType,
-            /* typeArgIndex= */ 0,
-            state.getTypes(),
-            useCapture);
+            ignoringCasts(assertee, state), assertionType, /* typeArgIndex= */ 0, state.getTypes());
     Type targetValueType =
         extractTypeArgAsMemberOfSupertype(
-            ignoringCasts(assertee, state),
-            assertionType,
-            /* typeArgIndex= */ 1,
-            state.getTypes(),
-            useCapture);
+            ignoringCasts(assertee, state), assertionType, /* typeArgIndex= */ 1, state.getTypes());
     MethodSymbol methodSymbol = getSymbol(tree);
     return Streams.mapWithIndex(
             tree.getArguments().stream(),
@@ -482,8 +447,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         .flatMap(x -> x);
   }
 
-  private Stream<Description> matchHasCount(
-      MethodInvocationTree tree, VisitorState state, boolean useCapture) {
+  private Stream<Description> matchHasCount(MethodInvocationTree tree, VisitorState state) {
     if (!HAS_COUNT.matches(tree, state)) {
       return Stream.empty();
     }
@@ -497,11 +461,7 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
         getOnlyElement(getSymbol((MethodInvocationTree) receiver).getParameters()).type.tsym;
     Type targetKeyType =
         extractTypeArgAsMemberOfSupertype(
-            ignoringCasts(assertee, state),
-            assertionType,
-            /* typeArgIndex= */ 0,
-            state.getTypes(),
-            useCapture);
+            ignoringCasts(assertee, state), assertionType, /* typeArgIndex= */ 0, state.getTypes());
     var argument = tree.getArguments().getFirst();
     return checkCompatibility(argument, targetKeyType, getType(argument), state);
   }
@@ -542,26 +502,22 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
             .build());
   }
 
-  private static Type getIterableTypeArg(
-      Type type, Tree onlyElement, VisitorState state, boolean useCapture) {
+  private static Type getIterableTypeArg(Type type, Tree onlyElement, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
-        getType(onlyElement), type.tsym, /* typeArgIndex= */ 0, state.getTypes(), useCapture);
+        getType(onlyElement), type.tsym, /* typeArgIndex= */ 0, state.getTypes());
   }
 
-  private static Type getIterableTypeArg(
-      Type type, Type onlyElement, VisitorState state, boolean useCapture) {
+  private static Type getIterableTypeArg(Type type, Type onlyElement, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
-        onlyElement, type.tsym, /* typeArgIndex= */ 0, state.getTypes(), useCapture);
+        onlyElement, type.tsym, /* typeArgIndex= */ 0, state.getTypes());
   }
 
-  private static Type getCorrespondenceTypeArg(
-      Tree onlyElement, VisitorState state, boolean useCapture) {
+  private static Type getCorrespondenceTypeArg(Tree onlyElement, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         getType(onlyElement),
         CORRESPONDENCE.get(state).tsym,
         /* typeArgIndex= */ 0,
-        state.getTypes(),
-        useCapture);
+        state.getTypes());
   }
 
   private static boolean isNumericType(Type parameter, VisitorState state) {

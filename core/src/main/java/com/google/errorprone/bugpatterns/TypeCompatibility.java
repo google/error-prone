@@ -58,17 +58,11 @@ public final class TypeCompatibility {
   private static final String WITHOUT_EQUALS_REASON =
       ". Though these types are the same, the type doesn't implement equals.";
   private final boolean treatBuildersAsIncomparable;
-  private final boolean useCapture;
 
   @Inject
   TypeCompatibility(ErrorProneFlags flags) {
     this.treatBuildersAsIncomparable =
         flags.getBoolean("TypeCompatibility:TreatBuildersAsIncomparable").orElse(true);
-    this.useCapture = flags.getBoolean("TypeCompatibility:UseCapture").orElse(true);
-  }
-
-  public boolean useCapture() {
-    return useCapture;
   }
 
   public TypeCompatibilityReport compatibilityOfTypes(
@@ -350,9 +344,9 @@ public final class TypeCompatibility {
         .orElse(TypeCompatibilityReport.compatible());
   }
 
-  private List<Type> typeArgsAsSuper(Type baseType, Type superType, VisitorState state) {
-    Type toSuper = useCapture ? state.getTypes().capture(baseType) : baseType;
-    Type projectedType = state.getTypes().asSuper(toSuper, superType.tsym);
+  private static List<Type> typeArgsAsSuper(Type baseType, Type superType, VisitorState state) {
+    Type projectedType =
+        state.getTypes().asSuper(state.getTypes().capture(baseType), superType.tsym);
     if (projectedType != null) {
       return projectedType.getTypeArguments();
     }

@@ -85,35 +85,31 @@ final class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
   }
 
   @Override
-  Type extractSourceType(MethodInvocationTree tree, VisitorState state, boolean useCapture) {
+  Type extractSourceType(MethodInvocationTree tree, VisitorState state) {
     return getType(extractSourceTree(tree, state));
   }
 
   @Override
-  @Nullable Type extractSourceType(
-      MemberReferenceTree tree, VisitorState state, boolean useCapture) {
+  @Nullable Type extractSourceType(MemberReferenceTree tree, VisitorState state) {
     return state.getTypes().findDescriptorType(getType(tree)).getParameterTypes().getFirst();
   }
 
   @Override
-  Type extractTargetType(MethodInvocationTree tree, VisitorState state, boolean useCapture) {
+  Type extractTargetType(MethodInvocationTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         ASTHelpers.getReceiverType(tree),
         state.getSymbolFromString(typeName),
         typeArgIndex,
-        state.getTypes(),
-        useCapture);
+        state.getTypes());
   }
 
   @Override
-  @Nullable Type extractTargetType(
-      MemberReferenceTree tree, VisitorState state, boolean useCapture) {
+  @Nullable Type extractTargetType(MemberReferenceTree tree, VisitorState state) {
     return extractTypeArgAsMemberOfSupertype(
         ASTHelpers.getReceiverType(tree),
         state.getSymbolFromString(typeName),
         typeArgIndex,
-        state.getTypes(),
-        useCapture);
+        state.getTypes());
   }
 
   @Override

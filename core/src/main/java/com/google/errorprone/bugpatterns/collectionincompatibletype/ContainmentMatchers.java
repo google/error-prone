@@ -112,24 +112,18 @@ public final class ContainmentMatchers {
           .build();
 
   public static @Nullable MatchResult firstNonNullMatchResult(
-      ExpressionTree tree, VisitorState state, boolean useCapture) {
+      ExpressionTree tree, VisitorState state) {
     if (!FIRST_ORDER_MATCHER.matches(tree, state)) {
       return null;
     }
 
     for (AbstractCollectionIncompatibleTypeMatcher matcher : ContainmentMatchers.ALL_MATCHERS) {
-      MatchResult result = matcher.matches(tree, state, useCapture);
+      MatchResult result = matcher.matches(tree, state);
       if (result != null) {
         return result;
       }
     }
     return null;
-  }
-
-  /** Backwards compatibility overload for external callers. */
-  public static @Nullable MatchResult firstNonNullMatchResult(
-      ExpressionTree tree, VisitorState state) {
-    return firstNonNullMatchResult(tree, state, /* useCapture= */ true);
   }
 
   private ContainmentMatchers() {}

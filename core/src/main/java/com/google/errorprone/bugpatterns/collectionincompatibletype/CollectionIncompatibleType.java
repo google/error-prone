@@ -73,14 +73,12 @@ public class CollectionIncompatibleType extends BugChecker
 
   private final FixType fixType;
   private final TypeCompatibility typeCompatibility;
-  private final boolean useCapture;
 
   @Inject
   CollectionIncompatibleType(TypeCompatibility typeCompatibility, ErrorProneFlags flags) {
     this.fixType =
         flags.getEnum("CollectionIncompatibleType:FixType", FixType.class).orElse(FixType.NONE);
     this.typeCompatibility = typeCompatibility;
-    this.useCapture = flags.getBoolean("TypeCompatibility:UseCapture").orElse(true);
   }
 
   @Override
@@ -94,7 +92,7 @@ public class CollectionIncompatibleType extends BugChecker
   }
 
   public Description match(ExpressionTree tree, VisitorState state) {
-    MatchResult result = ContainmentMatchers.firstNonNullMatchResult(tree, state, useCapture);
+    MatchResult result = ContainmentMatchers.firstNonNullMatchResult(tree, state);
     if (result == null) {
       return NO_MATCH;
     }
