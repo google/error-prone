@@ -45,7 +45,6 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -63,7 +62,6 @@ import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Pattern;
-import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
 /** A BugPattern; see the summary. */
@@ -108,13 +106,6 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
                       (ExpressionTree) state.getPath().getParentPath().getParentPath().getLeaf(),
                       state)));
 
-  private final boolean improvements;
-
-  @Inject
-  RedundantSetterCall(ErrorProneFlags flags) {
-    this.improvements = flags.getBoolean("RedundantSetterCall:Improvements").orElse(true);
-  }
-
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!TERMINAL_FLUENT_SETTER.matches(tree, state)) {
@@ -147,7 +138,7 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
       if (methodName.endsWith("Builder")) {
         break;
       }
-      if (improvements && isProto && methodName.startsWith("set")) {
+      if (isProto && methodName.startsWith("set")) {
         String withoutSet = methodName.replaceFirst("^set", "");
         if (!fieldNames.contains(toUpperCase(withoutSet))) {
           if (methodName.endsWith("Value")) {
