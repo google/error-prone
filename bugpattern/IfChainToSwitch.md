@@ -68,11 +68,6 @@ private void foo(Suit suit) {
 }
 ```
 
-Note that with the new `switch` style (`->`), one gets exhaustiveness checking
-"for free". That is, if a new `Suit` value were to be added to the `enum`, then
-the `switch` would raise a compile-time error, whereas the original chain of
-`if` statements would need to be manually detected and edited.
-
 If the flag `-XepOpt:IfChainToSwitch:EnableSafe=true` is set, the output will
 include an empty `case null`; this more closely matches the behavior of the
 original if-chain when `suit` is `null`, although is more verbose and may not
@@ -91,6 +86,16 @@ private void foo(Suit suit) {
   }
 }
 ```
+
+Note that with the new `switch` style (`->`), exhaustiveness checking is
+provided by the compiler for 'enhanced' switch statements (see [JLS §14.11.2]),
+and for traditional switch statements by Error Prone
+(https://errorprone.info/bugpattern/MissingCasesInEnumSwitch). That is, if a new `Suit` value were to
+be added to the `enum`, then the `switch` would raise a compile-time error,
+whereas the original chain of `if` statements would need to be manually detected
+and edited.
+
+[JLS §14.11.2]: https://docs.oracle.com/javase/specs/jls/se25/html/jls-14.html#jls-14.11.2
 
 #### 2. Patterns
 
