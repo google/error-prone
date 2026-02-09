@@ -17,19 +17,20 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.Arrays.stream;
 
 import com.google.common.base.Throwables;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Multiset;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -37,7 +38,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.google.protobuf.ByteString;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -45,14 +45,17 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.lang.reflect.InvocationTargetException;
+import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.UUID;
 import java.util.function.Consumer;
 import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(summary = "Detects calls that will fail at runtime", severity = ERROR)
-public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatcher {
+@BugPattern(
+    summary = "Statically detects calls that will always fail at runtime.",
+    severity = ERROR)
+public final class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatcher {
 
   @SuppressWarnings("UnnecessarilyFullyQualified")
   private static final ImmutableMap<String, Consumer<CharSequence>> VALIDATORS =
@@ -96,9 +99,13 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
             .named("parse")
             .withParameters("java.lang.CharSequence")) {
       @Override
-      void validate(MethodInvocationTree tree, String argument) {
-        MethodSymbol sym = ASTHelpers.getSymbol(tree);
-        VALIDATORS.get(sym.owner.getQualifiedName().toString()).accept(argument);
+      void validate(MethodInvocationTree tree, VisitorState state) {
+        String argument = constValue(getOnlyElement(tree.getArguments()), String.class);
+        if (argument != null) {
+
+          MethodSymbol sym = getSymbol(tree);
+          VALIDATORS.get(sym.owner.getQualifiedName().toString()).accept(argument);
+        }
       }
     },
     BYTE_STRING(
@@ -107,22 +114,44 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
             .named("fromHex")
             .withParameters("java.lang.String")) {
       @Override
-      void validate(MethodInvocationTree tree, String argument) {
-        // ByteString.fromHex was only added in 2021; use reflection to be tolerant of old proto
-        // versions.
-        try {
-          ByteString.class.getMethod("fromHex", String.class).invoke(null, argument);
-        } catch (NoSuchMethodException | IllegalAccessException e) {
-          return;
-        } catch (InvocationTargetException e) {
-          throw Throwables.getCauseAs(e.getCause(), NumberFormatException.class);
+      void validate(MethodInvocationTree tree, VisitorState state) {
+        String argument = constValue(getOnlyElement(tree.getArguments()), String.class);
+        if (argument != null) {
+          // ByteString.fromHex was only added in 2021; use reflection to be tolerant of old proto
+          // versions.
+          try {
+            ByteString.class.getMethod("fromHex", String.class).invoke(null, argument);
+          } catch (NoSuchMethodException | IllegalAccessException e) {
+            return;
+          } catch (InvocationTargetException e) {
+            throw Throwables.getCauseAs(e.getCause(), NumberFormatException.class);
+          }
         }
       }
     },
     UUID_PARSE(staticMethod().onClass("java.util.UUID").named("fromString")) {
       @Override
-      void validate(MethodInvocationTree tree, String argument) {
-        var unused = UUID.fromString(argument);
+      void validate(MethodInvocationTree tree, VisitorState state) {
+        String argument = constValue(getOnlyElement(tree.getArguments()), String.class);
+        if (argument != null) {
+          var unused = UUID.fromString(argument);
+        }
+      }
+    },
+    INSTANT_PLUS_MINUS_PERIOD(
+        instanceMethod()
+            .onExactClass("java.time.Instant")
+            .namedAnyOf("plus", "minus")
+            .withParameters("java.time.temporal.TemporalAmount")) {
+      private static final Matcher<ExpressionTree> NON_DAYS_BASED_PERIOD =
+          staticMethod().onClass("java.time.Period").namedAnyOf("ofMonths", "ofYears");
+
+      @Override
+      void validate(MethodInvocationTree tree, VisitorState state) {
+        if (NON_DAYS_BASED_PERIOD.matches(getOnlyElement(tree.getArguments()), state)) {
+          throw new UnsupportedTemporalTypeException(
+              "Instant.plus() and minus() do not support non-days-based Periods.");
+        }
       }
     };
 
@@ -133,7 +162,7 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
     @SuppressWarnings("ImmutableEnumChecker") // is immutable
     private final Matcher<ExpressionTree> matcher;
 
-    abstract void validate(MethodInvocationTree tree, String argument) throws Exception;
+    abstract void validate(MethodInvocationTree tree, VisitorState state);
   }
 
   private final ConstantExpressions constantExpressions;
@@ -176,13 +205,9 @@ public class AlwaysThrows extends BugChecker implements MethodInvocationTreeMatc
     if (api == null) {
       return NO_MATCH;
     }
-    String argument = constValue(Iterables.getOnlyElement(tree.getArguments()), String.class);
-    if (argument == null) {
-      return NO_MATCH;
-    }
     try {
-      api.validate(tree, argument);
-    } catch (Exception t) {
+      api.validate(tree, state);
+    } catch (RuntimeException t) {
       return buildDescription(tree)
           .setMessage(
               String.format(

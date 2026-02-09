@@ -169,7 +169,7 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
    */
   protected static @Nullable Type extractTypeArgAsMemberOfSupertype(
       Type type, Symbol superTypeSym, int typeArgIndex, Types types) {
-    Type collectionType = types.asSuper(type, superTypeSym);
+    Type collectionType = types.asSuper(types.capture(type), superTypeSym);
     if (collectionType == null) {
       return null;
     }

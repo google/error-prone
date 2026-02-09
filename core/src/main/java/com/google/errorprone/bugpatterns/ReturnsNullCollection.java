@@ -17,20 +17,24 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.TrustingNullnessAnalysis;
-import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
-import java.util.Optional;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.util.TreePath;
 
 /**
  * Flags methods with collection return types which return {@code null} in some cases but don't
@@ -43,7 +47,7 @@ import java.util.Optional;
         "Method has a collection return type and returns {@code null} in some cases but does not"
             + " annotate the method as @Nullable. See Effective Java 3rd Edition Item 54.",
     severity = SUGGESTION)
-public class ReturnsNullCollection extends AbstractMethodReturnsNull {
+public class ReturnsNullCollection extends BugChecker implements ReturnTreeMatcher {
 
   private static boolean methodWithoutNullable(MethodTree tree, VisitorState state) {
     return !TrustingNullnessAnalysis.hasNullableAnnotation(getSymbol(tree));
@@ -58,12 +62,21 @@ public class ReturnsNullCollection extends AbstractMethodReturnsNull {
               methodReturns(isSubtypeOf("com.google.common.collect.Table"))),
           ReturnsNullCollection::methodWithoutNullable);
 
-  public ReturnsNullCollection() {
-    super(METHOD_RETURNS_COLLECTION_WITHOUT_NULLABLE_ANNOTATION);
-  }
-
   @Override
-  protected Optional<Fix> provideFix(ReturnTree tree) {
-    return Optional.empty();
+  public final Description matchReturn(ReturnTree tree, VisitorState state) {
+    if (tree.getExpression() == null || tree.getExpression().getKind() != NULL_LITERAL) {
+      return NO_MATCH;
+    }
+    TreePath path = state.getPath();
+    while (path != null && path.getLeaf() instanceof StatementTree) {
+      path = path.getParentPath();
+    }
+    if (path == null || !(path.getLeaf() instanceof MethodTree methodTree)) {
+      return NO_MATCH;
+    }
+    if (!METHOD_RETURNS_COLLECTION_WITHOUT_NULLABLE_ANNOTATION.matches(methodTree, state)) {
+      return NO_MATCH;
+    }
+    return describeMatch(tree);
   }
 }

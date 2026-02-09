@@ -232,4 +232,20 @@ public final class InvalidBlockTagTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void customTag() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /**
+             * @customTag1 {@arbitraryInlineTag}
+             * @customTag2 this is a custom tag
+             */
+            class Test {}
+            """)
+        .setArgs("-XepOpt:Javadoc:customBlockTags=customTag1,customTag2")
+        .doTest();
+  }
 }

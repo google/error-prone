@@ -78,7 +78,7 @@ public class BindingToUnqualifiedCommonTypeTest {
                   return "hi";
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -171,7 +171,7 @@ public class BindingToUnqualifiedCommonTypeNegativeCases {
   @BindingAnnotation
   @Retention(RetentionPolicy.RUNTIME)
   @interface MyBindingAnnotation {}
-}\
+}
 """)
         .doTest();
   }

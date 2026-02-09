@@ -778,4 +778,25 @@ public class IdentifierNameTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void receiverParameter() {
+    helper
+        .addSourceLines(
+            "Super.java",
+            """
+            class Super {
+              void test(int x) {}
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test extends Super {
+              @Override
+              void test(Test this, int x) {}
+            }
+            """)
+        .doTest();
+  }
 }

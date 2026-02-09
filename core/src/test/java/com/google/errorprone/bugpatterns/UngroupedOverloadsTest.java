@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -78,7 +77,7 @@ public final class UngroupedOverloadsTest {
               }
 
               public void norf() {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -165,7 +164,7 @@ public final class UngroupedOverloadsTest {
               public void norf(int x, int y, int w) {
                 norf(x + w, y + w);
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -221,7 +220,7 @@ public final class UngroupedOverloadsTest {
               public void foo() {
                 foo(foo);
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -276,7 +275,7 @@ public final class UngroupedOverloadsTest {
               public void foo() {
                 foo(42);
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -326,7 +325,7 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
   public void foo() {
     foo(42);
   }
-}\
+}
 """)
         .setArgs(ImmutableList.of("-XepOpt:UngroupedOverloads:BatchFindings"))
         .doTest();
@@ -378,7 +377,7 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
               public int foo() {
                 return this.foo;
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -418,7 +417,7 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
               public void quux() {}
 
               public void bar(String s) {}
-            }\
+            }
             """)
         .addOutputLines(
             "UngroupedOverloadsRefactoringComments_expected.java",
@@ -452,7 +451,7 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
               public static final String BAZ = "baz"; // Stuff about `baz` continues.
 
               public void quux() {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -500,7 +499,7 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
               public void quux(int x, int y, int z) {}
 
               public void thud() {}
-            }\
+            }
             """)
         .addOutputLines(
             "UngroupedOverloadsRefactoringMultiple_expected.java",
@@ -542,7 +541,7 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
               public void norf() {}
 
               public void thud() {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -585,7 +584,7 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
               public void foo(int x, int y, int z) {}
 
               public void bar(int x, int y) {}
-            }\
+            }
             """)
         .addOutputLines(
             "UngroupedOverloadsRefactoringInterleaved_expected.java",
@@ -622,7 +621,7 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
               public void quux(int x) {}
 
               public void quux(int x, int y) {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -693,25 +692,6 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
               void baz() {}
             }
             """)
-        .doTest();
-  }
-
-  @Ignore // TODO(b/71818169): fix and re-enable
-  @Test
-  public void staticAndNonStatic() {
-    refactoringHelper
-        .addInputLines(
-            "Test.java",
-            """
-            class Test {
-              void foo() {}
-
-              void bar() {}
-
-              static void foo(int x) {}
-            }
-            """)
-        .expectUnchanged()
         .doTest();
   }
 

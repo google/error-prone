@@ -15,8 +15,10 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.TruthJUnit.assume;
+import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
@@ -1323,6 +1325,23 @@ public class UnusedVariableTest {
   }
 
   @Test
+  public void unusedParameterImplicitAssignment() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: The parameter 'a' is reassigned before being read
+              private int test(int a) {
+                a = 1;
+                return a;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void unusedAssignment_nulledOut_noWarning() {
     helper
         .addSourceLines(
@@ -1727,7 +1746,7 @@ public class Test {
             "SimpleRecord.java", //
             """
             //            public record SimpleRecord(Integer foo, Long bar) {}
-            //\
+            //
             """)
         .expectNoDiagnostics()
         .doTest();
@@ -2010,6 +2029,7 @@ public class Test {
 
   @Test
   public void unusedFunctionalInterfaceParameter_noFix() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -2020,7 +2040,7 @@ public class Test {
 
             class Test {
               public void test(List<Integer> xs) {
-                Collections.sort(xs, (a, b) -> a > a ? 1 : 0);
+                Collections.sort(xs, (a, unused) -> a > a ? 1 : 0);
                 Collections.sort(xs, (a, unused) -> a > a ? 1 : 0);
                 Collections.sort(
                     xs,
@@ -2140,5 +2160,67 @@ public class Test {
             """)
         .expectUnchanged()
         .doTest();
+  }
+
+  @Test
+  public void suggestUnderscoreVariable() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Arrays;
+            import java.util.Collections;
+            import java.util.function.Function;
+
+            class Test {
+              public static void main(String[] args) {
+                int x;
+                var foo = new Object();
+
+                Collections.sort(Arrays.asList(args), (a, b) -> a.isEmpty() ? 1 : 0);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.Arrays;
+            import java.util.Collections;
+            import java.util.function.Function;
+
+            class Test {
+              public static void main(String[] args) {
+                var _ = new Object();
+
+                Collections.sort(Arrays.asList(args), (a, _) -> a.isEmpty() ? 1 : 0);
+              }
+            }
+            """)
+        .setFixChooser(Iterables::getLast)
+        .doTest();
+  }
+
+  @Test
+  public void lambdaParameter_noFinding() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.function.Function;
+
+            class Test {
+              static void sink(Object... o) {}
+
+              public static void main(String[] args) {
+                Function<String, Integer> f = s -> 1;
+                Function<String, Integer> g = (String s) -> 1;
+                Function<String, Integer> h = (s) -> 1;
+                sink(f, g, h);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest(TEXT_MATCH);
   }
 }

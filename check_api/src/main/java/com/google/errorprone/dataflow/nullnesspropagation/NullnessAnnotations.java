@@ -20,7 +20,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static javax.lang.model.element.ElementKind.TYPE_PARAMETER;
 
 import com.google.common.collect.ImmutableList;
-import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -118,27 +117,21 @@ public class NullnessAnnotations {
     /*
      * We try to read annotations in two ways:
      *
-     * 1. from the TypeMirror: This is how we "should" always read *type-use* annotations, but
-     * JDK-8225377 prevents it from working across compilation boundaries.
+     * 1. from the TypeMirror
      *
-     * 2. from getRawAttributes(): This works around the problem across compilation boundaries, and
-     * it handles declaration annotations (though there are other ways we could handle declaration
-     * annotations). But it has a bug of its own with type-use annotations on inner classes
-     * (b/203207989). To reduce the chance that we hit the inner-class bug, we apply it only if the
-     * first approach fails.
+     * 2. from the Symbols, to handle declaration annotations
      */
     TypeMirror elementType =
         switch (sym.getKind()) {
           case METHOD -> ((ExecutableElement) sym).getReturnType();
-          case FIELD, PARAMETER -> sym.asType();
-          default -> null;
+          default -> sym.asType();
         };
     Optional<Nullness> fromElement = fromAnnotationsOn(elementType);
     if (fromElement.isPresent()) {
       return fromElement;
     }
 
-    return fromAnnotationStream(MoreAnnotations.getDeclarationAndTypeAttributes(sym));
+    return fromAnnotationStream(sym.getAnnotationMirrors().stream());
   }
 
   public static Optional<Nullness> fromAnnotationsOn(@Nullable TypeMirror type) {

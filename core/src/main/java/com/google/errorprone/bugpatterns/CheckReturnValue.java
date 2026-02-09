@@ -79,13 +79,12 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.Trees;
+import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.inject.Inject;
@@ -421,8 +420,7 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   }
 
   private static @Nullable MethodTree findDeclaration(Symbol symbol, VisitorState state) {
-    JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(state.context);
-    TreePath declPath = Trees.instance(javacEnv).getPath(symbol);
+    TreePath declPath = JavacTrees.instance(state.context).getPath(symbol);
     // Skip fields declared in other compilation units since we can't make a fix for them here.
     if (declPath != null
         && declPath.getCompilationUnit() == state.getPath().getCompilationUnit()

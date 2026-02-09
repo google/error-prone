@@ -56,7 +56,7 @@ public class JUnit4TestNotRunTest {
 
               // BUG: Diagnostic contains: @Test
               public static void testThisIsAStaticTest() {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -84,7 +84,7 @@ public class JUnit4TestNotRunTest {
 
               // BUG: Diagnostic contains: @Test
               public static void testThisIsAStaticTest() {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -683,7 +683,7 @@ public class JUnit4TestNotRunTest {
              */
             public class JUnit4TestNotRunNegativeCase1 {
               public void testThisIsATest() {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -707,7 +707,7 @@ public class JUnit4TestNotRunTest {
             @RunWith(JUnit38ClassRunner.class)
             public class JUnit4TestNotRunNegativeCase2 {
               public void testThisIsATest() {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -755,7 +755,7 @@ public class JUnit4TestNotRunNegativeCase3 {
   public int testSomething() {
     return 42;
   }
-}\
+}
 """)
         .doTest();
   }
@@ -780,7 +780,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class JUnit4TestNotRunNegativeCase4 extends TestCase {
   public void testThisIsATest() {}
-}\
+}
 """)
         .doTest();
   }
@@ -814,7 +814,7 @@ public class JUnit4TestNotRunNegativeCase4 extends TestCase {
 
               @Test
               public void testOverrideThis() {}
-            }\
+            }
             """)
         .addSourceLines(
             "JUnit4TestNotRunNegativeCase5.java",
@@ -839,7 +839,7 @@ public class JUnit4TestNotRunNegativeCase5 extends JUnit4TestNotRunBaseClass {
 
   @Override
   public void testOverrideThis() {}
-}\
+}
 """)
         .doTest();
   }

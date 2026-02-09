@@ -85,6 +85,53 @@ public final class CheckNotNullMultipleTimesTest {
   }
 
   @Test
+  public void switch_noError() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            class Test {
+              Test(Integer a) {
+                switch (hashCode()) {
+                  case 0 -> checkNotNull(a);
+                  default -> checkNotNull(a);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switchExpression_noError() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+
+            class Test {
+              Test(Integer a) {
+                int x =
+                    switch (hashCode()) {
+                      case 0 -> {
+                        checkNotNull(a);
+                        yield 0;
+                      }
+                      default -> {
+                        checkNotNull(a);
+                        yield 1;
+                      }
+                    };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void assignedTwice_noError() {
     helper
         .addSourceLines(

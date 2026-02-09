@@ -166,7 +166,7 @@ public class ComparisonOutOfRangeTest {
                 // BUG: Diagnostic contains: false
                 result = l == Long.MIN_VALUE * 2.0;
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -278,7 +278,7 @@ public class ComparisonOutOfRangeTest {
               String binaryTreeMixingByteWithNonNumeric(byte b) {
                 return "value is: " + b;
               }
-            }\
+            }
             """)
         .doTest();
   }

@@ -29,6 +29,7 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.SuppressionInfo.SuppressedState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnalysis;
+import com.google.errorprone.fixes.ErrorProneEndPosTable;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.suppliers.Supplier;
@@ -50,7 +51,6 @@ import com.sun.tools.javac.comp.Modules;
 import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.parser.Tokens.Token;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
 import com.sun.tools.javac.util.Name;
@@ -121,64 +121,6 @@ public class VisitorState {
       Map<String, SeverityLevel> severityMap,
       ErrorProneOptions errorProneOptions) {
     return new VisitorState(
-        context,
-        listener,
-        severityMap,
-        errorProneOptions,
-        StatisticsCollector.createCollector(),
-        null,
-        SuppressedState.UNSUPPRESSED);
-  }
-
-  /**
-   * Return a VisitorState that has no Error Prone configuration, and can't report results.
-   *
-   * @deprecated If VisitorState is needed, use {@link #createForUtilityPurposes}, otherwise just
-   *     use utility methods in ASTHelpers that don't need VisitorSate.
-   */
-  @Deprecated
-  public VisitorState(Context context) {
-    this(
-        context,
-        VisitorState::nullListener,
-        ImmutableMap.of(),
-        ErrorProneOptions.empty(),
-        // Can't use this VisitorState to report results, so no-op collector.
-        StatisticsCollector.createNoOpCollector(),
-        null,
-        SuppressedState.UNSUPPRESSED);
-  }
-
-  /**
-   * Return a VisitorState that has no Error Prone configuration, but can report findings to {@code
-   * listener}.
-   *
-   * @deprecated Use the equivalent factory method {@link #createForCustomFindingCollection}.
-   */
-  @Deprecated
-  public VisitorState(Context context, DescriptionListener listener) {
-    this(
-        context,
-        listener,
-        ImmutableMap.of(),
-        ErrorProneOptions.empty(),
-        StatisticsCollector.createCollector(),
-        null,
-        SuppressedState.UNSUPPRESSED);
-  }
-
-  /**
-   * Return a VisitorState configured for a new compilation, including Error Prone configuration.
-   *
-   * @deprecated Use the equivalent factory method {@link #createConfiguredForCompilation}.
-   */
-  @Deprecated
-  public VisitorState(
-      Context context,
-      DescriptionListener listener,
-      Map<String, SeverityLevel> severityMap,
-      ErrorProneOptions errorProneOptions) {
-    this(
         context,
         listener,
         severityMap,
@@ -603,11 +545,7 @@ public class VisitorState {
 
   /** Returns the end position of the node, or -1 if it is not available. */
   public int getEndPosition(Tree node) {
-    JCCompilationUnit compilationUnit = (JCCompilationUnit) getPath().getCompilationUnit();
-    if (compilationUnit.endPositions == null) {
-      return -1;
-    }
-    return ((JCTree) node).getEndPosition(compilationUnit.endPositions);
+    return ErrorProneEndPosTable.getEndPosition(node, getPath().getCompilationUnit());
   }
 
   /** Validates a type string, ensuring it is not generic and not an array type. */

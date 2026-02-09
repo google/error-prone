@@ -84,7 +84,7 @@ public class AssistedInjectAndInjectOnConstructorsPositiveCases {
 
     public TestClass3(String s) {}
   }
-}\
+}
 """)
         .doTest();
   }
@@ -146,7 +146,7 @@ public class AssistedInjectAndInjectOnConstructorsNegativeCases {
     @AssistedInject
     public TestClass6(int n) {}
   }
-}\
+}
 """)
         .doTest();
   }

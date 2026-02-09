@@ -33,7 +33,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.Commented;
 import com.google.errorprone.util.ErrorProneComment;
-import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
@@ -61,7 +60,7 @@ public class ParameterComment extends BugChecker
   }
 
   private Description matchNewClassOrMethodInvocation(
-      MethodSymbol symbol, ImmutableList<Commented<ExpressionTree>> arguments, Tree tree) {
+      MethodSymbol symbol, ImmutableList<Commented> arguments, Tree tree) {
     if (symbol.getParameters().isEmpty()) {
       return NO_MATCH;
     }
@@ -95,10 +94,7 @@ public class ParameterComment extends BugChecker
   }
 
   private static void fixParamComment(
-      SuggestedFix.Builder fix,
-      Commented<ExpressionTree> commented,
-      VarSymbol param,
-      ErrorProneComment c) {
+      SuggestedFix.Builder fix, Commented commented, VarSymbol param, ErrorProneComment c) {
     fix.prefixWith(commented.tree(), String.format("/* %s= */ ", param.getSimpleName()))
         .replace(c.getSourcePos(0), c.getSourcePos(0) + c.getText().length(), "");
   }

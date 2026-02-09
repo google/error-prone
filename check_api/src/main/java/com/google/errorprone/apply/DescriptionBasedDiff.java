@@ -19,11 +19,11 @@ package com.google.errorprone.apply;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.errorprone.DescriptionListener;
+import com.google.errorprone.fixes.ErrorProneEndPosTable;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.Replacement;
 import com.google.errorprone.fixes.Replacements;
 import com.google.errorprone.matchers.Description;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import java.net.URI;
 import java.nio.file.Paths;
@@ -46,7 +46,7 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
   private final JCCompilationUnit compilationUnit;
   private final Set<String> importsToAdd;
   private final Set<String> importsToRemove;
-  private final EndPosTable endPositions;
+  private final ErrorProneEndPosTable endPositions;
   private final Replacements replacements = new Replacements();
   private final ImportOrganizer importOrganizer;
 
@@ -73,7 +73,7 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
     this.ignoreOverlappingFixes = ignoreOverlappingFixes;
     this.importsToAdd = new LinkedHashSet<>();
     this.importsToRemove = new LinkedHashSet<>();
-    this.endPositions = compilationUnit.endPositions;
+    this.endPositions = ErrorProneEndPosTable.create(compilationUnit);
     this.importOrganizer = importOrganizer;
   }
 

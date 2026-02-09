@@ -16,12 +16,13 @@
 
 package com.google.errorprone.apply;
 
+import static com.google.errorprone.fixes.ErrorProneEndPosTable.getEndPosition;
+
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
@@ -58,31 +59,29 @@ public class ImportStatements {
     return new ImportStatements(
         (JCExpression) compilationUnit.getPackageName(),
         compilationUnit.getImports(),
-        compilationUnit.endPositions,
+        compilationUnit,
         importOrganizer);
   }
 
   ImportStatements(
       JCExpression packageTree,
       List<? extends JCTree> importTrees,
-      EndPosTable endPositions,
+      JCCompilationUnit unit,
       ImportOrganizer importOrganizer) {
 
     // find start, end positions for current list of imports (for replacement)
     if (importTrees.isEmpty()) {
       // start/end positions are just after the package expression
       hasExistingImports = false;
-      startPos =
-          packageTree != null
-              ? packageTree.getEndPosition(endPositions) + 2 // +2 for semicolon and newline
-              : 0;
+      // +2 for semicolon and newline
+      startPos = packageTree != null ? getEndPosition(packageTree, unit) + 2 : 0;
       endPos = startPos;
     } else {
       // process list of imports and find start/end positions
       hasExistingImports = true;
       for (JCTree importTree : importTrees) {
         int currStartPos = importTree.getStartPosition();
-        int currEndPos = importTree.getEndPosition(endPositions);
+        int currEndPos = getEndPosition(importTree, unit);
 
         startPos = Math.min(startPos, currStartPos);
         endPos = Math.max(endPos, currEndPos);

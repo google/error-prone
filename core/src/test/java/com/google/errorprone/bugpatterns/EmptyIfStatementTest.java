@@ -86,7 +86,7 @@ public class EmptyIfStatementTest {
                   System.out.println("foo");
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }

@@ -42,7 +42,7 @@ public class EqualsHashCodeTestPositiveCases {
       return false;
     }
   }
-}\
+}
 """)
         .doTest();
   }
@@ -72,7 +72,7 @@ public class EqualsHashCodeTestPositiveCases {
               }
 
               public static class Neither {}
-            }\
+            }
             """)
         .doTest();
   }

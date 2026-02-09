@@ -118,7 +118,7 @@ public class ArrayEqualsTest {
                   System.out.println("arrays are not equal!");
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -163,7 +163,7 @@ public class ArrayEqualsTest {
                   System.out.println("arrays are not equal!");
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -232,7 +232,7 @@ public class ArrayEqualsTest {
                   System.out.println("Objects are not equal!");
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -285,7 +285,7 @@ public class ArrayEqualsTest {
                   System.out.println("arrays are not equal!");
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }

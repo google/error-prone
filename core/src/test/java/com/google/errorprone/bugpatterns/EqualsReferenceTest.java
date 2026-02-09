@@ -71,7 +71,7 @@ public class EqualsReferenceTest {
                   return equals(o);
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -147,7 +147,7 @@ public class EqualsReferenceTest {
                   return null;
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }

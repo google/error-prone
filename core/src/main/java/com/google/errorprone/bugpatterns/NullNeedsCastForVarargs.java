@@ -37,7 +37,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.TypeCastTree;
@@ -133,24 +132,17 @@ public final class NullNeedsCastForVarargs extends BugChecker
         : state.getSymtab().objectType;
   }
 
-  /**
-   * A single parameter whose erasure is type {@code Object[]}. This includes {@code Object...} and
-   * (when {@code <T>} is an unbounded type parameter) {@code T[]}.
-   */
-  private static final ImmutableList<Supplier<Type>> JUST_OBJECT_TYPE_ARRAY =
-      ImmutableList.of(OBJECT_TYPE_ARRAY);
-
   private static final Matcher<ExpressionTree> METHOD_WITH_SOLE_PARAMETER_OBJECT_VARARGS =
       instanceMethod()
           .onDescendantOf("com.google.common.truth.Subject")
           .named("containsExactly")
-          .withParametersOfType(JUST_OBJECT_TYPE_ARRAY);
+          .withParametersOfType(OBJECT_TYPE_ARRAY);
 
   private static final Matcher<ExpressionTree> METHOD_WITH_SECOND_PARAMETER_OBJECT_VARARGS =
       instanceMethod()
           .onDescendantOf("com.google.common.reflect.Invokable")
           .named("invoke")
-          .withParametersOfType(ImmutableList.of(OBJECT_TYPE, OBJECT_TYPE_ARRAY));
+          .withParametersOfType(OBJECT_TYPE, OBJECT_TYPE_ARRAY);
 
   // TODO: b/429160687 - Also cover the methods in UsingCorrespondence.
 
@@ -165,26 +157,26 @@ public final class NullNeedsCastForVarargs extends BugChecker
           staticMethod()
               .onClass("com.google.common.collect.AndroidAccessToCompactDataStructures")
               .namedAnyOf("newCompactHashSet", "newCompactLinkedHashSet")
-              .withParametersOfType(JUST_OBJECT_TYPE_ARRAY),
+              .withParametersOfType(OBJECT_TYPE_ARRAY),
           staticMethod()
               .onClassAny(
                   "com.google.common.collect.CompactHashSet",
                   "com.google.common.collect.CompactLinkedHashSet")
               .named("create")
-              .withParametersOfType(JUST_OBJECT_TYPE_ARRAY),
+              .withParametersOfType(OBJECT_TYPE_ARRAY),
           staticMethod()
               .onClassAny(
                   "com.google.common.collect.Iterables", "com.google.common.collect.Iterators")
               .namedAnyOf("cycle", "forArray")
-              .withParametersOfType(JUST_OBJECT_TYPE_ARRAY),
+              .withParametersOfType(OBJECT_TYPE_ARRAY),
           staticMethod()
               .onClass("com.google.common.collect.Lists")
               .namedAnyOf("newArrayList", "newLinkedList")
-              .withParametersOfType(JUST_OBJECT_TYPE_ARRAY),
+              .withParametersOfType(OBJECT_TYPE_ARRAY),
           staticMethod()
               .onClass("com.google.common.collect.Sets")
               .namedAnyOf("newHashSet", "newLinkedHashSet")
-              .withParametersOfType(JUST_OBJECT_TYPE_ARRAY),
+              .withParametersOfType(OBJECT_TYPE_ARRAY),
           staticMethod().onClass("java.util.Arrays").named("asList"),
           staticMethod()
               .onClass("java.util.stream.Stream")
@@ -196,5 +188,5 @@ public final class NullNeedsCastForVarargs extends BugChecker
                * (Similarly, we may or may not need to call `withParametersOfType` for the other
                * cases above in which overloads exist, but we do anyway.)
                */
-              .withParametersOfType(JUST_OBJECT_TYPE_ARRAY));
+              .withParametersOfType(OBJECT_TYPE_ARRAY));
 }

@@ -192,7 +192,7 @@ public class InstanceOfAndCastMatchWrongTypeTest {
               }
             }
 
-            class SuperClass {}\
+            class SuperClass {}
             """)
         .doTest();
   }
@@ -471,7 +471,7 @@ public class InstanceOfAndCastMatchWrongTypeNegativeCases {
   static class SubNegativeClass extends SuperNegativeClass {}
 
   static class DisjointClass {}
-}\
+}
 """)
         .doTest();
   }
@@ -530,6 +530,43 @@ public class InstanceOfAndCastMatchWrongTypeNegativeCases {
                 if (getArray()[0] instanceof Integer) {
                   String s0 = (String) getArray()[0];
                 }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void handlesRecordDestructuring_noFinding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            record Test(int x, int y) {
+              static int getX(Object o) {
+                if (o instanceof Test(int x, int y)) {
+                  return ((Test) o).x();
+                }
+                return 0;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void handlesRecordDestructuring_finding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            record Test(int x, int y) {
+              static int getX(Object o) {
+                if (o instanceof Test(int x, int y)) {
+                  // BUG: Diagnostic contains:
+                  return ((String) o).length();
+                }
+                return 0;
               }
             }
             """)

@@ -22,6 +22,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Streams.stream;
+import static com.google.errorprone.fixes.ErrorProneEndPosTable.getEndPosition;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
@@ -31,6 +32,7 @@ import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.sun.tools.javac.code.TypeTag.CLASS;
 import static com.sun.tools.javac.util.Position.NOPOS;
+import static java.lang.Math.max;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 
@@ -98,7 +100,6 @@ import com.sun.tools.javac.parser.Tokens;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
@@ -146,26 +147,6 @@ import org.jspecify.annotations.Nullable;
 
 /** Factories for constructing {@link Fix}es. */
 public final class SuggestedFixes {
-
-  /** Parse a modifier token into a {@link Modifier}. */
-  private static @Nullable Modifier getTokModifierKind(ErrorProneToken tok) {
-    return switch (tok.kind()) {
-      case PUBLIC -> Modifier.PUBLIC;
-      case PROTECTED -> Modifier.PROTECTED;
-      case PRIVATE -> Modifier.PRIVATE;
-      case ABSTRACT -> Modifier.ABSTRACT;
-      case STATIC -> Modifier.STATIC;
-      case FINAL -> Modifier.FINAL;
-      case TRANSIENT -> Modifier.TRANSIENT;
-      case VOLATILE -> Modifier.VOLATILE;
-      case SYNCHRONIZED -> Modifier.SYNCHRONIZED;
-      case NATIVE -> Modifier.NATIVE;
-      case STRICTFP -> Modifier.STRICTFP;
-      case DEFAULT -> Modifier.DEFAULT;
-      default -> null;
-    };
-  }
-
   /** Adds modifiers to the given class, method, or field declaration. */
   public static Optional<SuggestedFix> addModifiers(
       Tree tree, VisitorState state, Modifier... modifiers) {
@@ -190,11 +171,8 @@ public final class SuggestedFixes {
         modifierPositions.put(mod, -1);
       }
       ImmutableList<ErrorProneToken> tokens = state.getOffsetTokensForNode(originalModifiers);
-      for (ErrorProneToken tok : tokens) {
-        Modifier mod = getTokModifierKind(tok);
-        if (mod != null) {
-          modifierPositions.put(mod, tok.pos());
-        }
+      for (ModifierWithTokens mod : ModifierWithTokens.fromTokens(tokens)) {
+        modifierPositions.put(mod.modifier(), mod.pos());
       }
       // walk the map of all modifiers, and accumulate a list of new modifiers to insert
       // beside an existing modifier
@@ -244,12 +222,12 @@ public final class SuggestedFixes {
           state.getEndPosition(originalModifiers) == NOPOS
               ? getStartPosition(tree)
               : state.getEndPosition(originalModifiers) + 1;
-      insertPos =
-          state.getOffsetTokensForNode(originalModifiers).stream()
-              .filter(t -> getTokModifierKind(t) != null)
-              .mapToInt(t -> t.endPos() + 1)
-              .max()
-              .orElse(pos);
+      var tokens = state.getOffsetTokensForNode(originalModifiers);
+      int lastModifierEnd = -1;
+      for (ModifierWithTokens mod : ModifierWithTokens.fromTokens(tokens)) {
+        lastModifierEnd = max(lastModifierEnd, mod.endPos() + 1);
+      }
+      insertPos = lastModifierEnd == -1 ? pos : lastModifierEnd;
     }
 
     fix.replace(insertPos, insertPos, Joiner.on(' ').join(toAdd) + " ");
@@ -272,17 +250,84 @@ public final class SuggestedFixes {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     List<ErrorProneToken> tokens = state.getOffsetTokensForNode(originalModifiers);
     boolean empty = true;
-    for (ErrorProneToken tok : tokens) {
-      Modifier mod = getTokModifierKind(tok);
-      if (toRemove.contains(mod)) {
+    for (ModifierWithTokens mod : ModifierWithTokens.fromTokens(tokens)) {
+      if (toRemove.contains(mod.modifier())) {
         empty = false;
-        fix.replace(tok.pos(), tok.endPos() + 1, "");
+        fix.replace(mod.pos(), mod.endPos() + 1, "");
       }
     }
     if (empty) {
       return Optional.empty();
     }
     return Optional.of(fix.build());
+  }
+
+  /**
+   * Parses the modifier at the start of the given {@code tokens} into a {@link ModifierWithTokens},
+   * if there is one.
+   */
+  private static @Nullable ModifierWithTokens getTokModifierKind(List<ErrorProneToken> tokens) {
+    var firstToken = tokens.getFirst();
+    return switch (firstToken.kind()) {
+      case PUBLIC -> new ModifierWithTokens(Modifier.PUBLIC, firstToken);
+      case PROTECTED -> new ModifierWithTokens(Modifier.PROTECTED, firstToken);
+      case PRIVATE -> new ModifierWithTokens(Modifier.PRIVATE, firstToken);
+      case ABSTRACT -> new ModifierWithTokens(Modifier.ABSTRACT, firstToken);
+      case STATIC -> new ModifierWithTokens(Modifier.STATIC, firstToken);
+      case FINAL -> new ModifierWithTokens(Modifier.FINAL, firstToken);
+      case TRANSIENT -> new ModifierWithTokens(Modifier.TRANSIENT, firstToken);
+      case VOLATILE -> new ModifierWithTokens(Modifier.VOLATILE, firstToken);
+      case SYNCHRONIZED -> new ModifierWithTokens(Modifier.SYNCHRONIZED, firstToken);
+      case NATIVE -> new ModifierWithTokens(Modifier.NATIVE, firstToken);
+      case STRICTFP -> new ModifierWithTokens(Modifier.STRICTFP, firstToken);
+      case DEFAULT -> new ModifierWithTokens(Modifier.DEFAULT, firstToken);
+      case IDENTIFIER -> {
+        if (firstToken.name().contentEquals("sealed")) {
+          yield new ModifierWithTokens(Modifier.SEALED, firstToken);
+        }
+        if (firstToken.name().contentEquals("non")
+            && tokens.size() >= 3
+            && tokens.get(1).kind().equals(TokenKind.SUB)
+            && tokens.get(2).kind().equals(TokenKind.IDENTIFIER)
+            && tokens.get(2).name().contentEquals("sealed")) {
+          yield new ModifierWithTokens(Modifier.NON_SEALED, tokens.subList(0, 3));
+        }
+        yield null;
+      }
+      default -> null;
+    };
+  }
+
+  /**
+   * A modifier and the tokens that make up its representation. This would be trivial except for
+   * {@code non-sealed}, which is composed of three tokens.
+   */
+  record ModifierWithTokens(Modifier modifier, List<ErrorProneToken> tokens) {
+    ModifierWithTokens(Modifier modifier, ErrorProneToken token) {
+      this(modifier, ImmutableList.of(token));
+    }
+
+    int pos() {
+      return tokens().getFirst().pos();
+    }
+
+    int endPos() {
+      return tokens().getLast().endPos();
+    }
+
+    static ImmutableList<ModifierWithTokens> fromTokens(List<ErrorProneToken> tokens) {
+      ImmutableList.Builder<ModifierWithTokens> builder = ImmutableList.builder();
+      while (!tokens.isEmpty()) {
+        ModifierWithTokens mod = getTokModifierKind(tokens);
+        if (mod != null) {
+          builder.add(mod);
+          tokens = tokens.subList(mod.tokens().size(), tokens.size());
+          continue;
+        }
+        tokens = tokens.subList(1, tokens.size());
+      }
+      return builder.build();
+    }
   }
 
   /**
@@ -497,9 +542,7 @@ public final class SuggestedFixes {
   private static int endPosition(
       DCTree.DCEndPosTree<?> node, DCTree.DCDocComment comment, DocTreePath docPath) {
     JCDiagnostic.DiagnosticPosition pos = node.pos(comment);
-    EndPosTable endPositions =
-        ((JCCompilationUnit) docPath.getTreePath().getCompilationUnit()).endPositions;
-    return pos.getEndPosition(endPositions);
+    return getEndPosition(pos, docPath.getTreePath().getCompilationUnit());
   }
 
   /**

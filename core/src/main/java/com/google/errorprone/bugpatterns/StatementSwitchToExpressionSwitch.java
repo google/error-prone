@@ -198,6 +198,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       return NO_MATCH;
     }
 
+    if (switchTree.getCases().isEmpty()) {
+      return NO_MATCH;
+    }
+
     AnalysisResult analysisResult = analyzeSwitchTree(switchTree, state);
 
     List<SuggestedFix> suggestedFixes = new ArrayList<>();

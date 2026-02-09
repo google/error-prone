@@ -45,6 +45,8 @@ import java.util.Date;
 import java.util.Deque;
 import java.util.DuplicateFormatFlagsException;
 import java.util.FormatFlagsConversionMismatchException;
+import java.util.Formattable;
+import java.util.Formatter;
 import java.util.GregorianCalendar;
 import java.util.IllegalFormatCodePointException;
 import java.util.IllegalFormatConversionException;
@@ -212,7 +214,12 @@ public final class FormatStringValidation {
         return getInstance(getOnlyElement(asLazyArg.getTypeArguments()), state);
       }
     }
-    return new Object();
+    return new Formattable() {
+      @Override
+      public void formatTo(Formatter formatter, int flags, int width, int precision) {
+        formatter.format("hello");
+      }
+    };
   }
 
   private static boolean isSubtype(Types types, Type t, Type s) {

@@ -57,6 +57,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.inject.Inject;
 
 /**
  * Matches invalid Javadoc tags, and tries to suggest fixes.
@@ -73,6 +74,13 @@ public final class InvalidInlineTag extends BugChecker
       Pattern.compile("^\\{?@param ([a-zA-Z0-9]+)}?");
 
   private static final Splitter DOT_SPLITTER = Splitter.on('.');
+
+  private final KnownTags knownTags;
+
+  @Inject
+  InvalidInlineTag(KnownTags knownTags) {
+    this.knownTags = knownTags;
+  }
 
   private void scanTags(
       VisitorState state, Context context, ImmutableSet<String> parameters, DocTreePath path) {
@@ -272,6 +280,9 @@ public final class InvalidInlineTag extends BugChecker
     @Override
     public Void visitUnknownInlineTag(UnknownInlineTagTree unknownInlineTagTree, Void unused) {
       String name = unknownInlineTagTree.getTagName();
+      if (knownTags.isKnownTag(inlineTag(name))) {
+        return null;
+      }
       if (name.equals("param")) {
         int startPos = Utils.getStartPosition(unknownInlineTagTree, state);
         int endPos = Utils.getEndPosition(unknownInlineTagTree, state);
@@ -377,8 +388,9 @@ public final class InvalidInlineTag extends BugChecker
       if (!(docTree instanceof DCInlineTag<?> dCInlineTag)) {
         return null;
       }
-      JavadocTag tag = inlineTag(dCInlineTag.getTagName());
-      if (context.validTags.contains(tag) || JavadocTag.KNOWN_OTHER_TAGS.contains(tag)) {
+      String tagName = dCInlineTag.getTagName();
+      JavadocTag tag = inlineTag(tagName);
+      if (context.validTags.contains(tag) || knownTags.isKnownTag(tag)) {
         return null;
       }
       String message =

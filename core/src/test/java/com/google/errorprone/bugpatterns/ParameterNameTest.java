@@ -21,7 +21,6 @@ import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEX
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -516,28 +515,33 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import " + InnerClassTest.class.getCanonicalName() + ";",
-            "class Test {",
-            "  {",
-            "    new InnerClassTest().new Inner(/* foo= */ 1, /* bar= */ 2);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.ParameterNameTest.InnerClassTest;
+
+            class Test {
+              {
+                new InnerClassTest().new Inner(/* foo= */ 1, /* bar= */ 2);
+              }
+            }
+            """)
         .doTest();
   }
 
-  @Ignore // see b/64954766
   @Test
   public void innerClassPositive() {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import " + InnerClassTest.class.getCanonicalName() + ";",
-            "class Test {",
-            "  {",
-            "    // BUG: Diagnostic contains:",
-            "    new InnerClassTest().new Inner(/* bar= */ 1, /* foo= */ 2);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.ParameterNameTest.InnerClassTest;
+
+            class Test {
+              {
+                // BUG: Diagnostic contains:
+                new InnerClassTest().new Inner(/* bar= */ 1, /* foo= */ 2);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -551,30 +555,33 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import " + Foo.class.getCanonicalName() + ";",
-            "class Test {",
-            "  {",
-            "    new Foo(/* foo= */ 1, /* bar= */ 2) {",
-            "    };",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.ParameterNameTest.Foo;
+
+            class Test {
+              {
+                new Foo(/* foo= */ 1, /* bar= */ 2) {};
+              }
+            }
+            """)
         .doTest();
   }
 
-  @Ignore // see b/65065109
   @Test
   public void anonymousClassConstructor() {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import " + Foo.class.getCanonicalName() + ";",
-            "class Test {",
-            "  {",
-            "    // BUG: Diagnostic contains:",
-            "    new Foo(/* bar= */ 1, /* foo= */ 2) {",
-            "    };",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.ParameterNameTest.Foo;
+
+            class Test {
+              {
+                // BUG: Diagnostic contains:
+                new Foo(/* bar= */ 1, /* foo= */ 2) {};
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -636,28 +643,33 @@ public class ParameterNameTest {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import " + AnnotatedParametersTestClass.class.getCanonicalName() + ";",
-            "class Test {",
-            "  void test() {",
-            "    AnnotatedParametersTestClass.target(/* foo= */ 1);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.ParameterNameTest.AnnotatedParametersTestClass;
+
+            class Test {
+              void test() {
+                AnnotatedParametersTestClass.target(/* foo= */ 1);
+              }
+            }
+            """)
         .doTest();
   }
 
-  @Ignore // TODO(b/67993065): remove @Ignore after the issue is fixed.
   @Test
   public void externalAnnotatedParameterPositive() {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import " + AnnotatedParametersTestClass.class.getCanonicalName() + ";",
-            "class Test {",
-            "  void test() {",
-            "    // BUG: Diagnostic contains: target(/* foo= */ 1)",
-            "    AnnotatedParametersTestClass.target(/* bar= */ 1);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.ParameterNameTest.AnnotatedParametersTestClass;
+
+            class Test {
+              void test() {
+                // BUG: Diagnostic contains: target(/* foo= */ 1)
+                AnnotatedParametersTestClass.target(/* bar= */ 1);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -897,12 +909,15 @@ class Test {
     testHelper
         .addSourceLines(
             "Test.java",
-            "import " + Holder.class.getCanonicalName() + ";",
-            "class Test {",
-            "  void bar() {",
-            "    Holder.varargsMethod(/* values...= */ 1, 1, 1);",
-            "  }",
-            "}")
+            """
+            import com.google.errorprone.bugpatterns.ParameterNameTest.Holder;
+
+            class Test {
+              void bar() {
+                Holder.varargsMethod(/* values...= */ 1, 1, 1);
+              }
+            }
+            """)
         .withClasspath(Holder.class, ParameterNameTest.class)
         .doTest();
   }
@@ -970,6 +985,24 @@ class Test {
             public class A {
               // BUG: Diagnostic contains:
               Object x = eq(/* notValue= */ 1);
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void enumConstructor() {
+    testHelper
+        .addSourceLines(
+            "E.java",
+            """
+            package test.a;
+
+            public enum E {
+              // BUG: Diagnostic contains:
+              ONE(/* foo= */ 1);
+
+              E(int bar) {}
             }
             """)
         .doTest();

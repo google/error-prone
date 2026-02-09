@@ -199,7 +199,8 @@ public final class IdentifierName extends BugChecker
         if (NamedParameterComment.containsSyntheticParameterName(superMethod)) {
           return NO_MATCH;
         }
-        if (index < superMethod.getParameters().size()
+        if (index >= 0
+            && index < superMethod.getParameters().size()
             && superMethod.getParameters().get(index).getSimpleName().contentEquals(name)) {
           return NO_MATCH;
         }

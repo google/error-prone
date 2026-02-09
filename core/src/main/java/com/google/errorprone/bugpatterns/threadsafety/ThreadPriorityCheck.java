@@ -45,7 +45,13 @@ public class ThreadPriorityCheck extends BugChecker implements MethodInvocationT
   private static final Matcher<ExpressionTree> THREAD_MATCHERS =
       anyOf(
           Matchers.staticMethod().onClass("java.lang.Thread").named("yield"),
-          Matchers.instanceMethod().onDescendantOf("java.lang.Thread").named("setPriority"));
+          Matchers.instanceMethod().onDescendantOf("java.lang.Thread").named("setPriority"),
+          Matchers.instanceMethod()
+              .onDescendantOf("java.lang.Thread.Builder.OfPlatform")
+              .named("priority"),
+          Matchers.instanceMethod()
+              .onDescendantOf("com.google.common.util.concurrent.ThreadFactoryBuilder")
+              .named("setPriority"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

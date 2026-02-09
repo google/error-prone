@@ -186,7 +186,7 @@ public class ReturnValueIgnoredTest {
                 // BUG: Diagnostic contains: Return value of 'toString' must be used
                 Arrays.toString(objects);
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -251,7 +251,7 @@ public class ReturnValueIgnoredTest {
                 Arrays.fill(numbers, 0);
                 Arrays.sort(numbers);
               }
-            }\
+            }
             """)
         .doTest();
   }

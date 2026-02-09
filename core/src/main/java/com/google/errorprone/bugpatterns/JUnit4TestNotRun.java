@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.JUnitMatchers.containsTestMethod;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestClass;
 import static com.google.errorprone.matchers.JUnitMatchers.isJunit3TestCase;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -37,7 +36,6 @@ import static javax.lang.model.element.Modifier.STATIC;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -120,13 +118,8 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<Tree> NOT_STATIC = not(hasModifier(STATIC));
 
-  private final boolean removeAssertionRequirement;
-
   @Inject
-  JUnit4TestNotRun(ErrorProneFlags flags) {
-    this.removeAssertionRequirement =
-        flags.getBoolean("JUnit4TestNotRun:RemoveAssertionRequirement").orElse(true);
-  }
+  JUnit4TestNotRun() {}
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
@@ -218,8 +211,7 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
 
     // Method non-static and contains call(s) to testing method, probably a test,
     // unless it is called elsewhere in the class, in which case it is a helper method.
-    if (NOT_STATIC.matches(methodTree, state)
-        && (removeAssertionRequirement || containsTestMethod(methodTree))) {
+    if (NOT_STATIC.matches(methodTree, state)) {
       return Optional.of(describeFixes(methodTree, state));
     }
     return Optional.empty();

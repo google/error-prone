@@ -32,7 +32,6 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
 import static java.lang.String.format;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -178,7 +177,7 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
           staticMethod()
               .onClass("org.mockito.Mockito")
               .named("mock")
-              .withParametersOfType(ImmutableList.of(OBJECT_TYPE_ARRAY)));
+              .withParametersOfType(OBJECT_TYPE_ARRAY));
 
   private static final Matcher<MethodInvocationTree> DO_CALL_REAL_METHOD =
       anyOf(

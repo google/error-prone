@@ -77,7 +77,7 @@ public class CollectionToArraySafeParameterTest {
               class FooBar<T> extends HashSet<String> {}
 
               class Foo<T> extends HashSet<T> {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -142,7 +142,7 @@ public class CollectionToArraySafeParameterNegativeCases {
       return new Integer[10];
     }
   }
-}\
+}
 """)
         .doTest();
   }

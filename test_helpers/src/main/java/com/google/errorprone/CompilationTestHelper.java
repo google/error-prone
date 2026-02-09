@@ -69,6 +69,7 @@ public class CompilationTestHelper {
           "-XDdev",
           "-parameters",
           "-XDcompilePolicy=simple",
+          "-XDaddTypeAnnotationsToSymbol=true",
           // Don't limit errors/warnings for tests to the default of 100
           "-Xmaxerrs",
           "500",

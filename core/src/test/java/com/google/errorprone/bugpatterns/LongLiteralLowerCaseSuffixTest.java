@@ -141,7 +141,7 @@ public class LongLiteralLowerCaseSuffixPositiveCase2 {
     // BUG: Diagnostic contains: value = 0_1__2L
     long value = 0_1__2l;
   }
-}\
+}
 """)
         .doTest();
   }
@@ -200,7 +200,7 @@ public class LongLiteralLowerCaseSuffixPositiveCase2 {
               public void negativeHexUpperCase() {
                 long value = -0x80L;
               }
-            }\
+            }
             """)
         .doTest();
   }

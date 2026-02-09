@@ -21,6 +21,7 @@ import static com.google.errorprone.util.ASTHelpers.stringContainsComments;
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.DescriptionListener;
+import com.google.errorprone.fixes.ErrorPronePosition;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -112,7 +113,11 @@ abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
           }
         }
         Description.Builder builder =
-            Description.builder(match.getLocation(), rule().qualifiedTemplateClass(), "", "")
+            Description.builder(
+                    ErrorPronePosition.from(match.getLocation()),
+                    rule().qualifiedTemplateClass(),
+                    "",
+                    "")
                 .overrideSeverity(SeverityLevel.WARNING);
 
         if (rule().afterTemplates().isEmpty()) {

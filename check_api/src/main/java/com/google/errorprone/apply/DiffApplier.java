@@ -69,6 +69,7 @@ public class DiffApplier extends AbstractService {
             5,
             TimeUnit.SECONDS,
             new ArrayBlockingQueue<Runnable>(50),
+            Thread.ofPlatform().name("DiffApplier.workerService").factory(),
             new ThreadPoolExecutor.CallerRunsPolicy());
   }
 

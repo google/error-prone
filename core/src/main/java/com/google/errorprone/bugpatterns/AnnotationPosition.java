@@ -18,8 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.concat;
+import static com.google.common.collect.Sets.toImmutableEnumSet;
+import static com.google.common.collect.Streams.concat;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
@@ -28,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.getAnnotationType;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.Comparator.naturalOrder;
+import static java.util.EnumSet.allOf;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
@@ -54,7 +56,6 @@ import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.TypeAnnotations.AnnotationType;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -75,21 +76,6 @@ import org.jspecify.annotations.Nullable;
     link = "https://google.github.io/styleguide/javaguide.html#s4.8.5-annotations")
 public final class AnnotationPosition extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
-
-  private static final ImmutableMap<String, TokenKind> TOKEN_KIND_BY_NAME =
-      Arrays.stream(TokenKind.values()).collect(toImmutableMap(tk -> tk.name(), tk -> tk));
-
-  private static final ImmutableSet<TokenKind> MODIFIERS =
-      Streams.concat(
-              Arrays.stream(Modifier.values())
-                  .map(m -> TOKEN_KIND_BY_NAME.get(m.name()))
-                  // TODO(b/168625474): sealed doesn't have a token kind in Java 15
-                  .filter(Objects::nonNull),
-              // Pretend that "<" and ">" are modifiers, so that type arguments wind up grouped with
-              // modifiers.
-              Stream.of(TokenKind.LT, TokenKind.GT, TokenKind.GTGT))
-          .collect(toImmutableSet());
-
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     return handle(tree, tree.getSimpleName(), tree.getModifiers(), state);
@@ -112,11 +98,11 @@ public final class AnnotationPosition extends BugChecker
     }
 
     int treePos = getStartPosition(tree);
-    List<ErrorProneToken> tokens = annotationTokens(tree, state, treePos);
+    ImmutableList<ErrorProneToken> tokens = annotationTokens(tree, state, treePos);
     ErrorProneComment danglingJavadoc = findOrphanedJavadoc(name, tokens);
 
     ImmutableList<ErrorProneToken> modifierTokens =
-        tokens.stream().filter(t -> MODIFIERS.contains(t.kind())).collect(toImmutableList());
+        tokens.stream().filter(t -> isModifier(t)).collect(toImmutableList());
 
     int firstModifierPos =
         modifierTokens.stream().findFirst().map(x -> x.pos()).orElse(Integer.MAX_VALUE);
@@ -150,32 +136,35 @@ public final class AnnotationPosition extends BugChecker
   private static ImmutableList<ErrorProneToken> annotationTokens(
       Tree tree, VisitorState state, int annotationEnd) {
     int endPos;
-    if (tree instanceof MethodTree methodTree) {
-      if (methodTree.getReturnType() != null) {
-        endPos = getStartPosition(methodTree.getReturnType());
-      } else if (!methodTree.getParameters().isEmpty()) {
-        endPos = getStartPosition(methodTree.getParameters().getFirst());
-        if (endPos < annotationEnd) {
+    switch (tree) {
+      case MethodTree methodTree -> {
+        if (methodTree.getReturnType() != null) {
+          endPos = getStartPosition(methodTree.getReturnType());
+        } else if (!methodTree.getParameters().isEmpty()) {
+          endPos = getStartPosition(methodTree.getParameters().getFirst());
+          if (endPos < annotationEnd) {
+            endPos = state.getEndPosition(methodTree);
+          }
+        } else if (methodTree.getBody() != null
+            && !methodTree.getBody().getStatements().isEmpty()) {
+          endPos = getStartPosition(methodTree.getBody().getStatements().getFirst());
+        } else {
           endPos = state.getEndPosition(methodTree);
         }
-      } else if (methodTree.getBody() != null && !methodTree.getBody().getStatements().isEmpty()) {
-        endPos = getStartPosition(methodTree.getBody().getStatements().getFirst());
-      } else {
-        endPos = state.getEndPosition(methodTree);
       }
-    } else if (tree instanceof VariableTree variableTree) {
-      endPos = getStartPosition(variableTree.getType());
-      if (endPos == -1) {
-        // handle 'var'
-        endPos = state.getEndPosition(variableTree.getModifiers());
+      case VariableTree variableTree -> {
+        endPos = getStartPosition(variableTree.getType());
+        if (endPos == -1) {
+          // handle 'var'
+          endPos = state.getEndPosition(variableTree.getModifiers());
+        }
       }
-    } else if (tree instanceof ClassTree classTree) {
-      endPos =
-          classTree.getMembers().isEmpty()
-              ? state.getEndPosition(classTree)
-              : getStartPosition(classTree.getMembers().getFirst());
-    } else {
-      throw new AssertionError();
+      case ClassTree classTree ->
+          endPos =
+              classTree.getMembers().isEmpty()
+                  ? state.getEndPosition(classTree)
+                  : getStartPosition(classTree.getMembers().getFirst());
+      default -> throw new AssertionError();
     }
     return state.getOffsetTokens(annotationEnd, endPos);
   }
@@ -209,7 +198,7 @@ public final class AnnotationPosition extends BugChecker
             .collect(toImmutableList());
 
     int lastNonTypeAnnotationOrModifierPosition =
-        Streams.concat(
+        concat(
                 Stream.of(lastModifierPos),
                 shouldBeBefore.stream().map(ASTHelpers::getStartPosition))
             .max(naturalOrder())
@@ -333,5 +322,27 @@ public final class AnnotationPosition extends BugChecker
     BEFORE,
     AFTER,
     EITHER
+  }
+
+  private static final ImmutableMap<String, TokenKind> TOKEN_KIND_BY_NAME =
+      allOf(TokenKind.class).stream().collect(toImmutableMap(tk -> tk.name(), tk -> tk));
+
+  private static final ImmutableSet<TokenKind> MODIFIERS =
+      concat(
+              allOf(Modifier.class).stream()
+                  .map(m -> TOKEN_KIND_BY_NAME.get(m.name()))
+                  // "sealed" does not have a TokenKind.
+                  .filter(Objects::nonNull),
+              // Pretend that "<" and ">" are modifiers, so that type arguments wind up grouped with
+              // modifiers.
+              Stream.of(TokenKind.LT, TokenKind.GT, TokenKind.GTGT))
+          .collect(toImmutableEnumSet());
+
+  private static boolean isModifier(ErrorProneToken t) {
+    return MODIFIERS.contains(t.kind())
+        || (t.kind().equals(TokenKind.IDENTIFIER)
+            // It suffices here to consider "non" to be a modifier by itself, given we only use this
+            // method to find the start/end of the modifiers.
+            && (t.name().contentEquals("sealed") || t.name().contentEquals("non")));
   }
 }

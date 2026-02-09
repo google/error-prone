@@ -2511,4 +2511,23 @@ abstract class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void parseError() {
+    compilationHelper
+        .addSourceLines(
+            "IllegalStartOfExpression.java",
+            """
+            package example;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+
+            public class IllegalStartOfExpression {
+              @GuardedBy("itself (synchronized blocks)")
+              // BUG: Diagnostic contains: could not resolve
+              int field;
+            }
+            """)
+        .doTest();
+  }
 }

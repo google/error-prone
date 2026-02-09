@@ -205,7 +205,7 @@ public class ThreadJoinLoopTest {
                   }
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -335,7 +335,7 @@ public class ThreadJoinLoopTest {
                   }
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -514,7 +514,7 @@ public class ThreadJoinLoopTest {
                   }
                 }
               }
-            }\
+            }
             """)
         .addOutputLines(
             "ThreadJoinLoopPositiveCases_expected.java",
@@ -595,7 +595,7 @@ public class ThreadJoinLoopTest {
                   Uninterruptibles.joinUninterruptibly(this);
                 }
               }
-            }\
+            }
             """)
         .doTest(TestMode.AST_MATCH);
   }

@@ -32,9 +32,12 @@ public final class BadInstanceofTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(BadInstanceof.class, getClass());
 
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(BadInstanceof.class, getClass());
+
   @Test
   public void refactoring() {
-    BugCheckerRefactoringTestHelper.newInstance(BadInstanceof.class, getClass())
+    refactoringHelper
         .addInputLines(
             "Test.java",
             """
@@ -108,6 +111,38 @@ class C extends A {}
 
             class C extends A {}
             """)
+        .doTest();
+  }
+
+  @Test
+  public void patternMatching_finding() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class A {
+              String foo(String s) {
+                // BUG: Diagnostic contains:
+                return s instanceof String x ? x : "null";
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void patternMatching_noFix() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class A {
+              String foo(String s) {
+                return s instanceof String x ? x : "null";
+              }
+            }
+            """)
+        .expectUnchanged()
         .doTest();
   }
 }

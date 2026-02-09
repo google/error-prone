@@ -30,9 +30,6 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
-import static com.sun.source.tree.Tree.Kind.ANNOTATED_TYPE;
-import static com.sun.source.tree.Tree.Kind.ARRAY_TYPE;
-import static com.sun.source.tree.Tree.Kind.IDENTIFIER;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 import static com.sun.tools.javac.parser.Tokens.TokenKind.DOT;
 import static java.lang.Boolean.TRUE;
@@ -68,14 +65,13 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.Trees;
+import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.processing.JavacProcessingEnvironment;
 import java.util.Objects;
 import java.util.Set;
 import javax.lang.model.element.Name;
@@ -86,7 +82,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author awturner@google.com (Andy Turner)
  */
-class NullnessUtils {
+final class NullnessUtils {
   private NullnessUtils() {}
 
   private static final Matcher<ExpressionTree> OPTIONAL_OR_NULL =
@@ -633,8 +629,7 @@ class NullnessUtils {
   }
 
   static @Nullable VariableTree findDeclaration(VisitorState state, Symbol sym) {
-    JavacProcessingEnvironment javacEnv = JavacProcessingEnvironment.instance(state.context);
-    TreePath declPath = Trees.instance(javacEnv).getPath(sym);
+    TreePath declPath = JavacTrees.instance(state.context).getPath(sym);
     // Skip fields declared in other compilation units since we can't make a fix for them here.
     if (declPath != null
         && declPath.getCompilationUnit() == state.getPath().getCompilationUnit()

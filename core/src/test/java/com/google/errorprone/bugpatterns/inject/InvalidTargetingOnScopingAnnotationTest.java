@@ -96,7 +96,7 @@ public class InvalidTargetingOnScopingAnnotationTest {
               @ScopeAnnotation
               @Retention(RUNTIME)
               public @interface TestAnnotation7 {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -146,7 +146,7 @@ public class InvalidTargetingOnScopingAnnotationNegativeCases {
   @Target(PARAMETER)
   @Retention(RUNTIME)
   public @interface TestAnnotation4 {}
-}\
+}
 """)
         .doTest();
   }

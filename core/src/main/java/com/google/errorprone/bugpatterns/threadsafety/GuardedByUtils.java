@@ -19,18 +19,20 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
+import static com.google.errorprone.util.ErrorProneLog.deferredDiagnosticHandler;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
+import com.google.errorprone.util.ErrorProneParser;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.parser.JavacParser;
-import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -74,17 +76,21 @@ public final class GuardedByUtils {
 
   static JCTree.JCExpression parseString(String guardedByString, Context context) {
     JavacParser parser =
-        ParserFactory.instance(context)
-            .newParser(
-                guardedByString,
-                /* keepDocComments= */ false,
-                /* keepEndPos= */ true,
-                /* keepLineMap= */ false);
+        ErrorProneParser.newParser(
+            context,
+            guardedByString,
+            /* keepDocComments= */ false,
+            /* keepEndPos= */ true,
+            /* keepLineMap= */ false);
+    Log log = Log.instance(context);
+    Log.DeferredDiagnosticHandler deferredDiagnosticHandler = deferredDiagnosticHandler(log);
     JCTree.JCExpression exp;
     try {
       exp = parser.parseExpression();
     } catch (RuntimeException e) {
       throw new IllegalGuardedBy(e.getMessage());
+    } finally {
+      log.popDiagnosticHandler(deferredDiagnosticHandler);
     }
     int len = (parser.getEndPos(exp) - exp.getStartPosition());
     if (len != guardedByString.length()) {

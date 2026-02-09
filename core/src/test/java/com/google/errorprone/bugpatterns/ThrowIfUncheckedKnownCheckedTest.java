@@ -71,7 +71,7 @@ public class ThrowIfUncheckedKnownCheckedTest {
               }
 
               void foo() throws IOException, ExecutionException {}
-            }\
+            }
             """)
         .doTest();
   }
@@ -147,7 +147,7 @@ public class ThrowIfUncheckedKnownCheckedTestNegativeCases {
     throwIfUnchecked(null); // throws NPE
     propagateIfPossible(null); // no-op
   }
-}\
+}
 """)
         .doTest();
   }

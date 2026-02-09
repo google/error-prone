@@ -45,9 +45,11 @@ import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.AppliedFix;
+import com.google.errorprone.fixes.ErrorProneEndPosTable;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ErrorProneParser;
 import com.google.errorprone.util.MoreAnnotations;
 import com.google.errorprone.util.OperatorPrecedence;
 import com.sun.source.tree.AssignmentTree;
@@ -66,10 +68,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.parser.JavacParser;
-import com.sun.tools.javac.parser.ParserFactory;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -374,12 +373,12 @@ public final class Inliner extends BugChecker
   }
 
   private static JavacParser newParser(String replacement, VisitorState state) {
-    return ParserFactory.instance(state.context)
-        .newParser(
-            replacement,
-            /* keepDocComments= */ true,
-            /* keepEndPos= */ true,
-            /* keepLineMap= */ true);
+    return ErrorProneParser.newParser(
+        state.context,
+        replacement,
+        /* keepDocComments= */ true,
+        /* keepEndPos= */ true,
+        /* keepLineMap= */ true);
   }
 
   private static List<? extends ExpressionTree> getArguments(Tree tree) {
@@ -572,15 +571,7 @@ public final class Inliner extends BugChecker
     return false;
   }
 
-  private static EndPosTable asEndPosTable(JavacParser parser) {
-    return (EndPosTable)
-        Proxy.newProxyInstance(
-            EndPosTable.class.getClassLoader(),
-            new Class<?>[] {EndPosTable.class},
-            (proxy, method, args) ->
-                switch (method.getName()) {
-                  case "getEndPos" -> parser.getEndPos((JCTree) args[0]);
-                  default -> throw new AssertionError("Unexpected method: " + method.getName());
-                });
+  private static ErrorProneEndPosTable asEndPosTable(JavacParser parser) {
+    return tree -> parser.getEndPos((JCTree) tree);
   }
 }

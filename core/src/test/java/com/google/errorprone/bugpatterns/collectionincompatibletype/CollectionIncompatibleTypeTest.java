@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -292,7 +291,7 @@ public class CollectionIncompatibleTypePositiveCases {
     // BUG: Diagnostic contains:
     return collection.contains(nonFinalClass1);
   }
-}\
+}
 """)
         .doTest();
   }
@@ -568,7 +567,7 @@ public class CollectionIncompatibleTypeNegativeCases {
       Set<Class<? extends Iterable<?>>> iterables, Class<ArrayList> arrayListClass) {
     iterables.contains(arrayListClass);
   }
-}\
+}
 """)
         .doTest();
   }
@@ -589,7 +588,7 @@ public class CollectionIncompatibleTypeNegativeCases {
                 Properties properties = new Properties();
                 properties.get("");
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -609,7 +608,7 @@ public class CollectionIncompatibleTypeNegativeCases {
               public void test(K k) {
                 get(k);
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -665,9 +664,7 @@ public class CollectionIncompatibleTypeNegativeCases {
         .doTest(TestMode.TEXT_MATCH);
   }
 
-  // This test is disabled because calling Types#asSuper in the check removes the upper bound on K.
   @Test
-  @Ignore
   public void boundedTypeParameters() {
     compilationHelper
         .addSourceLines(

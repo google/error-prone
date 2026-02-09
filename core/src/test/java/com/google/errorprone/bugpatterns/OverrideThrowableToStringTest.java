@@ -72,7 +72,7 @@ public class OverrideThrowableToStringTest {
                   return "";
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -119,7 +119,7 @@ public class OverrideThrowableToStringTest {
                   return "";
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -166,7 +166,7 @@ public class OverrideThrowableToStringTest {
                   return "";
                 }
               }
-            }\
+            }
             """)
         .addOutputLines(
             "OverrideThrowableToStringPositiveCases_expected.java",
@@ -205,7 +205,7 @@ public class OverrideThrowableToStringTest {
                   return "";
                 }
               }
-            }\
+            }
             """)
         .doTest(TestMode.AST_MATCH);
   }
@@ -223,7 +223,7 @@ public class OverrideThrowableToStringTest {
               public String toString() {
                 return "";
               }
-            }\
+            }
             """)
         .doTest();
   }

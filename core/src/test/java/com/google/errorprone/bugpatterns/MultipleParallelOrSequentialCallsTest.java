@@ -170,7 +170,7 @@ class MultipleParallelOrSequentialCallsPositiveCases {
       return true;
     }
   }
-}\
+}
 """)
         .doTest();
   }
@@ -231,7 +231,7 @@ class MultipleParallelOrSequentialCallsPositiveCases {
                   return null;
                 }
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -373,7 +373,7 @@ class MultipleParallelOrSequentialCallsPositiveCases {
       return true;
     }
   }
-}\
+}
 """)
         .addOutputLines(
             "MultipleParallelOrSequentialCallsPositiveCases_expected.java",
@@ -503,7 +503,7 @@ class MultipleParallelOrSequentialCallsPositiveCases {
       return true;
     }
   }
-}\
+}
 """)
         .doTest(TestMode.AST_MATCH);
   }

@@ -73,7 +73,7 @@ public class MultipleUnaryOperatorsInMethodCallTest {
               public static int someFunction(int a) {
                 return 0;
               }
-            }\
+            }
             """)
         .doTest();
   }
@@ -102,7 +102,7 @@ public class MultipleUnaryOperatorsInMethodCallTest {
               }
 
               public static void testMethod(int one, int two) {}
-            }\
+            }
             """)
         .doTest();
   }

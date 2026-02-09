@@ -695,4 +695,135 @@ public final class UnusedMethodTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void overriddenRecordGetter_isUsedByDestructuring() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private record R(int x, int y) {
+                @Override
+                public int x() {
+                  return x;
+                }
+              }
+
+              int f(R r) {
+                return switch (r) {
+                  case R(int x, int y) -> x;
+                  default -> 0;
+                };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void otherOverriddenMethod_stillFlagged() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private record R(int x, int y) {
+                // BUG: Diagnostic contains:
+                public int frobnicator() {
+                  return x;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void overriddenMethod_visibleFromSubclass_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private interface Frobnicator {
+                int frobnicate();
+              }
+
+              public class Impl implements Frobnicator {
+                @Override
+                public int frobnicate() {
+                  return 0;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void overriddenMethod_notVisibleOutside() {
+    // Note that while the finding is correct here, the fix is not by itself: the method and all its
+    // overrides could be removed.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private interface Frobnicator {
+                // BUG: Diagnostic contains:
+                int frobnicate();
+              }
+
+              private class Impl implements Frobnicator {
+                @Override
+                public int frobnicate() {
+                  return 0;
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              private interface Frobnicator {}
+
+              private class Impl implements Frobnicator {
+                @Override
+                public int frobnicate() {
+                  return 0;
+                }
+              }
+            }
+            """)
+        .allowBreakingChanges()
+        .doTest();
+  }
+
+  @Test
+  public void overriddenMethod_notVisibleOutside_butUsed() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private interface Frobnicator {
+                int frobnicate();
+              }
+
+              private class Impl implements Frobnicator {
+                @Override
+                public int frobnicate() {
+                  return 0;
+                }
+              }
+
+              void f(Frobnicator f) {
+                var unused = f.frobnicate();
+              }
+            }
+            """)
+        .doTest();
+  }
 }

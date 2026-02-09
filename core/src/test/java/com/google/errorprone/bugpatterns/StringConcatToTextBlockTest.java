@@ -120,7 +120,7 @@ public class StringConcatToTextBlockTest {
                   \"""
                   hello
                   foo
-                  world\\
+                  world\
                   \""";
             }
             """)
@@ -148,7 +148,7 @@ public class StringConcatToTextBlockTest {
                   hello
                   foo
 
-                  world\\
+                  world\
                   \""";
             }
             """)
@@ -176,7 +176,7 @@ public class StringConcatToTextBlockTest {
               String s =
                   \"""
                   string
-                  literals\\
+                  literals\
                   \""";
             }
             """)
@@ -204,7 +204,7 @@ public class StringConcatToTextBlockTest {
               String s =
                   \"""
                   string
-                  literals\\
+                  literals\
                   \""";
             }
             """)
@@ -232,7 +232,7 @@ public class StringConcatToTextBlockTest {
               String s =
                   \"""
                   string
-                  literals\\
+                  literals\
                   \""";
             }
             """)

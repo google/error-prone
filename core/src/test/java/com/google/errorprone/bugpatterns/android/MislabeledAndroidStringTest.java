@@ -133,7 +133,7 @@ public class MislabeledAndroidStringTest {
                 public static final int no = 1;
                 public static final int copy = 2;
               }
-            }\
+            }
             """)
         .setArgs(ImmutableList.of("-XDandroidCompatible=true"));
   }

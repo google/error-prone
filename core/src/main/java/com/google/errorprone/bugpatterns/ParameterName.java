@@ -69,9 +69,9 @@ public class ParameterName extends BugChecker
   private final ImmutableList<String> exemptPackages;
 
   @Inject
-  ParameterName(ErrorProneFlags errorProneFlags) {
+  ParameterName(ErrorProneFlags flags) {
     this.exemptPackages =
-        errorProneFlags.getListOrEmpty("ParameterName:exemptPackagePrefixes").stream()
+        flags.getListOrEmpty("ParameterName:exemptPackagePrefixes").stream()
             // add a trailing '.' so that e.g. com.foo matches as a prefix of com.foo.bar, but not
             // com.foobar
             .map(p -> p.endsWith(".") ? p : p + ".")
@@ -80,14 +80,24 @@ public class ParameterName extends BugChecker
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    checkArguments(tree, tree.getArguments(), state.getEndPosition(tree.getMethodSelect()), state);
+    checkArguments(
+        tree, tree.getArguments(), argListStartPosition(tree.getMethodSelect(), state), state);
     return NO_MATCH;
   }
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    checkArguments(tree, tree.getArguments(), state.getEndPosition(tree.getIdentifier()), state);
+    checkArguments(
+        tree, tree.getArguments(), argListStartPosition(tree.getIdentifier(), state), state);
     return NO_MATCH;
+  }
+
+  int argListStartPosition(Tree tree, VisitorState state) {
+    int pos = state.getEndPosition(tree);
+    if (pos != Position.NOPOS) {
+      return pos;
+    }
+    return getStartPosition(tree);
   }
 
   private void checkArguments(

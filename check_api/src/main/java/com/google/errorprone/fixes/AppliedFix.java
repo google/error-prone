@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Range;
-import com.sun.tools.javac.tree.EndPosTable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +38,7 @@ public record AppliedFix(String snippet, boolean isRemoveLine) {
    * to the source, or a change only to imports.
    */
   public static @Nullable AppliedFix apply(
-      CharSequence source, EndPosTable endPositions, Fix suggestedFix) {
+      CharSequence source, ErrorProneEndPosTable endPositions, Fix suggestedFix) {
     // We apply the replacements in ascending order here. Descending is simpler, since applying a
     // replacement can't change the index for future replacements, but it leads to quadratic
     // copying behavior as we constantly shift the tail of the file around in our StringBuilder.
@@ -91,7 +90,8 @@ public record AppliedFix(String snippet, boolean isRemoveLine) {
     return firstEditedLine(replaced, shiftedReplacements.getFirst());
   }
 
-  public static String applyReplacements(CharSequence source, EndPosTable endPositions, Fix fix) {
+  public static String applyReplacements(
+      CharSequence source, ErrorProneEndPosTable endPositions, Fix fix) {
     return applyReplacements(source, fix.getReplacements(endPositions));
   }
 

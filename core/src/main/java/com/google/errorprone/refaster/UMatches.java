@@ -94,7 +94,7 @@ abstract class UMatches extends UExpression {
 
   static VisitorState makeVisitorState(Tree target, Unifier unifier) {
     Context context = unifier.getContext();
-    VisitorState state = new VisitorState(context);
+    VisitorState state = VisitorState.createForUtilityPurposes(context);
     TreePath path = TreePath.getPath(context.get(JCCompilationUnit.class), target);
     if (path != null) {
       state = state.withPath(path);

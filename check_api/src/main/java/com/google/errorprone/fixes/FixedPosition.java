@@ -17,18 +17,19 @@
 package com.google.errorprone.fixes;
 
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 
 /** A {@link DiagnosticPosition} with a fixed position. */
-public final class FixedPosition implements DiagnosticPosition {
-  private final JCTree tree;
-  private final int startPosition;
+public record FixedPosition(JCTree tree, int startPosition, int endPosition)
+    implements ErrorPronePosition {
 
   public FixedPosition(Tree tree, int startPosition) {
-    this.tree = (JCTree) tree;
-    this.startPosition = startPosition;
+    this((JCTree) tree, startPosition, startPosition);
+  }
+
+  public FixedPosition(Tree tree, int startPosition, int endPosition) {
+    this((JCTree) tree, startPosition, startPosition);
   }
 
   @Override
@@ -47,7 +48,7 @@ public final class FixedPosition implements DiagnosticPosition {
   }
 
   @Override
-  public int getEndPosition(EndPosTable endPosTable) {
-    return startPosition;
+  public int getEndPosition(ErrorProneEndPosTable endPosTable) {
+    return endPosition;
   }
 }

@@ -530,16 +530,14 @@ public class ASTHelpers {
    * <p>TODO(eaftan): Are there other places this could be used?
    */
   public static Type getReturnType(ExpressionTree expressionTree) {
-    if (expressionTree instanceof JCFieldAccess methodCall) {
-      return methodCall.type.getReturnType();
-    } else if (expressionTree instanceof JCIdent methodCall) {
-      return methodCall.type.getReturnType();
-    } else if (expressionTree instanceof JCMethodInvocation jCMethodInvocation) {
-      return getReturnType(jCMethodInvocation.getMethodSelect());
-    } else if (expressionTree instanceof JCMemberReference jCMemberReference) {
-      return jCMemberReference.sym.type.getReturnType();
-    }
-    throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
+    return switch (expressionTree) {
+      case JCFieldAccess methodCall -> methodCall.type.getReturnType();
+      case JCIdent methodCall -> methodCall.type.getReturnType();
+      case JCMethodInvocation jCMethodInvocation ->
+          getReturnType(jCMethodInvocation.getMethodSelect());
+      case JCMemberReference jCMemberReference -> jCMemberReference.sym.type.getReturnType();
+      default -> throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
+    };
   }
 
   /**
@@ -574,17 +572,16 @@ public class ASTHelpers {
    * }</pre>
    */
   public static Type getReceiverType(ExpressionTree expressionTree) {
-    if (expressionTree instanceof JCFieldAccess methodSelectFieldAccess) {
-      return methodSelectFieldAccess.selected.type;
-    } else if (expressionTree instanceof JCIdent methodCall) {
-      return methodCall.sym.owner.type;
-    } else if (expressionTree instanceof JCMethodInvocation jCMethodInvocation) {
-      return getReceiverType(jCMethodInvocation.getMethodSelect());
-    } else if (expressionTree instanceof JCMemberReference jCMemberReference) {
-      return jCMemberReference.getQualifierExpression().type;
-    }
-    throw new IllegalArgumentException(
-        "Expected a JCFieldAccess or JCIdent from expression " + expressionTree);
+    return switch (expressionTree) {
+      case JCFieldAccess methodSelectFieldAccess -> methodSelectFieldAccess.selected.type;
+      case JCIdent methodCall -> methodCall.sym.owner.type;
+      case JCMethodInvocation jCMethodInvocation ->
+          getReceiverType(jCMethodInvocation.getMethodSelect());
+      case JCMemberReference jCMemberReference -> jCMemberReference.getQualifierExpression().type;
+      default ->
+          throw new IllegalArgumentException(
+              "Expected a JCFieldAccess or JCIdent from expression " + expressionTree);
+    };
   }
 
   /**
@@ -606,22 +603,19 @@ public class ASTHelpers {
    * }</pre>
    */
   public static @Nullable ExpressionTree getReceiver(ExpressionTree expressionTree) {
-    if (expressionTree instanceof MethodInvocationTree methodInvocationTree) {
-      ExpressionTree methodSelect = methodInvocationTree.getMethodSelect();
-      if (methodSelect instanceof IdentifierTree) {
-        return null;
-      }
-      return getReceiver(methodSelect);
-    } else if (expressionTree instanceof MemberSelectTree memberSelectTree) {
-      return memberSelectTree.getExpression();
-    } else if (expressionTree instanceof MemberReferenceTree memberReferenceTree) {
-      return memberReferenceTree.getQualifierExpression();
-    } else {
-      throw new IllegalStateException(
-          String.format(
-              "Expected expression '%s' to be a method invocation or field access, but was %s",
-              expressionTree, expressionTree.getKind()));
-    }
+    return switch (expressionTree) {
+      case MethodInvocationTree methodInvocationTree ->
+          methodInvocationTree.getMethodSelect() instanceof IdentifierTree
+              ? null
+              : getReceiver(methodInvocationTree.getMethodSelect());
+      case MemberSelectTree memberSelectTree -> memberSelectTree.getExpression();
+      case MemberReferenceTree memberReferenceTree -> memberReferenceTree.getQualifierExpression();
+      default ->
+          throw new IllegalStateException(
+              String.format(
+                  "Expected expression '%s' to be a method invocation or field access, but was %s",
+                  expressionTree, expressionTree.getKind()));
+    };
   }
 
   /**
@@ -1718,24 +1712,6 @@ public class ASTHelpers {
    */
   public static boolean variableIsStaticFinal(VarSymbol var) {
     return (var.isStatic() || var.owner.isEnum()) && var.getModifiers().contains(Modifier.FINAL);
-  }
-
-  /**
-   * Returns declaration annotations of the given symbol, as well as 'top-level' type annotations,
-   * including :
-   *
-   * <ul>
-   *   <li>Type annotations of the return type of a method.
-   *   <li>Type annotations on the type of a formal parameter or field.
-   * </ul>
-   *
-   * <p>One might expect this to be equivalent to information returned by {@link
-   * Type#getAnnotationMirrors}, but javac doesn't associate type annotation information with types
-   * for symbols completed from class files, so that approach doesn't work across compilation
-   * boundaries.
-   */
-  public static Stream<Attribute.Compound> getDeclarationAndTypeAttributes(Symbol sym) {
-    return MoreAnnotations.getDeclarationAndTypeAttributes(sym);
   }
 
   /**
