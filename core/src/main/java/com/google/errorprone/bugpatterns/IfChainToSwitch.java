@@ -20,6 +20,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.SwitchUtils.COMPILE_TIME_CONSTANT_MATCHER;
+import static com.google.errorprone.bugpatterns.SwitchUtils.isEnumValue;
+import static com.google.errorprone.bugpatterns.SwitchUtils.renderComments;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -40,12 +43,11 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.IfTreeMatcher;
+import com.google.errorprone.bugpatterns.SwitchUtils.Validity;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
-import com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
@@ -88,18 +90,6 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   // it's either an ExpressionStatement or a Throw.  Refer to JLS 14 §14.11.1
   private static final ImmutableSet<Kind> KINDS_CONVERTIBLE_WITHOUT_BRACES =
       ImmutableSet.of(THROW, EXPRESSION_STATEMENT);
-  private static final Matcher<ExpressionTree> COMPILE_TIME_CONSTANT_MATCHER =
-      CompileTimeConstantExpressionMatcher.instance();
-
-  /**
-   * Tri-state of whether the if-chain is valid, invalid, or possibly valid for conversion to a
-   * switch.
-   */
-  enum Validity {
-    MAYBE_VALID,
-    INVALID,
-    VALID
-  }
 
   private final boolean enableMain;
   private final boolean enableSafe;
@@ -349,14 +339,6 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return Range.closedOpen(comment.getPos() + ifTreeStart, comment.getEndPos() + ifTreeStart);
   }
 
-  /** Render the supplied comments, separated by newlines. */
-  private static String renderComments(ImmutableList<ErrorProneComment> comments) {
-    return comments.stream()
-        .map(ErrorProneComment::getText)
-        .filter(commentText -> !commentText.isEmpty())
-        .collect(joining("\n"));
-  }
-
   /**
    * Renders Java source code representation of the supplied {@code Type} that is suitable for use
    * in fixes, where any raw types are replaced with wildcard types. For example, `List` becomes
@@ -468,7 +450,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     boolean hasPattern = cases.stream().anyMatch(x -> x.instanceOfOptional().isPresent());
 
     boolean allEnumValuesPresent =
-        isEnum(subject, state)
+        isEnumValue(subject, state)
             && handledEnumValues.containsAll(ASTHelpers.enumValues(switchType.asElement()));
 
     if (hasDefault && hasUnconditional) {
@@ -869,10 +851,6 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         ImmutableSet.copyOf(handledEnumValues));
   }
 
-  private static boolean isEnum(ExpressionTree tree, VisitorState state) {
-    return isSubtype(getType(tree), state.getSymtab().enumSym.type, state);
-  }
-
   /** Determines whether any yield or break statements are present in the tree. */
   private static boolean hasBreakOrYieldInTree(Tree tree) {
     Boolean result =
@@ -958,7 +936,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               hasElseIf);
         } else {
           // Predicate is a binary tree, but neither side is a constant.
-          if (isEnum(lhs, state) || isEnum(rhs, state)) {
+          if (isEnumValue(lhs, state) || isEnumValue(rhs, state)) {
             return validateEnumPredicateForSubject(
                 lhs,
                 rhs,
@@ -1236,8 +1214,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       int caseEndPosition,
       boolean hasElse,
       boolean hasElseIf) {
-    boolean lhsIsEnumConstant = isEnum(lhs, state) && ASTHelpers.isEnumConstant(lhs);
-    boolean rhsIsEnumConstant = isEnum(rhs, state) && ASTHelpers.isEnumConstant(rhs);
+    boolean lhsIsEnumConstant = isEnumValue(lhs, state) && ASTHelpers.isEnumConstant(lhs);
+    boolean rhsIsEnumConstant = isEnumValue(rhs, state) && ASTHelpers.isEnumConstant(rhs);
 
     if (lhsIsEnumConstant && rhsIsEnumConstant) {
       // Comparing enum const to enum const, cannot convert
@@ -1549,7 +1527,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             continue;
           }
         }
-        boolean isEnum = isEnum(constantExpression, state);
+        boolean isEnum = isEnumValue(constantExpression, state);
         if (isEnum) {
           if (lhs.guardOptional().isPresent()) {
             // Guarded patterns cannot dominate enum values
