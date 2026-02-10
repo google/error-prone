@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Streams.findLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.JUnitMatchers.TEST_CASE;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.streamReceivers;
@@ -26,19 +27,24 @@ import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import java.util.HashSet;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
@@ -50,7 +56,8 @@ import org.jspecify.annotations.Nullable;
 @BugPattern(
     summary = "A terminating method call is required for a test helper to have any effect.",
     severity = ERROR)
-public final class MissingTestCall extends BugChecker implements MethodTreeMatcher {
+public final class MissingTestCall extends BugChecker
+    implements ExpressionStatementTreeMatcher, MethodTreeMatcher {
 
   private static final ImmutableSet<MethodPairing> PAIRINGS =
       ImmutableSet.of(
@@ -86,10 +93,24 @@ public final class MissingTestCall extends BugChecker implements MethodTreeMatch
                   .onDescendantOf("com.google.errorprone.CompilationTestHelper")
                   .named("doTest")));
 
+  private final boolean matchGraphVerify;
+
+  @Inject
+  MissingTestCall(ErrorProneFlags flags) {
+    this.matchGraphVerify = flags.getBoolean("MissingTestCall:MatchGraphVerify").orElse(true);
+  }
+
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
-    ImmutableSet<MethodPairing> pairings = PAIRINGS;
+    return TEST_CASE.matches(tree, state) ? handle(tree, PAIRINGS, state) : NO_MATCH;
+  }
 
+  @Override
+  public Description matchExpressionStatement(ExpressionStatementTree tree, VisitorState state) {
+    return NO_MATCH;
+  }
+
+  private Description handle(Tree tree, ImmutableSet<MethodPairing> pairings, VisitorState state) {
     Set<MethodPairing> required = new HashSet<>();
     Set<MethodPairing> called = new HashSet<>();
     new TreePathScanner<Void, Void>() {
