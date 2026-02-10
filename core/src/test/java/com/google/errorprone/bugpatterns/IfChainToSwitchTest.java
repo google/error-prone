@@ -327,18 +327,16 @@ public final class IfChainToSwitchTest {
             import java.lang.Number;
 
             class Test {
-              private Object suit;
-
               public void foo(Suit s) {
-                this.suit = null;
+                Object suit = s;
                 System.out.println("yo");
-                if (this.suit instanceof String) {
+                if (suit instanceof String) {
                   System.out.println("It's a string!");
                 } else if (suit instanceof Number) {
                   System.out.println("It's a number!");
                 } else if (suit instanceof Suit) {
                   System.out.println("It's a Suit!");
-                } else if (this.suit instanceof Object o) {
+                } else if (suit instanceof Object o) {
                   System.out.println("It's an object!");
                 }
                 throw new AssertionError();
@@ -351,10 +349,8 @@ public final class IfChainToSwitchTest {
             import java.lang.Number;
 
             class Test {
-              private Object suit;
-
               public void foo(Suit s) {
-                this.suit = null;
+                Object suit = s;
                 System.out.println("yo");
                 switch (suit) {
                   case String unused -> System.out.println("It's a string!");
@@ -381,18 +377,16 @@ public final class IfChainToSwitchTest {
             import java.lang.Number;
 
             class Test {
-              private Object suit;
-
               public void foo(Suit s) {
-                this.suit = null;
+                Object suit = s;
                 System.out.println("yo");
-                if (this.suit instanceof String) {
+                if (suit instanceof String) {
                   System.out.println("It's a string!");
                 } else if (suit instanceof Number) {
                   System.out.println("It's a number!");
                 } else if (suit instanceof Suit) {
                   System.out.println("It's a Suit!");
-                } else if (this.suit instanceof Object o) {
+                } else if (suit instanceof Object o) {
                   System.out.println("It's an object!");
                 }
                 throw new AssertionError();
@@ -405,10 +399,8 @@ public final class IfChainToSwitchTest {
             import java.lang.Number;
 
             class Test {
-              private Object suit;
-
               public void foo(Suit s) {
-                this.suit = null;
+                Object suit = s;
                 System.out.println("yo");
                 switch (suit) {
                   case String unused -> System.out.println("It's a string!");
@@ -2372,6 +2364,69 @@ class Test {
             }
             """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_methodInvocation_error() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                if (suit.hashCode() == 1) {
+                  System.out.println("Hash code 1");
+                } else if (suit.hashCode() == 2) {
+                  System.out.println("Hash code 2");
+                } else if (suit.hashCode() == 3) {
+                  System.out.println("Hash code 3");
+                } else throw new AssertionError("Some other hash code");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                switch (suit.hashCode()) {
+                  case 1 -> System.out.println("Hash code 1");
+                  case 2 -> System.out.println("Hash code 2");
+                  case 3 -> System.out.println("Hash code 3");
+                  default -> throw new AssertionError("Some other hash code");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_methodInvocationSafe_noError() {
+    // Same code as ifChain_methodInvocation_error, but should not refactor in safe mode because the
+    // subject is not the same variable.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                if (suit.hashCode() == 1) {
+                  System.out.println("Hash code 1");
+                } else if (suit.hashCode() == 2) {
+                  System.out.println("Hash code 2");
+                } else if (suit.hashCode() == 3) {
+                  System.out.println("Hash code 3");
+                } else throw new AssertionError("Some other hash code");
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe=true")
         .doTest();
   }
 

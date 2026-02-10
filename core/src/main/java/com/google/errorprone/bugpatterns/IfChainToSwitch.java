@@ -40,6 +40,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.IfTreeMatcher;
+import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher;
@@ -103,12 +104,14 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   private final boolean enableMain;
   private final boolean enableSafe;
   private final int maxChainLength;
+  private final ConstantExpressions constantExpressions;
 
   @Inject
-  IfChainToSwitch(ErrorProneFlags flags) {
+  IfChainToSwitch(ErrorProneFlags flags, ConstantExpressions constantExpressions) {
     enableMain = flags.getBoolean("IfChainToSwitch:EnableMain").orElse(false);
     enableSafe = flags.getBoolean("IfChainToSwitch:EnableSafe").orElse(false);
     maxChainLength = flags.getInteger("IfChainToSwitch:MaxChainLength").orElse(50);
+    this.constantExpressions = constantExpressions;
   }
 
   @Override
@@ -273,14 +276,14 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       } else if (caseIr.instanceOfOptional().isPresent()) {
         InstanceOfIr instanceOfIr = caseIr.instanceOfOptional().get();
         sb.append("case ");
-        if (instanceOfIr.patternVariable() != null) {
+        if (instanceOfIr.patternVariable().isPresent()) {
           sb.append(
               printRawTypesAsWildcards(
-                  getType(instanceOfIr.patternVariable()), state, suggestedFixBuilder));
+                  getType(instanceOfIr.patternVariable().get()), state, suggestedFixBuilder));
 
-          Symbol sym = ASTHelpers.getSymbol(instanceOfIr.patternVariable());
+          Symbol sym = ASTHelpers.getSymbol(instanceOfIr.patternVariable().get());
           sb.append(" ").append(sym.getSimpleName()).append(" ");
-        } else if (instanceOfIr.type() != null && instanceOfIr.expression() != null) {
+        } else if (instanceOfIr.expression().isPresent()) {
           sb.append(
               printRawTypesAsWildcards(getType(instanceOfIr.type()), state, suggestedFixBuilder));
           // It's possible that "unused" could conflict with an existing local variable name;
@@ -441,6 +444,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
     boolean hasDefault = cases.stream().anyMatch(CaseIr::hasDefault);
     boolean hasCaseNull = cases.stream().anyMatch(CaseIr::hasCaseNull);
+    // NOMUTANTS -- this is a performance optimization
     boolean recheckDominanceNeeded = false;
 
     boolean switchOnNullWouldImplicitlyThrow = switchOnNullWouldImplicitlyThrow(subject, cases);
@@ -795,7 +799,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
    * converting it to a switch statement. Returns the analysis state following the analysis of the
    * if statement at this level.
    */
-  private static IfChainAnalysisState analyzeIfStatement(
+  private IfChainAnalysisState analyzeIfStatement(
       IfChainAnalysisState ifChainAnalysisState,
       ExpressionTree condition,
       StatementTree conditionalBlock,
@@ -899,7 +903,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
    * so even if this method returns {@code Optional.empty()} the predicate may still be convertible
    * by some other (unsupported) means.
    */
-  private static Optional<ExpressionTree> validatePredicateForSubject(
+  private Optional<ExpressionTree> validatePredicateForSubject(
       ExpressionTree predicate,
       Optional<ExpressionTree> subject,
       VisitorState state,
@@ -1028,7 +1032,23 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return Optional.empty();
   }
 
-  private static Optional<ExpressionTree> validateInstanceofForSubject(
+  /**
+   * Determines whether the {@code subject} expression "matches" the given {@code expression}. If
+   * {@code enableSafe} is true, then matching means that the subject must be referring to the same
+   * variable or constant expression. If {@code enableSafe} is false, then we also allow expressions
+   * that have potential side-effects.
+   */
+  private boolean subjectMatches(
+      ExpressionTree subject, ExpressionTree expression, VisitorState state) {
+
+    boolean sameVariable = sameVariable(subject, expression);
+
+    return enableSafe
+        ? sameVariable || constantExpressions.isSame(subject, expression, state)
+        : sameVariable || expressionSourceMatches(subject, expression, state);
+  }
+
+  private Optional<ExpressionTree> validateInstanceofForSubject(
       ExpressionTree at,
       InstanceOfTree instanceOfTree,
       Optional<ExpressionTree> subject,
@@ -1043,10 +1063,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
     ExpressionTree expression = at;
     // Does this expression and the subject (if present) refer to the same thing?
-    if (subject.isPresent()
-        && !(sameVariable(subject.get(), expression)
-            || subject.get().equals(expression)
-            || expressionSourceMatches(subject, expression, state))) {
+    if (subject.isPresent() && !subjectMatches(subject.get(), expression, state)) {
       return Optional.empty();
     }
 
@@ -1062,7 +1079,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* hasDefault= */ false,
               /* instanceOfOptional= */ Optional.of(
                   new InstanceOfIr(
-                      instanceOfTree.getExpression(), bpt.getVariable(), instanceOfTree.getType())),
+                      Optional.ofNullable(instanceOfTree.getExpression()),
+                      Optional.ofNullable(bpt.getVariable()),
+                      instanceOfTree.getType())),
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
@@ -1099,7 +1118,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* hasCaseNull= */ false,
               /* hasDefault= */ false,
               /* instanceOfOptional= */ Optional.of(
-                  new InstanceOfIr(instanceOfTree.getExpression(), null, instanceOfTree.getType())),
+                  new InstanceOfIr(
+                      Optional.ofNullable(instanceOfTree.getExpression()),
+                      Optional.empty(),
+                      instanceOfTree.getType())),
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
@@ -1128,7 +1150,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return Optional.of(expression);
   }
 
-  private static Optional<ExpressionTree> validateCompileTimeConstantForSubject(
+  private Optional<ExpressionTree> validateCompileTimeConstantForSubject(
       ExpressionTree lhs,
       ExpressionTree rhs,
       Optional<ExpressionTree> subject,
@@ -1144,10 +1166,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     ExpressionTree testExpression = compileTimeConstantOnLhs ? rhs : lhs;
     ExpressionTree compileTimeConstant = compileTimeConstantOnLhs ? lhs : rhs;
 
-    if (subject.isPresent()
-        && !(sameVariable(subject.get(), testExpression)
-            || subject.get().equals(testExpression)
-            || expressionSourceMatches(subject, testExpression, state))) {
+    if (subject.isPresent() && !subjectMatches(subject.get(), testExpression, state)) {
       // Predicate not compatible with predicate of preceding if statement
       return Optional.empty();
     }
@@ -1204,7 +1223,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return Optional.of(testExpression);
   }
 
-  private static Optional<ExpressionTree> validateEnumPredicateForSubject(
+  private Optional<ExpressionTree> validateEnumPredicateForSubject(
       ExpressionTree lhs,
       ExpressionTree rhs,
       Optional<ExpressionTree> subject,
@@ -1234,10 +1253,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     ExpressionTree compileTimeConstant = lhsIsEnumConstant ? lhs : rhs;
     ExpressionTree testExpression = lhsIsEnumConstant ? rhs : lhs;
 
-    if (subject.isPresent()
-        && !(sameVariable(subject.get(), testExpression)
-            || subject.get().equals(testExpression)
-            || expressionSourceMatches(subject, testExpression, state))) {
+    if (subject.isPresent() && !subjectMatches(subject.get(), testExpression, state)) {
       return Optional.empty();
     }
 
@@ -1292,10 +1308,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
    * comments, etc.
    */
   private static boolean expressionSourceMatches(
-      Optional<ExpressionTree> subject, ExpressionTree expression, VisitorState state) {
+      ExpressionTree subject, ExpressionTree expression, VisitorState state) {
 
-    return subject.isPresent()
-        && state.getSourceForNode(subject.get()).equals(state.getSourceForNode(expression));
+    return state.getSourceForNode(subject).equals(state.getSourceForNode(expression));
   }
 
   /** Retrieves a list of all statements (if any) following the current path, if any. */
@@ -1520,8 +1535,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
                 // Cannot unbox LHS pattern, so RHS primitive constant should come before it
                 return true;
               }
-            } else if (instanceOfIr.patternVariable() != null) {
-              VariableTree patternVariable = instanceOfIr.patternVariable();
+            } else if (instanceOfIr.patternVariable().isPresent()) {
+              VariableTree patternVariable = instanceOfIr.patternVariable().get();
               Type patternType = getType(patternVariable);
               if (isSubtype(getType(constantExpression), patternType, state)) {
                 // RHS constant can be assigned to LHS pattern
@@ -1598,12 +1613,12 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       Type lhsType =
           lhs.instanceOfOptional().get().type() != null
               ? getType(lhs.instanceOfOptional().get().type())
-              : getType(lhs.instanceOfOptional().get().patternVariable().getType());
+              : getType(lhs.instanceOfOptional().get().patternVariable().get().getType());
       var rhsInstanceOf = rhs.instanceOfOptional().get();
       Type rhsType =
           rhsInstanceOf.type() != null
               ? getType(rhsInstanceOf.type())
-              : getType(rhsInstanceOf.patternVariable().getType());
+              : getType(rhsInstanceOf.patternVariable().get().getType());
       if (isSubtype(rhsType, lhsType, state)) {
         // The LHS type is a subtype of the RHS type, so the LHS dominates the RHS
         return true;
@@ -1620,9 +1635,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
    */
   record InstanceOfIr(
       // In the example above, the expression would be `y`.
-      @Nullable ExpressionTree expression,
+      Optional<ExpressionTree> expression,
       // In the example above, the variable tree would be `Y y`.
-      @Nullable VariableTree patternVariable,
+      Optional<VariableTree> patternVariable,
       // In the example above, the type would be `Y`.
       Tree type) {
 
