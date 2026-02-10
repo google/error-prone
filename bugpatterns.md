@@ -1737,6 +1737,9 @@ Since Java 8, it&#39;s been unnecessary to make local variables and parameters &
 __[UnnecessaryOptionalGet](bugpattern/UnnecessaryOptionalGet)__<br>
 This code can be simplified by directly using the lambda parameters instead of calling get..() on optional.
 
+__[UnnecessarySemicolon](bugpattern/UnnecessarySemicolon)__<br>
+Unnecessary semicolons should be omitted. For empty block statements, prefer {}.
+
 __[UnnecessaryTestMethodPrefix](bugpattern/UnnecessaryTestMethodPrefix)__<br>
 A &#96;test&#96; prefix for a JUnit4 test is redundant, and a holdover from JUnit3. The &#96;@Test&#96; annotation makes it clear it&#39;s a test.
 

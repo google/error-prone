@@ -7319,6 +7319,10 @@ return value should be used or not.</div>
 <dd>
 <div class="block">Matches if a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ClassTree</code></a> is an enum declaration.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#isEnumConstant(com.sun.source.tree.Tree)" class="member-name-link">isEnumConstant(Tree)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns true if the given tree is an enum constant.</div>
+</dd>
 <dt><a href="com/google/errorprone/predicates/TypePredicates.html#isExactType(com.google.errorprone.suppliers.Supplier)" class="member-name-link">isExactType(Supplier)</a> - Static method in class com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicates.html" title="class in com.google.errorprone.predicates">TypePredicates</a></dt>
 <dd>
 <div class="block">Match types that are exactly equal.</div>
@@ -8658,6 +8662,8 @@ applied to a class (or interface or enum).</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/UngroupedOverloads.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchClass(ClassTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UngroupedOverloads.html" title="class in com.google.errorprone.bugpatterns">UngroupedOverloads</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/UnnecessarySemicolon.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchClass(ClassTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessarySemicolon.html" title="class in com.google.errorprone.bugpatterns">UnnecessarySemicolon</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/VarTypeName.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchClass(ClassTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/VarTypeName.html" title="class in com.google.errorprone.bugpatterns">VarTypeName</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AlreadyChecked.html#matchCompilationUnit(com.sun.source.tree.CompilationUnitTree,com.google.errorprone.VisitorState)" class="member-name-link">matchCompilationUnit(CompilationUnitTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AlreadyChecked.html" title="class in com.google.errorprone.bugpatterns">AlreadyChecked</a></dt>
@@ -8821,6 +8827,8 @@ applied to a class (or interface or enum).</div>
 <div class="block">Match empty statement if: - Parent statement is an if - The then part of the parent if is an
 empty statement, and - The else part of the parent if does not exist</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/UnnecessarySemicolon.html#matchEmptyStatement(com.sun.source.tree.EmptyStatementTree,com.google.errorprone.VisitorState)" class="member-name-link">matchEmptyStatement(EmptyStatementTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessarySemicolon.html" title="class in com.google.errorprone.bugpatterns">UnnecessarySemicolon</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/BugChecker.EnhancedForLoopTreeMatcher.html#matchEnhancedForLoop(com.sun.source.tree.EnhancedForLoopTree,com.google.errorprone.VisitorState)" class="member-name-link">matchEnhancedForLoop(EnhancedForLoopTree, VisitorState)</a> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.EnhancedForLoopTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.EnhancedForLoopTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/LoopOverCharArray.html#matchEnhancedForLoop(com.sun.source.tree.EnhancedForLoopTree,com.google.errorprone.VisitorState)" class="member-name-link">matchEnhancedForLoop(EnhancedForLoopTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/LoopOverCharArray.html" title="class in com.google.errorprone.bugpatterns">LoopOverCharArray</a></dt>
@@ -14996,6 +15004,12 @@ functions of Optionals.</div>
 <div class="block">A BugPattern; see the summary.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/UnnecessaryQualifier.html#%3Cinit%3E()" class="member-name-link">UnnecessaryQualifier()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryQualifier.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryQualifier</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/UnnecessarySemicolon.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnnecessarySemicolon</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/UnnecessarySemicolon.html#%3Cinit%3E()" class="member-name-link">UnnecessarySemicolon()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessarySemicolon.html" title="class in com.google.errorprone.bugpatterns">UnnecessarySemicolon</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/UnnecessarySetDefault.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnnecessarySetDefault</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
