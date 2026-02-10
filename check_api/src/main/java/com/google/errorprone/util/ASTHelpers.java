@@ -1169,6 +1169,12 @@ public class ASTHelpers {
     return new LinkedHashSet<>(values);
   }
 
+  /** Returns true if the given tree is an enum constant. */
+  public static boolean isEnumConstant(Tree tree) {
+    Symbol sym = ASTHelpers.getSymbol(tree);
+    return sym != null && sym.getKind() == ElementKind.ENUM_CONSTANT;
+  }
+
   /** Returns true if the given tree is a generated constructor. */
   public static boolean isGeneratedConstructor(MethodTree tree) {
     if (!(tree instanceof JCMethodDecl jCMethodDecl)) {

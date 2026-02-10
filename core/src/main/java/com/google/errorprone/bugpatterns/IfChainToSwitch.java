@@ -1217,14 +1217,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       int caseEndPosition,
       boolean hasElse,
       boolean hasElseIf) {
-    boolean lhsIsEnumConstant =
-        isEnum(lhs, state)
-            && (ASTHelpers.getSymbol(lhs) != null)
-            && (ASTHelpers.getSymbol(lhs).getKind() == ElementKind.ENUM_CONSTANT);
-    boolean rhsIsEnumConstant =
-        isEnum(rhs, state)
-            && (ASTHelpers.getSymbol(rhs) != null)
-            && (ASTHelpers.getSymbol(rhs).getKind() == ElementKind.ENUM_CONSTANT);
+    boolean lhsIsEnumConstant = isEnum(lhs, state) && ASTHelpers.isEnumConstant(lhs);
+    boolean rhsIsEnumConstant = isEnum(rhs, state) && ASTHelpers.isEnumConstant(rhs);
 
     if (lhsIsEnumConstant && rhsIsEnumConstant) {
       // Comparing enum const to enum const, cannot convert

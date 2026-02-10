@@ -447,6 +447,7 @@ import com.google.errorprone.bugpatterns.UnnecessaryMethodReference;
 import com.google.errorprone.bugpatterns.UnnecessaryOptionalGet;
 import com.google.errorprone.bugpatterns.UnnecessaryParentheses;
 import com.google.errorprone.bugpatterns.UnnecessaryQualifier;
+import com.google.errorprone.bugpatterns.UnnecessarySemicolon;
 import com.google.errorprone.bugpatterns.UnnecessarySetDefault;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryStringBuilder;
@@ -1327,6 +1328,7 @@ public class BuiltInCheckerSuppliers {
           UnnecessaryDefaultInEnumSwitch.class,
           UnnecessaryFinal.class,
           UnnecessaryOptionalGet.class,
+          UnnecessarySemicolon.class,
           UnnecessarySetDefault.class,
           UnnecessaryStaticImport.class,
           UnnecessaryTestMethodPrefix.class,
