@@ -48,7 +48,7 @@ import java.util.Set;
 @CheckReturnValue
 public class Scanner extends TreePathScanner<Void, VisitorState> {
 
-  private SuppressionInfo currentSuppressions = SuppressionInfo.EMPTY;
+  protected SuppressionInfo currentSuppressions = SuppressionInfo.EMPTY;
 
   /** Scan a tree from a position identified by a TreePath. */
   @Override
@@ -58,7 +58,12 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       return super.scan(path, state);
     } finally {
       // Restore old suppression state.
+      if (state.errorProneOptions().isWarnOnUnneededSuppressions()
+          && currentSuppressions != prevSuppressionInfo) {
+        currentSuppressions.warnOnUnusedSuppressions(state);
+      }
       currentSuppressions = prevSuppressionInfo;
+      state.setCurrentSuppressions(currentSuppressions);
     }
   }
 
@@ -74,7 +79,12 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       return super.scan(tree, state);
     } finally {
       // Restore old suppression state.
+      if (state.errorProneOptions().isWarnOnUnneededSuppressions()
+          && currentSuppressions != prevSuppressionInfo) {
+        currentSuppressions.warnOnUnusedSuppressions(state);
+      }
       currentSuppressions = prevSuppressionInfo;
+      state.setCurrentSuppressions(currentSuppressions);
     }
   }
 
@@ -91,9 +101,13 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
       if (sym != null) {
         currentSuppressions =
             currentSuppressions.withExtendedSuppressions(
-                sym, state, getCustomSuppressionAnnotations(state));
+                sym,
+                state,
+                getCustomSuppressionAnnotations(state),
+                getWarnOnUnneededSuppressWarningStrings());
       }
     }
+    state.setCurrentSuppressions(currentSuppressions);
     return prevSuppressionInfo;
   }
 
@@ -118,6 +132,10 @@ public class Scanner extends TreePathScanner<Void, VisitorState> {
    * this{@code Scanner}.
    */
   protected Set<? extends Name> getCustomSuppressionAnnotations(VisitorState state) {
+    return ImmutableSet.of();
+  }
+
+  protected Set<String> getWarnOnUnneededSuppressWarningStrings() {
     return ImmutableSet.of();
   }
 
