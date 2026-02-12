@@ -34,6 +34,7 @@ import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
@@ -69,6 +70,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.Optional;
+import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -78,6 +80,13 @@ public class JdkObsolete extends BugChecker
         ClassTreeMatcher,
         MemberReferenceTreeMatcher,
         MethodInvocationTreeMatcher {
+
+  private final Optional<Integer> androidMinSdkVersion;
+
+  @Inject
+  JdkObsolete(ErrorProneFlags flags) {
+    this.androidMinSdkVersion = flags.getInteger("JdkObsolete:AndroidMinSdkVersion");
+  }
 
   static class Obsolete {
     final String qualifiedName;
@@ -147,7 +156,12 @@ public class JdkObsolete extends BugChecker
           .stream()
           .collect(toImmutableMap(Obsolete::qualifiedName, x -> x));
 
-  private record ObsoleteApi(Matcher<ExpressionTree> matcher, String message) {}
+  private record ObsoleteApi(
+      Matcher<ExpressionTree> matcher, String message, int androidMinSdkVersion) {
+    ObsoleteApi(Matcher<ExpressionTree> matcher, String message) {
+      this(matcher, message, 1);
+    }
+  }
 
   private static final String IO_UTILS = "org.apache.commons.io.IOUtils";
 
@@ -162,7 +176,8 @@ public class JdkObsolete extends BugChecker
                   .onExactClass("java.io.ByteArrayOutputStream")
                   .named("toString")
                   .withParameters("java.lang.String"),
-              "Use ByteArrayOutputStream.toString(Charset) instead."),
+              "Use ByteArrayOutputStream.toString(Charset) instead.",
+              33),
           new ObsoleteApi(
               instanceMethod()
                   .onExactClass("java.lang.String")
@@ -174,31 +189,36 @@ public class JdkObsolete extends BugChecker
                   .onClass("java.net.URLDecoder")
                   .named("decode")
                   .withParameters("java.lang.String", "java.lang.String"),
-              "Use URLDecoder.decode(String, Charset) instead."),
+              "Use URLDecoder.decode(String, Charset) instead.",
+              33),
           new ObsoleteApi(
               staticMethod()
                   .onClass("java.net.URLEncoder")
                   .named("encode")
                   .withParameters("java.lang.String", "java.lang.String"),
-              "Use URLEncoder.encode(String, Charset) instead."),
+              "Use URLEncoder.encode(String, Charset) instead.",
+              33),
           new ObsoleteApi(
               staticMethod()
                   .onClass("java.nio.channels.Channels")
                   .named("newReader")
                   .withParameters("java.nio.channels.ReadableByteChannel", "java.lang.String"),
-              "Use Channels.newReader(ReadableByteChannel, Charset) instead."),
+              "Use Channels.newReader(ReadableByteChannel, Charset) instead.",
+              33),
           new ObsoleteApi(
               staticMethod()
                   .onClass("java.nio.channels.Channels")
                   .named("newWriter")
                   .withParameters("java.nio.channels.WritableByteChannel", "java.lang.String"),
-              "Use Channels.newWriter(WritableByteChannel, Charset) instead."),
+              "Use Channels.newWriter(WritableByteChannel, Charset) instead.",
+              33),
           new ObsoleteApi(
               instanceMethod()
                   .onExactClass("java.util.Properties")
                   .named("storeToXML")
                   .withParameters("java.io.OutputStream", "java.lang.String", "java.lang.String"),
-              "Use Properties.storeToXML(OutputStream, String, Charset) instead."),
+              "Use Properties.storeToXML(OutputStream, String, Charset) instead.",
+              35),
           new ObsoleteApi(
               staticMethod()
                   .onClass(IO_UTILS)
@@ -310,22 +330,26 @@ public class JdkObsolete extends BugChecker
               constructor()
                   .forClass("java.util.Scanner")
                   .withParameters("java.io.InputStream", "java.lang.String"),
-              "Use new Scanner(InputStream, Charset) instead."),
+              "Use new Scanner(InputStream, Charset) instead.",
+              34),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Scanner")
                   .withParameters("java.io.File", "java.lang.String"),
-              "Use new Scanner(File, Charset) instead."),
+              "Use new Scanner(File, Charset) instead.",
+              34),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Scanner")
                   .withParameters("java.nio.file.Path", "java.lang.String"),
-              "Use new Scanner(Path, Charset) instead."),
+              "Use new Scanner(Path, Charset) instead.",
+              34),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Scanner")
                   .withParameters("java.nio.channels.ReadableByteChannel", "java.lang.String"),
-              "Use new Scanner(ReadableByteChannel, Charset) instead."),
+              "Use new Scanner(ReadableByteChannel, Charset) instead.",
+              34),
           new ObsoleteApi(
               constructor()
                   .forClass("java.lang.String")
@@ -375,32 +399,38 @@ public class JdkObsolete extends BugChecker
               constructor()
                   .forClass("java.util.Formatter")
                   .withParameters("java.lang.String", "java.lang.String"),
-              "Use new Formatter(String, Charset) instead."),
+              "Use new Formatter(String, Charset) instead.",
+              34),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Formatter")
                   .withParameters("java.lang.String", "java.lang.String", "java.util.Locale"),
-              "Use new Formatter(String, Charset, Locale) instead."),
+              "Use new Formatter(String, Charset, Locale) instead.",
+              34),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Formatter")
                   .withParameters("java.io.File", "java.lang.String"),
-              "Use new Formatter(File, Charset) instead."),
+              "Use new Formatter(File, Charset) instead.",
+              34),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Formatter")
                   .withParameters("java.io.File", "java.lang.String", "java.util.Locale"),
-              "Use new Formatter(File, Charset, Locale) instead."),
+              "Use new Formatter(File, Charset, Locale) instead.",
+              34),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Formatter")
                   .withParameters("java.io.OutputStream", "java.lang.String"),
-              "Use new Formatter(OutputStream, Charset) instead."),
+              "Use new Formatter(OutputStream, Charset) instead.",
+              34),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Formatter")
                   .withParameters("java.io.OutputStream", "java.lang.String", "java.util.Locale"),
-              "Use new Formatter(OutputStream, Charset, Locale) instead."));
+              "Use new Formatter(OutputStream, Charset, Locale) instead.",
+              34));
 
   static final Matcher<ExpressionTree> MATCHER_STRINGBUFFER =
       anyOf(
@@ -702,7 +732,11 @@ public class JdkObsolete extends BugChecker
   private Description matchObsoleteApi(
       ExpressionTree tree, VisitorState state, ImmutableList<ObsoleteApi> obsoleteApis) {
     return obsoleteApis.stream()
-        .filter(api -> api.matcher().matches(tree, state))
+        .filter(
+            api ->
+                (androidMinSdkVersion.isEmpty()
+                        || androidMinSdkVersion.get() >= api.androidMinSdkVersion())
+                    && api.matcher().matches(tree, state))
         .map(api -> buildDescription(tree).setMessage(api.message()).build())
         .findFirst()
         .orElse(NO_MATCH);
