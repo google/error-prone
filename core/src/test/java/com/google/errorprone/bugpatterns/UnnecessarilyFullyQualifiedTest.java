@@ -434,4 +434,34 @@ public final class UnnecessarilyFullyQualifiedTest {
         .setArgs("-XepOpt:UnnecessarilyFullyQualified:BatchFindings=true")
         .doTest();
   }
+
+  @Test
+  public void lambdaParameter() {
+    compilationHelper
+        .addSourceLines(
+            "Lib.java",
+            """
+            import java.util.List;
+            import java.util.stream.Stream;
+
+            interface Lib {
+              Stream<List<String>> f();
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(Lib l) {
+                l.f().map(x -> x);
+              }
+
+              void g(Lib l) {
+                l.f().map(x -> x);
+              }
+            }
+            """)
+        .setArgs("-XepOpt:UnnecessarilyFullyQualified:BatchFindings=true")
+        .doTest();
+  }
 }

@@ -20,6 +20,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getGeneratedBy;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.FindIdentifiers.findIdent;
 import static com.sun.tools.javac.code.Kinds.KindSelector.VAL_TYP;
@@ -54,7 +55,6 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.Position;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -171,7 +171,7 @@ public final class UnnecessarilyFullyQualified extends BugChecker
         if (!(symbol instanceof ClassSymbol)) {
           return;
         }
-        if (state.getEndPosition(tree) == Position.NOPOS) {
+        if (!hasExplicitSource(tree, state)) {
           return;
         }
         List<TreePath> treePaths = table.get(tree.getIdentifier(), symbol.type.tsym);
