@@ -60,6 +60,12 @@ public final class SetUnrecognized extends BugChecker implements MethodInvocatio
     if (!isSubtype(argSymbol.owner.type, ENUM_LITE.get(state), state)) {
       return NO_MATCH;
     }
+    if (argSymbol
+        .owner
+        .members()
+        .anyMatch(s -> s.getSimpleName().contentEquals("UNRECOGNIZED_VALUE"))) {
+      return NO_MATCH;
+    }
     return describeMatch(tree);
   }
 

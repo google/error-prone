@@ -35,6 +35,8 @@ message TestProtoMessage {
 
   optional string string_field = 7;
 
+  optional TestEnumWithUnrecognizedValue enum_field = 8;
+
   extensions 100 to 199;
 }
 
@@ -67,4 +69,11 @@ message TestMessageContainingOneOfMessage {
 enum TestEnum {
   UNSPECIFIED = 0;
   TEST_ENUM_VAL = 1;
+}
+
+enum TestEnumWithUnrecognizedValue {
+  TEST_ENUM_UNKNOWN = 0;
+  A = 1;
+  B = 2;
+  UNRECOGNIZED = 3;
 }
