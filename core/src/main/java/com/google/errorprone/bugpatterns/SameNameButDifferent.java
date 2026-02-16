@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.findPathFromEnclosingNodeToTopLevel;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.FindIdentifiers.findIdent;
 import static java.util.stream.Collectors.joining;
 
@@ -42,7 +43,6 @@ import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
-import com.sun.tools.javac.util.Position;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
@@ -105,7 +105,7 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
       }
 
       private @Nullable String qualifiedName(Tree tree) {
-        if (state.getEndPosition(tree) == Position.NOPOS) {
+        if (!hasExplicitSource(tree, state)) {
           return null;
         }
         ArrayDeque<Name> parts = new ArrayDeque<>();
