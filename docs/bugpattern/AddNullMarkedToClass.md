@@ -5,8 +5,8 @@ that unannotated types in that scope are treated as if they were annotated with
 `@NonNull`, with some exceptions for local variables and type variables. In code
 covered by `@NullMarked`, `String x` means the same as `@NonNull String x`.
 
-This standardizes the default annotation for all the static checkers and
-compilers that supports jspecify annotations.
+This standardizes the default annotation for all static checkers and compilers
+that support JSpecify annotations.
 
 For more information, see https://jspecify.dev/docs/user-guide/#nullmarked.
 
