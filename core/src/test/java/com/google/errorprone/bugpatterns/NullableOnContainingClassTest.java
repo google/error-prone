@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -183,6 +185,30 @@ public final class NullableOnContainingClassTest {
               class B {}
 
               void test(A.@Nullable B x) {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void implicitLambdaParameterType() {
+    // type annotations on var lambda parameters are rejected after JDK-8371683
+    assume().that(Runtime.version().feature()).isLessThan(27);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static java.lang.annotation.ElementType.TYPE_USE;
+            import java.lang.annotation.Target;
+            import java.util.function.Function;
+
+            class A {
+              @Target(TYPE_USE)
+              @interface Nullable {}
+
+              void f() {
+                Function<String, Integer> f = (@Nullable var s) -> s.hashCode();
+              }
             }
             """)
         .doTest();

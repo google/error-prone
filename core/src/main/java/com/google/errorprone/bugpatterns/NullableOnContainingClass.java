@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static java.lang.annotation.ElementType.TYPE_PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
 
@@ -71,6 +72,9 @@ public final class NullableOnContainingClass extends BugChecker
   private Description handle(
       List<? extends AnnotationTree> annotations, Tree type, VisitorState state) {
     if (!(type instanceof MemberSelectTree memberSelectTree)) {
+      return NO_MATCH;
+    }
+    if (!hasExplicitSource(type, state)) {
       return NO_MATCH;
     }
     int endOfOuterType = state.getEndPosition(memberSelectTree.getExpression());
