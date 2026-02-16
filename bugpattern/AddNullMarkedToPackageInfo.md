@@ -12,6 +12,10 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 
+## The problem
+Checks if `@NullMarked` annotation is applied to a `package-info.java` file.
+
+More details are available at [AddNullMarkedToClass](AddNullMarkedToClass.md)
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("AddNullMarkedToPackageInfo")` to the enclosing element.
