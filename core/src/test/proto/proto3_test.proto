@@ -24,6 +24,8 @@ message TestProto3Message {
   string my_string = 1;
   bytes my_bytes = 2;
   TestProto3Enum my_enum = 3;
+  repeated TestProto3Enum repeated_enum = 4;
+  map<string, TestProto3Enum> map_enum = 5;
 }
 
 enum TestProto3Enum {

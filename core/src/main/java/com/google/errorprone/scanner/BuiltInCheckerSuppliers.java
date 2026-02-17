@@ -47,6 +47,7 @@ import com.google.errorprone.bugpatterns.AutoValueFinalMethods;
 import com.google.errorprone.bugpatterns.AutoValueImmutableFields;
 import com.google.errorprone.bugpatterns.AutoValueSubclassLeaked;
 import com.google.errorprone.bugpatterns.AvoidObjectArrays;
+import com.google.errorprone.bugpatterns.AvoidValueSetter;
 import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
 import com.google.errorprone.bugpatterns.BadComparable;
 import com.google.errorprone.bugpatterns.BadImport;
@@ -913,6 +914,7 @@ public class BuiltInCheckerSuppliers {
           AutoValueFinalMethods.class,
           AutoValueImmutableFields.class,
           AutoValueSubclassLeaked.class,
+          AvoidValueSetter.class,
           BadComparable.class,
           BadImport.class,
           BadInstanceof.class,
