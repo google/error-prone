@@ -19,6 +19,7 @@ package com.google.errorprone;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.truth.Truth.assertThat;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.Collections2;
@@ -26,6 +27,9 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.ErrorProneOptions.Severity;
 import com.google.errorprone.apply.ImportOrganizer;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -324,5 +328,121 @@ public class ErrorProneOptionsTest {
                   .collect(toImmutableList()));
       assertThat(options.getSeverityMap()).containsExactlyEntriesIn(severityMap).inOrder();
     }
+  }
+
+  @Test
+  public void processArgumentsFileParsing() throws IOException {
+    File source = File.createTempFile("ep_argfile_", ".cfg");
+    source.deleteOnExit();
+    Files.write(
+        source.toPath(),
+        ImmutableList.of(
+            "# Line comment",
+            "-Xep:UnicodeEscape:OFF",
+            "-Xep:InvalidBlockTag:OFF # inline comment",
+            "-Xep:JavaUtilDate:OFF",
+            "# Several flags on a single line are acceptable:",
+            "-Xep:LabelledBreakTarget:OFF \t -Xep:JUnit4TestNotRun:OFF"
+                + "   -Xep:ComparableType:OFF",
+            "-Xep:EqualsHashCode:WARN",
+            "-Xep:ReturnValueIgnored:WARN",
+            "  # Indents and trailing, comment also indented:",
+            "\t\t  \t-Xep:ArrayToString:WARN",
+            "  -Xep:MisusedDayOfYear:WARN\t   ",
+            "  -Xep:SelfComparison:WARN   ",
+            "-Xep:MisusedWeekYear:WARN"),
+        UTF_8);
+
+    String[] args = {"@" + source.getAbsolutePath()};
+    ImmutableMap<String, Severity> expectedSeverityMap =
+        ImmutableMap.<String, Severity>builder()
+            .put("UnicodeEscape", Severity.OFF)
+            .put("InvalidBlockTag", Severity.OFF)
+            .put("JavaUtilDate", Severity.OFF)
+            .put("LabelledBreakTarget", Severity.OFF)
+            .put("JUnit4TestNotRun", Severity.OFF)
+            .put("ComparableType", Severity.OFF)
+            .put("EqualsHashCode", Severity.WARN)
+            .put("ReturnValueIgnored", Severity.WARN)
+            .put("ArrayToString", Severity.WARN)
+            .put("MisusedDayOfYear", Severity.WARN)
+            .put("SelfComparison", Severity.WARN)
+            .put("MisusedWeekYear", Severity.WARN)
+            .buildOrThrow();
+
+    ErrorProneOptions options = ErrorProneOptions.processArgs(args);
+    assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
+  }
+
+  @Test
+  public void processArgumentsFileOverrides() throws IOException {
+    File source1 = File.createTempFile("ep_argfile_", ".cfg");
+    source1.deleteOnExit();
+    File source2 = File.createTempFile("ep_argfile_", ".cfg");
+    source2.deleteOnExit();
+
+    Files.write(
+        source1.toPath(),
+        ImmutableList.of(
+            "-Xep:InvalidParam:WARN", "-Xep:JUnit4TestNotRun:WARN", "-Xep:EmptyBlockTag:WARN"),
+        UTF_8);
+    Files.write(
+        source2.toPath(),
+        ImmutableList.of(
+            "-Xep:EffectivelyPrivate:OFF",
+            "-Xep:ReturnValueIgnored:OFF",
+            "-Xep:EmptyBlockTag:OFF",
+            "-Xep:IntLongMath:OFF"),
+        UTF_8);
+
+    String[] args = {
+      "-Xep:InvalidParam:ERROR",
+      "-Xep:EffectivelyPrivate:ERROR",
+      "-Xep:UnicodeEscape:ERROR",
+      "-Xep:JavaUtilDate:ERROR",
+      "@" + source1.getAbsolutePath(),
+      "-Xep:UnicodeEscape:ERROR",
+      "-Xep:JUnit4TestNotRun:ERROR",
+      "@" + source2.getAbsolutePath(),
+      "-Xep:JavaUtilDate:ERROR",
+      "-Xep:IntLongMath:ERROR"
+    };
+
+    // To make the result easier to follow, the `args` set flags to ERROR,
+    // the first config file uses WARN, and the second config file uses OFF.
+    ImmutableMap<String, Severity> expectedSeverityMap =
+        ImmutableMap.<String, Severity>builder()
+            .put("InvalidParam", Severity.WARN)
+            .put("EffectivelyPrivate", Severity.OFF)
+            .put("UnicodeEscape", Severity.ERROR)
+            .put("JavaUtilDate", Severity.ERROR)
+            .put("JUnit4TestNotRun", Severity.ERROR)
+            .put("EmptyBlockTag", Severity.OFF)
+            .put("ReturnValueIgnored", Severity.OFF)
+            .put("IntLongMath", Severity.ERROR)
+            .buildOrThrow();
+
+    ErrorProneOptions options = ErrorProneOptions.processArgs(args);
+    assertThat(options.getSeverityMap()).isEqualTo(expectedSeverityMap);
+  }
+
+  @Test
+  public void processArgumentsFileRefOtherConfig() throws IOException {
+    File source = File.createTempFile("ep_argfile_", ".cfg");
+    source.deleteOnExit();
+    Files.write(
+        source.toPath(),
+        ImmutableList.of("-Xep:InvalidParam:WARN", "@other.cfg", "-Xep:EmptyBlockTag:WARN"),
+        UTF_8);
+    assertThrows(
+        InvalidCommandLineOptionException.class,
+        () -> ErrorProneOptions.processArgs(new String[] {"@" + source.getAbsolutePath()}));
+  }
+
+  @Test
+  public void processArgumentsFileMissing() {
+    assertThrows(
+        InvalidCommandLineOptionException.class,
+        () -> ErrorProneOptions.processArgs(new String[] {"@test_cfg_is_missing.cfg"}));
   }
 }
