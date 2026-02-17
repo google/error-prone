@@ -114,6 +114,51 @@ public class MyChecker extends BugChecker implements SomeTreeMatcher {
 }
 ```
 
+## Configuration file
+
+All arguments that are passed as `-Xep*` after `-Xplugin:ErrorProne` can also
+be passed through a configuration file using `@`.
+
+This allows easier sharing of errorprone configurations between various
+build systems (cli, maven, gradle, bazel, etc) and works around platform
+dependent line wrapping rules.
+
+The configuration file allows `#` as comment, both full line and inline.
+
+Example:
+
+```
+-XepAllErrorsAsWarnings
+-XepAllSuggestionsAsWarnings
+-XepDisableWarningsInGeneratedCode
+# This library back-ports `java.time`, so we need the old APIs
+-Xep:JavaUtilDate:OFF
+# Bug #123
+-Xep:JUnit4TestNotRun:OFF
+# Indends and trailing spaces are OK:
+   -Xep:MisusedDayOfYear:WARN
+   -Xep:MisusedWeekYear:WARN
+# Several flags in one single line are OK:
+-Xep:EffectivelyPrivate:OFF -Xep:ReturnValueIgnored:OFF   -Xep:EmptyBlockTag:OFF
+# Empty lines are OK
+
+-Xep:ReturnValueIgnored:WARN # Inline comments are OK
+```
+
+Using it in command line:
+
+```bash
+@~/project/errorprone.cfg
+```
+
+NOTE: the `~` in the example above will not work in Windows, or Gradle,
+or Maven, as it is expanded by the shell. \
+You will need to use the methods specific to your platform and build system.
+
+NOTE: it is supported to pass a mixture of flags and several arguments files.
+The final value of a flag will be the one set that last time, regardless if
+that was done in directly or in am arguments file.
+
 ## Maven
 
 To pass Error Prone flags to Maven, use the `compilerArgs` parameter in the
@@ -156,3 +201,18 @@ the second `<arg>` element above can also be formatted as follows on JDK 9+, but
 
 NOTE: using multi-line `<arg>`s does not work on Windows when `<fork>` is
 enabled, see https://github.com/google/error-prone/issues/4256
+
+NOTE: using an argument file (with `@`) allows bypassing this line wrapping bug:
+
+```xml
+<compilerArgs>
+  ...
+  <arg>-Xplugin:ErrorProne @${project.basedir}/errorprone.cfg</arg>
+</compilerArgs>
+```
+And move the flags to `errorprone.cfg`:
+
+```
+-Xep:DeadException:WARN
+-Xep:GuardedBy:OFF
+```
