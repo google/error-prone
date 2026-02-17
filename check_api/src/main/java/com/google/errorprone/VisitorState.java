@@ -18,6 +18,7 @@ package com.google.errorprone;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.errorprone.SuppressionInfo.Unsuppressed.UNSUPPRESSED;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 
@@ -58,10 +59,14 @@ import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
 import java.io.IOException;
 import java.lang.ref.SoftReference;
+import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import javax.lang.model.util.Elements;
 import org.jspecify.annotations.Nullable;
 
@@ -69,6 +74,32 @@ import org.jspecify.annotations.Nullable;
  * @author alexeagle@google.com (Alex Eagle)
  */
 public class VisitorState {
+  private SuppressionInfo.Suppressed peekSuppressedStateOverride() {
+    return sharedState.suppressedStateOverrides.peek();
+  }
+
+  public AutoCloseable pushSuppressedStateOverride(SuppressionInfo.Suppressed suppressed) {
+    ArrayDeque<SuppressionInfo.Suppressed> overrides = sharedState.suppressedStateOverrides;
+    overrides.push(suppressed);
+    return () -> {
+      SuppressionInfo.Suppressed popped = overrides.pop();
+      if (popped != suppressed) {
+        throw new IllegalStateException("SuppressedState override stack corrupted.");
+      }
+    };
+  }
+
+  private @Nullable Suppressible peekCurrentSuppressible() {
+    return sharedState.currentSuppressible;
+  }
+
+  public void setCurrentSuppressible(Suppressible suppressible) {
+    sharedState.currentSuppressible = suppressible;
+  }
+
+  public void clearCurrentSuppressible() {
+    sharedState.currentSuppressible = null;
+  }
 
   private final SharedState sharedState;
   public final Context context;
@@ -93,7 +124,7 @@ public class VisitorState {
         // Can't use this VisitorState to report results, so no-op collector.
         StatisticsCollector.createNoOpCollector(),
         null,
-        SuppressedState.UNSUPPRESSED);
+        UNSUPPRESSED);
   }
 
   /**
@@ -109,7 +140,7 @@ public class VisitorState {
         ErrorProneOptions.empty(),
         StatisticsCollector.createCollector(),
         null,
-        SuppressedState.UNSUPPRESSED);
+        UNSUPPRESSED);
   }
 
   /**
@@ -127,7 +158,7 @@ public class VisitorState {
         errorProneOptions,
         StatisticsCollector.createCollector(),
         null,
-        SuppressedState.UNSUPPRESSED);
+        UNSUPPRESSED);
   }
 
   /**
@@ -165,7 +196,26 @@ public class VisitorState {
 
   public VisitorState withPath(TreePath path) {
     checkNotNull(path);
-    return new VisitorState(context, path, suppressedState, sharedState);
+    SuppressedState effectiveSuppressedState = suppressedState;
+    if (!suppressedState.isSuppressed()) {
+      SuppressionInfo.Suppressed suppressedOverride = peekSuppressedStateOverride();
+      if (suppressedOverride != null) {
+        effectiveSuppressedState = suppressedOverride;
+      } else {
+        Suppressible suppressible = peekCurrentSuppressible();
+        if (suppressible != null) {
+          SeverityLevel severityLevel =
+              sharedState.severityMap.getOrDefault(suppressible.canonicalName(), SeverityLevel.ERROR);
+          boolean suppressedInGeneratedCode =
+              errorProneOptions().disableWarningsInGeneratedCode()
+                  && severityLevel != SeverityLevel.ERROR;
+          effectiveSuppressedState =
+              getCurrentSuppressions()
+                  .suppressedState(suppressible, suppressedInGeneratedCode, this);
+        }
+      }
+    }
+    return new VisitorState(context, path, effectiveSuppressedState, sharedState);
   }
 
   private VisitorState withNoPathForMemoization() {
@@ -236,6 +286,27 @@ public class VisitorState {
     if (override != null) {
       description = description.applySeverityOverride(override);
     }
+    SuppressedState effectiveSuppressedState = suppressedState;
+    if (!suppressedState.isSuppressed()) {
+      SuppressionInfo.Suppressed suppressedOverride = peekSuppressedStateOverride();
+      if (suppressedOverride != null) {
+        effectiveSuppressedState = suppressedOverride;
+      }
+    }
+    if (effectiveSuppressedState.isSuppressed()) {
+      // we used it
+      SuppressionInfo.Suppressed suppressed = (SuppressionInfo.Suppressed) effectiveSuppressedState;
+      suppressed.setAsUsed();
+      try {
+        getCurrentSuppressions().updatedUsedSuppressions(suppressed);
+      } catch (IllegalArgumentException unused) {
+        // Suppression wasn't tracked in current suppressions; ignore.
+      }
+      if (errorProneOptions().isWarnOnUnneededSuppressions()) {
+        // For now, don't report suppressed findings if we're going to warn on unused suppressions.
+        return;
+      }
+    }
     sharedState.statisticsCollector.incrementCounter(statsKey(description.checkName + "-findings"));
 
     // TODO(glorioso): I believe it is correct to still emit regular findings since the
@@ -246,7 +317,11 @@ public class VisitorState {
   }
 
   private String statsKey(String key) {
-    return suppressedState == SuppressedState.SUPPRESSED ? key + "-suppressed" : key;
+    return suppressedState.isSuppressed() ? key + "-suppressed" : key;
+  }
+
+  public SuppressedState getSuppressedState() {
+    return suppressedState;
   }
 
   /**
@@ -668,6 +743,11 @@ public class VisitorState {
     private final StatisticsCollector statisticsCollector;
     private final Map<String, SeverityLevel> severityMap;
     private final ErrorProneOptions errorProneOptions;
+    private SuppressionInfo currentSuppressions = SuppressionInfo.EMPTY;
+    private final ArrayDeque<SuppressionInfo.Suppressed> suppressedStateOverrides =
+        new ArrayDeque<>();
+    private @Nullable Suppressible currentSuppressible;
+    private final Map<Symbol, Set<String>> usedSuppressionsBySymbol = new IdentityHashMap<>();
 
     // TODO(ronshapiro): should we presize this with a reasonable size? We can check for the
     // smallest build and see how many types are loaded and use that. Or perhaps a heuristic
@@ -693,6 +773,18 @@ public class VisitorState {
       this.severityMap = severityMap;
       this.errorProneOptions = errorProneOptions;
     }
+  }
+
+  public SuppressionInfo getCurrentSuppressions() {
+    return sharedState.currentSuppressions;
+  }
+
+  public void setCurrentSuppressions(SuppressionInfo suppressionInfo) {
+    sharedState.currentSuppressions = suppressionInfo;
+  }
+
+  public Set<String> getOrCreateUsedSuppressions(Symbol sym) {
+    return sharedState.usedSuppressionsBySymbol.computeIfAbsent(sym, unused -> new HashSet<>());
   }
 
   /**

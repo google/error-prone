@@ -318,9 +318,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
             && state.severityMap().get(canonicalName()) != SeverityLevel.ERROR;
     SuppressionInfo.SuppressedState suppressedState =
         SuppressionInfo.EMPTY
-            .withExtendedSuppressions(sym, state, customSuppressionAnnotationNames.get(state))
+            .withExtendedSuppressions(
+                sym, state, customSuppressionAnnotationNames.get(state), allNames())
             .suppressedState(BugChecker.this, suppressedInGeneratedCode, state);
-    return suppressedState == SuppressionInfo.SuppressedState.SUPPRESSED;
+    return suppressedState.isSuppressed();
   }
 
   private final Supplier<? extends Set<? extends Name>> customSuppressionAnnotationNames =
@@ -345,6 +346,14 @@ public abstract class BugChecker implements Suppressible, Serializable {
       }
     }.scan(state.getPath().getCompilationUnit(), null);
     return ImmutableRangeSet.copyOf(suppressedRegions);
+  }
+
+  /**
+   * Returns true if this checker supports unneeded suppression warnings. False by default;
+   * supporting checkers should override.
+   */
+  public boolean supportsUnneededSuppressionWarnings() {
+    return false;
   }
 
   public interface AnnotatedTypeTreeMatcher extends Suppressible {
@@ -639,25 +648,118 @@ public abstract class BugChecker implements Suppressible, Serializable {
   protected class SuppressibleTreePathScanner<R, P> extends TreePathScanner<R, P> {
 
     protected final VisitorState state;
+    private final Set<String> warnOnUnneededSuppressWarningStrings;
 
     public SuppressibleTreePathScanner(VisitorState state) {
       this.state = state;
+      this.warnOnUnneededSuppressWarningStrings =
+          BugChecker.this.supportsUnneededSuppressionWarnings()
+              ? BugChecker.this.allNames()
+              : Collections.emptySet();
     }
 
     @Override
     public R scan(Tree tree, P param) {
-      return suppressed(tree) ? null : super.scan(tree, param);
+      TreePath path = getCurrentPath();
+      VisitorState stateWithPath = path == null ? state : state.withPath(path);
+      return scanWithSuppression(tree, stateWithPath, () -> super.scan(tree, param));
     }
 
     @Override
     public R scan(TreePath treePath, P param) {
-      return suppressed(treePath.getLeaf()) ? null : super.scan(treePath, param);
+      Tree leaf = treePath.getLeaf();
+      VisitorState stateWithPath = state.withPath(treePath);
+      return scanWithSuppression(leaf, stateWithPath, () -> super.scan(treePath, param));
     }
 
-    private boolean suppressed(Tree tree) {
+    private interface ScanAction<R> {
+      R scan();
+    }
+
+    private R scanWithSuppression(Tree tree, VisitorState stateWithPath, ScanAction<R> scanAction) {
+      SuppressionInfo prevSuppressionInfo = updateSuppressions(tree, stateWithPath);
+      SuppressionInfo currentSuppressions = stateWithPath.getCurrentSuppressions();
+      SuppressionInfo.Suppressed suppressed = null;
+      AutoCloseable override = null;
+      boolean suppressibleSet = false;
+      try {
+        stateWithPath.setCurrentSuppressible(BugChecker.this);
+        suppressibleSet = true;
+        SuppressionInfo.SuppressedState suppressedState = suppressedState(tree, stateWithPath);
+        if (suppressedState.isSuppressed()) {
+          suppressed = (SuppressionInfo.Suppressed) suppressedState;
+          if (!shouldScanSuppressed(stateWithPath, suppressed)) {
+            return null;
+          }
+          override = stateWithPath.pushSuppressedStateOverride(suppressed);
+        }
+        return scanAction.scan();
+      } finally {
+        if (override != null) {
+          closeOverride(override);
+        }
+        if (suppressibleSet) {
+          stateWithPath.clearCurrentSuppressible();
+        }
+        if (suppressed != null && suppressed.isUsed()) {
+          try {
+            currentSuppressions.updatedUsedSuppressions(suppressed);
+          } catch (IllegalArgumentException unused) {
+            // Suppression wasn't tracked in currentSuppressions; ignore for now.
+          }
+        }
+        stateWithPath.setCurrentSuppressions(prevSuppressionInfo);
+      }
+    }
+
+    private SuppressionInfo updateSuppressions(Tree tree, VisitorState stateWithPath) {
+      SuppressionInfo prevSuppressionInfo = stateWithPath.getCurrentSuppressions();
+      SuppressionInfo currentSuppressions = prevSuppressionInfo;
+      if (tree instanceof CompilationUnitTree compilationUnitTree) {
+        currentSuppressions =
+            currentSuppressions.forCompilationUnit(compilationUnitTree, stateWithPath);
+      } else {
+        Symbol sym = getDeclaredSymbol(tree);
+        if (sym != null) {
+          currentSuppressions =
+              currentSuppressions.withExtendedSuppressions(
+                  sym,
+                  stateWithPath,
+                  customSuppressionAnnotationNames.get(stateWithPath),
+                  warnOnUnneededSuppressWarningStrings);
+        }
+      }
+      stateWithPath.setCurrentSuppressions(currentSuppressions);
+      return prevSuppressionInfo;
+    }
+
+    private SuppressionInfo.SuppressedState suppressedState(Tree tree, VisitorState stateWithPath) {
       boolean isSuppressible =
           tree instanceof ClassTree || tree instanceof MethodTree || tree instanceof VariableTree;
-      return isSuppressible && isSuppressed(tree, state);
+      if (!isSuppressible) {
+        return SuppressionInfo.Unsuppressed.UNSUPPRESSED;
+      }
+      ErrorProneOptions errorProneOptions = stateWithPath.errorProneOptions();
+      boolean suppressedInGeneratedCode =
+          errorProneOptions.disableWarningsInGeneratedCode()
+              && stateWithPath.severityMap().get(canonicalName()) != SeverityLevel.ERROR;
+      return stateWithPath
+          .getCurrentSuppressions()
+          .suppressedState(BugChecker.this, suppressedInGeneratedCode, stateWithPath);
+    }
+
+    private boolean shouldScanSuppressed(
+        VisitorState stateWithPath, SuppressionInfo.Suppressed suppressed) {
+      return stateWithPath.errorProneOptions().isWarnOnUnneededSuppressions()
+          && warnOnUnneededSuppressWarningStrings.contains(suppressed.getSuppressionName());
+    }
+
+    private void closeOverride(AutoCloseable override) {
+      try {
+        override.close();
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
     }
   }
 }
