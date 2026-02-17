@@ -87,29 +87,46 @@ public class BugCheckerRefactoringTestHelper {
   public enum TestMode {
     TEXT_MATCH {
       @Override
-      void verifyMatch(JavaFileObject refactoredSource, JavaFileObject expectedSource)
+      void verifyMatch(
+          JavaFileObject refactoredSource,
+          JavaFileObject expectedSource,
+          boolean allowFormattingErrors)
           throws IOException {
-        assertThat(maybeFormat(refactoredSource.getCharContent(false).toString()))
-            .isEqualTo(maybeFormat(expectedSource.getCharContent(false).toString()));
+        assertThat(
+                maybeFormat(
+                    refactoredSource.getCharContent(false).toString(), allowFormattingErrors))
+            .isEqualTo(
+                maybeFormat(
+                    expectedSource.getCharContent(false).toString(), allowFormattingErrors));
       }
 
-      private String maybeFormat(String input) {
+      private String maybeFormat(String input, boolean allowFormattingErrors) {
         try {
           Formatter formatter = new Formatter();
           return StringWrapper.wrap(formatter.formatSource(input), formatter);
         } catch (FormatterException e) {
-          return input;
+          if (allowFormattingErrors) {
+            return input;
+          }
+          throw new AssertionError(
+              "Failed to format source, and allowFormattingErrors is false", e);
         }
       }
     },
     AST_MATCH {
       @Override
-      void verifyMatch(JavaFileObject refactoredSource, JavaFileObject expectedSource) {
+      void verifyMatch(
+          JavaFileObject refactoredSource,
+          JavaFileObject expectedSource,
+          boolean allowFormattingErrors) {
         assertAbout(javaSource()).that(refactoredSource).parsesAs(expectedSource);
       }
     };
 
-    abstract void verifyMatch(JavaFileObject refactoredSource, JavaFileObject expectedSource)
+    abstract void verifyMatch(
+        JavaFileObject refactoredSource,
+        JavaFileObject expectedSource,
+        boolean allowFormattingErrors)
         throws IOException;
   }
 
@@ -156,6 +173,7 @@ public class BugCheckerRefactoringTestHelper {
   private FixChooser fixChooser = FixChoosers.FIRST;
   private ImmutableList<String> options = ImmutableList.of();
   private boolean allowBreakingChanges = false;
+  private boolean allowFormattingErrors = false;
   private String importOrder = "static-first";
 
   private boolean run = false;
@@ -241,6 +259,13 @@ public class BugCheckerRefactoringTestHelper {
     return this;
   }
 
+  /** If set, formatting errors in the output are allowed. Off by default. */
+  @CanIgnoreReturnValue
+  public BugCheckerRefactoringTestHelper allowFormattingErrors() {
+    allowFormattingErrors = true;
+    return this;
+  }
+
   @CanIgnoreReturnValue
   public BugCheckerRefactoringTestHelper setImportOrder(String importOrder) {
     this.importOrder = importOrder;
@@ -283,7 +308,7 @@ public class BugCheckerRefactoringTestHelper {
     JCCompilationUnit tree = doCompile(input, sources.keySet(), context);
     JavaFileObject transformed = applyDiff(input, context, tree);
     closeCompiler(context);
-    testMode.verifyMatch(transformed, output);
+    testMode.verifyMatch(transformed, output, allowFormattingErrors);
     if (!allowBreakingChanges) {
       Context anotherContext = new Context();
       doCompile(output, sources.values(), anotherContext);

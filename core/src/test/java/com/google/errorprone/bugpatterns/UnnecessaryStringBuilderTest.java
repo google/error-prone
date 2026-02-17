@@ -228,6 +228,8 @@ public class UnnecessaryStringBuilderTest {
             """)
         // TODO: b/472686687 - remove allowBreakingChanges when the bug is fixed
         .allowBreakingChanges()
+        // TODO: b/472686687 - remove allowFormattingErrors when the bug is fixed
+        .allowFormattingErrors()
         // TODO: b/472686687 - remove TEXT_MATCH when the bug is fixed
         .doTest(TEXT_MATCH);
   }
