@@ -222,6 +222,7 @@ import com.google.errorprone.bugpatterns.JUnitAssertSameCheck;
 import com.google.errorprone.bugpatterns.JUnitParameterMethodNotFound;
 import com.google.errorprone.bugpatterns.JavaLangClash;
 import com.google.errorprone.bugpatterns.JavaUtilDateChecker;
+import com.google.errorprone.bugpatterns.JdkImmutableCollections;
 import com.google.errorprone.bugpatterns.JdkObsolete;
 import com.google.errorprone.bugpatterns.LabelledBreakTarget;
 import com.google.errorprone.bugpatterns.LambdaFunctionalInterface;
@@ -1263,6 +1264,7 @@ public class BuiltInCheckerSuppliers {
           Interruption.class,
           IterablePathParameter.class,
           Java8ApiChecker.class,
+          JdkImmutableCollections.class,
           LambdaFunctionalInterface.class,
           LongLiteralLowerCaseSuffix.class,
           MethodCanBeStatic.class,
