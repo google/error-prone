@@ -32,16 +32,16 @@ public class ProtoStringFieldReferenceEqualityTest {
   public void positive() {
     compilationHelper
         .addSourceLines(
-            "com/google/protobuf/GeneratedMessage.java",
+            "com/google/protobuf/MessageLite.java",
             """
             package com.google.protobuf;
 
-            public class GeneratedMessage {}
+            public interface MessageLite {}
             """)
         .addSourceLines(
             "Proto.java",
             """
-            public abstract class Proto extends com.google.protobuf.GeneratedMessage {
+            public abstract class Proto implements com.google.protobuf.MessageLite {
               public abstract String getMessage();
             }
             """)
@@ -68,16 +68,16 @@ public class ProtoStringFieldReferenceEqualityTest {
   public void negative() {
     compilationHelper
         .addSourceLines(
-            "com/google/protobuf/GeneratedMessage.java",
+            "com/google/protobuf/MessageLite.java",
             """
             package com.google.protobuf;
 
-            public class GeneratedMessage {}
+            public interface MessageLite {}
             """)
         .addSourceLines(
             "Proto.java",
             """
-            public abstract class Proto extends com.google.protobuf.GeneratedMessage {
+            public abstract class Proto implements com.google.protobuf.MessageLite {
               public abstract int getId();
 
               public abstract String getMessage();
