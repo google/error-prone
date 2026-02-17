@@ -131,70 +131,75 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">If set, fixes that produce output that doesn't compile are allowed.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#expectErrorMessage(java.lang.String,java.util.function.Predicate)" class="member-name-link">expectErrorMessage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</code></div>
+<div class="col-first odd-row-color"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><a href="../../BugCheckerRefactoringTestHelper.html#allowFormattingErrors()" class="member-name-link">allowFormattingErrors</a>()</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Expects an error message matching <code>matcher</code> at the line below a comment matching the key.</div>
+<div class="block">If set, formatting errors in the output are allowed.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#expectNoDiagnostics()" class="member-name-link">expectNoDiagnostics</a>()</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#expectErrorMessage(java.lang.String,java.util.function.Predicate)" class="member-name-link">expectErrorMessage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;? super <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;matcher)</code></div>
 <div class="col-last even-row-color">
+<div class="block">Expects an error message matching <code>matcher</code> at the line below a comment matching the key.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#expectNoDiagnostics()" class="member-name-link">expectNoDiagnostics</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Tells the compilation helper to expect that no diagnostics will be generated, even if the
 source file contains bug markers.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#expectResult(com.sun.tools.javac.main.Main.Result)" class="member-name-link">expectResult</a><wbr>(com.sun.tools.javac.main.Main.Result&nbsp;result)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#expectResult(com.sun.tools.javac.main.Main.Result)" class="member-name-link">expectResult</a><wbr>(com.sun.tools.javac.main.Main.Result&nbsp;result)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Tells the compilation helper to expect a specific result from the compilation, e.g. success or
 failure.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">BugCheckerRefactoringTestHelper.ExpectOutput.</span><code><a href="../../BugCheckerRefactoringTestHelper.ExpectOutput.html#expectUnchanged()" class="member-name-link">expectUnchanged</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#matchAllDiagnostics()" class="member-name-link">matchAllDiagnostics</a>()</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first odd-row-color"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">BugCheckerRefactoringTestHelper.ExpectOutput.</span><code><a href="../../BugCheckerRefactoringTestHelper.ExpectOutput.html#expectUnchanged()" class="member-name-link">expectUnchanged</a>()</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#matchAllDiagnostics()" class="member-name-link">matchAllDiagnostics</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block">By default, the compilation helper will only inspect diagnostics generated by the check being
 tested.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="../../ErrorProneFlags.Builder.html" title="class in com.google.errorprone">ErrorProneFlags.Builder</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ErrorProneFlags.Builder.</span><code><a href="../../ErrorProneFlags.Builder.html#parseFlag(java.lang.String)" class="member-name-link">parseFlag</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;flag)</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code><a href="../../ErrorProneFlags.Builder.html" title="class in com.google.errorprone">ErrorProneFlags.Builder</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ErrorProneFlags.Builder.</span><code><a href="../../ErrorProneFlags.Builder.html#parseFlag(java.lang.String)" class="member-name-link">parseFlag</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;flag)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Given a String custom flag in the format <code>"-XepOpt:FlagName=Value"</code>, places the flag in
 this builder's dictionary, e.g.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="../../ErrorProneFlags.Builder.html" title="class in com.google.errorprone">ErrorProneFlags.Builder</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ErrorProneFlags.Builder.</span><code><a href="../../ErrorProneFlags.Builder.html#putFlag(java.lang.String,java.lang.String)" class="member-name-link">putFlag</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+<div class="col-first even-row-color"><code><a href="../../ErrorProneFlags.Builder.html" title="class in com.google.errorprone">ErrorProneFlags.Builder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ErrorProneFlags.Builder.</span><code><a href="../../ErrorProneFlags.Builder.html#putFlag(java.lang.String,java.lang.String)" class="member-name-link">putFlag</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Puts a key-value pair directly in this builder's dictionary.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><a href="../../BugCheckerRefactoringTestHelper.html#setArgs(com.google.common.collect.ImmutableList)" class="member-name-link">setArgs</a><wbr>(com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><a href="../../BugCheckerRefactoringTestHelper.html#setArgs(java.lang.String...)" class="member-name-link">setArgs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;args)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><a href="../../BugCheckerRefactoringTestHelper.html#setArgs(com.google.common.collect.ImmutableList)" class="member-name-link">setArgs</a><wbr>(com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#setArgs(java.lang.String...)" class="member-name-link">setArgs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;args)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Sets custom command-line arguments for the compilation.</div>
-</div>
+<div class="col-first even-row-color"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><a href="../../BugCheckerRefactoringTestHelper.html#setArgs(java.lang.String...)" class="member-name-link">setArgs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;args)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#setArgs(java.util.List)" class="member-name-link">setArgs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#setArgs(java.lang.String...)" class="member-name-link">setArgs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;args)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Sets custom command-line arguments for the compilation.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><a href="../../BugCheckerRefactoringTestHelper.html#setFixChooser(com.google.errorprone.BugCheckerRefactoringTestHelper.FixChooser)" class="member-name-link">setFixChooser</a><wbr>(<a href="../../BugCheckerRefactoringTestHelper.FixChooser.html" title="interface in com.google.errorprone">BugCheckerRefactoringTestHelper.FixChooser</a>&nbsp;chooser)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><a href="../../BugCheckerRefactoringTestHelper.html#setImportOrder(java.lang.String)" class="member-name-link">setImportOrder</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importOrder)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#withClasspath(java.lang.Class...)" class="member-name-link">withClasspath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;...&nbsp;classes)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#setArgs(java.util.List)" class="member-name-link">setArgs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</code></div>
 <div class="col-last even-row-color">
+<div class="block">Sets custom command-line arguments for the compilation.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><a href="../../BugCheckerRefactoringTestHelper.html#setFixChooser(com.google.errorprone.BugCheckerRefactoringTestHelper.FixChooser)" class="member-name-link">setFixChooser</a><wbr>(<a href="../../BugCheckerRefactoringTestHelper.FixChooser.html" title="interface in com.google.errorprone">BugCheckerRefactoringTestHelper.FixChooser</a>&nbsp;chooser)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="../../BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">BugCheckerRefactoringTestHelper.</span><code><a href="../../BugCheckerRefactoringTestHelper.html#setImportOrder(java.lang.String)" class="member-name-link">setImportOrder</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importOrder)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="../../CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">CompilationTestHelper.</span><code><a href="../../CompilationTestHelper.html#withClasspath(java.lang.Class...)" class="member-name-link">withClasspath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;...&nbsp;classes)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Sets the classpath for the test compilation, overriding the default of using the runtime
 classpath of the test execution.</div>
 </div>
