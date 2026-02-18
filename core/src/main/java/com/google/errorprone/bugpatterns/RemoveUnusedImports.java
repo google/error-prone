@@ -55,6 +55,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.DCTree.DCReference;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.lang.model.element.Name;
@@ -70,6 +71,7 @@ import org.jspecify.annotations.Nullable;
     tags = StandardTags.STYLE)
 public final class RemoveUnusedImports extends BugChecker implements CompilationUnitTreeMatcher {
   @Override
+  @SuppressWarnings("TreeToString")
   public Description matchCompilationUnit(
       CompilationUnitTree compilationUnitTree, VisitorState state) {
     ImmutableSetMultimap<ImportTree, Symbol> importedSymbols =
@@ -80,20 +82,20 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
     }
 
     LinkedHashSet<ImportTree> unusedImports = new LinkedHashSet<>(importedSymbols.keySet());
-    new TreeSymbolScanner(JavacTrees.instance(state.context), state)
-        .scan(
-            compilationUnitTree,
-            new SymbolSink() {
-              @Override
-              public boolean keepScanning() {
-                return !unusedImports.isEmpty();
-              }
+    var scanner = new TreeSymbolScanner(JavacTrees.instance(state.context), state);
+    scanner.scan(
+        compilationUnitTree,
+        new SymbolSink() {
+          @Override
+          public boolean keepScanning() {
+            return !unusedImports.isEmpty();
+          }
 
-              @Override
-              public void accept(Symbol symbol) {
-                unusedImports.removeAll(importedSymbols.inverse().get(symbol));
-              }
-            });
+          @Override
+          public void accept(Symbol symbol) {
+            unusedImports.removeAll(importedSymbols.inverse().get(symbol));
+          }
+        });
 
     if (unusedImports.isEmpty()) {
       return NO_MATCH;
@@ -117,6 +119,13 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
                         tree -> {
                           String name = state.getSourceForNode(tree.getQualifiedIdentifier());
                           var meanings = actualMeanings.get(getSimpleName(tree).toString());
+                          if (importedSymbols.get(tree).stream()
+                              .anyMatch(scanner.enumConstantCaseUsages::contains)) {
+                            return String.format(
+                                "%s (this is an enum constant: if it's only used within switch"
+                                    + " labels, that doesn't require an import)",
+                                name);
+                          }
                           if (meanings.isEmpty()) {
                             return name;
                           }
@@ -148,6 +157,7 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
     private final DocTreeSymbolScanner docTreeSymbolScanner;
     private final JavacTrees trees;
     private final VisitorState state;
+    private final Set<Symbol> enumConstantCaseUsages = new HashSet<>();
 
     private TreeSymbolScanner(JavacTrees trees, VisitorState state) {
       this.docTreeSymbolScanner = new DocTreeSymbolScanner();
@@ -180,6 +190,7 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
         // Exceptionally, a ConstantCaseLabel used in an enum of a matching switch type does not
         // require an import.
         if (caseType.tsym.isEnum() && isSameType(caseType, switchType, state)) {
+          enumConstantCaseUsages.add(symbol.baseSymbol());
           return null;
         }
       }

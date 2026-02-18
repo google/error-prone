@@ -653,6 +653,32 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
+  public void redundantImportInSwitch_findingDescription() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.annotation.ElementType;
+
+            // BUG: Diagnostic contains: enum constant
+            import static java.lang.annotation.ElementType.FIELD;
+            import static java.lang.annotation.ElementType.METHOD;
+
+            class Test {
+              public void test(ElementType test) {
+                String result =
+                    switch (test) {
+                      case METHOD -> "m";
+                      case FIELD -> "f";
+                      default -> "o";
+                    };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void nonRedundantImportInSwitch() {
     testHelper
         .addInputLines(
