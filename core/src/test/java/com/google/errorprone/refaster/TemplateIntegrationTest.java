@@ -382,4 +382,9 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   public void unqualifiedMethod() throws IOException {
     runTest("UnqualifiedMethodTemplate");
   }
+
+  @Test
+  public void widerType() throws IOException {
+    runTest("WiderTypeTemplate");
+  }
 }
