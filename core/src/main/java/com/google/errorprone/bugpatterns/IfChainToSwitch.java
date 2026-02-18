@@ -273,14 +273,14 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       } else if (caseIr.instanceOfOptional().isPresent()) {
         InstanceOfIr instanceOfIr = caseIr.instanceOfOptional().get();
         sb.append("case ");
-        if (instanceOfIr.patternVariable() != null) {
+        if (instanceOfIr.patternVariable().isPresent()) {
           sb.append(
               printRawTypesAsWildcards(
-                  getType(instanceOfIr.patternVariable()), state, suggestedFixBuilder));
+                  getType(instanceOfIr.patternVariable().get()), state, suggestedFixBuilder));
 
-          Symbol sym = ASTHelpers.getSymbol(instanceOfIr.patternVariable());
+          Symbol sym = ASTHelpers.getSymbol(instanceOfIr.patternVariable().get());
           sb.append(" ").append(sym.getSimpleName()).append(" ");
-        } else if (instanceOfIr.type() != null && instanceOfIr.expression() != null) {
+        } else if (instanceOfIr.expression().isPresent()) {
           sb.append(
               printRawTypesAsWildcards(getType(instanceOfIr.type()), state, suggestedFixBuilder));
           // It's possible that "unused" could conflict with an existing local variable name;
@@ -441,6 +441,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
     boolean hasDefault = cases.stream().anyMatch(CaseIr::hasDefault);
     boolean hasCaseNull = cases.stream().anyMatch(CaseIr::hasCaseNull);
+    // NOMUTANTS -- this is a performance optimization
     boolean recheckDominanceNeeded = false;
 
     boolean switchOnNullWouldImplicitlyThrow = switchOnNullWouldImplicitlyThrow(subject, cases);
@@ -1062,7 +1063,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* hasDefault= */ false,
               /* instanceOfOptional= */ Optional.of(
                   new InstanceOfIr(
-                      instanceOfTree.getExpression(), bpt.getVariable(), instanceOfTree.getType())),
+                      Optional.ofNullable(instanceOfTree.getExpression()),
+                      Optional.ofNullable(bpt.getVariable()),
+                      instanceOfTree.getType())),
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
@@ -1099,7 +1102,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* hasCaseNull= */ false,
               /* hasDefault= */ false,
               /* instanceOfOptional= */ Optional.of(
-                  new InstanceOfIr(instanceOfTree.getExpression(), null, instanceOfTree.getType())),
+                  new InstanceOfIr(
+                      Optional.ofNullable(instanceOfTree.getExpression()),
+                      Optional.empty(),
+                      instanceOfTree.getType())),
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
@@ -1520,8 +1526,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
                 // Cannot unbox LHS pattern, so RHS primitive constant should come before it
                 return true;
               }
-            } else if (instanceOfIr.patternVariable() != null) {
-              VariableTree patternVariable = instanceOfIr.patternVariable();
+            } else if (instanceOfIr.patternVariable().isPresent()) {
+              VariableTree patternVariable = instanceOfIr.patternVariable().get();
               Type patternType = getType(patternVariable);
               if (isSubtype(getType(constantExpression), patternType, state)) {
                 // RHS constant can be assigned to LHS pattern
@@ -1598,12 +1604,12 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       Type lhsType =
           lhs.instanceOfOptional().get().type() != null
               ? getType(lhs.instanceOfOptional().get().type())
-              : getType(lhs.instanceOfOptional().get().patternVariable().getType());
+              : getType(lhs.instanceOfOptional().get().patternVariable().get().getType());
       var rhsInstanceOf = rhs.instanceOfOptional().get();
       Type rhsType =
           rhsInstanceOf.type() != null
               ? getType(rhsInstanceOf.type())
-              : getType(rhsInstanceOf.patternVariable().getType());
+              : getType(rhsInstanceOf.patternVariable().get().getType());
       if (isSubtype(rhsType, lhsType, state)) {
         // The LHS type is a subtype of the RHS type, so the LHS dominates the RHS
         return true;
@@ -1620,9 +1626,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
    */
   record InstanceOfIr(
       // In the example above, the expression would be `y`.
-      @Nullable ExpressionTree expression,
+      Optional<ExpressionTree> expression,
       // In the example above, the variable tree would be `Y y`.
-      @Nullable VariableTree patternVariable,
+      Optional<VariableTree> patternVariable,
       // In the example above, the type would be `Y`.
       Tree type) {
 
