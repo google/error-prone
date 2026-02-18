@@ -108,9 +108,14 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
         parts.add(getOnlyElement(methodInvocationTree.getArguments()));
         path = parentPath.getParentPath();
       } else if (TO_STRING.matches(methodInvocationTree, state)) {
+        String replacement = replacement(state, parts);
+        Tree parent = grandParent.getParentPath().getLeaf();
+        if (parent instanceof MemberSelectTree memberSelectTree
+            && memberSelectTree.getExpression().equals(methodInvocationTree)) {
+          replacement = "(" + replacement + ")";
+        }
         return describeMatch(
-            methodInvocationTree,
-            SuggestedFix.replace(methodInvocationTree, replacement(state, parts)));
+            methodInvocationTree, SuggestedFix.replace(methodInvocationTree, replacement));
       } else {
         // another instance method on StringBuilder
         return NO_MATCH;

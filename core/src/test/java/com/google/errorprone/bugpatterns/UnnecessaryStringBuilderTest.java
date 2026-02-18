@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -204,7 +202,6 @@ public class UnnecessaryStringBuilderTest {
         .doTest();
   }
 
-  // TODO: b/472686687 - the refactoring should add parens
   @Test
   public void needsEnclosingParens() {
     refactoringHelper
@@ -222,15 +219,10 @@ public class UnnecessaryStringBuilderTest {
             """
             abstract class Test {
               void f(String hello) {
-                hello + 1.getBytes();
+                (hello + 1).getBytes();
               }
             }
             """)
-        // TODO: b/472686687 - remove allowBreakingChanges when the bug is fixed
-        .allowBreakingChanges()
-        // TODO: b/472686687 - remove allowFormattingErrors when the bug is fixed
-        .allowFormattingErrors()
-        // TODO: b/472686687 - remove TEXT_MATCH when the bug is fixed
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 }
