@@ -66,7 +66,6 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.DCTree;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
-import com.sun.tools.javac.tree.DocCommentTable;
 import com.sun.tools.javac.tree.JCTree;
 import java.io.IOException;
 import java.lang.annotation.Retention;
@@ -1226,9 +1225,9 @@ public class SuggestedFixesTest {
     @Override
     public Description matchClass(ClassTree tree, VisitorState state) {
       DCTree.DCDocComment comment =
-          getCommentTree(
-              ((JCTree.JCCompilationUnit) state.getPath().getCompilationUnit()).docComments,
-              (JCTree) tree);
+          (DCDocComment)
+              ((JCTree.JCCompilationUnit) state.getPath().getCompilationUnit())
+                  .docComments.getCommentTree((JCTree) tree);
       if (comment == null) {
         return Description.NO_MATCH;
       }
@@ -1245,17 +1244,6 @@ public class SuggestedFixesTest {
         return Description.NO_MATCH;
       }
       return describeMatch(tree, fix.build());
-    }
-  }
-
-  private static DCDocComment getCommentTree(DocCommentTable docCommentTable, JCTree tree) {
-    try {
-      return (DCDocComment)
-          DocCommentTable.class
-              .getMethod("getCommentTree", JCTree.class)
-              .invoke(docCommentTable, tree);
-    } catch (ReflectiveOperationException e) {
-      throw new LinkageError(e.getMessage(), e);
     }
   }
 
