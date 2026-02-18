@@ -44,14 +44,16 @@ jobs:
      
       - name: Bump Version Number
         run: |
-          mvn --no-transfer-progress versions:set versions:commit -DnewVersion="${{ github.event.inputs.version }}"
+          mvn --no-transfer-progress versions:set versions:commit -DnewVersion="${GITHUB_EVENT_INPUTS_VERSION}"
           git ls-files | grep 'pom.xml$' | xargs git add
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git config --global user.name "${{ github.actor }}"
-          git commit -m "Release Error Prone ${{ github.event.inputs.version }}"
-          git tag "v${{ github.event.inputs.version }}"
+          git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git config --global user.name "${GITHUB_ACTOR}"
+          git commit -m "Release Error Prone ${GITHUB_EVENT_INPUTS_VERSION}"
+          git tag "v${GITHUB_EVENT_INPUTS_VERSION}"
           echo "TARGET_COMMITISH=$(git rev-parse HEAD)" >> $GITHUB_ENV
-          git remote set-url origin https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/google/error-prone.git
+          git remote set-url origin https://${GITHUB_ACTOR}:${{ secrets.GITHUB_TOKEN }}@github.com/google/error-prone.git
+        env:
+          GITHUB_EVENT_INPUTS_VERSION: ${{ github.event.inputs.version }}
           
       - name: Deploy to Sonatype
         env:
@@ -63,7 +65,9 @@ jobs:
 
       - name: Push tag
         run: |
-          git push origin "v${{ github.event.inputs.version }}"
+          git push origin "v${GITHUB_EVENT_INPUTS_VERSION}"
+        env:
+          GITHUB_EVENT_INPUTS_VERSION: ${{ github.event.inputs.version }}
           
       - name: Draft Release Entry
         uses: softprops/action-gh-release@v2.5.0
