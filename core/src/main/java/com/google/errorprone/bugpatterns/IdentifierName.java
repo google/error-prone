@@ -290,7 +290,7 @@ public final class IdentifierName extends BugChecker
     return symbol instanceof VarSymbol && isStatic(symbol);
   }
 
-  private static final Pattern LOWER_UNDERSCORE_PATTERN = Pattern.compile("[a-z0-9_]+");
-  private static final Pattern UPPER_UNDERSCORE_PATTERN = Pattern.compile("[A-Z0-9_]+");
+  private static final Pattern LOWER_UNDERSCORE_PATTERN = Pattern.compile("[a-z0-9$_]+");
+  private static final Pattern UPPER_UNDERSCORE_PATTERN = Pattern.compile("[A-Z0-9$_]+");
   private static final Splitter UNDERSCORE_SPLITTER = Splitter.on('_');
 }

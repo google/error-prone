@@ -799,4 +799,17 @@ public class IdentifierNameTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void dollarSign() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final String JSON_KEY_$SCHEMA = "$schema";
+            }
+            """)
+        .doTest();
+  }
 }
