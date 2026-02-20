@@ -56,6 +56,36 @@ public final class PatternMatchingInstanceofTest {
   }
 
   @Test
+  public void shadowedVariableName() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                int test = 0;
+                if (o instanceof Test) {
+                  test((Test) o);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                int test = 0;
+                if (o instanceof Test test2) {
+                  test(test2);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void seesThroughParens() {
     helper
         .addInputLines(
