@@ -33,7 +33,6 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -110,7 +109,7 @@ class BugPatternFileGenerator implements LineProcessor<List<BugPatternInstance>>
     }
 
     // replace spaces in filename with underscores
-    Path checkPath = Paths.get(pattern.name.replace(' ', '_') + ".md");
+    Path checkPath = Path.of(pattern.name.replace(' ', '_') + ".md");
 
     try (Writer writer = Files.newBufferedWriter(outputDir.resolve(checkPath), UTF_8)) {
 

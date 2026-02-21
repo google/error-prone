@@ -37,7 +37,7 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.List;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -98,13 +98,13 @@ public final class ExternalCanIgnoreReturnValue extends ErrorProneMethodRule {
     AS_STRINGS {
       @Override
       MethodPredicate load(String file) throws IOException {
-        return configByInterpretingMethodsAsStrings(MoreFiles.asCharSource(Paths.get(file), UTF_8));
+        return configByInterpretingMethodsAsStrings(MoreFiles.asCharSource(Path.of(file), UTF_8));
       }
     },
     PARSE_TOKENS {
       @Override
       MethodPredicate load(String file) throws IOException {
-        return configByParsingApiObjects(MoreFiles.asCharSource(Paths.get(file), UTF_8));
+        return configByParsingApiObjects(MoreFiles.asCharSource(Path.of(file), UTF_8));
       }
     };
 
