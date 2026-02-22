@@ -857,4 +857,328 @@ public final class UnusedMethodTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void methodHandleFindStatic() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static java.lang.invoke.MethodHandles.lookup;
+            import static java.lang.invoke.MethodType.methodType;
+
+            class Test {
+              private static void bar() {}
+
+              void use() throws Exception {
+                lookup().findStatic(Test.class, "bar", methodType(void.class));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodHandleFindVirtual() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static java.lang.invoke.MethodHandles.lookup;
+            import static java.lang.invoke.MethodType.methodType;
+
+            class Test {
+              private void foo() {}
+
+              void use() throws Exception {
+                lookup().findVirtual(Test.class, "foo", methodType(void.class));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodHandleFindVirtualWithParams() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static java.lang.invoke.MethodHandles.lookup;
+            import static java.lang.invoke.MethodType.methodType;
+
+            class Test {
+              private void process(int x, String s) {}
+
+              void use() throws Exception {
+                lookup().findVirtual(Test.class, "process", methodType(void.class, int.class, String.class));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodHandleFindSpecial() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static java.lang.invoke.MethodHandles.lookup;
+            import static java.lang.invoke.MethodType.methodType;
+
+            class Test {
+              private void baz() {}
+
+              void use() throws Exception {
+                lookup().findSpecial(Test.class, "baz", methodType(void.class), Test.class);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodHandleFindConstructor() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static java.lang.invoke.MethodHandles.lookup;
+            import static java.lang.invoke.MethodType.methodType;
+
+            class Test {
+              private Test(int x) {}
+
+              static void use() throws Exception {
+                lookup().findConstructor(Test.class, methodType(void.class, int.class));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodHandleNonInlinedMethodType() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static java.lang.invoke.MethodHandles.lookup;
+            import static java.lang.invoke.MethodType.methodType;
+
+            import java.lang.invoke.MethodType;
+
+            class Test {
+              // BUG: Diagnostic contains: Method 'foo' is never used.
+              private void foo() {}
+
+              void use() throws Exception {
+                MethodType mt = methodType(void.class);
+                lookup().findVirtual(Test.class, "foo", mt);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void classGetMethod() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private void target() {}
+
+              void use() throws Exception {
+                Test.class.getMethod("target");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void classGetDeclaredMethod() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private void secret() {}
+
+              void use() throws Exception {
+                Test.class.getDeclaredMethod("secret");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void classGetConstructor() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private Test(int x) {}
+
+              static void use() throws Exception {
+                Test.class.getConstructor(int.class);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void classGetDeclaredConstructor() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private Test(String s) {}
+
+              static void use() throws Exception {
+                Test.class.getDeclaredConstructor(String.class);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void reflectionConstantFieldName() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final String METHOD_NAME = "target";
+
+              private void target() {}
+
+              void use() throws Exception {
+                Test.class.getMethod(METHOD_NAME);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void reflectionNonConstantName() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: Method 'target' is never used.
+              private void target() {}
+
+              void use(String name) throws Exception {
+                Test.class.getMethod(name);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void reflectionOnDifferentClass() {
+    helper
+        .addSourceLines(
+            "Other.java",
+            """
+            class Other {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: Method 'target' is never used.
+              private void target() {}
+
+              void use() throws Exception {
+                Other.class.getMethod("target");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void reflectionWithParams() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private void process(String s) {}
+
+              void use() throws Exception {
+                Test.class.getMethod("process", String.class);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void reflectionWrongOverload() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: Method 'process' is never used.
+              private void process(String s) {}
+
+              void use() throws Exception {
+                Test.class.getMethod("process");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void classGetConstructor_zeroVarargs() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: Constructor 'Test' is never used.
+              private Test(int x) {}
+
+              static void use() throws Exception {
+                Test.class.getConstructor();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void reflectionWithoutClassLiteral() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: Method 'target' is never used.
+              private void target() {}
+
+              void use() throws Exception {
+                getClass().getMethod("target");
+              }
+            }
+            """)
+        .doTest();
+  }
+
 }
