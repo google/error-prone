@@ -98,7 +98,7 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">com.google.protobuf.AbstractMessage (implements com.google.protobuf.Message)
 <ul>
-<li class="circle">com.google.protobuf.GeneratedMessageV3 (implements java.io.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a>)
+<li class="circle">com.google.protobuf.GeneratedMessage (implements java.io.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a>)
 <ul>
 <li class="circle">com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff</a> (implements com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiffOrBuilder.html" title="interface in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiffOrBuilder</a>)</li>
 <li class="circle">com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassMember.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassMember</a> (implements com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassMemberOrBuilder.html" title="interface in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassMemberOrBuilder</a>)</li>
@@ -115,7 +115,7 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">com.google.protobuf.AbstractMessage.Builder&lt;BuilderType&gt; (implements com.google.protobuf.Message.Builder)
 <ul>
-<li class="circle">com.google.protobuf.GeneratedMessageV3.Builder&lt;BuilderT&gt;
+<li class="circle">com.google.protobuf.GeneratedMessage.Builder&lt;BuilderT&gt;
 <ul>
 <li class="circle">com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.Builder.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff.Builder</a> (implements com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiffOrBuilder.html" title="interface in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiffOrBuilder</a>)</li>
 <li class="circle">com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassMember.Builder.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassMember.Builder</a> (implements com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassMemberOrBuilder.html" title="interface in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassMemberOrBuilder</a>)</li>
@@ -153,7 +153,6 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/AnnotationMatcherUtils.html" class="type-name-link" title="class in com.google.errorprone.matchers">AnnotationMatcherUtils</a></li>
 <li class="circle">com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" class="type-name-link" title="class in com.google.errorprone.util">AnnotationNames</a></li>
 <li class="circle">com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/AnnotationType.html" class="type-name-link" title="class in com.google.errorprone.matchers">AnnotationType</a> (implements com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;)</li>
-<li class="circle">com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto</a></li>
 <li class="circle">com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ApiFactory.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ApiFactory</a></li>
 <li class="circle">com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Asserts.html" class="type-name-link" title="class in com.google.errorprone.matchers">Asserts</a> (implements com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;)</li>
 <li class="circle">com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AssertThrowsUtils.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">AssertThrowsUtils</a></li>
@@ -934,6 +933,11 @@ loadScripts(document, 'script');</script>
 </li>
 <li class="circle">com.google.errorprone.apply.<a href="com/google/errorprone/apply/FsFileDestination.html" class="type-name-link" title="class in com.google.errorprone.apply">FsFileDestination</a> (implements com.google.errorprone.apply.<a href="com/google/errorprone/apply/FileDestination.html" title="interface in com.google.errorprone.apply">FileDestination</a>)</li>
 <li class="circle">com.google.errorprone.apply.<a href="com/google/errorprone/apply/FsFileSource.html" class="type-name-link" title="class in com.google.errorprone.apply">FsFileSource</a> (implements com.google.errorprone.apply.<a href="com/google/errorprone/apply/FileSource.html" title="interface in com.google.errorprone.apply">FileSource</a>)</li>
+<li class="circle">com.google.protobuf.GeneratedFile
+<ul>
+<li class="circle">com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto</a></li>
+</ul>
+</li>
 <li class="circle">com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByBinder.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByBinder</a></li>
 <li class="circle">com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression</a>
 <ul>
