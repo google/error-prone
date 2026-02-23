@@ -64,6 +64,7 @@ public class ErrorProneOptions {
   private static final String IGNORE_SUPPRESSION_ANNOTATIONS = "-XepIgnoreSuppressionAnnotations";
   private static final String DISABLE_ALL_CHECKS = "-XepDisableAllChecks";
   private static final String DISABLE_ALL_WARNINGS = "-XepDisableAllWarnings";
+  private static final String WARN_ON_UNNEEDED_SUPPRESSIONS = "-XepWarnOnUnneededSuppressions";
   private static final String IGNORE_UNKNOWN_CHECKS_FLAG = "-XepIgnoreUnknownCheckNames";
   private static final String DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG =
       "-XepDisableWarningsInGeneratedCode";
@@ -98,6 +99,10 @@ public class ErrorProneOptions {
 
   public boolean isDisableAllChecks() {
     return disableAllChecks;
+  }
+
+  public boolean isWarnOnUnneededSuppressions() {
+    return warnOnUnneededSuppressions;
   }
 
   /**
@@ -154,6 +159,7 @@ public class ErrorProneOptions {
   private final boolean suggestionsAsWarnings;
   private final boolean enableAllChecksAsWarnings;
   private final boolean disableAllChecks;
+  private final boolean warnOnUnneededSuppressions;
   private final boolean isTestOnlyTarget;
   private final boolean isPubliclyVisibleTarget;
   private final ErrorProneFlags flags;
@@ -172,6 +178,7 @@ public class ErrorProneOptions {
       boolean suggestionsAsWarnings,
       boolean enableAllChecksAsWarnings,
       boolean disableAllChecks,
+      boolean warnOnUnneededSuppressions,
       boolean isTestOnlyTarget,
       boolean isPubliclyVisibleTarget,
       ErrorProneFlags flags,
@@ -188,6 +195,7 @@ public class ErrorProneOptions {
     this.suggestionsAsWarnings = suggestionsAsWarnings;
     this.enableAllChecksAsWarnings = enableAllChecksAsWarnings;
     this.disableAllChecks = disableAllChecks;
+    this.warnOnUnneededSuppressions = warnOnUnneededSuppressions;
     this.isTestOnlyTarget = isTestOnlyTarget;
     this.isPubliclyVisibleTarget = isPubliclyVisibleTarget;
     this.flags = flags;
@@ -261,6 +269,7 @@ public class ErrorProneOptions {
     private boolean suggestionsAsWarnings = false;
     private boolean enableAllChecksAsWarnings = false;
     private boolean disableAllChecks = false;
+    private boolean warnOnUnneededSuppressions = false;
     private boolean isTestOnlyTarget = false;
     private boolean isPubliclyVisibleTarget = false;
     private boolean ignoreSuppressionAnnotations = false;
@@ -345,6 +354,10 @@ public class ErrorProneOptions {
       this.disableAllChecks = disableAllChecks;
     }
 
+    public void setWarnOnUnneededSuppressions(boolean warnOnUnneededSuppressions) {
+      this.warnOnUnneededSuppressions = warnOnUnneededSuppressions;
+    }
+
     void setTestOnlyTarget(boolean isTestOnlyTarget) {
       this.isTestOnlyTarget = isTestOnlyTarget;
     }
@@ -368,6 +381,7 @@ public class ErrorProneOptions {
           suggestionsAsWarnings,
           enableAllChecksAsWarnings,
           disableAllChecks,
+          warnOnUnneededSuppressions,
           isTestOnlyTarget,
           isPubliclyVisibleTarget,
           flagsBuilder.build(),
@@ -475,6 +489,7 @@ public class ErrorProneOptions {
         case SUGGESTIONS_AS_WARNINGS_FLAG -> builder.setSuggestionsAsWarnings(true);
         case ENABLE_ALL_CHECKS -> builder.setEnableAllChecksAsWarnings(true);
         case DISABLE_ALL_CHECKS -> builder.setDisableAllChecks(true);
+        case WARN_ON_UNNEEDED_SUPPRESSIONS -> builder.setWarnOnUnneededSuppressions(true);
         case COMPILING_TEST_ONLY_CODE -> builder.setTestOnlyTarget(true);
         case COMPILING_PUBLICLY_VISIBLE_CODE -> builder.setPubliclyVisibleTarget(true);
         case DISABLE_ALL_WARNINGS -> builder.setDisableAllWarnings(true);
