@@ -1894,6 +1894,12 @@ the caller passes <code>foo</code> as a parameter.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/BugCheckerInfo.html#checkerClass()" class="member-name-link">checkerClass()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html#checkExplicitSource(com.sun.source.tree.Tree)" class="member-name-link">checkExplicitSource(Tree)</a> - Static method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html#checkExplicitSource(com.sun.tools.javac.tree.JCTree)" class="member-name-link">checkExplicitSource(JCTree)</a> - Static method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html#checkExplicitSource(com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition)" class="member-name-link">checkExplicitSource(JCDiagnostic.DiagnosticPosition)</a> - Static method in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html#checkForImmutability(java.util.Optional,com.google.common.collect.ImmutableSet,com.sun.tools.javac.code.Type.ClassType,com.google.errorprone.bugpatterns.threadsafety.ImmutableAnalysis.ViolationReporter)" class="member-name-link">checkForImmutability(Optional, ImmutableSet, Type.ClassType, ImmutableAnalysis.ViolationReporter)</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ImmutableAnalysis.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ImmutableAnalysis</a></dt>
 <dd>
 <div class="block">Check that an <code>@Immutable</code>-annotated class:
@@ -4744,6 +4750,8 @@ if the flag is unset.</div>
 </dd>
 <dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html#GET_END_POS_HANDLE" class="member-name-link">GET_END_POS_HANDLE</a> - Static variable in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html#GET_END_POS_WITH_UNIT_HANDLE" class="member-name-link">GET_END_POS_WITH_UNIT_HANDLE</a> - Static variable in interface com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/scanner/ScannerSupplier.html#getAllChecks()" class="member-name-link">getAllChecks()</a> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner">ScannerSupplier</a></dt>
 <dd>
 <div class="block">Returns a map of check name to <a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a> for all <a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone"><code>BugCheckerInfo</code></a>s in this
@@ -6035,6 +6043,8 @@ constructors.</div>
 <div class="block">Handles an exception thrown by an individual check.</div>
 </dd>
 <dt><a href="com/google/errorprone/apply/DescriptionBasedDiff.html#handleFix(com.google.errorprone.fixes.Fix)" class="member-name-link">handleFix(Fix)</a> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/DescriptionBasedDiff.html" title="class in com.google.errorprone.apply">DescriptionBasedDiff</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/apply/DescriptionBasedDiff.html#handleFix(com.google.errorprone.matchers.Description,com.google.errorprone.fixes.Fix)" class="member-name-link">handleFix(Description, Fix)</a> - Method in class com.google.errorprone.apply.<a href="com/google/errorprone/apply/DescriptionBasedDiff.html" title="class in com.google.errorprone.apply">DescriptionBasedDiff</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.LockEventListener.html#handleGuardedAccess(com.sun.source.tree.ExpressionTree,com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression,com.google.errorprone.bugpatterns.threadsafety.HeldLockSet)" class="member-name-link">handleGuardedAccess(ExpressionTree, GuardedByExpression, HeldLockSet)</a> - Method in interface com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/HeldLockAnalyzer.LockEventListener.html" title="interface in com.google.errorprone.bugpatterns.threadsafety">HeldLockAnalyzer.LockEventListener</a></dt>
 <dd>
@@ -10722,6 +10732,8 @@ on the injected values.</div>
 <dd>
 <div class="block">Matches test helpers which require a terminating method to be called.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/MissingTestCall.html#%3Cinit%3E()" class="member-name-link">MissingTestCall()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingTestCall.html" title="class in com.google.errorprone.bugpatterns">MissingTestCall</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/MisusedDateFormat.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MisusedDateFormat</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Base class for checks which find common errors in date format patterns.</div>
@@ -11983,6 +11995,8 @@ together.</div>
 <div class="block">Returns the value of the <a href="./com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html#param-policy"><code>policy</code></a> record component.</div>
 </dd>
 <dt><a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html#pos" class="member-name-link">pos</a> - Variable in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html" title="class in com.google.errorprone.refaster">UPlaceholderExpression.PlaceholderParamIdent</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/SourcePositionException.html#pos()" class="member-name-link">pos()</a> - Method in exception class com.google.errorprone.<a href="com/google/errorprone/SourcePositionException.html" title="class in com.google.errorprone">SourcePositionException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/ErrorProneToken.html#pos()" class="member-name-link">pos()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a></dt>
 <dd>&nbsp;</dd>
@@ -13264,6 +13278,12 @@ statement with expression matching the passed <code>expressionTreeMatcher</code>
 </dd>
 <dt><a href="com/google/errorprone/apply/SourceFile.html#%3Cinit%3E(java.lang.String,java.lang.CharSequence)" class="member-name-link">SourceFile(String, CharSequence)</a> - Constructor for class com.google.errorprone.apply.<a href="com/google/errorprone/apply/SourceFile.html" title="class in com.google.errorprone.apply">SourceFile</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/SourcePositionException.html" class="type-name-link" title="class in com.google.errorprone">SourcePositionException</a> - Exception Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
+<dd>
+<div class="block">An invalid source position.</div>
+</dd>
+<dt><a href="com/google/errorprone/SourcePositionException.html#%3Cinit%3E(int,int)" class="member-name-link">SourcePositionException(int, int)</a> - Constructor for exception class com.google.errorprone.<a href="com/google/errorprone/SourcePositionException.html" title="class in com.google.errorprone">SourcePositionException</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AbstractCollectionIncompatibleTypeMatcher.MatchResult.html#sourceTree()" class="member-name-link">sourceTree()</a> - Method in record class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>sourceTree</code> record component.</div>
@@ -14133,6 +14153,8 @@ thrownMatcher</code>.</div>
 <dt><a href="com/google/errorprone/dataflow/AccessPathStore.html#toBuilder()" class="member-name-link">toBuilder()</a> - Method in record class com.google.errorprone.dataflow.<a href="com/google/errorprone/dataflow/AccessPathStore.html" title="class in com.google.errorprone.dataflow">AccessPathStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.html#toBuilder()" class="member-name-link">toBuilder()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/SourcePositionException.html#toErrorProneError(java.lang.String,javax.tools.JavaFileObject)" class="member-name-link">toErrorProneError(String, JavaFileObject)</a> - Method in exception class com.google.errorprone.<a href="com/google/errorprone/SourcePositionException.html" title="class in com.google.errorprone">SourcePositionException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/MethodVisibility.Visibility.html#toModifier()" class="member-name-link">toModifier()</a> - Method in enum class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/MethodVisibility.Visibility.html" title="enum class in com.google.errorprone.matchers">MethodVisibility.Visibility</a></dt>
 <dd>&nbsp;</dd>

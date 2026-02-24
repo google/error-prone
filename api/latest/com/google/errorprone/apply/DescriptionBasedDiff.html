@@ -64,6 +64,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#getRelevantFileName()" tabindex="0">getRelevantFileName()</a></li>
 <li><a href="#isEmpty()" tabindex="0">isEmpty()</a></li>
 <li><a href="#onDescribed(com.google.errorprone.matchers.Description)" tabindex="0">onDescribed(Description)</a></li>
+<li><a href="#handleFix(com.google.errorprone.matchers.Description,com.google.errorprone.fixes.Fix)" tabindex="0">handleFix(Description, Fix)</a></li>
 <li><a href="#handleFix(com.google.errorprone.fixes.Fix)" tabindex="0">handleFix(Fix)</a></li>
 <li><a href="#applyDifferences(com.google.errorprone.apply.SourceFile)" tabindex="0">applyDifferences(SourceFile)</a></li>
 </ol>
@@ -140,12 +141,16 @@ implements <a href="../DescriptionListener.html" title="interface in com.google.
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleFix(com.google.errorprone.fixes.Fix)" class="member-name-link">handleFix</a><wbr>(<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleFix(com.google.errorprone.matchers.Description,com.google.errorprone.fixes.Fix)" class="member-name-link">handleFix</a><wbr>(<a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description,
+ <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onDescribed(com.google.errorprone.matchers.Description)" class="member-name-link">onDescribed</a><wbr>(<a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onDescribed(com.google.errorprone.matchers.Description)" class="member-name-link">onDescribed</a><wbr>(<a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Reports a suggested modification to the code.</div>
 </div>
 </div>
@@ -216,6 +221,15 @@ implements <a href="../DescriptionListener.html" title="interface in com.google.
 <dt>Specified by:</dt>
 <dd><code><a href="../DescriptionListener.html#onDescribed(com.google.errorprone.matchers.Description)">onDescribed</a></code>&nbsp;in interface&nbsp;<code><a href="../DescriptionListener.html" title="interface in com.google.errorprone">DescriptionListener</a></code></dd>
 </dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="handleFix(com.google.errorprone.matchers.Description,com.google.errorprone.fixes.Fix)">
+<h3>handleFix</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleFix</span><wbr><span class="parameters">(<a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description,
+ <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&nbsp;fix)</span></div>
 </div>
 </section>
 </li>
