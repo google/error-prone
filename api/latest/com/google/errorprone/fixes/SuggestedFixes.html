@@ -98,6 +98,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#suggestedExemptingAnnotationSupported(javax.lang.model.element.Element)" tabindex="0">suggestedExemptingAnnotationSupported(Element)</a></li>
 <li><a href="#replaceIncludingComments(com.sun.source.util.TreePath,java.lang.String,com.google.errorprone.VisitorState)" tabindex="0">replaceIncludingComments(TreePath, String, VisitorState)</a></li>
 <li><a href="#castTree(com.sun.source.tree.ExpressionTree,java.lang.String,com.google.errorprone.VisitorState)" tabindex="0">castTree(ExpressionTree, String, VisitorState)</a></li>
+<li><a href="#replaceVariableType(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" tabindex="0">replaceVariableType(VariableTree, String, VisitorState)</a></li>
 </ol>
 </li>
 </ol>
@@ -433,32 +434,39 @@ replacement</code>.</div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Replaces the tree at <code>path</code> along with any Javadocs/associated single-line comments.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#suggestedExemptingAnnotationSupported(javax.lang.model.element.Element)" class="member-name-link">suggestedExemptingAnnotationSupported</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;exemptingAnnotation)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#replaceVariableType(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">replaceVariableType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacementType,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Replaces the type of the given variable with <code>replacementType</code>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#suggestedExemptingAnnotationSupported(javax.lang.model.element.Element)" class="member-name-link">suggestedExemptingAnnotationSupported</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;exemptingAnnotation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns true iff <code>suggestExemptingAnnotation()</code> supports this annotation.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#suggestExemptingAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)" class="member-name-link">suggestExemptingAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;exemptingAnnotation,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#suggestExemptingAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)" class="member-name-link">suggestExemptingAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;exemptingAnnotation,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;where,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Create a fix to add a suppression annotation on the surrounding class.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState,java.lang.String,java.util.Collection)" class="member-name-link">updateAnnotationArgumentValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;annotation,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState,java.lang.String,java.util.Collection)" class="member-name-link">updateAnnotationArgumentValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;annotation,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterName,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;newValues)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a fix that updates <code>newValues</code> to the <code>parameterName</code> argument for <code>
 annotation</code>, regardless of whether there is already an argument.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static <a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,java.lang.String,java.util.Collection)" class="member-name-link">updateAnnotationArgumentValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;annotation,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static <a href="SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,java.lang.String,java.util.Collection)" class="member-name-link">updateAnnotationArgumentValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;annotation,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterName,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;newValues)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState,java.lang.String,java.util.Collection)"><code>updateAnnotationArgumentValues(AnnotationTree, VisitorState, String, Collection)</code></a> instead</div>
 </div>
@@ -1041,6 +1049,20 @@ node.</div>
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;toType,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block">Casts the given <code>expressionTree</code> to <code>toType</code>, adding parentheses if necessary.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="replaceVariableType(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)">
+<h3>replaceVariableType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</span>&nbsp;<span class="element-name">replaceVariableType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacementType,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Replaces the type of the given variable with <code>replacementType</code>.
+
+<p>If the tree is a <code>var</code> declaration, the <code>var</code> keyword will be replaced with the
+<code>replacementType</code>.</div>
 </div>
 </section>
 </li>

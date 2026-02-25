@@ -5027,30 +5027,37 @@ replacement</code>.</div>
 <div class="block">Replaces the tree at <code>path</code> along with any Javadocs/associated single-line comments.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#suggestExemptingAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)" class="member-name-link">suggestExemptingAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;exemptingAnnotation,
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#replaceVariableType(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">replaceVariableType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacementType,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Replaces the type of the given variable with <code>replacementType</code>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#suggestExemptingAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)" class="member-name-link">suggestExemptingAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;exemptingAnnotation,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;where,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Create a fix to add a suppression annotation on the surrounding class.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../fixes/SuggestedFix.Builder.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">swap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node1,
+<div class="col-first even-row-color"><code><a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../fixes/SuggestedFix.Builder.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">swap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node1,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node2,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../fixes/SuggestedFix.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">swap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node1,
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static <a href="../fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFix.</span><code><a href="../fixes/SuggestedFix.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">swap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node1,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;node2,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block"><a href="../fixes/SuggestedFix.Builder.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree,com.google.errorprone.VisitorState)"><code>SuggestedFix.Builder.swap(Tree, Tree, VisitorState)</code></a></div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState,java.lang.String,java.util.Collection)" class="member-name-link">updateAnnotationArgumentValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;annotation,
+<div class="col-first even-row-color"><code>static <a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState,java.lang.String,java.util.Collection)" class="member-name-link">updateAnnotationArgumentValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&nbsp;annotation,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;parameterName,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;newValues)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Returns a fix that updates <code>newValues</code> to the <code>parameterName</code> argument for <code>
 annotation</code>, regardless of whether there is already an argument.</div>
 </div>

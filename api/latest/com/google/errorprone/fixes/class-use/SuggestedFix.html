@@ -349,10 +349,17 @@ string.</div>
 <div class="block">Removes modifiers from the given class, method, or field declaration.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#suggestExemptingAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)" class="member-name-link">suggestExemptingAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;exemptingAnnotation,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;where,
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#replaceVariableType(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">replaceVariableType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacementType,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
+<div class="block">Replaces the type of the given variable with <code>replacementType</code>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#suggestExemptingAnnotation(java.lang.String,com.sun.source.util.TreePath,com.google.errorprone.VisitorState)" class="member-name-link">suggestExemptingAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;exemptingAnnotation,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;where,
+ <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Create a fix to add a suppression annotation on the surrounding class.</div>
 </div>
 </div>
