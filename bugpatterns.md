@@ -1501,9 +1501,6 @@ Empty statement after if
 __[ExtendsAutoValue](bugpattern/ExtendsAutoValue)__<br>
 Do not extend an @AutoValue-like classes in non-generated code.
 
-__[InjectMoreThanOneQualifier](bugpattern/InjectMoreThanOneQualifier)__<br>
-Using more than one qualifier annotation on the same element is not allowed.
-
 __[InsecureCryptoUsage](bugpattern/InsecureCryptoUsage)__<br>
 A standard cryptographic operation is used in a mode that is prone to vulnerabilities
 
@@ -1518,6 +1515,9 @@ Prefer &#39;L&#39; to &#39;l&#39; for the suffix to long literals
 
 __[MissingRuntimeRetention](bugpattern/MissingRuntimeRetention)__<br>
 Scoping and qualifier annotations must have runtime retention.
+
+__[MoreThanOneQualifier](bugpattern/MoreThanOneQualifier)__<br>
+Using more than one qualifier annotation on the same element is not allowed.
 
 __[NoAllocation](bugpattern/NoAllocation)__<br>
 @NoAllocation was specified on this method, but something was found that would trigger an allocation

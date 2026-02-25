@@ -62,20 +62,29 @@ loadScripts(document, 'script');</script>
 <li><a href="#INSIDE_GUICE_MODULE" tabindex="0">INSIDE_GUICE_MODULE</a></li>
 <li><a href="#GUICE_PROVIDES_ANNOTATION" tabindex="0">GUICE_PROVIDES_ANNOTATION</a></li>
 <li><a href="#DAGGER_PROVIDES_ANNOTATION" tabindex="0">DAGGER_PROVIDES_ANNOTATION</a></li>
+<li><a href="#PROVIDES_ANNOTATIONS" tabindex="0">PROVIDES_ANNOTATIONS</a></li>
+<li><a href="#MULTIBINDINGS_ANNOTATIONS" tabindex="0">MULTIBINDINGS_ANNOTATIONS</a></li>
 <li><a href="#ASSISTED_ANNOTATION" tabindex="0">ASSISTED_ANNOTATION</a></li>
 <li><a href="#ASSISTED_INJECT_ANNOTATION" tabindex="0">ASSISTED_INJECT_ANNOTATION</a></li>
 <li><a href="#GUICE_INJECT_ANNOTATION" tabindex="0">GUICE_INJECT_ANNOTATION</a></li>
 <li><a href="#JAVAX_INJECT_ANNOTATION" tabindex="0">JAVAX_INJECT_ANNOTATION</a></li>
-<li><a href="#IS_APPLICATION_OF_JAVAX_INJECT" tabindex="0">IS_APPLICATION_OF_JAVAX_INJECT</a></li>
+<li><a href="#JAKARTA_INJECT_ANNOTATION" tabindex="0">JAKARTA_INJECT_ANNOTATION</a></li>
+<li><a href="#INJECT_ANNOTATIONS" tabindex="0">INJECT_ANNOTATIONS</a></li>
 <li><a href="#IS_APPLICATION_OF_GUICE_INJECT" tabindex="0">IS_APPLICATION_OF_GUICE_INJECT</a></li>
+<li><a href="#IS_APPLICATION_OF_JAVAX_INJECT" tabindex="0">IS_APPLICATION_OF_JAVAX_INJECT</a></li>
+<li><a href="#IS_APPLICATION_OF_JAKARTA_INJECT" tabindex="0">IS_APPLICATION_OF_JAKARTA_INJECT</a></li>
 <li><a href="#IS_APPLICATION_OF_AT_INJECT" tabindex="0">IS_APPLICATION_OF_AT_INJECT</a></li>
 <li><a href="#HAS_INJECT_ANNOTATION" tabindex="0">HAS_INJECT_ANNOTATION</a></li>
 <li><a href="#GUICE_SCOPE_ANNOTATION" tabindex="0">GUICE_SCOPE_ANNOTATION</a></li>
 <li><a href="#JAVAX_SCOPE_ANNOTATION" tabindex="0">JAVAX_SCOPE_ANNOTATION</a></li>
+<li><a href="#SCOPE_ANNOTATIONS" tabindex="0">SCOPE_ANNOTATIONS</a></li>
 <li><a href="#IS_SCOPING_ANNOTATION" tabindex="0">IS_SCOPING_ANNOTATION</a></li>
+<li><a href="#HAS_SCOPE_ANNOTATION" tabindex="0">HAS_SCOPE_ANNOTATION</a></li>
 <li><a href="#GUICE_BINDING_ANNOTATION" tabindex="0">GUICE_BINDING_ANNOTATION</a></li>
 <li><a href="#JAVAX_QUALIFIER_ANNOTATION" tabindex="0">JAVAX_QUALIFIER_ANNOTATION</a></li>
-<li><a href="#IS_BINDING_ANNOTATION" tabindex="0">IS_BINDING_ANNOTATION</a></li>
+<li><a href="#QUALIFIER_ANNOTATIONS" tabindex="0">QUALIFIER_ANNOTATIONS</a></li>
+<li><a href="#IS_QUALIFIER_ANNOTATION" tabindex="0">IS_QUALIFIER_ANNOTATION</a></li>
+<li><a href="#HAS_QUALIFIER_ANNOTATION" tabindex="0">HAS_QUALIFIER_ANNOTATION</a></li>
 <li><a href="#GUICE_MAP_KEY_ANNOTATION" tabindex="0">GUICE_MAP_KEY_ANNOTATION</a></li>
 <li><a href="#DAGGER_MAP_KEY_ANNOTATION" tabindex="0">DAGGER_MAP_KEY_ANNOTATION</a></li>
 <li><a href="#IS_DAGGER_COMPONENT" tabindex="0">IS_DAGGER_COMPONENT</a></li>
@@ -147,39 +156,66 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#HAS_INJECT_ANNOTATION" class="member-name-link">HAS_INJECT_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#INSIDE_GUICE_MODULE" class="member-name-link">INSIDE_GUICE_MODULE</a></code></div>
+<div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#HAS_QUALIFIER_ANNOTATION" class="member-name-link">HAS_QUALIFIER_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#IS_APPLICATION_OF_AT_INJECT" class="member-name-link">IS_APPLICATION_OF_AT_INJECT</a></code></div>
+<div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#HAS_SCOPE_ANNOTATION" class="member-name-link">HAS_SCOPE_ANNOTATION</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#INJECT_ANNOTATIONS" class="member-name-link">INJECT_ANNOTATIONS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#INSIDE_GUICE_MODULE" class="member-name-link">INSIDE_GUICE_MODULE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#IS_APPLICATION_OF_GUICE_INJECT" class="member-name-link">IS_APPLICATION_OF_GUICE_INJECT</a></code></div>
+<div class="col-second even-row-color"><code><a href="#IS_APPLICATION_OF_AT_INJECT" class="member-name-link">IS_APPLICATION_OF_AT_INJECT</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#IS_APPLICATION_OF_GUICE_INJECT" class="member-name-link">IS_APPLICATION_OF_GUICE_INJECT</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#IS_APPLICATION_OF_JAKARTA_INJECT" class="member-name-link">IS_APPLICATION_OF_JAKARTA_INJECT</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#IS_APPLICATION_OF_JAVAX_INJECT" class="member-name-link">IS_APPLICATION_OF_JAVAX_INJECT</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#IS_BINDING_ANNOTATION" class="member-name-link">IS_BINDING_ANNOTATION</a></code></div>
+<div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#IS_DAGGER_COMPONENT" class="member-name-link">IS_DAGGER_COMPONENT</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#IS_DAGGER_COMPONENT" class="member-name-link">IS_DAGGER_COMPONENT</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#IS_DAGGER_COMPONENT_OR_MODULE" class="member-name-link">IS_DAGGER_COMPONENT_OR_MODULE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#IS_DAGGER_COMPONENT_OR_MODULE" class="member-name-link">IS_DAGGER_COMPONENT_OR_MODULE</a></code></div>
+<div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#IS_QUALIFIER_ANNOTATION" class="member-name-link">IS_QUALIFIER_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#IS_SCOPING_ANNOTATION" class="member-name-link">IS_SCOPING_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#JAVAX_INJECT_ANNOTATION" class="member-name-link">JAVAX_INJECT_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><code><a href="#JAKARTA_INJECT_ANNOTATION" class="member-name-link">JAKARTA_INJECT_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#JAVAX_QUALIFIER_ANNOTATION" class="member-name-link">JAVAX_QUALIFIER_ANNOTATION</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#JAVAX_INJECT_ANNOTATION" class="member-name-link">JAVAX_INJECT_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#JAVAX_SCOPE_ANNOTATION" class="member-name-link">JAVAX_SCOPE_ANNOTATION</a></code></div>
+<div class="col-second even-row-color"><code><a href="#JAVAX_QUALIFIER_ANNOTATION" class="member-name-link">JAVAX_QUALIFIER_ANNOTATION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#JAVAX_SCOPE_ANNOTATION" class="member-name-link">JAVAX_SCOPE_ANNOTATION</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#MULTIBINDINGS_ANNOTATIONS" class="member-name-link">MULTIBINDINGS_ANNOTATIONS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#PROVIDES_ANNOTATIONS" class="member-name-link">PROVIDES_ANNOTATIONS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#QUALIFIER_ANNOTATIONS" class="member-name-link">QUALIFIER_ANNOTATIONS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#SCOPE_ANNOTATIONS" class="member-name-link">SCOPE_ANNOTATIONS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -258,6 +294,22 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="PROVIDES_ANNOTATIONS">
+<h3>PROVIDES_ANNOTATIONS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">PROVIDES_ANNOTATIONS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="MULTIBINDINGS_ANNOTATIONS">
+<h3>MULTIBINDINGS_ANNOTATIONS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">MULTIBINDINGS_ANNOTATIONS</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="ASSISTED_ANNOTATION">
 <h3>ASSISTED_ANNOTATION</h3>
 <div class="horizontal-scroll">
@@ -322,10 +374,26 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="IS_APPLICATION_OF_JAVAX_INJECT">
-<h3>IS_APPLICATION_OF_JAVAX_INJECT</h3>
+<section class="detail" id="JAKARTA_INJECT_ANNOTATION">
+<h3>JAKARTA_INJECT_ANNOTATION</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</span>&nbsp;<span class="element-name">IS_APPLICATION_OF_JAVAX_INJECT</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">JAKARTA_INJECT_ANNOTATION</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../constant-values.html#com.google.errorprone.matchers.InjectMatchers.JAKARTA_INJECT_ANNOTATION">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="INJECT_ANNOTATIONS">
+<h3>INJECT_ANNOTATIONS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">INJECT_ANNOTATIONS</span></div>
 </div>
 </section>
 </li>
@@ -334,6 +402,22 @@ loadScripts(document, 'script');</script>
 <h3>IS_APPLICATION_OF_GUICE_INJECT</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</span>&nbsp;<span class="element-name">IS_APPLICATION_OF_GUICE_INJECT</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="IS_APPLICATION_OF_JAVAX_INJECT">
+<h3>IS_APPLICATION_OF_JAVAX_INJECT</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</span>&nbsp;<span class="element-name">IS_APPLICATION_OF_JAVAX_INJECT</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="IS_APPLICATION_OF_JAKARTA_INJECT">
+<h3>IS_APPLICATION_OF_JAKARTA_INJECT</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</span>&nbsp;<span class="element-name">IS_APPLICATION_OF_JAKARTA_INJECT</span></div>
 </div>
 </section>
 </li>
@@ -386,10 +470,26 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="SCOPE_ANNOTATIONS">
+<h3>SCOPE_ANNOTATIONS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">SCOPE_ANNOTATIONS</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="IS_SCOPING_ANNOTATION">
 <h3>IS_SCOPING_ANNOTATION</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</span>&nbsp;<span class="element-name">IS_SCOPING_ANNOTATION</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="HAS_SCOPE_ANNOTATION">
+<h3>HAS_SCOPE_ANNOTATION</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</span>&nbsp;<span class="element-name">HAS_SCOPE_ANNOTATION</span></div>
 </div>
 </section>
 </li>
@@ -426,10 +526,26 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="IS_BINDING_ANNOTATION">
-<h3>IS_BINDING_ANNOTATION</h3>
+<section class="detail" id="QUALIFIER_ANNOTATIONS">
+<h3>QUALIFIER_ANNOTATIONS</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</span>&nbsp;<span class="element-name">IS_BINDING_ANNOTATION</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableSet&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">QUALIFIER_ANNOTATIONS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="IS_QUALIFIER_ANNOTATION">
+<h3>IS_QUALIFIER_ANNOTATION</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link">AnnotationTree</a>&gt;</span>&nbsp;<span class="element-name">IS_QUALIFIER_ANNOTATION</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="HAS_QUALIFIER_ANNOTATION">
+<h3>HAS_QUALIFIER_ANNOTATION</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</span>&nbsp;<span class="element-name">HAS_QUALIFIER_ANNOTATION</span></div>
 </div>
 </section>
 </li>

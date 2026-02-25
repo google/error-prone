@@ -6060,6 +6060,10 @@ constructors.</div>
 <dd>
 <div class="block">Matches trees annotated with <a href="com/google/errorprone/annotations/MustBeClosed.html" title="annotation interface in com.google.errorprone.annotations"><code>MustBeClosed</code></a>.</div>
 </dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#HAS_QUALIFIER_ANNOTATION" class="member-name-link">HAS_QUALIFIER_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#HAS_SCOPE_ANNOTATION" class="member-name-link">HAS_SCOPE_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#hasAcceptedThreadSafeTypeParameterAnnotation(com.sun.tools.javac.code.Symbol.TypeVariableSymbol)" class="member-name-link">hasAcceptedThreadSafeTypeParameterAnnotation(Symbol.TypeVariableSymbol)</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>
 <div class="block">Returns whether the given type parameter's declaration is annotated with <code>ThreadSafety.typeParameterAnnotation</code> or another acceptable annotation.</div>
@@ -6800,6 +6804,8 @@ if possible.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/InitializeInline.html#%3Cinit%3E()" class="member-name-link">InitializeInline()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InitializeInline.html" title="class in com.google.errorprone.bugpatterns">InitializeInline</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#INJECT_ANNOTATIONS" class="member-name-link">INJECT_ANNOTATIONS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/InjectedConstructorAnnotations.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject">InjectedConstructorAnnotations</a> - Class in <a href="com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a></dt>
 <dd>
 <div class="block">A checker for injected constructors with @Inject(optional=true) or binding annotations.</div>
@@ -7149,15 +7155,17 @@ throw a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/ja
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_APPLICATION_OF_GUICE_INJECT" class="member-name-link">IS_APPLICATION_OF_GUICE_INJECT</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_APPLICATION_OF_JAVAX_INJECT" class="member-name-link">IS_APPLICATION_OF_JAVAX_INJECT</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_APPLICATION_OF_JAKARTA_INJECT" class="member-name-link">IS_APPLICATION_OF_JAKARTA_INJECT</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_BINDING_ANNOTATION" class="member-name-link">IS_BINDING_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_APPLICATION_OF_JAVAX_INJECT" class="member-name-link">IS_APPLICATION_OF_JAVAX_INJECT</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_DAGGER_COMPONENT" class="member-name-link">IS_DAGGER_COMPONENT</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_DAGGER_COMPONENT_OR_MODULE" class="member-name-link">IS_DAGGER_COMPONENT_OR_MODULE</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#IS_INTERFACE" class="member-name-link">IS_INTERFACE</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_QUALIFIER_ANNOTATION" class="member-name-link">IS_QUALIFIER_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/InjectMatchers.html#IS_SCOPING_ANNOTATION" class="member-name-link">IS_SCOPING_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
@@ -7662,6 +7670,8 @@ underneath a class or method that is marked as TestNG test code.</div>
 </dl>
 <h2 class="title" id="I:J">J</h2>
 <dl class="index">
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#JAKARTA_INJECT_ANNOTATION" class="member-name-link">JAKARTA_INJECT_ANNOTATION</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/suppliers/Suppliers.html#JAVA_LANG_BOOLEAN_TYPE" class="member-name-link">JAVA_LANG_BOOLEAN_TYPE</a> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/suppliers/Suppliers.html#JAVA_LANG_INTEGER_TYPE" class="member-name-link">JAVA_LANG_INTEGER_TYPE</a> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
@@ -10876,6 +10886,8 @@ the annotation is either annotated with Guice's <code>@ScopeAnnotation</code> or
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/MoreThanOneScopeAnnotationOnClass.html#%3Cinit%3E()" class="member-name-link">MoreThanOneScopeAnnotationOnClass()</a> - Constructor for class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/MoreThanOneScopeAnnotationOnClass.html" title="class in com.google.errorprone.bugpatterns.inject">MoreThanOneScopeAnnotationOnClass</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#MULTIBINDINGS_ANNOTATIONS" class="member-name-link">MULTIBINDINGS_ANNOTATIONS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TypesWithUndefinedEquality.html#MULTIMAP" class="member-name-link">MULTIMAP</a> - Enum constant in enum class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypesWithUndefinedEquality.html" title="enum class in com.google.errorprone.bugpatterns">TypesWithUndefinedEquality</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/MultimapKeys.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MultimapKeys</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
@@ -12201,6 +12213,8 @@ proto.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/CacheLoaderNull.html#provideFix(com.sun.source.tree.ExpressionTree)" class="member-name-link">provideFix(ExpressionTree)</a> - Method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/CacheLoaderNull.html" title="class in com.google.errorprone.bugpatterns.nullness">CacheLoaderNull</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#PROVIDES_ANNOTATIONS" class="member-name-link">PROVIDES_ANNOTATIONS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/guice/ProvidesMethodOutsideOfModule.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject.guice">ProvidesMethodOutsideOfModule</a> - Class in <a href="com/google/errorprone/bugpatterns/inject/guice/package-summary.html">com.google.errorprone.bugpatterns.inject.guice</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/guice/ProvidesMethodOutsideOfModule.html#%3Cinit%3E()" class="member-name-link">ProvidesMethodOutsideOfModule()</a> - Constructor for class com.google.errorprone.bugpatterns.inject.guice.<a href="com/google/errorprone/bugpatterns/inject/guice/ProvidesMethodOutsideOfModule.html" title="class in com.google.errorprone.bugpatterns.inject.guice">ProvidesMethodOutsideOfModule</a></dt>
@@ -12262,6 +12276,8 @@ proto.</div>
 <h2 class="title" id="I:Q">Q</h2>
 <dl class="index">
 <dt><a href="com/google/errorprone/refaster/RefasterRule.html#qualifiedTemplateClass()" class="member-name-link">qualifiedTemplateClass()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/RefasterRule.html" title="class in com.google.errorprone.refaster">RefasterRule</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#QUALIFIER_ANNOTATIONS" class="member-name-link">QUALIFIER_ANNOTATIONS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/QualifierOrScopeOnInjectMethod.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject">QualifierOrScopeOnInjectMethod</a> - Class in <a href="com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a></dt>
 <dd>&nbsp;</dd>
@@ -12970,6 +12986,8 @@ enabled <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class
 <dd>
 <div class="block">Returns the value of the <a href="./com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.Evaluation.html#param-scope"><code>scope</code></a> record component.</div>
 </dd>
+<dt><a href="com/google/errorprone/matchers/InjectMatchers.html#SCOPE_ANNOTATIONS" class="member-name-link">SCOPE_ANNOTATIONS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/InjectMatchers.html" title="class in com.google.errorprone.matchers">InjectMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/ScopeAnnotationOnInterfaceOrAbstractClass.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject">ScopeAnnotationOnInterfaceOrAbstractClass</a> - Class in <a href="com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/ScopeAnnotationOnInterfaceOrAbstractClass.html#%3Cinit%3E()" class="member-name-link">ScopeAnnotationOnInterfaceOrAbstractClass()</a> - Constructor for class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/ScopeAnnotationOnInterfaceOrAbstractClass.html" title="class in com.google.errorprone.bugpatterns.inject">ScopeAnnotationOnInterfaceOrAbstractClass</a></dt>
