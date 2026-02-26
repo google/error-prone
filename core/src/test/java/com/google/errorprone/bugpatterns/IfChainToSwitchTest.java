@@ -105,6 +105,39 @@ public final class IfChainToSwitchTest {
   }
 
   @Test
+  public void ifChain_doubleNull_noError() {
+    // Switches cannot contain duplicate `case null` clauses
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              private Object suit;
+
+              public void foo(Suit s) {
+                this.suit = s;
+                System.out.println("yo");
+                if (this./* hi */ suit instanceof String) {
+                  System.out.println("It's a string!");
+                } else if (suit == null) {
+                  System.out.println("It's null 1!");
+                } else if (suit instanceof Number) {
+                  System.out.println("It's a number!");
+                } else if (suit instanceof Suit) {
+                  System.out.println("It's a Suit!");
+                } else if (this.suit == null) {
+                  System.out.println("It's null 2!");
+                } else throw new AssertionError();
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
   public void ifChain_removesTrailing_error() {
     // Removal of unreachable code after the final branch
     refactoringHelper
@@ -3003,7 +3036,8 @@ class Test {
   }
 
   @Test
-  public void ifChain_domination3_error() {
+  public void ifChain_conflictingUnguardedTypePatterns_noError() {
+    // Integer and Number are conflicting; both unconditional for Integer
     helper
         .addSourceLines(
             "Test.java",
@@ -3034,7 +3068,7 @@ class Test {
   }
 
   @Test
-  public void ifChain_domination4_noError() {
+  public void ifChain_conflictingUnguardedTypePatternsShort_noError() {
     // Number and Integer are conflicting (both unconditional for Integer)
     helper
         .addSourceLines(
@@ -3060,7 +3094,7 @@ class Test {
   }
 
   @Test
-  public void ifChain_domination5_noError() {
+  public void ifChain_dominationDefaultAndUnconditionalConflict_noError() {
     // Both a default and unconditional conflict
     helper
         .addSourceLines(
@@ -3085,6 +3119,55 @@ class Test {
             """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
         .doTest();
+  }
+
+  @Test
+  public void ifChain_dominationWithTrueGuard_error() {
+    // Guard of `true` must be treated as unguarded, causing case to be pulled up
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Integer i = s == null ? 0 : 1;
+                if (i == 0) {
+                  System.out.println("It's 0!");
+                } else if (i instanceof Integer o && o.hashCode() == 17) {
+                  System.out.println("Its hashcode is 17");
+                } else if (i instanceof Integer in && (true)) {
+                  System.out.println("It's unguarded");
+                } else if (i == 23) {
+                  System.out.println("It's a 23");
+                } else if (i instanceof Integer in && i > 348) {
+                  System.out.println("It's a big integer!");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+import java.lang.Number;
+
+class Test {
+  public void foo(Suit s) {
+    Integer i = s == null ? 0 : 1;
+    switch (i) {
+      case 0 -> System.out.println("It's 0!");
+      case Integer o when o.hashCode() == 17 -> System.out.println("Its hashcode is 17");
+      case 23 -> System.out.println("It's a 23");
+      case Integer in when i > 348 -> System.out.println("It's a big integer!");
+      case Integer in when (true) -> System.out.println("It's unguarded");
+    }
+  }
+}
+""")
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
   }
 
   @Test
