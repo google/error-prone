@@ -115,9 +115,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code><a href="../UType.html" title="class in com.google.errorprone.refaster">UType</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">UTypeVar.</span><code><a href="../UTypeVar.html#getUpperBound()" class="member-name-link">getUpperBound</a>()</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../UType.html" title="class in com.google.errorprone.refaster">UType</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">UTemplater.</span><code><a href="../UTemplater.html#template(com.sun.tools.javac.code.Type)" class="member-name-link">template</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type)</code></div>
+<div class="col-first even-row-color"><code>abstract @Nullable <a href="../UType.html" title="class in com.google.errorprone.refaster">UType</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">UVariableDecl.</span><code><a href="../UVariableDecl.html#getVariableType()" class="member-name-link">getVariableType</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="../UType.html" title="class in com.google.errorprone.refaster">UType</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">UTemplater.</span><code><a href="../UTemplater.html#template(com.sun.tools.javac.code.Type)" class="member-name-link">template</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">com.google.errorprone.refaster</a> that return types with arguments of type <a href="../UType.html" title="class in com.google.errorprone.refaster">UType</a></span></div>
 <div class="summary-table three-column-summary">
@@ -206,6 +209,17 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">UTypeVar.</span><code><a href="../UTypeVar.html#create(java.lang.String,com.google.errorprone.refaster.UType,com.google.errorprone.refaster.UType)" class="member-name-link">create</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="../UType.html" title="class in com.google.errorprone.refaster">UType</a>&nbsp;lowerBound,
  <a href="../UType.html" title="class in com.google.errorprone.refaster">UType</a>&nbsp;upperBound)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static <a href="../UVariableDecl.html" title="class in com.google.errorprone.refaster">UVariableDecl</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">UVariableDecl.</span><code><a href="../UVariableDecl.html#create(java.lang.CharSequence,com.google.errorprone.refaster.UExpression,com.google.errorprone.refaster.UType,com.google.errorprone.refaster.UExpression)" class="member-name-link">create</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;identifier,
+ <a href="../UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;type,
+ @Nullable <a href="../UType.html" title="class in com.google.errorprone.refaster">UType</a>&nbsp;variableType,
+ @Nullable <a href="../UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;initializer)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="../UVariableDecl.html" title="class in com.google.errorprone.refaster">UVariableDecl</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">UVariableDecl.</span><code><a href="../UVariableDecl.html#create(java.lang.CharSequence,com.google.errorprone.refaster.UExpression,com.google.errorprone.refaster.UType)" class="member-name-link">create</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;identifier,
+ <a href="../UExpression.html" title="class in com.google.errorprone.refaster">UExpression</a>&nbsp;type,
+ <a href="../UType.html" title="class in com.google.errorprone.refaster">UType</a>&nbsp;variableType)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>void</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">UTypeVar.</span><code><a href="../UTypeVar.html#setLowerBound(com.google.errorprone.refaster.UType)" class="member-name-link">setLowerBound</a><wbr>(<a href="../UType.html" title="class in com.google.errorprone.refaster">UType</a>&nbsp;lowerBound)</code></div>
