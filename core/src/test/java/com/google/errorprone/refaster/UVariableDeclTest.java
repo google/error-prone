@@ -32,13 +32,24 @@ public class UVariableDeclTest {
   @Test
   public void equality() {
     new EqualsTester()
-        .addEqualityGroup(UVariableDecl.create("foo", UClassIdent.create("java.lang.String"), null))
+        .addEqualityGroup(
+            UVariableDecl.create(
+                "foo",
+                UClassIdent.create("java.lang.String"),
+                UClassType.create("java.lang.String")))
         .addEqualityGroup(
             UVariableDecl.create(
                 "foo", UClassIdent.create("java.lang.String"), ULiteral.stringLit("bar")))
         .addEqualityGroup(
-            UVariableDecl.create("foo", UClassIdent.create("java.lang.Integer"), null))
-        .addEqualityGroup(UVariableDecl.create("baz", UClassIdent.create("java.lang.String"), null))
+            UVariableDecl.create(
+                "foo",
+                UClassIdent.create("java.lang.Integer"),
+                UClassType.create("java.lang.Integer")))
+        .addEqualityGroup(
+            UVariableDecl.create(
+                "baz",
+                UClassIdent.create("java.lang.String"),
+                UClassType.create("java.lang.String")))
         .testEquals();
   }
 

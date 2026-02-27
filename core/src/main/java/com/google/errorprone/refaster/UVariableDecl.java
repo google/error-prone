@@ -47,21 +47,35 @@ import org.jspecify.annotations.Nullable;
  */
 @AutoValue
 public abstract class UVariableDecl extends USimpleStatement implements VariableTree {
+  public static UVariableDecl create(
+      CharSequence identifier,
+      UExpression type,
+      @Nullable UType variableType,
+      @Nullable UExpression initializer) {
+    return new AutoValue_UVariableDecl(StringName.of(identifier), type, variableType, initializer);
+  }
 
   public static UVariableDecl create(
       CharSequence identifier, UExpression type, @Nullable UExpression initializer) {
-    return new AutoValue_UVariableDecl(StringName.of(identifier), type, initializer);
+    return create(identifier, type, null, initializer);
   }
 
   public static UVariableDecl create(CharSequence identifier, UExpression type) {
-    return create(identifier, type, null);
+    return create(identifier, type, null, null);
+  }
+
+  public static UVariableDecl create(
+      CharSequence identifier, UExpression type, UType variableType) {
+    return create(identifier, type, variableType, null);
   }
 
   @Override
   public abstract StringName getName();
 
   @Override
-  public abstract UExpression getType();
+  public abstract @Nullable UExpression getType();
+
+  public abstract @Nullable UType getVariableType();
 
   @Override
   public abstract @Nullable UExpression getInitializer();
@@ -73,7 +87,10 @@ public abstract class UVariableDecl extends USimpleStatement implements Variable
   @Override
   public Choice<Unifier> visitVariable(VariableTree decl, Unifier unifier) {
     return Choice.condition(unifier.getBinding(key()) == null, unifier)
-        .flatMap(unifications(getType(), decl.getType()))
+        .flatMap(
+            getType() != null
+                ? unifications(getType(), decl.getType())
+                : unifications(getVariableType(), ASTHelpers.getType(decl)))
         .flatMap(unifications(getInitializer(), decl.getInitializer()))
         .map(
             new Function<Unifier, Unifier>() {

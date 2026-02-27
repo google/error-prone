@@ -342,7 +342,8 @@ public class TemplatingTest extends CompilerBasedTest {
         .isEqualTo(
             BlockTemplate.create(
                 ImmutableMap.of("str", UClassType.create("java.lang.String")),
-                UVariableDecl.create("old", UPrimitiveTypeTree.INT, ULiteral.intLit(0)),
+                UVariableDecl.create(
+                    "old", UPrimitiveTypeTree.INT, UPrimitiveType.INT, ULiteral.intLit(0)),
                 UDoWhileLoop.create(
                     UBlock.create(
                         UExpressionStatement.create(
@@ -477,7 +478,10 @@ public class TemplatingTest extends CompilerBasedTest {
                 UForLoop.create(
                     ImmutableList.of(
                         UVariableDecl.create(
-                            "i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))),
+                            "i",
+                            UPrimitiveTypeTree.INT,
+                            UPrimitiveType.INT,
+                            UFreeIdent.create("from"))),
                     UBinary.create(
                         Kind.LESS_THAN, ULocalVarIdent.create("i"), UFreeIdent.create("to")),
                     ImmutableList.of(
@@ -504,7 +508,10 @@ public class TemplatingTest extends CompilerBasedTest {
                 UForLoop.create(
                     ImmutableList.of(
                         UVariableDecl.create(
-                            "i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))),
+                            "i",
+                            UPrimitiveTypeTree.INT,
+                            UPrimitiveType.INT,
+                            UFreeIdent.create("from"))),
                     UBinary.create(
                         Kind.LESS_THAN, ULocalVarIdent.create("i"), UFreeIdent.create("to")),
                     ImmutableList.<UExpressionStatement>of(),
@@ -529,7 +536,10 @@ public class TemplatingTest extends CompilerBasedTest {
                 UForLoop.create(
                     ImmutableList.of(
                         UVariableDecl.create(
-                            "i", UPrimitiveTypeTree.INT, UFreeIdent.create("from"))),
+                            "i",
+                            UPrimitiveTypeTree.INT,
+                            UPrimitiveType.INT,
+                            UFreeIdent.create("from"))),
                     null,
                     ImmutableList.of(
                         UExpressionStatement.create(
@@ -667,6 +677,7 @@ public class TemplatingTest extends CompilerBasedTest {
                 UVariableDecl.create(
                     "list",
                     UTypeApply.create("java.util.List", UTypeVarIdent.create("E")),
+                    UClassType.create("java.util.List", UTypeVar.create("E")),
                     UNewClass.create(
                         UTypeApply.create("java.util.ArrayList", UTypeVarIdent.create("E")),
                         UFreeIdent.create("collection"))),
@@ -718,9 +729,10 @@ public class TemplatingTest extends CompilerBasedTest {
         .isEqualTo(
             BlockTemplate.create(
                 ImmutableMap.of("array", UArrayType.create(UPrimitiveType.INT)),
-                UVariableDecl.create("sum", UPrimitiveTypeTree.INT, ULiteral.intLit(0)),
+                UVariableDecl.create(
+                    "sum", UPrimitiveTypeTree.INT, UPrimitiveType.INT, ULiteral.intLit(0)),
                 UEnhancedForLoop.create(
-                    UVariableDecl.create("value", UPrimitiveTypeTree.INT),
+                    UVariableDecl.create("value", UPrimitiveTypeTree.INT, UPrimitiveType.INT),
                     UFreeIdent.create("array"),
                     UBlock.create(
                         UExpressionStatement.create(
@@ -747,12 +759,14 @@ public class TemplatingTest extends CompilerBasedTest {
         .isEqualTo(
             BlockTemplate.create(
                 ImmutableMap.of("array", UArrayType.create(UPrimitiveType.INT)),
-                UVariableDecl.create("sum", UPrimitiveTypeTree.INT, ULiteral.intLit(0)),
+                UVariableDecl.create(
+                    "sum", UPrimitiveTypeTree.INT, UPrimitiveType.INT, ULiteral.intLit(0)),
                 USynchronized.create(
                     UParens.create(UFreeIdent.create("array")),
                     UBlock.create(
                         UEnhancedForLoop.create(
-                            UVariableDecl.create("value", UPrimitiveTypeTree.INT),
+                            UVariableDecl.create(
+                                "value", UPrimitiveTypeTree.INT, UPrimitiveType.INT),
                             UFreeIdent.create("array"),
                             UBlock.create(
                                 UExpressionStatement.create(
@@ -814,9 +828,13 @@ public class TemplatingTest extends CompilerBasedTest {
                                     UPrimitiveTypeTree.INT,
                                     ImmutableList.of(
                                         UVariableDecl.create(
-                                            "a", UClassIdent.create("java.lang.String")),
+                                            "a",
+                                            UClassIdent.create("java.lang.String"),
+                                            UClassType.create("java.lang.String")),
                                         UVariableDecl.create(
-                                            "b", UClassIdent.create("java.lang.String"))),
+                                            "b",
+                                            UClassIdent.create("java.lang.String"),
+                                            UClassType.create("java.lang.String"))),
                                     ImmutableList.<UExpression>of(),
                                     UBlock.create(
                                         UReturn.create(

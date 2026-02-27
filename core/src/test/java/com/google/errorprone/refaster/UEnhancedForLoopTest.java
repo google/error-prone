@@ -34,7 +34,7 @@ public class UEnhancedForLoopTest {
     new EqualsTester()
         .addEqualityGroup(
             UEnhancedForLoop.create(
-                UVariableDecl.create("c", UPrimitiveTypeTree.CHAR, null),
+                UVariableDecl.create("c", UPrimitiveTypeTree.CHAR, UPrimitiveType.CHAR),
                 UMethodInvocation.create(
                     UMemberSelect.create(
                         ULiteral.stringLit("foo"),
@@ -43,7 +43,10 @@ public class UEnhancedForLoopTest {
                 USkip.INSTANCE))
         .addEqualityGroup(
             UEnhancedForLoop.create(
-                UVariableDecl.create("c", UClassIdent.create("java.lang.Character"), null),
+                UVariableDecl.create(
+                    "c",
+                    UClassIdent.create("java.lang.Character"),
+                    UClassType.create("java.lang.Character")),
                 UMethodInvocation.create(
                     UMemberSelect.create(
                         ULiteral.stringLit("foo"),
@@ -57,7 +60,7 @@ public class UEnhancedForLoopTest {
   public void serialization() {
     SerializableTester.reserializeAndAssert(
         UEnhancedForLoop.create(
-            UVariableDecl.create("c", UPrimitiveTypeTree.CHAR, null),
+            UVariableDecl.create("c", UPrimitiveTypeTree.CHAR, UPrimitiveType.CHAR),
             UMethodInvocation.create(
                 UMemberSelect.create(
                     ULiteral.stringLit("foo"),
