@@ -40,7 +40,7 @@ import java.nio.charset.StandardCharsets;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    summary = "StringCharset",
+    summary = "Prefer StandardCharsets over using string names for charsets",
     severity = WARNING,
     explanation = "Prefer StandardCharsets over using string names for charsets")
 public class StringCharset extends BugChecker
