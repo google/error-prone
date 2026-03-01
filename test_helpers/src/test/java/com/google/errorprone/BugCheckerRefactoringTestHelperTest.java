@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
@@ -336,6 +337,8 @@ public class BugCheckerRefactoringTestHelperTest {
   @SuppressWarnings("MissingTestCall") // used in a method reference in assertThrows
   @Test
   public void replaceVarTypes() {
+    // after JDK-8358604, var types have source positions
+    assume().that(Runtime.version().feature()).isLessThan(27);
     BugCheckerRefactoringTestHelper helper =
         BugCheckerRefactoringTestHelper.newInstance(ReplaceVarTypes.class, getClass())
             .addInputLines(
