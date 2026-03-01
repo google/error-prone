@@ -2103,8 +2103,13 @@ public class ASTHelpers {
     if (varDecl.declaredUsingVar()) {
       return true;
     }
+    Tree type = tree.getType();
+    // after JDK-8268850, implicit lambda parameter types are null
+    if (type == null) {
+      return true;
+    }
     // after JDK-8358604, inferred variable types have source positions
-    if (!hasExplicitSource(tree.getType(), state)) {
+    if (!hasExplicitSource(type, state)) {
       return true;
     }
     return false;

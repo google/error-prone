@@ -724,10 +724,12 @@ public final class SuggestedFixes {
   public static SuggestedFix renameVariable(
       VariableTree tree, String replacement, VisitorState state) {
     String name = tree.getName().toString();
-    int typeEndPos = state.getEndPosition(tree.getType());
-    // handle implicit lambda parameter types
-    int searchOffset = typeEndPos == -1 ? 0 : (typeEndPos - getStartPosition(tree));
-    int pos = getStartPosition(tree) + state.getSourceForNode(tree).indexOf(name, searchOffset);
+    int startPos = getStartPosition(tree);
+    // For implicit lambda parameter types  getType() returns null after JDK 27 (JDK-8268850)
+    // and a tree without an end position for earlier versions.
+    int typeEndPos = tree.getType() != null ? state.getEndPosition(tree.getType()) : -1;
+    int searchOffset = typeEndPos == -1 ? 0 : (typeEndPos - startPos);
+    int pos = startPos + state.getSourceForNode(tree).indexOf(name, searchOffset);
     return SuggestedFix.builder()
         .replace(pos, pos + name.length(), replacement)
         .merge(renameVariableUsages(tree, replacement, state))
