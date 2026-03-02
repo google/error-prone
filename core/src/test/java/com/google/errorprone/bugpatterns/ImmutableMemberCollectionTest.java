@@ -270,24 +270,24 @@ public final class ImmutableMemberCollectionTest {
             """)
         .addOutputLines(
             "Test.java",
-"""
-import com.google.common.collect.ImmutableList;
-import java.util.List;
-import java.util.ArrayList;
+            """
+            import com.google.common.collect.ImmutableList;
+            import java.util.List;
+            import java.util.ArrayList;
 
-class Test {
-  private final ImmutableList<String> myList1 = ImmutableList.copyOf(new ArrayList<>());
-  private final ImmutableList<String> myList2;
+            class Test {
+              private final ImmutableList<String> myList1 = ImmutableList.of();
+              private final ImmutableList<String> myList2;
 
-  Test() {
-    myList2 = ImmutableList.copyOf(new ArrayList<>());
-  }
+              Test() {
+                myList2 = ImmutableList.of();
+              }
 
-  Test(String x) {
-    myList2 = ImmutableList.of(x);
-  }
-}
-""")
+              Test(String x) {
+                myList2 = ImmutableList.of(x);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -316,7 +316,7 @@ class Test {
             import java.util.List;
 
             class Test {
-              private final ImmutableList<String> myList = ImmutableList.copyOf(new ArrayList<>());
+              private final ImmutableList<String> myList = ImmutableList.of();
 
               private String myFunc() {
                 return myList.get(0);
@@ -378,6 +378,55 @@ class Test {
             }
             """)
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void jdkFactory() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Arrays;
+            import java.util.HashSet;
+            import java.util.List;
+            import java.util.Map;
+            import java.util.Set;
+            import java.util.Collections;
+
+            class Test {
+              private final Set<String> a = Set.of("a");
+              private final Set<String> b = Collections.unmodifiableSet(new HashSet<>());
+              private final List<String> c = Arrays.asList("a");
+              private final Map<String, Integer> e =
+                  Map.ofEntries(Map.entry("one", 1), Map.entry("two", 2), Map.entry("three", 3));
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.collect.ImmutableMap;
+            import com.google.common.collect.ImmutableSet;
+            import java.util.Arrays;
+            import java.util.Collections;
+            import java.util.HashSet;
+            import java.util.List;
+            import java.util.Map;
+            import java.util.Set;
+
+            class Test {
+              private final ImmutableSet<String> a = ImmutableSet.of("a");
+              private final ImmutableSet<String> b = ImmutableSet.of();
+              private final ImmutableList<String> c = ImmutableList.of("a");
+              private final ImmutableMap<String, Integer> e =
+                  ImmutableMap.<String, Integer>builder()
+                      .put("one", 1)
+                      .put("two", 2)
+                      .put("three", 3)
+                      .buildOrThrow();
+            }
+            """)
         .doTest();
   }
 }
