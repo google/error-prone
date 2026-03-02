@@ -88,7 +88,7 @@ public abstract class UVariableDecl extends USimpleStatement implements Variable
   public Choice<Unifier> visitVariable(VariableTree decl, Unifier unifier) {
     return Choice.condition(unifier.getBinding(key()) == null, unifier)
         .flatMap(
-            getType() != null
+            (getType() != null && decl.getType() != null)
                 ? unifications(getType(), decl.getType())
                 : unifications(getVariableType(), ASTHelpers.getType(decl)))
         .flatMap(unifications(getInitializer(), decl.getInitializer()))
