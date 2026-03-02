@@ -1035,7 +1035,7 @@ __[JodaWithDurationAddedLong](bugpattern/JodaWithDurationAddedLong)__<br>
 Use of JodaTime&#39;s type.withDurationAdded(long, int) (where &lt;type&gt; &#61; {Duration,Instant,DateTime}). Please use type.withDurationAdded(Duration.millis(long), int) instead.
 
 __[LiteEnumValueOf](bugpattern/LiteEnumValueOf)__<br>
-Instead of converting enums to string and back, its numeric value should be used instead as it is the stable part of the protocol defined by the enum.
+Instead of looking up a lite enum by name, use its numeric value since that is the stable part of the protocol defined by the enum.
 
 __[LiteProtoToString](bugpattern/LiteProtoToString)__<br>
 toString() on lite protos will not generate a useful representation of the proto from optimized builds. Consider whether using some subset of fields instead would provide useful information.

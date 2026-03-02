@@ -1,7 +1,7 @@
 ---
 title: LiteEnumValueOf
-summary: Instead of converting enums to string and back, its numeric value should
-  be used instead as it is the stable part of the protocol defined by the enum.
+summary: Instead of looking up a lite enum by name, use its numeric value since that
+  is the stable part of the protocol defined by the enum.
 layout: bugpattern
 tags: ''
 severity: WARNING
