@@ -32,8 +32,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -115,9 +113,6 @@ public final class AnnotateFormatMethod extends BugChecker implements MethodInvo
         || hasAnnotation(formatParameter, LENIENT_FORMAT_STRING_ANNOTATION, state)) {
       return NO_MATCH;
     }
-    if (args.lenient()) {
-      return handleLenient(state, args.arguments(), methodTree, formatParameter);
-    }
     if (!getSymbol(methodTree).isVarArgs()) {
       return NO_MATCH;
     }
@@ -138,32 +133,6 @@ public final class AnnotateFormatMethod extends BugChecker implements MethodInvo
     return buildDescription(methodTree)
         .setMessage(fixable ? message() : (message() + REORDER))
         .build();
-  }
-
-  private Description handleLenient(
-      VisitorState state,
-      List<ExpressionTree> args,
-      MethodTree methodTree,
-      VariableTree formatParameter) {
-    int formatParameterIndex = methodTree.getParameters().indexOf(formatParameter);
-    if (args.size() != methodTree.getParameters().size() - formatParameterIndex) {
-      return NO_MATCH;
-    }
-    if (args.size() == 1) {
-      return NO_MATCH;
-    }
-    // Check that all the parameters after the format string are passed through in order.
-    for (int i = 1; i < args.size(); i++) {
-      if (!(getSymbol(args.get(i)) instanceof VarSymbol vs)
-          || !vs.equals(getSymbol(methodTree.getParameters().get(formatParameterIndex + i)))) {
-        return NO_MATCH;
-      }
-    }
-    SuggestedFix.Builder fix = SuggestedFix.builder();
-    var lenientFormatString =
-        SuggestedFixes.qualifyType(state, fix, LENIENT_FORMAT_STRING_ANNOTATION);
-    fix.prefixWith(formatParameter, "@" + lenientFormatString + " ");
-    return describeMatch(methodTree, fix.build());
   }
 
   private record FormatMethodArguments(boolean lenient, ImmutableList<ExpressionTree> arguments) {}
