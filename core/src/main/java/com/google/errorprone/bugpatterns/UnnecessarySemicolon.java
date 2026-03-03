@@ -92,6 +92,11 @@ public final class UnnecessarySemicolon extends BugChecker
         }
         to = getStartPosition(next);
       }
+      if (from > to) {
+        // multi-variable declarations like `int x, y;` get desugared into two declarations with
+        // overlapping start and end positions
+        continue;
+      }
       ImmutableList<ErrorProneToken> tokens = state.getOffsetTokens(from, to);
       for (ErrorProneToken token : tokens) {
         if (token.kind() == Tokens.TokenKind.SEMI) {

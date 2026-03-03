@@ -157,4 +157,31 @@ public class UnnecessarySemicolonTest {
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void multiVariable() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int x, y;
+                ;
+                int z;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int x, y;
+                int z;
+              }
+            }
+            """)
+        .doTest(TEXT_MATCH);
+  }
 }
