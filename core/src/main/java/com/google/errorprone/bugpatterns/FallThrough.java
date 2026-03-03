@@ -65,8 +65,7 @@ public class FallThrough extends BugChecker implements SwitchTreeMatcher {
       if (endPos == Position.NOPOS) {
         break;
       }
-      String comments =
-          state.getSourceCode().subSequence(endPos, getStartPosition(next)).toString().trim();
+      String comments = state.getSourceCode(endPos, getStartPosition(next)).toString().trim();
       if (completes && !FALL_THROUGH_PATTERN.matcher(comments).find()) {
         state.reportMatch(
             buildDescription(next)

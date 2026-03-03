@@ -84,17 +84,14 @@ public final class MisformattedTestData extends BugChecker implements MethodInvo
     int startPos = state.getEndPosition(tree.getArguments().get(0));
     int endPos = getStartPosition(tree.getArguments().get(1));
     var tokens =
-        getTokens(
-            state.getSourceCode().subSequence(startPos, endPos).toString(),
-            startPos,
-            state.context);
+        getTokens(state.getSourceCode(startPos, endPos).toString(), startPos, state.context);
     var afterCommaPos =
         tokens.reverse().stream()
             .filter(t -> t.kind().equals(TokenKind.COMMA))
             .findFirst()
             .orElseThrow()
             .endPos();
-    var betweenArguments = state.getSourceCode().subSequence(afterCommaPos, endPos).toString();
+    var betweenArguments = state.getSourceCode(afterCommaPos, endPos).toString();
     var spaces =
         betweenArguments.contains("\n")
             ? betweenArguments.substring(betweenArguments.indexOf('\n') + 1)

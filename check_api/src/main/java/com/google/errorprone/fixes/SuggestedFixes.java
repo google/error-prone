@@ -1785,9 +1785,7 @@ public final class SuggestedFixes {
             ? getStartPosition(tree.getInitializer())
             : state.getEndPosition(tree);
     ImmutableList<ErrorProneToken> tokens =
-        ErrorProneTokens.getTokens(
-                state.getSourceCode().subSequence(pos, end).toString(), state.context)
-            .stream()
+        ErrorProneTokens.getTokens(state.getSourceCode(pos, end).toString(), state.context).stream()
             .filter(
                 token ->
                     token.kind().equals(TokenKind.IDENTIFIER) && token.name().contentEquals("var"))

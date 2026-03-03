@@ -191,7 +191,7 @@ public final class UnescapedEntity extends BugChecker
           Integer startPos = startPosStack.pollLast();
           if (startPos != null) {
             int endPos = getStartPosition(endTree, state);
-            String source = state.getSourceCode().subSequence(startPos, endPos).toString();
+            String source = state.getSourceCode(startPos, endPos).toString();
             if (SHOULD_NOT_WRAP.matcher(source).find()) {
               dontEmitCodeFix.add(Range.closed(startPos, endPos));
             } else {

@@ -286,7 +286,7 @@ public final class InvalidInlineTag extends BugChecker
       if (name.equals("param")) {
         int startPos = Utils.getStartPosition(unknownInlineTagTree, state);
         int endPos = Utils.getEndPosition(unknownInlineTagTree, state);
-        CharSequence text = state.getSourceCode().subSequence(startPos, endPos);
+        CharSequence text = state.getSourceCode(startPos, endPos);
         Matcher matcher = PARAM_MATCHER.matcher(text);
         if (matcher.find()) {
           String parameterName = matcher.group(1);

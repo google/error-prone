@@ -96,7 +96,7 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
     }
     int start = getStartPosition(statements.getFirst());
     int end = state.getEndPosition(getLast(statements));
-    return state.getSourceCode().subSequence(start, end);
+    return state.getSourceCode(start, end);
   }
 
   @Override

@@ -76,7 +76,7 @@ public class AssertThrowsMultipleStatements extends BugChecker
     }
     fix.prefixWith(
         state.findEnclosing(StatementTree.class),
-        state.getSourceCode().subSequence(startPosition, endPosition).toString());
+        state.getSourceCode(startPosition, endPosition).toString());
     return describeMatch(last, fix.build());
   }
 }
