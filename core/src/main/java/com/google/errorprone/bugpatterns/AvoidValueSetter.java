@@ -26,6 +26,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static java.lang.String.format;
 
+import com.google.common.base.CaseFormat;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -64,10 +65,16 @@ public final class AvoidValueSetter extends BugChecker implements MethodInvocati
     Type protoBuilderType = symbol.owner.type;
     Type protoType = symbol.owner.owner.type;
 
-    String fieldNumberMemberNameCamel = toUpperCase(fieldName) + "_FIELD_NUMBER";
+    String fieldNumberConstant =
+        toUpperCase(CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, fieldName))
+            + "_FIELD_NUMBER";
+    String fieldNumberConstantIfMisnamed = toUpperCase(fieldName) + "_FIELD_NUMBER";
     if (protoType != null
         && getEnclosedElements(protoType.tsym).stream()
-            .anyMatch(member -> member.getSimpleName().contentEquals(fieldNumberMemberNameCamel))) {
+            .anyMatch(
+                member ->
+                    member.getSimpleName().contentEquals(fieldNumberConstant)
+                        || member.getSimpleName().contentEquals(fieldNumberConstantIfMisnamed))) {
       return NO_MATCH;
     }
 

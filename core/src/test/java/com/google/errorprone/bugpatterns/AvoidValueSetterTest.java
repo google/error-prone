@@ -56,6 +56,10 @@ public class AvoidValueSetterTest {
               void f(TestProtoWithConfusingNames.Builder m) {
                 m.setBarFieldValue(1);
               }
+
+              void g(TestProtoWithConfusingNames.Builder m) {
+                m.setFooFieldValue(1);
+              }
             }
             """)
         .doTest();

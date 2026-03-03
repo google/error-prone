@@ -54,8 +54,8 @@ message TestOneOfMessage {
 }
 
 message TestProtoWithConfusingNames {
-  optional TestEnum foo = 1;
-  optional int32 foo_value = 2;
+  optional TestEnum foo_field = 1;
+  optional int32 foo_field_value = 2;
 
   // Fields that both collide, and are named in camelcase.
   optional TestEnum barField = 3;
