@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
+import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
@@ -57,12 +58,14 @@ import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.lang.model.util.Elements;
+import javax.tools.JavaFileObject;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -473,7 +476,7 @@ public class VisitorState {
     return (pathToEnclosing == null) ? null : (T) pathToEnclosing.getLeaf();
   }
 
-  public @Nullable CharSequence getSourceCode(int start, int end) {
+  public CharSequence getSourceCode(int start, int end) {
     CharSequence sourceCode = getSourceCode();
     if (start > 0 && start < sourceCode.length() && start > end) {
       // If the start position is a valid position position, but the [start, end) range is invalid,
@@ -489,11 +492,13 @@ public class VisitorState {
    *
    * @return the source file as a sequence of characters, or null if it is not available
    */
-  public @Nullable CharSequence getSourceCode() {
+  public CharSequence getSourceCode() {
     try {
-      return getPath().getCompilationUnit().getSourceFile().getCharContent(false);
+      JavaFileObject javaFileObject = getPath().getCompilationUnit().getSourceFile();
+      return requireNonNull(javaFileObject.getCharContent(/* ignoreEncodingErrors= */ false));
     } catch (IOException e) {
-      return null;
+      // this should be impossible if ignoreEncodingErrors is false
+      throw new UncheckedIOException(e);
     }
   }
 
