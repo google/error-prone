@@ -92,6 +92,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#arrayTypeForType(com.sun.tools.javac.code.Type)" tabindex="0">arrayTypeForType(Type)</a></li>
 <li><a href="#findPathToEnclosing(java.lang.Class...)" tabindex="0">findPathToEnclosing(Class...)</a></li>
 <li><a href="#findEnclosing(java.lang.Class...)" tabindex="0">findEnclosing(Class...)</a></li>
+<li><a href="#getSourceCode(int,int)" tabindex="0">getSourceCode(int, int)</a></li>
 <li><a href="#getSourceCode()" tabindex="0">getSourceCode()</a></li>
 <li><a href="#getSourceForNode(com.sun.source.tree.Tree)" tabindex="0">getSourceForNode(Tree)</a></li>
 <li><a href="#getTokensForNode(com.sun.source.tree.Tree)" tabindex="0">getTokensForNode(Tree)</a></li>
@@ -245,92 +246,96 @@ of the tree within the overall source.</div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the current source file.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSourceForNode(com.sun.source.tree.Tree)" class="member-name-link">getSourceForNode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSourceCode(int,int)" class="member-name-link">getSourceCode</a><wbr>(int&nbsp;start,
+ int&nbsp;end)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSourceForNode(com.sun.source.tree.Tree)" class="member-name-link">getSourceForNode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the original source code that represents the given node.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymbolFromName(com.sun.tools.javac.util.Name)" class="member-name-link">getSymbolFromName</a><wbr>(com.sun.tools.javac.util.Name&nbsp;name)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymbolFromName(com.sun.tools.javac.util.Name)" class="member-name-link">getSymbolFromName</a><wbr>(com.sun.tools.javac.util.Name&nbsp;name)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Look up the class symbol for a given Name.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymbolFromString(com.sun.tools.javac.code.Symbol.ModuleSymbol,com.sun.tools.javac.util.Name)" class="member-name-link">getSymbolFromString</a><wbr>(com.sun.tools.javac.code.Symbol.ModuleSymbol&nbsp;msym,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymbolFromString(com.sun.tools.javac.code.Symbol.ModuleSymbol,com.sun.tools.javac.util.Name)" class="member-name-link">getSymbolFromString</a><wbr>(com.sun.tools.javac.code.Symbol.ModuleSymbol&nbsp;msym,
  com.sun.tools.javac.util.Name&nbsp;name)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Symbol</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymbolFromString(java.lang.String)" class="member-name-link">getSymbolFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;symStr)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symtab</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymtab()" class="member-name-link">getSymtab</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Symbol</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymbolFromString(java.lang.String)" class="member-name-link">getSymbolFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;symStr)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableList<wbr>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTokensForNode(com.sun.source.tree.Tree)" class="member-name-link">getTokensForNode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symtab</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymtab()" class="member-name-link">getSymtab</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableList<wbr>&lt;<a href="util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTokensForNode(com.sun.source.tree.Tree)" class="member-name-link">getTokensForNode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the list of <code>Tokens.Token</code>s for the given <code>JCTree</code>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.TreeMaker</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTreeMaker()" class="member-name-link">getTreeMaker</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Type</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getType(com.sun.tools.javac.code.Type,boolean,java.util.List)" class="member-name-link">getType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;baseType,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.TreeMaker</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTreeMaker()" class="member-name-link">getTreeMaker</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Type</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getType(com.sun.tools.javac.code.Type,boolean,java.util.List)" class="member-name-link">getType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;baseType,
  boolean&nbsp;isArray,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeParams)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Build an instance of a Type.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Type</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTypeFromString(java.lang.String)" class="member-name-link">getTypeFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeStr)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Type</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTypeFromString(java.lang.String)" class="member-name-link">getTypeFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeStr)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Given the binary name of a class, returns the <code>Type</code>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Types</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTypes()" class="member-name-link">getTypes</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#incrementCounter(com.google.errorprone.bugpatterns.BugChecker,java.lang.String)" class="member-name-link">incrementCounter</a><wbr>(<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Types</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTypes()" class="member-name-link">getTypes</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#incrementCounter(com.google.errorprone.bugpatterns.BugChecker,java.lang.String)" class="member-name-link">incrementCounter</a><wbr>(<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Increment the counter for a combination of <code>bugChecker</code>'s canonical name and <code>key</code>
 by 1.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#incrementCounter(com.google.errorprone.bugpatterns.BugChecker,java.lang.String,int)" class="member-name-link">incrementCounter</a><wbr>(<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#incrementCounter(com.google.errorprone.bugpatterns.BugChecker,java.lang.String,int)" class="member-name-link">incrementCounter</a><wbr>(<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;bugChecker,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
  int&nbsp;count)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Increment the counter for a combination of <code>bugChecker</code>'s canonical name and <code>key</code>
 by <code>count</code>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAndroidCompatible()" class="member-name-link">isAndroidCompatible</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAndroidCompatible()" class="member-name-link">isAndroidCompatible</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns true if the compilation is targeting Android.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;<a href="suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#memoize(com.google.errorprone.suppliers.Supplier)" class="member-name-link">memoize</a><wbr>(<a href="suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;T&gt;&nbsp;f)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;<a href="suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#memoize(com.google.errorprone.suppliers.Supplier)" class="member-name-link">memoize</a><wbr>(<a href="suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;T&gt;&nbsp;f)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Produces a cache for a function that is expected to return the same result throughout a
 compilation, but requires a <a href="VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a> to compute that result.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reportMatch(com.google.errorprone.matchers.Description)" class="member-name-link">reportMatch</a><wbr>(<a href="matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, <a href="BugPattern.SeverityLevel.html" title="enum class in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#severityMap()" class="member-name-link">severityMap</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reportMatch(com.google.errorprone.matchers.Description)" class="member-name-link">reportMatch</a><wbr>(<a href="matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a>&nbsp;description)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link">AutoCloseable</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#timingSpan(com.google.errorprone.matchers.Suppressible)" class="member-name-link">timingSpan</a><wbr>(<a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, <a href="BugPattern.SeverityLevel.html" title="enum class in com.google.errorprone">BugPattern.SeverityLevel</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#severityMap()" class="member-name-link">severityMap</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link">AutoCloseable</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#timingSpan(com.google.errorprone.matchers.Suppressible)" class="member-name-link">timingSpan</a><wbr>(<a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a timing span for the given <a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#withPath(com.sun.source.util.TreePath)" class="member-name-link">withPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#withSuppression(com.google.errorprone.SuppressionInfo.SuppressedState)" class="member-name-link">withSuppression</a><wbr>(<a href="SuppressionInfo.SuppressedState.html" title="enum class in com.google.errorprone">SuppressionInfo.SuppressedState</a>&nbsp;suppressedState)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#withPath(com.sun.source.util.TreePath)" class="member-name-link">withPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#withSuppression(com.google.errorprone.SuppressionInfo.SuppressedState)" class="member-name-link">withSuppression</a><wbr>(<a href="SuppressionInfo.SuppressedState.html" title="enum class in com.google.errorprone">SuppressionInfo.SuppressedState</a>&nbsp;suppressedState)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -656,6 +661,15 @@ retrieve the element directly, use <a href="#findEnclosing(java.lang.Class...)">
 <dt>Returns:</dt>
 <dd>the node, or <code>null</code> if there is no match</dd>
 </dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getSourceCode(int,int)">
+<h3>getSourceCode</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a></span>&nbsp;<span class="element-name">getSourceCode</span><wbr><span class="parameters">(int&nbsp;start,
+ int&nbsp;end)</span></div>
 </div>
 </section>
 </li>
