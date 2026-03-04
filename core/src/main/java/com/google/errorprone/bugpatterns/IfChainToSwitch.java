@@ -48,7 +48,6 @@ import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.Reachability;
@@ -90,6 +89,19 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   // it's either an ExpressionStatement or a Throw.  Refer to JLS 14 §14.11.1
   private static final ImmutableSet<Kind> KINDS_CONVERTIBLE_WITHOUT_BRACES =
       ImmutableSet.of(THROW, EXPRESSION_STATEMENT);
+  // Types that are allowed for CaseConstant expressions to be assignable to in a switch, as
+  // specified in JLS 21 §14.11.1.
+  private static final ImmutableSet<String> ALLOWED_SWITCH_CASE_CONSTANT_TYPES =
+      ImmutableSet.of(
+          "char",
+          "byte",
+          "short",
+          "int",
+          "java.lang.Character",
+          "java.lang.Byte",
+          "java.lang.Short",
+          "java.lang.Integer",
+          "java.lang.String");
 
   private final boolean enableMain;
   private final boolean enableSafe;
@@ -1269,24 +1281,33 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     boolean compileTimeConstantOnLhs = COMPILE_TIME_CONSTANT_MATCHER.matches(lhs, state);
     ExpressionTree testExpression = compileTimeConstantOnLhs ? rhs : lhs;
     ExpressionTree compileTimeConstant = compileTimeConstantOnLhs ? lhs : rhs;
+    Type compileTimeConstantType = getType(compileTimeConstant);
+    Type testExpressionType = getType(testExpression);
 
     if (subject.isPresent() && !subjectMatches(subject.get(), testExpression, state)) {
       // Predicate not compatible with predicate of preceding if statement
       return Optional.empty();
     }
 
-    // Don't support the use of Booleans as switch conditions
-    if (isSubtype(getType(testExpression), Suppliers.JAVA_LANG_BOOLEAN_TYPE.get(state), state)) {
-      return Optional.empty();
-    }
-
     // Don't support the use of String as switch conditions
-    if (isSubtype(getType(testExpression), state.getSymtab().stringType, state)) {
+    if (isSubtype(testExpressionType, state.getSymtab().stringType, state)) {
       return Optional.empty();
     }
 
-    // Switching on primitive long requires later Java version (we don't currently support)
-    if (state.getTypes().isSameType(getType(testExpression), state.getSymtab().longType)) {
+    // The compile time constant must be assignable to the type of the testExpression, which
+    // includes the possible use of assignment context conversions
+    Types types = state.getTypes();
+    if (!types.isAssignable(compileTimeConstantType, testExpressionType)) {
+      return Optional.empty();
+    }
+
+    // As of Java 21, a CaseConstant must be assignable to one of the following types (this is an
+    // outer bound; the checker does not necessarily support all of these)
+    boolean caseConstantIsAssignable =
+        ALLOWED_SWITCH_CASE_CONSTANT_TYPES.stream()
+            .map(state::getTypeFromString)
+            .anyMatch(t -> types.isAssignable(compileTimeConstantType, t));
+    if (!caseConstantIsAssignable) {
       return Optional.empty();
     }
 

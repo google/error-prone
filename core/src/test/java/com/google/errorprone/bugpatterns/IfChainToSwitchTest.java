@@ -1102,7 +1102,7 @@ class Test {
             "Proto.java",
             """
             public abstract class Proto extends com.google.protobuf.GeneratedMessage {
-              public abstract Long getMessage();
+              public abstract Integer getMessage();
             }
             """)
         .addSourceLines(
@@ -1114,6 +1114,89 @@ class Test {
                 Object suit2 = s;
                 System.out.println("yo");
                 // BUG: Diagnostic contains:
+                if (proto.getMessage() == 1) {
+                  System.out.println("It's red");
+                } else if (proto.getMessage() == 2) {
+                  System.out.println("It's yellow");
+                } else if (proto.getMessage() == 3) {
+                  System.out.println("It's red");
+                } else throw new AssertionError();
+                return true;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_protoLongCaseConstant_noError() {
+    // Although switching on an Integer is supported, one of the constants is 2l, which is a long,
+    // which is not assignable to an Integer.
+    helper
+        .addSourceLines(
+            "com/google/protobuf/GeneratedMessage.java",
+            """
+            package com.google.protobuf;
+
+            public class GeneratedMessage {}
+            """)
+        .addSourceLines(
+            "Proto.java",
+            """
+            public abstract class Proto extends com.google.protobuf.GeneratedMessage {
+              public abstract Integer getMessage();
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean g(Proto proto, Suit s) {
+                Object suit = s;
+                Object suit2 = s;
+                System.out.println("yo");
+                if (proto.getMessage() == 1) {
+                  System.out.println("It's red");
+                } else if (proto.getMessage() == 2l) {
+                  System.out.println("It's yellow");
+                } else if (proto.getMessage() == 3) {
+                  System.out.println("It's red");
+                } else throw new AssertionError();
+                return true;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_protoLong_noError() {
+    // Switching on a long is not supported
+    helper
+        .addSourceLines(
+            "com/google/protobuf/GeneratedMessage.java",
+            """
+            package com.google.protobuf;
+
+            public class GeneratedMessage {}
+            """)
+        .addSourceLines(
+            "Proto.java",
+            """
+            public abstract class Proto extends com.google.protobuf.GeneratedMessage {
+              public abstract Long getMessage();
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean g(Proto proto, Suit s) {
+                Object suit = s;
+                Object suit2 = s;
+                System.out.println("yo");
                 if (proto.getMessage() == 1l) {
                   System.out.println("It's red");
                 } else if (proto.getMessage() == 2l) {
@@ -3032,6 +3115,38 @@ class Test {
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_nonAssignable_error() {
+    // Integer and char can be compared thanks to binary numeric promotion (see JLS 21 §5.1.2, 5.2),
+    // but not in the context of a switch.  (A char cannot be assigned to an Integer.)
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Integer i = s == null ? 0 : 1;
+                if (i == -1) {
+                  System.out.println("It's negative");
+                } else if (i == 0) {
+                  System.out.println("It's 0!");
+                  System.out.println("More zero stuff");
+                } else if (i == 13) {
+                  System.out.println("It's 13");
+                } else if (i instanceof Integer in && i > 348) {
+                  System.out.println("It's a big integer!");
+                } else if (i == 'ま') {
+                  System.out.println("It's a glyph");
+                } else {
+                  System.out.println("It's something else!");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
   }
 
   @Test
