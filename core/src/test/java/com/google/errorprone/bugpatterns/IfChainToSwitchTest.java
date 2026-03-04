@@ -2910,6 +2910,42 @@ class Test {
   }
 
   @Test
+  public void ifChain_javadocEnum_error() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private void foo(Suit suit) {
+                if (suit == Suit.SPADE) {
+                  System.out.println("spade");
+                } else if (suit == Suit.HEART || suit == Suit.DIAMOND) {
+                  System.out.println("red suit");
+                } else if (suit == Suit.CLUB) {
+                  System.out.println("club");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              private void foo(Suit suit) {
+                switch (suit) {
+                  case Suit.SPADE -> System.out.println("spade");
+                  case Suit.HEART, Suit.DIAMOND -> System.out.println("red suit");
+                  case Suit.CLUB -> System.out.println("club");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void ifChain_javadocOrdering_error() {
     refactoringHelper
         .addInputLines(
@@ -2945,6 +2981,340 @@ class Test {
             }
             """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_grouping_error() {
+    // This checker doesn't attempt to sort grouped constants
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Integer i = s == null ? 0 : 1;
+                if (i == -1) {
+                  System.out.println("It's negative");
+                } else if (i == 0) {
+                  System.out.println("It's 0!");
+                  System.out.println("More zero stuff");
+                } else if (i == 13 || i == 14 || (i == 15) || i == 16 || i == 17 || (i == 19 || i == 18)) {
+                  System.out.println("It's a teen");
+                } else if (i instanceof Integer in && i > 348) {
+                  System.out.println("It's a big integer!");
+                } else {
+                  System.out.println("It's something else!");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+class Test {
+  public void foo(Suit s) {
+    Integer i = s == null ? 0 : 1;
+    switch (i) {
+      case -1 -> System.out.println("It's negative");
+      case 0 -> {
+        System.out.println("It's 0!");
+        System.out.println("More zero stuff");
+      }
+      case 13, 14, 15, 16, 17, 19, 18 -> System.out.println("It's a teen");
+      case Integer in when i > 348 -> System.out.println("It's a big integer!");
+      default -> System.out.println("It's something else!");
+    }
+  }
+}
+""")
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_groupingPrimitive_error() {
+    // Switch on a primitive
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                int i = s == null ? 0 : 1;
+                if (i == -1) {
+                  System.out.println("It's negative");
+                } else if (i == 0) {
+                  System.out.println("It's 0!");
+                } else if (i == 13 || i == 14 || (i == 15) || i == 16 || i == 17 || (i == 19 || i == 18)) {
+                  System.out.println("It's a teen");
+                } else {
+                  System.out.println("It's something else!");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+class Test {
+  public void foo(Suit s) {
+    int i = s == null ? 0 : 1;
+    switch (i) {
+      case -1 -> System.out.println("It's negative");
+      case 0 -> System.out.println("It's 0!");
+      case 13, 14, 15, 16, 17, 19, 18 -> System.out.println("It's a teen");
+      default -> System.out.println("It's something else!");
+    }
+  }
+}
+""")
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_groupingInvalidSubtree_error() {
+    // != does not qualify
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                int i = s == null ? 0 : 1;
+                if (i == -1) {
+                  System.out.println("It's negative");
+                } else if (i == 0) {
+                  System.out.println("It's 0!");
+                } else if (i == 13
+                    || i == 14
+                    || (i == 15)
+                    || i != 123
+                    || i == 16
+                    || i == 17
+                    || (i == 19 || i == 18)) {
+                  System.out.println("It's a teen");
+                } else {
+                  System.out.println("It's something else!");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_groupingEnum_error() {
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                if (s == Suit.DIAMOND) {
+                  System.out.println("Diamond");
+                } else if (s == Suit.CLUB || s == Suit.SPADE) {
+                  System.out.println("Club or spade");
+                } else if (s instanceof Suit ss && ss == Suit.DIAMOND) {
+                  System.out.println("Diamond again, should not happen");
+                } else {
+                  System.out.println("It's something else!");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+class Test {
+  public void foo(Suit s) {
+    switch (s) {
+      case Suit.DIAMOND -> System.out.println("Diamond");
+      case Suit.CLUB, Suit.SPADE -> System.out.println("Club or spade");
+      case Suit ss when ss == Suit.DIAMOND ->
+          System.out.println("Diamond again, should not happen");
+      default -> System.out.println("It's something else!");
+    }
+  }
+}
+""")
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_groupingEnumNonEnhanced_error() {
+    // Not an "enhanced switch", see JLS 25 §14.11.2, thus it can be non-exhaustive (no FIVE).
+    // However, we still insert the default based on Error Prone conventions.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+
+              enum Die {
+                ONE,
+                TWO,
+                THREE,
+                FOUR,
+                FIVE,
+                SIX
+              };
+
+              public void foo(Die d) {
+                if (d == Die.ONE) {
+                  System.out.println("One");
+                } else if (d == Die.TWO || ((d == Die.FOUR) || d == Die.SIX)) {
+                  System.out.println("Even");
+                } else if (d == Die.THREE) {
+                  System.out.println("Three");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+
+              enum Die {
+                ONE,
+                TWO,
+                THREE,
+                FOUR,
+                FIVE,
+                SIX
+              };
+
+              public void foo(Die d) {
+                switch (d) {
+                  case Die.ONE -> System.out.println("One");
+                  case Die.TWO, Die.FOUR, Die.SIX -> System.out.println("Even");
+                  case Die.THREE -> System.out.println("Three");
+                  default -> {}
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_groupingEnumSafe_error() {
+    // Same as ifChain_groupingEnum_error, except in safe mode
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                if (s == Suit.DIAMOND) {
+                  System.out.println("Diamond");
+                } else if (s == Suit.CLUB || s == Suit.SPADE) {
+                  System.out.println("Club or spade");
+                } else if (s instanceof Suit ss && ss == Suit.DIAMOND) {
+                  System.out.println("Diamond again, should not happen");
+                } else {
+                  System.out.println("It's something else!");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+class Test {
+  public void foo(Suit s) {
+    switch (s) {
+      case Suit.DIAMOND -> System.out.println("Diamond");
+      case Suit.CLUB, Suit.SPADE -> System.out.println("Club or spade");
+      case Suit ss when ss == Suit.DIAMOND ->
+          System.out.println("Diamond again, should not happen");
+      case null, default -> System.out.println("It's something else!");
+    }
+  }
+}
+""")
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_groupingEnumNull_noError() {
+    // We don't support null and enum under the same `case` based on Java syntax restrictions
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                if (s == Suit.DIAMOND) {
+                  System.out.println("Diamond");
+                } else if (s == Suit.CLUB || s == null) {
+                  System.out.println("Null or club");
+                } else if (s instanceof Suit ss && ss == Suit.DIAMOND) {
+                  System.out.println("Diamond again, should not happen");
+                } else {
+                  System.out.println("It's something else!");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_groupingSafe_error() {
+    // Same as ifChain_grouping_error, except in safe mode
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Integer i = s == null ? 0 : 1;
+                if (i == -1) {
+                  System.out.println("It's negative");
+                } else if (i == 0) {
+                  System.out.println("It's 0!");
+                } else if (i == 13 || i == 14 || (i == 15) || i == 16 || i == 17 || (i == 19 || i == 18)) {
+                  System.out.println("It's a teen");
+                } else if (i instanceof Integer in && i > 348) {
+                  System.out.println("It's a big integer!");
+                } else {
+                  System.out.println("It's something else!");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+class Test {
+  public void foo(Suit s) {
+    Integer i = s == null ? 0 : 1;
+    switch (i) {
+      case -1 -> System.out.println("It's negative");
+      case 0 -> System.out.println("It's 0!");
+      case 13, 14, 15, 16, 17, 19, 18 -> System.out.println("It's a teen");
+      case Integer in when i > 348 -> System.out.println("It's a big integer!");
+      case null, default -> System.out.println("It's something else!");
+    }
+  }
+}
+""")
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest(TEXT_MATCH);
   }
