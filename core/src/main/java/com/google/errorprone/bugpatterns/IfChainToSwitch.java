@@ -59,6 +59,7 @@ import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
@@ -958,40 +959,48 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
           return Optional.empty();
         }
-      } else if (predicateIsConditionalAnd) {
+      } else if (predicateIsConditionalAnd && !mustBeInstanceOf) {
         // Maybe the predicate is something like `a instanceof Foo && predicate`.  If so, recurse on
         // the left side, and attach the right side of the conditional and as a guard to the
         // resulting case.
-        if (!mustBeInstanceOf && binaryTree.getKind().equals(Kind.CONDITIONAL_AND)) {
-          int currentCasesSize = cases.size();
-          var rv =
-              validatePredicateForSubject(
-                  binaryTree.getLeftOperand(),
-                  subject,
-                  state,
-                  /* mustBeInstanceOf= */ true,
-                  cases,
-                  elseOptional,
-                  arrowRhsOptional,
-                  handledEnumValues,
-                  ifTreeRange,
-                  /* caseStartPosition= */ caseStartPosition);
-          if (rv.isPresent()) {
-            CaseIr oldLastCase = cases.get(currentCasesSize);
-            // Update last case to attach the guard
-            cases.set(
-                currentCasesSize,
-                new CaseIr(
-                    /* hasCaseNull= */ oldLastCase.hasCaseNull(),
-                    /* hasDefault= */ oldLastCase.hasDefault(),
-                    /* instanceOfOptional= */ oldLastCase.instanceOfOptional(),
-                    /* guardOptional= */ Optional.of(binaryTree.getRightOperand()),
-                    /* expressionsOptional= */ oldLastCase.expressionsOptional(),
-                    /* arrowRhsOptional= */ oldLastCase.arrowRhsOptional(),
-                    /* caseSourceCodeRange= */ oldLastCase.caseSourceCodeRange()));
-            return rv;
+        int currentCasesSize = cases.size();
+        var rv =
+            validatePredicateForSubject(
+                binaryTree.getLeftOperand(),
+                subject,
+                state,
+                /* mustBeInstanceOf= */ true,
+                cases,
+                elseOptional,
+                arrowRhsOptional,
+                handledEnumValues,
+                ifTreeRange,
+                /* caseStartPosition= */ caseStartPosition);
+        if (rv.isPresent()) {
+          CaseIr oldLastCase = cases.get(currentCasesSize);
+          ExpressionTree rightOperandNoParentheses =
+              ASTHelpers.stripParentheses(binaryTree.getRightOperand());
+          // A guard cannot just be `false` (not valid Java)
+          if (isBooleanLiteral(rightOperandNoParentheses)
+              && rightOperandNoParentheses instanceof LiteralTree literalTree
+              && literalTree.getValue() instanceof Boolean b
+              && !b) {
+            return Optional.empty();
           }
+          // Update last case to attach the guard
+          cases.set(
+              currentCasesSize,
+              new CaseIr(
+                  /* hasCaseNull= */ oldLastCase.hasCaseNull(),
+                  /* hasDefault= */ oldLastCase.hasDefault(),
+                  /* instanceOfOptional= */ oldLastCase.instanceOfOptional(),
+                  /* guardOptional= */ Optional.of(binaryTree.getRightOperand()),
+                  /* expressionsOptional= */ oldLastCase.expressionsOptional(),
+                  /* arrowRhsOptional= */ oldLastCase.arrowRhsOptional(),
+                  /* caseSourceCodeRange= */ oldLastCase.caseSourceCodeRange()));
+          return rv;
         }
+
       } else if (!mustBeInstanceOf && predicateIsConditionalOr) {
         // Maybe the predicate is something like `x == 1 || x == 2`.
         return validateConditionalOrsForSubject(binaryTree, params);
@@ -1004,6 +1013,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
     // Predicate not a supported style
     return Optional.empty();
+  }
+
+  private static boolean isBooleanLiteral(ExpressionTree tree) {
+    return tree.getKind() == Kind.BOOLEAN_LITERAL;
   }
 
   /**

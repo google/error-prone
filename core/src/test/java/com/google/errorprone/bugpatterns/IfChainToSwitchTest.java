@@ -2109,6 +2109,36 @@ class Test {
   }
 
   @Test
+  public void ifChain_guardFalse_noError() {
+    // A guard cannot be the literal `false`.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object suit = s;
+                System.out.println("yo");
+                if (suit == Suit.SPADE) {
+                  return;
+                } else if (suit == Suit.DIAMOND) {
+                  return;
+                } else if (suit == Suit.HEART) {
+                  return;
+                } else if (suit instanceof Suit su && (false)) {
+                  throw new NullPointerException();
+                }
+                return;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe=false")
+        .doTest();
+  }
+
+  @Test
   public void ifChain_pullUpSafe2_error() {
 
     refactoringHelper
