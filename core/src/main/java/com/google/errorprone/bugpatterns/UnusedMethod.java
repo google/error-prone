@@ -26,14 +26,19 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.fixes.SuggestedFixes.replaceIncludingComments;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
+import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.MoreAnnotations.asStrings;
 import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
@@ -43,6 +48,7 @@ import static javax.lang.model.element.ElementKind.FIELD;
 import static javax.lang.model.element.Modifier.FINAL;
 
 import com.google.common.base.Ascii;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -50,6 +56,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
@@ -58,6 +65,7 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.DeconstructionPatternTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -71,6 +79,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import com.sun.tools.javac.tree.JCTree.JCAssign;
@@ -84,6 +93,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
+import org.jspecify.annotations.Nullable;
 
 /** Bugpattern to detect unused declarations. */
 @BugPattern(
@@ -98,6 +108,29 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   private static final String JUNIT_PARAMS_VALUE = "value";
   private static final Supplier<Type> JUNIT_PARAMS_ANNOTATION_TYPE =
       Suppliers.typeFromString("junitparams.Parameters");
+
+  private static final Matcher<ExpressionTree> LOOKUP_FIND_METHOD =
+      instanceMethod()
+          .onDescendantOf("java.lang.invoke.MethodHandles.Lookup")
+          .namedAnyOf("findStatic", "findVirtual", "findSpecial");
+
+  private static final Matcher<ExpressionTree> LOOKUP_FIND_CONSTRUCTOR =
+      instanceMethod()
+          .onDescendantOf("java.lang.invoke.MethodHandles.Lookup")
+          .named("findConstructor");
+
+  private static final Matcher<ExpressionTree> CLASS_GET_METHOD =
+      instanceMethod()
+          .onDescendantOf("java.lang.Class")
+          .namedAnyOf("getMethod", "getDeclaredMethod");
+
+  private static final Matcher<ExpressionTree> CLASS_GET_CONSTRUCTOR =
+      instanceMethod()
+          .onDescendantOf("java.lang.Class")
+          .namedAnyOf("getConstructor", "getDeclaredConstructor");
+
+  private static final Matcher<ExpressionTree> METHOD_TYPE_FACTORY =
+      staticMethod().onClass("java.lang.invoke.MethodType").named("methodType");
 
   /**
    * Class annotations which exempt methods within the annotated class from findings.
@@ -272,6 +305,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
       @Override
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
         handle(getSymbol(tree));
+        handleReflectiveAccess(tree);
         return super.visitMethodInvocation(tree, null);
       }
 
@@ -310,6 +344,122 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         if (symbol instanceof MethodSymbol) {
           unusedMethods.remove(symbol);
         }
+      }
+
+      private void handleReflectiveAccess(MethodInvocationTree tree) {
+        if (LOOKUP_FIND_METHOD.matches(tree, state)) {
+          // findStatic/findVirtual/findSpecial(Class<?> refc, String name, MethodType type, ...)
+          List<? extends ExpressionTree> args = tree.getArguments();
+          Type ownerType = extractTypeFromClassLiteral(args.get(0));
+          String name = constValue(args.get(1), String.class);
+          ImmutableList<Type> paramTypes = extractParamTypesFromMethodType(args.get(2));
+          if (ownerType == null || name == null || paramTypes == null) {
+            return;
+          }
+          removeReflectivelyAccessedMethod(name, ownerType, paramTypes);
+        } else if (LOOKUP_FIND_CONSTRUCTOR.matches(tree, state)) {
+          // findConstructor(Class<?> refc, MethodType type)
+          List<? extends ExpressionTree> args = tree.getArguments();
+          Type ownerType = extractTypeFromClassLiteral(args.get(0));
+          ImmutableList<Type> paramTypes = extractParamTypesFromMethodType(args.get(1));
+          if (ownerType == null || paramTypes == null) {
+            return;
+          }
+          removeReflectivelyAccessedMethod(null, ownerType, paramTypes);
+        } else if (CLASS_GET_METHOD.matches(tree, state)) {
+          // getMethod/getDeclaredMethod(String name, Class<?>... parameterTypes)
+          List<? extends ExpressionTree> args = tree.getArguments();
+          Type ownerType = extractClassOwnerFromReceiver(tree);
+          String name = constValue(args.get(0), String.class);
+          ImmutableList<Type> paramTypes = extractClassLiteralVarargs(args, 1);
+          if (ownerType == null || name == null || paramTypes == null) {
+            return;
+          }
+          removeReflectivelyAccessedMethod(name, ownerType, paramTypes);
+        } else if (CLASS_GET_CONSTRUCTOR.matches(tree, state)) {
+          // getConstructor/getDeclaredConstructor(Class<?>... parameterTypes)
+          List<? extends ExpressionTree> args = tree.getArguments();
+          Type ownerType = extractClassOwnerFromReceiver(tree);
+          ImmutableList<Type> paramTypes = extractClassLiteralVarargs(args, 0);
+          if (ownerType == null || paramTypes == null) {
+            return;
+          }
+          removeReflectivelyAccessedMethod(null, ownerType, paramTypes);
+        }
+      }
+
+      private @Nullable Type extractTypeFromClassLiteral(ExpressionTree expr) {
+        if (!(expr instanceof MemberSelectTree select)) {
+          return null;
+        }
+        if (!select.getIdentifier().contentEquals("class")) {
+          return null;
+        }
+        return getType(select.getExpression());
+      }
+
+      private @Nullable ImmutableList<Type> extractParamTypesFromMethodType(ExpressionTree expr) {
+        if (!(expr instanceof MethodInvocationTree call)) {
+          return null;
+        }
+        if (!METHOD_TYPE_FACTORY.matches(call, state)) {
+          return null;
+        }
+        return extractClassLiteralVarargs(call.getArguments(), 1);
+      }
+
+      private @Nullable Type extractClassOwnerFromReceiver(MethodInvocationTree tree) {
+        ExpressionTree receiver = getReceiver(tree);
+        if (receiver == null) {
+          return null;
+        }
+        return extractTypeFromClassLiteral(receiver);
+      }
+
+      private @Nullable ImmutableList<Type> extractClassLiteralVarargs(
+          List<? extends ExpressionTree> args, int startIndex) {
+        ImmutableList.Builder<Type> builder = ImmutableList.builder();
+        for (int i = startIndex; i < args.size(); i++) {
+          Type t = extractTypeFromClassLiteral(args.get(i));
+          if (t == null) {
+            return null;
+          }
+          builder.add(t);
+        }
+        return builder.build();
+      }
+
+      private void removeReflectivelyAccessedMethod(
+          @Nullable String name, Type ownerType, ImmutableList<Type> paramTypes) {
+        unusedMethods
+            .keySet()
+            .removeIf(sym -> methodMatches((MethodSymbol) sym, name, ownerType, paramTypes));
+      }
+
+      private boolean methodMatches(
+          MethodSymbol sym, @Nullable String name, Type ownerType, ImmutableList<Type> paramTypes) {
+        if (name == null) {
+          if (!sym.isConstructor()) {
+            return false;
+          }
+        } else {
+          if (sym.isConstructor() || !sym.getSimpleName().contentEquals(name)) {
+            return false;
+          }
+        }
+        if (!isSameType(sym.owner.type, ownerType, state)) {
+          return false;
+        }
+        List<VarSymbol> params = sym.params();
+        if (params.size() != paramTypes.size()) {
+          return false;
+        }
+        for (int i = 0; i < params.size(); i++) {
+          if (!isSameType(params.get(i).type, paramTypes.get(i), state)) {
+            return false;
+          }
+        }
+        return true;
       }
 
       @Override
