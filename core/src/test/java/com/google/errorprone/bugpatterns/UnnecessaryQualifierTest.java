@@ -57,7 +57,7 @@ public final class UnnecessaryQualifierTest {
             "Test.java",
             """
             class Test {
-              // BUG: Diagnostic contains:
+              // BUG: Diagnostic contains: Qualifier annotation @Qual has no effect here
               @Qual int x;
             }
             """)

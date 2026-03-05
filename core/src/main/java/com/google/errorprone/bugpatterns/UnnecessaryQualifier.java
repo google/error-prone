@@ -32,6 +32,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -176,9 +177,18 @@ public final class UnnecessaryQualifier extends BugChecker
     if (explicitAnnotations.isEmpty()) {
       return NO_MATCH;
     }
-    return describeMatch(
-        explicitAnnotations.getFirst(),
-        explicitAnnotations.stream().map(SuggestedFix::delete).collect(mergeFixes()));
+    boolean plural = explicitAnnotations.size() > 1;
+    return buildDescription(explicitAnnotations.getFirst())
+        .addFix(explicitAnnotations.stream().map(SuggestedFix::delete).collect(mergeFixes()))
+        .setMessage(
+            String.format(
+                "Qualifier annotation%s %s %s no effect here",
+                plural ? "s" : "",
+                explicitAnnotations.stream()
+                    .map(anno -> getSymbol(anno).getQualifiedName().toString())
+                    .collect(joining(", ", "@", "")),
+                plural ? "have" : "has"))
+        .build();
   }
 
   private static ImmutableList<AnnotationTree> getQualifiers(
