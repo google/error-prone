@@ -174,6 +174,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     return avoidShadowing(camelCased, state);
   }
 
+  // TODO: cushon - add to SuggestedFixes?
   private static String avoidShadowing(String name, VisitorState state) {
     var idents =
         FindIdentifiers.findAllIdents(state).stream()

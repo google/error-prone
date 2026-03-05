@@ -273,8 +273,8 @@ public final class ConstantExpressions {
         return Optional.of(new ConstantExpression.ConstantEquals(lhs.get(), rhs.get()));
       }
     }
-    Object value = constValue(tree);
-    if (value != null && tree instanceof LiteralTree) {
+    Object value = tree instanceof LiteralTree ? constValue(tree) : null;
+    if (value != null || tree.getKind() == Kind.NULL_LITERAL) {
       return Optional.of(new ConstantExpression.Literal(value));
     }
     return symbolizeImmutableExpression(tree, state).map(x -> x);

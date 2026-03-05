@@ -37,6 +37,7 @@ import com.google.errorprone.bugpatterns.ArrayRecordComponent;
 import com.google.errorprone.bugpatterns.ArrayToString;
 import com.google.errorprone.bugpatterns.ArraysAsListPrimitiveArray;
 import com.google.errorprone.bugpatterns.AssertFalse;
+import com.google.errorprone.bugpatterns.AssertThrowsMinimizer;
 import com.google.errorprone.bugpatterns.AssertThrowsMultipleStatements;
 import com.google.errorprone.bugpatterns.AssertionFailureIgnored;
 import com.google.errorprone.bugpatterns.AssignmentExpression;
@@ -905,6 +906,7 @@ public class BuiltInCheckerSuppliers {
           ArrayRecordComponent.class,
           AssertEqualsArgumentOrderChecker.class,
           AssertSameIncompatible.class,
+          AssertThrowsMinimizer.class,
           AssertThrowsMultipleStatements.class,
           AssertionFailureIgnored.class,
           AssignmentExpression.class,
