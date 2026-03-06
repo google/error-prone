@@ -59,7 +59,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" tabindex="0">matchMethodInvocation(MethodInvocationTree, VisitorState)</a></li>
+<li><a href="#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" tabindex="0">matchMethod(MethodTree, VisitorState)</a></li>
 </ol>
 </li>
 </ol>
@@ -77,13 +77,13 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a>, <a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a>, <a href="../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">AssertThrowsMinimizer</span>
 <span class="extends-implements">extends <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></span></div>
+implements <a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></span></div>
 <div class="block">A <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 <dl class="notes">
 <dt>See Also:</dt>
@@ -118,7 +118,7 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
@@ -145,14 +145,14 @@ implements <a href="BugChecker.MethodInvocationTreeMatcher.html" title="interfac
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">
-<h3>matchMethodInvocation</h3>
+<section class="detail" id="matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">
+<h3>matchMethod</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchMethodInvocation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;tree,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="BugChecker.MethodInvocationTreeMatcher.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)">matchMethodInvocation</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.MethodInvocationTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodInvocationTreeMatcher</a></code></dd>
+<dd><code><a href="BugChecker.MethodTreeMatcher.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod</a></code>&nbsp;in interface&nbsp;<code><a href="BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code></dd>
 </dl>
 </div>
 </section>
