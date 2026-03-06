@@ -205,4 +205,38 @@ public class AssertThrowsMinimizerTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void twoAssertions() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f() {
+                Bar bar = new Bar();
+                assertThrows(IllegalStateException.class, () -> Foo.builder().setBar(bar));
+                assertThrows(IllegalStateException.class, () -> Foo.builder().setBar(bar));
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f() {
+                Bar bar = new Bar();
+                Foo.Builder builder = Foo.builder();
+                assertThrows(IllegalStateException.class, () -> builder.setBar(bar));
+                Foo.Builder builder2 = Foo.builder();
+                assertThrows(IllegalStateException.class, () -> builder2.setBar(bar));
+              }
+            }
+            """)
+        .doTest(TEXT_MATCH);
+  }
 }

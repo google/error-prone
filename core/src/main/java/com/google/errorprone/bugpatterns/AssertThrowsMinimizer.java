@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -26,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
@@ -33,7 +33,7 @@ import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -47,8 +47,13 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.inject.Inject;
@@ -56,7 +61,7 @@ import javax.lang.model.element.ElementKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Minimize the amount of logic in assertThrows", severity = WARNING)
-public class AssertThrowsMinimizer extends BugChecker implements MethodInvocationTreeMatcher {
+public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<ExpressionTree> MATCHER =
       staticMethod().onClass("org.junit.Assert").named("assertThrows");
@@ -70,38 +75,56 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodInvocatio
     this.useVarType = flags.getBoolean("AssertThrowsMinimizer:UseVarType").orElse(false);
   }
 
+  private ImmutableList<AssertThrows> findAssertThrowsToFix(VisitorState state) {
+    ImmutableList.Builder<AssertThrows> toFix = ImmutableList.builder();
+    new SuppressibleTreePathScanner<Void, Void>(state) {
+      @Override
+      public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+        matchMethodInvocation(tree, state.withPath(getCurrentPath())).ifPresent(toFix::add);
+        return super.visitMethodInvocation(tree, null);
+      }
+    }.scan(state.getPath(), null);
+    return toFix.build();
+  }
+
+  record AssertThrows(
+      Tree parent,
+      LambdaExpressionTree lambdaExpressionTree,
+      MethodInvocationTree runnable,
+      ImmutableList<Hoist> toHoist) {}
+
   record Hoist(ExpressionTree site, String name) {}
 
-  @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+  private Optional<AssertThrows> matchMethodInvocation(
+      MethodInvocationTree tree, VisitorState state) {
     if (!MATCHER.matches(tree, state)) {
-      return NO_MATCH;
+      return Optional.empty();
     }
     if (!(state.getPath().getParentPath().getLeaf() instanceof StatementTree parent)) {
       // We need a scope to declare variables in, assertThrows is usually an expression statement or
       // a variable initializer
-      return NO_MATCH;
+      return Optional.empty();
     }
     if (!(tree.getArguments().getLast() instanceof LambdaExpressionTree lambdaExpressionTree)) {
-      return NO_MATCH;
+      return Optional.empty();
     }
     MethodInvocationTree runnable;
     switch (lambdaExpressionTree.getBody()) {
       case BlockTree blockTree -> {
         if (blockTree.getStatements().size() != 1) {
-          return NO_MATCH;
+          return Optional.empty();
         }
         if (!(getOnlyElement(blockTree.getStatements())
                 instanceof ExpressionStatementTree expressionStatementTree
             && expressionStatementTree.getExpression()
                 instanceof MethodInvocationTree methodInvocationTree)) {
-          return NO_MATCH;
+          return Optional.empty();
         }
         runnable = methodInvocationTree;
       }
       case MethodInvocationTree methodInvocationTree -> runnable = methodInvocationTree;
       default -> {
-        return NO_MATCH;
+        return Optional.empty();
       }
     }
     ImmutableList<Hoist> toHoist =
@@ -115,26 +138,38 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodInvocatio
             .filter(h -> needsHoisting(h.site(), state))
             .collect(toImmutableList());
     if (toHoist.isEmpty()) {
+      return Optional.empty();
+    }
+    return Optional.of(new AssertThrows(parent, lambdaExpressionTree, runnable, toHoist));
+  }
+
+  @Override
+  public Description matchMethod(MethodTree tree, VisitorState state) {
+    ImmutableList<AssertThrows> toFix = findAssertThrowsToFix(state);
+    if (toFix.isEmpty()) {
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    StringBuilder hoistedVariables = new StringBuilder();
-    for (Hoist hoist : toHoist) {
-      String identifier = avoidShadowing(hoist.name(), state);
-      hoistedVariables.append(
-          String.format(
-              "%s %s = %s;\n",
-              useVarType ? "var" : SuggestedFixes.qualifyType(state, fix, getType(hoist.site())),
-              identifier,
-              state.getSourceForNode(hoist.site())));
-      fix.replace(hoist.site(), identifier);
+    VariableNamer variableNamer = new VariableNamer(state);
+    for (AssertThrows current : toFix) {
+      StringBuilder hoistedVariables = new StringBuilder();
+      for (Hoist hoist : current.toHoist) {
+        String identifier = variableNamer.avoidShadowing(hoist.name());
+        hoistedVariables.append(
+            String.format(
+                "%s %s = %s;\n",
+                useVarType ? "var" : SuggestedFixes.qualifyType(state, fix, getType(hoist.site())),
+                identifier,
+                state.getSourceForNode(hoist.site())));
+        fix.replace(hoist.site(), identifier);
+      }
+      fix.prefixWith(current.parent(), hoistedVariables.toString());
+      if (current.lambdaExpressionTree().getBody() instanceof BlockTree blockTree) {
+        fix.replace(getStartPosition(blockTree), getStartPosition(current.runnable()), "");
+        fix.replace(state.getEndPosition(current.runnable()), state.getEndPosition(blockTree), "");
+      }
     }
-    fix.prefixWith(parent, hoistedVariables.toString());
-    if (lambdaExpressionTree.getBody() instanceof BlockTree blockTree) {
-      fix.replace(getStartPosition(blockTree), getStartPosition(runnable), "");
-      fix.replace(state.getEndPosition(runnable), state.getEndPosition(blockTree), "");
-    }
-    return describeMatch(tree, fix.build());
+    return describeMatch(toFix.getFirst().parent(), fix.build());
   }
 
   private static String receiverVariableName(ExpressionTree tree) {
@@ -159,17 +194,24 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodInvocatio
     return constantExpressions.constantExpression(tree, state).isEmpty();
   }
 
-  // Stolen from PatternMatchingInstanceof
-  // TODO: cushon - add to SuggestedFixes?
-  private static String avoidShadowing(String name, VisitorState state) {
-    var idents =
-        FindIdentifiers.findAllIdents(state).stream()
-            .map(s -> s.getSimpleName().toString())
-            .collect(toImmutableSet());
-    return IntStream.iterate(1, i -> i + 1)
-        .mapToObj(i -> i == 1 ? name : (name + i))
-        .filter(n -> !idents.contains(n))
-        .findFirst()
-        .get();
+  private static class VariableNamer {
+    private final Set<String> idents;
+
+    VariableNamer(VisitorState state) {
+      this.idents =
+          FindIdentifiers.findAllIdents(state).stream()
+              .map(s -> s.getSimpleName().toString())
+              .collect(toCollection(HashSet::new));
+    }
+
+    // Stolen from PatternMatchingInstanceof
+    // TODO: cushon - add to SuggestedFixes?
+    private String avoidShadowing(String name) {
+      return IntStream.iterate(1, i -> i + 1)
+          .mapToObj(i -> i == 1 ? name : (name + i))
+          .filter(n -> idents.add(n))
+          .findFirst()
+          .get();
+    }
   }
 }
