@@ -21,12 +21,14 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.SwitchUtils.COMPILE_TIME_CONSTANT_MATCHER;
+import static com.google.errorprone.bugpatterns.SwitchUtils.getReferencedLocalVariablesInTree;
 import static com.google.errorprone.bugpatterns.SwitchUtils.isEnumValue;
 import static com.google.errorprone.bugpatterns.SwitchUtils.renderComments;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.sameVariable;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
@@ -985,6 +987,12 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               && rightOperandNoParentheses instanceof LiteralTree literalTree
               && literalTree.getValue() instanceof Boolean b
               && !b) {
+            return Optional.empty();
+          }
+          // A guard cannot reference a local variable that is not final nor effectively final;
+          // see JLS 21 §14.11.1.
+          if (getReferencedLocalVariablesInTree(rightOperandNoParentheses).stream()
+              .anyMatch(varSymbol -> !isConsideredFinal(varSymbol))) {
             return Optional.empty();
           }
           // Update last case to attach the guard

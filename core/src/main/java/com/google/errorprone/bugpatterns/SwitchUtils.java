@@ -442,5 +442,30 @@ public final class SwitchUtils {
     };
   }
 
+  public static Set<VarSymbol> getReferencedLocalVariablesInTree(Tree tree) {
+    Set<VarSymbol> referencedLocalVariables = new HashSet<>();
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitMemberSelect(MemberSelectTree memberSelect, Void unused) {
+        handle(memberSelect);
+        return super.visitMemberSelect(memberSelect, null);
+      }
+
+      @Override
+      public Void visitIdentifier(IdentifierTree identifier, Void unused) {
+        handle(identifier);
+        return super.visitIdentifier(identifier, null);
+      }
+
+      private void handle(Tree tree) {
+        var symbol = getSymbol(tree);
+        if (symbol instanceof VarSymbol varSymbol) {
+          referencedLocalVariables.add(varSymbol);
+        }
+      }
+    }.scan(tree, null);
+    return referencedLocalVariables;
+  }
+
   private SwitchUtils() {}
 }

@@ -2139,6 +2139,71 @@ class Test {
   }
 
   @Test
+  public void ifChain_guardEffectivelyFinal_noError() {
+    // Local variables referenced in a guard must be effectively final.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                int nonEffectivelyFinal = 0;
+                nonEffectivelyFinal++;
+                Object suit = s;
+                System.out.println("yo");
+                if (suit == Suit.SPADE) {
+                  return;
+                } else if (suit == Suit.DIAMOND) {
+                  return;
+                } else if (suit == Suit.HEART) {
+                  return;
+                } else if (suit instanceof Suit su && (Integer.valueOf(nonEffectivelyFinal) == 0)) {
+                  throw new NullPointerException();
+                }
+                return;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe=false")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_guardEffectivelyFinalObject_noError() {
+    // Local variables referenced in a guard must be effectively final.
+    // Here the local variable is non-primitive.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                String nonEffectivelyFinal = "hello";
+                nonEffectivelyFinal = "world";
+                Object suit = s;
+                System.out.println("yo");
+                if (suit == Suit.SPADE) {
+                  return;
+                } else if (suit == Suit.DIAMOND) {
+                  return;
+                } else if (suit == Suit.HEART) {
+                  return;
+                } else if (suit instanceof Suit su && (nonEffectivelyFinal.length() > 2)) {
+                  throw new NullPointerException();
+                }
+                return;
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe=false")
+        .doTest();
+  }
+
+  @Test
   public void ifChain_pullUpSafe2_error() {
 
     refactoringHelper
