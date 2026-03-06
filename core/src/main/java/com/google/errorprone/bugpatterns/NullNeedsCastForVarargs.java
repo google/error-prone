@@ -88,7 +88,7 @@ public final class NullNeedsCastForVarargs extends BugChecker
     }
     var arg = arguments.getLast();
     if (arg.getKind() == NULL_LITERAL || isCastOfNullToArrayOfTargetTypeElementType(arg, state)) {
-      var elementType = targetTypElementType(state);
+      var elementType = targetTypeElementType(state);
       var fix = SuggestedFix.builder();
       var prettyName = qualifyType(state, fix, elementType);
       fix.replace(arg, "(%s) null".formatted(prettyName));
@@ -120,11 +120,11 @@ public final class NullNeedsCastForVarargs extends BugChecker
 
     var castTree = (TypeCastTree) arg;
     var castType = (ArrayType) getType(castTree.getType());
-    var elementType = targetTypElementType(state);
+    var elementType = targetTypeElementType(state);
     return state.getTypes().isSubtype(castType.getComponentType(), elementType);
   }
 
-  private static Type targetTypElementType(VisitorState state) {
+  private static Type targetTypeElementType(VisitorState state) {
     var targetType = targetType(state);
     return (targetType != null && !targetType.type().getTypeArguments().isEmpty())
         // The target is likely List<T>/Stream<T>/..., so the signature has `T...`. Return `T`.
