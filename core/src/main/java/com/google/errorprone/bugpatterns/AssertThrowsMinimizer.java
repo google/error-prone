@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -178,6 +179,9 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
   }
 
   private boolean needsHoisting(ExpressionTree tree, VisitorState state) {
+    if (KNOWN_SAFE.matches(tree, state)) {
+      return false;
+    }
     boolean unqualifiedIdentifier =
         switch (tree) {
           case IdentifierTree identifierTree -> true;
@@ -193,6 +197,13 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
     // less valuable to hoist.
     return constantExpressions.constantExpression(tree, state).isEmpty();
   }
+
+  private static final Matcher<ExpressionTree> KNOWN_SAFE =
+      anyOf(
+          staticMethod()
+              .onClass("com.google.net.rpc3.client.RpcClientContext")
+              .named("create")
+              .withNoParameters());
 
   private static class VariableNamer {
     private final Set<String> idents;

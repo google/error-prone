@@ -239,4 +239,38 @@ public class AssertThrowsMinimizerTest {
             """)
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void rpcClientContextCreate_isNotHoisted() {
+    compilationHelper
+        .addInputLines(
+            "RpcClientContext.java",
+            """
+            package com.google.net.rpc3.client;
+
+            public class RpcClientContext {
+              public static RpcClientContext create() {
+                return null;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            import com.google.net.rpc3.client.RpcClientContext;
+
+            class Test {
+              void consume(RpcClientContext r) {}
+
+              void m() {
+                assertThrows(IllegalArgumentException.class, () -> consume(RpcClientContext.create()));
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }
