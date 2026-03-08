@@ -22,6 +22,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.SwitchUtils.COMPILE_TIME_CONSTANT_MATCHER;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getReferencedLocalVariablesInTree;
+import static com.google.errorprone.bugpatterns.SwitchUtils.hasBreakOutOfTree;
 import static com.google.errorprone.bugpatterns.SwitchUtils.isEnumValue;
 import static com.google.errorprone.bugpatterns.SwitchUtils.renderComments;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -31,6 +32,7 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.sameVariable;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.THROW;
 import static java.lang.Math.max;
@@ -63,20 +65,25 @@ import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.YieldTree;
 import com.sun.source.util.TreePath;
+import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -419,6 +426,28 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
+   * Determines whether the given case IR has an "unguarded" pattern. As defined in the JLS,
+   * "unguarded" means that either there is no guard or the guard is the boolean literal `true`.
+   */
+  private static boolean isUnguarded(CaseIr caseIr) {
+    // Not a pattern
+    if (caseIr.instanceOfOptional().isEmpty()) {
+      return false;
+    }
+
+    if (caseIr.guardOptional().isEmpty()) {
+      return true;
+    }
+
+    // Guard is present and is `true`
+    ExpressionTree guard = stripParentheses(caseIr.guardOptional().get());
+    return isBooleanLiteral(guard)
+        && guard instanceof LiteralTree literalTree
+        && literalTree.getValue() instanceof Boolean b
+        && b;
+  }
+
+  /**
    * Analyzes the supplied case IRs for a switch statement for issues related default/unconditional
    * cases. If deemed necessary, this method injects a `default` and/or `case null` into the
    * supplied case IRs. If the supplied case IRs cannot be used to form a syntactically valid switch
@@ -452,7 +481,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             .filter(
                 caseIr ->
                     caseIr.instanceOfOptional().isPresent()
-                        && caseIr.guardOptional().isEmpty()
+                        && isUnguarded(caseIr)
                         && isSubtype(
                             getType(subject),
                             getType(caseIr.instanceOfOptional().get().type()),
@@ -676,12 +705,13 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
-   * Analyzes the supplied case IRs for duplicate constants (either primitives or enum values). If
+   * Analyzes the supplied case IRs for duplicate constants (primitives, enum values, or `null`). If
    * any duplicates are found, returns {@code Optional.empty()}.
    */
   private static Optional<List<CaseIr>> maybeDetectDuplicateConstants(List<CaseIr> cases) {
 
     Set<Object> seenConstants = new HashSet<>();
+    boolean seenNull = false;
 
     for (CaseIr caseIr : cases) {
       if (caseIr.expressionsOptional().isPresent()) {
@@ -702,6 +732,13 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               return Optional.empty();
             }
             seenConstants.add(sym);
+          }
+
+          if (isNull(expression)) {
+            if (seenNull) {
+              return Optional.empty();
+            }
+            seenNull = true;
           }
         }
       }
@@ -1516,9 +1553,16 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       VisitorState state,
       Range<Integer> ifTreeSourceRange) {
 
-    // Wrapping break/yield in a switch can potentially change its semantics.  A deeper analysis of
-    // whether semantics are preserved is not attempted here
-    if (hasBreakOrYieldInTree(ifTree)) {
+    // Yields and breaks within if-chain's blocks are allowable, provided that they do not transfer
+    // control outside of their respective block
+    boolean hasBreakOut =
+        cases.stream()
+            .filter(caseIr -> caseIr.arrowRhsOptional().isPresent())
+            .map(caseIr -> caseIr.arrowRhsOptional().get())
+            .anyMatch(arrowRhs -> hasBreakOutOfTree(arrowRhs, state));
+    boolean hasYieldOut =
+        analyzeYieldControlFlow(ifTree, state).values().stream().anyMatch(value -> ifTree == value);
+    if (hasBreakOut || hasYieldOut) {
       return new ArrayList<>();
     }
 
@@ -1605,6 +1649,34 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
+   * Returns a map from yield trees to the scope that they are yielding to. Special case: when
+   * yielding to the scope of somewhere above {@code tree}, the tree itself is used as a sentinel
+   * value (no attempt is made to search up the AST from {@code tree}).
+   */
+  private static Map<Tree, Tree> analyzeYieldControlFlow(Tree tree, VisitorState state) {
+    ArrayDeque<Tree> yieldScope = new ArrayDeque<>();
+    yieldScope.push(tree);
+    HashMap<Tree, Tree> result = new HashMap<>();
+    // One can only yield from a switch expression
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitSwitchExpression(SwitchExpressionTree switchExpressionTree, Void unused) {
+        yieldScope.push(switchExpressionTree);
+        super.visitSwitchExpression(switchExpressionTree, null);
+        yieldScope.pop();
+        return null;
+      }
+
+      @Override
+      public Void visitYield(YieldTree yieldTree, Void unused) {
+        result.put(yieldTree, yieldScope.peek());
+        return null;
+      }
+    }.scan(state.getPath(), null);
+    return result;
+  }
+
+  /**
    * If a finding is available, build a {@code SuggestedFix} for it and add to the suggested fixes.
    */
   private static void maybeBuildAndAddSuggestedFix(
@@ -1665,7 +1737,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         boolean isPrimitive = getType(constantExpression).isPrimitive();
         if (isPrimitive) {
           // Guarded patterns cannot dominate primitives
-          if (lhs.guardOptional().isPresent()) {
+          if (!isUnguarded(lhs)) {
             continue;
           }
           if (lhs.instanceOfOptional().isPresent()) {
@@ -1697,7 +1769,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         }
         boolean isEnum = isEnumValue(constantExpression, state);
         if (isEnum) {
-          if (lhs.guardOptional().isPresent()) {
+          if (!isUnguarded(lhs)) {
             // Guarded patterns cannot dominate enum values
             continue;
           }
@@ -1718,7 +1790,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         // RHS must be a reference
         // The rhs-reference code would be needed to support e.g. String literals.  It is included
         // for completeness.
-        if (lhs.guardOptional().isPresent()) {
+        if (!isUnguarded(lhs)) {
           // Guarded patterns cannot dominate references
           continue;
         }
@@ -1749,7 +1821,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     }
 
     // RHS must be a pattern
-    if (lhs.guardOptional().isPresent()) {
+    if (!isUnguarded(lhs)) {
       // LHS has a guard, so cannot dominate RHS
       return false;
     }
