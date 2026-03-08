@@ -21,6 +21,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.SwitchUtils.getReferencedLocalVariablesInTree;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -557,28 +558,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * supplied {@code tree}.
    */
   private static boolean hasReadsOrWritesOfVariableInTree(VarSymbol symbol, Tree tree) {
-    Set<VarSymbol> referencedLocalVariables = new HashSet<>();
-    new TreeScanner<Void, Void>() {
-      @Override
-      public Void visitMemberSelect(MemberSelectTree memberSelect, Void unused) {
-        handle(memberSelect);
-        return super.visitMemberSelect(memberSelect, null);
-      }
-
-      @Override
-      public Void visitIdentifier(IdentifierTree identifier, Void unused) {
-        handle(identifier);
-        return super.visitIdentifier(identifier, null);
-      }
-
-      private void handle(Tree tree) {
-        var symbol = getSymbol(tree);
-        if (symbol instanceof VarSymbol varSymbol) {
-          referencedLocalVariables.add(varSymbol);
-        }
-      }
-    }.scan(tree, null);
-    return referencedLocalVariables.contains(symbol);
+    return getReferencedLocalVariablesInTree(tree).contains(symbol);
   }
 
   /**
