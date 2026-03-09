@@ -273,4 +273,63 @@ public class AssertThrowsMinimizerTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void stringWrapper() {
+    compilationHelper
+        .addInputLines(
+            "AbstractType.java",
+            """
+            package com.google.android.gms.tagmanager.internal.type;
+
+            public abstract class AbstractType {}
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "StringWrapper.java",
+            """
+            package com.google.android.gms.tagmanager.internal.type;
+
+            public class StringWrapper extends AbstractType {
+              public StringWrapper(String value) {}
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+            import com.google.android.gms.tagmanager.internal.type.StringWrapper;
+
+            abstract class Test {
+              void f() {
+                assertThrows(IllegalStateException.class, () -> doSomething(new StringWrapper("hello")));
+                assertThrows(IllegalStateException.class, () -> doSomething(new StringWrapper(getString())));
+              }
+
+              abstract void doSomething(StringWrapper stringWrapper);
+
+              abstract String getString();
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+            import com.google.android.gms.tagmanager.internal.type.StringWrapper;
+
+            abstract class Test {
+              void f() {
+                assertThrows(IllegalStateException.class, () -> doSomething(new StringWrapper("hello")));
+                StringWrapper stringWrapper = new StringWrapper(getString());
+                assertThrows(IllegalStateException.class, () -> doSomething(stringWrapper));
+              }
+
+              abstract void doSomething(StringWrapper stringWrapper);
+
+              abstract String getString();
+            }
+            """)
+        .doTest();
+  }
 }

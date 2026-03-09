@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -40,6 +41,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -49,6 +51,7 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -180,7 +183,15 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
 
   private boolean needsHoisting(ExpressionTree tree, VisitorState state) {
     if (KNOWN_SAFE.matches(tree, state)) {
-      return false;
+      var arguments =
+          switch (tree) {
+            case MethodInvocationTree methodInvocationTree -> methodInvocationTree.getArguments();
+            case NewClassTree newClassTree -> newClassTree.getArguments();
+            default -> throw new AssertionError(tree.getKind());
+          };
+      if (arguments.stream().noneMatch(a -> needsHoisting(a, state))) {
+        return false;
+      }
     }
     boolean unqualifiedIdentifier =
         switch (tree) {
@@ -203,7 +214,18 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
           staticMethod()
               .onClass("com.google.net.rpc3.client.RpcClientContext")
               .named("create")
-              .withNoParameters());
+              .withNoParameters(),
+          staticMethod().onClass("java.util.Arrays").named("asList"),
+          staticMethod()
+              .onClassAny(
+                  "com.google.common.collect.ImmutableList",
+                  "com.google.common.collect.ImmutableSet")
+              .named("of"),
+          staticMethod().onClass("java.util.Collections").named("emptyList"),
+          constructor()
+              .forClass(
+                  TypePredicates.isDescendantOf(
+                      "com.google.android.gms.tagmanager.internal.type.AbstractType")));
 
   private static class VariableNamer {
     private final Set<String> idents;
