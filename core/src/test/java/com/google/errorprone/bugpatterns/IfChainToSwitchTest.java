@@ -1346,6 +1346,124 @@ class Test {
   }
 
   @Test
+  public void ifChain_dupePattern_noError() {
+    // Duplicate unguarded pattern with `Suit`
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object o = s;
+                if (o == Suit.DIAMOND) {
+                  System.out.println("Diamond");
+                } else if (o instanceof Suit r) {
+                  System.out.println("It's some black suit");
+                } else if (Suit.HEART == o) {
+                  System.out.println("Hearts");
+                } else if (o == Suit.SPADE) {
+                  System.out.println("Spade");
+                } else if (o instanceof Suit su && (true)) {
+                  System.out.println("Dupe");
+                } else {
+                  System.out.println("Something else");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_duplicateUnguardedPattern_noError() {
+    // Duplicate unguarded pattern with `Suit`.  Note that one has a pattern variable, but this does
+    // not change the fact that they are duplicates.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                Object o = s;
+                if (o == Suit.DIAMOND) {
+                  System.out.println("Diamond");
+                } else if (o instanceof Suit su) {
+                  System.out.println("Dupe");
+                } else if (o instanceof Suit r) {
+                  System.out.println("It's some black suit");
+                } else if (Suit.HEART == o) {
+                  System.out.println("Hearts");
+                } else if (o == Suit.SPADE) {
+                  System.out.println("Spade");
+                } else if (o instanceof Suit) {
+                  System.out.println("Dupe");
+                } else {
+                  System.out.println("Something else");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_duplicateGuardedPattern_noError() {
+    // Duplicate pattern with `Suit` and a guard
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Object o = s;
+                if (o == Suit.DIAMOND) {
+                  System.out.println("Diamond");
+                } else if (o instanceof Suit su && (su != null)) {
+                  System.out.println("Dupe");
+                } else if (o instanceof Suit r) {
+                  System.out.println("It's some black suit");
+                } else if (Suit.HEART == o) {
+                  System.out.println("Hearts");
+                } else if (o == Suit.SPADE) {
+                  System.out.println("Spade");
+                } else if (o instanceof Suit su && (su != null)) {
+                  System.out.println("Dupe");
+                } else {
+                  System.out.println("Something else");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Object o = s;
+                switch (o) {
+                  case Suit.DIAMOND -> System.out.println("Diamond");
+                  case Suit su when (su != null) -> System.out.println("Dupe");
+                  case Suit.HEART -> System.out.println("Hearts");
+                  case Suit.SPADE -> System.out.println("Spade");
+                  case Suit su when (su != null) -> System.out.println("Dupe");
+                  case Suit r -> System.out.println("It's some black suit");
+                  default -> System.out.println("Something else");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
   public void ifChain_dupeEnum_noError() {
     // Duplicate enum
     helper
@@ -3069,7 +3187,7 @@ class Test {
 
   @Test
   public void ifChain_conflictingUnguardedTypePatternsShort_noError() {
-    // Number and Integer are conflicting (both unconditional for Integer)
+    // Number and Integer are conflicting; both unconditional for Integer
     helper
         .addSourceLines(
             "Test.java",
@@ -3172,6 +3290,7 @@ class Test {
 
   @Test
   public void ifChain_javadocEnum_error() {
+    // This example appears in the documentation for IfChainToSwitch
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -3208,6 +3327,7 @@ class Test {
 
   @Test
   public void ifChain_javadocOrdering_error() {
+    // This example appears in the documentation for IfChainToSwitch
     refactoringHelper
         .addInputLines(
             "Test.java",
