@@ -46,6 +46,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -53,6 +54,7 @@ import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -63,9 +65,12 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
@@ -78,6 +83,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
 /** Checker that detects likely time-unit mismatches by looking at identifier names. */
@@ -91,7 +97,15 @@ public final class TimeUnitMismatch extends BugChecker
         BinaryTreeMatcher,
         MethodInvocationTreeMatcher,
         NewClassTreeMatcher,
+        ReturnTreeMatcher,
         VariableTreeMatcher {
+
+  private final boolean checkReturnValues;
+
+  @Inject
+  TimeUnitMismatch(ErrorProneFlags flags) {
+    this.checkReturnValues = flags.getBoolean("TimeUnitMismatch:CheckReturnValues").orElse(true);
+  }
 
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
@@ -180,6 +194,25 @@ public final class TimeUnitMismatch extends BugChecker
   }
 
   @Override
+  public Description matchReturn(ReturnTree tree, VisitorState state) {
+    if (!checkReturnValues || tree.getExpression() == null) {
+      return Description.NO_MATCH;
+    }
+    for (var parent : state.getPath()) {
+      if (parent instanceof LambdaExpressionTree lambdaTree) {
+        var implementedMethod = state.getTypes().findDescriptorSymbol(getType(lambdaTree).tsym);
+        check(implementedMethod.getSimpleName().toString(), tree.getExpression(), state);
+        return ANY_MATCHES_WERE_ALREADY_REPORTED;
+      }
+      if (parent instanceof MethodTree methodTree) {
+        check(methodTree.getName().toString(), tree.getExpression(), state);
+        return ANY_MATCHES_WERE_ALREADY_REPORTED;
+      }
+    }
+    return ANY_MATCHES_WERE_ALREADY_REPORTED;
+  }
+
+  @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     if (tree.getInitializer() != null) {
       check(tree.getName().toString(), tree.getInitializer(), state);
@@ -194,12 +227,6 @@ public final class TimeUnitMismatch extends BugChecker
    * compile against .class files that were compiled without parameter names?) e.g.,
    * SystemClock.elapsedRealtime is millis. And how about Stopwatch.elapsed(TimeUnit) and perhaps
    * similar methods?
-   */
-
-  /*
-   * TODO(cpovirk): Check `return` statements against the type suggested by the method name (or from
-   * the hardcoded list, since mismatches there seem more likely -- e.g., Ticker.read() that returns
-   * elapsedRealtime()).
    */
 
   /*

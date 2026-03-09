@@ -373,6 +373,73 @@ public class TimeUnitMismatchTest {
   }
 
   @Test
+  public void returningMillisFromMicrosMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private int millis = 1;
+
+              long getMicros() {
+                // BUG: Diagnostic contains: expected microseconds but was milliseconds
+                return millis;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void lambda() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              interface MySupplier {
+                long getMillis();
+              }
+
+              private long micros = 1;
+
+              void test() {
+                MySupplier s =
+                    () -> {
+                      // BUG: Diagnostic contains: expected milliseconds but was microseconds
+                      return micros;
+                    };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodReference() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              interface MySupplier {
+                long getMillis();
+              }
+
+              private long getMicros() {
+                return 1;
+              }
+
+              void test() {
+                // This should be flagged for consistency with the lambda test case above.
+                MySupplier s2 = this::getMicros;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void testUnitSuggestedByName() {
     assertSeconds("sleepSec", "deadlineSeconds", "secondsTimeout", "msToS");
     assertUnknown(
