@@ -36,6 +36,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.ExpressionTree;
@@ -319,6 +320,34 @@ public final class SwitchUtils {
           }
         }.scan(tree, null);
 
+    return result != null && result;
+  }
+
+  /**
+   * Determines whether any `break` statements that jump out of the {@code tree} are present within
+   * the {@code tree}.
+   */
+  static boolean hasBreakOutOfTree(Tree tree, VisitorState state) {
+    Boolean result =
+        new TreeScanner<Boolean, Void>() {
+          @Override
+          public Boolean visitBreak(BreakTree breakTree, Void unused) {
+            Tree breakTarget = skipLabel(requireNonNull(((JCTree.JCBreak) breakTree).target));
+            // If the break transfers control to somewhere above the tree, it is jumping out.
+            var pathIterator = state.getPath().iterator();
+            for (Tree at = tree; pathIterator.hasNext(); at = pathIterator.next()) {
+              if (at == breakTarget) {
+                return true;
+              }
+            }
+            return false;
+          }
+
+          @Override
+          public Boolean reduce(@Nullable Boolean left, @Nullable Boolean right) {
+            return Objects.equals(left, true) || Objects.equals(right, true);
+          }
+        }.scan(tree, null);
     return result != null && result;
   }
 

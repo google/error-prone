@@ -1521,7 +1521,7 @@ class Test {
   }
 
   @Test
-  public void ifChain_loopContextYield_noError() {
+  public void ifChain_loopContextYieldOut_noError() {
     // Putting a switch in another switch would change the meaning of the `yield`
     helper
         .addSourceLines(
@@ -1555,6 +1555,72 @@ class Test {
   }
 
   @Test
+  public void ifChain_loopContextYield_error() {
+    // So long as the yield is internal to an if block, it's OK.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                switch (s) {
+                  default -> {
+                    if (s == Suit.DIAMOND) {
+                      throw new AssertionError("Diamond");
+                    } else if (s instanceof Suit r) {
+                      throw new AssertionError("Club");
+                    } else if (Suit.HEART == s) {
+                      throw new AssertionError("Heart");
+                    } else if (Suit.SPADE == s) {
+                      int x =
+                          switch (s) {
+                            case Suit.SPADE -> {
+                              yield 1;
+                            }
+                            default -> throw new AssertionError("Default");
+                          };
+                      System.out.println("Spade " + x);
+                    }
+                  }
+                }
+                ;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+class Test {
+  public void foo(Suit s) {
+    switch (s) {
+      default -> {
+        switch (s) {
+          case Suit.DIAMOND -> throw new AssertionError("Diamond");
+          case Suit.HEART -> throw new AssertionError("Heart");
+          case Suit.SPADE -> {
+            int x =
+                switch (s) {
+                  case Suit.SPADE -> {
+                    yield 1;
+                  }
+                  default -> throw new AssertionError("Default");
+                };
+            System.out.println("Spade " + x);
+          }
+          case Suit r -> throw new AssertionError("Club");
+        }
+      }
+    }
+    ;
+  }
+}
+""")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
   public void ifChain_loopContextPullUp_noError() {
     // Can't pull up break into switch context
     helper
@@ -1583,6 +1649,190 @@ class Test {
             """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
         .doTest();
+  }
+
+  @Test
+  public void ifChain_loopContextHasBreakOut_noError() {
+    // Can't break out from within if-chain
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                while (true) {
+                  if (s == Suit.DIAMOND) {
+                    System.out.println("Diamond");
+                  } else if (s instanceof Suit r) {
+                    System.out.println("It's some black suit");
+                    break;
+                  } else if (Suit.HEART == s) {
+                    System.out.println("Hearts");
+                  } else if (Suit.SPADE == s) {
+                    System.out.println("Spade");
+                  }
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_loopContextHasLabelledBreakOut_noError() {
+    // Can't labelled break out from within if-chain
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                a:
+                while (true) {
+                  b:
+                  if (s == Suit.DIAMOND) {
+                    System.out.println("Diamond");
+                  } else if (s instanceof Suit r) {
+                    System.out.println("It's some black suit");
+                    break b;
+                  } else if (Suit.HEART == s) {
+                    System.out.println("Hearts");
+                  } else if (Suit.SPADE == s) {
+                    System.out.println("Spade");
+                  }
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_loopContextHasInternalBreak_error() {
+    // As long as control is transferred inside the same if block, break is OK
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                while (true) {
+                  if (s == Suit.DIAMOND) {
+                    System.out.println("Diamond");
+                  } else if (s instanceof Suit r) {
+                    for (int i = 0; i < 10; i++) {
+                      System.out.println("It's some black suit");
+                      if (true) {
+                        break;
+                      }
+                    }
+                  } else if (Suit.HEART == s) {
+                    System.out.println("Hearts");
+                  } else if (Suit.SPADE == s) {
+                    System.out.println("Spade");
+                  }
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                while (true) {
+                  switch (s) {
+                    case Suit.DIAMOND -> System.out.println("Diamond");
+                    case Suit.HEART -> System.out.println("Hearts");
+                    case Suit.SPADE -> System.out.println("Spade");
+                    case Suit r -> {
+                      for (int i = 0; i < 10; i++) {
+                        System.out.println("It's some black suit");
+                        if (true) {
+                          break;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_loopContextHasInternalLabelledBreak_error() {
+    // As long as control is transferred inside the same if block, break is OK
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                a:
+                while (true) {
+                  if (s == Suit.DIAMOND) {
+                    System.out.println("Diamond");
+                  } else if (s instanceof Suit r) {
+                    b:
+                    for (int i = 0; i < 10; i++) {
+                      System.out.println("It's some black suit");
+                      c:
+                      for (int j = 0; j < 10; j++) {
+                        if (true) {
+                          break b;
+                        }
+                      }
+                    }
+                  } else if (Suit.HEART == s) {
+                    System.out.println("Hearts");
+                  } else if (Suit.SPADE == s) {
+                    System.out.println("Spade");
+                  }
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                a:
+                while (true) {
+                  switch (s) {
+                    case Suit.DIAMOND -> System.out.println("Diamond");
+                    case Suit.HEART -> System.out.println("Hearts");
+                    case Suit.SPADE -> System.out.println("Spade");
+                    case Suit r -> {
+                      b:
+                      for (int i = 0; i < 10; i++) {
+                        System.out.println("It's some black suit");
+                        c:
+                        for (int j = 0; j < 10; j++) {
+                          if (true) {
+                            break b;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
   }
 
   @Test
