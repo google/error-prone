@@ -676,12 +676,13 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
-   * Analyzes the supplied case IRs for duplicate constants (either primitives or enum values). If
+   * Analyzes the supplied case IRs for duplicate constants (primitives, enum values, or `null`). If
    * any duplicates are found, returns {@code Optional.empty()}.
    */
   private static Optional<List<CaseIr>> maybeDetectDuplicateConstants(List<CaseIr> cases) {
 
     Set<Object> seenConstants = new HashSet<>();
+    boolean seenNull = false;
 
     for (CaseIr caseIr : cases) {
       if (caseIr.expressionsOptional().isPresent()) {
@@ -702,6 +703,13 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               return Optional.empty();
             }
             seenConstants.add(sym);
+          }
+
+          if (isNull(expression)) {
+            if (seenNull) {
+              return Optional.empty();
+            }
+            seenNull = true;
           }
         }
       }

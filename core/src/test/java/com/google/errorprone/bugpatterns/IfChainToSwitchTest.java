@@ -105,6 +105,39 @@ public final class IfChainToSwitchTest {
   }
 
   @Test
+  public void ifChain_doubleNull_noError() {
+    // Switches cannot contain duplicate `case null` clauses
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              private Object suit;
+
+              public void foo(Suit s) {
+                this.suit = s;
+                System.out.println("yo");
+                if (this./* hi */ suit instanceof String) {
+                  System.out.println("It's a string!");
+                } else if (suit == null) {
+                  System.out.println("It's null 1!");
+                } else if (suit instanceof Number) {
+                  System.out.println("It's a number!");
+                } else if (suit instanceof Suit) {
+                  System.out.println("It's a Suit!");
+                } else if (this.suit == null) {
+                  System.out.println("It's null 2!");
+                } else throw new AssertionError();
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
   public void ifChain_removesTrailing_error() {
     // Removal of unreachable code after the final branch
     refactoringHelper
