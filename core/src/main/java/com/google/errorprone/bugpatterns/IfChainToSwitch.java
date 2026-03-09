@@ -31,6 +31,7 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.sameVariable;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.THROW;
 import static java.lang.Math.max;
@@ -419,6 +420,28 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
+   * Determines whether the given case IR has an "unguarded" pattern. As defined in the JLS,
+   * "unguarded" means that either there is no guard or the guard is the boolean literal `true`.
+   */
+  private static boolean isUnguarded(CaseIr caseIr) {
+    // Not a pattern
+    if (caseIr.instanceOfOptional().isEmpty()) {
+      return false;
+    }
+
+    if (caseIr.guardOptional().isEmpty()) {
+      return true;
+    }
+
+    // Guard is present and is `true`
+    ExpressionTree guard = stripParentheses(caseIr.guardOptional().get());
+    return isBooleanLiteral(guard)
+        && guard instanceof LiteralTree literalTree
+        && literalTree.getValue() instanceof Boolean b
+        && b;
+  }
+
+  /**
    * Analyzes the supplied case IRs for a switch statement for issues related default/unconditional
    * cases. If deemed necessary, this method injects a `default` and/or `case null` into the
    * supplied case IRs. If the supplied case IRs cannot be used to form a syntactically valid switch
@@ -452,7 +475,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             .filter(
                 caseIr ->
                     caseIr.instanceOfOptional().isPresent()
-                        && caseIr.guardOptional().isEmpty()
+                        && isUnguarded(caseIr)
                         && isSubtype(
                             getType(subject),
                             getType(caseIr.instanceOfOptional().get().type()),
@@ -1673,7 +1696,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         boolean isPrimitive = getType(constantExpression).isPrimitive();
         if (isPrimitive) {
           // Guarded patterns cannot dominate primitives
-          if (lhs.guardOptional().isPresent()) {
+          if (!isUnguarded(lhs)) {
             continue;
           }
           if (lhs.instanceOfOptional().isPresent()) {
@@ -1705,7 +1728,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         }
         boolean isEnum = isEnumValue(constantExpression, state);
         if (isEnum) {
-          if (lhs.guardOptional().isPresent()) {
+          if (!isUnguarded(lhs)) {
             // Guarded patterns cannot dominate enum values
             continue;
           }
@@ -1726,7 +1749,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         // RHS must be a reference
         // The rhs-reference code would be needed to support e.g. String literals.  It is included
         // for completeness.
-        if (lhs.guardOptional().isPresent()) {
+        if (!isUnguarded(lhs)) {
           // Guarded patterns cannot dominate references
           continue;
         }
@@ -1757,7 +1780,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     }
 
     // RHS must be a pattern
-    if (lhs.guardOptional().isPresent()) {
+    if (!isUnguarded(lhs)) {
       // LHS has a guard, so cannot dominate RHS
       return false;
     }
