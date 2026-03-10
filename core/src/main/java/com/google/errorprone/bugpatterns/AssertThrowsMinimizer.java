@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -240,6 +241,11 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
           default -> false;
         };
     if (unqualifiedIdentifier && getSymbol(tree).getKind() == ElementKind.FIELD) {
+      return false;
+    }
+    if (constValue(tree) != null) {
+      // Allow anything with a compile-time constant value. constantExpressions doesn't cover
+      // constant fields and string concatenation.
       return false;
     }
     // This is an imperfect heuristic. These expressions aren't guaranteed not to throw, but may be

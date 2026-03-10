@@ -406,4 +406,29 @@ public class AssertThrowsMinimizerTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void constValue() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+            import java.util.List;
+            import java.util.ArrayList;
+
+            class Test {
+
+              private static final String CONST = "hello";
+
+              void f() {
+                List<String> list = new ArrayList<>();
+                assertThrows(IllegalStateException.class, () -> list.add(CONST));
+                assertThrows(IllegalStateException.class, () -> list.add(CONST + "world"));
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }
