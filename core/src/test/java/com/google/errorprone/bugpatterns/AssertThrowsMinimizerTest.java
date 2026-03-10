@@ -36,8 +36,10 @@ public class AssertThrowsMinimizerTest {
                 static Builder builder() {
                   return null;
                 }
+
                 interface Builder {
                   Builder setBar(Bar bar);
+
                   Foo build();
                 }
               }
@@ -46,7 +48,30 @@ public class AssertThrowsMinimizerTest {
           .addInputLines(
               "Bar.java",
               """
-              class Bar {
+              class Bar {}
+              """)
+          .expectUnchanged()
+          .addInputLines(
+              "Helper.java",
+              """
+              class Helper {
+                void consume(int i) {}
+
+                static int onlyUnchecked() {
+                  return 0;
+                }
+
+                static int checked() throws java.io.IOException {
+                  return 1;
+                }
+
+                static int otherChecked() throws java.sql.SQLException {
+                  return 2;
+                }
+
+                static int bothChecked() throws java.io.IOException, java.sql.SQLException {
+                  return 3;
+                }
               }
               """)
           .expectUnchanged();
@@ -272,6 +297,135 @@ public class AssertThrowsMinimizerTest {
             """)
         .expectUnchanged()
         .doTest();
+  }
+
+  @Test
+  public void checkedException_argOnlyThrowsUnchecked_noHoist() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+            import java.io.IOException;
+
+            class Test {
+              void f(Helper helper) {
+                assertThrows(IOException.class, () -> helper.consume(Helper.onlyUnchecked()));
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void uncheckedException_argOnlyThrowsUnchecked_hoist() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f(Helper helper) {
+                assertThrows(RuntimeException.class, () -> helper.consume(Helper.onlyUnchecked()));
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f(Helper helper) {
+                int i = Helper.onlyUnchecked();
+                assertThrows(RuntimeException.class, () -> helper.consume(i));
+              }
+            }
+            """)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void checkedException_argThrowsChecked_hoist() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+            import java.io.IOException;
+
+            class Test {
+              void f(Helper helper) throws Exception {
+                assertThrows(IOException.class, () -> helper.consume(Helper.checked()));
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+            import java.io.IOException;
+
+            class Test {
+              void f(Helper helper) throws Exception {
+                int i = Helper.checked();
+                assertThrows(IOException.class, () -> helper.consume(i));
+              }
+            }
+            """)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void checkedException_argThrowsDifferentChecked_noHoist() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+            import java.io.IOException;
+
+            class Test {
+              void f(Helper helper) throws Exception {
+                assertThrows(IOException.class, () -> helper.consume(Helper.otherChecked()));
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void checkedException_argThrowsMultipleChecked_hoist() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+            import java.io.IOException;
+
+            class Test {
+              void f(Helper helper) throws Exception {
+                assertThrows(IOException.class, () -> helper.consume(Helper.bothChecked()));
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+            import java.io.IOException;
+
+            class Test {
+              void f(Helper helper) throws Exception {
+                int i = Helper.bothChecked();
+                assertThrows(IOException.class, () -> helper.consume(i));
+              }
+            }
+            """)
+        .doTest(TEXT_MATCH);
   }
 
   @Test
