@@ -1229,6 +1229,9 @@ Including the first argument of checkNotNull in the failure message is not usefu
 __[PreferInstanceofOverGetKind](bugpattern/PreferInstanceofOverGetKind)__<br>
 Prefer instanceof over getKind() checks where possible, as these work well with pattern matching instanceofs
 
+__[PreferThrowsTag](bugpattern/PreferThrowsTag)__<br>
+Prefer the @throws javadoc tag instead of @exception.
+
 __[PrimitiveAtomicReference](bugpattern/PrimitiveAtomicReference)__<br>
 Using compareAndSet with boxed primitives is dangerous, as reference rather than value equality is used. Consider using AtomicInteger, AtomicLong, AtomicBoolean from JDK or AtomicDouble from Guava instead.
 
