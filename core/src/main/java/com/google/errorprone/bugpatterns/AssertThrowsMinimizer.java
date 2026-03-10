@@ -26,11 +26,14 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getThrownExceptions;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isCheckedExceptionType;
 import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -55,6 +58,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -153,7 +157,27 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
     if (toFix.isEmpty()) {
       return NO_MATCH;
     }
+
+    ImmutableList<Type> checkedExceptions =
+        toFix.stream()
+            .flatMap(at -> at.toHoist.stream())
+            .flatMap(h -> getThrownExceptions(h.site(), state).stream())
+            .filter(t -> isCheckedExceptionType(t, state))
+            .collect(toImmutableList());
+
     SuggestedFix.Builder fix = SuggestedFix.builder();
+    if (!checkedExceptions.isEmpty()) {
+      Type exceptionType = state.getSymtab().exceptionType;
+      boolean needsThrowable =
+          checkedExceptions.stream()
+              .anyMatch(t -> !state.getTypes().isAssignable(t, exceptionType));
+      addThrows(
+          tree,
+          needsThrowable ? state.getSymtab().throwableType : state.getSymtab().exceptionType,
+          fix,
+          state);
+    }
+
     VariableNamer variableNamer = new VariableNamer(state);
     for (AssertThrows current : toFix) {
       StringBuilder hoistedVariables = new StringBuilder();
@@ -174,6 +198,20 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
       }
     }
     return describeMatch(toFix.getFirst().parent(), fix.build());
+  }
+
+  private void addThrows(
+      MethodTree tree, Type exceptionType, SuggestedFix.Builder fix, VisitorState state) {
+    var types = state.getTypes();
+    if (tree.getThrows().stream().anyMatch(t -> types.isSuperType(getType(t), exceptionType))) {
+      return;
+    }
+    if (tree.getThrows().isEmpty()) {
+      fix.prefixWith(tree.getBody(), " throws " + exceptionType.tsym.getSimpleName());
+    } else {
+      fix.postfixWith(
+          Iterables.getLast(tree.getThrows()), ", " + exceptionType.tsym.getSimpleName());
+    }
   }
 
   private static String receiverVariableName(ExpressionTree tree) {

@@ -275,6 +275,80 @@ public class AssertThrowsMinimizerTest {
   }
 
   @Test
+  public void throwsException() {
+    compilationHelper
+        .addInputLines(
+            "Hoistable.java",
+            """
+            public class Hoistable {
+              public static Hoistable create(Object t) throws Exception {
+                return new Hoistable();
+              }
+
+              public static Object getThing() throws Exception {
+                throw new Exception();
+              }
+
+              public static Object getOtherThing() throws Throwable {
+                throw new Throwable();
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f() {
+                assertThrows(Exception.class, () -> Hoistable.create(Hoistable.getThing()));
+              }
+
+              void g() {
+                assertThrows(Throwable.class, () -> Hoistable.create(Hoistable.getOtherThing()));
+              }
+
+              void h() throws Throwable {
+                assertThrows(Throwable.class, () -> Hoistable.create(Hoistable.getOtherThing()));
+              }
+
+              void i() throws IllegalStateException {
+                assertThrows(Throwable.class, () -> Hoistable.create(Hoistable.getOtherThing()));
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f() throws Exception {
+                Object t = Hoistable.getThing();
+                assertThrows(Exception.class, () -> Hoistable.create(t));
+              }
+
+              void g() throws Throwable {
+                Object t = Hoistable.getOtherThing();
+                assertThrows(Throwable.class, () -> Hoistable.create(t));
+              }
+
+              void h() throws Throwable {
+                Object t = Hoistable.getOtherThing();
+                assertThrows(Throwable.class, () -> Hoistable.create(t));
+              }
+
+              void i() throws IllegalStateException, Throwable {
+                Object t = Hoistable.getOtherThing();
+                assertThrows(Throwable.class, () -> Hoistable.create(t));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void stringWrapper() {
     compilationHelper
         .addInputLines(
