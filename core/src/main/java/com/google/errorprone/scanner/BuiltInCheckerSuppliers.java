@@ -576,6 +576,7 @@ import com.google.errorprone.bugpatterns.javadoc.InvalidThrowsLink;
 import com.google.errorprone.bugpatterns.javadoc.MalformedInlineTag;
 import com.google.errorprone.bugpatterns.javadoc.MissingSummary;
 import com.google.errorprone.bugpatterns.javadoc.NotJavadoc;
+import com.google.errorprone.bugpatterns.javadoc.PreferThrowsTag;
 import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
 import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.UnrecognisedJavadocTag;
@@ -1113,6 +1114,7 @@ public class BuiltInCheckerSuppliers {
           PatternMatchingInstanceof.class,
           PreconditionsCheckNotNullRepeated.class,
           PreferInstanceofOverGetKind.class,
+          PreferThrowsTag.class,
           PrimitiveAtomicReference.class,
           ProtectedMembersInFinalClass.class,
           ProtoDurationGetSecondsGetNano.class,
