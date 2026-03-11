@@ -32,6 +32,8 @@ public class AssertThrowsMinimizerTest {
           .addInputLines(
               "Foo.java",
               """
+              import java.util.function.Supplier;
+
               interface Foo {
                 static Builder builder() {
                   return null;
@@ -40,6 +42,7 @@ public class AssertThrowsMinimizerTest {
                 interface Builder {
                   Builder setBar(Bar bar);
 
+                  Builder setBar(Supplier<Bar> bar);
                   Foo build();
                 }
               }
@@ -584,5 +587,263 @@ public class AssertThrowsMinimizerTest {
             """)
         .expectUnchanged()
         .doTest();
+  }
+
+  @Test
+  public void lambda() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+            import java.util.function.Supplier;
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f() {
+                List<Supplier<String>> list = new ArrayList<>();
+                assertThrows(IllegalStateException.class, () -> list.add(() -> "hello"));
+                assertThrows(IllegalStateException.class, () -> list.add(Test::m));
+              }
+
+              static String m() {
+                return "hello";
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void methodReference() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+            import java.util.function.Supplier;
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f() {
+                Foo.Builder builder = Foo.builder();
+                assertThrows(IllegalStateException.class, () -> builder.setBar(new Test()::m));
+              }
+
+              Bar m() {
+                return null;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+            import java.util.function.Supplier;
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f() {
+                Foo.Builder builder = Foo.builder();
+                Supplier<Bar> bar = new Test()::m;
+                assertThrows(IllegalStateException.class, () -> builder.setBar(bar));
+              }
+
+              Bar m() {
+                return null;
+              }
+            }
+            """)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void newArray() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            abstract class Test {
+              void f() {
+                assertThrows(IllegalStateException.class, () -> doSomething(new String[] {"hello"}));
+                assertThrows(IllegalStateException.class, () -> doSomething(new String[] {getString()}));
+                assertThrows(IllegalStateException.class, () -> doSomething(new String[getDimension()]));
+              }
+
+              abstract void doSomething(String[] array);
+
+              abstract String getString();
+
+              abstract int getDimension();
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            abstract class Test {
+              void f() {
+                assertThrows(IllegalStateException.class, () -> doSomething(new String[] {"hello"}));
+                String[] array = new String[] {getString()};
+                assertThrows(IllegalStateException.class, () -> doSomething(array));
+                String[] array2 = new String[getDimension()];
+                assertThrows(IllegalStateException.class, () -> doSomething(array2));
+              }
+
+              abstract void doSomething(String[] array);
+
+              abstract String getString();
+
+              abstract int getDimension();
+            }
+            """)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void anonymousClass() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+            import java.util.function.Supplier;
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f() {
+                Foo.Builder builder = Foo.builder();
+                assertThrows(
+                    IllegalStateException.class,
+                    () ->
+                        builder.setBar(
+                            new Supplier<Bar>() {
+                              @Override
+                              public Bar get() {
+                                return null;
+                              }
+                            }));
+                assertThrows(
+                    IllegalStateException.class,
+                    () ->
+                        builder.setBar(
+                            new Supplier<Bar>() {
+                              static {
+                                if (true) {
+                                  throw new IllegalStateException();
+                                }
+                              }
+
+                              @Override
+                              public Bar get() {
+                                return null;
+                              }
+                            }));
+                assertThrows(
+                    IllegalStateException.class,
+                    () ->
+                        builder.setBar(
+                            new BarSupplier(new Test()) {
+                              @Override
+                              public Bar get() {
+                                return null;
+                              }
+                            }));
+                assertThrows(
+                    IllegalStateException.class,
+                    () ->
+                        builder.setBar(
+                            new Test().new InstanceBarSupplier() {
+                              @Override
+                              public Bar get() {
+                                return null;
+                              }
+                            }));
+              }
+
+              abstract static class BarSupplier implements Supplier<Bar> {
+                BarSupplier(Test test) {}
+              }
+
+              abstract class InstanceBarSupplier extends BarSupplier {
+                InstanceBarSupplier() {
+                  super(Test.this);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+            import java.util.function.Supplier;
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f() {
+                Foo.Builder builder = Foo.builder();
+                assertThrows(
+                    IllegalStateException.class,
+                    () ->
+                        builder.setBar(
+                            new Supplier<Bar>() {
+                              @Override
+                              public Bar get() {
+                                return null;
+                              }
+                            }));
+                Supplier<Bar> bar =
+                    new Supplier<Bar>() {
+                      static {
+                        if (true) {
+                          throw new IllegalStateException();
+                        }
+                      }
+
+                      @Override
+                      public Bar get() {
+                        return null;
+                      }
+                    };
+                assertThrows(IllegalStateException.class, () -> builder.setBar(bar));
+                BarSupplier bar2 =
+                    new BarSupplier(new Test()) {
+                      @Override
+                      public Bar get() {
+                        return null;
+                      }
+                    };
+                assertThrows(IllegalStateException.class, () -> builder.setBar(bar2));
+                InstanceBarSupplier bar3 =
+                    new Test().new InstanceBarSupplier() {
+                      @Override
+                      public Bar get() {
+                        return null;
+                      }
+                    };
+                assertThrows(IllegalStateException.class, () -> builder.setBar(bar3));
+              }
+
+              abstract static class BarSupplier implements Supplier<Bar> {
+                BarSupplier(Test test) {}
+              }
+
+              abstract class InstanceBarSupplier extends BarSupplier {
+                InstanceBarSupplier() {
+                  super(Test.this);
+                }
+              }
+            }
+            """)
+        .doTest(TEXT_MATCH);
   }
 }

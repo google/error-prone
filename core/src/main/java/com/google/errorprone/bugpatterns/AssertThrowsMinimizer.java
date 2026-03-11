@@ -52,12 +52,15 @@ import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
@@ -190,10 +193,15 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
       StringBuilder hoistedVariables = new StringBuilder();
       for (Hoist hoist : current.toHoist) {
         String identifier = variableNamer.avoidShadowing(hoist.name());
+        Type type =
+            getType(
+                hoist.site() instanceof NewClassTree newClassTree
+                    ? newClassTree.getIdentifier()
+                    : hoist.site());
         hoistedVariables.append(
             String.format(
                 "%s %s = %s;\n",
-                useVarType ? "var" : SuggestedFixes.qualifyType(state, fix, getType(hoist.site())),
+                useVarType ? "var" : SuggestedFixes.qualifyType(state, fix, type),
                 identifier,
                 state.getSourceForNode(hoist.site())));
         fix.replace(hoist.site(), identifier);
@@ -257,9 +265,42 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
     if (isCheckedException(exceptionType, state) && !throwsSubtypeOf(tree, exceptionType, state)) {
       return false;
     }
+    boolean needsHoisting =
+        switch (tree) {
+          case LambdaExpressionTree lambdaExpressionTree -> false;
+          case MemberReferenceTree memberReferenceTree ->
+              needsHoisting(memberReferenceTree.getQualifierExpression(), exceptionType, state);
+          case NewArrayTree newArrayTree ->
+              Stream.concat(
+                      newArrayTree.getDimensions().stream(),
+                      Optional.ofNullable(newArrayTree.getInitializers())
+                          .map(list -> list.stream())
+                          .orElse(Stream.empty()))
+                  .anyMatch(t -> needsHoisting(t, exceptionType, state));
+          case NewClassTree newClassTree -> newClassTreeNeedsHoisting(newClassTree);
+          default -> true;
+        };
+    if (!needsHoisting) {
+      return false;
+    }
     // This is an imperfect heuristic. These expressions aren't guaranteed not to throw, but may be
     // less valuable to hoist.
     return constantExpressions.constantExpression(tree, state).isEmpty();
+  }
+
+  // Allow anonymous implementations of interfaces
+  private boolean newClassTreeNeedsHoisting(NewClassTree tree) {
+    if (tree.getClassBody() == null) {
+      return true;
+    }
+    Symbol sym = getSymbol(tree.getIdentifier());
+    // New class expressions for non-interfaces could throw in constructors or class initializers
+    if (!sym.isInterface()) {
+      return true;
+    }
+    // Hoist implementations that could throw in constructors or class initializers (in static
+    // blocks or field initializers)
+    return !tree.getClassBody().getMembers().stream().allMatch(m -> m instanceof MethodTree);
   }
 
   private static boolean throwsSubtypeOf(
