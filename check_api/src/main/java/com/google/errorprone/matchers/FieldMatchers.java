@@ -90,9 +90,11 @@ public final class FieldMatchers {
       if (symbol == null) {
         return false;
       }
+      ClassSymbol classSymbol = enclosingClass(symbol);
       return symbol.getKind().isField()
+          && classSymbol != null
           && fieldSymbolIsAppropriate(symbol)
-          && classIsAppropriate(enclosingClass(symbol));
+          && classIsAppropriate(classSymbol);
     }
 
     abstract boolean fieldSymbolIsAppropriate(Symbol symbol);
