@@ -338,6 +338,7 @@ import com.google.errorprone.bugpatterns.PublicApiNamedStreamShouldReturnStream;
 import com.google.errorprone.bugpatterns.RandomCast;
 import com.google.errorprone.bugpatterns.RandomModInteger;
 import com.google.errorprone.bugpatterns.ReachabilityFenceUsage;
+import com.google.errorprone.bugpatterns.RecordAccessorInCompactConstructor;
 import com.google.errorprone.bugpatterns.RedundantControlFlow;
 import com.google.errorprone.bugpatterns.RedundantOverride;
 import com.google.errorprone.bugpatterns.RedundantSetterCall;
@@ -851,6 +852,7 @@ public class BuiltInCheckerSuppliers {
           ProvidesNull.class,
           RandomCast.class,
           RandomModInteger.class,
+          RecordAccessorInCompactConstructor.class,
           RectIntersectReturnValueIgnored.class,
           RedundantSetterCall.class,
           RequiredModifiersChecker.class,
