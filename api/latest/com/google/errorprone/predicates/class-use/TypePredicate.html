@@ -187,18 +187,24 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#allOf(com.google.errorprone.predicates.TypePredicate...)" class="member-name-link">allOf</a><wbr>(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>...&nbsp;predicates)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#anyOf(com.google.errorprone.predicates.TypePredicate...)" class="member-name-link">anyOf</a><wbr>(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>...&nbsp;predicates)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#anyOf(com.google.common.collect.ImmutableList)" class="member-name-link">anyOf</a><wbr>(com.google.common.collect.ImmutableList&lt;<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&gt;&nbsp;predicates)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#anything()" class="member-name-link">anything</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#anyOf(com.google.errorprone.predicates.TypePredicate...)" class="member-name-link">anyOf</a><wbr>(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>...&nbsp;predicates)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#anything()" class="member-name-link">anything</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches everything (always <code>true</code>).</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isArray()" class="member-name-link">isArray</a>()</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isArray()" class="member-name-link">isArray</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block">Match arrays.</div>
 </div>
+<div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isArrayOf(com.google.errorprone.predicates.TypePredicate)" class="member-name-link">isArrayOf</a><wbr>(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;predicate)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isDescendantOf(com.google.errorprone.suppliers.Supplier)" class="member-name-link">isDescendantOf</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></div>
 <div class="col-last even-row-color">
@@ -230,11 +236,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Match types that are exactly equal to any of the given types.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#not(com.google.errorprone.predicates.TypePredicate)" class="member-name-link">not</a><wbr>(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;predicate)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isPrimitive()" class="member-name-link">isPrimitive</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#nothing()" class="member-name-link">nothing</a>()</code></div>
-<div class="col-last odd-row-color">
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#not(com.google.errorprone.predicates.TypePredicate)" class="member-name-link">not</a><wbr>(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;predicate)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#nothing()" class="member-name-link">nothing</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches nothing (always <code>false</code>).</div>
 </div>
 </div>
@@ -250,7 +259,19 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#anyOf(com.google.errorprone.predicates.TypePredicate...)" class="member-name-link">anyOf</a><wbr>(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>...&nbsp;predicates)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#not(com.google.errorprone.predicates.TypePredicate)" class="member-name-link">not</a><wbr>(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;predicate)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isArrayOf(com.google.errorprone.predicates.TypePredicate)" class="member-name-link">isArrayOf</a><wbr>(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;predicate)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#not(com.google.errorprone.predicates.TypePredicate)" class="member-name-link">not</a><wbr>(<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;predicate)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+</div>
+<div class="caption"><span>Method parameters in <a href="../package-summary.html">com.google.errorprone.predicates</a> with type arguments of type <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#anyOf(com.google.common.collect.ImmutableList)" class="member-name-link">anyOf</a><wbr>(com.google.common.collect.ImmutableList&lt;<a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&gt;&nbsp;predicates)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
