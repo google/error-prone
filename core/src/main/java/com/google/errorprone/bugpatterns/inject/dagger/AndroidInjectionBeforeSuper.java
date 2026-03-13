@@ -21,12 +21,12 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.variableType;
+import static com.google.errorprone.predicates.TypePredicates.isExactType;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -57,27 +57,27 @@ public final class AndroidInjectionBeforeSuper extends BugChecker implements Met
     ACTIVITY(
         "android.app.Activity",
         "onCreate",
-        ImmutableList.of(variableType(isSameType("android.os.Bundle"))),
+        ImmutableList.of(variableType(isExactType("android.os.Bundle"))),
         "dagger.android.AndroidInjection"),
     FRAMEWORK_FRAGMENT(
         "android.app.Fragment",
         "onAttach",
-        ImmutableList.of(variableType(isSameType("android.content.Context"))),
+        ImmutableList.of(variableType(isExactType("android.content.Context"))),
         "dagger.android.AndroidInjection"),
     FRAMEWORK_FRAGMENT_PRE_API23(
         "android.app.Fragment",
         "onAttach",
-        ImmutableList.of(variableType(isSameType("android.app.Activity"))),
+        ImmutableList.of(variableType(isExactType("android.app.Activity"))),
         "dagger.android.AndroidInjection"),
     SUPPORT_FRAGMENT(
         "android.support.v4.app.Fragment",
         "onAttach",
-        ImmutableList.of(variableType(isSameType("android.content.Context"))),
+        ImmutableList.of(variableType(isExactType("android.content.Context"))),
         "dagger.android.support.AndroidSupportInjection"),
     SUPPORT_FRAGMENT_PRE_API23(
         "android.support.v4.app.Fragment",
         "onAttach",
-        ImmutableList.of(variableType(isSameType("android.app.Activity"))),
+        ImmutableList.of(variableType(isExactType("android.app.Activity"))),
         "dagger.android.support.AndroidSupportInjection"),
     SERVICE(
         "android.app.Service", "onCreate", ImmutableList.of(), "dagger.android.AndroidInjection"),

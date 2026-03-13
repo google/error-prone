@@ -18,6 +18,7 @@ package com.google.errorprone.predicates;
 
 import static com.google.errorprone.suppliers.Suppliers.fromStrings;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.predicates.type.Array;
 import com.google.errorprone.predicates.type.DescendantOf;
 import com.google.errorprone.predicates.type.DescendantOfAny;
@@ -43,6 +44,15 @@ public final class TypePredicates {
   /** Match arrays. */
   public static TypePredicate isArray() {
     return Array.INSTANCE;
+  }
+
+  public static TypePredicate isArrayOf(TypePredicate predicate) {
+    return (type, state) ->
+        state.getTypes().isArray(type) && predicate.apply(state.getTypes().elemtype(type), state);
+  }
+
+  public static TypePredicate isPrimitive() {
+    return (type, state) -> type.isPrimitive();
   }
 
   /** Match types that are exactly equal. */
@@ -87,6 +97,10 @@ public final class TypePredicates {
   }
 
   public static TypePredicate anyOf(TypePredicate... predicates) {
+    return anyOf(ImmutableList.copyOf(predicates));
+  }
+
+  public static TypePredicate anyOf(ImmutableList<TypePredicate> predicates) {
     return (type, state) -> {
       for (TypePredicate predicate : predicates) {
         if (predicate.apply(type, state)) {

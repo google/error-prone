@@ -38,6 +38,8 @@ import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 import static com.google.errorprone.matchers.Matchers.typeCast;
 import static com.google.errorprone.matchers.Matchers.variableInitializer;
 import static com.google.errorprone.matchers.Matchers.variableType;
+import static com.google.errorprone.predicates.TypePredicates.isPrimitive;
+import static com.google.errorprone.predicates.TypePredicates.not;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import static com.sun.source.tree.Tree.Kind.AND_ASSIGNMENT;
 import static com.sun.source.tree.Tree.Kind.DIVIDE_ASSIGNMENT;
@@ -252,7 +254,7 @@ public class NoAllocationChecker extends BugChecker
           anyOf(
               not(enhancedForLoop(anyVariable, arrayExpression, anyStatement)),
               enhancedForLoop(
-                  variableType(not(isPrimitiveType())), primitiveArrayExpression, anyStatement)));
+                  variableType(not(isPrimitive())), primitiveArrayExpression, anyStatement)));
 
   /** Matches boxing assignment. */
   private static final Matcher<AssignmentTree> boxingAssignment =
@@ -267,7 +269,7 @@ public class NoAllocationChecker extends BugChecker
           not(withinThrowOrAnnotation),
           enclosingMethod(noAllocationMethodMatcher),
           variableInitializer(primitiveExpression),
-          variableType(not(isPrimitiveType())));
+          variableType(not(isPrimitive())));
 
   /** Matches boxing by explicit cast. */
   private static final Matcher<TypeCastTree> boxingCast =

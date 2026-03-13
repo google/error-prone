@@ -21,6 +21,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
+import static com.google.errorprone.predicates.TypePredicates.isExactType;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
@@ -1511,7 +1512,7 @@ public class Matchers {
       allOf(
           methodIsNamed("equals"),
           methodHasVisibility(PUBLIC),
-          methodHasParameters(variableType(isSameType("java.lang.Object"))),
+          methodHasParameters(variableType(isExactType("java.lang.Object"))),
           anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
 
   /** Matches {@link Object#equals} method declaration. */

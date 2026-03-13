@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasMethod;
-import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.isStatic;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
@@ -29,6 +28,7 @@ import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.variableType;
+import static com.google.errorprone.predicates.TypePredicates.isExactType;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
@@ -42,6 +42,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
+import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
@@ -68,7 +69,7 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
   private static final Matcher<MethodTree> MATCHER =
       allOf(
           methodIsNamed("equals"),
-          methodHasParameters(variableType(not(isSameType("java.lang.Object")))),
+          methodHasParameters(variableType(TypePredicates.not(isExactType(OBJECT_TYPE)))),
           anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
 
   /** Matches if the enclosing class overrides Object#equals. */
@@ -78,7 +79,7 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
               allOf(
                   methodIsNamed("equals"),
                   methodReturns(BOOLEAN_TYPE),
-                  methodHasParameters(variableType(isSameType(OBJECT_TYPE))),
+                  methodHasParameters(variableType(isExactType(OBJECT_TYPE))),
                   not(isStatic()))));
 
   /**

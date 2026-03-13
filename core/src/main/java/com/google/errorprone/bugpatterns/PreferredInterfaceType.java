@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
+import static com.google.errorprone.matchers.Matchers.typePredicateMatcher;
 import static com.google.errorprone.matchers.Matchers.variableType;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
@@ -51,8 +52,8 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.predicates.TypePredicates;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -122,11 +123,9 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
               isDescendantOf("com.google.common.graph.Network"),
               "com.google.common.graph.ImmutableNetwork"));
 
-  private static final Matcher<Tree> INTERESTING_TYPE =
-      anyOf(
-          BETTER_TYPES.stream()
-              .map(bt -> Matchers.typePredicateMatcher(bt.predicate()))
-              .collect(toImmutableList()));
+  private static final TypePredicate INTERESTING_TYPE =
+      TypePredicates.anyOf(
+          BETTER_TYPES.stream().map(bt -> bt.predicate()).collect(toImmutableList()));
 
   public static final Matcher<Tree> SHOULD_IGNORE =
       anyOf(
@@ -234,7 +233,7 @@ public final class PreferredInterfaceType extends BugChecker implements Compilat
       @Override
       public Void visitMethod(MethodTree node, Void unused) {
         MethodSymbol methodSymbol = getSymbol(node);
-        if (methodReturns(INTERESTING_TYPE).matches(node, state)
+        if (methodReturns(typePredicateMatcher(INTERESTING_TYPE)).matches(node, state)
             && !methodCanBeOverridden(methodSymbol)
             && !SHOULD_IGNORE.matches(node, state)) {
           fixableTypes.put(methodSymbol, node.getReturnType());

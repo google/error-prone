@@ -40,6 +40,7 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Type;
 import javax.lang.model.element.Modifier;
 
 /**
@@ -63,7 +64,8 @@ public class CannotMockFinalClass extends BugChecker
 
   private static final Matcher<VariableTree> variableOfFinalClassAnnotatedMock =
       allOf(
-          variableType(hasModifier(Modifier.FINAL)),
+          variableType(
+              (Type t, VisitorState s) -> t.asElement().getModifiers().contains(Modifier.FINAL)),
           hasAnnotation("org.mockito.Mock"),
           enclosingClassIsJunit4Test);
 
