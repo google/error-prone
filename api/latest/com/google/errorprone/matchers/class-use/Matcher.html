@@ -1185,6 +1185,14 @@ on a tree of <code>type</code> and returns <code>false</code> for all other tree
 <div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#variableType(com.google.errorprone.matchers.Matcher)" class="member-name-link">variableType</a><wbr>(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;treeMatcher)</code></div>
 <div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">this does not handle VariableTrees for implicitly typed lambda parameters, prefer
+    <a href="../Matchers.html#variableType(com.google.errorprone.predicates.TypePredicate)"><code>Matchers.variableType(TypePredicate)</code></a></div>
+</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#variableType(com.google.errorprone.predicates.TypePredicate)" class="member-name-link">variableType</a><wbr>(<a href="../../predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;typePredicate)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches on the type of a VariableTree AST node.</div>
 </div>
 </div>
@@ -1440,7 +1448,10 @@ on a tree of <code>type</code> and returns <code>false</code> for all other tree
 <div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#variableType(com.google.errorprone.matchers.Matcher)" class="member-name-link">variableType</a><wbr>(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;treeMatcher)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Matches on the type of a VariableTree AST node.</div>
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">this does not handle VariableTrees for implicitly typed lambda parameters, prefer
+    <a href="../Matchers.html#variableType(com.google.errorprone.predicates.TypePredicate)"><code>Matchers.variableType(TypePredicate)</code></a></div>
+</div>
 </div>
 </div>
 <div class="caption"><span>Method parameters in <a href="../package-summary.html">com.google.errorprone.matchers</a> with type arguments of type <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a></span></div>

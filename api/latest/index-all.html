@@ -15590,6 +15590,13 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#variableType(com.google.errorprone.matchers.Matcher)" class="member-name-link">variableType(Matcher)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">this does not handle VariableTrees for implicitly typed lambda parameters, prefer
+    <a href="com/google/errorprone/matchers/Matchers.html#variableType(com.google.errorprone.predicates.TypePredicate)"><code>Matchers.variableType(TypePredicate)</code></a></div>
+</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/Matchers.html#variableType(com.google.errorprone.predicates.TypePredicate)" class="member-name-link">variableType(TypePredicate)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
 <div class="block">Matches on the type of a VariableTree AST node.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/Varifier.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">Varifier</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
