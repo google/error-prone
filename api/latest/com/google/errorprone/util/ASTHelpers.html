@@ -306,7 +306,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns a stream of the owner hierarchy starting from <code>sym</code>, as described by <code>Symbol.owner</code>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable com.sun.tools.javac.code.Symbol.PackageSymbol</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Symbol.PackageSymbol&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enclosingPackage(com.sun.tools.javac.code.Symbol)" class="member-name-link">enclosingPackage</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Return the enclosing <code>PackageSymbol</code> of the given symbol, or <code>null</code>.</div>
@@ -1723,7 +1723,7 @@ could not be determined.</div>
 <section class="detail" id="enclosingPackage(com.sun.tools.javac.code.Symbol)">
 <h3>enclosingPackage</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol.PackageSymbol</span>&nbsp;<span class="element-name">enclosingPackage</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Symbol.PackageSymbol&gt;</span>&nbsp;<span class="element-name">enclosingPackage</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol&nbsp;sym)</span></div>
 <div class="block">Return the enclosing <code>PackageSymbol</code> of the given symbol, or <code>null</code>.
 
 <p>Prefer this to <code>Symbol.packge()</code>, which throws a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link"><code>NullPointerException</code></a> for
