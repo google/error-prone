@@ -138,7 +138,9 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
       MethodMatchers.constructor()
           .forClass(
               (type, state) ->
-                  enclosingPackage(type.asElement()).getQualifiedName().contentEquals("java.util"))
+                  enclosingPackage(type.asElement())
+                      .map(p -> p.getQualifiedName().contentEquals("java.util"))
+                      .orElse(false))
           .withNoParameters();
 
   private static final Matcher<ExpressionTree> MAP_OF_ENTRIES =

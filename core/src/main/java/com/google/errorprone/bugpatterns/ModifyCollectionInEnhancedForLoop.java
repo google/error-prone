@@ -81,9 +81,8 @@ public class ModifyCollectionInEnhancedForLoop extends BugChecker
         .anyMatch(
             s ->
                 enclosingPackage(s.asElement())
-                    .getQualifiedName()
-                    .toString()
-                    .startsWith("java.util.concurrent"))) {
+                    .map(p -> p.getQualifiedName().toString().startsWith("java.util.concurrent"))
+                    .orElse(false))) {
       return NO_MATCH;
     }
     if (blockEndsInBreakOrReturn(state)) {

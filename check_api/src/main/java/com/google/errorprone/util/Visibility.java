@@ -91,8 +91,7 @@ public enum Visibility implements Comparable<Visibility> {
     public boolean shouldBeVisible(Symbol symbol, VisitorState state) {
       JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
       PackageSymbol packge = compilationUnit.packge;
-      // TODO(ghm): Should we handle the default (unnamed) package here?
-      return enclosingPackage(symbol).equals(packge);
+      return enclosingPackage(symbol).map(p -> p.equals(packge)).orElse(false);
     }
 
     @Override

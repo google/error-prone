@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Iterables.isEmpty;
-import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.findMatchingMethods;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isCastable;
@@ -38,11 +37,13 @@ import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.inject.Inject;
+import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
 
@@ -290,10 +291,13 @@ public final class TypeCompatibility {
   }
 
   private static String classNamePart(Type type) {
-    String fullClassname = type.asElement().getQualifiedName().toString();
-    String packageName = enclosingPackage(type.asElement()).fullname.toString();
-    String prefix = fullClassname.substring(packageName.length());
-    return prefix.startsWith(".") ? prefix.substring(1) : prefix;
+    Element element = type.asElement();
+    ArrayDeque<Name> parts = new ArrayDeque<>();
+    while (element instanceof ClassSymbol classSymbol) {
+      parts.addFirst(classSymbol.getSimpleName());
+      element = classSymbol.owner;
+    }
+    return String.join(".", parts);
   }
 
   /**

@@ -98,8 +98,9 @@ public final class RefersToDaggerCodegen extends BugChecker implements MethodInv
   }
 
   private static boolean isDaggerInternalClass(ClassSymbol symbol) {
-    return DAGGER_INTERNAL_PACKAGES.contains(
-        enclosingPackage(symbol).getQualifiedName().toString());
+    return enclosingPackage(symbol)
+        .map(p -> DAGGER_INTERNAL_PACKAGES.contains(p.getQualifiedName().toString()))
+        .orElse(false);
   }
 
   private static boolean isAllowedToReferenceDaggerInternals(VisitorState state) {

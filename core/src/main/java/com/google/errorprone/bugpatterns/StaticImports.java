@@ -188,7 +188,7 @@ public final class StaticImports {
           continue;
         case 0:
         case Flags.PROTECTED:
-          if (enclosingPackage(member) != pkg) {
+          if (enclosingPackage(member).orElse(null) != pkg) {
             continue;
           }
           break;

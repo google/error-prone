@@ -284,7 +284,7 @@ public final class NullArgumentForNonNullParameter extends BugChecker
     }
 
     ImmutableSet<Name> packagesWeTrust = NULL_MARKED_PACKAGES_WE_TRUST.get(state);
-    for (sym = enclosingPackage(sym); sym != null; sym = sym.owner) {
+    for (sym = enclosingPackage(sym).orElse(null); sym != null; sym = sym.owner) {
       if (packagesWeTrust.contains(sym.getQualifiedName())) {
         return true;
       }

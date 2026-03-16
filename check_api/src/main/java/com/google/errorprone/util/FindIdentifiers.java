@@ -503,7 +503,7 @@ public final class FindIdentifiers {
         Set<Modifier> modifiers = var.getModifiers();
         // If we're in the same package where var was defined, we can access package-private fields
         // (JLS 6.6.1).
-        if (Objects.equals(enclosingPackage, ASTHelpers.enclosingPackage(var))) {
+        if (Objects.equals(enclosingPackage, ASTHelpers.enclosingPackage(var).orElse(null))) {
           return !modifiers.contains(Modifier.PRIVATE);
         }
 

@@ -41,7 +41,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 
@@ -106,10 +105,10 @@ public final class TimeInStaticInitializer extends BugChecker
       anyOf(
           staticMethod()
               .onClass(
-                  (t, s) -> {
-                    PackageSymbol pkg = enclosingPackage(t.tsym);
-                    return pkg != null && pkg.getQualifiedName().contentEquals("java.time");
-                  })
+                  (t, s) ->
+                      enclosingPackage(t.tsym)
+                          .map(p -> p.getQualifiedName().contentEquals("java.time"))
+                          .orElse(false))
               .named("now"),
           instanceMethod().onDescendantOf("java.time.InstantSource").named("instant"),
           instanceMethod().onDescendantOf("com.google.common.time.TimeSource").named("instant"));
