@@ -323,7 +323,12 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
               .onClass("com.google.net.rpc3.client.RpcClientContext")
               .named("create")
               .withNoParameters(),
+          staticMethod()
+              .onClass("com.google.net.rpc.RpcAuthority")
+              .named("self")
+              .withNoParameters(),
           staticMethod().onClass("java.util.Arrays").named("asList"),
+          // TODO: b/493258197 - immutable collection factories could throw NPEs
           staticMethod()
               .onClassAny(
                   "com.google.common.collect.ImmutableList",
