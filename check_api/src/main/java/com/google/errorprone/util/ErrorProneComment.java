@@ -75,7 +75,8 @@ public final class ErrorProneComment {
     JAVADOC_LINE,
     JAVADOC_BLOCK;
 
-    static ErrorProneCommentStyle from(CommentStyle style) {
+    /** Returns the {@link ErrorProneCommentStyle} for the given {@link CommentStyle}. */
+    public static ErrorProneCommentStyle from(CommentStyle style) {
       return switch (style.name()) {
         case "LINE" -> ErrorProneCommentStyle.LINE;
         case "BLOCK" -> ErrorProneCommentStyle.BLOCK;
