@@ -446,6 +446,10 @@ public class AssertThrowsMinimizerTest {
                 throw new Exception();
               }
 
+              public static Object getThingUnchecked()  {
+                throw new RuntimeException();
+              }
+
               public static Object getOtherThing() throws Throwable {
                 throw new Throwable();
               }
@@ -473,6 +477,10 @@ public class AssertThrowsMinimizerTest {
               void i() throws IllegalStateException {
                 assertThrows(Throwable.class, () -> Hoistable.create(Hoistable.getOtherThing()));
               }
+
+              void j() {
+                assertThrows(Exception.class, () -> Hoistable.create(Hoistable.getThingUnchecked()));
+              }
             }
             """)
         .addOutputLines(
@@ -499,6 +507,11 @@ public class AssertThrowsMinimizerTest {
               void i() throws IllegalStateException, Throwable {
                 Object t = Hoistable.getOtherThing();
                 assertThrows(Throwable.class, () -> Hoistable.create(t));
+              }
+
+              void j() {
+                Object t = Hoistable.getThingUnchecked();
+                assertThrows(Exception.class, () -> Hoistable.create(t));
               }
             }
             """)

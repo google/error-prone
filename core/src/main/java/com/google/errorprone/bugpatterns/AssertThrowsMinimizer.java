@@ -306,8 +306,9 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
   private static boolean throwsSubtypeOf(
       ExpressionTree tree, Type exceptionType, VisitorState state) {
     Types types = state.getTypes();
-    return getThrownExceptions(tree, state).stream()
-        .anyMatch(t -> isCheckedException(t, state) && types.isSubtype(t, exceptionType));
+    return types.isSubtype(state.getSymtab().runtimeExceptionType, exceptionType)
+        || getThrownExceptions(tree, state).stream()
+            .anyMatch(t -> isCheckedException(t, state) && types.isSubtype(t, exceptionType));
   }
 
   private static boolean isCheckedException(Type exception, VisitorState state) {
