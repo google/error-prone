@@ -859,4 +859,51 @@ public class AssertThrowsMinimizerTest {
             """)
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void optional() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            import java.util.Optional;
+
+            abstract class Test {
+              void f() {
+                // This one should probably have been extracted, since it incorrectly passes!
+                assertThrows(NullPointerException.class, () -> doSomething(Optional.of(null)));
+                assertThrows(NullPointerException.class, () -> doSomething(Optional.of("hi")));
+                assertThrows(NullPointerException.class, () -> doSomething(Optional.of(getString())));
+              }
+
+              abstract void doSomething(Optional<String> string);
+
+              abstract String getString();
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            import java.util.Optional;
+
+            abstract class Test {
+              void f() {
+                // This one should probably have been extracted, since it incorrectly passes!
+                assertThrows(NullPointerException.class, () -> doSomething(Optional.of(null)));
+                assertThrows(NullPointerException.class, () -> doSomething(Optional.of("hi")));
+                Optional<String> string = Optional.of(getString());
+                assertThrows(NullPointerException.class, () -> doSomething(string));
+              }
+
+              abstract void doSomething(Optional<String> string);
+
+              abstract String getString();
+            }
+            """)
+        .doTest(TEXT_MATCH);
+  }
 }
