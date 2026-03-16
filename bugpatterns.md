@@ -602,6 +602,9 @@ Arguments are swapped in assertEquals-like call
 __[AssertSameIncompatible](bugpattern/AssertSameIncompatible)__<br>
 The types passed to this assertion are incompatible.
 
+__[AssertThrowsBlockToExpression](bugpattern/AssertThrowsBlockToExpression)__<br>
+assertThrows calls with lambdas containing a single statement can be expressed more concisely
+
 __[AssertThrowsMinimizer](bugpattern/AssertThrowsMinimizer)__<br>
 Minimize the amount of logic in assertThrows
 
