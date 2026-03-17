@@ -31,7 +31,7 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 
 /**
- * Suggests using {@code @throws} instead of {@code @exception} in Javadoc.
+ * Prefer the {@code @throws} tag instead of the {@code @exception} tag.
  *
  * @author kak@google.com (Kurt Alfred Kluever)
  */
@@ -42,28 +42,21 @@ public final class PreferThrowsTag extends BugChecker implements MethodTreeMatch
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     DocTreePath path = Utils.getDocTreePath(state);
     if (path != null) {
-      new ThrowsChecker(state).scan(path, null);
+      new DocTreePathScanner<Void, Void>() {
+        @Override
+        public Void visitThrows(ThrowsTree throwsTree, Void unused) {
+          if (throwsTree.getTagName().equals("exception")) {
+            int startPos = Utils.getStartPosition(throwsTree, state);
+            int endPos = startPos + "@exception".length();
+            state.reportMatch(
+                describeMatch(
+                    diagnosticPosition(getCurrentPath(), state),
+                    replace(startPos, endPos, "@throws")));
+          }
+          return super.visitThrows(throwsTree, null);
+        }
+      }.scan(path, null);
     }
     return Description.NO_MATCH;
-  }
-
-  private final class ThrowsChecker extends DocTreePathScanner<Void, Void> {
-    private final VisitorState state;
-
-    private ThrowsChecker(VisitorState state) {
-      this.state = state;
-    }
-
-    @Override
-    public Void visitThrows(ThrowsTree throwsTree, Void unused) {
-      if (throwsTree.getTagName().equals("exception")) {
-        int startPos = Utils.getStartPosition(throwsTree, state);
-        int endPos = startPos + "@exception".length();
-        state.reportMatch(
-            describeMatch(
-                diagnosticPosition(getCurrentPath(), state), replace(startPos, endPos, "@throws")));
-      }
-      return super.visitThrows(throwsTree, null);
-    }
   }
 }
