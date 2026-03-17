@@ -190,7 +190,7 @@ public final class ConstantExpressions {
   /** Represents a constant expression. */
   public sealed interface ConstantExpression {
     /** Represents a constant literal. */
-    public static record Literal(Object object) implements ConstantExpression {
+    public static record Literal(@Nullable Object object) implements ConstantExpression {
       @Override
       public void accept(ConstantExpressionVisitor visitor) {
         visitor.visitConstant(object());
@@ -198,7 +198,7 @@ public final class ConstantExpressions {
 
       @Override
       public final String toString() {
-        return object().toString();
+        return String.valueOf(object());
       }
     }
 
