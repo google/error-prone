@@ -487,7 +487,7 @@ public class SuggestedFixesTest {
 
             class Test {
               java.util.Map.Entry<String, Integer> f() {
-                // BUG: Diagnostic contains: return (Entry<String,Integer>) null;
+                // BUG: Diagnostic contains: return (Entry<String, Integer>) null;
                 return null;
               }
             }
@@ -503,7 +503,7 @@ public class SuggestedFixesTest {
             """
             class Test {
               java.util.Map.Entry<String, Integer> f() {
-                // BUG: Diagnostic contains: return (Map.Entry<String,Integer>) null;
+                // BUG: Diagnostic contains: return (Map.Entry<String, Integer>) null;
                 return null;
               }
             }
@@ -2642,5 +2642,59 @@ public class Test {
           .map(t -> describeMatch(t, SuggestedFixes.removeElement(t, tree.getArguments(), state)))
           .orElse(NO_MATCH);
     }
+  }
+
+  /** A test check that replaces var with explicit types. */
+  @BugPattern(summary = "Replace var with a type", severity = ERROR)
+  public static class ReplaceVarWithType extends BugChecker
+      implements BugChecker.VariableTreeMatcher {
+
+    @Override
+    public Description matchVariable(VariableTree tree, VisitorState state) {
+      SuggestedFix.Builder fix = SuggestedFix.builder();
+      String replacement = SuggestedFixes.qualifyType(state, fix, ASTHelpers.getType(tree));
+      SuggestedFixes.replaceVariableType(tree, replacement, state).ifPresent(fix::merge);
+      return describeMatch(tree, fix.build());
+    }
+  }
+
+  @Test
+  public void replaceVarWithType() {
+    BugCheckerRefactoringTestHelper.newInstance(ReplaceVarWithType.class, getClass())
+        .addInputLines(
+            "Lib.java",
+            """
+            import java.util.Collection;
+            import java.util.Map;
+
+            abstract class Lib {
+              abstract Map<String, ? extends Collection<?>> getA();
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            abstract class Test extends Lib {
+              void f() {
+                var a = getA();
+                var b = 2;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.Collection;
+            import java.util.Map;
+
+            abstract class Test extends Lib {
+              void f() {
+                Map<String, ? extends Collection<?>> a = getA();
+                int b = 2;
+              }
+            }
+            """)
+        .doTest();
   }
 }

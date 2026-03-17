@@ -139,6 +139,7 @@ import javax.lang.model.element.Name;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.SimpleTypeVisitor8;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -416,6 +417,17 @@ public final class SuggestedFixes {
           }
 
           @Override
+          public String visitWildcard(WildcardType t, SuggestedFix.Builder builder) {
+            if (t.getExtendsBound() != null) {
+              return "? extends " + t.getExtendsBound().accept(this, builder);
+            }
+            if (t.getSuperBound() != null) {
+              return "? super " + t.getSuperBound().accept(this, builder);
+            }
+            return t.toString();
+          }
+
+          @Override
           public String visitDeclared(DeclaredType t, SuggestedFix.Builder builder) {
             String baseType = qualifyType(state, builder, ((Type) t).tsym);
             if (t.getTypeArguments().isEmpty()) {
@@ -426,7 +438,7 @@ public final class SuggestedFixes {
             boolean started = false;
             for (TypeMirror arg : t.getTypeArguments()) {
               if (started) {
-                b.append(',');
+                b.append(", ");
               }
               b.append(arg.accept(this, builder));
               started = true;
