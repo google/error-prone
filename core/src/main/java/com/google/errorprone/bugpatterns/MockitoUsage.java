@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 
 import com.google.errorprone.BugPattern;
@@ -38,12 +37,7 @@ import java.util.List;
 public class MockitoUsage extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> MOCK_METHOD =
-      anyOf(
-          staticMethod().onClass("org.mockito.Mockito").withSignature("<T>when(T)"),
-          staticMethod().onClass("org.mockito.Mockito").withSignature("<T>verify(T)"),
-          staticMethod()
-              .onClass("org.mockito.Mockito")
-              .withSignature("<T>verify(T,org.mockito.verification.VerificationMode)"));
+      staticMethod().onClass("org.mockito.Mockito").namedAnyOf("when", "verify");
 
   private static final Matcher<ExpressionTree> NEVER_METHOD =
       staticMethod().onClass("org.mockito.Mockito").named("never").withNoParameters();
