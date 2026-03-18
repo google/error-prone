@@ -329,10 +329,20 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         sym.getRawAttributes().stream()
             .filter(a -> a.type.tsym.getQualifiedName().equals(name))
             .findAny()
-            // get the annotation value array as a set of Names
-            .flatMap(a -> getAnnotationValue(a, "value"))
+            // get the annotation value array as a set of Names,
+            // normalizing unset value to the empty value
             .map(
-                y -> asStrings(y).map(state::getName).map(Name::toString).collect(toImmutableSet()))
+                a ->
+                    getAnnotationValue(a, "value")
+                        .map(
+                            y ->
+                                asStrings(y)
+                                    .map(state::getName)
+                                    .map(Name::toString)
+                                    .collect(toImmutableSet()))
+                        .orElse(ImmutableSet.of()))
+            // if no explicit method sources were specified, use method name instead
+            .map(names -> names.isEmpty() ? ImmutableSet.of(sym.name.toString()) : names)
             // remove all potentially unused methods referenced by the @MethodSource
             .ifPresent(
                 referencedNames ->
