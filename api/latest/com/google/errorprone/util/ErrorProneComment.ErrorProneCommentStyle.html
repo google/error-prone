@@ -99,7 +99,11 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public static enum </span><span class="element-name type-name-label">ErrorProneComment.ErrorProneCommentStyle</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html" title="class or interface in java.lang" class="external-link">Enum</a>&lt;<a href="ErrorProneComment.ErrorProneCommentStyle.html" title="enum class in com.google.errorprone.util">ErrorProneComment.ErrorProneCommentStyle</a>&gt;</span></div>
-<div class="block">A compatibility wrapper for <code>Tokens.Comment.CommentStyle</code>.</div>
+<div class="block">A compatibility wrapper for <code>Tokens.Comment.CommentStyle</code>.
+
+<p>Directly using <code>Tokens.Comment.CommentStyle</code> would make Error Prone incompatible with older versions
+of javac (which only have <code>LINE</code>, <code>BLOCK</code>, and <code>JAVADOC</code>) and newer versions
+(which add <code>JAVADOC_LINE</code> and rename <code>JAVADOC</code> to <code>JAVADOC_BLOCK</code>).</div>
 </div>
 </section>
 <section class="summary">
