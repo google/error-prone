@@ -52,6 +52,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -66,6 +67,7 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -95,6 +97,7 @@ import org.jspecify.annotations.Nullable;
 public final class TimeUnitMismatch extends BugChecker
     implements AssignmentTreeMatcher,
         BinaryTreeMatcher,
+        MemberReferenceTreeMatcher,
         MethodInvocationTreeMatcher,
         NewClassTreeMatcher,
         ReturnTreeMatcher,
@@ -255,6 +258,19 @@ public final class TimeUnitMismatch extends BugChecker
     return ANY_MATCHES_WERE_ALREADY_REPORTED;
   }
 
+  @Override
+  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
+    if (!checkReturnValues) {
+      return Description.NO_MATCH;
+    }
+    Symbol descriptorSymbol = state.getTypes().findDescriptorSymbol(getType(tree).tsym);
+    if (descriptorSymbol == null) {
+      return Description.NO_MATCH;
+    }
+    check(descriptorSymbol.getSimpleName().toString(), tree, state);
+    return ANY_MATCHES_WERE_ALREADY_REPORTED;
+  }
+
   // check for setTimeoutInSecs(int timeout) where the callsite is millis
   private boolean checkSetterStyleMethod(
       MethodInvocationTree tree, MethodSymbol symbol, VisitorState state) {
@@ -343,7 +359,13 @@ public final class TimeUnitMismatch extends BugChecker
      * TODO(cpovirk): But consider looking at List<Integer> and even String, for which I've seen
      * possible mistakes.
      */
-    if (!NUMERIC_TIME_TYPE.matches(actualTree, state)) {
+    if (actualTree instanceof MemberReferenceTree memberRef) {
+      MethodSymbol descriptorSymbol =
+          (MethodSymbol) state.getTypes().findDescriptorSymbol(getType(memberRef).tsym);
+      if (!descriptorSymbol.getReturnType().isNumeric()) {
+        return false;
+      }
+    } else if (!NUMERIC_TIME_TYPE.matches(actualTree, state)) {
       return false;
     }
 
@@ -442,6 +464,9 @@ public final class TimeUnitMismatch extends BugChecker
     switch (expr) {
       case TypeCastTree typeCast -> {
         return extractArgumentName(typeCast.getExpression());
+      }
+      case MemberReferenceTree memberRef -> {
+        return memberRef.getName().toString();
       }
       case MemberSelectTree memberSelect -> {
         // If we have a field or method access, we use the name of the field/method. (We ignore

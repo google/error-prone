@@ -431,7 +431,31 @@ public class TimeUnitMismatchTest {
               }
 
               void test() {
-                // This should be flagged for consistency with the lambda test case above.
+                // BUG: Diagnostic contains: expected milliseconds but was microseconds
+                MySupplier s2 = this::getMicros;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_nonNumericReturnType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              interface MySupplier {
+                String getMillis();
+              }
+
+              private String getMicros() {
+                return "1";
+              }
+
+              void test() {
+                // Surely cursed, but don't complain: we can't hope to fix non-numbers.
                 MySupplier s2 = this::getMicros;
               }
             }
