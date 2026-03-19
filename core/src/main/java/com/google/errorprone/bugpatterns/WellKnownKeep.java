@@ -64,7 +64,8 @@ public final class WellKnownKeep {
           "org.openqa.selenium.support.FindBys",
           "org.apache.beam.sdk.transforms.DoFn.TimerId",
           "org.apache.beam.sdk.transforms.DoFn.StateId",
-          "org.springframework.boot.test.mock.mockito.MockBean");
+          "org.springframework.boot.test.mock.mockito.MockBean",
+          "org.springframework.test.context.bean.override.mockito.MockitoBean");
 
   /**
    * Annotations that exempt methods from being considered unused.
