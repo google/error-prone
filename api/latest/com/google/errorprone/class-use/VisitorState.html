@@ -112,19 +112,21 @@ injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</d
 <div class="col-last odd-row-color">
 <div class="block">A predicate DSL for matching javac AST nodes.</div>
 </div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.predicates">com.google.errorprone.predicates</a></div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.matchers.method">com.google.errorprone.matchers.method</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.predicates.type">com.google.errorprone.predicates.type</a></div>
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.predicates">com.google.errorprone.predicates</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.predicates.type">com.google.errorprone.predicates.type</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.suppliers">com.google.errorprone.suppliers</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.suppliers">com.google.errorprone.suppliers</a></div>
+<div class="col-last even-row-color">
 <div class="block">Supports matchers, but rather than giving Matcher implementations which are predicates on
 individual AST nodes, a supplier gives contextual information from the traversal of the AST.</div>
 </div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.util">com.google.errorprone.util</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.util">com.google.errorprone.util</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Utility code.</div>
 </div>
 </div>
@@ -5289,6 +5291,22 @@ doReturn(val).when(t)</code>.</div>
 <div class="col-last even-row-color">
 <div class="block">Match a Tree based solely on the Symbol produced by <a href="../util/ASTHelpers.html#getSymbol(com.sun.source.tree.Tree)"><code>ASTHelpers.getSymbol(Tree)</code></a>.</div>
 </div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.matchers.method">
+<h2>Uses of <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a> in <a href="../matchers/method/package-summary.html">com.google.errorprone.matchers.method</a></h2>
+<div class="caption"><span>Methods in <a href="../matchers/method/package-summary.html">com.google.errorprone.matchers.method</a> with parameters of type <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ParameterPredicate.</span><code><a href="../matchers/method/ParameterPredicate.html#matches(com.sun.tools.javac.code.Symbol.VarSymbol,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">matches</a><wbr>(com.sun.tools.javac.code.Symbol.VarSymbol&nbsp;parameter,
+ com.sun.tools.javac.code.Type&nbsp;type,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>

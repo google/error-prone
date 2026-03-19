@@ -64,6 +64,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#withParameters(java.lang.Iterable)" tabindex="0">withParameters(Iterable)</a></li>
 <li><a href="#withParametersOfType(java.lang.Iterable)" tabindex="0">withParametersOfType(Iterable)</a></li>
 <li><a href="#withParametersOfType(com.google.errorprone.suppliers.Supplier,com.google.errorprone.suppliers.Supplier...)" tabindex="0">withParametersOfType(Supplier, Supplier...)</a></li>
+<li><a href="#withParametersMatching(com.google.errorprone.matchers.method.ParameterPredicate,com.google.errorprone.matchers.method.ParameterPredicate...)" tabindex="0">withParametersMatching(ParameterPredicate, ParameterPredicate...)</a></li>
+<li><a href="#withParametersMatching(java.lang.Iterable)" tabindex="0">withParametersMatching(Iterable)</a></li>
 </ol>
 </li>
 </ol>
@@ -120,6 +122,19 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#withParameters(java.lang.String,java.lang.String...)" class="member-name-link">withParameters</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;first,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;rest)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match methods whose formal parameters have the given types.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#withParametersMatching(com.google.errorprone.matchers.method.ParameterPredicate,com.google.errorprone.matchers.method.ParameterPredicate...)" class="member-name-link">withParametersMatching</a><wbr>(<a href="ParameterPredicate.html" title="interface in com.google.errorprone.matchers.method">ParameterPredicate</a>&nbsp;first,
+ <a href="ParameterPredicate.html" title="interface in com.google.errorprone.matchers.method">ParameterPredicate</a>...&nbsp;rest)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match methods whose formal parameters have the given types.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#withParametersMatching(java.lang.Iterable)" class="member-name-link">withParametersMatching</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="ParameterPredicate.html" title="interface in com.google.errorprone.matchers.method">ParameterPredicate</a>&gt;&nbsp;parameters)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match methods whose formal parameters have the given types.</div>
@@ -203,6 +218,33 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
  <a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;...&nbsp;rest)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match methods whose formal parameters have the given types.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withParametersMatching(com.google.errorprone.matchers.method.ParameterPredicate,com.google.errorprone.matchers.method.ParameterPredicate...)">
+<h3>withParametersMatching</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></span>&nbsp;<span class="element-name">withParametersMatching</span><wbr><span class="parameters">(<a href="ParameterPredicate.html" title="interface in com.google.errorprone.matchers.method">ParameterPredicate</a>&nbsp;first,
+ <a href="ParameterPredicate.html" title="interface in com.google.errorprone.matchers.method">ParameterPredicate</a>...&nbsp;rest)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match methods whose formal parameters have the given types.
+
+<p>Unlike other methods for matching on parameters which consider erased types, this method
+provides access to generic types. Note also that other methods like <a href="../../predicates/TypePredicates.html#isExactType(java.lang.String)"><code>TypePredicates.isExactType(String)</code></a> still only compare erased types.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withParametersMatching(java.lang.Iterable)">
+<h3>withParametersMatching</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="MethodMatchers.ParameterMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.ParameterMatcher</a></span>&nbsp;<span class="element-name">withParametersMatching</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="ParameterPredicate.html" title="interface in com.google.errorprone.matchers.method">ParameterPredicate</a>&gt;&nbsp;parameters)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match methods whose formal parameters have the given types.
+
+<p>Unlike other methods for matching on parameters which consider erased types, this method
+provides access to generic types. Note also that other methods like <a href="../../predicates/TypePredicates.html#isExactType(java.lang.String)"><code>TypePredicates.isExactType(String)</code></a> still only compare erased types.</div>
 </div>
 </section>
 </li>
