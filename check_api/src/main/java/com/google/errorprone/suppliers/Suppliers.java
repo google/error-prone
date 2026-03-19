@@ -130,11 +130,15 @@ public final class Suppliers {
 
   public static final Supplier<Type> LONG_TYPE = state -> state.getSymtab().longType;
 
+  public static final Supplier<Type> FLOAT_TYPE = state -> state.getSymtab().floatType;
+
   public static final Supplier<Type> DOUBLE_TYPE = state -> state.getSymtab().doubleType;
 
   public static final Supplier<Type> CHAR_TYPE = state -> state.getSymtab().charType;
 
   public static final Supplier<Type> OBJECT_TYPE = state -> state.getSymtab().objectType;
+
+  public static final Supplier<Type> CLASS_TYPE = state -> state.getSymtab().classType;
 
   public static final Supplier<Type> EXCEPTION_TYPE = state -> state.getSymtab().exceptionType;
 

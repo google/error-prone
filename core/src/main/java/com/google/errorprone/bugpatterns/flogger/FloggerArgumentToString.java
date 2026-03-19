@@ -28,6 +28,17 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.predicates.TypePredicates.isExactType;
+import static com.google.errorprone.predicates.TypePredicates.isPrimitive;
+import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.BYTE_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.CHAR_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.DOUBLE_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.FLOAT_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.LONG_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.SHORT_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
@@ -40,6 +51,8 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.method.ParameterPredicates;
+import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
@@ -142,19 +155,12 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
     // Consider carefully if it's worth doing the char[] variant (Will we format char[] exactly
     // as the corresponding String? How often is it used?)
     STRING_VALUE_OF(
-        anyOf(
-            Stream.of(
-                    "valueOf(boolean)",
-                    "valueOf(char)",
-                    "valueOf(int)",
-                    "valueOf(long)",
-                    "valueOf(float)",
-                    "valueOf(double)",
-                    "valueOf(java.lang.Object)")
-                .map(
-                    signature ->
-                        instanceMethod().onExactClass("java.lang.String").withSignature(signature))
-                .collect(toImmutableList()))) {
+        instanceMethod()
+            .onExactClass("java.lang.String")
+            .named("valueOf")
+            .withParametersMatching(
+                ParameterPredicates.of(
+                    TypePredicates.anyOf(isPrimitive(), isExactType(OBJECT_TYPE))))) {
 
       @Override
       Parameter unwrap(MethodInvocationTree invocation, char placeholder) {
@@ -164,19 +170,24 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
     // Unwrap things like: Integer.toString(n) --> n
     STATIC_TO_STRING(
         anyOf(
-            ImmutableMap.<Class<?>, String>builder()
-                .put(Boolean.class, "toString(boolean)")
-                .put(Character.class, "toString(char)")
-                .put(Byte.class, "toString(byte)")
-                .put(Short.class, "toString(short)")
-                .put(Integer.class, "toString(int)")
-                .put(Long.class, "toString(long)")
-                .put(Float.class, "toString(float)")
-                .put(Double.class, "toString(double)")
+            ImmutableMap.<Class<?>, Supplier<Type>>builder()
+                .put(Boolean.class, BOOLEAN_TYPE)
+                .put(Character.class, CHAR_TYPE)
+                .put(Byte.class, BYTE_TYPE)
+                .put(Short.class, SHORT_TYPE)
+                .put(Integer.class, INT_TYPE)
+                .put(Long.class, LONG_TYPE)
+                .put(Float.class, FLOAT_TYPE)
+                .put(Double.class, DOUBLE_TYPE)
                 .buildOrThrow()
                 .entrySet()
                 .stream()
-                .map(e -> staticMethod().onClass(e.getKey().getName()).withSignature(e.getValue()))
+                .map(
+                    e ->
+                        staticMethod()
+                            .onClass(e.getKey().getName())
+                            .named("toString")
+                            .withParametersOfType(e.getValue()))
                 .collect(toImmutableList()))) {
 
       @Override
@@ -188,19 +199,24 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
     // Note that we could also unwrap unboxing, but this has the effect of removing a null check.
     STATIC_VALUE_OF(
         anyOf(
-            ImmutableMap.<Class<?>, String>builder()
-                .put(Boolean.class, "valueOf(boolean)")
-                .put(Character.class, "valueOf(char)")
-                .put(Byte.class, "valueOf(byte)")
-                .put(Short.class, "valueOf(short)")
-                .put(Integer.class, "valueOf(int)")
-                .put(Long.class, "valueOf(long)")
-                .put(Float.class, "valueOf(float)")
-                .put(Double.class, "valueOf(double)")
+            ImmutableMap.<Class<?>, Supplier<Type>>builder()
+                .put(Boolean.class, BOOLEAN_TYPE)
+                .put(Character.class, CHAR_TYPE)
+                .put(Byte.class, BYTE_TYPE)
+                .put(Short.class, SHORT_TYPE)
+                .put(Integer.class, INT_TYPE)
+                .put(Long.class, LONG_TYPE)
+                .put(Float.class, FLOAT_TYPE)
+                .put(Double.class, DOUBLE_TYPE)
                 .buildOrThrow()
                 .entrySet()
                 .stream()
-                .map(e -> staticMethod().onClass(e.getKey().getName()).withSignature(e.getValue()))
+                .map(
+                    e ->
+                        staticMethod()
+                            .onClass(e.getKey().getName())
+                            .named("valueOf")
+                            .withParametersOfType(e.getValue()))
                 .collect(toImmutableList()))) {
 
       @Override
@@ -236,13 +252,18 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
     },
     STATIC_TO_HEX_STRING(
         anyOf(
-            ImmutableMap.<Class<?>, String>builder()
-                .put(Integer.class, "toHexString(int)")
-                .put(Long.class, "toHexString(long)")
+            ImmutableMap.<Class<?>, Supplier<Type>>builder()
+                .put(Integer.class, INT_TYPE)
+                .put(Long.class, LONG_TYPE)
                 .buildOrThrow()
                 .entrySet()
                 .stream()
-                .map(e -> staticMethod().onClass(e.getKey().getName()).withSignature(e.getValue()))
+                .map(
+                    e ->
+                        staticMethod()
+                            .onClass(e.getKey().getName())
+                            .named("toHexString")
+                            .withParametersOfType(e.getValue()))
                 .collect(toImmutableList()))) {
 
       @Override

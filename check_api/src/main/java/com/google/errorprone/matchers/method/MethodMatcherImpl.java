@@ -38,6 +38,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Iterator;
 import java.util.List;
@@ -220,8 +221,6 @@ final class MethodMatcherImpl
 
   @Override
   public MethodSignatureMatcher withSignature(String signature) {
-    // TODO(cushon): build a way to match signatures (including varargs ones!) that doesn't
-    // rely on MethodSymbol#toString().
     return append(
         (m, s) ->
             m.sym().getSimpleName().contentEquals(signature)
@@ -265,6 +264,32 @@ final class MethodMatcherImpl
   @Override
   public ParameterMatcher withParametersOfType(Supplier<Type> first, Supplier<Type>... rest) {
     return withParametersOfType(Lists.asList(first, rest));
+  }
+
+  @Override
+  public ParameterMatcher withParametersMatching(
+      ParameterPredicate first, ParameterPredicate... rest) {
+    return withParametersMatching(Lists.asList(first, rest));
+  }
+
+  @Override
+  public ParameterMatcher withParametersMatching(Iterable<ParameterPredicate> expected) {
+    return append(
+        (method, state) -> {
+          List<VarSymbol> actual = method.sym().getParameters();
+          if (actual.size() != Iterables.size(expected)) {
+            return false;
+          }
+          Iterator<VarSymbol> ax = actual.iterator();
+          Iterator<ParameterPredicate> bx = expected.iterator();
+          while (ax.hasNext()) {
+            VarSymbol parameter = ax.next();
+            if (!bx.next().matches(parameter, parameter.type, state)) {
+              return false;
+            }
+          }
+          return true;
+        });
   }
 
   @Override

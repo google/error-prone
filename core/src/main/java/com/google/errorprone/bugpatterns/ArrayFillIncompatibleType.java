@@ -19,6 +19,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.arrayOf;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -46,10 +49,12 @@ public class ArrayFillIncompatibleType extends BugChecker implements MethodInvoc
       anyOf(
           staticMethod()
               .onClass("java.util.Arrays")
-              .withSignature("fill(java.lang.Object[],java.lang.Object)"),
+              .named("fill")
+              .withParametersOfType(arrayOf(OBJECT_TYPE), OBJECT_TYPE),
           staticMethod()
               .onClass("java.util.Arrays")
-              .withSignature("fill(java.lang.Object[],int,int,java.lang.Object)"));
+              .named("fill")
+              .withParametersOfType(arrayOf(OBJECT_TYPE), INT_TYPE, INT_TYPE, OBJECT_TYPE));
 
   @Override
   public Description matchMethodInvocation(

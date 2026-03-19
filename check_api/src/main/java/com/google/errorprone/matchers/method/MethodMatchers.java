@@ -18,6 +18,7 @@ package com.google.errorprone.matchers.method;
 
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
@@ -189,6 +190,24 @@ public final class MethodMatchers {
 
     /** Match methods whose formal parameters have the given types. */
     ParameterMatcher withParametersOfType(Supplier<Type> first, Supplier<Type>... rest);
+
+    /**
+     * Match methods whose formal parameters have the given types.
+     *
+     * <p>Unlike other methods for matching on parameters which consider erased types, this method
+     * provides access to generic types. Note also that other methods like {@link
+     * TypePredicates#isExactType} still only compare erased types.
+     */
+    ParameterMatcher withParametersMatching(ParameterPredicate first, ParameterPredicate... rest);
+
+    /**
+     * Match methods whose formal parameters have the given types.
+     *
+     * <p>Unlike other methods for matching on parameters which consider erased types, this method
+     * provides access to generic types. Note also that other methods like {@link
+     * TypePredicates#isExactType} still only compare erased types.
+     */
+    ParameterMatcher withParametersMatching(Iterable<ParameterPredicate> parameters);
   }
 
   /**

@@ -20,6 +20,9 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.method.ParameterPredicates.onlyTypeParameter;
+import static com.google.errorprone.predicates.TypePredicates.isExactType;
+import static com.google.errorprone.suppliers.Suppliers.CLASS_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.stream.Collectors.joining;
@@ -32,6 +35,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.MethodMatchers;
+import com.google.errorprone.matchers.method.ParameterPredicates;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -49,7 +53,9 @@ public class RobolectricShadowDirectlyOn extends BugChecker implements MethodInv
   private static final Matcher<ExpressionTree> MATCHER =
       MethodMatchers.staticMethod()
           .onClass("org.robolectric.shadow.api.Shadow")
-          .withSignature("<T>directlyOn(T,java.lang.Class<T>)");
+          .named("directlyOn")
+          .withParametersMatching(
+              onlyTypeParameter(), ParameterPredicates.of(isExactType(CLASS_TYPE)));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

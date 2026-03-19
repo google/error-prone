@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.methodInvocation;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
+import static com.google.errorprone.suppliers.Suppliers.CLASS_TYPE;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -104,13 +105,11 @@ public class BindingToUnqualifiedCommonType extends BugChecker
               .namedAnyOf("to", "toInstance", "toProvider", "toConstructor"),
           receiverOfInvocation(
               methodInvocation(
-                  anyOf(
-                      instanceMethod()
-                          .onDescendantOf("com.google.inject.AbstractModule")
-                          .withSignature("<T>bind(java.lang.Class<T>)"),
-                      instanceMethod()
-                          .onDescendantOf("com.google.inject.Binder")
-                          .withSignature("<T>bind(java.lang.Class<T>)")),
+                  instanceMethod()
+                      .onDescendantOfAny(
+                          "com.google.inject.AbstractModule", "com.google.inject.Binder")
+                      .named("bind")
+                      .withParametersOfType(CLASS_TYPE),
                   MatchType.ALL,
                   classLiteral(IS_SIMPLE_TYPE))));
 
