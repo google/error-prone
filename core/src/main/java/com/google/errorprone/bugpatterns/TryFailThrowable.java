@@ -101,29 +101,26 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
           isSameType("junit.framework.AssertionFailedError"));
 
   private static final Matcher<ExpressionTree> failOrAssert =
-      new Matcher<ExpressionTree>() {
-        @Override
-        public boolean matches(ExpressionTree item, VisitorState state) {
-          if (!(item instanceof MethodInvocationTree)) {
-            return false;
-          }
-          Symbol sym = getSymbol(item);
-          if (!(sym instanceof MethodSymbol)) {
-            throw new IllegalArgumentException("not a method call");
-          }
-          if (!isStatic(sym)) {
-            return false;
-          }
-
-          String methodName = sym.getQualifiedName().toString();
-          String className = sym.owner.getQualifiedName().toString();
-          // TODO(cpovirk): Look for literal "throw new AssertionError()," etc.
-          return (methodName.startsWith("assert") || methodName.startsWith("fail"))
-              && (className.equals("org.junit.Assert")
-                  || className.equals("junit.framework.Assert")
-                  || className.equals("junit.framework.TestCase")
-                  || className.endsWith("MoreAsserts"));
+      (ExpressionTree item, VisitorState state) -> {
+        if (!(item instanceof MethodInvocationTree)) {
+          return false;
         }
+        Symbol sym = getSymbol(item);
+        if (!(sym instanceof MethodSymbol)) {
+          throw new IllegalArgumentException("not a method call");
+        }
+        if (!isStatic(sym)) {
+          return false;
+        }
+
+        String methodName = sym.getQualifiedName().toString();
+        String className = sym.owner.getQualifiedName().toString();
+        // TODO(cpovirk): Look for literal "throw new AssertionError()," etc.
+        return (methodName.startsWith("assert") || methodName.startsWith("fail"))
+            && (className.equals("org.junit.Assert")
+                || className.equals("junit.framework.Assert")
+                || className.equals("junit.framework.TestCase")
+                || className.endsWith("MoreAsserts"));
       };
 
   @Override

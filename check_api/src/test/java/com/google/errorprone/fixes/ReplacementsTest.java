@@ -61,11 +61,8 @@ public class ReplacementsTest {
   }
 
   private static final Function<Replacement, Range<Integer>> AS_RANGES =
-      new Function<Replacement, Range<Integer>>() {
-        @Override
-        public Range<Integer> apply(Replacement replacement) {
-          return replacement.range();
-        }
+      (Replacement replacement) -> {
+        return replacement.range();
       };
 
   @Test

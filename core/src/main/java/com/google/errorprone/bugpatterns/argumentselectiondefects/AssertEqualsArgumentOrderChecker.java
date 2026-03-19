@@ -84,37 +84,33 @@ public final class AssertEqualsArgumentOrderChecker extends BugChecker
    * perfect match otherwise we return a distance of 1.
    */
   private static Function<ParameterPair, Double> buildDistanceFunction() {
-    return new Function<ParameterPair, Double>() {
+    return (ParameterPair parameterPair) -> {
+      Parameter formal = parameterPair.formal();
+      Parameter actual = parameterPair.actual();
+      String formalName = formal.name();
+      String actualName = actual.name();
 
-      @Override
-      public Double apply(ParameterPair parameterPair) {
-        Parameter formal = parameterPair.formal();
-        Parameter actual = parameterPair.actual();
-        String formalName = formal.name();
-        String actualName = actual.name();
-
-        if (formalName.equals("expected")) {
-          if (actual.constant() || isEnumIdentifier(actual)) {
-            return 0.0;
-          }
-          if (actualName.startsWith("expected")) {
-            return 0.0;
-          }
-          return 1.0;
+      if (formalName.equals("expected")) {
+        if (actual.constant() || isEnumIdentifier(actual)) {
+          return 0.0;
         }
-
-        if (formalName.equals("actual")) {
-          if (actual.constant() || isEnumIdentifier(actual)) {
-            return 1.0;
-          }
-          if (actualName.startsWith("actual")) {
-            return 0.0;
-          }
-          return 1.0;
+        if (actualName.startsWith("expected")) {
+          return 0.0;
         }
-
-        return formal.index() == actual.index() ? 0.0 : Double.POSITIVE_INFINITY;
+        return 1.0;
       }
+
+      if (formalName.equals("actual")) {
+        if (actual.constant() || isEnumIdentifier(actual)) {
+          return 1.0;
+        }
+        if (actualName.startsWith("actual")) {
+          return 0.0;
+        }
+        return 1.0;
+      }
+
+      return formal.index() == actual.index() ? 0.0 : Double.POSITIVE_INFINITY;
     };
   }
 

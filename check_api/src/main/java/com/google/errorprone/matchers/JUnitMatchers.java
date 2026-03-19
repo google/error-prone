@@ -220,31 +220,28 @@ public final class JUnitMatchers {
    * expects tests to be annotated with @Test.
    */
   public static Matcher<ExpressionTree> isJUnit4TestRunnerOfType(Iterable<String> runnerTypes) {
-    return new Matcher<ExpressionTree>() {
-      @Override
-      public boolean matches(ExpressionTree t, VisitorState state) {
-        Type type = ASTHelpers.getType(t);
-        // Expect a class type.
-        if (!(type instanceof ClassType)) {
-          return false;
-        }
-        // Expect one type argument, the type of the JUnit class runner to use.
-        com.sun.tools.javac.util.List<Type> typeArgs = type.getTypeArguments();
-        if (typeArgs.size() != 1) {
-          return false;
-        }
-        Type runnerType = getOnlyElement(typeArgs);
-        for (String testRunner : runnerTypes) {
-          Symbol parent = state.getSymbolFromString(testRunner);
-          if (parent == null) {
-            continue;
-          }
-          if (runnerType.tsym.isSubClass(parent, state.getTypes())) {
-            return true;
-          }
-        }
+    return (ExpressionTree t, VisitorState state) -> {
+      Type type = ASTHelpers.getType(t);
+      // Expect a class type.
+      if (!(type instanceof ClassType)) {
         return false;
       }
+      // Expect one type argument, the type of the JUnit class runner to use.
+      com.sun.tools.javac.util.List<Type> typeArgs = type.getTypeArguments();
+      if (typeArgs.size() != 1) {
+        return false;
+      }
+      Type runnerType = getOnlyElement(typeArgs);
+      for (String testRunner : runnerTypes) {
+        Symbol parent = state.getSymbolFromString(testRunner);
+        if (parent == null) {
+          continue;
+        }
+        if (runnerType.tsym.isSubClass(parent, state.getTypes())) {
+          return true;
+        }
+      }
+      return false;
     };
   }
 

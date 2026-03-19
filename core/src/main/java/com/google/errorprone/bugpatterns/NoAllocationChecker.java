@@ -185,28 +185,25 @@ public class NoAllocationChecker extends BugChecker
    * below it.
    */
   private static final Matcher<Tree> withinThrowOrAnnotation =
-      new Matcher<Tree>() {
-        @Override
-        public boolean matches(Tree tree, VisitorState state) {
-          // TODO(agoode): Make this accept statements in a block that definitely will lead to a
-          // throw.
-          TreePath path = state.getPath().getParentPath();
-          while (path != null) {
-            Tree node = path.getLeaf();
-            state = state.withPath(path);
-            switch (node.getKind()) {
-              case METHOD -> {
-                // We've gotten to the top of the method without finding a throw.
-                return false;
-              }
-              case THROW, ANNOTATION -> {
-                return true;
-              }
-              default -> path = path.getParentPath();
+      (Tree tree, VisitorState state) -> {
+        // TODO(agoode): Make this accept statements in a block that definitely will lead to a
+        // throw.
+        TreePath path = state.getPath().getParentPath();
+        while (path != null) {
+          Tree node = path.getLeaf();
+          state = state.withPath(path);
+          switch (node.getKind()) {
+            case METHOD -> {
+              // We've gotten to the top of the method without finding a throw.
+              return false;
             }
+            case THROW, ANNOTATION -> {
+              return true;
+            }
+            default -> path = path.getParentPath();
           }
-          return false;
         }
+        return false;
       };
 
   /**
@@ -288,71 +285,65 @@ public class NoAllocationChecker extends BugChecker
 
   /** Matches boxing by method invocation, including varargs. */
   private static final Matcher<MethodInvocationTree> boxingInvocation =
-      new Matcher<MethodInvocationTree>() {
-        @Override
-        public boolean matches(MethodInvocationTree tree, VisitorState state) {
-          if (!enclosingMethod(noAllocationMethodMatcher).matches(tree, state)) {
-            return false;
-          }
+      (MethodInvocationTree tree, VisitorState state) -> {
+        if (!enclosingMethod(noAllocationMethodMatcher).matches(tree, state)) {
+          return false;
+        }
 
-          // Get the arguments.
-          JCMethodInvocation methodInvocation = (JCMethodInvocation) tree;
-          List<JCExpression> arguments = methodInvocation.getArguments();
+        // Get the arguments.
+        JCMethodInvocation methodInvocation = (JCMethodInvocation) tree;
+        List<JCExpression> arguments = methodInvocation.getArguments();
 
-          // Get the parameters.
-          MethodSymbol methodSymbol = ASTHelpers.getSymbol(tree);
-          List<VarSymbol> params = methodSymbol.getParameters();
+        // Get the parameters.
+        MethodSymbol methodSymbol = ASTHelpers.getSymbol(tree);
+        List<VarSymbol> params = methodSymbol.getParameters();
 
-          // If there is a length mismatch, this implies varargs boxing.
-          if (arguments.size() != params.size()) {
+        // If there is a length mismatch, this implies varargs boxing.
+        if (arguments.size() != params.size()) {
+          return true;
+        }
+
+        // Check for boxing at each argument.
+        int numArgs = arguments.size();
+        int i = 0;
+        Iterator<JCExpression> argument = arguments.iterator();
+        Iterator<VarSymbol> param = params.iterator();
+        while (param.hasNext() && argument.hasNext()) {
+          JCExpression a = argument.next();
+          VarSymbol p = param.next();
+
+          if (a.type.isPrimitive() && !p.type.isPrimitive()) {
+            // Boxing occurs here.
             return true;
           }
 
-          // Check for boxing at each argument.
-          int numArgs = arguments.size();
-          int i = 0;
-          Iterator<JCExpression> argument = arguments.iterator();
-          Iterator<VarSymbol> param = params.iterator();
-          while (param.hasNext() && argument.hasNext()) {
-            JCExpression a = argument.next();
-            VarSymbol p = param.next();
-
-            if (a.type.isPrimitive() && !p.type.isPrimitive()) {
-              // Boxing occurs here.
-              return true;
-            }
-
-            // Check last parameter. If it's a varargs parameter, ensure no boxing by making sure
-            // it's assignable.
-            if (i == numArgs - 1
-                && methodSymbol.isVarArgs()
-                && p.type instanceof ArrayType
-                && !state.getTypes().isAssignable(a.type, p.type)) {
-              return true;
-            }
-            i++;
+          // Check last parameter. If it's a varargs parameter, ensure no boxing by making sure
+          // it's assignable.
+          if (i == numArgs - 1
+              && methodSymbol.isVarArgs()
+              && p.type instanceof ArrayType
+              && !state.getTypes().isAssignable(a.type, p.type)) {
+            return true;
           }
-
-          return false;
+          i++;
         }
+
+        return false;
       };
 
   /** Matches boxing by unary operator. */
   private static final Matcher<UnaryTree> boxingUnary =
-      new Matcher<UnaryTree>() {
-        @Override
-        public boolean matches(UnaryTree tree, VisitorState state) {
-          return allOf(
-                      not(withinThrowOrAnnotation),
-                      enclosingMethod(noAllocationMethodMatcher),
-                      anyOf(
-                          kindIs(POSTFIX_DECREMENT),
-                          kindIs(POSTFIX_INCREMENT),
-                          kindIs(PREFIX_DECREMENT),
-                          kindIs(PREFIX_INCREMENT)))
-                  .matches(tree, state)
-              && not(isPrimitiveType()).matches(tree, state);
-        }
+      (UnaryTree tree, VisitorState state) -> {
+        return allOf(
+                    not(withinThrowOrAnnotation),
+                    enclosingMethod(noAllocationMethodMatcher),
+                    anyOf(
+                        kindIs(POSTFIX_DECREMENT),
+                        kindIs(POSTFIX_INCREMENT),
+                        kindIs(PREFIX_DECREMENT),
+                        kindIs(PREFIX_INCREMENT)))
+                .matches(tree, state)
+            && not(isPrimitiveType()).matches(tree, state);
       };
 
   @Override

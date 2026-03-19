@@ -50,12 +50,9 @@ public class InjectedConstructorAnnotations extends BugChecker implements Method
 
   // A matcher of binding annotations
   private static final Matcher<AnnotationTree> BINDING_ANNOTATION_MATCHER =
-      new Matcher<AnnotationTree>() {
-        @Override
-        public boolean matches(AnnotationTree annotationTree, VisitorState state) {
-          return symbolHasAnnotation(GUICE_BINDING_ANNOTATION)
-              .matches(annotationTree.getAnnotationType(), state);
-        }
+      (AnnotationTree annotationTree, VisitorState state) -> {
+        return symbolHasAnnotation(GUICE_BINDING_ANNOTATION)
+            .matches(annotationTree.getAnnotationType(), state);
       };
 
   /**

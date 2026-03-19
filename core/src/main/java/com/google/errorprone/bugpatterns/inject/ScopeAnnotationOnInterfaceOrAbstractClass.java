@@ -45,12 +45,9 @@ public class ScopeAnnotationOnInterfaceOrAbstractClass extends BugChecker
     implements AnnotationTreeMatcher {
 
   private static final Matcher<ClassTree> INTERFACE_AND_ABSTRACT_TYPE_MATCHER =
-      new Matcher<ClassTree>() {
-        @Override
-        public boolean matches(ClassTree classTree, VisitorState state) {
-          return classTree.getModifiers().getFlags().contains(ABSTRACT)
-              || (ASTHelpers.getSymbol(classTree).flags() & Flags.INTERFACE) != 0;
-        }
+      (ClassTree classTree, VisitorState state) -> {
+        return classTree.getModifiers().getFlags().contains(ABSTRACT)
+            || (ASTHelpers.getSymbol(classTree).flags() & Flags.INTERFACE) != 0;
       };
 
   @Override

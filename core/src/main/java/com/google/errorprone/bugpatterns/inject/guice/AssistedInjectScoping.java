@@ -69,20 +69,17 @@ public class AssistedInjectScoping extends BugChecker implements ClassTreeMatche
    * constructor and at least one constructor is annotated with @AssistedInject.
    */
   private static final Matcher<ClassTree> HAS_ASSISTED_CONSTRUCTOR =
-      new Matcher<ClassTree>() {
-        @Override
-        public boolean matches(ClassTree classTree, VisitorState state) {
-          MultiMatchResult<MethodTree> injectedConstructors =
-              CLASS_TO_INJECTED_CONSTRUCTORS.multiMatchResult(classTree, state);
-          if (injectedConstructors.matches()) {
-            // Check constructor with @Inject annotation for parameter with @Assisted annotation.
-            return methodHasParameters(AT_LEAST_ONE, hasAnnotation(ASSISTED_ANNOTATION))
-                .matches(injectedConstructors.matchingNodes().getFirst(), state);
-          }
-
-          return constructor(AT_LEAST_ONE, hasAnnotation(ASSISTED_INJECT_ANNOTATION))
-              .matches(classTree, state);
+      (ClassTree classTree, VisitorState state) -> {
+        MultiMatchResult<MethodTree> injectedConstructors =
+            CLASS_TO_INJECTED_CONSTRUCTORS.multiMatchResult(classTree, state);
+        if (injectedConstructors.matches()) {
+          // Check constructor with @Inject annotation for parameter with @Assisted annotation.
+          return methodHasParameters(AT_LEAST_ONE, hasAnnotation(ASSISTED_ANNOTATION))
+              .matches(injectedConstructors.matchingNodes().getFirst(), state);
         }
+
+        return constructor(AT_LEAST_ONE, hasAnnotation(ASSISTED_INJECT_ANNOTATION))
+            .matches(classTree, state);
       };
 
   @Override
