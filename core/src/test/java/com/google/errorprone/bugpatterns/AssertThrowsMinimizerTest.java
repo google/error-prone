@@ -906,4 +906,110 @@ public class AssertThrowsMinimizerTest {
             """)
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void varArgs() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+            import java.util.function.Supplier;
+            import static org.junit.Assert.assertThrows;
+
+            abstract class Test {
+              void f() {
+                assertThrows(IllegalStateException.class, () -> doSomething(getString(), getString()));
+              }
+
+              abstract String getString();
+
+              abstract void doSomething(String... strings);
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+            import java.util.function.Supplier;
+            import static org.junit.Assert.assertThrows;
+
+            abstract class Test {
+              void f() {
+                String strings = getString();
+                String strings2 = getString();
+                assertThrows(IllegalStateException.class, () -> doSomething(strings, strings2));
+              }
+
+              abstract String getString();
+
+              abstract void doSomething(String... strings);
+            }
+            """)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void cast() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+            import java.util.function.Supplier;
+            import static org.junit.Assert.assertThrows;
+
+            abstract class Test {
+              void f(String s, Object o) {
+                assertThrows(IllegalStateException.class, () -> doSomething((String) getString()));
+                assertThrows(IllegalStateException.class, () -> doSomething((String) s));
+                assertThrows(IllegalStateException.class, () -> doSomething((String) o));
+                assertThrows(IllegalStateException.class, () -> doSomething((Object) s));
+                assertThrows(IllegalStateException.class, () -> doSomething((Object) o));
+                assertThrows(IllegalStateException.class, () -> doSomething((String) null));
+              }
+
+              abstract String getString();
+
+              abstract Object getObject();
+
+              abstract void doSomething(String s);
+
+              abstract void doSomething(Object o);
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.ArrayList;
+            import java.util.List;
+            import java.util.function.Supplier;
+            import static org.junit.Assert.assertThrows;
+
+            abstract class Test {
+              void f(String s, Object o) {
+                String s2 = getString();
+                assertThrows(IllegalStateException.class, () -> doSomething(s2));
+                assertThrows(IllegalStateException.class, () -> doSomething((String) s));
+                String s3 = (String) o;
+                assertThrows(IllegalStateException.class, () -> doSomething(s3));
+                assertThrows(IllegalStateException.class, () -> doSomething((Object) s));
+                assertThrows(IllegalStateException.class, () -> doSomething((Object) o));
+                assertThrows(IllegalStateException.class, () -> doSomething((String) null));
+              }
+
+              abstract String getString();
+
+              abstract Object getObject();
+
+              abstract void doSomething(String s);
+
+              abstract void doSomething(Object o);
+            }
+            """)
+        .doTest(TEXT_MATCH);
+  }
 }

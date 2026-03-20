@@ -30,6 +30,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getThrownExceptions;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isCheckedExceptionType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.base.CaseFormat;
@@ -60,8 +61,10 @@ import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TypeCastTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.HashSet;
@@ -145,14 +148,19 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
         return Optional.empty();
       }
     }
+    MethodSymbol sym = getSymbol(runnable);
     ImmutableList<Hoist> toHoist =
         Streams.concat(
                 Stream.ofNullable(getReceiver(runnable))
                     .map(r -> new Hoist(r, receiverVariableName(r))),
                 Streams.zip(
                     runnable.getArguments().stream(),
-                    getSymbol(runnable).getParameters().stream(),
-                    (ExpressionTree a, VarSymbol p) -> new Hoist(a, p.getSimpleName().toString())))
+                    Streams.concat(
+                            sym.getParameters().stream(),
+                            // if there are varargs, there may be more arguments than parameters
+                            Stream.generate(() -> sym.getParameters().getLast()))
+                        .map(p -> p.getSimpleName().toString()),
+                    (ExpressionTree a, String p) -> new Hoist(a, p)))
             .filter(h -> needsHoisting(h.site(), exceptionType, state))
             .collect(toImmutableList());
     if (toHoist.isEmpty()) {
@@ -188,7 +196,9 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
           state);
     }
 
-    VariableNamer variableNamer = new VariableNamer(state);
+    // update the tree path so VariableName considers the method parameters
+    VariableNamer variableNamer =
+        new VariableNamer(state.withPath(new TreePath(state.getPath(), toFix.getFirst().runnable)));
     for (AssertThrows current : toFix) {
       StringBuilder hoistedVariables = new StringBuilder();
       for (Hoist hoist : current.toHoist) {
@@ -203,7 +213,7 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
                 "%s %s = %s;\n",
                 useVarType ? "var" : SuggestedFixes.qualifyType(state, fix, type),
                 identifier,
-                state.getSourceForNode(hoist.site())));
+                state.getSourceForNode(initializer(state, hoist.site(), type))));
         fix.replace(hoist.site(), identifier);
       }
       fix.prefixWith(current.parent(), hoistedVariables.toString());
@@ -213,6 +223,18 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
       }
     }
     return describeMatch(toFix.getFirst().parent(), fix.build());
+  }
+
+  private ExpressionTree initializer(VisitorState state, ExpressionTree site, Type type) {
+    if (useVarType) {
+      return site;
+    }
+    if (site instanceof TypeCastTree typeCastTree
+        && isSubtype(getType(typeCastTree.getExpression()), type, state)) {
+      // avoid unnecessary casts in hoisted variables
+      return typeCastTree.getExpression();
+    }
+    return site;
   }
 
   private void addThrows(
@@ -278,6 +300,12 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
                           .orElse(Stream.empty()))
                   .anyMatch(t -> needsHoisting(t, exceptionType, state));
           case NewClassTree newClassTree -> newClassTreeNeedsHoisting(newClassTree);
+          case TypeCastTree typeCastTree ->
+              needsHoisting(typeCastTree.getExpression(), exceptionType, state)
+                  || !isSubtype(
+                      getType(typeCastTree.getExpression()),
+                      getType(typeCastTree.getType()),
+                      state);
           default -> true;
         };
     if (!needsHoisting) {
