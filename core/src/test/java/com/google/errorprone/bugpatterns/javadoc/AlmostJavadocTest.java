@@ -267,4 +267,24 @@ public final class AlmostJavadocTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void nonJavadoccablePositionMethod() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            public class Test {
+              void foo() {
+                class Foo {
+                  // TODO(kak): this shouldn't fire here!
+                  // BUG: Diagnostic contains: AlmostJavadoc
+                  /* Foo {@link Test}. */
+                  void bar() {}
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }
