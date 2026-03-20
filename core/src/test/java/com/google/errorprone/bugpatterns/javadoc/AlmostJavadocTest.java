@@ -277,8 +277,6 @@ public final class AlmostJavadocTest {
             public class Test {
               void foo() {
                 class Foo {
-                  // TODO(kak): this shouldn't fire here!
-                  // BUG: Diagnostic contains: AlmostJavadoc
                   /* Foo {@link Test}. */
                   void bar() {}
                 }

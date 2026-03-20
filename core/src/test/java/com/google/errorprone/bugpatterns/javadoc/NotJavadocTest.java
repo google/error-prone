@@ -74,7 +74,6 @@ public final class NotJavadocTest {
 
   @Test
   public void nestedClassWithMethod() {
-    // TODO(kak): we should also fix the "javadocs" on the method inside the local class
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -82,6 +81,7 @@ public final class NotJavadocTest {
             class Test {
               void test() {
                 class A {
+                  // BUG: Diagnostic contains: local class
                   /** Not Javadoc. */
                   void method() {}
                 }
@@ -124,7 +124,6 @@ public final class NotJavadocTest {
               }
             }
             """)
-        // TODO(kak): we should also fix the "javadocs" on the method inside the local class
         .addOutputLines(
             "Test.java",
             """
@@ -132,7 +131,7 @@ public final class NotJavadocTest {
               void test() {
                 /* Not Javadoc. */
                 class A {
-                  /** Not Javadoc. */
+                  /* Not Javadoc. */
                   void method() {}
                 }
               }

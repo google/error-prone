@@ -40,7 +40,10 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DocCommentTable;
 import com.sun.tools.javac.tree.JCTree;
@@ -159,7 +162,8 @@ final class Utils {
 
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
-        if (!(getSymbol(classTree).owner instanceof MethodSymbol)) {
+        Symbol owner = getSymbol(classTree).owner;
+        if (owner instanceof PackageSymbol || owner instanceof ClassSymbol) {
           javadoccablePositions.put(ASTHelpers.getStartPosition(classTree), getCurrentPath());
         }
         return super.visitClass(classTree, null);
@@ -167,7 +171,10 @@ final class Utils {
 
       @Override
       public Void visitMethod(MethodTree methodTree, Void unused) {
-        if (!ASTHelpers.isGeneratedConstructor(methodTree)) {
+        Symbol owner = getSymbol(methodTree).owner;
+        if (!ASTHelpers.isGeneratedConstructor(methodTree)
+            && owner instanceof ClassSymbol
+            && !isLocalOrAnonymousClass(owner)) {
           javadoccablePositions.put(ASTHelpers.getStartPosition(methodTree), getCurrentPath());
         }
         return super.visitMethod(methodTree, null);
@@ -175,8 +182,11 @@ final class Utils {
 
       @Override
       public Void visitVariable(VariableTree variableTree, Void unused) {
-        ElementKind kind = getSymbol(variableTree).getKind();
-        if (kind == ElementKind.FIELD && !ASTHelpers.isRecord(getSymbol(variableTree))) {
+        Symbol symbol = getSymbol(variableTree);
+        ElementKind kind = symbol.getKind();
+        if (kind == ElementKind.FIELD
+            && !ASTHelpers.isRecord(symbol)
+            && !isLocalOrAnonymousClass(symbol.owner)) {
           javadoccablePositions.put(ASTHelpers.getStartPosition(variableTree), getCurrentPath());
         }
         // For enum constants, skip past the desugared class declaration.
@@ -200,6 +210,10 @@ final class Utils {
       }
     }.scan(tree, null);
     return ImmutableMap.copyOf(javadoccablePositions);
+  }
+
+  private static boolean isLocalOrAnonymousClass(Symbol sym) {
+    return sym.isAnonymous() || sym.owner instanceof MethodSymbol;
   }
 
   private Utils() {}
