@@ -63,9 +63,28 @@ public final class NotJavadocTest {
             """
             class Test {
               void test() {
-                // BUG: Diagnostic contains: nested
+                // BUG: Diagnostic contains: Local classes
                 /** Not Javadoc. */
                 class A {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedClassWithMethod() {
+    // TODO(kak): we should also fix the "javadocs" on the method inside the local class
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                class A {
+                  /** Not Javadoc. */
+                  void method() {}
+                }
               }
             }
             """)
@@ -97,17 +116,24 @@ public final class NotJavadocTest {
             class Test {
               void test() {
                 /** Not Javadoc. */
-                class A {}
+                class A {
+                  /** Not Javadoc. */
+                  void method() {}
+                }
               }
             }
             """)
+        // TODO(kak): we should also fix the "javadocs" on the method inside the local class
         .addOutputLines(
             "Test.java",
             """
             class Test {
               void test() {
                 /* Not Javadoc. */
-                class A {}
+                class A {
+                  /** Not Javadoc. */
+                  void method() {}
+                }
               }
             }
             """)

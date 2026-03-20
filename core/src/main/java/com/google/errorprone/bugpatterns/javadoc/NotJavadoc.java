@@ -76,8 +76,8 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
         }
         var message =
             seeminglyJavadocableTrees.contains(token.pos())
-                ? "This comment seems to be attached to a method or class, but methods and classes"
-                    + " nested within methods cannot be documented with Javadoc."
+                ? "Local classes (or methods within local classes) cannot be documented with"
+                    + " Javadoc."
                 : message();
         state.reportMatch(
             buildDescription(getDiagnosticPosition(comment.getSourcePos(0), tree))
