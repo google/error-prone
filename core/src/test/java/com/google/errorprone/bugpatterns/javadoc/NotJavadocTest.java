@@ -93,16 +93,17 @@ public final class NotJavadocTest {
 
   @Test
   public void doubleJavadoc() {
+    // It would be nice if this were caught.
     helper
         .addInputLines(
-            "Test.java", //
-            "class Test {",
-            // It would be nice if this were caught.
-            "  /** Not Javadoc. */",
-            "  /** Javadoc. */",
-            "  void test() {",
-            "  }",
-            "}")
+            "Test.java",
+            """
+            class Test {
+              /** Not Javadoc. */
+              /** Javadoc. */
+              void test() {}
+            }
+            """)
         .expectUnchanged()
         .doTest();
   }
