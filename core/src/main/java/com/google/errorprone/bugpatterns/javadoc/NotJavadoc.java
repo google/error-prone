@@ -22,11 +22,12 @@ import static com.google.errorprone.bugpatterns.javadoc.Utils.getJavadoccableTre
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ErrorProneTokens.getTokens;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableRangeSet;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -39,7 +40,7 @@ import com.google.errorprone.util.ErrorProneToken;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 
@@ -52,14 +53,23 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     ImmutableMap<Integer, TreePath> javadocableTrees = getJavadoccableTrees(tree);
-    ImmutableSet<Integer> seeminglyJavadocableTrees = getSeeminglyJavadocableTrees(tree);
+    ImmutableMap<Integer, JavadocableTreeKind> seeminglyJavadocableTrees =
+        getSeeminglyJavadocableTrees(tree);
     ImmutableRangeSet<Integer> suppressedRegions = suppressedRegions(state);
     for (ErrorProneToken token : getTokens(state.getSourceCode().toString(), state.context)) {
       for (ErrorProneComment comment : token.comments()) {
-        if (!comment.getStyle().equals(ErrorProneCommentStyle.JAVADOC_BLOCK)
-            || comment.getText().equals("/**/")) {
-          continue;
+        switch (comment.getStyle()) {
+          case JAVADOC_BLOCK -> {
+            if (comment.getText().equals("/**/")) {
+              continue;
+            }
+          }
+          case JAVADOC_LINE -> {}
+          default -> {
+            continue;
+          }
         }
+        // if this is a valid location for Javadoc, skip over this comment
         if (javadocableTrees.containsKey(token.pos())) {
           continue;
         }
@@ -70,38 +80,71 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
           continue;
         }
 
-        int endPos = 2;
-        while (comment.getText().charAt(endPos) == '*') {
-          endPos++;
-        }
-        var message =
-            seeminglyJavadocableTrees.contains(token.pos())
-                ? "Local classes (or methods within local classes) cannot be documented with"
-                    + " Javadoc."
-                : message();
-        state.reportMatch(
+        String message =
+            switch (seeminglyJavadocableTrees.get(token.pos())) {
+              case CLASS ->
+                  "This comment is attached to a local class, but local classes cannot be"
+                      + " documented with Javadoc. Please convert this to a regular comment.";
+              case METHOD ->
+                  "This comment is attached to a method inside a local class, but methods inside"
+                      + " local classes cannot be documented with Javadoc. Please convert this to"
+                      + " a regular comment.";
+              case RECORD_COMPONENT ->
+                  "This comment seems to be attached to a record component,"
+                      + " but record components cannot be documented with Javadoc. Please move this"
+                      + " to an @param tag on the record class.";
+              case null -> message();
+            };
+        var description =
             buildDescription(getDiagnosticPosition(comment.getSourcePos(0), tree))
-                .setMessage(message)
-                .addFix(replace(comment.getSourcePos(1), comment.getSourcePos(endPos - 1), ""))
-                .build());
+                .setMessage(message);
+        // we only emit a fix for Classic Javadoc (not Markdown Javadoc)
+        if (comment.getStyle().equals(ErrorProneCommentStyle.JAVADOC_BLOCK)) {
+          int endPos = 2;
+          while (comment.getText().charAt(endPos) == '*') {
+            endPos++;
+          }
+          description.addFix(
+              replace(comment.getSourcePos(1), comment.getSourcePos(endPos - 1), ""));
+        }
+        state.reportMatch(description.build());
       }
     }
     return NO_MATCH;
   }
 
-  private static ImmutableSet<Integer> getSeeminglyJavadocableTrees(CompilationUnitTree tree) {
-    ImmutableSet.Builder<Integer> builder = ImmutableSet.builder();
+  private enum JavadocableTreeKind {
+    CLASS,
+    METHOD,
+    RECORD_COMPONENT
+  }
+
+  private static ImmutableMap<Integer, JavadocableTreeKind> getSeeminglyJavadocableTrees(
+      CompilationUnitTree tree) {
+    ImmutableMap.Builder<Integer, JavadocableTreeKind> builder = ImmutableMap.builder();
     tree.accept(
         new TreeScanner<Void, Void>() {
           @Override
-          public Void scan(Tree tree, Void unused) {
-            if (tree instanceof MethodTree || tree instanceof ClassTree) {
-              builder.add(getStartPosition(tree));
+          public Void visitClass(ClassTree tree, Void unused) {
+            builder.put(getStartPosition(tree), JavadocableTreeKind.CLASS);
+            return super.visitClass(tree, null);
+          }
+
+          @Override
+          public Void visitMethod(MethodTree tree, Void unused) {
+            builder.put(getStartPosition(tree), JavadocableTreeKind.METHOD);
+            return super.visitMethod(tree, null);
+          }
+
+          @Override
+          public Void visitVariable(VariableTree tree, Void unused) {
+            if (isRecord(getSymbol(tree))) {
+              builder.put(getStartPosition(tree), JavadocableTreeKind.RECORD_COMPONENT);
             }
-            return super.scan(tree, null);
+            return super.visitVariable(tree, null);
           }
         },
         null);
-    return builder.build();
+    return builder.buildKeepingLast();
   }
 }

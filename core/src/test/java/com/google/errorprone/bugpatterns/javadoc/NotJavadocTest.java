@@ -63,7 +63,7 @@ public final class NotJavadocTest {
             """
             class Test {
               void test() {
-                // BUG: Diagnostic contains: Local classes
+                // BUG: Diagnostic contains: local class
                 /** Not Javadoc. */
                 class A {}
               }
@@ -251,7 +251,13 @@ public final class NotJavadocTest {
                 /** age (must be positive) */
                 int age) {}
             """)
-        .expectUnchanged()
+        .addOutputLines(
+            "Test.java",
+            """
+            public record Test(
+                /* age (must be positive) */
+                int age) {}
+            """)
         .doTest(TEXT_MATCH);
   }
 
@@ -272,7 +278,21 @@ public record Test(
      */
     int age) {}
 """)
-        .expectUnchanged()
+        // TODO(kak): it would be nice to hoist the @param up to the record's Javadocs
+        .addOutputLines(
+            "Test.java",
+"""
+public record Test(
+    /*
+     * @param age Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+     *     incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+     *     exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+     *     dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+     *     Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
+     *     anim id est laborum.
+     */
+    int age) {}
+""")
         .doTest(TEXT_MATCH);
   }
 
@@ -286,6 +306,7 @@ public record Test(
                 /// age (must be positive)
                 int age) {}
             """)
+        // TODO(b/494275366): Add a fix for this.
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }
@@ -306,6 +327,7 @@ public record Test(
                 ///     mollit anim id est laborum.
                 int age) {}
             """)
+        // TODO(b/494275366): Add a fix for this.
         .expectUnchanged()
         .doTest(TEXT_MATCH);
   }

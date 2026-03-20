@@ -176,7 +176,7 @@ final class Utils {
       @Override
       public Void visitVariable(VariableTree variableTree, Void unused) {
         ElementKind kind = getSymbol(variableTree).getKind();
-        if (kind == ElementKind.FIELD) {
+        if (kind == ElementKind.FIELD && !ASTHelpers.isRecord(getSymbol(variableTree))) {
           javadoccablePositions.put(ASTHelpers.getStartPosition(variableTree), getCurrentPath());
         }
         // For enum constants, skip past the desugared class declaration.
