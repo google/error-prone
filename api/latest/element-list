@@ -24,6 +24,7 @@ com.google.errorprone.dataflow.nullnesspropagation
 com.google.errorprone.dataflow.nullnesspropagation.inference
 com.google.errorprone.fixes
 com.google.errorprone.matchers
+com.google.errorprone.matchers.field
 com.google.errorprone.matchers.method
 com.google.errorprone.names
 com.google.errorprone.predicates

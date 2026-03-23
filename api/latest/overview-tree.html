@@ -78,6 +78,7 @@ loadScripts(document, 'script');</script>
 <li><a href="com/google/errorprone/dataflow/nullnesspropagation/inference/package-tree.html">com.google.errorprone.dataflow.nullnesspropagation.inference</a>, </li>
 <li><a href="com/google/errorprone/fixes/package-tree.html">com.google.errorprone.fixes</a>, </li>
 <li><a href="com/google/errorprone/matchers/package-tree.html">com.google.errorprone.matchers</a>, </li>
+<li><a href="com/google/errorprone/matchers/field/package-tree.html">com.google.errorprone.matchers.field</a>, </li>
 <li><a href="com/google/errorprone/matchers/method/package-tree.html">com.google.errorprone.matchers.method</a>, </li>
 <li><a href="com/google/errorprone/names/package-tree.html">com.google.errorprone.names</a>, </li>
 <li><a href="com/google/errorprone/predicates/package-tree.html">com.google.errorprone.predicates</a>, </li>
@@ -912,6 +913,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.google.errorprone.<a href="com/google/errorprone/ErrorProneVersion.html" class="type-name-link" title="class in com.google.errorprone">ErrorProneVersion</a></li>
 <li class="circle">com.google.errorprone.predicates.type.<a href="com/google/errorprone/predicates/type/Exact.html" class="type-name-link" title="class in com.google.errorprone.predicates.type">Exact</a> (implements com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>)</li>
 <li class="circle">com.google.errorprone.predicates.type.<a href="com/google/errorprone/predicates/type/ExactAny.html" class="type-name-link" title="class in com.google.errorprone.predicates.type">ExactAny</a> (implements com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>)</li>
+<li class="circle">com.google.errorprone.matchers.field.<a href="com/google/errorprone/matchers/field/FieldMatchers.html" class="type-name-link" title="class in com.google.errorprone.matchers.field">FieldMatchers</a></li>
 <li class="circle">com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/FieldMatchers.html" class="type-name-link" title="class in com.google.errorprone.matchers">FieldMatchers</a></li>
 <li class="circle">com.google.errorprone.<a href="com/google/errorprone/FileManagers.html" class="type-name-link" title="class in com.google.errorprone">FileManagers</a></li>
 <li class="circle">com.google.errorprone.<a href="com/google/errorprone/FileObjects.html" class="type-name-link" title="class in com.google.errorprone">FileObjects</a></li>
@@ -1155,6 +1157,9 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.google.errorprone.apply.<a href="com/google/errorprone/apply/Diff.html" class="type-name-link" title="interface in com.google.errorprone.apply">Diff</a></li>
 <li class="circle">com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorProneEndPosTable.html" class="type-name-link" title="interface in com.google.errorprone.fixes">ErrorProneEndPosTable</a></li>
 <li class="circle">com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/ErrorPronePosition.html" class="type-name-link" title="interface in com.google.errorprone.fixes">ErrorPronePosition</a></li>
+<li class="circle">com.google.errorprone.matchers.field.<a href="com/google/errorprone/matchers/field/FieldMatchers.FieldClassMatcher.html" class="type-name-link" title="interface in com.google.errorprone.matchers.field">FieldMatchers.FieldClassMatcher</a></li>
+<li class="circle">com.google.errorprone.matchers.field.<a href="com/google/errorprone/matchers/field/FieldMatchers.InstanceFieldMatcher.html" class="type-name-link" title="interface in com.google.errorprone.matchers.field">FieldMatchers.InstanceFieldMatcher</a></li>
+<li class="circle">com.google.errorprone.matchers.field.<a href="com/google/errorprone/matchers/field/FieldMatchers.StaticFieldMatcher.html" class="type-name-link" title="interface in com.google.errorprone.matchers.field">FieldMatchers.StaticFieldMatcher</a></li>
 <li class="circle">com.google.errorprone.apply.<a href="com/google/errorprone/apply/FileDestination.html" class="type-name-link" title="interface in com.google.errorprone.apply">FileDestination</a></li>
 <li class="circle">com.google.errorprone.apply.<a href="com/google/errorprone/apply/FileSource.html" class="type-name-link" title="interface in com.google.errorprone.apply">FileSource</a></li>
 <li class="circle">com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Fix.html" class="type-name-link" title="interface in com.google.errorprone.fixes">Fix</a></li>
@@ -1194,6 +1199,7 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matcher.html" class="type-name-link" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;
 <ul>
+<li class="circle">com.google.errorprone.matchers.field.<a href="com/google/errorprone/matchers/field/FieldMatchers.FieldNameMatcher.html" class="type-name-link" title="interface in com.google.errorprone.matchers.field">FieldMatchers.FieldNameMatcher</a></li>
 <li class="circle">com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.MethodMatcher.html" class="type-name-link" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodMatcher</a>
 <ul>
 <li class="circle">com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.AnyMethodMatcher.html" class="type-name-link" title="interface in com.google.errorprone.matchers.method">MethodMatchers.AnyMethodMatcher</a></li>

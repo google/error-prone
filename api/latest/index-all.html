@@ -742,8 +742,6 @@ node.</div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match on any class.</div>
 </dd>
-<dt><a href="com/google/errorprone/matchers/FieldMatchers.html#anyFieldInClass(java.lang.String)" class="member-name-link">anyFieldInClass(String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/FieldMatchers.html" title="class in com.google.errorprone.matchers">FieldMatchers</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#anyMethod()" class="member-name-link">anyMethod()</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches a static or instance method.</div>
@@ -2242,6 +2240,8 @@ injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</d
 <dd>
 <div class="block">A predicate DSL for matching javac AST nodes.</div>
 </dd>
+<dt><a href="com/google/errorprone/matchers/field/package-summary.html">com.google.errorprone.matchers.field</a> - package com.google.errorprone.matchers.field</dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/method/package-summary.html">com.google.errorprone.matchers.method</a> - package com.google.errorprone.matchers.method</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/names/package-summary.html">com.google.errorprone.names</a> - package com.google.errorprone.names</dt>
@@ -4137,9 +4137,31 @@ any one of the given annotations.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/SelfEquals.html#fieldFix(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">fieldFix(Tree, VisitorState)</a> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SelfEquals.html" title="class in com.google.errorprone.bugpatterns">SelfEquals</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/field/FieldMatchers.html" class="type-name-link" title="class in com.google.errorprone.matchers.field">FieldMatchers</a> - Class in <a href="com/google/errorprone/matchers/field/package-summary.html">com.google.errorprone.matchers.field</a></dt>
+<dd>
+<div class="block">Matchers for fields.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/FieldMatchers.html" class="type-name-link" title="class in com.google.errorprone.matchers">FieldMatchers</a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
 <dd>
-<div class="block">Static utility methods for creating <a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><code>Matcher</code></a>s for detecting references to fields.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="com/google/errorprone/matchers/field/FieldMatchers.html" title="class in com.google.errorprone.matchers.field"><code>FieldMatchers</code></a> instead.</div>
+</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/field/FieldMatchers.FieldClassMatcher.html" class="type-name-link" title="interface in com.google.errorprone.matchers.field">FieldMatchers.FieldClassMatcher</a> - Interface in <a href="com/google/errorprone/matchers/field/package-summary.html">com.google.errorprone.matchers.field</a></dt>
+<dd>
+<div class="block">Matches fields by declaring class.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/field/FieldMatchers.FieldNameMatcher.html" class="type-name-link" title="interface in com.google.errorprone.matchers.field">FieldMatchers.FieldNameMatcher</a> - Interface in <a href="com/google/errorprone/matchers/field/package-summary.html">com.google.errorprone.matchers.field</a></dt>
+<dd>
+<div class="block">Matches fields by name.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/field/FieldMatchers.InstanceFieldMatcher.html" class="type-name-link" title="interface in com.google.errorprone.matchers.field">FieldMatchers.InstanceFieldMatcher</a> - Interface in <a href="com/google/errorprone/matchers/field/package-summary.html">com.google.errorprone.matchers.field</a></dt>
+<dd>
+<div class="block">Matches instance fields.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/field/FieldMatchers.StaticFieldMatcher.html" class="type-name-link" title="interface in com.google.errorprone.matchers.field">FieldMatchers.StaticFieldMatcher</a> - Interface in <a href="com/google/errorprone/matchers/field/package-summary.html">com.google.errorprone.matchers.field</a></dt>
+<dd>
+<div class="block">Matches static fields.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/FieldMissingNullable.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.nullness">FieldMissingNullable</a> - Class in <a href="com/google/errorprone/bugpatterns/nullness/package-summary.html">com.google.errorprone.bugpatterns.nullness</a></dt>
 <dd>
@@ -6987,8 +7009,12 @@ tree from a <code>UTree</code> based on a set of substitutions.</div>
 <dd>
 <div class="block">Matches calls to the method <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a> or any override of that method.</div>
 </dd>
-<dt><a href="com/google/errorprone/matchers/FieldMatchers.html#instanceField(java.lang.String,java.lang.String)" class="member-name-link">instanceField(String, String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/FieldMatchers.html" title="class in com.google.errorprone.matchers">FieldMatchers</a></dt>
+<dt><a href="com/google/errorprone/matchers/field/FieldMatchers.html#instanceField()" class="member-name-link">instanceField()</a> - Static method in class com.google.errorprone.matchers.field.<a href="com/google/errorprone/matchers/field/FieldMatchers.html" title="class in com.google.errorprone.matchers.field">FieldMatchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/FieldMatchers.html#instanceField(java.lang.String,java.lang.String)" class="member-name-link">instanceField(String, String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/FieldMatchers.html" title="class in com.google.errorprone.matchers">FieldMatchers</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#instanceHashCodeInvocation()" class="member-name-link">instanceHashCodeInvocation()</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches calls to the method <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> or any override of that method.</div>
@@ -11017,11 +11043,15 @@ ignorable.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/ErrorProneToken.html#name()" class="member-name-link">name()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneToken.html" title="class in com.google.errorprone.util">ErrorProneToken</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/field/FieldMatchers.FieldClassMatcher.html#named(java.lang.String)" class="member-name-link">named(String)</a> - Method in interface com.google.errorprone.matchers.field.<a href="com/google/errorprone/matchers/field/FieldMatchers.FieldClassMatcher.html" title="interface in com.google.errorprone.matchers.field">FieldMatchers.FieldClassMatcher</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#named(java.lang.String)" class="member-name-link">named(String)</a> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></dt>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match methods with the given name.</div>
 </dd>
+<dt><a href="com/google/errorprone/matchers/field/FieldMatchers.FieldClassMatcher.html#namedAnyOf(com.google.common.collect.ImmutableSet)" class="member-name-link">namedAnyOf(ImmutableSet)</a> - Method in interface com.google.errorprone.matchers.field.<a href="com/google/errorprone/matchers/field/FieldMatchers.FieldClassMatcher.html" title="interface in com.google.errorprone.matchers.field">FieldMatchers.FieldClassMatcher</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#namedAnyOf(java.lang.Iterable)" class="member-name-link">namedAnyOf(Iterable)</a> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></dt>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
@@ -11032,6 +11062,8 @@ ignorable.</div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match methods with any of the given names.</div>
 </dd>
+<dt><a href="com/google/errorprone/matchers/field/FieldMatchers.FieldClassMatcher.html#namedAnyOf(java.lang.String,java.lang.String,java.lang.String...)" class="member-name-link">namedAnyOf(String, String, String...)</a> - Method in interface com.google.errorprone.matchers.field.<a href="com/google/errorprone/matchers/field/FieldMatchers.FieldClassMatcher.html" title="interface in com.google.errorprone.matchers.field">FieldMatchers.FieldClassMatcher</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/NamedLikeContextualKeyword.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NamedLikeContextualKeyword</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Warns on classes or methods being named similarly to contextual keywords, or invoking such
@@ -11497,6 +11529,10 @@ won't produce meaningful output.</div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match on the given type exactly.</div>
 </dd>
+<dt><a href="com/google/errorprone/matchers/field/FieldMatchers.InstanceFieldMatcher.html#onClass(java.lang.String)" class="member-name-link">onClass(String)</a> - Method in interface com.google.errorprone.matchers.field.<a href="com/google/errorprone/matchers/field/FieldMatchers.InstanceFieldMatcher.html" title="interface in com.google.errorprone.matchers.field">FieldMatchers.InstanceFieldMatcher</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/field/FieldMatchers.StaticFieldMatcher.html#onClass(java.lang.String)" class="member-name-link">onClass(String)</a> - Method in interface com.google.errorprone.matchers.field.<a href="com/google/errorprone/matchers/field/FieldMatchers.StaticFieldMatcher.html" title="interface in com.google.errorprone.matchers.field">FieldMatchers.StaticFieldMatcher</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/method/MethodMatchers.AnyMethodMatcher.html#onClass(java.lang.String)" class="member-name-link">onClass(String)</a> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.AnyMethodMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.AnyMethodMatcher</a></dt>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
@@ -13456,8 +13492,12 @@ and static and non-static separated by blank line.</div>
 <dd>
 <div class="block">Matches an invocation of a recognized static object equality method such as <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Objects.html#equals(java.lang.Object,java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Objects.equals(Object, Object)</code></a>.</div>
 </dd>
-<dt><a href="com/google/errorprone/matchers/FieldMatchers.html#staticField(java.lang.String,java.lang.String)" class="member-name-link">staticField(String, String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/FieldMatchers.html" title="class in com.google.errorprone.matchers">FieldMatchers</a></dt>
+<dt><a href="com/google/errorprone/matchers/field/FieldMatchers.html#staticField()" class="member-name-link">staticField()</a> - Static method in class com.google.errorprone.matchers.field.<a href="com/google/errorprone/matchers/field/FieldMatchers.html" title="class in com.google.errorprone.matchers.field">FieldMatchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/FieldMatchers.html#staticField(java.lang.String,java.lang.String)" class="member-name-link">staticField(String, String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/FieldMatchers.html" title="class in com.google.errorprone.matchers">FieldMatchers</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#staticFieldAccess()" class="member-name-link">staticFieldAccess()</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches an AST node which is an expression yielding the indicated static field access.</div>
