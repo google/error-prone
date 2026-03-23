@@ -44,7 +44,6 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DocCommentTable;
 import com.sun.tools.javac.tree.JCTree;
@@ -169,8 +168,7 @@ final class Utils {
 
       @Override
       public Void visitMethod(MethodTree methodTree, Void unused) {
-        if (!isGeneratedConstructor(methodTree)
-            && isJavadoccableClass(getSymbol(methodTree).owner)) {
+        if (!isGeneratedConstructor(methodTree) && isJavadoccableClass(getSymbol(methodTree))) {
           javadoccablePositions.put(ASTHelpers.getStartPosition(methodTree), getCurrentPath());
         }
         return super.visitMethod(methodTree, null);
@@ -179,7 +177,7 @@ final class Utils {
       @Override
       public Void visitVariable(VariableTree variableTree, Void unused) {
         Symbol symbol = getSymbol(variableTree);
-        if (isJavadoccableClass(symbol.owner)) {
+        if (isJavadoccableClass(symbol)) {
           ElementKind kind = symbol.getKind();
           if (kind == ElementKind.FIELD && !isRecord(symbol)) {
             javadoccablePositions.put(ASTHelpers.getStartPosition(variableTree), getCurrentPath());
@@ -214,14 +212,9 @@ final class Utils {
    * <p>Notably, anonymous classes and local classes <b>cannot</b> have Javadoc.
    */
   private static boolean isJavadoccableClass(Symbol sym) {
-    if (!(sym instanceof ClassSymbol classSym) || classSym.isAnonymous()) {
-      return false;
-    }
-    return switch (classSym.owner) {
-      case PackageSymbol unused -> true;
-      case ClassSymbol ownerClassSym -> isJavadoccableClass(ownerClassSym);
-      default -> false;
-    };
+    // enclClass returns sym if sym is a ClassSymbol, which is what we want in this case
+    ClassSymbol classSym = sym.enclClass();
+    return classSym != null && !classSym.isDirectlyOrIndirectlyLocal();
   }
 
   private Utils() {}
