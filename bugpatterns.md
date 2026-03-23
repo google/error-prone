@@ -1478,9 +1478,6 @@ Because of spurious wakeups, Object.wait() and Condition.await() must always be 
 __[WakelockReleasedDangerously](bugpattern/WakelockReleasedDangerously)__<br>
 On Android versions &lt; P, a wakelock acquired with a timeout may be released by the system before calling &#96;release&#96;, even after checking &#96;isHeld()&#96;. If so, it will throw a RuntimeException. Please wrap in a try/catch block.
 
-__[WithSignatureDiscouraged](bugpattern/WithSignatureDiscouraged)__<br>
-withSignature is discouraged. Prefer .named and/or .withParameters where possible.
-
 ## Experimental : ERROR
 
 __[AutoFactoryAtInject](bugpattern/AutoFactoryAtInject)__<br>
