@@ -15,11 +15,9 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.FieldMatchers.staticField;
-import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.field.FieldMatchers.staticField;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -31,7 +29,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
-import java.util.stream.Stream;
 
 /** Checks for usages of dangerous {@code DateTimeConstants} constants. */
 @BugPattern(
@@ -47,24 +44,23 @@ public final class JodaDateTimeConstants extends BugChecker
     implements MemberSelectTreeMatcher, IdentifierTreeMatcher {
 
   private static final Matcher<ExpressionTree> DATE_TIME_CONSTANTS_MATCHER =
-      anyOf(
-          Stream.of(
-                  "HOURS_PER_DAY",
-                  "HOURS_PER_WEEK",
-                  "MILLIS_PER_DAY",
-                  "MILLIS_PER_HOUR",
-                  "MILLIS_PER_MINUTE",
-                  "MILLIS_PER_SECOND",
-                  "MILLIS_PER_WEEK",
-                  "MINUTES_PER_DAY",
-                  "MINUTES_PER_HOUR",
-                  "MINUTES_PER_WEEK",
-                  "SECONDS_PER_DAY",
-                  "SECONDS_PER_HOUR",
-                  "SECONDS_PER_MINUTE",
-                  "SECONDS_PER_WEEK")
-              .map(constant -> staticField("org.joda.time.DateTimeConstants", constant))
-              .collect(toImmutableSet()));
+      staticField()
+          .onClass("org.joda.time.DateTimeConstants")
+          .namedAnyOf(
+              "HOURS_PER_DAY",
+              "HOURS_PER_WEEK",
+              "MILLIS_PER_DAY",
+              "MILLIS_PER_HOUR",
+              "MILLIS_PER_MINUTE",
+              "MILLIS_PER_SECOND",
+              "MILLIS_PER_WEEK",
+              "MINUTES_PER_DAY",
+              "MINUTES_PER_HOUR",
+              "MINUTES_PER_WEEK",
+              "SECONDS_PER_DAY",
+              "SECONDS_PER_HOUR",
+              "SECONDS_PER_MINUTE",
+              "SECONDS_PER_WEEK");
 
   @Override
   public Description matchMemberSelect(MemberSelectTree tree, VisitorState state) {

@@ -18,10 +18,10 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.FieldMatchers.staticField;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.field.FieldMatchers.staticField;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -45,9 +45,7 @@ public final class SystemOut extends BugChecker
     implements MethodInvocationTreeMatcher, MemberSelectTreeMatcher {
 
   private static final Matcher<ExpressionTree> BAD_FIELDS =
-      anyOf(
-          staticField(System.class.getName(), "out"), //
-          staticField(System.class.getName(), "err"));
+      staticField().onClass(System.class.getName()).namedAnyOf("out", "err");
 
   private static final Matcher<ExpressionTree> BAD_METHODS =
       anyOf(

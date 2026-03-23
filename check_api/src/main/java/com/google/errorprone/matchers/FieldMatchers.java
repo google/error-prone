@@ -16,87 +16,25 @@
 
 package com.google.errorprone.matchers;
 
-import static com.google.errorprone.util.ASTHelpers.enclosingClass;
-import static com.google.errorprone.util.ASTHelpers.isStatic;
-
-import com.google.errorprone.VisitorState;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.ImportTree;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import org.jspecify.annotations.Nullable;
 
-// TODO(glorioso): this likely wants to be a fluent interface like MethodMatchers.
-// Ex: [staticField()|instanceField()]
-//         .[onClass(String)|onAnyClass|onClassMatching]
-//         .[named(String)|withAnyName|withNameMatching]
-/** Static utility methods for creating {@link Matcher}s for detecting references to fields. */
+/**
+ * @deprecated use {@link com.google.errorprone.matchers.field.FieldMatchers} instead.
+ */
+@Deprecated
 public final class FieldMatchers {
-  private FieldMatchers() {}
-
-  public static Matcher<ExpressionTree> anyFieldInClass(String className) {
-    return new FieldReferenceMatcher() {
-      @Override
-      boolean classIsAppropriate(ClassSymbol classSymbol) {
-        return classSymbol.getQualifiedName().contentEquals(className);
-      }
-
-      @Override
-      boolean fieldSymbolIsAppropriate(Symbol symbol) {
-        return true;
-      }
-    };
-  }
 
   public static Matcher<ExpressionTree> staticField(String className, String fieldName) {
-    return new FieldReferenceMatcher() {
-      @Override
-      boolean classIsAppropriate(ClassSymbol classSymbol) {
-        return classSymbol.getQualifiedName().contentEquals(className);
-      }
-
-      @Override
-      boolean fieldSymbolIsAppropriate(Symbol symbol) {
-        return isStatic(symbol) && symbol.getSimpleName().contentEquals(fieldName);
-      }
-    };
+    return com.google.errorprone.matchers.field.FieldMatchers.staticField()
+        .onClass(className)
+        .named(fieldName);
   }
 
   public static Matcher<ExpressionTree> instanceField(String className, String fieldName) {
-    return new FieldReferenceMatcher() {
-      @Override
-      boolean classIsAppropriate(ClassSymbol classSymbol) {
-        return classSymbol.getQualifiedName().contentEquals(className);
-      }
-
-      @Override
-      boolean fieldSymbolIsAppropriate(Symbol symbol) {
-        return !isStatic(symbol) && symbol.getSimpleName().contentEquals(fieldName);
-      }
-    };
+    return com.google.errorprone.matchers.field.FieldMatchers.instanceField()
+        .onClass(className)
+        .named(fieldName);
   }
 
-  private abstract static class FieldReferenceMatcher implements Matcher<ExpressionTree> {
-    @Override
-    public boolean matches(ExpressionTree expressionTree, VisitorState state) {
-      return isSymbolFieldInAppropriateClass(ASTHelpers.getSymbol(expressionTree))
-          // Don't match if this is part of a static import tree, since they will get the finding
-          // on any usage of the field in their source.
-          && ASTHelpers.findEnclosingNode(state.getPath(), ImportTree.class) == null;
-    }
-
-    private boolean isSymbolFieldInAppropriateClass(@Nullable Symbol symbol) {
-      if (symbol == null) {
-        return false;
-      }
-      return symbol.getKind().isField()
-          && fieldSymbolIsAppropriate(symbol)
-          && classIsAppropriate(enclosingClass(symbol));
-    }
-
-    abstract boolean fieldSymbolIsAppropriate(Symbol symbol);
-
-    abstract boolean classIsAppropriate(ClassSymbol classSymbol);
-  }
+  private FieldMatchers() {}
 }
