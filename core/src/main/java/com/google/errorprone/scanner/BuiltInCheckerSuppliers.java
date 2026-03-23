@@ -477,7 +477,6 @@ import com.google.errorprone.bugpatterns.Varifier;
 import com.google.errorprone.bugpatterns.VoidUsed;
 import com.google.errorprone.bugpatterns.WaitNotInLoop;
 import com.google.errorprone.bugpatterns.WildcardImport;
-import com.google.errorprone.bugpatterns.WithSignatureDiscouraged;
 import com.google.errorprone.bugpatterns.WrongOneof;
 import com.google.errorprone.bugpatterns.XorPower;
 import com.google.errorprone.bugpatterns.YodaCondition;
@@ -1199,8 +1198,7 @@ public class BuiltInCheckerSuppliers {
           VariableNameSameAsType.class,
           VoidUsed.class,
           WaitNotInLoop.class,
-          WakelockReleasedDangerously.class,
-          WithSignatureDiscouraged.class
+          WakelockReleasedDangerously.class
           // keep-sorted end
           );
 

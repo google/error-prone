@@ -220,14 +220,6 @@ final class MethodMatcherImpl
   }
 
   @Override
-  public MethodSignatureMatcher withSignature(String signature) {
-    return append(
-        (m, s) ->
-            m.sym().getSimpleName().contentEquals(signature)
-                || m.sym().toString().equals(signature));
-  }
-
-  @Override
   public ParameterMatcher withNoParameters() {
     return withParameters(ImmutableList.of());
   }

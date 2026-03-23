@@ -152,17 +152,6 @@ public final class MethodMatchers {
 
     /** Match methods with a name that matches the given regular expression. */
     MethodNameMatcher withNameMatching(Pattern pattern);
-
-    /**
-     * Match methods with the given signature.
-     *
-     * <p>Example: {@code format(java.lang.String,java.lang.Object...)}
-     *
-     * @deprecated The implementation uses javac internals to pretty-print the signatures, and the
-     *     signature format is not well-specified.
-     */
-    @Deprecated
-    MethodSignatureMatcher withSignature(String signature);
   }
 
   /**
