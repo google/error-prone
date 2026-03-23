@@ -1033,6 +1033,7 @@ public class UnnecessaryDefaultInEnumSwitchTest {
                   case TWO:
                     return true;
                   case UNRECOGNIZED:
+                  // continue below
                   case THREE:
                     // This is a comment
                     System.out.println("Test");

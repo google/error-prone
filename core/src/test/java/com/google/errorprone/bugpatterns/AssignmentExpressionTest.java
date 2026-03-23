@@ -120,7 +120,9 @@ public final class AssignmentExpressionTest {
             """
             class Test {
               void test() {
+                // BUG: Diagnostic contains:
                 Object a = new Object();
+                // BUG: Diagnostic contains:
                 a = new Object();
               }
             }

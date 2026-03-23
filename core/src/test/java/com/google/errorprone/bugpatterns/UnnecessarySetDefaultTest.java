@@ -64,6 +64,7 @@ public class UnnecessarySetDefaultTest {
             class Test {
               {
                 NullPointerTester tester = new NullPointerTester();
+
                 tester
                     .setDefault(ImmutableList.class, ImmutableList.of(42))
                     .setDefault(ImmutableList.class, ImmutableList.of(42));

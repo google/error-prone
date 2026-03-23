@@ -189,7 +189,6 @@ public class UnsafeLocaleUsageTest {
                 private Locale locale;
 
                 Inner(String a, String b) {
-                  // BUG: Diagnostic contains: forLanguageTag(String)
                   locale = new Locale(a, b);
                 }
               }
@@ -230,7 +229,6 @@ public class UnsafeLocaleUsageTest {
                 private Locale locale;
 
                 Inner(String a, String b) {
-                  // BUG: Diagnostic contains: forLanguageTag(String)
                   locale = Locale.of(a, b);
                 }
               }

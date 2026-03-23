@@ -105,6 +105,7 @@ public class ForEachIterableTest {
 
               void iteratorWhile(Iterable<T> list) {
                 for (T t : list) {
+
                   doSomething(t);
                 }
               }

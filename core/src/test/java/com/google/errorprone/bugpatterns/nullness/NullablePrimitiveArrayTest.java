@@ -61,6 +61,7 @@ public class NullablePrimitiveArrayTest {
             import org.checkerframework.checker.nullness.qual.NonNull;
 
             abstract class Test {
+
               abstract byte @Nullable [] f();
 
               abstract byte @Nullable [] g();

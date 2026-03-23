@@ -202,6 +202,7 @@ class Test {
   }
 
   private static final Pattern INPUT_PATTERN = Pattern.compile("car");
+
   private static final Pattern INPUT_PATTERN2 = Pattern.compile("blue");
 }
 """)
@@ -243,6 +244,7 @@ class Test {
               }
 
               private static final Pattern INPUT_PATTERN = Pattern.compile("car");
+
               private static final Pattern INPUT_PATTERN2 = Pattern.compile("dog");
             }
             """)
@@ -277,6 +279,7 @@ class Test {
               static final String MY_COOL_PATTERN = "a+";
 
               public static void myPopularStaticMethod() {
+
                 Matcher m = SOME_PATTERN.matcher("aaaaab");
               }
 
@@ -316,9 +319,11 @@ class Test {
             class Test {
               public static boolean match() {
                 String line = "abcd";
+
                 if (P1.matcher(line).matches() && P2.matcher(line).matches()) {
                   return true;
                 }
+
                 return P3.matcher(line).matches() && P4.matcher(line).matches();
               }
 
@@ -357,6 +362,7 @@ class Test {
             class Test {
               /** This is a javadoc. * */
               public static void myPopularStaticMethod() {
+
                 Matcher m = MY_PATTERN.matcher("aaaaab");
               }
 
@@ -397,6 +403,7 @@ class Test {
 
               class Inner {
                 public void myPopularStaticMethod() {
+
                   Matcher m = MY_PATTERN.matcher("aaaaab");
                 }
 

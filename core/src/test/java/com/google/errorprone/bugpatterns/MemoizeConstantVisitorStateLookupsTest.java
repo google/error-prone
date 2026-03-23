@@ -143,6 +143,7 @@ class Test {
 
               private static final Supplier<Name> JAVA_LANG_CLASS_NAME =
                   VisitorState.memoize(state -> state.getName("java.lang.Class"));
+
               private static final Supplier<Type> JAVA_LANG_CLASS_TYPE =
                   VisitorState.memoize(state -> state.getTypeFromString("java.lang.Class"));
             }

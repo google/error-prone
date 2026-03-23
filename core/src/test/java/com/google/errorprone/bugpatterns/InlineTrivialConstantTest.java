@@ -42,6 +42,7 @@ public class InlineTrivialConstantTest {
             "Test.java",
             """
             class Test {
+
               void f() {
                 System.err.println("");
               }

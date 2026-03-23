@@ -60,8 +60,8 @@ public class IntLiteralCastTest {
               void f() {
                 long l = 1L << 32;
                 l = 0L;
-                float f = 1f;
-                double d = 1d;
+                float f = 1.0f;
+                double d = 1.0;
                 List<Float> floats = Arrays.asList(0.0f, 1.0f, 2.0f);
               }
             }

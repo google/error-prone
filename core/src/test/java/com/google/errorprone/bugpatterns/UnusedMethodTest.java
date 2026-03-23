@@ -710,6 +710,7 @@ public final class UnusedMethodTest {
               void f() {
                 var r =
                     new Runnable() {
+
                       @Override
                       public void run() {}
                     };
@@ -717,6 +718,7 @@ public final class UnusedMethodTest {
 
               enum E implements Runnable {
                 ONE {
+
                   @Override
                   public void run() {}
                 };

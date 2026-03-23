@@ -302,7 +302,9 @@ public final class MockNotUsedInProductionTest {
             import org.mockito.Mock;
 
             class Test {
+
               public Object test() {
+
                 return null;
               }
             }
@@ -345,7 +347,9 @@ public final class MockNotUsedInProductionTest {
             import org.mockito.Mock;
 
             class Test {
+
               public Object test() {
+
                 return null;
               }
             }

@@ -784,6 +784,7 @@ public class ReturnValueIgnoredTest {
 
             final class Test {
               public void f() {
+
                 var unused = Optional.of(42).orElseThrow(AssertionError::new);
                 Stream.of(Optional.of(42)).forEach(o -> o.orElseThrow(AssertionError::new));
               }

@@ -114,6 +114,7 @@ public class FloggerRequiredModifiersTest {
             import com.google.common.flogger.FluentLogger;
 
             class Test {
+
               private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
               void doIt() {
@@ -227,10 +228,12 @@ class Test {
             import com.google.common.flogger.FluentLogger;
 
             interface Test {
+
               default void foo() {
                 Private.logger.atInfo().log();
               }
 
+              /** Do not use. Exists only to hide implementation details of this interface. */
               public static final class Private {
                 private Private() {}
 
@@ -265,6 +268,7 @@ class Test {
                 Private.logger.atInfo().log();
               }
 
+              /** Do not use. Exists only to hide implementation details of this interface. */
               public static final class Private {
                 private Private() {}
 
@@ -354,6 +358,7 @@ class Test {
             import com.google.common.flogger.FluentLogger;
 
             class Child extends Parent {
+
               private static final FluentLogger logger = FluentLogger.forEnclosingClass();
 
               Child() {
@@ -399,7 +404,9 @@ class Test {
             import com.google.common.flogger.FluentLogger;
 
             class Child extends Parent {
+
               private static final FluentLogger flogger = FluentLogger.forEnclosingClass();
+
               private static final FluentLogger logger = flogger;
 
               Child() {
@@ -440,10 +447,12 @@ class Test {
             import com.google.common.flogger.FluentLogger;
 
             interface Child extends Parent {
+
               default void go() {
                 Private.logger.atInfo().log();
               }
 
+              /** Do not use. Exists only to hide implementation details of this interface. */
               public static final class Private {
                 private Private() {}
 
@@ -470,10 +479,12 @@ class Test {
             import com.google.common.flogger.FluentLogger;
 
             interface Sibling extends Parent {
+
               default void go() {
                 Private.logger.atInfo().log();
               }
 
+              /** Do not use. Exists only to hide implementation details of this interface. */
               public static final class Private {
                 private Private() {}
 

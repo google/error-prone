@@ -106,6 +106,7 @@ public final class FieldCanBeLocalTest {
             "Test.java",
             """
             class Test {
+
               int foo() {
                 int a = 1;
                 a = 2;
@@ -178,6 +179,7 @@ public final class FieldCanBeLocalTest {
             "Test.java",
             """
             class Test {
+
               int foo() {
                 @Field int a = 1;
                 return a;
@@ -256,6 +258,7 @@ public final class FieldCanBeLocalTest {
             "Test.java",
             """
             class Test {
+
               int foo() {
                 @Field int a = 1;
                 return a;
@@ -389,6 +392,7 @@ public final class FieldCanBeLocalTest {
             "Test.java",
             """
             class Test {
+
               int foo() {
                 int a = 1;
                 return a;
@@ -427,6 +431,7 @@ public final class FieldCanBeLocalTest {
             "Test.java",
             """
             class Test {
+
               int foo() {
                 int a = 1;
                 return a;
@@ -470,7 +475,9 @@ public final class FieldCanBeLocalTest {
             "Test.java",
             """
             class Test {
+
               Test(int a) {
+
                 int b = a + 2;
               }
 

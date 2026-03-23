@@ -75,7 +75,7 @@ public final class UnicodeDirectionalityCharactersTest {
             "Test.java",
             """
             // BUG: Diagnostic contains:
-            /** \\u202A */
+            /** \\u202a */
             class Test {
               final int noUnicodeHereBoss = 1;
             }

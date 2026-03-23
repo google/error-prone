@@ -59,6 +59,7 @@ public class SwitchDefaultTest {
                   case 1:
                     return;
                   case 0:
+
                   default:
                     return;
                 }
@@ -244,7 +245,8 @@ public class SwitchDefaultTest {
                 switch (i) {
                   case 0:
                     return true;
-                  case 1: // fall through
+                  // fall through
+                  case 1:
                   default: // fall through
                 }
                 return false;

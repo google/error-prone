@@ -625,7 +625,7 @@ class MustBeClosedCheckerPositiveCases {
   }
 
   int existingDeclarationUsesVar() {
-    // Bug: Diagnostic contains:
+    // BUG: Diagnostic contains:
     try (var result = new Foo().mustBeClosedAnnotatedMethod()) {
       return 0;
     }

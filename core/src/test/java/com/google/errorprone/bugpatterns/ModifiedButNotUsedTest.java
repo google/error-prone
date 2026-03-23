@@ -132,7 +132,9 @@ public final class ModifiedButNotUsedTest {
 
             class Test {
               void test() {
+
                 sideEffects();
+
                 sideEffects();
               }
 
@@ -303,6 +305,7 @@ public final class ModifiedButNotUsedTest {
 
             class Test {
               void foo() {
+
                 TestFieldProtoMessage.Builder builder = TestFieldProtoMessage.newBuilder();
                 sideEffects();
               }

@@ -429,7 +429,7 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
              */
             class UngroupedOverloadsRefactoringComments {
 
-              private void bar() {}
+              private void bar() {} // This is super-important comment for `foo`.
 
               // Something about `bar`.
               /** Does something. */
@@ -438,6 +438,8 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
               // Something about this `bar`.
               public void bar(int x, int y) {}
 
+              // Stuff about `baz` continues.
+
               // More stuff about `bar`.
               public void bar(int x, int y, int z) {
                 // Some internal comments too.
@@ -445,10 +447,10 @@ public class UngroupedOverloadsPositiveCasesCoveringOnlyOnFirst {
 
               public void bar(String s) {}
 
-              public static final String FOO = "foo"; // This is super-important comment for `foo`.
+              public static final String FOO = "foo";
 
               // Something about `baz`.
-              public static final String BAZ = "baz"; // Stuff about `baz` continues.
+              public static final String BAZ = "baz";
 
               public void quux() {}
             }
