@@ -961,18 +961,6 @@ public class Matchers {
   /**
    * Matches on the type of a VariableTree AST node.
    *
-   * @param treeMatcher A matcher on the type of the variable.
-   * @deprecated this does not handle VariableTrees for implicitly typed lambda parameters, prefer
-   *     {@link #variableType(TypePredicate)}
-   */
-  @Deprecated
-  public static Matcher<VariableTree> variableType(Matcher<Tree> treeMatcher) {
-    return (variableTree, state) -> treeMatcher.matches(variableTree.getType(), state);
-  }
-
-  /**
-   * Matches on the type of a VariableTree AST node.
-   *
    * @param typePredicate the type predicate to apply to the variable type
    */
   public static Matcher<VariableTree> variableType(TypePredicate typePredicate) {
