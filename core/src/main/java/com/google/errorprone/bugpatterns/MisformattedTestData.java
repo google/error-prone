@@ -36,6 +36,8 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
+import com.google.googlejavaformat.java.ImportOrderer;
+import com.google.googlejavaformat.java.JavaFormatterOptions.Style;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -71,7 +73,7 @@ public final class MisformattedTestData extends BugChecker implements MethodInvo
     Formatter formatter = new Formatter();
     String formattedSource;
     try {
-      formattedSource = formatter.formatSource(string);
+      formattedSource = ImportOrderer.reorderImports(formatter.formatSource(string), Style.GOOGLE);
     } catch (FormatterException exception) {
       return NO_MATCH;
     }

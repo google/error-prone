@@ -266,4 +266,59 @@ public final class MisformattedTestDataTest {
             """)
         .doTest(TEXT_MATCH);
   }
+
+  @Test
+  public void reorderImports() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    package foo;
+
+                    import java.util.List;
+                    import static java.lang.Math.min;
+
+                    class Test {
+                      int method(List<Integer> xs) {
+                        return min(xs.get(0), xs.get(1));
+                      }
+                    }
+                    \""");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    package foo;
+
+                    import static java.lang.Math.min;
+
+                    import java.util.List;
+
+                    class Test {
+                      int method(List<Integer> xs) {
+                        return min(xs.get(0), xs.get(1));
+                      }
+                    }
+                    \""");
+               }
+            }
+            """)
+        .doTest(TEXT_MATCH);
+  }
 }
