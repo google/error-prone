@@ -83,6 +83,9 @@ public final class UnnecessaryOptionalGet extends BugChecker
       return Description.NO_MATCH;
     }
     VariableTree arg = getOnlyElement(lambdaExpressionTree.getParameters());
+    if ("_".equals(state.getSourceForNode(arg))) {
+      return Description.NO_MATCH;
+    }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     new TreeScanner<Void, VisitorState>() {
       @Override

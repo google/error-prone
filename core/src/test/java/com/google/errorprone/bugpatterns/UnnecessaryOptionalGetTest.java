@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -386,6 +388,26 @@ public final class UnnecessaryOptionalGetTest {
               }
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  public void unnamedVariable_doesNotSuggestFix() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.ifPresent(_ -> System.out.println(op.get()));
+              }
+            }
+            """)
+        .expectUnchanged()
         .doTest();
   }
 }
