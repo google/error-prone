@@ -83,8 +83,10 @@ abstract class UInstanceOf extends UExpression {
   }
 
   @Override
-  public @Nullable Choice<Unifier> visitInstanceOf(
-      InstanceOfTree instanceOf, @Nullable Unifier unifier) {
+  public Choice<Unifier> visitInstanceOf(InstanceOfTree instanceOf, @Nullable Unifier unifier) {
+    if (instanceOf.getPattern() != null) {
+      return Choice.none();
+    }
     return getExpression()
         .unify(instanceOf.getExpression(), unifier)
         .flatMap(unifications(getType(), instanceOf.getType()));

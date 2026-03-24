@@ -435,6 +435,28 @@ public class UnificationTest extends CompilerBasedTest {
   }
 
   @Test
+  public void instanceOf() {
+    // Template: x instanceof String
+    ExpressionTemplate template =
+        ExpressionTemplate.create(
+            ImmutableMap.of("x", UClassType.create("java.lang.Object")),
+            UInstanceOf.create(UFreeIdent.create("x"), UClassIdent.create("java.lang.String")),
+            UPrimitiveType.BOOLEAN);
+
+    compile(
+        "class Foo {",
+        "  public void example(Object x) {",
+        // positive example
+        "    if (x instanceof String) {}",
+        // negative example
+        "    if (x instanceof String s) {}",
+        "  }",
+        "}");
+
+    expectMatches(template, Match.create(ImmutableMap.of("x", "x")));
+  }
+
+  @Test
   public void newArray() {
     // Template: new String[] {str}
     ExpressionTemplate template =
