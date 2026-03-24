@@ -1701,6 +1701,7 @@ public class Test {
             """
             class Test {
               void f() {
+
                 int y = 1;
                 System.err.println(y);
               }
@@ -1729,6 +1730,7 @@ public class Test {
             """
             class Test {
               void f() {
+
                 int y = 1;
                 System.err.println(y);
               }

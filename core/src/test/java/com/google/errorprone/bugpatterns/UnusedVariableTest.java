@@ -493,10 +493,13 @@ public class UnusedVariableTest {
             package unusedvars;
 
             public class Unuseds {
+
               private static final String CONST_STR = "test";
+
               public int publicOne;
 
               void test() {
+
                 System.out.println(CONST_STR);
               }
             }
@@ -968,6 +971,7 @@ public class UnusedVariableTest {
             import com.google.common.collect.ImmutableList;
 
             class Test {
+
               void test() {}
             }
             """)
@@ -1036,6 +1040,7 @@ public class UnusedVariableTest {
               int a = foo();
 
               private int foo() {
+
                 return 1;
               }
             }
@@ -1244,6 +1249,7 @@ public class UnusedVariableTest {
             "Test.java",
             """
             class Test {
+
               public int a() {
                 a();
                 return 1;
@@ -1272,6 +1278,7 @@ public class UnusedVariableTest {
             """
             class Test {
               void foo() {
+
                 if (hashCode() > 0) {}
               }
             }
@@ -1417,6 +1424,7 @@ public class UnusedVariableTest {
 
             public class Test {
               public String test() {
+
                 hashCode();
                 String a = toString();
                 return a;
@@ -1481,6 +1489,7 @@ public class UnusedVariableTest {
 
             public class Test {
               public void test() {
+
                 int a = 3;
                 System.out.println(a);
               }
@@ -1900,6 +1909,7 @@ public class Test {
             """
             public class Test {
               public void test() {
+
                 Integer a = 3;
                 a.hashCode();
               }
@@ -2191,6 +2201,7 @@ public class Test {
 
             class Test {
               public static void main(String[] args) {
+
                 var _ = new Object();
 
                 Collections.sort(Arrays.asList(args), (a, _) -> a.isEmpty() ? 1 : 0);

@@ -559,6 +559,7 @@ interface Test {
             "Test.java",
             """
             interface T {
+
               <T> @TypeUse T f();
             }
             """)
@@ -584,6 +585,7 @@ interface Test {
             import java.util.List;
 
             interface T {
+
               <T extends List<T>> @TypeUse T f();
             }
             """)

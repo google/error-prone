@@ -1444,7 +1444,7 @@ public final class Caller {
             public final class Caller {
               public void doTest() {
                 Client client = new Client();
-                boolean x = (client.after(/* false= */ false) || true);
+                boolean x = (client.after(/* foo= */ false) || true);
               }
             }
             """)

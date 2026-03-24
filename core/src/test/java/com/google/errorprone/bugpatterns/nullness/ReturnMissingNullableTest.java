@@ -2161,8 +2161,7 @@ public class ReturnMissingNullableTest {
             "out/Test.java",
             """
             class T {
-              @org.jspecify.annotations.Nullable
-              private final Object method(boolean b) {
+              private final @org.jspecify.annotations.Nullable Object method(boolean b) {
                 return b ? null : 0;
               }
 
