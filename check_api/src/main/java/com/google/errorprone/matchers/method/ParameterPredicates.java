@@ -16,8 +16,6 @@
 
 package com.google.errorprone.matchers.method;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import com.google.errorprone.predicates.TypePredicate;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
@@ -61,12 +59,9 @@ public final class ParameterPredicates {
     return (parameter, type, state) -> {
       MethodSymbol method = (MethodSymbol) parameter.owner;
       List<TypeVariableSymbol> typeParameters = method.getTypeParameters();
-      checkState(
-          typeParameters.size() == 1,
-          "Expected method %s to have exactly one type parameter, but found %s",
-          method,
-          typeParameters);
-      return type.hasTag(TypeTag.TYPEVAR) && type.tsym == typeParameters.getFirst();
+      return !typeParameters.isEmpty()
+          && type.hasTag(TypeTag.TYPEVAR)
+          && type.tsym == typeParameters.getFirst();
     };
   }
 

@@ -164,4 +164,24 @@ public class CollectionToArraySafeParameterNegativeCases {
             """)
         .doTest();
   }
+
+  @Test
+  public void unexpectedOverload() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.Collection;
+
+            interface Test extends Collection<String> {
+
+              void toArray(int[] a);
+
+              default void f(int[] a) {
+                toArray(a);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
