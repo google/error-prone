@@ -28,7 +28,6 @@ com.google.errorprone.matchers.field
 com.google.errorprone.matchers.method
 com.google.errorprone.names
 com.google.errorprone.predicates
-com.google.errorprone.predicates.type
 com.google.errorprone.refaster
 com.google.errorprone.refaster.annotation
 com.google.errorprone.scanner

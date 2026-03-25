@@ -69,10 +69,8 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><a href="#com.google.errorprone.predicates">com.google.errorprone.predicates</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.predicates.type">com.google.errorprone.predicates.type</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.suppliers">com.google.errorprone.suppliers</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="#com.google.errorprone.suppliers">com.google.errorprone.suppliers</a></div>
+<div class="col-last even-row-color">
 <div class="block">Supports matchers, but rather than giving Matcher implementations which are predicates on
 individual AST nodes, a supplier gives contextual information from the traversal of the AST.</div>
 </div>
@@ -146,12 +144,6 @@ compilation, but requires a <a href="../../VisitorState.html" title="class in co
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="../../matchers/AbstractTypeMatcher.html#%3Cinit%3E(com.google.errorprone.suppliers.Supplier)" class="member-name-link">AbstractTypeMatcher</a><wbr>(<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeToCompareSupplier)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../../matchers/IsSameType.html#%3Cinit%3E(com.google.errorprone.suppliers.Supplier)" class="member-name-link">IsSameType</a><wbr>(<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeToCompareSupplier)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../../matchers/IsSubtypeOf.html#%3Cinit%3E(com.google.errorprone.suppliers.Supplier)" class="member-name-link">IsSubtypeOf</a><wbr>(<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeToCompareSupplier)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -254,58 +246,14 @@ compilation, but requires a <a href="../../VisitorState.html" title="class in co
 <div class="block">Match types that are exactly equal.</div>
 </div>
 </div>
-</section>
-</li>
-<li>
-<section class="detail" id="com.google.errorprone.predicates.type">
-<h2>Uses of <a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a> in <a href="../../predicates/type/package-summary.html">com.google.errorprone.predicates.type</a></h2>
-<div class="caption"><span>Fields in <a href="../../predicates/type/package-summary.html">com.google.errorprone.predicates.type</a> declared as <a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a></span></div>
+<div class="caption"><span>Method parameters in <a href="../../predicates/package-summary.html">com.google.errorprone.predicates</a> with type arguments of type <a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a></span></div>
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Field</div>
+<div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>final <a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">DescendantOf.</span><code><a href="../../predicates/type/DescendantOf.html#expected" class="member-name-link">expected</a></code></div>
+<div class="col-first even-row-color"><code>static <a href="../../predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../../predicates/TypePredicates.html#isDescendantOfAny(com.google.common.collect.ImmutableList)" class="member-name-link">isDescendantOfAny</a><wbr>(com.google.common.collect.ImmutableList&lt;<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;&nbsp;types)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>final <a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Exact.</span><code><a href="../../predicates/type/Exact.html#supplier" class="member-name-link">supplier</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-</div>
-<div class="caption"><span>Fields in <a href="../../predicates/type/package-summary.html">com.google.errorprone.predicates.type</a> with type parameters of type <a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a></span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Field</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a><wbr>&lt;<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">DescendantOfAny.</span><code><a href="../../predicates/type/DescendantOfAny.html#types" class="member-name-link">types</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a><wbr>&lt;<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ExactAny.</span><code><a href="../../predicates/type/ExactAny.html#types" class="member-name-link">types</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-</div>
-<div class="caption"><span>Constructors in <a href="../../predicates/type/package-summary.html">com.google.errorprone.predicates.type</a> with parameters of type <a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a></span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier</div>
-<div class="table-header col-second">Constructor</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../../predicates/type/DescendantOf.html#%3Cinit%3E(com.google.errorprone.suppliers.Supplier)" class="member-name-link">DescendantOf</a><wbr>(<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../../predicates/type/Exact.html#%3Cinit%3E(com.google.errorprone.suppliers.Supplier)" class="member-name-link">Exact</a><wbr>(<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-</div>
-<div class="caption"><span>Constructor parameters in <a href="../../predicates/type/package-summary.html">com.google.errorprone.predicates.type</a> with type arguments of type <a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a></span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier</div>
-<div class="table-header col-second">Constructor</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../../predicates/type/DescendantOfAny.html#%3Cinit%3E(java.lang.Iterable)" class="member-name-link">DescendantOfAny</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;&nbsp;types)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../../predicates/type/ExactAny.html#%3Cinit%3E(java.lang.Iterable)" class="member-name-link">ExactAny</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;&nbsp;types)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>

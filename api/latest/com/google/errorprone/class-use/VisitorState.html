@@ -116,17 +116,15 @@ injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</d
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><a href="#com.google.errorprone.predicates">com.google.errorprone.predicates</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.predicates.type">com.google.errorprone.predicates.type</a></div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.suppliers">com.google.errorprone.suppliers</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.suppliers">com.google.errorprone.suppliers</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Supports matchers, but rather than giving Matcher implementations which are predicates on
 individual AST nodes, a supplier gives contextual information from the traversal of the AST.</div>
 </div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.util">com.google.errorprone.util</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="#com.google.errorprone.util">com.google.errorprone.util</a></div>
+<div class="col-last even-row-color">
 <div class="block">Utility code.</div>
 </div>
 </div>
@@ -5209,14 +5207,6 @@ a constructor or non-<code>void</code> method for which the return value is cons
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">IsSameType.</span><code><a href="../matchers/IsSameType.html#matches(T,com.google.errorprone.VisitorState)" class="member-name-link">matches</a><wbr>(<a href="../matchers/IsSameType.html#type-param-T" title="type parameter in IsSameType">T</a>&nbsp;tree,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">IsSubtypeOf.</span><code><a href="../matchers/IsSubtypeOf.html#matches(T,com.google.errorprone.VisitorState)" class="member-name-link">matches</a><wbr>(<a href="../matchers/IsSubtypeOf.html#type-param-T" title="type parameter in IsSubtypeOf">T</a>&nbsp;tree,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>boolean</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Matcher.</span><code><a href="../matchers/Matcher.html#matches(T,com.google.errorprone.VisitorState)" class="member-name-link">matches</a><wbr>(<a href="../matchers/Matcher.html#type-param-T" title="type parameter in Matcher">T</a>&nbsp;t,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
@@ -5318,33 +5308,6 @@ doReturn(val).when(t)</code>.</div>
 <div class="col-second even-row-color"><span class="type-name-label">TypePredicate.</span><code><a href="../predicates/TypePredicate.html#apply(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">apply</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="com.google.errorprone.predicates.type">
-<h2>Uses of <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a> in <a href="../predicates/type/package-summary.html">com.google.errorprone.predicates.type</a></h2>
-<div class="caption"><span>Methods in <a href="../predicates/type/package-summary.html">com.google.errorprone.predicates.type</a> with parameters of type <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Method</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">DescendantOf.</span><code><a href="../predicates/type/DescendantOf.html#apply(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">apply</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">DescendantOfAny.</span><code><a href="../predicates/type/DescendantOfAny.html#apply(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">apply</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Exact.</span><code><a href="../predicates/type/Exact.html#apply(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">apply</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ExactAny.</span><code><a href="../predicates/type/ExactAny.html#apply(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">apply</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>

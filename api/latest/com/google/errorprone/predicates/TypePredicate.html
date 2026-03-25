@@ -59,6 +59,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#apply(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" tabindex="0">apply(Type, VisitorState)</a></li>
+<li><a href="#and(com.google.errorprone.predicates.TypePredicate)" tabindex="0">and(TypePredicate)</a></li>
 </ol>
 </li>
 </ol>
@@ -72,10 +73,6 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>All Superinterfaces:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
-</dl>
-<dl class="notes">
-<dt>All Known Implementing Classes:</dt>
-<dd><code><a href="type/Array.html" title="enum class in com.google.errorprone.predicates.type">Array</a>, <a href="type/DescendantOf.html" title="class in com.google.errorprone.predicates.type">DescendantOf</a>, <a href="type/DescendantOfAny.html" title="class in com.google.errorprone.predicates.type">DescendantOfAny</a>, <a href="type/Exact.html" title="class in com.google.errorprone.predicates.type">Exact</a>, <a href="type/ExactAny.html" title="class in com.google.errorprone.predicates.type">ExactAny</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
@@ -91,16 +88,19 @@ extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/ja
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button><button id="method-summary-table-tab5" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab5', 3)" class="table-tab">Default Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#apply(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">apply</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#and(com.google.errorprone.predicates.TypePredicate)" class="member-name-link">and</a><wbr>(<a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;other)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#apply(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">apply</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -121,6 +121,14 @@ extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/ja
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">apply</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="and(com.google.errorprone.predicates.TypePredicate)">
+<h3>and</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></span>&nbsp;<span class="element-name">and</span><wbr><span class="parameters">(<a href="TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a>&nbsp;other)</span></div>
 </div>
 </section>
 </li>
