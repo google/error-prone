@@ -327,9 +327,6 @@ public class BugCheckerRefactoringTestHelperTest {
     @Override
     public Description matchVariable(VariableTree tree, VisitorState state) {
       Tree type = tree.getType();
-      if (ASTHelpers.hasExplicitSource(type, state)) {
-        return Description.NO_MATCH;
-      }
       return describeMatch(type, SuggestedFix.replace(type, "Object"));
     }
   }
@@ -337,8 +334,9 @@ public class BugCheckerRefactoringTestHelperTest {
   @SuppressWarnings("MissingTestCall") // used in a method reference in assertThrows
   @Test
   public void replaceVarTypes() {
-    // after JDK-8358604, var types have source positions
-    assume().that(Runtime.version().feature()).isLessThan(27);
+    // after JDK-8358604 in JDK 27, var types have source positions
+    // after JDK-8359383 in JDK 26, var type start and end positions are the same
+    assume().that(Runtime.version().feature()).isLessThan(26);
     BugCheckerRefactoringTestHelper helper =
         BugCheckerRefactoringTestHelper.newInstance(ReplaceVarTypes.class, getClass())
             .addInputLines(
@@ -361,5 +359,33 @@ public class BugCheckerRefactoringTestHelperTest {
                 var x = 1 + 2;
             """);
     assertThat(e).hasMessageThat().contains("BugPattern: ReplaceVarTypes");
+  }
+
+  @Test
+  public void varTypeSourcePositions() {
+    // after JDK-8358604 in JDK 27, var types have source positions
+    assume().that(Runtime.version().feature()).isAtLeast(27);
+    BugCheckerRefactoringTestHelper.newInstance(ReplaceVarTypes.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              public void foo() {
+                var x = 1 + 2;
+                System.out.println(x);
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            public class Test {
+              public void foo() {
+                Object x = 1 + 2;
+                System.out.println(x);
+              }
+            }
+            """)
+        .doTest();
   }
 }
