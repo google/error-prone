@@ -17,15 +17,11 @@
 package com.google.errorprone.predicates;
 
 import static com.google.errorprone.suppliers.Suppliers.fromStrings;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.common.collect.ImmutableList;
-import com.google.errorprone.predicates.type.Array;
-import com.google.errorprone.predicates.type.DescendantOf;
-import com.google.errorprone.predicates.type.DescendantOfAny;
-import com.google.errorprone.predicates.type.Exact;
-import com.google.errorprone.predicates.type.ExactAny;
 import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.suppliers.Suppliers;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.tools.javac.code.Type;
 
 /** A collection of {@link TypePredicate}s. */
@@ -43,12 +39,11 @@ public final class TypePredicates {
 
   /** Match arrays. */
   public static TypePredicate isArray() {
-    return Array.INSTANCE;
+    return (type, state) -> type != null && state.getTypes().isArray(type);
   }
 
   public static TypePredicate isArrayOf(TypePredicate predicate) {
-    return (type, state) ->
-        state.getTypes().isArray(type) && predicate.apply(state.getTypes().elemtype(type), state);
+    return isArray().and((type, state) -> predicate.apply(state.getTypes().elemtype(type), state));
   }
 
   public static TypePredicate isPrimitive() {
@@ -57,32 +52,40 @@ public final class TypePredicates {
 
   /** Match types that are exactly equal. */
   public static TypePredicate isExactType(String type) {
-    return isExactType(Suppliers.typeFromString(type));
+    return isExactType(typeFromString(type));
   }
 
   /** Match types that are exactly equal. */
   public static TypePredicate isExactType(Supplier<Type> type) {
-    return new Exact(type);
+    return (actual, state) -> ASTHelpers.isSameType(actual, type.get(state), state);
   }
 
   /** Match types that are exactly equal to any of the given types. */
   public static TypePredicate isExactTypeAny(Iterable<String> types) {
-    return new ExactAny(fromStrings(types));
+    ImmutableList<Supplier<Type>> suppliers = fromStrings(types);
+    return (actual, state) ->
+        suppliers.stream()
+            .anyMatch(supplier -> ASTHelpers.isSameType(actual, supplier.get(state), state));
   }
 
   /** Match sub-types of the given type. */
   public static TypePredicate isDescendantOf(Supplier<Type> type) {
-    return new DescendantOf(type);
+    return (actual, state) -> ASTHelpers.isSubtype(actual, type.get(state), state);
   }
 
   /** Match sub-types of the given type. */
   public static TypePredicate isDescendantOf(String type) {
-    return isDescendantOf(Suppliers.typeFromString(type));
+    return isDescendantOf(typeFromString(type));
   }
 
   /** Match types that are a sub-type of one of the given types. */
   public static TypePredicate isDescendantOfAny(Iterable<String> types) {
-    return new DescendantOfAny(fromStrings(types));
+    return isDescendantOfAny(fromStrings(types));
+  }
+
+  public static TypePredicate isDescendantOfAny(ImmutableList<Supplier<Type>> types) {
+    return (actual, state) ->
+        types.stream().anyMatch(type -> ASTHelpers.isSubtype(actual, type.get(state), state));
   }
 
   public static TypePredicate allOf(TypePredicate... predicates) {

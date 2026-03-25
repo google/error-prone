@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
@@ -32,8 +33,6 @@ import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.predicates.type.DescendantOf;
-import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -65,8 +64,7 @@ public final class ProtoBuilderReturnValueIgnored extends AbstractReturnValueIgn
   private static final Matcher<ExpressionTree> ROOT_INVOCATIONS_TO_IGNORE =
       anyOf(
           staticMethod()
-              .onClass(
-                  new DescendantOf(Suppliers.typeFromString("com.google.protobuf.MessageLite")))
+              .onClass(isDescendantOf("com.google.protobuf.MessageLite"))
               .namedAnyOf("newBuilder"),
           instanceMethod()
               .onDescendantOf("com.google.protobuf.MessageLite")

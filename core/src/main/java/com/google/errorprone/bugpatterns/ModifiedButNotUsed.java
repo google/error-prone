@@ -24,8 +24,11 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.Matchers.typePredicateMatcher;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOfAny;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
@@ -41,11 +44,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatch
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.IsSubtypeOf;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.predicates.type.DescendantOf;
-import com.google.errorprone.predicates.type.DescendantOfAny;
-import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.SideEffectAnalysis;
 import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.AssignmentTree;
@@ -146,9 +145,10 @@ public class ModifiedButNotUsed extends BugChecker
               .withNameMatching(Pattern.compile("get.+")));
 
   private static final Matcher<Tree> COLLECTION_TYPE =
-      anyOf(COLLECTIONS.stream().map(IsSubtypeOf::new).collect(toImmutableList()));
+      typePredicateMatcher(isDescendantOfAny(COLLECTIONS));
 
-  private static final Matcher<Tree> PROTO_TYPE = new IsSubtypeOf<>(MESSAGE_BUILDER);
+  private static final Matcher<Tree> PROTO_TYPE =
+      typePredicateMatcher(isDescendantOf(MESSAGE_BUILDER));
 
   private static final Matcher<ExpressionTree> FLUENT_CONSTRUCTOR =
       anyOf(
@@ -156,27 +156,20 @@ public class ModifiedButNotUsed extends BugChecker
               kindIs(Kind.NEW_CLASS),
               constructor()
                   .forClass(
-                      new DescendantOfAny(
+                      isDescendantOfAny(
                           GUAVA_IMMUTABLES.stream()
-                              .map(i -> Suppliers.typeFromString(i + ".Builder"))
+                              .map(i -> i + ".Builder")
                               .collect(toImmutableList())))),
           staticMethod()
               .onDescendantOfAny(GUAVA_IMMUTABLES)
               .namedAnyOf("builder", "builderWithExpectedSize"),
-          allOf(
-              kindIs(Kind.NEW_CLASS),
-              constructor().forClass(new DescendantOf(Suppliers.typeFromString(MESSAGE_BUILDER)))),
+          allOf(kindIs(Kind.NEW_CLASS), constructor().forClass(isDescendantOf(MESSAGE_BUILDER))),
           staticMethod().onDescendantOf(MESSAGE).named("newBuilder"),
           instanceMethod().onDescendantOf(MESSAGE).namedAnyOf("toBuilder", "newBuilderForType"));
 
   private static final Matcher<ExpressionTree> NEW_COLLECTION =
       anyOf(
-          constructor()
-              .forClass(
-                  new DescendantOfAny(
-                      COLLECTIONS.stream()
-                          .map(Suppliers::typeFromString)
-                          .collect(toImmutableList()))),
+          constructor().forClass(isDescendantOfAny(COLLECTIONS)),
           staticMethod()
               .onClassAny(
                   "com.google.common.collect.Lists",
