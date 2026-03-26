@@ -10,3 +10,10 @@ Use the erased type of method parameters in `@link` tags. For example, write
 `{@link #foo(List)}` instead of `{@link #foo(List<Bah>)}`. Javadoc does yet not
 support generics in `@link` tags, due to a bug:
 [JDK-5096551](https://bugs.openjdk.java.net/browse/JDK-5096551).
+
+### Limitations
+
+This check is very limited in terms of which unresolved links it can be *sure*
+are unresolvable. Code within Google is often compiled on a per-package or even
+per-file basis, and Error Prone only has visibility into the current
+compilation.
