@@ -305,4 +305,30 @@ public final class InvalidInlineTagTest {
         .setArgs("-XepOpt:Javadoc:customInlineTags=customTag1,customTag2")
         .doTest();
   }
+
+  @Test
+  public void blockTagUsedInline() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            interface Test {
+              // BUG: Diagnostic contains: Tag name `see` is not a valid inline tag, but it is a valid block
+              // tag.
+              /** Provide an {@see #foo} */
+              void foo(int a);
+
+              // BUG: Diagnostic contains: Tag name `author` is not a valid inline tag, but it is a valid block
+              // tag.
+              /** {@author ghm} */
+              int bar();
+
+              // BUG: Diagnostic contains: Tag name `since` is not a valid inline tag, but it is a valid block
+              // tag.
+              /** {@since 1.0} */
+              void baz();
+            }
+            """)
+        .doTest();
+  }
 }

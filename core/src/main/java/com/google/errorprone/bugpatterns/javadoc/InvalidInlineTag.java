@@ -350,6 +350,17 @@ public final class InvalidInlineTag extends BugChecker
     }
 
     private void reportUnknownTag(DocTree docTree, JavadocTag tag) {
+      if (context.validTags.contains(JavadocTag.blockTag(tag.name()))) {
+        state.reportMatch(
+            buildDescription(diagnosticPosition(getCurrentPath(), state))
+                .setMessage(
+                    String.format(
+                        "Tag name `%s` is not a valid inline tag, but it is a valid block tag.",
+                        tag.name()))
+                .build());
+        fixedTags.add(docTree);
+        return;
+      }
       Optional<String> bestMatch =
           Utils.getBestMatch(
               tag.name(),
