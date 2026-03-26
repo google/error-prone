@@ -29,7 +29,7 @@ public record FixedPosition(JCTree tree, int startPosition, int endPosition)
   }
 
   public FixedPosition(Tree tree, int startPosition, int endPosition) {
-    this((JCTree) tree, startPosition, endPosition);
+    this((JCTree) tree, startPosition, startPosition);
   }
 
   @Override

@@ -14,13 +14,29 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.predicates;
+package com.google.errorprone.predicates.type;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.tools.javac.code.Type;
-import java.io.Serializable;
 
-/** A predicate for testing {@link Type}s. */
-public interface TypePredicate extends Serializable {
-  boolean apply(Type type, VisitorState state);
+/** Matches types that exactly match the given type. */
+public class Exact implements TypePredicate {
+
+  public final Supplier<Type> supplier;
+
+  public Exact(Supplier<Type> type) {
+    this.supplier = type;
+  }
+
+  @Override
+  public boolean apply(Type type, VisitorState state) {
+    Type expected = supplier.get(state);
+    if (expected == null || type == null) {
+      return false;
+    }
+    return ASTHelpers.isSameType(expected, type, state);
+  }
 }
