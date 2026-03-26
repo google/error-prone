@@ -26,5 +26,12 @@ Use the erased type of method parameters in `@link` tags. For example, write
 support generics in `@link` tags, due to a bug:
 [JDK-5096551](https://bugs.openjdk.java.net/browse/JDK-5096551).
 
+### Limitations
+
+This check is very limited in terms of which unresolved links it can be *sure*
+are unresolvable. Code within Google is often compiled on a per-package or even
+per-file basis, and Error Prone only has visibility into the current
+compilation.
+
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("InvalidLink")` to the enclosing element.
