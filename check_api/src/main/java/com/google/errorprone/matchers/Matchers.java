@@ -21,7 +21,6 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.predicates.TypePredicates.isExactType;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
@@ -396,7 +395,7 @@ public class Matchers {
    * @param typeStr a string representation of the type, e.g., "java.util.AbstractList"
    */
   public static <T extends Tree> Matcher<T> isSubtypeOf(String typeStr) {
-    return typePredicateMatcher(isDescendantOf(typeStr));
+    return new IsSubtypeOf<>(typeStr);
   }
 
   /**
@@ -405,7 +404,7 @@ public class Matchers {
    * @param type the type to check against
    */
   public static <T extends Tree> Matcher<T> isSubtypeOf(Supplier<Type> type) {
-    return typePredicateMatcher(isDescendantOf(type));
+    return new IsSubtypeOf<>(type);
   }
 
   /**
@@ -414,22 +413,22 @@ public class Matchers {
    * @param clazz a class representation of the type, e.g., Action.class.
    */
   public static <T extends Tree> Matcher<T> isSubtypeOf(Class<?> clazz) {
-    return typePredicateMatcher(isDescendantOf(typeFromClass(clazz)));
+    return new IsSubtypeOf<>(typeFromClass(clazz));
   }
 
   /** Matches an AST node if it has the same erased type as the given type. */
   public static <T extends Tree> Matcher<T> isSameType(Supplier<Type> type) {
-    return typePredicateMatcher(isExactType(type));
+    return new IsSameType<>(type);
   }
 
   /** Matches an AST node if it has the same erased type as the given type. */
   public static <T extends Tree> Matcher<T> isSameType(String typeString) {
-    return typePredicateMatcher(isExactType(typeString));
+    return new IsSameType<>(typeString);
   }
 
   /** Matches an AST node if it has the same erased type as the given class. */
   public static <T extends Tree> Matcher<T> isSameType(Class<?> clazz) {
-    return typePredicateMatcher(isExactType(typeFromClass(clazz)));
+    return new IsSameType<>(typeFromClass(clazz));
   }
 
   /**

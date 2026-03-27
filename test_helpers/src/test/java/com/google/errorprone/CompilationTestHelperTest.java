@@ -546,9 +546,8 @@ public class CompilationTestHelperTest {
   @SuppressWarnings("MissingTestCall") // used in a method reference in assertThrows
   @Test
   public void replaceVarTypes() {
-    // after JDK-8358604 in JDK 27, var types have source positions
-    // after JDK-8359383 in JDK 26, var type start and end positions are the same
-    assume().that(Runtime.version().feature()).isLessThan(26);
+    // after JDK-8358604, var types have source positions
+    assume().that(Runtime.version().feature()).isLessThan(27);
     var compilationTestHelper =
         CompilationTestHelper.newInstance(ReplaceVarTypes.class, getClass())
             .addSourceLines(

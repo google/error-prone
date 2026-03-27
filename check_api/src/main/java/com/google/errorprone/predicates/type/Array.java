@@ -14,13 +14,18 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.predicates;
+package com.google.errorprone.predicates.type;
 
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.predicates.TypePredicate;
 import com.sun.tools.javac.code.Type;
-import java.io.Serializable;
 
-/** A predicate for testing {@link Type}s. */
-public interface TypePredicate extends Serializable {
-  boolean apply(Type type, VisitorState state);
+/** Matches arrays. */
+public enum Array implements TypePredicate {
+  INSTANCE {
+    @Override
+    public boolean apply(Type type, VisitorState state) {
+      return type != null && state.getTypes().isArray(type);
+    }
+  };
 }
