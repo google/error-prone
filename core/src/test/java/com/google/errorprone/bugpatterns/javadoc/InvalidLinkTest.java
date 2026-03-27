@@ -137,6 +137,70 @@ interface Test {
   }
 
   @Test
+  public void qualifiedMethodLink_classExistsMemberDoesnt() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            interface Test {
+              // BUG: Diagnostic contains: The reference `List#nonExistent()` to a method doesn't resolve
+              /** {@link List#nonExistent()} */
+              void foo();
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void qualifiedMethodLink_classExistsMemberDoesnt_fullyQualified() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            interface Test {
+              // BUG: Diagnostic contains: The reference `java.util.List#nonExistent()` to a method doesn't
+              // resolve
+              /** {@link java.util.List#nonExistent()} */
+              void foo();
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void qualifiedMethodLink_classDoesntExist() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            interface Test {
+              /** {@link com.google.NonExistent#method()} */
+              void foo();
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void qualifiedMethodLink_generics() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            interface Test {
+              // BUG: Diagnostic contains: erasure
+              /** {@link List#add(List<String>)} */
+              void foo();
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void shouldBeMethodLink() {
     refactoring
         .addInputLines(

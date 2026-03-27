@@ -38,6 +38,7 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.doctree.ErroneousTree;
 import com.sun.source.doctree.LinkTree;
+import com.sun.source.doctree.ReferenceTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -47,6 +48,7 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DCTree.DCText;
+import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.util.Log;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -146,19 +148,11 @@ public final class InvalidLink extends BugChecker
       }
       String reference = linkTree.getReference().getSignature();
       Element element = null;
-      Log log = Log.instance(state.context);
-      // Install a deferred diagnostic handler before calling DocTrees.getElement(DocTreePath)
-
-      Log.DeferredDiagnosticHandler deferredDiagnosticHandler = deferredDiagnosticHandler(log);
       boolean crashed = false;
       try {
-        element =
-            JavacTrees.instance(state.context)
-                .getElement(new DocTreePath(getCurrentPath(), linkTree.getReference()));
+        element = getElement(linkTree.getReference());
       } catch (NullPointerException | AssertionError e) {
         crashed = true;
-      } finally {
-        log.popDiagnosticHandler(deferredDiagnosticHandler);
       }
       if (crashed) {
         // If the @link crashed javac, report a finding.
@@ -169,8 +163,28 @@ public final class InvalidLink extends BugChecker
                 .build());
       }
       // Don't warn about fully qualified types; they won't always be known at compile-time.
-      if (element != null || reference.contains(".")) {
+      if (element != null || (reference.contains(".") && !reference.contains("#"))) {
         return super.visitLink(linkTree, null);
+      }
+      if (reference.contains("#")) {
+        String classPart = reference.substring(0, reference.indexOf('#'));
+        if (classPart.isEmpty() || classExists(classPart)) {
+          state.reportMatch(
+              buildDescription(diagnosticPosition(getCurrentPath(), state))
+                  .setMessage(
+                      String.format(
+                          "The reference `%s` to a method doesn't resolve to anything. Is it"
+                              + " misspelt, or is the parameter list not correct? See"
+                              + " https://docs.oracle.com/javase/8/docs/technotes/tools/unix/javadoc.html#JSSOR654"
+                              + " for documentation on how to form method links.%s",
+                          reference,
+                          reference.contains("<")
+                              ? " Note, in particular, that the _erasure_ of generic types should"
+                                  + " be used (for example, List rather than List<Foo>)."
+                              : ""))
+                  .build());
+          return super.visitLink(linkTree, null);
+        }
       }
       if (parameters.contains(reference)) {
         String message =
@@ -198,25 +212,28 @@ public final class InvalidLink extends BugChecker
                 .build());
         return super.visitLink(linkTree, null);
       }
-      if (reference.charAt(0) == '#') {
-        state.reportMatch(
-            buildDescription(diagnosticPosition(getCurrentPath(), state))
-                .setMessage(
-                    String.format(
-                        "The reference `%s` to a method doesn't resolve to anything. Is it"
-                            + " misspelt, or is the parameter list not correct? See"
-                            + " https://docs.oracle.com/javase/8/docs/technotes/tools/unix/javadoc.html#JSSOR654"
-                            + " for documentation on how to form method links.%s",
-                        reference,
-                        reference.contains("<")
-                            ? " Note, in particular, that the _erasure_ of generic types should be"
-                                + " used (for example, List rather than List<Foo>)."
-                            : ""))
-                .build());
-      }
-      // TODO(ghm): If this is a method reference, we could check whether class is available but the
-      // method isn't.
       return super.visitLink(linkTree, null);
+    }
+
+    private boolean classExists(String classPart) {
+      try {
+        DocTreeMaker maker = DocTreeMaker.instance(state.context);
+        ReferenceTree classReference = maker.newReferenceTree(classPart);
+        return getElement(classReference) != null;
+      } catch (NullPointerException | AssertionError e) {
+        return false;
+      }
+    }
+
+    private Element getElement(ReferenceTree reference) {
+      Log log = Log.instance(state.context);
+      Log.DeferredDiagnosticHandler handler = deferredDiagnosticHandler(log);
+      try {
+        return JavacTrees.instance(state.context)
+            .getElement(new DocTreePath(getCurrentPath(), reference));
+      } finally {
+        log.popDiagnosticHandler(handler);
+      }
     }
 
     private String fixLink(String reference, String label) {
