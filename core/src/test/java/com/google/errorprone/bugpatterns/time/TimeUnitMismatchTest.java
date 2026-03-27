@@ -464,6 +464,30 @@ public class TimeUnitMismatchTest {
   }
 
   @Test
+  public void ternary() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private long millis = 1;
+              private long micros = 1;
+
+              long foo(boolean condition) {
+                // BUG: Diagnostic contains:
+                return condition ? millis : micros;
+              }
+
+              long bar(boolean condition) {
+                // BUG: Diagnostic contains:
+                return condition ? micros : millis;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void testUnitSuggestedByName() {
     assertSeconds("sleepSec", "deadlineSeconds", "secondsTimeout", "msToS");
     assertUnknown(

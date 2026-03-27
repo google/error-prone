@@ -52,6 +52,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.ConditionalExpressionTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
@@ -64,6 +65,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -97,6 +99,7 @@ import org.jspecify.annotations.Nullable;
 public final class TimeUnitMismatch extends BugChecker
     implements AssignmentTreeMatcher,
         BinaryTreeMatcher,
+        ConditionalExpressionTreeMatcher,
         MemberReferenceTreeMatcher,
         MethodInvocationTreeMatcher,
         NewClassTreeMatcher,
@@ -194,6 +197,35 @@ public final class TimeUnitMismatch extends BugChecker
                   state))
           .build();
     }
+  }
+
+  @Override
+  public Description matchConditionalExpression(
+      ConditionalExpressionTree tree, VisitorState state) {
+    if (!checkReturnValues) {
+      return Description.NO_MATCH;
+    }
+    if (!NUMERIC_TIME_TYPE.matches(tree.getTrueExpression(), state)
+        || !NUMERIC_TIME_TYPE.matches(tree.getFalseExpression(), state)) {
+      return Description.NO_MATCH;
+    }
+
+    TreeAndTimeUnit lhs = unitSuggestedByTree(tree.getTrueExpression());
+    TreeAndTimeUnit rhs = unitSuggestedByTree(tree.getFalseExpression());
+
+    if (lhs == null || rhs == null) {
+      return Description.NO_MATCH;
+    }
+    if (lhs.outermostUnit().equals(rhs.outermostUnit())) {
+      return Description.NO_MATCH;
+    }
+
+    return buildDescription(tree)
+        .setMessage(
+            String.format(
+                "The branches of this ternary expression have different time units: %s and %s.",
+                lhs.outermostUnit(), rhs.outermostUnit()))
+        .build();
   }
 
   @Override
