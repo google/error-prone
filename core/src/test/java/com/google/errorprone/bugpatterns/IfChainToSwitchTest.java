@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
@@ -3534,6 +3535,171 @@ class Test {
 }
 """)
         .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_dominationWithTrivialGuardSwitchExpressionAssignable_error() {
+    // Future Java versions will define domination to include when the switch expression is always
+    // assignable to the type of the pattern expression (see JEP 530).  The code this checker emits
+    // conforms to this convention, even for earlier source versions.  This test specifically tests
+    // when the pattern expression has a trivial guard (`true`)
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              interface A {}
+
+              interface B {}
+
+              static class C implements A {}
+
+              public void foo(Suit s) {
+                A a = s == null ? null : new C();
+                if (a instanceof A && true) {
+                  System.out.println("It's an A!");
+                } else if (a instanceof B b && true) {
+                  System.out.println("It's a B!");
+                } else if (a == null) {
+                  System.out.println("It's null!");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+class Test {
+  interface A {}
+
+  interface B {}
+
+  static class C implements A {}
+
+  public void foo(Suit s) {
+    A a = s == null ? null : new C();
+    switch (a) {
+      case B b when true -> System.out.println("It's a B!");
+      case A unused when true -> System.out.println("It's an A!");
+      case null -> System.out.println("It's null!");
+    }
+  }
+}
+""")
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_dominationWithSwitchExpressionAssignable_error() {
+    // Future Java versions will define domination to include when the switch expression is always
+    // assignable to the type of the pattern expression (see JEP 530).  The code this checker emits
+    // conforms to this convention, even for earlier source versions.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              interface A {}
+
+              interface B {}
+
+              static class C implements A {}
+
+              public void foo(Suit s) {
+                A a = s == null ? null : new C();
+                if (a instanceof A) {
+                  System.out.println("It's an A!");
+                } else if (a instanceof B b) {
+                  System.out.println("It's a B!");
+                } else if (a == null) {
+                  System.out.println("It's null!");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+class Test {
+  interface A {}
+
+  interface B {}
+
+  static class C implements A {}
+
+  public void foo(Suit s) {
+    A a = s == null ? null : new C();
+    switch (a) {
+      case B b -> System.out.println("It's a B!");
+      case A unused -> System.out.println("It's an A!");
+      case null -> System.out.println("It's null!");
+    }
+  }
+}
+""")
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest(TEXT_MATCH);
+  }
+
+  @Test
+  public void ifChain_dominationWithSwitchExpressionAssignable26PreviewEnabled_error() {
+    // Executes ifChain_dominationWithSwitchExpressionAssignable_error under Java 26+ with optional
+    // features enabled (covers JEP 530)
+    assume().that(Runtime.version().feature()).isAtLeast(26);
+
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              interface A {}
+
+              interface B {}
+
+              static class C implements A {}
+
+              public void foo(Suit s) {
+                A a = s == null ? null : new C();
+                if (a instanceof A) {
+                  System.out.println("It's an A!");
+                } else if (a instanceof B b) {
+                  System.out.println("It's a B!");
+                } else if (a == null) {
+                  System.out.println("It's null!");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+class Test {
+  interface A {}
+
+  interface B {}
+
+  static class C implements A {}
+
+  public void foo(Suit s) {
+    A a = s == null ? null : new C();
+    switch (a) {
+      case B b -> System.out.println("It's a B!");
+      case A unused -> System.out.println("It's an A!");
+      case null -> System.out.println("It's null!");
+    }
+  }
+}
+""")
+        .setArgs(
+            "-XepOpt:IfChainToSwitch:EnableMain",
+            "--enable-preview",
+            "--release",
+            Integer.toString(Runtime.version().feature()))
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest(TEXT_MATCH);
   }

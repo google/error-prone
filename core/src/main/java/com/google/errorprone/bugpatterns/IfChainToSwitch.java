@@ -426,25 +426,26 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
-   * Determines whether the given case IR has an "unguarded" pattern. As defined in the JLS,
-   * "unguarded" means that either there is no guard or the guard is the boolean literal `true`.
+   * Determines whether the given case IR has a "guarded" pattern. As defined in the JLS,
+   * "unguarded" means that either there is no guard or the guard is the boolean literal `true`, and
+   * "guarded" is the logical negation of "unguarded".
    */
-  private static boolean isUnguarded(CaseIr caseIr) {
+  private static boolean isGuarded(CaseIr caseIr) {
     // Not a pattern
     if (caseIr.instanceOfOptional().isEmpty()) {
-      return false;
+      return true;
     }
 
     if (caseIr.guardOptional().isEmpty()) {
-      return true;
+      return false;
     }
 
     // Guard is present and is `true`
     ExpressionTree guard = stripParentheses(caseIr.guardOptional().get());
-    return isBooleanLiteral(guard)
+    return !(isBooleanLiteral(guard)
         && guard instanceof LiteralTree literalTree
         && literalTree.getValue() instanceof Boolean b
-        && b;
+        && b);
   }
 
   /**
@@ -481,7 +482,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             .filter(
                 caseIr ->
                     caseIr.instanceOfOptional().isPresent()
-                        && isUnguarded(caseIr)
+                        && !isGuarded(caseIr)
                         && isSubtype(
                             getType(subject),
                             getType(caseIr.instanceOfOptional().get().type()),
@@ -1710,6 +1711,23 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     }
   }
 
+  /** Returns whether the {@code CaseIr} represents an unconditional pattern. */
+  public static boolean isUnconditionalPattern(
+      CaseIr caseIr, VisitorState state, ExpressionTree subject) {
+    // The guard is the condition
+    if (isGuarded(caseIr)) {
+      return false;
+    }
+    if (caseIr.instanceOfOptional().isPresent()) {
+      InstanceOfIr instanceOfIr = caseIr.instanceOfOptional().get();
+      if (state.getTypes().isSubtype(getType(subject), getType(instanceOfIr.type()))) {
+        // A (non-null) subject expression can always match
+        return true;
+      }
+    }
+    return false;
+  }
+
   /**
    * Compute whether the RHS is dominated by the LHS.
    *
@@ -1738,7 +1756,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         boolean isPrimitive = getType(constantExpression).isPrimitive();
         if (isPrimitive) {
           // Guarded patterns cannot dominate primitives
-          if (!isUnguarded(lhs)) {
+          if (isGuarded(lhs)) {
             continue;
           }
           if (lhs.instanceOfOptional().isPresent()) {
@@ -1770,7 +1788,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         }
         boolean isEnum = isEnumValue(constantExpression, state);
         if (isEnum) {
-          if (!isUnguarded(lhs)) {
+          if (isGuarded(lhs)) {
             // Guarded patterns cannot dominate enum values
             continue;
           }
@@ -1791,7 +1809,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         // RHS must be a reference
         // The rhs-reference code would be needed to support e.g. String literals.  It is included
         // for completeness.
-        if (!isUnguarded(lhs)) {
+        if (isGuarded(lhs)) {
           // Guarded patterns cannot dominate references
           continue;
         }
@@ -1816,13 +1834,13 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     }
 
     // The RHS must be a pattern
-    if (lhs.hasDefault() || lhs.hasCaseNull()) {
-      // LHS has a default or case null, which dominates the RHS
+    if (lhs.hasDefault() || lhs.hasCaseNull() || isUnconditionalPattern(lhs, state, subject)) {
+      // LHS always matches, or is `case null`, thus dominates the RHS
       return true;
     }
 
     // RHS must be a pattern
-    if (!isUnguarded(lhs)) {
+    if (isGuarded(lhs)) {
       // LHS has a guard, so cannot dominate RHS
       return false;
     }
