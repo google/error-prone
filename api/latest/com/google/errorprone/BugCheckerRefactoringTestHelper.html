@@ -172,10 +172,14 @@ test.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#doTest()" class="member-name-link">doTest</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Runs the test.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#doTest(com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode)" class="member-name-link">doTest</a><wbr>(<a href="BugCheckerRefactoringTestHelper.TestMode.html" title="enum class in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a>&nbsp;testMode)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Runs the test.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static <a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#newInstance(com.google.errorprone.bugpatterns.BugChecker,java.lang.Class)" class="member-name-link">newInstance</a><wbr>(<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;refactoringBugChecker,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</code></div>
@@ -353,6 +357,9 @@ test.</div>
 <h3>doTest</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">doTest</span>()</div>
+<div class="block">Runs the test.
+
+<p>By default outputs are compared with <a href="BugCheckerRefactoringTestHelper.TestMode.html#TEXT_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH</code></a>.</div>
 </div>
 </section>
 </li>
@@ -361,6 +368,11 @@ test.</div>
 <h3>doTest</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">doTest</span><wbr><span class="parameters">(<a href="BugCheckerRefactoringTestHelper.TestMode.html" title="enum class in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a>&nbsp;testMode)</span></div>
+<div class="block">Runs the test.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>testMode</code> - the comparison to use to for the test outputs. The default is <a href="BugCheckerRefactoringTestHelper.TestMode.html#TEXT_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH</code></a>.</dd>
+</dl>
 </div>
 </section>
 </li>
