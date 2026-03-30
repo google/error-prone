@@ -388,4 +388,52 @@ public class BugCheckerRefactoringTestHelperTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void reorderImports() {
+    helper
+        .addInputLines(
+            "in/Test.java",
+            """
+            import static java.lang.Math.min;
+
+            import java.util.List;
+
+            public class Test {
+              public Integer foo(List<Integer> xs) {
+                Integer i = null;
+                for (int x : xs) {
+                  if (i == null) {
+                    i = x;
+                  } else {
+                    i = min(i, x);
+                  }
+                }
+                return i;
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            import static java.lang.Math.min;
+
+            import java.util.List;
+
+            public class Test {
+              public Integer foo(List<Integer> xs) {
+                Integer i = null;
+                for (int x : xs) {
+                  if (i == null) {
+                    i = x;
+                  } else {
+                    i = min(i, x);
+                  }
+                }
+                return null;
+              }
+            }
+            """)
+        .doTest(TestMode.TEXT_MATCH);
+  }
 }

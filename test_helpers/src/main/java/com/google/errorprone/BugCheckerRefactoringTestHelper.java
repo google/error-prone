@@ -50,6 +50,8 @@ import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
+import com.google.googlejavaformat.java.ImportOrderer;
+import com.google.googlejavaformat.java.JavaFormatterOptions.Style;
 import com.google.googlejavaformat.java.StringWrapper;
 import com.google.testing.compile.JavaFileObjects;
 import com.sun.source.tree.CompilationUnitTree;
@@ -105,7 +107,10 @@ public class BugCheckerRefactoringTestHelper {
       private String maybeFormat(String input, boolean allowFormattingErrors) {
         try {
           Formatter formatter = new Formatter();
-          return StringWrapper.wrap(formatter.formatSource(input), formatter);
+          String formatted = formatter.formatSource(input);
+          formatted = StringWrapper.wrap(formatted, formatter);
+          formatted = ImportOrderer.reorderImports(formatted, Style.GOOGLE);
+          return formatted;
         } catch (FormatterException e) {
           if (allowFormattingErrors) {
             return input;
@@ -274,10 +279,21 @@ public class BugCheckerRefactoringTestHelper {
     return this;
   }
 
+  /**
+   * Runs the test.
+   *
+   * <p>By default outputs are compared with {@link TestMode#TEXT_MATCH}.
+   */
   public void doTest() {
-    this.doTest(TestMode.AST_MATCH);
+    this.doTest(TestMode.TEXT_MATCH);
   }
 
+  /**
+   * Runs the test.
+   *
+   * @param testMode the comparison to use to for the test outputs. The default is {@link
+   *     TestMode#TEXT_MATCH}.
+   */
   public void doTest(TestMode testMode) {
     checkState(!run, "doTest should only be called once");
 
