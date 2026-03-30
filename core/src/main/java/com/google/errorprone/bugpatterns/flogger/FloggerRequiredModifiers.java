@@ -18,12 +18,10 @@ package com.google.errorprone.bugpatterns.flogger;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
-import static com.google.errorprone.fixes.SuggestedFixes.removeModifiers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static javax.lang.model.element.Modifier.FINAL;
-import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PROTECTED;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
@@ -216,8 +214,7 @@ public final class FloggerRequiredModifiers extends BugChecker
     // We have to add all the modifiers as a single SuggestedFix or they conflict
     ImmutableSet.Builder<Modifier> toAdd = ImmutableSet.builder();
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    removeModifiers(field, state, PUBLIC, PROTECTED).ifPresent(fix::merge);
-    toAdd.add(PRIVATE);
+    fix.merge(SuggestedFixes.Visibility.PRIVATE.refactor(field, state));
     toAdd.add(Modifier.FINAL);
     if (flags.contains(FINAL) && canHaveStaticFields(ASTHelpers.getSymbol(owningClass))) {
       // We only add static to fields which are already final, or that we're also making final.

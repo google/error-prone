@@ -66,10 +66,8 @@ public final class IncorrectMainMethod extends BugChecker implements MethodTreeM
     }
     if (!SourceVersion.supportsInstanceMainMethods(state.context)
         && !sym.getModifiers().containsAll(REQUIRED_MODIFIERS)) {
-      SuggestedFixes.removeModifiers(tree, state, Modifier.PROTECTED, Modifier.PRIVATE)
-          .ifPresent(fix::merge);
-      SuggestedFixes.addModifiers(tree, tree.getModifiers(), state, REQUIRED_MODIFIERS)
-          .ifPresent(fix::merge);
+      fix.merge(SuggestedFixes.Visibility.PUBLIC.refactor(tree, state));
+      SuggestedFixes.addModifiers(tree, state, Modifier.STATIC).ifPresent(fix::merge);
     }
     if (fix.isEmpty()) {
       return NO_MATCH;

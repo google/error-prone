@@ -240,10 +240,7 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
             .prefixWith(methodTree, "@Ignore ")
             .build();
 
-    SuggestedFix visibilityFix =
-        SuggestedFix.merge(
-            SuggestedFixes.removeModifiers(methodTree, state, Modifier.PUBLIC).orElse(emptyFix()),
-            SuggestedFixes.addModifiers(methodTree, state, Modifier.PRIVATE).orElse(emptyFix()));
+    SuggestedFix visibilityFix = SuggestedFixes.Visibility.PRIVATE.refactor(methodTree, state);
 
     // Suggest @Ignore first if test method is named like a purposely disabled test.
     String methodName = methodTree.getName().toString();

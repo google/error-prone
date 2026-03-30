@@ -38,7 +38,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
-import javax.lang.model.element.Modifier;
 
 /**
  * Flags protected members in final classes.
@@ -78,8 +77,7 @@ public class ProtectedMembersInFinalClass extends BugChecker implements ClassTre
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    relevantMembers.forEach(
-        m -> SuggestedFixes.removeModifiers(m, state, Modifier.PROTECTED).ifPresent(fix::merge));
+    relevantMembers.forEach(m -> fix.merge(SuggestedFixes.Visibility.PACKAGE.refactor(m, state)));
 
     if (fix.isEmpty()) {
       return NO_MATCH;

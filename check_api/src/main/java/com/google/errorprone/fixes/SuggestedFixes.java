@@ -37,6 +37,7 @@ import static com.sun.tools.javac.util.Position.NOPOS;
 import static java.lang.Math.max;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
@@ -120,6 +121,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -1808,6 +1810,55 @@ public final class SuggestedFixes {
     ErrorProneToken token = getOnlyElement(tokens);
     return Optional.of(
         SuggestedFix.replace(pos + token.pos(), pos + token.endPos(), replacementType));
+  }
+
+  /** Visibility modifiers. */
+  public enum Visibility {
+    PUBLIC(Optional.of(Modifier.PUBLIC)),
+    PRIVATE(Optional.of(Modifier.PRIVATE)),
+    PROTECTED(Optional.of(Modifier.PROTECTED)),
+    PACKAGE(Optional.empty());
+
+    private final Optional<Modifier> modifier;
+
+    Visibility(Optional<Modifier> modifier) {
+      this.modifier = modifier;
+    }
+
+    public SuggestedFix refactor(Tree tree, VisitorState state) {
+      SuggestedFix.Builder fix = SuggestedFix.builder();
+      modifier.flatMap(mod -> SuggestedFixes.addModifiers(tree, state, mod)).ifPresent(fix::merge);
+      Set<Modifier> toRemove =
+          EnumSet.allOf(Visibility.class).stream()
+              .filter(v -> v != this)
+              .flatMap(v -> v.modifier.stream())
+              .collect(toCollection(() -> EnumSet.noneOf(Modifier.class)));
+      SuggestedFixes.removeModifiers(getModifiers(tree), state, toRemove).ifPresent(fix::merge);
+      return fix.build();
+    }
+
+    private static Optional<Visibility> from(Modifier modifier) {
+      return switch (modifier) {
+        case PUBLIC -> Optional.of(PUBLIC);
+        case PROTECTED -> Optional.of(PROTECTED);
+        case PRIVATE -> Optional.of(PRIVATE);
+        default -> Optional.empty();
+      };
+    }
+
+    public static Visibility from(Tree tree) {
+      ImmutableList<Visibility> visibilities =
+          getSymbol(tree).getModifiers().stream()
+              .flatMap(modifier -> from(modifier).stream())
+              .collect(toImmutableList());
+      if (visibilities.isEmpty()) {
+        return PACKAGE;
+      }
+      if (visibilities.size() > 1) {
+        throw new IllegalArgumentException("Conflicting visibility modifiers: " + visibilities);
+      }
+      return getOnlyElement(visibilities);
+    }
   }
 
   private SuggestedFixes() {}
