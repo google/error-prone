@@ -62,6 +62,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#matchIf(com.sun.source.tree.IfTree,com.google.errorprone.VisitorState)" tabindex="0">matchIf(IfTree, VisitorState)</a></li>
 <li><a href="#needsBracesForArrowRhs(com.sun.source.tree.StatementTree)" tabindex="0">needsBracesForArrowRhs(StatementTree)</a></li>
 <li><a href="#intersectTypes(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" tabindex="0">intersectTypes(Type, Type, VisitorState)</a></li>
+<li><a href="#isUnconditionalPattern(com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr,com.google.errorprone.VisitorState,com.sun.source.tree.ExpressionTree)" tabindex="0">isUnconditionalPattern(IfChainToSwitch.CaseIr, VisitorState, ExpressionTree)</a></li>
 <li><a href="#isDominatedBy(com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr,com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr,com.google.errorprone.VisitorState,com.sun.source.tree.ExpressionTree)" tabindex="0">isDominatedBy(IfChainToSwitch.CaseIr, IfChainToSwitch.CaseIr, VisitorState, ExpressionTree)</a></li>
 </ol>
 </li>
@@ -135,13 +136,20 @@ implements <a href="BugChecker.IfTreeMatcher.html" title="interface in com.googl
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Compute whether the RHS is dominated by the LHS.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchIf(com.sun.source.tree.IfTree,com.google.errorprone.VisitorState)" class="member-name-link">matchIf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/IfTree.html" title="class or interface in com.sun.source.tree" class="external-link">IfTree</a>&nbsp;ifTree,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isUnconditionalPattern(com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr,com.google.errorprone.VisitorState,com.sun.source.tree.ExpressionTree)" class="member-name-link">isUnconditionalPattern</a><wbr>(com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr&nbsp;caseIr,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;subject)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns whether the <code>CaseIr</code> represents an unconditional pattern.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchIf(com.sun.source.tree.IfTree,com.google.errorprone.VisitorState)" class="member-name-link">matchIf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/IfTree.html" title="class or interface in com.sun.source.tree" class="external-link">IfTree</a>&nbsp;ifTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;visitorState)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#needsBracesForArrowRhs(com.sun.source.tree.StatementTree)" class="member-name-link">needsBracesForArrowRhs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&nbsp;statementTree)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#needsBracesForArrowRhs(com.sun.source.tree.StatementTree)" class="member-name-link">needsBracesForArrowRhs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&nbsp;statementTree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Determines whether the given statement tree needs to be wrapped in braces when used on the
 right hand side of the arrow of a `case`.</div>
 </div>
@@ -202,6 +210,17 @@ right hand side of the arrow of a `case`.</div>
 not quite the same thing as the "Intersection Types" defined JLS 21 § 4.9 (it is not a distinct
 type; there is no <code>IntersectionTypeTree</code>) although they are similar in that the
 (non-null) return value can be assigned to both types.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isUnconditionalPattern(com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr,com.google.errorprone.VisitorState,com.sun.source.tree.ExpressionTree)">
+<h3>isUnconditionalPattern</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isUnconditionalPattern</span><wbr><span class="parameters">(com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr&nbsp;caseIr,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;subject)</span></div>
+<div class="block">Returns whether the <code>CaseIr</code> represents an unconditional pattern.</div>
 </div>
 </section>
 </li>
