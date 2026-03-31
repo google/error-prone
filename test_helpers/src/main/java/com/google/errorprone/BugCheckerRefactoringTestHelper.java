@@ -120,6 +120,12 @@ public class BugCheckerRefactoringTestHelper {
         }
       }
     },
+    /**
+     * @deprecated prefer {@link #TEXT_MATCH}, which formats the actual and expected output to be
+     *     lenient of whitespace differences. {@link #AST_MATCH} will ignore differences in
+     *     comments, and may miss other differences that aren't detectable in the AST.
+     */
+    @Deprecated
     AST_MATCH {
       @Override
       void verifyMatch(
