@@ -379,8 +379,8 @@ public class UnsafeLocaleUsageTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Locale;
             import com.google.common.collect.ImmutableMap;
+            import java.util.Locale;
 
             class Test {
               private static final ImmutableMap<String, Locale> INTERNAL_COUNTRY_CODE_TO_LOCALE =

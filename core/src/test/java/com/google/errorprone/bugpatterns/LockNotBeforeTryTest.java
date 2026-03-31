@@ -385,6 +385,7 @@ public final class LockNotBeforeTryTest {
             "Test.java",
             """
             import static java.util.Objects.requireNonNull;
+
             import java.util.concurrent.locks.ReentrantLock;
 
             class Test {
@@ -403,6 +404,7 @@ public final class LockNotBeforeTryTest {
             "Test.java",
             """
             import static java.util.Objects.requireNonNull;
+
             import java.util.concurrent.locks.ReentrantLock;
 
             class Test {

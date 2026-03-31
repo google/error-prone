@@ -816,8 +816,8 @@ public class UnusedVariableTest {
             """
             package unusedvars;
 
-            import java.util.Map;
             import java.util.HashMap;
+            import java.util.Map;
 
             public class Test {
               private int next = 1;
@@ -1681,10 +1681,11 @@ public class UnusedVariableTest {
         .addInputLines(
             "Test.java",
 """
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import static java.util.stream.Collectors.toList;
 
 public class Test {
   public void f(List<List<String>> lists) {
@@ -1697,10 +1698,11 @@ public class Test {
         .addOutputLines(
             "Test.java",
             """
+            import static java.util.stream.Collectors.toList;
+
             import java.util.ArrayList;
             import java.util.Collection;
             import java.util.List;
-            import static java.util.stream.Collectors.toList;
 
             public class Test {
               public void f(List<List<String>> lists) {}
@@ -1716,10 +1718,11 @@ public class Test {
         .addInputLines(
             "Test.java",
 """
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import static java.util.stream.Collectors.toList;
 
 public class Test {
   public void f(List<List<String>> lists) {
@@ -1732,10 +1735,11 @@ public class Test {
         .addOutputLines(
             "Test.java",
             """
+            import static java.util.stream.Collectors.toList;
+
             import java.util.ArrayList;
             import java.util.Collection;
             import java.util.List;
-            import static java.util.stream.Collectors.toList;
 
             public class Test {
               public void f(List<List<String>> lists) {

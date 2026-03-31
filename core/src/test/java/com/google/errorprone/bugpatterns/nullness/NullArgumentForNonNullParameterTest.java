@@ -393,8 +393,8 @@ public class NullArgumentForNonNullParameterTest {
         .addSourceLines(
             "Foo.java",
             """
-            import org.jspecify.annotations.NonNull;
             import java.io.Serializable;
+            import org.jspecify.annotations.NonNull;
 
             class Foo<T extends @NonNull Object & Serializable> {
               void consume(T s) {}
@@ -414,8 +414,8 @@ public class NullArgumentForNonNullParameterTest {
         .addSourceLines(
             "Foo.java",
             """
-            import org.jspecify.annotations.NonNull;
             import java.io.Serializable;
+            import org.jspecify.annotations.NonNull;
 
             class Foo<V extends @NonNull Object, T extends V> {
               void consume(T s) {}

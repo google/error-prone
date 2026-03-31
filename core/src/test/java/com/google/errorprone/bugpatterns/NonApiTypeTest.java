@@ -369,6 +369,7 @@ public final class NonApiTypeTest {
             "Test.java",
             """
             import static com.google.common.base.Preconditions.checkArgument;
+
             import com.google.common.collect.ImmutableSet;
 
             public class Test {

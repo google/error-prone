@@ -32,11 +32,11 @@ public class MultipleNullnessAnnotationsTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.List;
             import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
             import org.checkerframework.checker.nullness.compatqual.NullableDecl;
             import org.checkerframework.checker.nullness.qual.NonNull;
             import org.checkerframework.checker.nullness.qual.Nullable;
-            import java.util.List;
 
             abstract class Test {
               // BUG: Diagnostic contains:
@@ -63,11 +63,11 @@ public class MultipleNullnessAnnotationsTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.List;
             import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
             import org.checkerframework.checker.nullness.compatqual.NullableDecl;
             import org.checkerframework.checker.nullness.qual.NonNull;
             import org.checkerframework.checker.nullness.qual.Nullable;
-            import java.util.List;
 
             abstract class Test {
               @NonNullDecl @NonNull Object x;
@@ -83,8 +83,8 @@ public class MultipleNullnessAnnotationsTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.checkerframework.checker.nullness.qual.Nullable;
             import java.util.List;
+            import org.checkerframework.checker.nullness.qual.Nullable;
 
             abstract class Test {
               @Nullable Object @Nullable [] x;
@@ -101,8 +101,8 @@ public class MultipleNullnessAnnotationsTest {
         .addSourceLines(
             "Nullable.java",
             """
-            import java.lang.annotation.Target;
             import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
 
             @Target({
               ElementType.METHOD,

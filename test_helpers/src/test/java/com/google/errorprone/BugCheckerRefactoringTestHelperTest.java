@@ -290,9 +290,9 @@ public class BugCheckerRefactoringTestHelperTest {
         .addOutputLines(
             "out/pkg/A.java",
             """
-            import java.util.ArrayList;
-
             import static java.lang.Math.min;
+
+            import java.util.ArrayList;
 
             class A {}
             """)

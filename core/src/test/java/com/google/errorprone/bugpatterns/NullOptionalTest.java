@@ -109,6 +109,7 @@ public final class NullOptionalTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import java.util.Optional;
 
             class Test {

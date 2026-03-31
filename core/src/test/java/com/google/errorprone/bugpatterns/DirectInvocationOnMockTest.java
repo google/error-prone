@@ -111,6 +111,7 @@ public final class DirectInvocationOnMockTest {
             "Test.java",
             """
             import static org.mockito.Mockito.mock;
+
             import org.mockito.Answers;
 
             class Test {
@@ -191,8 +192,8 @@ public final class DirectInvocationOnMockTest {
         .addSourceLines(
             "Test.java",
             """
-            import static org.mockito.Mockito.mock;
             import static org.mockito.BDDMockito.given;
+            import static org.mockito.Mockito.mock;
 
             class Test {
               public Object test() {
@@ -232,8 +233,8 @@ public final class DirectInvocationOnMockTest {
         .addSourceLines(
             "Test.java",
             """
-            import static org.mockito.Mockito.mock;
             import static org.mockito.BDDMockito.given;
+            import static org.mockito.Mockito.mock;
 
             class Test {
               public Object test() {
@@ -252,8 +253,8 @@ public final class DirectInvocationOnMockTest {
         .addSourceLines(
             "Test.java",
             """
-            import static org.mockito.Mockito.mock;
             import static org.mockito.Mockito.doCallRealMethod;
+            import static org.mockito.Mockito.mock;
 
             class Test {
               public Object test() {
@@ -273,8 +274,8 @@ public final class DirectInvocationOnMockTest {
         .addSourceLines(
             "Test.java",
             """
-            import static org.mockito.Mockito.mock;
             import static org.mockito.BDDMockito.willCallRealMethod;
+            import static org.mockito.Mockito.mock;
 
             class Test {
               public Object test() {
@@ -294,6 +295,7 @@ public final class DirectInvocationOnMockTest {
             "Test.java",
             """
             import static org.mockito.Mockito.mock;
+
             import org.mockito.stubbing.OngoingStubbing;
 
             class Test {
@@ -319,6 +321,7 @@ public final class DirectInvocationOnMockTest {
             "Test.java",
             """
             import static org.mockito.Mockito.mock;
+
             import org.mockito.BDDMockito.BDDMyOngoingStubbing;
 
             class Test {
@@ -363,8 +366,8 @@ public final class DirectInvocationOnMockTest {
         .addSourceLines(
             "Test.java",
             """
-            import static org.mockito.Mockito.mock;
             import static org.mockito.BDDMockito.given;
+            import static org.mockito.Mockito.mock;
 
             class Test {
               public Object test() {

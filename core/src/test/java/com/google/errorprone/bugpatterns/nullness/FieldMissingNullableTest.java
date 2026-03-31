@@ -397,8 +397,8 @@ public class FieldMissingNullableTest {
             """
             package com.google.errorprone.bugpatterns.nullness;
 
-            import java.util.function.Predicate;
             import java.util.function.Function;
+            import java.util.function.Predicate;
 
             public class FieldMissingNullTest {
               private Runnable runnable = () -> {};

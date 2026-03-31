@@ -223,8 +223,8 @@ public class ReferenceEqualityTest {
         .addInputLines(
             "in/Test.java",
             """
-            import com.google.common.base.Optional;
             import com.google.common.base.Objects;
+            import com.google.common.base.Optional;
 
             class Test {
               boolean f(Optional<Integer> a, Optional<Integer> b) {
@@ -236,8 +236,8 @@ public class ReferenceEqualityTest {
         .addOutputLines(
             "out/Test.java",
             """
-            import com.google.common.base.Optional;
             import com.google.common.base.Objects;
+            import com.google.common.base.Optional;
 
             class Test {
               boolean f(Optional<Integer> a, Optional<Integer> b) {

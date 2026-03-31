@@ -50,8 +50,9 @@ public final class AssertSameIncompatibleTest {
             "Test.java",
             """
             import static org.junit.Assert.assertSame;
-            import java.util.List;
+
             import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
               void f(List<Object> list, ArrayList<Integer> arrayList) {

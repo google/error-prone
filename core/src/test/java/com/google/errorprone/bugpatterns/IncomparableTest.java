@@ -33,10 +33,10 @@ public class IncomparableTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.Collections;
+            import java.util.Set;
             import java.util.TreeMap;
             import java.util.TreeSet;
-            import java.util.Set;
-            import java.util.Collections;
 
             final class Test {
               void f() {
@@ -58,10 +58,10 @@ public class IncomparableTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.Collections;
+            import java.util.Set;
             import java.util.TreeMap;
             import java.util.TreeSet;
-            import java.util.Set;
-            import java.util.Collections;
 
             class Test {
               void f() {

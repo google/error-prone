@@ -96,6 +96,7 @@ public class JUnit4TestNotRunTest {
             "Test.java",
             """
             import static org.mockito.Mockito.verify;
+
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
 
@@ -137,10 +138,11 @@ public class JUnit4TestNotRunTest {
         .addSourceLines(
             "Test.java",
             """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import java.util.Collections;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
-            import static com.google.common.truth.Truth.assertThat;
-            import java.util.Collections;
 
             @RunWith(JUnit4.class)
             public class Test {
@@ -165,9 +167,9 @@ public class JUnit4TestNotRunTest {
         .addSourceLines(
             "Test.java",
             """
+            import com.google.common.truth.Truth;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
-            import com.google.common.truth.Truth;
 
             @RunWith(JUnit4.class)
             public class Test {
@@ -187,6 +189,7 @@ public class JUnit4TestNotRunTest {
             "Test.java",
             """
             import static com.google.common.base.Preconditions.checkState;
+
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
 
@@ -229,6 +232,7 @@ public class JUnit4TestNotRunTest {
             "Test.java",
             """
             import static org.junit.Assert.fail;
+
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
 
@@ -271,6 +275,7 @@ public class JUnit4TestNotRunTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
 
@@ -312,9 +317,9 @@ public class JUnit4TestNotRunTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.Collections;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
-            import java.util.Collections;
 
             @RunWith(JUnit4.class)
             public class Test {
@@ -333,9 +338,9 @@ public class JUnit4TestNotRunTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.Collections;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
-            import java.util.Collections;
 
             @RunWith(JUnit4.class)
             public class Test {
@@ -377,9 +382,9 @@ public class JUnit4TestNotRunTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.Collections;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
-            import java.util.Collections;
 
             @RunWith(JUnit4.class)
             public class Test {
@@ -552,9 +557,9 @@ public class JUnit4TestNotRunTest {
         .addSourceLines(
             "TestStuff.java",
             """
+            import org.junit.Test;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
-            import org.junit.Test;
 
             @RunWith(JUnit4.class)
             public class TestStuff {
@@ -579,9 +584,9 @@ public class JUnit4TestNotRunTest {
         .addSourceLines(
             "TestStuff.java",
             """
+            import org.junit.Test;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
-            import org.junit.Test;
 
             @RunWith(JUnit4.class)
             public class TestStuff {
@@ -606,10 +611,10 @@ public class JUnit4TestNotRunTest {
         .addSourceLines(
             "TestStuff.java",
             """
+            import java.util.function.Consumer;
+            import org.junit.Test;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
-            import org.junit.Test;
-            import java.util.function.Consumer;
 
             @RunWith(JUnit4.class)
             public class TestStuff {
@@ -869,9 +874,9 @@ public class JUnit4TestNotRunNegativeCase5 extends JUnit4TestNotRunBaseClass {
         .addSourceLines(
             "TestTheories.java",
             """
-            import org.junit.runner.RunWith;
             import org.junit.experimental.theories.Theories;
             import org.junit.experimental.theories.Theory;
+            import org.junit.runner.RunWith;
 
             @RunWith(Theories.class)
             public class TestTheories {
@@ -889,9 +894,10 @@ public class JUnit4TestNotRunNegativeCase5 extends JUnit4TestNotRunBaseClass {
             "TestTheories.java",
             """
             import static org.junit.Assert.fail;
-            import org.junit.runner.RunWith;
-            import org.junit.experimental.theories.Theories;
+
             import org.junit.experimental.theories.FromDataPoints;
+            import org.junit.experimental.theories.Theories;
+            import org.junit.runner.RunWith;
 
             @RunWith(Theories.class)
             public class TestTheories {

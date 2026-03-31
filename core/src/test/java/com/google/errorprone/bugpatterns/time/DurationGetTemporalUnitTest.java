@@ -54,6 +54,7 @@ public class DurationGetTemporalUnitTest {
             import static java.time.temporal.ChronoUnit.MILLIS;
             import static java.time.temporal.ChronoUnit.NANOS;
             import static java.time.temporal.ChronoUnit.SECONDS;
+
             import java.time.Duration;
 
             public class TestClass {

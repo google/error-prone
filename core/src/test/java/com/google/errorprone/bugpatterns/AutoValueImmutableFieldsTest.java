@@ -254,12 +254,12 @@ public class AutoValueImmutableFieldsTest {
             import com.google.auto.value.AutoValue;
             import com.google.common.collect.ImmutableCollection;
             import com.google.common.collect.ImmutableList;
+            import com.google.common.collect.ImmutableListMultimap;
             import com.google.common.collect.ImmutableMap;
             import com.google.common.collect.ImmutableMultimap;
-            import com.google.common.collect.ImmutableListMultimap;
-            import com.google.common.collect.ImmutableSetMultimap;
             import com.google.common.collect.ImmutableMultiset;
             import com.google.common.collect.ImmutableSet;
+            import com.google.common.collect.ImmutableSetMultimap;
             import com.google.common.collect.ImmutableTable;
 
             @AutoValue

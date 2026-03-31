@@ -630,8 +630,8 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.concurrent.ThreadLocalRandom;
             import java.util.Optional;
+            import java.util.concurrent.ThreadLocalRandom;
 
             public class Test {
               public void foo(Optional<Long> x) {

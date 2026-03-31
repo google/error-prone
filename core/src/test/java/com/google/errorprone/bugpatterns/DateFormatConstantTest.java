@@ -80,8 +80,8 @@ class Test {
         .addInputLines(
             "in/Test.java",
 """
-import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 class Test {
@@ -95,8 +95,8 @@ class Test {
         .addOutputLines(
             "out/Test.java",
             """
-            import java.text.SimpleDateFormat;
             import java.text.DateFormat;
+            import java.text.SimpleDateFormat;
             import java.util.Date;
 
             class Test {
@@ -117,8 +117,8 @@ class Test {
         .addInputLines(
             "in/Test.java",
 """
-import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 class Test {
@@ -132,8 +132,8 @@ class Test {
         .addOutputLines(
             "out/Test.java",
 """
-import java.text.SimpleDateFormat;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 class Test {

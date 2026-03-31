@@ -37,9 +37,9 @@ public final class MixedMutabilityReturnTypeTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.ArrayList;
             import java.util.Collections;
             import java.util.List;
-            import java.util.ArrayList;
 
             class Test {
               // BUG: Diagnostic contains: MixedMutabilityReturnType
@@ -60,9 +60,9 @@ public final class MixedMutabilityReturnTypeTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.ArrayList;
             import java.util.Collections;
             import java.util.List;
-            import java.util.ArrayList;
 
             class Test {
               @SuppressWarnings("MixedMutabilityReturnType")
@@ -83,9 +83,9 @@ public final class MixedMutabilityReturnTypeTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.ArrayList;
             import java.util.Collections;
             import java.util.List;
-            import java.util.ArrayList;
 
             class Test {
               // BUG: Diagnostic contains: MixedMutabilityReturnType
@@ -107,9 +107,9 @@ public final class MixedMutabilityReturnTypeTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.ArrayList;
             import java.util.Collections;
             import java.util.List;
-            import java.util.ArrayList;
 
             class Test {
               List<Integer> foo() {
@@ -133,9 +133,9 @@ public final class MixedMutabilityReturnTypeTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.ArrayList;
             import java.util.Collections;
             import java.util.List;
-            import java.util.ArrayList;
 
             class Test {
               List<Integer> foo() {
@@ -155,9 +155,9 @@ public final class MixedMutabilityReturnTypeTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.ArrayList;
             import java.util.Collections;
             import java.util.List;
-            import java.util.ArrayList;
 
             class Test {
               List<Integer> foo() {

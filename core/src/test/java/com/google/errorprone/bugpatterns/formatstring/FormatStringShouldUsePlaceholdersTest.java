@@ -156,8 +156,8 @@ public class Test {
 """
 import com.google.common.base.Preconditions;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 public class Test {
   public void checkPositionIndex(int i, String moreFormat, Object moreArgs) {

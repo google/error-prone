@@ -33,9 +33,10 @@ public class ScannerUseDelimiterTest {
         .addSourceLines(
             "Test.java",
             """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+
             import java.io.InputStream;
             import java.util.Scanner;
-            import static java.nio.charset.StandardCharsets.UTF_8;
 
             class Test {
               void f(InputStream inputStream) {
@@ -54,9 +55,10 @@ public class ScannerUseDelimiterTest {
         .addSourceLines(
             "Test.java",
             """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+
             import java.io.InputStream;
             import java.util.Scanner;
-            import static java.nio.charset.StandardCharsets.UTF_8;
 
             class Test {
               void f(InputStream inputStream, String delimiter) {

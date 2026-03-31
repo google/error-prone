@@ -1593,9 +1593,9 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         .addSourceLines(
             "Test.java",
 """
-import java.util.concurrent.Callable;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.Callable;
 
 class Test {
   // BUG: Diagnostic contains: [FileNotFoundException UnsupportedEncodingException]
@@ -1971,8 +1971,9 @@ class Test {
         .addSourceLines(
             "Declaration.java",
             """
-            import static java.lang.annotation.ElementType.METHOD;
             import static java.lang.annotation.ElementType.FIELD;
+            import static java.lang.annotation.ElementType.METHOD;
+
             import java.lang.annotation.Target;
 
             class Declaration {
@@ -1984,6 +1985,7 @@ class Test {
             "TypeUse.java",
             """
             import static java.lang.annotation.ElementType.TYPE_USE;
+
             import java.lang.annotation.Target;
 
             class TypeUse {

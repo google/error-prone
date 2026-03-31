@@ -307,6 +307,7 @@ public final class UnusedReturnValueMatcherTest {
             package test;
 
             import static org.junit.Assert.fail;
+
             import org.junit.rules.ExpectedException;
 
             public class Test {

@@ -163,8 +163,8 @@ public class SuggestedFixesTest {
         .addInputLines(
             "Test.java",
             """
-            import javax.annotation.Nullable;
             import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+            import javax.annotation.Nullable;
 
             @EditModifiers(value = "final", kind = EditModifiers.EditKind.ADD)
             class Test {
@@ -177,8 +177,8 @@ public class SuggestedFixesTest {
         .addOutputLines(
             "Test.java",
             """
-            import javax.annotation.Nullable;
             import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
+            import javax.annotation.Nullable;
 
             @EditModifiers(value = "final", kind = EditModifiers.EditKind.ADD)
             class Test {
@@ -1175,6 +1175,7 @@ public class SuggestedFixesTest {
             """
             import static com.google.common.base.Preconditions.checkNotNull;
             import static pkg.Lib.verifyNotNull;
+
             import com.google.common.base.Verify;
 
             class Test {
@@ -1207,6 +1208,7 @@ public class SuggestedFixesTest {
             "Test.java",
             """
             import static com.google.common.base.Preconditions.checkNotNull;
+
             import com.google.common.base.Verify;
 
             class Test {

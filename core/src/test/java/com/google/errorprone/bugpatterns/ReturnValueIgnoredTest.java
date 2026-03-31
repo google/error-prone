@@ -315,6 +315,7 @@ public class ReturnValueIgnoredTest {
             "Test.java",
             """
             import static org.junit.Assert.fail;
+
             import java.util.function.Function;
 
             class Test {

@@ -41,6 +41,7 @@ public class TruthGetOrDefaultTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.util.HashMap;
             import java.util.Map;
 
@@ -68,6 +69,7 @@ public class TruthGetOrDefaultTest {
             "Test.java",
 """
 import static com.google.common.truth.Truth.assertThat;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -90,6 +92,7 @@ class Test {
             "in/Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.util.HashMap;
             import java.util.Map;
 
@@ -107,6 +110,7 @@ class Test {
             "out/Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.util.HashMap;
             import java.util.Map;
 

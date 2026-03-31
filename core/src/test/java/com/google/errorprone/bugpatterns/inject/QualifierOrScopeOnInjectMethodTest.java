@@ -91,8 +91,8 @@ public class QualifierOrScopeOnInjectMethodTest {
         .addSourceLines(
             "Foo.java",
             """
-            import dagger.Provides;
             import dagger.Module;
+            import dagger.Provides;
             import javax.inject.Named;
 
             @Module

@@ -33,6 +33,7 @@ public class TemporalAccessorGetChronoFieldTest {
             "TestClass.java",
             """
             import static java.time.DayOfWeek.MONDAY;
+
             import java.time.temporal.ChronoField;
 
             public class TestClass {
@@ -70,6 +71,7 @@ public class TemporalAccessorGetChronoFieldTest {
             "TestClass.java",
             """
             import static java.time.DayOfWeek.MONDAY;
+
             import java.time.temporal.ChronoField;
 
             public class TestClass {
@@ -106,8 +108,9 @@ public class TemporalAccessorGetChronoFieldTest {
         .addSourceLines(
             "TestClass.java",
             """
-            import static java.time.temporal.ChronoField.MICRO_OF_SECOND;
             import static java.time.temporal.ChronoField.DAY_OF_WEEK;
+            import static java.time.temporal.ChronoField.MICRO_OF_SECOND;
+
             import java.time.Instant;
 
             public class TestClass {

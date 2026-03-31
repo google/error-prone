@@ -1952,14 +1952,14 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-            import java.util.Optional;
             import java.lang.Integer;
             import java.lang.Long;
+            import java.lang.Number;
             import java.math.BigDecimal;
             import java.time.Duration;
             import java.time.Instant;
             import java.util.Date;
+            import java.util.Optional;
 
             class Test {
               public void foo(Suit s) {
@@ -2009,14 +2009,14 @@ class Test {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-            import java.util.Optional;
             import java.lang.Integer;
             import java.lang.Long;
+            import java.lang.Number;
             import java.math.BigDecimal;
             import java.time.Duration;
             import java.time.Instant;
             import java.util.Date;
+            import java.util.Optional;
 
             class Test {
               public void foo(Suit s) {
@@ -3018,8 +3018,8 @@ class Test {
             "Test.java",
             """
             import java.lang.Number;
-            import java.util.List;
             import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
               public void foo(Suit s) {
@@ -3044,8 +3044,8 @@ class Test {
             "Test.java",
 """
 import java.lang.Number;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 class Test {
   public void foo(Suit s) {
@@ -3078,8 +3078,8 @@ class Test {
             "Test.java",
             """
             import java.lang.Number;
-            import java.util.List;
             import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
               public void foo(Suit s) {
@@ -3104,8 +3104,8 @@ class Test {
             "Test.java",
 """
 import java.lang.Number;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 class Test {
   public void foo(Suit s) {
@@ -3137,8 +3137,8 @@ class Test {
             "Test.java",
             """
             import java.lang.Number;
-            import java.util.Map;
             import java.util.HashMap;
+            import java.util.Map;
 
             class Test {
               public void foo(Suit s) {
@@ -3163,8 +3163,8 @@ class Test {
             "Test.java",
 """
 import java.lang.Number;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 class Test {
   public void foo(Suit s) {
@@ -3197,8 +3197,8 @@ class Test {
             "Test.java",
             """
             import java.lang.Number;
-            import java.util.Map;
             import java.util.HashMap;
+            import java.util.Map;
 
             class Test {
               public void foo(Suit s) {
@@ -3223,8 +3223,8 @@ class Test {
             "Test.java",
 """
 import java.lang.Number;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 class Test {
   public void foo(Suit s) {

@@ -34,8 +34,8 @@ public class JUnitAmbiguousTestClassTest {
         .addSourceLines(
             "Positive.java",
             """
-            import org.junit.Test;
             import junit.framework.TestCase;
+            import org.junit.Test;
 
             // BUG: Diagnostic contains:
             public class Positive extends TestCase {

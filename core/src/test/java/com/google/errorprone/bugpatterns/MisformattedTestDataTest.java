@@ -137,7 +137,7 @@ public final class MisformattedTestDataTest {
                           }
                         }
                         \""")
-                  .addOutputLines(
+                    .addOutputLines(
                         "Test.java",
                         \"""
                         package foo;
@@ -148,7 +148,7 @@ public final class MisformattedTestDataTest {
                           }
                         }
                         \""");
-               }
+              }
             }
             """)
         .doTest(TEXT_MATCH);
@@ -184,7 +184,7 @@ public final class MisformattedTestDataTest {
 
                     class Test {}
                     \""");
-               }
+              }
             }
             """)
         .doTest(TEXT_MATCH);
@@ -261,7 +261,7 @@ public final class MisformattedTestDataTest {
                       }
                     }
                     \""");
-               }
+              }
             }
             """)
         .doTest(TEXT_MATCH);

@@ -190,6 +190,7 @@ public final class JUnitIncompatibleTypeTest {
             "Test.java",
             """
             import static org.junit.Assert.assertArrayEquals;
+
             import java.util.Map;
 
             class Test {
@@ -210,6 +211,7 @@ public final class JUnitIncompatibleTypeTest {
             "Test.java",
             """
             import static org.junit.Assert.assertArrayEquals;
+
             import java.util.Map;
 
             class Test {

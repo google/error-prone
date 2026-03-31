@@ -138,6 +138,7 @@ public class SelfAssertionTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.truth.IntegerSubject;
             import java.util.Arrays;
 
@@ -162,6 +163,7 @@ public class SelfAssertionTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.util.List;
 
             abstract class Test {
@@ -181,6 +183,7 @@ public class SelfAssertionTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.time.Duration;
 
             abstract class Test {
@@ -201,6 +204,7 @@ public class SelfAssertionTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.time.Duration;
 
             abstract class Test {

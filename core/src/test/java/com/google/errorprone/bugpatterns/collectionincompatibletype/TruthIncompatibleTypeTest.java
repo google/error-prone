@@ -225,6 +225,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             public class Test {
@@ -244,6 +245,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             public class Test {
@@ -262,6 +264,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             public class Test {
@@ -280,6 +283,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             public class Test {
@@ -298,6 +302,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             public class Test {
@@ -317,6 +322,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             public class Test {
@@ -335,6 +341,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             public class Test {
@@ -353,6 +360,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             public class Test {
@@ -372,6 +380,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             public class Test {
@@ -391,6 +400,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import com.google.common.truth.Correspondence;
 
@@ -411,6 +421,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import com.google.common.truth.Correspondence;
 
@@ -431,6 +442,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import com.google.common.truth.Correspondence;
 
@@ -450,6 +462,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.util.Map;
 
             public class Test {
@@ -469,6 +482,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.util.Map;
 
             public class Test {
@@ -488,6 +502,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.util.Map;
 
             public class Test {
@@ -507,6 +522,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.util.Map;
 
             public class Test {
@@ -525,6 +541,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.Multimap;
 
             public class Test {
@@ -544,6 +561,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.Multimap;
             import java.util.stream.Stream;
 
@@ -564,6 +582,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
@@ -584,6 +603,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
@@ -604,6 +624,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
@@ -624,6 +645,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 
             final class Test {
@@ -642,6 +664,7 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
 """
 import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.truth.Correspondence;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
@@ -665,6 +688,7 @@ public class Test {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import com.google.common.truth.Correspondence;
 
@@ -702,6 +726,7 @@ public class Test {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.Multiset;
 
             public class Test {
@@ -720,6 +745,7 @@ public class Test {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.Multiset;
 
             public class Test {

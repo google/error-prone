@@ -37,6 +37,7 @@ public final class BadImportTest {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -54,6 +55,7 @@ public final class BadImportTest {
             "Test.java",
             """
             import static com.google.errorprone.CompilationTestHelper.newInstance;
+
             import com.google.errorprone.CompilationTestHelper;
             import com.google.errorprone.bugpatterns.BugChecker;
 
@@ -73,6 +75,7 @@ public final class BadImportTest {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -90,6 +93,7 @@ public final class BadImportTest {
             "Test.java",
 """
 import static com.google.common.collect.ImmutableList.of;
+
 import com.google.common.collect.ImmutableList;
 
 class Test {
@@ -108,6 +112,7 @@ class Test {
             "Test.java",
             """
             import static com.google.common.truth.Truth8.assertThat;
+
             import java.util.stream.IntStream;
 
             class Test {
@@ -127,6 +132,7 @@ class Test {
             "in/Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -145,6 +151,7 @@ class Test {
             "out/Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -582,6 +589,7 @@ class BadImportPositiveCases {
             "Test.java",
             """
             import static com.google.common.truth.Truth8.assertThat;
+
             import java.util.stream.IntStream;
 
             class Test {
@@ -617,6 +625,7 @@ class BadImportPositiveCases {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             @SuppressWarnings("BadImport")
@@ -635,6 +644,7 @@ class BadImportPositiveCases {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -655,6 +665,7 @@ class BadImportPositiveCases {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -722,6 +733,7 @@ class BadImportPositiveCases {
             package pkg;
 
             import static a.E.INSTANCE;
+
             import a.E;
 
             class Test {
@@ -840,6 +852,7 @@ class BadImportPositiveCases {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.toImmutableList;
+
             import com.google.common.collect.ImmutableList;
             import java.util.stream.Collector;
 

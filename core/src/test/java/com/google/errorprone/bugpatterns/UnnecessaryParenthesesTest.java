@@ -377,9 +377,9 @@ public class UnnecessaryParenthesesTest {
         .addInputLines(
             "R.java",
             """
+            import com.google.auto.value.AutoBuilder;
             import org.checkerframework.checker.nullness.qual.Nullable;
             import org.checkerframework.dataflow.qual.Pure;
-            import com.google.auto.value.AutoBuilder;
 
             /**
              * A record with parameters.

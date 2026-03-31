@@ -306,8 +306,8 @@ public class CatchFailTest {
         .addInputLines(
             "in/Foo.java",
             """
-            import org.junit.Test;
             import java.io.IOException;
+            import org.junit.Test;
 
             class Foo {
               @Test(expected = IOException.class)
@@ -323,8 +323,8 @@ public class CatchFailTest {
         .addOutputLines(
             "out/Foo.java",
             """
-            import org.junit.Test;
             import java.io.IOException;
+            import org.junit.Test;
 
             class Foo {
               @Test(expected = IOException.class)

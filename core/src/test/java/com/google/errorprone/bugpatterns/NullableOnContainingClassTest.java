@@ -36,6 +36,7 @@ public final class NullableOnContainingClassTest {
             "Test.java",
             """
             import static java.lang.annotation.ElementType.TYPE_USE;
+
             import java.lang.annotation.Target;
 
             class A {
@@ -60,6 +61,7 @@ public final class NullableOnContainingClassTest {
             """
             import static java.lang.annotation.ElementType.PARAMETER;
             import static java.lang.annotation.ElementType.TYPE_USE;
+
             import java.lang.annotation.Target;
 
             class A {
@@ -81,6 +83,7 @@ public final class NullableOnContainingClassTest {
             "Test.java",
             """
             import static java.lang.annotation.ElementType.PARAMETER;
+
             import java.lang.annotation.Target;
 
             class A {
@@ -102,6 +105,7 @@ public final class NullableOnContainingClassTest {
             "Test.java",
             """
             import static java.lang.annotation.ElementType.TYPE_USE;
+
             import java.lang.annotation.Target;
             import java.util.List;
 
@@ -129,6 +133,7 @@ public final class NullableOnContainingClassTest {
             """
             import static java.lang.annotation.ElementType.TYPE_PARAMETER;
             import static java.lang.annotation.ElementType.TYPE_USE;
+
             import java.lang.annotation.Target;
             import java.util.List;
 
@@ -155,6 +160,7 @@ public final class NullableOnContainingClassTest {
             "Test.java",
             """
             import static java.lang.annotation.ElementType.TYPE_USE;
+
             import java.lang.annotation.Target;
             import java.util.List;
 
@@ -176,6 +182,7 @@ public final class NullableOnContainingClassTest {
             "Test.java",
             """
             import static java.lang.annotation.ElementType.TYPE_USE;
+
             import java.lang.annotation.Target;
 
             class A {
@@ -199,6 +206,7 @@ public final class NullableOnContainingClassTest {
             "Test.java",
             """
             import static java.lang.annotation.ElementType.TYPE_USE;
+
             import java.lang.annotation.Target;
             import java.util.function.Function;
 

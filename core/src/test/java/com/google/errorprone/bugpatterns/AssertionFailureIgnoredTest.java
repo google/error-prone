@@ -81,8 +81,8 @@ public class AssertionFailureIgnoredTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.junit.Assert;
             import java.io.IOException;
+            import org.junit.Assert;
 
             class Test {
               void f() {
@@ -127,9 +127,10 @@ public class AssertionFailureIgnoredTest {
         .addInputLines(
             "in/Test.java",
             """
-            import org.junit.Assert;
-            import java.io.IOException;
             import static com.google.common.truth.Truth.assertThat;
+
+            import java.io.IOException;
+            import org.junit.Assert;
 
             class Test {
               void f() {
@@ -198,9 +199,10 @@ public class AssertionFailureIgnoredTest {
         .addInputLines(
             "in/Test.java",
             """
-            import org.junit.Assert;
-            import java.io.IOException;
             import static com.google.common.truth.Truth.assertThat;
+
+            import java.io.IOException;
+            import org.junit.Assert;
 
             class Test {
               void f() {
@@ -268,8 +270,8 @@ public class AssertionFailureIgnoredTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.junit.Assert;
             import java.io.IOError;
+            import org.junit.Assert;
 
             class Test {
               void f() {

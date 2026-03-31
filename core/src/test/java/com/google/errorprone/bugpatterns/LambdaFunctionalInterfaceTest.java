@@ -407,9 +407,9 @@ public class TwoLambdaFunctions {
         .addInputLines(
             "in/NumbertoT.java",
 """
-import java.util.function.Function;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class NumbertoT {
   private static <T extends Number> List<T> numToTFunction(Function<Double, T> converter) {

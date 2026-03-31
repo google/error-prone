@@ -55,8 +55,8 @@ public final class JodaNewPeriodTest {
         .addSourceLines(
             "TestClass.java",
             """
-            import org.joda.time.Period;
             import org.joda.time.Instant;
+            import org.joda.time.Period;
 
             public class TestClass {
               private static final Period period = new Period(10, 20);

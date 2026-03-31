@@ -134,8 +134,8 @@ public final class ImmutableMemberCollectionTest {
         .addInputLines(
             "Test.java",
             """
-            import java.util.Set;
             import java.util.HashSet;
+            import java.util.Set;
 
             class Test {
               private final Set<String> mySet;
@@ -159,8 +159,8 @@ public final class ImmutableMemberCollectionTest {
         .addInputLines(
             "Test.java",
             """
-            import java.util.Set;
             import java.util.HashSet;
+            import java.util.Set;
 
             class Test {
               private final Set<String> mySet = new HashSet<String>();
@@ -180,8 +180,8 @@ public final class ImmutableMemberCollectionTest {
         .addInputLines(
             "Test.java",
             """
-            import java.util.Set;
             import java.util.HashSet;
+            import java.util.Set;
 
             class Test {
               private final Set<String> mySet = new HashSet<String>();
@@ -201,8 +201,8 @@ public final class ImmutableMemberCollectionTest {
         .addInputLines(
             "Test.java",
             """
-            import java.util.Set;
             import java.util.HashSet;
+            import java.util.Set;
 
             class Test {
               private static final Set<String> mySet;
@@ -226,8 +226,8 @@ public final class ImmutableMemberCollectionTest {
         .addInputLines(
             "Test.java",
             """
-            import java.util.Set;
             import java.util.HashSet;
+            import java.util.Set;
 
             class Test {
               private static final Set<String> mySet;
@@ -252,8 +252,8 @@ public final class ImmutableMemberCollectionTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import java.util.List;
             import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
               private final List<String> myList1 = new ArrayList<>();
@@ -272,8 +272,8 @@ public final class ImmutableMemberCollectionTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import java.util.List;
             import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
               private final ImmutableList<String> myList1 = ImmutableList.of();
@@ -333,8 +333,8 @@ public final class ImmutableMemberCollectionTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableSet;
-            import java.util.Set;
             import java.util.HashSet;
+            import java.util.Set;
 
             class Test {
               private final ImmutableSet<String> mySet;
@@ -363,8 +363,8 @@ public final class ImmutableMemberCollectionTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableSet;
-            import java.util.Set;
             import java.util.HashSet;
+            import java.util.Set;
 
             class Test {
               public void addString(String x) {
@@ -388,11 +388,11 @@ public final class ImmutableMemberCollectionTest {
             "Test.java",
             """
             import java.util.Arrays;
+            import java.util.Collections;
             import java.util.HashSet;
             import java.util.List;
             import java.util.Map;
             import java.util.Set;
-            import java.util.Collections;
 
             class Test {
               private final Set<String> a = Set.of("a");

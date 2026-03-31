@@ -37,6 +37,7 @@ public final class NullNeedsCastForVarargsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -49,6 +50,7 @@ public final class NullNeedsCastForVarargsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -67,6 +69,7 @@ public final class NullNeedsCastForVarargsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -79,6 +82,7 @@ public final class NullNeedsCastForVarargsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -97,6 +101,7 @@ public final class NullNeedsCastForVarargsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -109,6 +114,7 @@ public final class NullNeedsCastForVarargsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -127,6 +133,7 @@ public final class NullNeedsCastForVarargsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.util.stream.Stream;
 
             class Test {
@@ -146,6 +153,7 @@ public final class NullNeedsCastForVarargsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -165,6 +173,7 @@ public final class NullNeedsCastForVarargsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -394,6 +403,7 @@ public final class NullNeedsCastForVarargsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import com.google.common.collect.Lists;
             import com.google.common.collect.Sets;

@@ -96,6 +96,7 @@ public class DurationToLongTimeUnitTest {
             import static java.util.concurrent.TimeUnit.MINUTES;
             import static java.util.concurrent.TimeUnit.NANOSECONDS;
             import static java.util.concurrent.TimeUnit.SECONDS;
+
             import com.google.protobuf.Duration;
             import com.google.protobuf.Timestamp;
             import java.util.concurrent.Future;
@@ -226,6 +227,7 @@ public class DurationToLongTimeUnitTest {
             import static java.util.concurrent.TimeUnit.MINUTES;
             import static java.util.concurrent.TimeUnit.NANOSECONDS;
             import static java.util.concurrent.TimeUnit.SECONDS;
+
             import com.google.protobuf.Duration;
             import com.google.protobuf.Timestamp;
             import java.util.concurrent.Future;

@@ -34,8 +34,8 @@ public class NullablePrimitiveArrayTest {
         .addInputLines(
             "Test.java",
             """
-            import org.checkerframework.checker.nullness.qual.Nullable;
             import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
 
             abstract class Test {
               @Nullable
@@ -57,8 +57,8 @@ public class NullablePrimitiveArrayTest {
         .addOutputLines(
             "Test.java",
             """
-            import org.checkerframework.checker.nullness.qual.Nullable;
             import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
 
             abstract class Test {
 
@@ -163,8 +163,8 @@ public class NullablePrimitiveArrayTest {
         .addInputLines(
             "Test.java",
             """
-            import org.checkerframework.checker.nullness.qual.Nullable;
             import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
 
             abstract class Test {
               abstract void f(@Nullable int @NonNull [] x);
@@ -173,8 +173,8 @@ public class NullablePrimitiveArrayTest {
         .addOutputLines(
             "Test.java",
             """
-            import org.checkerframework.checker.nullness.qual.Nullable;
             import org.checkerframework.checker.nullness.qual.NonNull;
+            import org.checkerframework.checker.nullness.qual.Nullable;
 
             abstract class Test {
               abstract void f(int @NonNull [] x);

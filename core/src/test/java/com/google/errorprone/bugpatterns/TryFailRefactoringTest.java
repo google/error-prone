@@ -38,6 +38,7 @@ public class TryFailRefactoringTest {
             """
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.fail;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -73,6 +74,7 @@ public class TryFailRefactoringTest {
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.assertThrows;
             import static org.junit.Assert.fail;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -111,6 +113,7 @@ public class TryFailRefactoringTest {
             """
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.fail;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -133,6 +136,7 @@ public class TryFailRefactoringTest {
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.assertThrows;
             import static org.junit.Assert.fail;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -156,6 +160,7 @@ public class TryFailRefactoringTest {
             """
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.fail;
+
             import com.google.common.io.CharSource;
             import java.io.BufferedReader;
             import java.io.IOException;
@@ -181,6 +186,7 @@ public class TryFailRefactoringTest {
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.assertThrows;
             import static org.junit.Assert.fail;
+
             import com.google.common.io.CharSource;
             import java.io.BufferedReader;
             import java.io.IOException;
@@ -209,6 +215,7 @@ public class TryFailRefactoringTest {
             """
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.fail;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;

@@ -236,8 +236,8 @@ public class OptionalOfRedundantMethodTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Optional;
             import com.google.common.collect.ImmutableMap;
+            import java.util.Optional;
 
             class Test {
               static String f(ImmutableMap<String, String> map) {
@@ -255,8 +255,8 @@ public class OptionalOfRedundantMethodTest {
         .addInputLines(
             "Test.java",
             """
-            import java.util.Optional;
             import com.google.common.collect.ImmutableMap;
+            import java.util.Optional;
 
             class Test {
               static String f(ImmutableMap<String, String> map) {
@@ -267,8 +267,8 @@ public class OptionalOfRedundantMethodTest {
         .addOutputLines(
             "Test.java",
 """
-import java.util.Optional;
 import com.google.common.collect.ImmutableMap;
+import java.util.Optional;
 
 class Test {
   static String f(ImmutableMap<String, String> map) {
@@ -286,8 +286,8 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.util.Optional;
             import com.google.common.collect.ImmutableMap;
+            import java.util.Optional;
 
             class Test {
               static String f(ImmutableMap<String, String> map) {
@@ -298,8 +298,8 @@ class Test {
         .addOutputLines(
             "Test.java",
             """
-            import java.util.Optional;
             import com.google.common.collect.ImmutableMap;
+            import java.util.Optional;
 
             class Test {
               static String f(ImmutableMap<String, String> map) {

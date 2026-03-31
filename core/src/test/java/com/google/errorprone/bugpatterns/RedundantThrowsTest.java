@@ -35,8 +35,8 @@ public final class RedundantThrowsTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.io.IOException;
             import java.io.FileNotFoundException;
+            import java.io.IOException;
             import java.nio.file.AccessDeniedException;
 
             interface Test {
@@ -86,8 +86,8 @@ interface Test {
         .addInputLines(
             "in/Test.java",
             """
-            import java.io.IOException;
             import java.io.FileNotFoundException;
+            import java.io.IOException;
             import java.nio.file.AccessDeniedException;
 
             interface Test {
@@ -97,8 +97,8 @@ interface Test {
         .addOutputLines(
             "out/Test.java",
             """
-            import java.io.IOException;
             import java.io.FileNotFoundException;
+            import java.io.IOException;
             import java.nio.file.AccessDeniedException;
 
             interface Test {

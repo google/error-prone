@@ -80,6 +80,7 @@ public class DateCheckerTest {
             "TestClass.java",
             """
             import static java.util.Calendar.JULY;
+
             import java.util.Date;
 
             public class TestClass {
@@ -182,6 +183,7 @@ public class TestClass {
             "TestClass.java",
 """
 import static java.util.Calendar.JULY;
+
 import java.util.Date;
 
 public class TestClass {
@@ -223,6 +225,7 @@ public class TestClass {
             "TestClass.java",
             """
             import static java.util.Calendar.JULY;
+
             import java.util.Date;
 
             public class TestClass {
@@ -244,6 +247,7 @@ public class TestClass {
             "TestClass.java",
             """
             import static java.util.Calendar.*;
+
             import java.util.Date;
 
             public class TestClass {

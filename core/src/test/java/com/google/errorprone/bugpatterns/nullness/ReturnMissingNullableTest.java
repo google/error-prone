@@ -1542,8 +1542,8 @@ public class ReturnMissingNullableTest {
             """
             package com.google.errorprone.bugpatterns.nullness;
 
-            import javax.annotation.Nullable;
             import java.util.Optional;
+            import javax.annotation.Nullable;
 
             public class MissingNullableReturnTest {
               public String get() {
@@ -1566,8 +1566,8 @@ public class ReturnMissingNullableTest {
             """
             package com.google.errorprone.bugpatterns.nullness;
 
-            import javax.annotation.Nullable;
             import java.util.concurrent.Callable;
+            import javax.annotation.Nullable;
 
             public class MissingNullableReturnTest {
               public Callable<?> get() {

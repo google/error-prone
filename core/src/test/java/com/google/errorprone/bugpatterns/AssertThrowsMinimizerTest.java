@@ -141,7 +141,8 @@ public class AssertThrowsMinimizerTest {
               void f() {
                 Foo.Builder builder = Foo.builder();
                 Bar bar = new Bar();
-                IllegalStateException ise = assertThrows(IllegalStateException.class, () -> builder.setBar(bar));
+                IllegalStateException ise =
+                    assertThrows(IllegalStateException.class, () -> builder.setBar(bar));
               }
             }
             """)
@@ -155,6 +156,7 @@ public class AssertThrowsMinimizerTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -176,8 +178,9 @@ public class AssertThrowsMinimizerTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
-            import java.util.List;
+
             import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
               void f() {
@@ -197,8 +200,9 @@ public class AssertThrowsMinimizerTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
-            import java.util.List;
+
             import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
               List<Integer> list = new ArrayList<>();
@@ -219,8 +223,9 @@ public class AssertThrowsMinimizerTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
-            import java.util.List;
+
             import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
               List<Integer> list = new ArrayList<>();
@@ -309,6 +314,7 @@ public class AssertThrowsMinimizerTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import java.io.IOException;
 
             class Test {
@@ -357,6 +363,7 @@ public class AssertThrowsMinimizerTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import java.io.IOException;
 
             class Test {
@@ -369,6 +376,7 @@ public class AssertThrowsMinimizerTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import java.io.IOException;
 
             class Test {
@@ -388,6 +396,7 @@ public class AssertThrowsMinimizerTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import java.io.IOException;
 
             class Test {
@@ -407,6 +416,7 @@ public class AssertThrowsMinimizerTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import java.io.IOException;
 
             class Test {
@@ -419,6 +429,7 @@ public class AssertThrowsMinimizerTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import java.io.IOException;
 
             class Test {
@@ -543,6 +554,7 @@ public class AssertThrowsMinimizerTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import com.google.android.gms.tagmanager.internal.type.StringWrapper;
 
             abstract class Test {
@@ -560,6 +572,7 @@ public class AssertThrowsMinimizerTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import com.google.android.gms.tagmanager.internal.type.StringWrapper;
 
             abstract class Test {
@@ -584,8 +597,9 @@ public class AssertThrowsMinimizerTest {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
-            import java.util.List;
+
             import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
 

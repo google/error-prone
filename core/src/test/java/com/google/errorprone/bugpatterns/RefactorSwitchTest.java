@@ -58,9 +58,9 @@ public final class RefactorSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.util.function.Supplier;
             import java.util.HashSet;
             import java.util.Set;
+            import java.util.function.Supplier;
 
             class Test {
               public String foo(Suit s) {
@@ -130,9 +130,9 @@ public final class RefactorSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.util.function.Supplier;
             import java.util.HashSet;
             import java.util.Set;
+            import java.util.function.Supplier;
 
             class Test {
               public String foo(Suit s) {

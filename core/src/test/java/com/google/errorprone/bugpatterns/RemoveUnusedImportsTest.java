@@ -40,9 +40,9 @@ public class RemoveUnusedImportsTest {
         .addInputLines(
             "in/Test.java",
             """
+            import static com.google.common.base.Preconditions.checkNotNull;
             import static java.util.Collections.emptyList;
             import static java.util.Collections.emptySet;
-            import static com.google.common.base.Preconditions.checkNotNull;
 
             import java.util.ArrayList;
             import java.util.Collection;
@@ -71,8 +71,8 @@ public class RemoveUnusedImportsTest {
         .addOutputLines(
             "out/Test.java",
             """
-            import static java.util.Collections.emptySet;
             import static com.google.common.base.Preconditions.checkNotNull;
+            import static java.util.Collections.emptySet;
 
             import java.util.Collection;
             import java.util.HashSet;
@@ -210,9 +210,9 @@ public class RemoveUnusedImportsTest {
             package test;
 
             import java.util.ArrayList;
-            import java.util.List;
             // BUG: Diagnostic contains:
             import java.util.LinkedList;
+            import java.util.List;
 
             public class Test {
               List<String> xs = new ArrayList<>();
@@ -230,9 +230,9 @@ public class RemoveUnusedImportsTest {
             package test;
 
             import java.util.ArrayList;
-            import java.util.List;
             // BUG: Diagnostic contains: java.util.LinkedList, java.util.Map, java.util.Set
             import java.util.LinkedList;
+            import java.util.List;
             import java.util.Map;
             import java.util.Set;
 
@@ -249,8 +249,8 @@ public class RemoveUnusedImportsTest {
         .addInputLines(
             "in/Test.java",
             """
-            import java.util.List;
             import java.util.Collection;
+            import java.util.List;
 
             /** {@link List#containsAll(Collection)} */
             public class Test {}
@@ -617,10 +617,10 @@ public class RemoveUnusedImportsTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.annotation.ElementType;
-
             import static java.lang.annotation.ElementType.FIELD;
             import static java.lang.annotation.ElementType.METHOD;
+
+            import java.lang.annotation.ElementType;
 
             class Test {
               public void test(ElementType test) {

@@ -61,6 +61,7 @@ public class TypeEqualsCheckerTest {
             "ExampleChecker.java",
             """
             import static com.google.errorprone.util.ASTHelpers.getSymbol;
+
             import com.google.errorprone.BugPattern;
             import com.google.errorprone.BugPattern.SeverityLevel;
             import com.google.errorprone.VisitorState;

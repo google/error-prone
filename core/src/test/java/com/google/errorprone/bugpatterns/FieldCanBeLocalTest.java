@@ -596,9 +596,9 @@ public final class FieldCanBeLocalTest {
         .addSourceLines(
             "Test.java",
 """
+import java.util.Collections;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import java.util.Collections;
 
 class Test {
   private Integer a;

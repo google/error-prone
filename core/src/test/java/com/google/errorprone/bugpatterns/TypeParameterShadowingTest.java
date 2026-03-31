@@ -375,8 +375,8 @@ public class TypeParameterShadowingTest {
 """
 package foo.bar;
 
-import java.util.Map;
 import java.util.Comparator;
+import java.util.Map;
 
 class Test {
   static Comparator<Map.Entry<Integer, String>> ENTRY_COMPARATOR =

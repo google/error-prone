@@ -96,6 +96,7 @@ public class FloggerFormatStringTest {
             "Test.java",
             """
             import static com.google.common.flogger.LazyArgs.lazy;
+
             import com.google.common.flogger.FluentLogger;
 
             class Test {

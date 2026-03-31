@@ -66,8 +66,8 @@ public class ImmutableAnnotationCheckerTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.annotation.Annotation;
             import com.google.common.collect.ImmutableSet;
+            import java.lang.annotation.Annotation;
 
             class Test implements Deprecated {
               public Class<? extends Annotation> annotationType() {
@@ -134,8 +134,8 @@ class Test implements Deprecated {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.annotation.Annotation;
             import com.google.errorprone.annotations.Immutable;
+            import java.lang.annotation.Annotation;
 
             // BUG: Diagnostic contains: annotations are immutable by default
             @Immutable
@@ -203,8 +203,8 @@ class Test implements Deprecated {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.annotation.Annotation;
             import com.google.common.collect.ImmutableSet;
+            import java.lang.annotation.Annotation;
 
             class Test {
               {
@@ -233,9 +233,9 @@ class Test implements Deprecated {
         .addSourceLines(
             "Test.java",
             """
+            import com.google.common.collect.ImmutableSet;
             import java.lang.annotation.Annotation;
             import java.util.Objects;
-            import com.google.common.collect.ImmutableSet;
 
             class Test {
               {
@@ -269,9 +269,9 @@ class Test implements Deprecated {
         .addSourceLines(
             "Test.java",
             """
+            import com.google.common.collect.ImmutableSet;
             import java.lang.annotation.Annotation;
             import java.util.Objects;
-            import com.google.common.collect.ImmutableSet;
 
             enum Test {
               ;
@@ -336,9 +336,9 @@ class Test implements Deprecated {
         .addSourceLines(
             "Test.java",
             """
+            import com.google.common.collect.ImmutableSet;
             import java.lang.annotation.Annotation;
             import java.util.Objects;
-            import com.google.common.collect.ImmutableSet;
 
             class Test {
               @SuppressWarnings("Immutable")
@@ -372,9 +372,9 @@ class Test implements Deprecated {
         .addSourceLines(
             "Test.java",
             """
+            import com.google.common.collect.ImmutableSet;
             import java.lang.annotation.Annotation;
             import java.util.Objects;
-            import com.google.common.collect.ImmutableSet;
 
             class Test {
               class MyAnno implements Annotation {

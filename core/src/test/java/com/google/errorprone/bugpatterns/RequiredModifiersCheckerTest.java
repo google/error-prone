@@ -38,8 +38,9 @@ public class RequiredModifiersCheckerTest {
               """
               package test;
 
-              import com.google.errorprone.annotations.RequiredModifiers;
               import static com.google.errorprone.annotations.Modifier.ABSTRACT;
+
+              import com.google.errorprone.annotations.RequiredModifiers;
 
               @RequiredModifiers(modifier = ABSTRACT)
               public @interface AbstractRequired {}
@@ -49,8 +50,9 @@ public class RequiredModifiersCheckerTest {
               """
               package test;
 
-              import static com.google.errorprone.annotations.Modifier.PUBLIC;
               import static com.google.errorprone.annotations.Modifier.FINAL;
+              import static com.google.errorprone.annotations.Modifier.PUBLIC;
+
               import com.google.errorprone.annotations.RequiredModifiers;
 
               @RequiredModifiers(modifier = {PUBLIC, FINAL})
@@ -240,8 +242,8 @@ public class RequiredModifiersTestCase {
             """
             package testdata;
 
-            import java.lang.annotation.Target;
             import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
 
             @Target(ElementType.PACKAGE)
             public @interface Anno {}
@@ -264,6 +266,7 @@ public class RequiredModifiersTestCase {
             package test;
 
             import static com.google.errorprone.annotations.Modifier.ABSTRACT;
+
             import com.google.errorprone.annotations.RequiredModifiers;
 
             @RequiredModifiers(modifier = ABSTRACT)

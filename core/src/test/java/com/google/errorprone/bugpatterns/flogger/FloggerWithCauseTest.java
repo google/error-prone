@@ -86,6 +86,7 @@ public class FloggerWithCauseTest {
             """
             import static com.google.common.flogger.StackSize.FULL;
             import static com.google.common.flogger.StackSize.MEDIUM;
+
             import com.google.common.flogger.FluentLogger;
 
             class Test {
@@ -126,6 +127,7 @@ public class FloggerWithCauseTest {
             "out/Test.java",
             """
             import static com.google.common.flogger.StackSize.MEDIUM;
+
             import com.google.common.flogger.FluentLogger;
 
             class Test {

@@ -35,8 +35,8 @@ public final class UnnecessaryCopyTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import java.util.List;
 
             class Test {
@@ -50,8 +50,8 @@ public final class UnnecessaryCopyTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import java.util.List;
 
             class Test {
@@ -71,8 +71,8 @@ public final class UnnecessaryCopyTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import java.util.List;
 
             class Test {
@@ -86,8 +86,8 @@ public final class UnnecessaryCopyTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import java.util.List;
 
             class Test {
@@ -107,8 +107,8 @@ public final class UnnecessaryCopyTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableMap;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import java.util.Map;
 
             class Test {
@@ -122,8 +122,8 @@ public final class UnnecessaryCopyTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableMap;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import java.util.Map;
 
             class Test {
@@ -143,8 +143,8 @@ public final class UnnecessaryCopyTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import java.util.List;
 
             class Test {
@@ -158,8 +158,8 @@ public final class UnnecessaryCopyTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import java.util.List;
 
             class Test {
@@ -179,8 +179,8 @@ public final class UnnecessaryCopyTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
             class Test {
               void f(TestProtoMessage m) {
@@ -192,8 +192,8 @@ public final class UnnecessaryCopyTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
             class Test {
               void f(TestProtoMessage m) {
@@ -211,8 +211,8 @@ public final class UnnecessaryCopyTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import java.util.List;
 
             class Test {
@@ -233,8 +233,8 @@ public final class UnnecessaryCopyTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import java.util.List;
 
             class Test {

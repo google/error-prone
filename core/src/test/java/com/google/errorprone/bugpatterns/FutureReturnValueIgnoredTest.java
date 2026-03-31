@@ -596,8 +596,9 @@ public class FutureReturnValueIgnoredNegativeCases {
         .addSourceLines(
             "test.java",
             """
-            import java.util.concurrent.CompletableFuture;
             import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
+            import java.util.concurrent.CompletableFuture;
 
             class Test {
               void f(CompletableFuture<?> cf) {

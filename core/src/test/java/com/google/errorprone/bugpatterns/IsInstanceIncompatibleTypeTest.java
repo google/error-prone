@@ -70,8 +70,8 @@ public class IsInstanceIncompatibleTypeTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Optional;
             import java.util.HashMap;
+            import java.util.Optional;
 
             class Test {
               Optional<HashMap<String, Integer>> f(Optional<HashMap<String, Integer>> m) {
@@ -89,8 +89,8 @@ public class IsInstanceIncompatibleTypeTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Optional;
             import java.lang.Number;
+            import java.util.Optional;
 
             class Test {
               <T extends Number> Optional<T> f(Optional<T> t) {
@@ -108,9 +108,9 @@ public class IsInstanceIncompatibleTypeTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Optional;
             import java.util.HashMap;
             import java.util.LinkedHashMap;
+            import java.util.Optional;
 
             class Test {
               Optional<HashMap> f(Optional<HashMap> m) {
@@ -127,9 +127,9 @@ public class IsInstanceIncompatibleTypeTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Optional;
             import java.util.HashMap;
             import java.util.LinkedHashMap;
+            import java.util.Optional;
 
             class Test {
               Optional<HashMap> f(Optional<HashMap> m) {
@@ -146,9 +146,9 @@ public class IsInstanceIncompatibleTypeTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Optional;
             import java.util.HashMap;
             import java.util.LinkedHashMap;
+            import java.util.Optional;
 
             class Test {
               Optional<HashMap<String, Integer>> f(Optional<HashMap<String, Integer>> m) {

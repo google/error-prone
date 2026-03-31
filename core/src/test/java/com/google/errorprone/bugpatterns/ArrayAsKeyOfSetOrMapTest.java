@@ -40,22 +40,22 @@ public final class ArrayAsKeyOfSetOrMapTest {
         .addSourceLines(
             "Test.java",
 """
-import java.util.Arrays;
-import java.util.Set;
-import java.util.Map;
-import java.util.LinkedHashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Maps;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.LinkedHashMultiset;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.LinkedHashMultiset;
 import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 class Test {
   public static void main(String[] args) {
@@ -106,24 +106,24 @@ class Test {
         .addSourceLines(
             "Test.java",
 """
-import java.util.Arrays;
-import java.util.Set;
-import java.util.Map;
-import java.util.LinkedHashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import com.google.common.collect.Sets;
-import com.google.common.collect.Maps;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.TreeSet;
-import com.google.common.collect.HashMultiset;
-import com.google.common.collect.LinkedHashMultiset;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.LinkedHashMultiset;
 import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Ordering;
+import com.google.common.collect.Sets;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 class Test {
   public static void main(String[] args) {

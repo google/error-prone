@@ -71,10 +71,10 @@ public class SymbolToStringTest {
             import com.sun.source.tree.ClassTree;
             import com.sun.tools.javac.code.Symbol;
             import com.sun.tools.javac.code.Symbol.ClassSymbol;
-            import com.sun.tools.javac.tree.TreeMaker;
             import com.sun.tools.javac.code.Type;
             import com.sun.tools.javac.code.Types;
             import com.sun.tools.javac.tree.JCTree.JCClassDecl;
+            import com.sun.tools.javac.tree.TreeMaker;
 
             @BugPattern(name = "Example", summary = "", severity = SeverityLevel.ERROR)
             public class ExampleChecker extends BugChecker implements ClassTreeMatcher {

@@ -197,6 +197,7 @@ public class DurationTemporalUnitTest {
             import static java.time.temporal.ChronoUnit.NANOS;
             import static java.time.temporal.ChronoUnit.SECONDS;
             import static java.time.temporal.ChronoUnit.YEARS;
+
             import java.time.Duration;
 
             public class TestClass {

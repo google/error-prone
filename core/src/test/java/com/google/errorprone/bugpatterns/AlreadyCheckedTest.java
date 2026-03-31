@@ -438,6 +438,7 @@ public final class AlreadyCheckedTest {
             "Test.java",
             """
             import static java.time.Duration.ofSeconds;
+
             import java.time.Duration;
 
             class Test {

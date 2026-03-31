@@ -514,6 +514,7 @@ public class InlinerTest {
             "Caller.java",
             """
             import static com.google.test.Client.before;
+
             import com.google.test.Client;
 
             public final class Caller {

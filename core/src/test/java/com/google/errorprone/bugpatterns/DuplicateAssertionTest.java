@@ -132,10 +132,10 @@ public final class DuplicateAssertionTest {
         .addSourceLines(
             "Test.java",
             """
-            import junit.framework.Assert;
+            import java.io.IOException;
             import java.nio.file.Files;
             import java.nio.file.Path;
-            import java.io.IOException;
+            import junit.framework.Assert;
 
             class Test {
               public final void checkContents(String relativePath, String expectedContents) throws IOException {

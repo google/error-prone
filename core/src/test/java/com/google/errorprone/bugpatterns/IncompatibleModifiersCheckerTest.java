@@ -39,6 +39,7 @@ public class IncompatibleModifiersCheckerTest {
 
               import static com.google.errorprone.annotations.Modifier.FINAL;
               import static com.google.errorprone.annotations.Modifier.PRIVATE;
+
               import com.google.errorprone.annotations.IncompatibleModifiers;
 
               @IncompatibleModifiers(modifier = {PRIVATE, FINAL})
@@ -51,6 +52,7 @@ public class IncompatibleModifiersCheckerTest {
 
               import static com.google.errorprone.annotations.Modifier.FINAL;
               import static com.google.errorprone.annotations.Modifier.PUBLIC;
+
               import com.google.errorprone.annotations.IncompatibleModifiers;
 
               @IncompatibleModifiers(modifier = {PUBLIC, FINAL})
@@ -62,6 +64,7 @@ public class IncompatibleModifiersCheckerTest {
               package test;
 
               import static com.google.errorprone.annotations.Modifier.ABSTRACT;
+
               import com.google.errorprone.annotations.IncompatibleModifiers;
 
               @IncompatibleModifiers(modifier = ABSTRACT)
@@ -189,8 +192,8 @@ public class IncompatibleModifiersTestCase {
             """
             package testdata;
 
-            import java.lang.annotation.Target;
             import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
 
             @Target(ElementType.PACKAGE)
             public @interface Anno {}
@@ -213,6 +216,7 @@ public class IncompatibleModifiersTestCase {
             package test;
 
             import static com.google.errorprone.annotations.Modifier.ABSTRACT;
+
             import com.google.errorprone.annotations.IncompatibleModifiers;
 
             @IncompatibleModifiers(modifier = ABSTRACT)

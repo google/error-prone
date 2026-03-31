@@ -129,6 +129,7 @@ public class CanonicalDurationTest {
             package a;
 
             import static java.time.Duration.ofSeconds;
+
             import java.time.Duration;
 
             public class A {
@@ -229,6 +230,7 @@ public class CanonicalDurationTest {
 
             import static java.time.Duration.ofSeconds;
             import static java.util.Arrays.asList;
+
             import java.time.Duration;
             import java.util.List;
 
@@ -247,6 +249,7 @@ public class CanonicalDurationTest {
             import static java.time.Duration.ofMinutes;
             import static java.time.Duration.ofSeconds;
             import static java.util.Arrays.asList;
+
             import java.time.Duration;
             import java.util.List;
 
@@ -269,6 +272,7 @@ public class CanonicalDurationTest {
             package a;
 
             import static java.time.Duration.ofSeconds;
+
             import java.time.Duration;
 
             public class A {
@@ -282,6 +286,7 @@ public class CanonicalDurationTest {
 
             import static java.time.Duration.ofMinutes;
             import static java.time.Duration.ofSeconds;
+
             import java.time.Duration;
 
             public class A {

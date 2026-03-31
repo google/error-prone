@@ -230,8 +230,8 @@ public final class UnnecessaryAsyncTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.concurrent.atomic.AtomicInteger;
             import java.util.List;
+            import java.util.concurrent.atomic.AtomicInteger;
 
             class Test {
               long test(List<String> xs) {

@@ -393,8 +393,8 @@ public class JdkObsoleteTest {
             "Test.java",
             """
             import java.util.Map;
-            import java.util.Set;
             import java.util.NavigableMap;
+            import java.util.Set;
 
             class Test {
               void f(NavigableMap<String, Integer> m) {

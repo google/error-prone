@@ -137,8 +137,8 @@ public class UnusedAnonymousClassTest {
             """
             package a;
 
-            import java.util.concurrent.Callable;
             import java.util.ArrayList;
+            import java.util.concurrent.Callable;
 
             public class One {
               static ArrayList<Callable<Void>> callables = new ArrayList<>();
@@ -167,8 +167,8 @@ public class UnusedAnonymousClassTest {
             """
             package a;
 
-            import java.util.concurrent.Callable;
             import java.util.ArrayList;
+            import java.util.concurrent.Callable;
 
             public class One {
               public static void main(String[] args) throws Exception {
@@ -194,8 +194,8 @@ public class UnusedAnonymousClassTest {
             """
             package a;
 
-            import java.util.concurrent.Callable;
             import java.util.ArrayList;
+            import java.util.concurrent.Callable;
 
             public class One {
               static ArrayList<Callable<Void>> callables = new ArrayList<>();

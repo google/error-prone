@@ -254,6 +254,7 @@ class Test {
             "Test.java",
 """
 import static java.text.DateFormat.*;
+
 import java.text.*;
 
 class Test {
@@ -486,6 +487,7 @@ class Test {
             "Test.java",
             """
             import static java.util.Locale.Category.FORMAT;
+
             import java.text.*;
             import java.util.Locale;
 

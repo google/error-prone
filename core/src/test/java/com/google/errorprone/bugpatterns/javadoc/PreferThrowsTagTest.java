@@ -39,6 +39,7 @@ public final class PreferThrowsTagTest {
             "Test.java",
             """
             import java.io.IOException;
+
             interface Test {
               /**
                * @exception IOException if something goes wrong
@@ -50,6 +51,7 @@ public final class PreferThrowsTagTest {
             "Test.java",
             """
             import java.io.IOException;
+
             interface Test {
               /**
                * @throws IOException if something goes wrong
@@ -67,6 +69,7 @@ public final class PreferThrowsTagTest {
             "Test.java",
             """
             import java.io.IOException;
+
             interface Test {
               /**
                * @exception IOException if something goes wrong
@@ -79,6 +82,7 @@ public final class PreferThrowsTagTest {
             "Test.java",
             """
             import java.io.IOException;
+
             interface Test {
               /**
                * @throws IOException if something goes wrong
@@ -97,6 +101,7 @@ public final class PreferThrowsTagTest {
             "Test.java",
             """
             import java.io.IOException;
+
             interface Test {
               /**
                * @throws IOException if something goes wrong

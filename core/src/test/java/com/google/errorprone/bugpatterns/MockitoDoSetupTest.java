@@ -44,6 +44,7 @@ public final class MockitoDoSetupTest {
             "Test.java",
             """
             import static org.mockito.Mockito.when;
+
             import org.mockito.Mockito;
 
             public class Test {
