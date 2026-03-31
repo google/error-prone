@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 import static org.junit.Assume.assumeTrue;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
@@ -48,7 +47,7 @@ public class FloatingPointLiteralPrecisionTest {
               float f = 2.0f;
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -95,7 +94,7 @@ public class FloatingPointLiteralPrecisionTest {
     BugCheckerRefactoringTestHelper.newInstance(FloatingPointLiteralPrecision.class, getClass())
         .addInputLines("in/Test.java", input)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
 
     // Make sure we're still emitting a warning.
     CompilationTestHelper.newInstance(FloatingPointLiteralPrecision.class, getClass())

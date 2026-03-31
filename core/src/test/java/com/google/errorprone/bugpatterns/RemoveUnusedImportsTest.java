@@ -15,8 +15,6 @@
  */
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -375,7 +373,7 @@ public class RemoveUnusedImportsTest {
             """
             package com.example;
             """) // The package statement's trailing newline is retained
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test

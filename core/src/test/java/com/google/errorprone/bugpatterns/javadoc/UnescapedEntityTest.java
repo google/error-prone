@@ -73,7 +73,7 @@ public final class UnescapedEntityTest {
             interface Test {}
             """)
         .expectUnchanged()
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -107,7 +107,7 @@ public final class UnescapedEntityTest {
              */
             interface Test {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -133,7 +133,7 @@ public final class UnescapedEntityTest {
              */
             interface Test {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -162,7 +162,7 @@ public final class UnescapedEntityTest {
              */
             interface Test {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -197,7 +197,7 @@ public final class UnescapedEntityTest {
              */
             interface Test {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -232,7 +232,7 @@ public final class UnescapedEntityTest {
              */
             interface Test {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -330,7 +330,7 @@ public final class UnescapedEntityTest {
              */
             interface Test {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -348,6 +348,6 @@ public final class UnescapedEntityTest {
             /** {@code List<List<Integer>>} */
             interface Test {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 }

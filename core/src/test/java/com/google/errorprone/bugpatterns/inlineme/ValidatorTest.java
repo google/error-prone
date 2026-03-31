@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.inlineme;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import java.util.regex.Pattern;
 import org.junit.Test;
@@ -1014,7 +1013,7 @@ public class ValidatorTest {
               public record SomeRecord(long id) {}
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   private BugCheckerRefactoringTestHelper getHelperInCleanupMode() {

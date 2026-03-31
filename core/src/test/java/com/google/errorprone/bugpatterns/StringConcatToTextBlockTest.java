@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -73,7 +71,7 @@ public class StringConcatToTextBlockTest {
                   \""";
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -124,7 +122,7 @@ public class StringConcatToTextBlockTest {
                   \""";
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -152,7 +150,7 @@ public class StringConcatToTextBlockTest {
                   \""";
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -180,7 +178,7 @@ public class StringConcatToTextBlockTest {
                   \""";
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -208,7 +206,7 @@ public class StringConcatToTextBlockTest {
                   \""";
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -236,7 +234,7 @@ public class StringConcatToTextBlockTest {
                   \""";
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   // b/396965922
@@ -267,7 +265,7 @@ public class StringConcatToTextBlockTest {
                   \""";
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -295,7 +293,7 @@ public class StringConcatToTextBlockTest {
             record Test(@SuppressWarnings("foo") @Anno int foo) {}
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -310,6 +308,6 @@ public class StringConcatToTextBlockTest {
             """)
         .expectUnchanged()
         .setArgs("-g:none")
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 }

@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.auto.value.processor.AutoValueProcessor;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -368,7 +367,7 @@ public class UnnecessaryParenthesesTest {
             }
             """)
         // Using TEXT_MATCH because the ASTs are the same with or without the parentheses!
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -395,6 +394,6 @@ public class UnnecessaryParenthesesTest {
             """)
         .expectUnchanged()
         .setArgs("-processor", AutoValueProcessor.class.getName())
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 }

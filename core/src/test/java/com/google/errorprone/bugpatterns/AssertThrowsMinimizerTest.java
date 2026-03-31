@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -110,7 +108,7 @@ public class AssertThrowsMinimizerTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -146,7 +144,7 @@ public class AssertThrowsMinimizerTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -270,7 +268,7 @@ public class AssertThrowsMinimizerTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -353,7 +351,7 @@ public class AssertThrowsMinimizerTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -386,7 +384,7 @@ public class AssertThrowsMinimizerTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -439,7 +437,7 @@ public class AssertThrowsMinimizerTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -685,7 +683,7 @@ public class AssertThrowsMinimizerTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -731,7 +729,7 @@ public class AssertThrowsMinimizerTest {
               abstract int getDimension();
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -871,7 +869,7 @@ public class AssertThrowsMinimizerTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -918,7 +916,7 @@ public class AssertThrowsMinimizerTest {
               abstract String getString();
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -962,7 +960,7 @@ public class AssertThrowsMinimizerTest {
               abstract void doSomething(String... strings);
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1024,6 +1022,6 @@ public class AssertThrowsMinimizerTest {
               abstract void doSomething(Object o);
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 }

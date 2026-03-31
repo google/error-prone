@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
@@ -104,7 +103,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -152,7 +151,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -206,7 +205,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(FixChoosers.FIRST)
-        .doTest(TEXT_MATCH);
+        .doTest();
 
     refactoringHelper2
         .addInputLines(
@@ -254,7 +253,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(FixChoosers.SECOND)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -304,7 +303,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -350,7 +349,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -503,7 +502,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -914,7 +913,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -969,7 +968,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1024,7 +1023,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1068,7 +1067,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1111,7 +1110,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1157,7 +1156,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1202,7 +1201,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1248,7 +1247,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1287,7 +1286,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             }
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true")
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   /**********************************
@@ -1778,7 +1777,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1836,7 +1835,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1930,7 +1929,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2068,7 +2067,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2127,7 +2126,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2213,7 +2212,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2289,7 +2288,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(FixChoosers.FIRST)
-        .doTest(TEXT_MATCH);
+        .doTest();
 
     refactoringHelper2
         .addInputLines(
@@ -2354,7 +2353,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(FixChoosers.SECOND)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2401,7 +2400,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2477,7 +2476,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2564,7 +2563,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2623,7 +2622,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2875,7 +2874,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2993,7 +2992,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -3097,7 +3096,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -3150,7 +3149,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -3210,7 +3209,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -3270,7 +3269,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -3337,7 +3336,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -3844,7 +3843,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         // There should be no second fix that attempts to remove the default case because there is
         // no default case.
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -3894,7 +3893,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest(TEXT_MATCH);
+        .doTest();
 
     refactoringHelper2
         .addInputLines(
@@ -3940,7 +3939,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(FixChoosers.SECOND)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -4000,7 +3999,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest(TEXT_MATCH);
+        .doTest();
 
     refactoringHelper2
         .addInputLines(
@@ -4050,7 +4049,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(FixChoosers.SECOND)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -4107,7 +4106,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
-        .doTest(TEXT_MATCH);
+        .doTest();
 
     refactoringHelper2
         .addInputLines(
@@ -4160,7 +4159,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(FixChoosers.SECOND)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -4272,7 +4271,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -4321,7 +4320,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableAssignmentSwitchConversion",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=false")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -4447,7 +4446,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion=true")
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -4485,7 +4484,7 @@ public final class StatementSwitchToExpressionSwitchTest {
         .setArgs(
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion=true",
             "-XepOpt:StatementSwitchToExpressionSwitch:EnableReturnSwitchConversion=true")
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -4731,7 +4730,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -4865,7 +4864,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -5079,7 +5078,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -5141,7 +5140,7 @@ public final class StatementSwitchToExpressionSwitchTest {
             """)
         .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
         .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test

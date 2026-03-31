@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +48,7 @@ class Test {}
  */
 class Test {}
 """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -86,7 +84,7 @@ class Test {}
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -104,7 +102,7 @@ class Test {}
             /** This malformed tag spans {@code multiple lines}. */
             class Test {}
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -117,7 +115,7 @@ class Test {}
             class Test {}
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -130,6 +128,6 @@ class Test {}
             class Test {}
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 }

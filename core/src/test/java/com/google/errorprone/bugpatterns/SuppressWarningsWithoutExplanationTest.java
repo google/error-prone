@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,7 +47,7 @@ public final class SuppressWarningsWithoutExplanationTest {
               void test() {}
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -71,7 +69,7 @@ public final class SuppressWarningsWithoutExplanationTest {
               void test() {}
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -86,7 +84,7 @@ public final class SuppressWarningsWithoutExplanationTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -101,7 +99,7 @@ public final class SuppressWarningsWithoutExplanationTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -117,7 +115,7 @@ public final class SuppressWarningsWithoutExplanationTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -133,7 +131,7 @@ public final class SuppressWarningsWithoutExplanationTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -149,6 +147,6 @@ public final class SuppressWarningsWithoutExplanationTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 }

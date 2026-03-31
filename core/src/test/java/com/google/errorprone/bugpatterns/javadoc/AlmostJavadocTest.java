@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -66,7 +64,7 @@ public final class AlmostJavadocTest {
               void bar(int bar) {}
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -114,7 +112,7 @@ public final class AlmostJavadocTest {
               void baz();
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test

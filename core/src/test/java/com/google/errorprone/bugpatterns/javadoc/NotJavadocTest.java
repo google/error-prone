@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -52,7 +50,7 @@ public final class NotJavadocTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -137,7 +135,7 @@ public final class NotJavadocTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -163,7 +161,7 @@ public final class NotJavadocTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -178,7 +176,7 @@ public final class NotJavadocTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -194,7 +192,7 @@ public final class NotJavadocTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -207,7 +205,7 @@ public final class NotJavadocTest {
             package foo;
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -220,7 +218,7 @@ public final class NotJavadocTest {
             module foo {}
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -237,7 +235,7 @@ public final class NotJavadocTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -257,7 +255,7 @@ public final class NotJavadocTest {
                 /* age (must be positive) */
                 int age) {}
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -292,7 +290,7 @@ public record Test(
      */
     int age) {}
 """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -307,7 +305,7 @@ public record Test(
             """)
         // TODO(b/494275366): Add a fix for this.
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -328,6 +326,6 @@ public record Test(
             """)
         // TODO(b/494275366): Add a fix for this.
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 }

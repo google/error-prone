@@ -22,7 +22,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -133,7 +132,7 @@ public class BugCheckerRefactoringTestHelperTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -159,7 +158,7 @@ public class BugCheckerRefactoringTestHelperTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -188,7 +187,7 @@ public class BugCheckerRefactoringTestHelperTest {
                       }
                     }
                     """)
-                .doTest(TestMode.TEXT_MATCH));
+                .doTest());
   }
 
   @Test
@@ -230,7 +229,7 @@ public class BugCheckerRefactoringTestHelperTest {
 
             public class Bar {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   /** Mock {@link BugChecker} for testing only. */
@@ -296,7 +295,7 @@ public class BugCheckerRefactoringTestHelperTest {
 
             class A {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   /** Mock {@link BugChecker} for testing only. */
@@ -434,6 +433,6 @@ public class BugCheckerRefactoringTestHelperTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 }

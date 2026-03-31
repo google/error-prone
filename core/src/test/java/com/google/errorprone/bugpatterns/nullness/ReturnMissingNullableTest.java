@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -1032,7 +1030,7 @@ public class ReturnMissingNullableTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2274,7 +2272,7 @@ public class ReturnMissingNullableTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2492,7 +2490,7 @@ public class ReturnMissingNullableTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test

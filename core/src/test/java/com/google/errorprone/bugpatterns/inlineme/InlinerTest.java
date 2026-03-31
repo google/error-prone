@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.inlineme;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 import static com.google.errorprone.bugpatterns.inlineme.Inliner.PREFIX_FLAG;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
@@ -317,7 +316,7 @@ public class InlinerTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1762,7 +1761,7 @@ public final class Caller {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   // b/399499673

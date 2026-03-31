@@ -15,13 +15,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.TruthJUnit.assume;
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -665,7 +663,7 @@ public class UnusedVariableTest {
 
             public class UnusedWithComment {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -687,7 +685,7 @@ public class UnusedVariableTest {
               public static final int A = 1; // foo
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -712,7 +710,7 @@ public class UnusedVariableTest {
               public static final int A = 1; // foo
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -732,7 +730,7 @@ public class UnusedVariableTest {
             @SuppressWarnings("foo" /* { */)
             public class Test {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2236,6 +2234,6 @@ public class Test {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 }

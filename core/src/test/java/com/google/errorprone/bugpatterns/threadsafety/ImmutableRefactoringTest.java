@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,7 +86,7 @@ public final class ImmutableRefactoringTest {
             "    final int a = 43;",
             "  }",
             "}")
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -113,7 +111,7 @@ public final class ImmutableRefactoringTest {
             "class Test {",
             "  int a = 42;",
             "}")
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -149,6 +147,6 @@ public final class ImmutableRefactoringTest {
             "    int a = 43;",
             "  }",
             "}")
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 }

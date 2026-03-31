@@ -20,7 +20,6 @@ import static com.google.errorprone.bugpatterns.checkreturnvalue.NoCanIgnoreRetu
 import static com.google.errorprone.bugpatterns.checkreturnvalue.NoCanIgnoreReturnValueOnClasses.METHOD_COMMENT;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -64,7 +63,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -98,7 +97,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -141,7 +140,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -184,7 +183,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -214,7 +213,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
             "    return new Client();",
             "  }",
             "}")
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -248,7 +247,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
             "    return this;",
             "  }",
             "}")
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -298,7 +297,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -345,7 +344,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -392,7 +391,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -439,7 +438,7 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -480,6 +479,6 @@ public final class NoCanIgnoreReturnValueOnClassesTest {
             "    abstract String id();",
             "  }",
             "}")
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 }

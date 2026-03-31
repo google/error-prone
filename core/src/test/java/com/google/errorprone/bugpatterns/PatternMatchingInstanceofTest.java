@@ -784,7 +784,7 @@ public final class PatternMatchingInstanceofTest {
             }
             """)
         .expectUnchanged()
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -935,7 +935,7 @@ public final class PatternMatchingInstanceofTest {
               }
             }
             """)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   // https://github.com/google/error-prone/issues/4921
@@ -1006,7 +1006,7 @@ public final class PatternMatchingInstanceofTest {
               void rawTypeNecessary(ArrayList<Integer> l) {}
             }
             """)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test

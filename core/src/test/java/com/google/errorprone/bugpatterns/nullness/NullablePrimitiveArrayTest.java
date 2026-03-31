@@ -104,7 +104,7 @@ public class NullablePrimitiveArrayTest {
               abstract byte @Nullable [] f();
             }
             """)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -133,7 +133,7 @@ public class NullablePrimitiveArrayTest {
               abstract byte[] f();
             }
             """)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test

@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -109,7 +107,7 @@ public final class AnnotationPositionTest {
               public boolean equals(Object o);
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -133,7 +131,7 @@ public final class AnnotationPositionTest {
               public void foo();
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -150,7 +148,7 @@ public final class AnnotationPositionTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -176,7 +174,7 @@ public final class AnnotationPositionTest {
               public void foo();
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -202,7 +200,7 @@ public final class AnnotationPositionTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -222,7 +220,7 @@ public final class AnnotationPositionTest {
               public boolean foo(@NonTypeUse final String s);
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -269,7 +267,7 @@ public final class AnnotationPositionTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -292,7 +290,7 @@ public final class AnnotationPositionTest {
               @NonTypeUse public static @EitherUse int foo = 1;
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -309,7 +307,7 @@ public final class AnnotationPositionTest {
             @NonTypeUse
             public interface Test {}
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -324,7 +322,7 @@ public final class AnnotationPositionTest {
             @EitherUse
             public interface Test {}
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -345,7 +343,7 @@ public final class AnnotationPositionTest {
             @NonTypeUse
             public final class Test {}
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -379,7 +377,7 @@ public final class AnnotationPositionTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -403,7 +401,7 @@ public final class AnnotationPositionTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -436,7 +434,7 @@ interface Test {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -495,7 +493,7 @@ interface Test {
               final class A implements Test {}
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -519,7 +517,7 @@ interface Test {
               non-sealed class A implements Test {}
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -541,7 +539,7 @@ interface Test {
               <T> T f();
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -613,7 +611,7 @@ interface Test {
               T f();
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -632,7 +630,7 @@ interface Test {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -654,7 +652,7 @@ interface Test {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -678,7 +676,7 @@ interface Test {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -702,7 +700,7 @@ interface Test {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -721,7 +719,7 @@ interface Test {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -736,7 +734,7 @@ interface Test {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -760,7 +758,7 @@ interface Test {
               ONE;
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -783,7 +781,7 @@ interface Test {
               @NonTypeUse int x;
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -811,7 +809,7 @@ interface Test {
               @NonTypeUse private List<?> z;
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test

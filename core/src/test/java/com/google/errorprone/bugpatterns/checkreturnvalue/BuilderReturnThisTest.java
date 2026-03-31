@@ -110,6 +110,6 @@ public class BuilderReturnThisTest {
               }
             }
             """)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 }

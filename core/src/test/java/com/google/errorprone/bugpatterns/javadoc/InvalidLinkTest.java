@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.common.truth.TruthJUnit.assume;
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
@@ -53,7 +52,7 @@ public final class InvalidLinkTest {
               void foo();
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -75,7 +74,7 @@ public final class InvalidLinkTest {
               void foo();
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -215,7 +214,7 @@ interface Test {
             /** {@link #frobnicate} */
             interface A {}
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -237,7 +236,7 @@ interface Test {
               void foo(String bar) {}
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test

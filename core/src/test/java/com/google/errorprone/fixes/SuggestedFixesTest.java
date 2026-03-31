@@ -18,7 +18,6 @@ package com.google.errorprone.fixes;
 
 import static com.google.common.collect.Streams.stream;
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -188,7 +187,7 @@ public class SuggestedFixesTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1286,7 +1285,7 @@ class Test {
   void foo() {}
 }
 """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   /** A {@link BugChecker} for testing. */
@@ -1433,7 +1432,7 @@ class Test {
               int BEST = 42;
             }
             """)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1469,7 +1468,7 @@ class Test {
               int BEST = 42;
             }
             """)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1498,7 +1497,7 @@ public class Test {
   int BEST = 42;
 }
 """)
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   /** A {@link BugChecker} for testing. */
@@ -2201,7 +2200,7 @@ public class Test {
               Object quux = Collections.<emptyList>singleton(null);
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   /** A {@link BugChecker} for testing. */
