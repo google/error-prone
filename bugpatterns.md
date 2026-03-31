@@ -456,6 +456,9 @@ Casting a random number in the range [0.0, 1.0) to an integer or long always res
 __[RandomModInteger](bugpattern/RandomModInteger)__<br>
 Use Random.nextInt(int).  Random.nextInt() % n can have negative results
 
+__[RecordAccessorInCompactConstructor](bugpattern/RecordAccessorInCompactConstructor)__<br>
+Record accessors read uninitialized fields inside a compact constructor. Use the component parameter instead.
+
 __[RectIntersectReturnValueIgnored](bugpattern/RectIntersectReturnValueIgnored)__<br>
 Return value of android.graphics.Rect.intersect() must be checked
 
