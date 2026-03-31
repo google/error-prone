@@ -29,7 +29,6 @@ import com.google.common.base.Verify;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
@@ -1529,10 +1528,11 @@ public class Test {
             "Test.java",
             """
             public class Test {
+
               int BEST = 42;
             }
             """)
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1556,7 +1556,7 @@ public class Test {
               int BEST = 42;
             }
             """)
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1580,7 +1580,7 @@ public class Test {
               int BEST = 42;
             }
             """)
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1600,10 +1600,11 @@ public class Test {
             "Test.java",
             """
             public class Test {
+
               int BEST = 42;
             }
             """)
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1627,7 +1628,7 @@ public class Test {
               int BEST = 42;
             }
             """)
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   /** A {@link BugChecker} for testing. */
@@ -1668,7 +1669,7 @@ public class Test {
               void m() {}
             }
             """)
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   /** A test bugchecker that deletes any field whose removal doesn't break the compilation. */

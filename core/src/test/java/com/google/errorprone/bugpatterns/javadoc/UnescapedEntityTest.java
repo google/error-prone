@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.javadoc;
 import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,7 +47,7 @@ public final class UnescapedEntityTest {
             /** {@code List<Foo>}, {@code Map<Foo, Bar>} */
             interface Test {}
             """)
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   @Test

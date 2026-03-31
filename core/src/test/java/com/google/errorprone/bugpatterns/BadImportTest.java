@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -464,6 +463,8 @@ import org.jspecify.annotations.Nullable;
  */
 class BadImportPositiveCases {
   public void variableDeclarations() {
+    // Only the first match is reported; but all occurrences are fixed.
+    // BUG: Diagnostic contains: ImmutableList.Builder
     ImmutableList.Builder<String> qualified;
     ImmutableList.Builder raw;
   }
@@ -510,7 +511,7 @@ class BadImportPositiveCases {
   }
 }
 """)
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   @Test

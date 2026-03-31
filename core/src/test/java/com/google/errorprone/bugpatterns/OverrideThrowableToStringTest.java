@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -140,7 +139,6 @@ public class OverrideThrowableToStringTest {
               class BasicTest extends Throwable {
 
                 @Override
-                // BUG: Diagnostic contains: override
                 public String toString() {
                   return "";
                 }
@@ -153,7 +151,6 @@ public class OverrideThrowableToStringTest {
                 }
 
                 @Override
-                // BUG: Diagnostic contains: override
                 public String toString() {
                   return "";
                 }
@@ -161,7 +158,6 @@ public class OverrideThrowableToStringTest {
 
               class NoOverride extends Throwable {
 
-                // BUG: Diagnostic contains: override
                 public String toString() {
                   return "";
                 }
@@ -178,7 +174,6 @@ public class OverrideThrowableToStringTest {
              */
             class OverrideThrowableToStringPositiveCases {
 
-              // BUG: Diagnostic contains: override
               class BasicTest extends Throwable {
 
                 @Override
@@ -207,7 +202,7 @@ public class OverrideThrowableToStringTest {
               }
             }
             """)
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   @Test
