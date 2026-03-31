@@ -119,11 +119,8 @@ public class ReferenceEquality extends AbstractReferenceEquality {
     Name equalsName = EQUALS.get(state);
     Symbol objectEquals = getOnlyMember(state, state.getSymtab().objectType, "equals");
     for (Type sup : state.getTypes().closure(type)) {
-      if (sup.tsym.isInterface()) {
-        continue;
-      }
       if (ASTHelpers.isSameType(sup, state.getSymtab().objectType, state)) {
-        return false;
+        continue;
       }
       Scope scope = sup.tsym.members();
       if (scope == null) {

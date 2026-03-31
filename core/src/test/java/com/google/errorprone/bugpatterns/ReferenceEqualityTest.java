@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -131,7 +133,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_implementsInterface_equals() {
+  public void implementsInterface_equals() {
     compilationHelper
         .addSourceLines(
             "Sup.java",
@@ -147,6 +149,7 @@ public class ReferenceEqualityTest {
 
             class Test implements Sup {
               boolean f(Test a, Test b) {
+                // BUG: Diagnostic contains: a.equals(b)
                 return a == b;
               }
             }
@@ -601,6 +604,25 @@ public class ReferenceEqualityTest {
             }
             """)
         .expectNoDiagnostics()
+        .doTest();
+  }
+
+  @Test
+  public void memorySegment() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.foreign.MemorySegment;
+
+            class Test {
+              boolean f(MemorySegment a) {
+                // BUG: Diagnostic contains: a.equals(MemorySegment.NULL)
+                return a == MemorySegment.NULL;
+              }
+            }
+            """)
         .doTest();
   }
 }
