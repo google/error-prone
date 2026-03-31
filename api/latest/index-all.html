@@ -1106,7 +1106,13 @@ class, and the annotation is itself annotated with <code>@ScopeAnnotation</code>
 <div class="block">Converts the given attribute to an string value.</div>
 </dd>
 <dt><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.TestMode.html#AST_MATCH" class="member-name-link">AST_MATCH</a> - Enum constant in enum class com.google.errorprone.<a href="com/google/errorprone/BugCheckerRefactoringTestHelper.TestMode.html" title="enum class in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="com/google/errorprone/BugCheckerRefactoringTestHelper.TestMode.html#TEXT_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH</code></a>, which formats the actual and expected output to be
+    lenient of whitespace differences. <a href="com/google/errorprone/BugCheckerRefactoringTestHelper.TestMode.html#AST_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.AST_MATCH</code></a> will ignore differences in
+    comments, and may miss other differences that aren't detectable in the AST.</div>
+</div>
+</dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html" class="type-name-link" title="class in com.google.errorprone.util">ASTHelpers</a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
 <dd>
 <div class="block">This class contains utility methods to work with the javac AST.</div>

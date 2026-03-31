@@ -123,7 +123,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Enum Constant</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="#AST_MATCH" class="member-name-link">AST_MATCH</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="#TEXT_MATCH"><code>TEXT_MATCH</code></a>, which formats the actual and expected output to be
+    lenient of whitespace differences.</div>
+</div>
+</div>
 <div class="col-first odd-row-color"><code><a href="#TEXT_MATCH" class="member-name-link">TEXT_MATCH</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
@@ -183,7 +188,13 @@ the order they are declared.</div>
 <section class="detail" id="AST_MATCH">
 <h3>AST_MATCH</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="BugCheckerRefactoringTestHelper.TestMode.html" title="enum class in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a></span>&nbsp;<span class="element-name">AST_MATCH</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="BugCheckerRefactoringTestHelper.TestMode.html" title="enum class in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a></span>&nbsp;<span class="element-name">AST_MATCH</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="#TEXT_MATCH"><code>TEXT_MATCH</code></a>, which formats the actual and expected output to be
+    lenient of whitespace differences. <a href="#AST_MATCH"><code>AST_MATCH</code></a> will ignore differences in
+    comments, and may miss other differences that aren't detectable in the AST.</div>
+</div>
 </div>
 </section>
 </li>
