@@ -78,4 +78,22 @@ public class DeprecatedVariableTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void recordComponent() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            public record Test(@Deprecated int x) {
+              public Test {
+                Objects.requireNonNull(x);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }
