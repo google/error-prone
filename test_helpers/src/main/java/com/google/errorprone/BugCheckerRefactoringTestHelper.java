@@ -299,7 +299,12 @@ public class BugCheckerRefactoringTestHelper {
    *
    * @param testMode the comparison to use to for the test outputs. The default is {@link
    *     TestMode#TEXT_MATCH}.
+   * @deprecated prefer {@link #doTest()}, which is equivalent to {@code doTest(TEXT_MATCH)}. {@link
+   *     TestMode#TEXT_MATCH} formats the actual and expected output to be lenient of whitespace
+   *     differences. {@link TestMode#AST_MATCH} will ignore differences in comments, and may miss
+   *     other differences that aren't detectable in the AST.
    */
+  @Deprecated
   public void doTest(TestMode testMode) {
     checkState(!run, "doTest should only be called once");
 
