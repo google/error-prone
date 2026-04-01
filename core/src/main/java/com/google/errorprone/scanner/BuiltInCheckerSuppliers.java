@@ -243,6 +243,7 @@ import com.google.errorprone.bugpatterns.LossyPrimitiveCompare;
 import com.google.errorprone.bugpatterns.MathAbsoluteNegative;
 import com.google.errorprone.bugpatterns.MathRoundIntLong;
 import com.google.errorprone.bugpatterns.MemoizeConstantVisitorStateLookups;
+import com.google.errorprone.bugpatterns.MemorySegmentReferenceEquality;
 import com.google.errorprone.bugpatterns.MethodCanBeStatic;
 import com.google.errorprone.bugpatterns.MisformattedTestData;
 import com.google.errorprone.bugpatterns.MisleadingEmptyVarargs;
@@ -808,6 +809,7 @@ public class BuiltInCheckerSuppliers {
           LoopConditionChecker.class,
           LossyPrimitiveCompare.class,
           MathRoundIntLong.class,
+          MemorySegmentReferenceEquality.class,
           MislabeledAndroidString.class,
           MisleadingEmptyVarargs.class,
           MisleadingEscapedSpace.class,
