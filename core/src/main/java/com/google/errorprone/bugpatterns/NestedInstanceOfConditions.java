@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.contains;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.errorprone.BugPattern;
@@ -24,7 +25,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.IfTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -48,7 +48,9 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
 
     ExpressionTree expressionTree = stripParentheses(ifTree.getCondition());
 
-    if (expressionTree instanceof InstanceOfTree instanceOfTree) {
+    // Pattern matching instanceofs can have null type.
+    if (expressionTree instanceof InstanceOfTree instanceOfTree
+        && instanceOfTree.getType() != null) {
 
       if (!(instanceOfTree.getExpression() instanceof IdentifierTree)) {
         return Description.NO_MATCH;
@@ -112,21 +114,17 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
     @Override
     public boolean matches(Tree tree, VisitorState state) {
       if (tree instanceof IfTree ifTree) {
-        ExpressionTree conditionTree = ASTHelpers.stripParentheses(ifTree.getCondition());
 
-        if (conditionTree instanceof InstanceOfTree instanceOfTree) {
+        // Pattern matching instanceofs can have null type.
+        if (stripParentheses(ifTree.getCondition()) instanceof InstanceOfTree instanceOfTree
+            && instanceOfTree.getType() != null) {
 
           Types types = state.getTypes();
 
-          // Pattern matching instanceofs can have null type.
-          if (instanceOfTree.getType() == null) {
-            return false;
-          }
-
           boolean isCastable =
               types.isCastable(
-                  types.erasure(ASTHelpers.getType(instanceOfTree.getType())),
-                  types.erasure(ASTHelpers.getType(typeTree)));
+                  types.erasure(getType(instanceOfTree.getType())),
+                  types.erasure(getType(typeTree)));
 
           boolean isSameExpression =
               state
