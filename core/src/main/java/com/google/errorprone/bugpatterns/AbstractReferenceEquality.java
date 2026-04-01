@@ -20,28 +20,22 @@ import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NONNUL
 import static com.google.errorprone.dataflow.nullnesspropagation.Nullness.NULL;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
-import static java.util.Arrays.stream;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.code.Kinds.KindSelector;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.Name;
 import java.util.List;
 import java.util.Optional;
 
@@ -84,26 +78,6 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
     return builder.build();
   }
 
-  private static boolean symbolsTypeHasName(Symbol sym, String name) {
-    if (sym == null) {
-      return false;
-    }
-    Type type = sym.type;
-    if (type == null) {
-      return false;
-    }
-    TypeSymbol tsym = type.tsym;
-    if (tsym == null) {
-      return false;
-    }
-    Name typeName = tsym.getQualifiedName();
-    if (typeName == null) {
-      // Probably shouldn't happen, but might as well check
-      return false;
-    }
-    return typeName.contentEquals(name);
-  }
-
   protected void addFixes(Description.Builder builder, BinaryTree tree, VisitorState state) {
     ExpressionTree lhs = tree.getLeftOperand();
     ExpressionTree rhs = tree.getRightOperand();
@@ -129,13 +103,12 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
 
     // If the lhs is possibly-null, provide both options.
     if (nullness != NONNULL) {
-      Symbol existingObjects = FindIdentifiers.findIdent("Objects", state, KindSelector.TYP);
-      ObjectsFix preferredFix =
-          stream(ObjectsFix.values())
-              .filter(f -> symbolsTypeHasName(existingObjects, f.className))
-              .findFirst()
-              .orElse(ObjectsFix.JAVA_UTIL);
-      builder.addFix(preferredFix.fix(tree, prefix, lhsSource, rhsSource));
+      SuggestedFix.Builder fix = SuggestedFix.builder();
+      String objects = SuggestedFixes.qualifyType(state, fix, "java.util.Objects");
+      builder.addFix(
+          fix.replace(
+                  tree, String.format("%s%s.equals(%s, %s)", prefix, objects, lhsSource, rhsSource))
+              .build());
     }
     if (nullness != NULL) {
       builder.addFix(
@@ -146,26 +119,6 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
                   prefix,
                   lhs instanceof BinaryTree ? String.format("(%s)", lhsSource) : lhsSource,
                   rhsSource)));
-    }
-  }
-
-  private enum ObjectsFix {
-    JAVA_UTIL("java.util.Objects", "Objects.equals"),
-    GUAVA("com.google.common.base.Objects", "Objects.equal");
-
-    private final String className;
-    private final String methodName;
-
-    ObjectsFix(String className, String methodName) {
-      this.className = className;
-      this.methodName = methodName;
-    }
-
-    SuggestedFix fix(BinaryTree tree, String prefix, String lhsSource, String rhsSource) {
-      return SuggestedFix.builder()
-          .replace(tree, String.format("%s%s(%s, %s)", prefix, methodName, lhsSource, rhsSource))
-          .addImport(className)
-          .build();
     }
   }
 

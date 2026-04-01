@@ -115,8 +115,8 @@ public class OptionalEqualityTest {
             class Test {
               boolean f(Optional<Integer> a) {
                 Optional<Integer> b = Optional.of(42);
-                // BUG: Diagnostic contains: Did you mean 'return Objects.equal(a, b);' or 'return
-                // a.equals(b);'?
+                // BUG: Diagnostic contains: Did you mean 'return java.util.Objects.equals(a, b);'
+                // or 'return a.equals(b);'?
                 return a == b;
               }
             }
