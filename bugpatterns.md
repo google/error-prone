@@ -330,6 +330,9 @@ Using an unnecessarily-wide comparison method can lead to lossy comparison
 __[MathRoundIntLong](bugpattern/MathRoundIntLong)__<br>
 Math.round(Integer) results in truncation
 
+__[MemorySegmentReferenceEquality](bugpattern/MemorySegmentReferenceEquality)__<br>
+Do not compare MemorySegments using reference equality.
+
 __[MislabeledAndroidString](bugpattern/MislabeledAndroidString)__<br>
 Certain resources in &#96;android.R.string&#96; have names that do not match their content
 
