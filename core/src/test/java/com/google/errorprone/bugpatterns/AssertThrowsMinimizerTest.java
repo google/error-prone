@@ -326,6 +326,65 @@ public class AssertThrowsMinimizerTest {
   }
 
   @Test
+  public void binaryExpression_b498209711() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f(Helper helper, int width) {
+                assertThrows(IllegalStateException.class, () -> helper.consume(width + 1));
+              }
+            }
+            """)
+        // TODO(b/498209711): This should be .expectUnchanged()
+        .addOutputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f(Helper helper, int width) {
+                int i = width + 1;
+                assertThrows(IllegalStateException.class, () -> helper.consume(i));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void complexExpression_isHoisted() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+"""
+import static org.junit.Assert.assertThrows;
+
+class Test {
+  void f(Helper helper, int width) {
+    assertThrows(IllegalStateException.class, () -> helper.consume(width + Helper.onlyUnchecked()));
+  }
+}
+""")
+        .addOutputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f(Helper helper, int width) {
+                int i = width + Helper.onlyUnchecked();
+                assertThrows(IllegalStateException.class, () -> helper.consume(i));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void uncheckedException_argOnlyThrowsUnchecked_hoist() {
     compilationHelper
         .addInputLines(
