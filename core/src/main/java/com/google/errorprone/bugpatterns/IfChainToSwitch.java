@@ -1861,7 +1861,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               ? getType(rhsInstanceOf.type())
               : getType(rhsInstanceOf.patternVariable().get().getType());
       if (isSubtype(rhsType, lhsType, state)) {
-        // The LHS type is a subtype of the RHS type, so the LHS dominates the RHS
+        // The RHS type is a subtype of the LHS type, so the LHS dominates the RHS
         return true;
       }
     }
