@@ -3284,7 +3284,11 @@ tested using an alternative instance.</div>
 </dd>
 <dt><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html#doTest(com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode)" class="member-name-link">doTest(BugCheckerRefactoringTestHelper.TestMode)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></dt>
 <dd>
-<div class="block">Runs the test.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html#doTest()"><code>BugCheckerRefactoringTestHelper.doTest()</code></a>, which is equivalent to <code>doTest(TEXT_MATCH)</code>. <a href="com/google/errorprone/BugCheckerRefactoringTestHelper.TestMode.html#TEXT_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH</code></a> formats the actual and expected output to be lenient of whitespace
+    differences. <a href="com/google/errorprone/BugCheckerRefactoringTestHelper.TestMode.html#AST_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.AST_MATCH</code></a> will ignore differences in comments, and may miss
+    other differences that aren't detectable in the AST.</div>
+</div>
 </dd>
 <dt><a href="com/google/errorprone/suppliers/Suppliers.html#DOUBLE_TYPE" class="member-name-link">DOUBLE_TYPE</a> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>

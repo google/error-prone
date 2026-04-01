@@ -175,10 +175,12 @@ test.</div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Runs the test.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#doTest(com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode)" class="member-name-link">doTest</a><wbr>(<a href="BugCheckerRefactoringTestHelper.TestMode.html" title="enum class in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a>&nbsp;testMode)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Runs the test.</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#doTest(com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode)" class="member-name-link">doTest</a><wbr>(<a href="BugCheckerRefactoringTestHelper.TestMode.html" title="enum class in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a>&nbsp;testMode)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="#doTest()"><code>doTest()</code></a>, which is equivalent to <code>doTest(TEXT_MATCH)</code>.</div>
+</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static <a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#newInstance(com.google.errorprone.bugpatterns.BugChecker,java.lang.Class)" class="member-name-link">newInstance</a><wbr>(<a href="bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>&nbsp;refactoringBugChecker,
@@ -367,7 +369,13 @@ test.</div>
 <section class="detail" id="doTest(com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode)">
 <h3>doTest</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">doTest</span><wbr><span class="parameters">(<a href="BugCheckerRefactoringTestHelper.TestMode.html" title="enum class in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a>&nbsp;testMode)</span></div>
+<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">doTest</span><wbr><span class="parameters">(<a href="BugCheckerRefactoringTestHelper.TestMode.html" title="enum class in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a>&nbsp;testMode)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">prefer <a href="#doTest()"><code>doTest()</code></a>, which is equivalent to <code>doTest(TEXT_MATCH)</code>. <a href="BugCheckerRefactoringTestHelper.TestMode.html#TEXT_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH</code></a> formats the actual and expected output to be lenient of whitespace
+    differences. <a href="BugCheckerRefactoringTestHelper.TestMode.html#AST_MATCH"><code>BugCheckerRefactoringTestHelper.TestMode.AST_MATCH</code></a> will ignore differences in comments, and may miss
+    other differences that aren't detectable in the AST.</div>
+</div>
 <div class="block">Runs the test.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
