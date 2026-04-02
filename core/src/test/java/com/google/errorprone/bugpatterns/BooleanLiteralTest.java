@@ -214,4 +214,21 @@ public class BooleanLiteralTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void castToTypeVariable() {
+    refactoringHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              <V> void genericMethod(V v) {
+                genericMethod((V) Boolean.FALSE);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }
