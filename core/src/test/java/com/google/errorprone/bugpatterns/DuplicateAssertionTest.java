@@ -146,4 +146,194 @@ public final class DuplicateAssertionTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void preconditions() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              public void test(Object o) {
+                Preconditions.checkNotNull(o);
+                // BUG: Diagnostic contains:
+                Preconditions.checkNotNull(o);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void requireNonNull() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            class Test {
+              public void test(Object o) {
+                Objects.requireNonNull(o);
+                // BUG: Diagnostic contains:
+                Objects.requireNonNull(o);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void preconditionsWithImpureExpression_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.base.Preconditions;
+            import java.util.Iterator;
+
+            class Test {
+              public void test(Iterator<Object> it) {
+                Preconditions.checkNotNull(it.next());
+                Preconditions.checkNotNull(it.next());
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void preconditionsWithMessages() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              public void test(Object o, boolean b) {
+                Preconditions.checkNotNull(o, "msg");
+                // BUG: Diagnostic contains:
+                Preconditions.checkNotNull(o, "msg");
+                Preconditions.checkArgument(b, "foo %s", o);
+                // BUG: Diagnostic contains:
+                Preconditions.checkArgument(b, "foo %s", o);
+                Preconditions.checkState(b, "bar %s", 1);
+                // BUG: Diagnostic contains:
+                Preconditions.checkState(b, "bar %s", 1);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void verifyWithMessages() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.base.Verify;
+
+            class Test {
+              public void test(Object o, boolean b) {
+                Verify.verify(b);
+                // BUG: Diagnostic contains:
+                Verify.verify(b);
+                // BUG: Diagnostic contains:
+                Verify.verify(b, "msg %s", o);
+                // BUG: Diagnostic contains:
+                Verify.verify(b, "msg %s", o);
+                Verify.verifyNotNull(o);
+                // BUG: Diagnostic contains:
+                Verify.verifyNotNull(o);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void preconditionsWithDifferentMessages_findings() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              public void test(Object o) {
+                Preconditions.checkNotNull(o, "msg1");
+                // BUG: Diagnostic contains:
+                Preconditions.checkNotNull(o, "msg2");
+                Preconditions.checkArgument(o != null, "msg3");
+                // BUG: Diagnostic contains:
+                Preconditions.checkArgument(o != null, "msg4");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void preconditions_mixedOverloads() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              public void test(Object o) {
+                Preconditions.checkNotNull(o);
+                // BUG: Diagnostic contains:
+                Preconditions.checkNotNull(o, "msg1");
+                // BUG: Diagnostic contains:
+                Preconditions.checkNotNull(o, "msg %s", "arg");
+                // BUG: Diagnostic contains:
+                Preconditions.checkNotNull(o, "msg %s", "other");
+                // BUG: Diagnostic contains:
+                Preconditions.checkNotNull(o, "msg %s", "other");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void preconditionThenDereferenced_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+            class Test {
+              void test(Object foo) {
+                checkNotNull(foo).toString();
+                checkNotNull(foo).hashCode();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void checkElementIndex_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.base.Preconditions;
+
+            class Test {
+              void test(int i, int size1, int size2) {
+                Preconditions.checkElementIndex(i, size1);
+                Preconditions.checkElementIndex(i, size2);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.assertEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.assertNotEqualsInvocation;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
@@ -45,6 +46,14 @@ import javax.inject.Inject;
 public final class DuplicateAssertion extends BugChecker implements BlockTreeMatcher {
   private static final Matcher<ExpressionTree> JUNIT_ASSERT =
       anyOf(assertEqualsInvocation(), assertNotEqualsInvocation());
+
+  private static final Matcher<ExpressionTree> PRECONDITIONS =
+      anyOf(
+          staticMethod()
+              .onClass("com.google.common.base.Preconditions")
+              .namedAnyOf("checkArgument", "checkState", "checkNotNull"),
+          staticMethod().onClass("com.google.common.base.Verify"),
+          staticMethod().onClass("java.util.Objects").named("requireNonNull"));
 
   private final ConstantExpressions constantExpressions;
 
@@ -93,6 +102,17 @@ public final class DuplicateAssertion extends BugChecker implements BlockTreeMat
                   method.getArguments().get(argumentsToSkip(method, state) + 1), state)
               .ifPresent(
                   ce -> lines.put(new Assertion(state.getSourceForNode(statement), ce), finalI));
+        } else if (PRECONDITIONS.matches(method, state)
+            && method.equals(est.getExpression())
+            && !method.getArguments().isEmpty()) {
+          // Only consider the line up to the end of the first argument, given a duplicated
+          // assertion with a different message is definitely bad.
+          int start = ASTHelpers.getStartPosition(method);
+          int end = state.getEndPosition(method.getArguments().get(0));
+          String source = state.getSourceCode().subSequence(start, end).toString();
+          constantExpressions
+              .constantExpression(method.getArguments().get(0), state)
+              .ifPresent(ce -> lines.put(new Assertion(source, ce), finalI));
         } else if (symbol.getSimpleName().contentEquals("assertThat")
             && method.getArguments().size() == 1) {
           constantExpressions
