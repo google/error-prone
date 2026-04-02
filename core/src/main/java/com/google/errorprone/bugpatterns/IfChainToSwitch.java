@@ -1249,9 +1249,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       int previousCaseEndPosition =
           cases.isEmpty()
               ? ifTreeRange.lowerEndpoint()
-              : cases.isEmpty()
-                  ? ifTreeRange.lowerEndpoint()
-                  : cases.getLast().caseSourceCodeRange().upperEndpoint();
+              : cases.getLast().caseSourceCodeRange().upperEndpoint();
       cases.add(
           new CaseIr(
               /* hasCaseNull= */ false,
