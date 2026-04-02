@@ -2459,6 +2459,52 @@ public final class RefactorSwitchTest {
   }
 
   @Test
+  public void switchByEnumAssignment_preservesComments_error() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit) {
+                int x = 0;
+                switch (suit) {
+                  case HEART, DIAMOND -> {
+                    x = /* This comment should be preserved */ x + 1;
+                  }
+                  case SPADE -> throw new RuntimeException();
+                  case CLUB -> throw new NullPointerException();
+                }
+                return x;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit) {
+                int x = 0;
+                x =
+                    switch (suit) {
+                      case HEART, DIAMOND ->
+                          /* This comment should be preserved */
+                          x + 1;
+                      case SPADE -> throw new RuntimeException();
+                      case CLUB -> throw new NullPointerException();
+                    };
+                return x;
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:RefactorSwitch:EnableAssignmentSwitch",
+            "-XepOpt:RefactorSwitch:EnableReturnSwitch=false",
+            "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+        .setFixChooser(RefactorSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
   public void switchByEnumAssignment_nullDefaultSameProduction_error() {
     // Null can be grouped together with default in a single SwitchLabel production in Java 21+
     // as `case null [, default]`

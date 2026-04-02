@@ -768,7 +768,7 @@ public final class RefactorSwitch extends BugChecker
     }
     if (singleStatement.isPresent()) {
       ImmutableList<ErrorProneComment> allComments =
-          state.getTokensForNode(caseTree.getBody()).stream()
+          state.getOffsetTokensForNode(caseTree.getBody()).stream()
               .flatMap(errorProneToken -> errorProneToken.comments().stream())
               .collect(toImmutableList());
       // Can the RHS be made into an expression? e.g. `case null -> {return 0;}` becomes
@@ -916,7 +916,7 @@ public final class RefactorSwitch extends BugChecker
       ImmutableList<StatementTree> statements = getStatements(caseTree);
       StatementTree statement = statements.get(0);
       ImmutableList<ErrorProneComment> allComments =
-          state.getTokensForNode(caseTree.getBody()).stream()
+          state.getOffsetTokensForNode(caseTree.getBody()).stream()
               .flatMap(errorProneToken -> errorProneToken.comments().stream())
               .collect(toImmutableList());
       Range<Integer> caseRhsSourceCodeRange =
@@ -947,8 +947,8 @@ public final class RefactorSwitch extends BugChecker
             ImmutableList<ErrorProneComment> orphanedComments =
                 computeOrphanedComments(
                     allComments,
-                    Range.closedOpen(getStartPosition(tree), state.getEndPosition(tree)),
-                    caseRhsSourceCodeRange);
+                    caseRhsSourceCodeRange,
+                    Range.closedOpen(getStartPosition(tree), state.getEndPosition(tree)));
             String renderedOrphans = renderComments(orphanedComments);
             if (!renderedOrphans.isEmpty()) {
               replacementBuilder.append("\n").append(renderedOrphans).append("\n");
@@ -1008,7 +1008,7 @@ public final class RefactorSwitch extends BugChecker
       }
 
       ImmutableList<ErrorProneComment> allComments =
-          state.getTokensForNode(caseTree.getBody()).stream()
+          state.getOffsetTokensForNode(caseTree.getBody()).stream()
               .flatMap(errorProneToken -> errorProneToken.comments().stream())
               .collect(toImmutableList());
 
@@ -1088,8 +1088,8 @@ public final class RefactorSwitch extends BugChecker
   }
 
   /** Returns a range that encloses the given comment, offset by the given start position. */
-  private static Range<Integer> buildCommentRange(ErrorProneComment comment, int startPosition) {
-    return Range.closedOpen(comment.getPos() + startPosition, comment.getEndPos() + startPosition);
+  private static Range<Integer> buildCommentRange(ErrorProneComment comment) {
+    return Range.closedOpen(comment.getPos(), comment.getEndPos());
   }
 
   /**
@@ -1102,15 +1102,9 @@ public final class RefactorSwitch extends BugChecker
       Range<Integer> printedRange) {
     return allComments.stream()
         // Within this case's source code
-        .filter(
-            comment ->
-                caseRhsSourceCodeRange.encloses(
-                    buildCommentRange(comment, caseRhsSourceCodeRange.lowerEndpoint())))
+        .filter(comment -> caseRhsSourceCodeRange.encloses(buildCommentRange(comment)))
         // But outside the printed range for the RHS
-        .filter(
-            comment ->
-                !buildCommentRange(comment, caseRhsSourceCodeRange.lowerEndpoint())
-                    .isConnected(printedRange))
+        .filter(comment -> !buildCommentRange(comment).isConnected(printedRange))
         .collect(toImmutableList());
   }
 
