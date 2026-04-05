@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
+import static com.google.errorprone.matchers.MethodVisibility.Visibility.PRIVATE;
 import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.predicates.TypePredicates.isExactType;
@@ -52,6 +53,7 @@ import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.AssignmentTree;
@@ -1454,14 +1456,35 @@ public class Matchers {
     return (Matcher<T>) INSTANCE_EQUALS;
   }
 
+  /**
+   * Matches main method candidates. On Java 25+, matches as defined in
+   * <a href="https://docs.oracle.com/javase/specs/jls/se25/html/jls-12.html#jls-12.1.4">JLS 12.1.4</a>:
+   * named {@code main}, returns {@code void}, not {@code private}, and either has a single {@code
+   * String[]} parameter or no parameters. On earlier versions, matches the traditional
+   * {@code public static void main(String[])} signature.
+   */
   public static final Matcher<MethodTree> MAIN_METHOD =
       allOf(
-          methodHasArity(1),
-          methodHasVisibility(PUBLIC),
-          hasModifier(STATIC),
           methodReturns(Suppliers.VOID_TYPE),
           methodIsNamed("main"),
-          methodHasParameters(isSameType(Suppliers.arrayOf(STRING_TYPE))));
+          anyOf(
+              // Traditional: public static void main(String[])
+              allOf(
+                  methodHasVisibility(PUBLIC),
+                  hasModifier(STATIC),
+                  methodHasParameters(isSameType(Suppliers.arrayOf(STRING_TYPE)))),
+              // Java 25+: void main() or void main(String[]), not private
+              allOf(
+                  supportsInstanceMainMethods(),
+                  not(methodHasVisibility(PRIVATE)),
+                  anyOf(
+                      methodHasNoParameters(),
+                      methodHasParameters(
+                          isSameType(Suppliers.arrayOf(STRING_TYPE)))))));
+
+  private static Matcher<MethodTree> supportsInstanceMainMethods() {
+    return (tree, state) -> SourceVersion.supportsInstanceMainMethods(state.context);
+  }
 
   private static final Matcher<ExpressionTree> INSTANCE_HASHCODE =
       allOf(instanceMethod().anyClass().named("hashCode").withNoParameters(), isSameType(INT_TYPE));
