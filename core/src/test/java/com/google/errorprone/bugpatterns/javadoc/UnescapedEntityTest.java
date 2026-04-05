@@ -333,6 +333,80 @@ public final class UnescapedEntityTest {
   }
 
   @Test
+  public void markdownJavadoc_ampersand() {
+    assume().that(Runtime.version().feature()).isAtLeast(23);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /// Foo & bar
+            interface Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadoc_htmlTags() {
+    assume().that(Runtime.version().feature()).isAtLeast(23);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /// <em>important</em> stuff
+            interface Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadoc_generics() {
+    assume().that(Runtime.version().feature()).isAtLeast(23);
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /// List<Foo>, Map<Foo, Bar>
+            interface Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// `List<Foo>`, `Map<Foo, Bar>`
+            interface Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadoc_alreadyInBackticks() {
+    assume().that(Runtime.version().feature()).isAtLeast(23);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /// `List<Foo>`
+            interface Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadoc_codeBlock() {
+    assume().that(Runtime.version().feature()).isAtLeast(23);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /// Example:
+            /// ```
+            /// List<Foo> list = new ArrayList<>();
+            /// ```
+            interface Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
   public void nestedGenericType_properlyEscaped() {
     refactoring
         .addInputLines(

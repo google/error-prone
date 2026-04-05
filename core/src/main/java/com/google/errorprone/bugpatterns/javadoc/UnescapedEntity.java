@@ -36,6 +36,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ErrorProneComment.ErrorProneCommentStyle;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.doctree.EndElementTree;
 import com.sun.source.doctree.ErroneousTree;
@@ -109,9 +110,11 @@ public final class UnescapedEntity extends BugChecker
     if (path == null) {
       return NO_MATCH;
     }
+    Comment comment = ((DCDocComment) path.getDocComment()).comment;
+    boolean isMarkdown =
+        ErrorProneCommentStyle.from(comment.getStyle()) == ErrorProneCommentStyle.JAVADOC_LINE;
     RangesFinder rangesFinder = new RangesFinder(state);
     rangesFinder.scan(path, null);
-    Comment comment = ((DCDocComment) path.getDocComment()).comment;
     Matcher matcher = GENERIC_PATTERN.matcher(comment.getText());
     RangeSet<Integer> generics = TreeRangeSet.create();
     while (matcher.find()) {
@@ -120,7 +123,8 @@ public final class UnescapedEntity extends BugChecker
               comment.getSourcePos(matcher.start()), comment.getSourcePos(matcher.end())));
     }
     RangeSet<Integer> emittedFixes =
-        fixGenerics(generics, rangesFinder.preTags, rangesFinder.dontEmitCodeFix, state);
+        fixGenerics(
+            generics, rangesFinder.preTags, rangesFinder.dontEmitCodeFix, isMarkdown, state);
     new EntityChecker(state, generics, rangesFinder.preTags, emittedFixes).scan(path, null);
     return NO_MATCH;
   }
@@ -129,25 +133,40 @@ public final class UnescapedEntity extends BugChecker
       RangeSet<Integer> generics,
       RangeSet<Integer> preTags,
       RangeSet<Integer> dontEmitCodeFix,
+      boolean isMarkdown,
       VisitorState state) {
     RangeSet<Integer> emittedFixes = TreeRangeSet.create();
     for (Range<Integer> range : generics.asRanges()) {
       if (emittedFixes.intersects(range) || dontEmitCodeFix.intersects(range)) {
         continue;
       }
-      Range<Integer> regionToWrap = preTags.rangeContaining(range.lowerEndpoint());
-      if (regionToWrap == null) {
-        regionToWrap = range;
+      if (isMarkdown) {
+        emittedFixes.add(range);
+        state.reportMatch(
+            buildDescription(
+                    getDiagnosticPosition(range.lowerEndpoint(), state.getPath().getLeaf()))
+                .setMessage(
+                    "This looks like a type with type parameters. The < and > characters here will"
+                        + " be interpreted as HTML, which can be avoided by wrapping it in"
+                        + " backticks.")
+                .addFix(wrapInBackticks(range))
+                .build());
+      } else {
+        Range<Integer> regionToWrap = preTags.rangeContaining(range.lowerEndpoint());
+        if (regionToWrap == null) {
+          regionToWrap = range;
+        }
+        emittedFixes.add(regionToWrap);
+        state.reportMatch(
+            buildDescription(
+                    getDiagnosticPosition(range.lowerEndpoint(), state.getPath().getLeaf()))
+                .setMessage(
+                    "This looks like a type with type parameters. The < and > characters here will "
+                        + "be interpreted as HTML, which can be avoided by wrapping it in a "
+                        + "{@code } tag.")
+                .addFix(wrapInCodeTag(regionToWrap))
+                .build());
       }
-      emittedFixes.add(regionToWrap);
-      state.reportMatch(
-          buildDescription(getDiagnosticPosition(range.lowerEndpoint(), state.getPath().getLeaf()))
-              .setMessage(
-                  "This looks like a type with type parameters. The < and > characters here will "
-                      + "be interpreted as HTML, which can be avoided by wrapping it in a "
-                      + "{@code } tag.")
-              .addFix(wrapInCodeTag(regionToWrap))
-              .build());
     }
     return emittedFixes;
   }
@@ -304,6 +323,13 @@ public final class UnescapedEntity extends BugChecker
     return SuggestedFix.builder()
         .replace(containingPre.lowerEndpoint(), containingPre.lowerEndpoint(), "{@code ")
         .replace(containingPre.upperEndpoint(), containingPre.upperEndpoint(), "}")
+        .build();
+  }
+
+  private static SuggestedFix wrapInBackticks(Range<Integer> range) {
+    return SuggestedFix.builder()
+        .replace(range.lowerEndpoint(), range.lowerEndpoint(), "`")
+        .replace(range.upperEndpoint(), range.upperEndpoint(), "`")
         .build();
   }
 }
