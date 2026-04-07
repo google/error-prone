@@ -28,6 +28,8 @@ import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static java.util.Arrays.stream;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
 
@@ -42,9 +44,12 @@ import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.TryTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -64,6 +69,8 @@ public final class NullArgumentForNonNullParameter extends BugChecker
   private static final Supplier<Type> JAVA_OPTIONAL_TYPE = typeFromString("java.util.Optional");
   private static final Supplier<Type> ARGUMENT_CAPTOR_CLASS =
       typeFromString("org.mockito.ArgumentCaptor");
+  private static final Supplier<Type> NULL_POINTER_EXCEPTION =
+      typeFromString("java.lang.NullPointerException");
   private static final Supplier<Name> OF_NAME = memoize(state -> state.getName("of"));
   private static final Supplier<Name> FOR_CLASS_NAME = memoize(state -> state.getName("forClass"));
   private static final Supplier<Name> PROTO_NONNULL_API_NAME =
@@ -134,10 +141,67 @@ public final class NullArgumentForNonNullParameter extends BugChecker
             return;
           }
 
+          if (isExpectedExceptionContext(state)) {
+            return;
+          }
+
           state.reportMatch(describeMatch(argTree));
         });
 
     return NO_MATCH; // Any matches were reported through state.reportMatch.
+  }
+
+  private static boolean isExpectedExceptionContext(VisitorState state) {
+    Tree prev = null;
+    for (var tree : state.getPath()) {
+      switch (tree) {
+        case MethodInvocationTree call -> {
+          if (getSymbol(call).getSimpleName().contentEquals("assertThrows")) {
+            // JUnit 4 has:
+            // - (Class, ThrowingRunnable)
+            // - (String, Class, ThrowingRunnable)
+            // JUnit 5 has:
+            // - assertThrows(Class, Executable)
+            // - assertThrows(Class, Executable, String)
+            // - assertThrows(Class, Executable, Supplier)
+            // We handle the variation in ordering by looking for any Class argument.
+            for (var arg : call.getArguments()) {
+              Type type = getType(arg);
+              if (isClass(type, state) && !type.getTypeArguments().isEmpty()) {
+                return isSupertypeOfNpe(type.getTypeArguments().getFirst(), state);
+              }
+            }
+          }
+        }
+        case TryTree tryTree -> {
+          // The only part of a `try` that we want to allow an intentional NPE in is the `try`
+          // block.
+          if (!tryTree.getBlock().equals(prev)) {
+            return false;
+          }
+          for (var catchTree : tryTree.getCatches()) {
+            if (isSupertypeOfNpe(getType(catchTree.getParameter()), state)) {
+              return true;
+            }
+          }
+        }
+        case ClassTree clazz -> {
+          return false;
+        }
+        default -> {}
+      }
+      prev = tree;
+    }
+    return false;
+  }
+
+  private static boolean isClass(Type type, VisitorState state) {
+    return type != null
+        && isSameType(state.getTypes().erasure(type), state.getSymtab().classType, state);
+  }
+
+  private static boolean isSupertypeOfNpe(Type type, VisitorState state) {
+    return state.getTypes().isSubtype(NULL_POINTER_EXCEPTION.get(state), type);
   }
 
   private boolean argumentMustBeNonNull(VarSymbol sym, VisitorState state) {
@@ -147,16 +211,6 @@ public final class NullArgumentForNonNullParameter extends BugChecker
     if (sym.owner.name.equals(FOR_CLASS_NAME.get(state))
         && isParameterOfMethodOnType(sym, ARGUMENT_CAPTOR_CLASS, state)) {
       return true;
-    }
-
-    if (state.errorProneOptions().isTestOnlyTarget()) {
-      return false; // The tests of `foo` often invoke `foo(null)` to verify that it NPEs.
-      /*
-       * TODO(cpovirk): But consider still matching *some* cases. For example, we might check
-       * primitives, since it would be strange to test that `foo(int i)` throws NPE if you call
-       * `foo((Integer) null)`. And tests that *use* a class like `Optional` (as opposed to
-       * *testing* Optional) could benefit from checking that they use `Optional.of` correctly.
-       */
     }
 
     if (sym.asType().isPrimitive()) {
