@@ -200,6 +200,55 @@ public final class RefactorSwitchTest {
   }
 
   @Test
+  public void switchAssignment_lhsReadCannotCombineWithDeclaration_error() {
+    // The switch can't be combined with the declaration of `x`, because `x.field` requires `x` to
+    // be definitely assigned
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              static class Foo {
+                Foo field;
+              }
+
+              public void foo(int ui) {
+                Foo x = null;
+                switch (ui) {
+                  case 1 -> x = new Foo();
+                  case 2 -> x = (x.field = new Foo());
+                  default -> x = new Foo();
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              static class Foo {
+                Foo field;
+              }
+
+              public void foo(int ui) {
+                Foo x = null;
+                x =
+                    switch (ui) {
+                      case 1 -> new Foo();
+                      case 2 -> (x.field = new Foo());
+                      default -> new Foo();
+                    };
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=true",
+            "-XepOpt:RefactorSwitch:EnableReturnSwitch=false",
+            "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+        .doTest();
+  }
+
+  @Test
   public void switchByEnum_hasContinue_noError() {
     // Continuing out of a switch statement is allowed, but continuing out of a switch expression is
     // not.

@@ -22,6 +22,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getReferencedLocalVariablesInTree;
+import static com.google.errorprone.bugpatterns.SwitchUtils.noReadsOfVariable;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -61,9 +62,7 @@ import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LabeledStatementTree;
-import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
@@ -72,7 +71,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -514,43 +512,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       return Optional.empty();
     }
     return Optional.of(variableTree);
-  }
-
-  /**
-   * Determines whether local variable {@code symbol} has no reads within the scope of the {@code
-   * VisitorState}. (Writes to the variable are ignored.)
-   */
-  private static boolean noReadsOfVariable(VarSymbol symbol, VisitorState state) {
-    Set<VarSymbol> referencedLocalVariables = new HashSet<>();
-    new TreePathScanner<Void, Void>() {
-
-      @Override
-      public Void visitAssignment(AssignmentTree tree, Void unused) {
-        // Only looks at the right-hand side of the assignment
-        return scan(tree.getExpression(), null);
-      }
-
-      @Override
-      public Void visitMemberSelect(MemberSelectTree memberSelect, Void unused) {
-        handle(memberSelect);
-        return super.visitMemberSelect(memberSelect, null);
-      }
-
-      @Override
-      public Void visitIdentifier(IdentifierTree identifier, Void unused) {
-        handle(identifier);
-        return super.visitIdentifier(identifier, null);
-      }
-
-      private void handle(Tree tree) {
-        var symbol = getSymbol(tree);
-        if (symbol instanceof VarSymbol varSymbol) {
-          referencedLocalVariables.add(varSymbol);
-        }
-      }
-    }.scan(state.getPath(), null);
-
-    return !referencedLocalVariables.contains(symbol);
   }
 
   /**

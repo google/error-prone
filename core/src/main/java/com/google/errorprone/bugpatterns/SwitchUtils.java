@@ -191,8 +191,11 @@ public final class SwitchUtils {
 
       @Override
       public Void visitAssignment(AssignmentTree tree, Void unused) {
-        // Only looks at the right-hand side of the assignment
-        return scan(tree.getExpression(), null);
+        if (tree.getVariable() instanceof IdentifierTree) {
+          // Bare assignments are pure writes to the variable, reads happen only on RHS
+          return scan(tree.getExpression(), null);
+        }
+        return super.visitAssignment(tree, null);
       }
 
       @Override
