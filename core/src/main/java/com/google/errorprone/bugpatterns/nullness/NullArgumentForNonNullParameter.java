@@ -158,13 +158,13 @@ public final class NullArgumentForNonNullParameter extends BugChecker
         case MethodInvocationTree call -> {
           if (getSymbol(call).getSimpleName().contentEquals("assertThrows")) {
             // JUnit 4 has:
-            // - (Class, ThrowingRunnable)
-            // - (String, Class, ThrowingRunnable)
+            // - assertThrows(Class, ThrowingRunnable)
+            // - assertThrows(String, Class, ThrowingRunnable)
             // JUnit 5 has:
             // - assertThrows(Class, Executable)
             // - assertThrows(Class, Executable, String)
             // - assertThrows(Class, Executable, Supplier)
-            // We handle the variation in ordering by looking for any Class argument.
+            // We handle the variation in parameter ordering by looking for any Class argument.
             for (var arg : call.getArguments()) {
               Type type = getType(arg);
               if (isClass(type, state) && !type.getTypeArguments().isEmpty()) {
