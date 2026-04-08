@@ -51,9 +51,9 @@ public class UnnamedVariableTest {
             class Test {
               public static void main(String[] args) {
                 {
-                  var unused = new Object();
+                  Object unused = new Object();
                 }
-                var bar = new Object();
+                Object bar = new Object();
                 bar = null;
                 Function<String, Integer> f = unused -> 1;
                 f = (String unused) -> 1;
@@ -69,9 +69,9 @@ public class UnnamedVariableTest {
             class Test {
               public static void main(String[] args) {
                 {
-                  var _ = new Object();
+                  Object _ = new Object();
                 }
-                var bar = new Object();
+                Object bar = new Object();
                 bar = null;
                 Function<String, Integer> f = _ -> 1;
                 f = (String _) -> 1;
@@ -168,7 +168,7 @@ public class UnnamedVariableTest {
             """
             class Test {
               void f(AutoCloseable a) throws Exception {
-                try (var c = a) {}
+                try (AutoCloseable c = a) {}
               }
             }
             """)
@@ -177,7 +177,7 @@ public class UnnamedVariableTest {
             """
             class Test {
               void f(AutoCloseable a) throws Exception {
-                try (var _ = a) {}
+                try (AutoCloseable _ = a) {}
               }
             }
             """)
@@ -194,7 +194,7 @@ public class UnnamedVariableTest {
 
             class Test {
               void f(List<Integer> xs) {
-                for (var x : xs) {}
+                for (Integer x : xs) {}
               }
             }
             """)
@@ -205,7 +205,7 @@ public class UnnamedVariableTest {
 
             class Test {
               void f(List<Integer> xs) {
-                for (var _ : xs) {}
+                for (Integer _ : xs) {}
               }
             }
             """)
