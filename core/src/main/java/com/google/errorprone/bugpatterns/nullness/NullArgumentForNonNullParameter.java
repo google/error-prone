@@ -51,6 +51,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
@@ -145,7 +146,23 @@ public final class NullArgumentForNonNullParameter extends BugChecker
             return;
           }
 
-          state.reportMatch(describeMatch(argTree));
+          String ownerName = methodSymbol.owner.getSimpleName().toString();
+          if (ownerName.isEmpty() && methodSymbol.owner instanceof ClassSymbol) {
+            /*
+             * TODO(cpovirk): Add a test for this once we fix the
+             * hasExtraParameterForEnclosingInstance case.
+             */
+            ownerName =
+                ((ClassSymbol) methodSymbol.owner).getSuperclass().tsym.getSimpleName().toString();
+          }
+
+          String message =
+              String.format(
+                  "Null is not permitted for parameter '%s' of %s '%s'.",
+                  paramSymbol.getSimpleName(),
+                  methodSymbol.isConstructor() ? "constructor" : "method",
+                  methodSymbol.isConstructor() ? ownerName : methodSymbol.getSimpleName());
+          state.reportMatch(buildDescription(argTree).setMessage(message).build());
         });
 
     return NO_MATCH; // Any matches were reported through state.reportMatch.

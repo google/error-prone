@@ -31,6 +31,27 @@ public class NullArgumentForNonNullParameterTest {
           .setArgs("-XepOpt:Nullness:Conservative=false");
 
   @Test
+  public void positiveConstructor() {
+    aggressiveHelper
+        .addSourceLines(
+            "Foo.java",
+            """
+            import org.jspecify.annotations.NullMarked;
+
+            @NullMarked
+            class Foo {
+              Foo(String s) {}
+
+              void foo() {
+                // BUG: Diagnostic contains: parameter 's' of constructor 'Foo'
+                new Foo(null);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void positivePrimitive() {
     conservativeHelper
         .addSourceLines(
@@ -42,7 +63,7 @@ public class NullArgumentForNonNullParameterTest {
               void consume(int i) {}
 
               void foo(Optional<Integer> o) {
-                // BUG: Diagnostic contains:
+                // BUG: Diagnostic contains: parameter 'i' of method 'consume'
                 consume(o.orElse(null));
               }
             }
@@ -99,7 +120,7 @@ public class NullArgumentForNonNullParameterTest {
 
             class Foo {
               void foo() {
-                // BUG: Diagnostic contains:
+                // BUG: Diagnostic contains: parameter 'value' of method 'of'
                 Optional.of(null);
               }
             }
