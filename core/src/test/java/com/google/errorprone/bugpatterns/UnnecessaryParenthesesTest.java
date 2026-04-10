@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.auto.value.processor.AutoValueProcessor;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
@@ -173,6 +175,37 @@ public class UnnecessaryParenthesesTest {
               }
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  public void lambdaExpressionTrees() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    testHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            class Test {
+              void withParens(List<String> list) {
+                list.forEach((_) -> System.out.println());
+                list.forEach((unused) -> System.out.println());
+                list.forEach((String unused) -> System.out.println());
+              }
+
+              void withoutParens(List<String> list) {
+                list.forEach(_ -> System.out.println());
+                list.forEach(unused -> System.out.println());
+              }
+            }
+            """)
+        // TODO(kak): we probably should remove unnecessary parentheses from LambdaExpressionTrees.
+        // Note that the parentheses are not a ParenthesizedTree node: In the AST, when you have
+        // (_) -> ..., the (_) is not represented as a ParenthesizedTree node wrapping an
+        // expression. Instead, the parentheses are just syntactical tokens that are part of the
+        // LambdaExpressionTree node itself.
+        .expectUnchanged()
         .doTest();
   }
 
