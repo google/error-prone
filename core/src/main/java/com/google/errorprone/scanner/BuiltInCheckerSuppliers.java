@@ -145,6 +145,7 @@ import com.google.errorprone.bugpatterns.ErroneousThreadPoolConstructorChecker;
 import com.google.errorprone.bugpatterns.ExpectedExceptionChecker;
 import com.google.errorprone.bugpatterns.ExpensiveLenientFormatString;
 import com.google.errorprone.bugpatterns.ExplicitArrayForVarargs;
+import com.google.errorprone.bugpatterns.ExposedPrivateType;
 import com.google.errorprone.bugpatterns.ExtendingJUnitAssert;
 import com.google.errorprone.bugpatterns.ExtendsAutoValue;
 import com.google.errorprone.bugpatterns.FallThrough;
@@ -978,6 +979,7 @@ public class BuiltInCheckerSuppliers {
           ErroneousThreadPoolConstructorChecker.class,
           EscapedEntity.class,
           ExpensiveLenientFormatString.class,
+          ExposedPrivateType.class,
           ExtendingJUnitAssert.class,
           ExtendsObject.class,
           FallThrough.class,
