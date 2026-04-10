@@ -809,6 +809,9 @@ HTML entities in @code/@literal tags will appear literally in the rendered javad
 __[ExpensiveLenientFormatString](bugpattern/ExpensiveLenientFormatString)__<br>
 String.format is passed to a lenient formatting method, which can be unwrapped to improve efficiency.
 
+__[ExposedPrivateType](bugpattern/ExposedPrivateType)__<br>
+Private member classes should not be referenced in signatures of non-private members.
+
 __[ExtendingJUnitAssert](bugpattern/ExtendingJUnitAssert)__<br>
 When only using JUnit Assert&#39;s static methods, you should import statically instead of extending.
 
