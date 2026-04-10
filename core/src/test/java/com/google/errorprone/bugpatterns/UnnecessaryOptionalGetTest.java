@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,6 +29,8 @@ import org.junit.runners.JUnit4;
 public final class UnnecessaryOptionalGetTest {
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
       BugCheckerRefactoringTestHelper.newInstance(UnnecessaryOptionalGet.class, getClass());
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(UnnecessaryOptionalGet.class, getClass());
 
   @Test
   public void genericOptionalVars_sameVarGet_replacesWithLambdaArg() {
@@ -392,7 +395,47 @@ public final class UnnecessaryOptionalGetTest {
   }
 
   @Test
-  public void unnamedVariable_doesNotSuggestFix() {
+  public void unnamedVariable_withGet_warning() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                // BUG: Diagnostic contains: naming the unnamed lambda parameter
+                op.ifPresent(_ -> System.out.println(op.get()));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unnamedVariableWithExplicitType_withGet_warning() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                // BUG: Diagnostic contains: naming the unnamed lambda parameter
+                op.ifPresent((String _) -> System.out.println(op.get()));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unnamedVariable_withGet_doesNotApplyFix() {
     assume().that(Runtime.version().feature()).isAtLeast(22);
     refactoringTestHelper
         .addInputLines(
@@ -412,7 +455,7 @@ public final class UnnecessaryOptionalGetTest {
   }
 
   @Test
-  public void unnamedVariableWithExplicitType_doesNotSuggestFix() {
+  public void unnamedVariableWithExplicitType_withGet_doesNotApplyFix() {
     assume().that(Runtime.version().feature()).isAtLeast(22);
     refactoringTestHelper
         .addInputLines(
@@ -428,6 +471,44 @@ public final class UnnecessaryOptionalGetTest {
             }
             """)
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void unnamedVariable_withoutGet_doesNotWarn() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.ifPresent(_ -> System.out.println("world"));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unnamedVariableWithExplicitType_withoutGet_doesNotWarn() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.ifPresent((String _) -> System.out.println("world"));
+              }
+            }
+            """)
         .doTest();
   }
 }

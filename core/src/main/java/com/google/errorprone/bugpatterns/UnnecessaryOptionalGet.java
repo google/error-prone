@@ -32,6 +32,7 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreeScanner;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A refactoring to replace Optional.get() with lambda arg in expressions passed as arg to member
@@ -84,7 +85,14 @@ public final class UnnecessaryOptionalGet extends BugChecker
     }
     VariableTree arg = getOnlyElement(lambdaExpressionTree.getParameters());
     if (arg.getName().isEmpty()) {
-      return Description.NO_MATCH;
+      if (!usesOptionalGet(tree, state, onlyArg)) {
+        return Description.NO_MATCH;
+      }
+      return buildDescription(tree)
+          .setMessage(
+              "This code can be simplified by naming the unnamed lambda parameter and using it"
+                  + " directly instead of calling get() on the optional.")
+          .build();
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     new TreeScanner<Void, VisitorState>() {
@@ -102,5 +110,21 @@ public final class UnnecessaryOptionalGet extends BugChecker
       return Description.NO_MATCH;
     }
     return describeMatch(tree, fix.build());
+  }
+
+  private static boolean usesOptionalGet(MethodInvocationTree tree, VisitorState state, ExpressionTree onlyArg) {
+    AtomicBoolean foundGet = new AtomicBoolean(false);
+    new TreeScanner<Void, VisitorState>() {
+      @Override
+      public Void visitMethodInvocation(
+          MethodInvocationTree methodInvocationTree, VisitorState visitorState) {
+        if (OPTIONAL_GET.matches(methodInvocationTree, visitorState)
+            && sameVariable(getReceiver(tree), getReceiver(methodInvocationTree))) {
+          foundGet.set(true);
+        }
+        return super.visitMethodInvocation(methodInvocationTree, visitorState);
+      }
+    }.scan(onlyArg, state);
+    return foundGet.get();
   }
 }
