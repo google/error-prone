@@ -91,7 +91,7 @@ public final class UnnecessaryOptionalGet extends BugChecker
       return buildDescription(tree)
           .setMessage(
               "This code can be simplified by naming the unnamed lambda parameter and using it"
-                  + " directly instead of calling get() on the optional.")
+                  + " directly instead of calling get..() on the optional.")
           .build();
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
@@ -112,7 +112,8 @@ public final class UnnecessaryOptionalGet extends BugChecker
     return describeMatch(tree, fix.build());
   }
 
-  private static boolean usesOptionalGet(MethodInvocationTree tree, VisitorState state, ExpressionTree onlyArg) {
+  private static boolean usesOptionalGet(
+      MethodInvocationTree tree, VisitorState state, ExpressionTree onlyArg) {
     AtomicBoolean foundGet = new AtomicBoolean(false);
     new TreeScanner<Void, VisitorState>() {
       @Override
