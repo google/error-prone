@@ -29,6 +29,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.SourceVersion;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.EnhancedForLoopTree;
@@ -78,7 +79,7 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
 
   private static SuggestedFix buildFix(
       VariableTree tree, Symbol symbol, TreePath path, VisitorState state) {
-    if (symbol.getKind() == ElementKind.PARAMETER) {
+    if (symbol.getKind() == ElementKind.PARAMETER && isLambdaInAssignmentOrInitializer(path)) {
       // TODO(kak): we should also drop unnecessary parens. E.g.,
       // before:  `(String unused) -> 1`
       // after:   `(_) -> 1`
@@ -92,6 +93,21 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
       return builder.build();
     }
     return fix;
+  }
+
+  /**
+   * Returns true if the lambda expression containing the variable at the given {@link TreePath} is
+   * used as an initializer in a {@link VariableTree} or as the expression in an {@link
+   * AssignmentTree}.
+   */
+  private static boolean isLambdaInAssignmentOrInitializer(TreePath path) {
+    TreePath parentPath = path.getParentPath();
+    return parentPath.getLeaf() instanceof LambdaExpressionTree lambda
+        && switch (parentPath.getParentPath().getLeaf()) {
+          case VariableTree varTree -> varTree.getInitializer() == lambda;
+          case AssignmentTree assignmentTree -> assignmentTree.getExpression() == lambda;
+          default -> false;
+        };
   }
 
   /**

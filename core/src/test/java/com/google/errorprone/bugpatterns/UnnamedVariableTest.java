@@ -88,7 +88,7 @@ public class UnnamedVariableTest {
 
               public void foo(List<String> list) {
                 list.forEach(_ -> System.out.println());
-                list.forEach((_) -> System.out.println());
+                list.forEach((String _) -> System.out.println());
               }
             }
             """)
