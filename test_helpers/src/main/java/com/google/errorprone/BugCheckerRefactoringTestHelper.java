@@ -443,7 +443,11 @@ public class BugCheckerRefactoringTestHelper {
       return tree.getPackage().packge.package_info.toString();
     }
     // ..or a `module-info.java`.
-    return tree.getModuleDecl().sym.getQualifiedName().toString();
+    if (tree.getModuleDecl() != null) {
+      return tree.getModuleDecl().sym.getQualifiedName().toString();
+    }
+    throw new IllegalArgumentException(
+        "Expected a class, package, or module declaration:\n" + tree);
   }
 
   /** To assert the proper {@code .addInput().addOutput()} chain. */

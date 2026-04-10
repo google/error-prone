@@ -435,4 +435,22 @@ public class BugCheckerRefactoringTestHelperTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void emptyTestInput() {
+    BugCheckerRefactoringTestHelper bugCheckerRefactoringTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(ReplaceVarTypes.class, getClass())
+            .addInputLines(
+                "Test.java",
+                """
+                import java.util.List;
+                """)
+            .expectUnchanged();
+    IllegalArgumentException thrown =
+        assertThrows(
+            IllegalArgumentException.class, () -> bugCheckerRefactoringTestHelper.doTest());
+    assertThat(thrown)
+        .hasMessageThat()
+        .contains("Expected a class, package, or module declaration");
+  }
 }
