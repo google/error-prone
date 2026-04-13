@@ -99,6 +99,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#replaceIncludingComments(com.sun.source.util.TreePath,java.lang.String,com.google.errorprone.VisitorState)" tabindex="0">replaceIncludingComments(TreePath, String, VisitorState)</a></li>
 <li><a href="#castTree(com.sun.source.tree.ExpressionTree,java.lang.String,com.google.errorprone.VisitorState)" tabindex="0">castTree(ExpressionTree, String, VisitorState)</a></li>
 <li><a href="#replaceVariableType(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" tabindex="0">replaceVariableType(VariableTree, String, VisitorState)</a></li>
+<li><a href="#variableNamer(com.google.errorprone.VisitorState)" tabindex="0">variableNamer(VisitorState)</a></li>
 </ol>
 </li>
 </ol>
@@ -142,9 +143,14 @@ whether to add the new member(s) at the beginning of the class, or at the end.</
 <div class="block">A class to hold the files from the compilation context, with a diff applied to the
 currently-processed one; the files can then be recompiled.</div>
 </div>
-<div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="SuggestedFixes.Visibility.html" class="type-name-link" title="enum class in com.google.errorprone.fixes">SuggestedFixes.Visibility</a></code></div>
+<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="SuggestedFixes.VariableNamer.html" class="type-name-link" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Helper class for avoiding variable name shadowing.</div>
+</div>
+<div class="col-first odd-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="SuggestedFixes.Visibility.html" class="type-name-link" title="enum class in com.google.errorprone.fixes">SuggestedFixes.Visibility</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Visibility modifiers.</div>
 </div>
 </div>
@@ -476,6 +482,9 @@ annotation</code>, regardless of whether there is already an argument.</div>
 <div class="deprecation-comment">use <a href="#updateAnnotationArgumentValues(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState,java.lang.String,java.util.Collection)"><code>updateAnnotationArgumentValues(AnnotationTree, VisitorState, String, Collection)</code></a> instead</div>
 </div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#variableNamer(com.google.errorprone.VisitorState)" class="member-name-link">variableNamer</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -1068,6 +1077,14 @@ node.</div>
 
 <p>If the tree is a <code>var</code> declaration, the <code>var</code> keyword will be replaced with the
 <code>replacementType</code>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="variableNamer(com.google.errorprone.VisitorState)">
+<h3>variableNamer</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a></span>&nbsp;<span class="element-name">variableNamer</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 </div>
 </section>
 </li>
