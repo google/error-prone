@@ -31,7 +31,6 @@ import static com.google.errorprone.util.ASTHelpers.getThrownExceptions;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isCheckedExceptionType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ImmutableList;
@@ -47,7 +46,6 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.TypePredicates;
-import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
@@ -67,10 +65,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
@@ -197,8 +192,9 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
     }
 
     // update the tree path so VariableName considers the method parameters
-    VariableNamer variableNamer =
-        new VariableNamer(state.withPath(new TreePath(state.getPath(), toFix.getFirst().runnable)));
+    SuggestedFixes.VariableNamer variableNamer =
+        SuggestedFixes.variableNamer(
+            state.withPath(new TreePath(state.getPath(), toFix.getFirst().runnable)));
     for (AssertThrows current : toFix) {
       StringBuilder hoistedVariables = new StringBuilder();
       for (Hoist hoist : current.toHoist) {
@@ -367,25 +363,4 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
               .forClass(
                   TypePredicates.isDescendantOf(
                       "com.google.android.gms.tagmanager.internal.type.AbstractType")));
-
-  private static class VariableNamer {
-    private final Set<String> idents;
-
-    VariableNamer(VisitorState state) {
-      this.idents =
-          FindIdentifiers.findAllIdents(state).stream()
-              .map(s -> s.getSimpleName().toString())
-              .collect(toCollection(HashSet::new));
-    }
-
-    // Stolen from PatternMatchingInstanceof
-    // TODO: cushon - add to SuggestedFixes?
-    private String avoidShadowing(String name) {
-      return IntStream.iterate(1, i -> i + 1)
-          .mapToObj(i -> i == 1 ? name : (name + i))
-          .filter(n -> idents.add(n))
-          .findFirst()
-          .get();
-    }
-  }
 }

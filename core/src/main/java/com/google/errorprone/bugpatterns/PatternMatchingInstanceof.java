@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Ascii.toLowerCase;
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
@@ -36,8 +35,8 @@ import com.google.errorprone.bugpatterns.BugChecker.InstanceOfTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.FindIdentifiers;
 import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
@@ -56,7 +55,6 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import java.util.HashSet;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.SourceVersion;
@@ -167,24 +165,12 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     String simpleName = IdentifierNames.fixInitialisms(targetType.tsym.getSimpleName().toString());
     String lowerFirstLetter = toLowerCase(String.valueOf(simpleName.charAt(0)));
     String camelCased = lowerFirstLetter + simpleName.substring(1);
+    SuggestedFixes.VariableNamer variableNamer = SuggestedFixes.variableNamer(state);
     if (SourceVersion.isKeyword(camelCased)
         || (unboxed != null && unboxed.getTag() != TypeTag.NONE)) {
-      return avoidShadowing(lowerFirstLetter, state);
+      return variableNamer.avoidShadowing(lowerFirstLetter);
     }
-    return avoidShadowing(camelCased, state);
-  }
-
-  // TODO: cushon - add to SuggestedFixes?
-  private static String avoidShadowing(String name, VisitorState state) {
-    var idents =
-        FindIdentifiers.findAllIdents(state).stream()
-            .map(s -> s.getSimpleName().toString())
-            .collect(toImmutableSet());
-    return IntStream.iterate(1, i -> i + 1)
-        .mapToObj(i -> i == 1 ? name : (name + i))
-        .filter(n -> !idents.contains(n))
-        .findFirst()
-        .get();
+    return variableNamer.avoidShadowing(camelCased);
   }
 
   /** Finds trees which are implied by the {@code instanceOfTree}. */

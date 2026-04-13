@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -77,6 +79,7 @@ public final class UnnecessaryOptionalGetTest {
               private void home() {
                 Optional<String> op = Optional.of("hello");
                 op.transform(x -> Long.parseLong(op.get()));
+                op.transform((String x) -> Long.parseLong(op.get()));
               }
             }
             """)
@@ -89,6 +92,7 @@ public final class UnnecessaryOptionalGetTest {
               private void home() {
                 Optional<String> op = Optional.of("hello");
                 op.transform(x -> Long.parseLong(x));
+                op.transform((String x) -> Long.parseLong(x));
               }
             }
             """)
@@ -383,6 +387,39 @@ public final class UnnecessaryOptionalGetTest {
               private void home() {
                 Optional<String> op = Optional.of("hello");
                 op.flatMap(x -> Optional.of(x));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unnamedVariable_withGet_warning() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.ifPresent(_ -> System.out.println(op.get()));
+                op.ifPresent((String _) -> System.out.println(op.get()));
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            public class Test {
+              private void home() {
+                Optional<String> op = Optional.of("hello");
+                op.ifPresent(value -> System.out.println(value));
+                op.ifPresent((String value) -> System.out.println(value));
               }
             }
             """)

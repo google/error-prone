@@ -122,6 +122,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -743,11 +744,20 @@ public final class SuggestedFixes {
     // and a tree without an end position for earlier versions.
     int typeEndPos = tree.getType() != null ? state.getEndPosition(tree.getType()) : -1;
     int searchOffset = typeEndPos == -1 ? 0 : (typeEndPos - startPos);
-    int pos = startPos + state.getSourceForNode(tree).indexOf(name, searchOffset);
-    return SuggestedFix.builder()
-        .replace(pos, pos + name.length(), replacement)
-        .merge(renameVariableUsages(tree, replacement, state))
-        .build();
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    state.getOffsetTokens(startPos + searchOffset, state.getEndPosition(tree)).stream()
+        .filter(
+            token ->
+                switch (token.kind()) {
+                  // VariableTree#getName is empty for unnamed _ variables
+                  case UNDERSCORE -> name.isEmpty();
+                  case IDENTIFIER -> token.name().contentEquals(name);
+                  default -> false;
+                })
+        .findFirst()
+        .ifPresent(token -> fix.replace(token.pos(), token.endPos(), replacement));
+    fix.merge(renameVariableUsages(tree, replacement, state));
+    return fix.build();
   }
 
   /**
@@ -1858,6 +1868,31 @@ public final class SuggestedFixes {
         throw new IllegalArgumentException("Conflicting visibility modifiers: " + visibilities);
       }
       return getOnlyElement(visibilities);
+    }
+  }
+
+  public static VariableNamer variableNamer(VisitorState state) {
+    return new VariableNamer(state);
+  }
+
+  /** Helper class for avoiding variable name shadowing. */
+  public static class VariableNamer {
+    private final Set<String> idents;
+
+    private VariableNamer(VisitorState state) {
+      this.idents =
+          FindIdentifiers.findAllIdents(state).stream()
+              .map(s -> s.getSimpleName().toString())
+              .collect(toCollection(HashSet::new));
+    }
+
+    public String avoidShadowing(String name) {
+      for (int i = 1; ; i++) {
+        String n = i == 1 ? name : (name + i);
+        if (idents.add(n)) {
+          return n;
+        }
+      }
     }
   }
 
