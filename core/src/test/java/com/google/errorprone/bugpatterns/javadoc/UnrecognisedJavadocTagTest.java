@@ -88,4 +88,29 @@ public final class UnrecognisedJavadocTagTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void nestedCodeOk() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /** A {@code <pre>{@code ...}</pre>} block. */
+            class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unrecognisedImmediatelyFollowingRecognised() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            // BUG: Diagnostic contains:
+            /** {@code foo}{@link bar) */
+            class Test {}
+            """)
+        .doTest();
+  }
 }
