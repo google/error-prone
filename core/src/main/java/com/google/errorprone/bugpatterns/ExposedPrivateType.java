@@ -176,7 +176,8 @@ public final class ExposedPrivateType extends BugChecker
       description.addFix(increaseVisibility.build());
       description.setMessage(
           String.format(
-              "Signatures of non-private members should not reference private classes: %s",
+              "Signature of non-private member '%s' should not reference private classes: %s",
+              getSymbol(tree).getSimpleName(),
               found.stream().map(s -> s.getSimpleName()).collect(joining(", "))));
       return description.build();
     }
