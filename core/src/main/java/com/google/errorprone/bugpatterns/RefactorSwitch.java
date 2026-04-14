@@ -106,7 +106,7 @@ public final class RefactorSwitch extends BugChecker
   RefactorSwitch(ErrorProneFlags flags) {
     enableAssignmentSwitch = flags.getBoolean("RefactorSwitch:EnableAssignmentSwitch").orElse(true);
     enableReturnSwitch = flags.getBoolean("RefactorSwitch:EnableReturnSwitch").orElse(true);
-    enableSimplifySwitch = flags.getBoolean("RefactorSwitch:EnableSimplifySwitch").orElse(false);
+    enableSimplifySwitch = flags.getBoolean("RefactorSwitch:EnableSimplifySwitch").orElse(true);
   }
 
   @Override
