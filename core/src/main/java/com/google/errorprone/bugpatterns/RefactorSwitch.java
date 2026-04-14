@@ -105,7 +105,7 @@ public final class RefactorSwitch extends BugChecker
   @Inject
   RefactorSwitch(ErrorProneFlags flags) {
     enableAssignmentSwitch = flags.getBoolean("RefactorSwitch:EnableAssignmentSwitch").orElse(true);
-    enableReturnSwitch = flags.getBoolean("RefactorSwitch:EnableReturnSwitch").orElse(false);
+    enableReturnSwitch = flags.getBoolean("RefactorSwitch:EnableReturnSwitch").orElse(true);
     enableSimplifySwitch = flags.getBoolean("RefactorSwitch:EnableSimplifySwitch").orElse(false);
   }
 
@@ -1108,11 +1108,11 @@ public final class RefactorSwitch extends BugChecker
         .collect(toImmutableList());
   }
 
-  record AnalysisResult(
+  private record AnalysisResult(
       // A list of conversions that can be performed on the switch
       ImmutableList<Convertible> convertibleFindings) {}
 
-  record AssignmentSwitchAnalysisState(
+  private record AssignmentSwitchAnalysisState(
       // Current qualification for conversion based on cases examined so far
       CaseQualifications assignmentSwitchCaseQualifications,
       // What is being assigned to (if any)
@@ -1122,7 +1122,7 @@ public final class RefactorSwitch extends BugChecker
       // The tree of the assignment being performed (if any)
       Optional<ExpressionTree> assignmentTreeOptional) {}
 
-  record AssignmentSwitchAnalysisResult(
+  private record AssignmentSwitchAnalysisResult(
       // The switch can be converted to an assignment switch
       boolean canConvertToAssignmentSwitch,
       // The variable declaration that preceded the switch (if any)
@@ -1142,7 +1142,7 @@ public final class RefactorSwitch extends BugChecker
     }
   }
 
-  record ReturnSwitchAnalysisResult(
+  private record ReturnSwitchAnalysisResult(
       // The switch can be converted to a return switch
       boolean canConvertToReturnSwitch,
       // Whether the default case can be removed
@@ -1156,7 +1156,7 @@ public final class RefactorSwitch extends BugChecker
     }
   }
 
-  record SimplifyAnalysisResult(
+  private record SimplifyAnalysisResult(
       // At least one case can be simplified
       boolean canSimplify,
       // Whether the default case can be removed
