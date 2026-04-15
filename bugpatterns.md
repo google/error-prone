@@ -1364,6 +1364,9 @@ Three-letter time zone identifiers are deprecated, may be ambiguous, and might n
 __[ThrowIfUncheckedKnownUnchecked](bugpattern/ThrowIfUncheckedKnownUnchecked)__<br>
 &#96;throwIfUnchecked(knownUnchecked)&#96; is equivalent to &#96;throw knownUnchecked&#96;.
 
+__[ThrowableEqualsHashCode](bugpattern/ThrowableEqualsHashCode)__<br>
+Overriding Throwable.equals() or hashCode() is discouraged.
+
 __[TimeInStaticInitializer](bugpattern/TimeInStaticInitializer)__<br>
 Accessing the current time in a static initialiser captures the time at class loading, which is rarely desirable.
 
