@@ -408,6 +408,7 @@ import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownChecked;
 import com.google.errorprone.bugpatterns.ThrowIfUncheckedKnownUnchecked;
 import com.google.errorprone.bugpatterns.ThrowNull;
 import com.google.errorprone.bugpatterns.ThrowSpecificExceptions;
+import com.google.errorprone.bugpatterns.ThrowableEqualsHashCode;
 import com.google.errorprone.bugpatterns.ThrowsUncheckedException;
 import com.google.errorprone.bugpatterns.ToStringReturnsNull;
 import com.google.errorprone.bugpatterns.TooManyParameters;
@@ -1164,6 +1165,7 @@ public class BuiltInCheckerSuppliers {
           ThreadPriorityCheck.class,
           ThreeLetterTimeZoneID.class,
           ThrowIfUncheckedKnownUnchecked.class,
+          ThrowableEqualsHashCode.class,
           TimeInStaticInitializer.class,
           TimeUnitConversionChecker.class,
           ToStringReturnsNull.class,
