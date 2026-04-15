@@ -1821,7 +1821,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * @param symbolsToHoist Bidirectional map from symbols to hoist to the top of the switch
    *     statement to their declaration trees
    */
-  record AnalysisResult(
+  private record AnalysisResult(
       boolean canConvertDirectlyToExpressionSwitch,
       boolean canConvertToReturnSwitch,
       boolean canRemoveDefault,
@@ -1839,7 +1839,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * @param assignmentSourceCodeOptional Java source code of the assignment switch's operator, e.g.
    *     "+="
    */
-  record AssignmentSwitchAnalysisResult(
+  private record AssignmentSwitchAnalysisResult(
       boolean canConvertToAssignmentSwitch,
       Optional<VariableTree> precedingVariableDeclaration,
       Optional<ExpressionTree> assignmentTargetOptional,
@@ -1853,7 +1853,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * @param assignmentExpressionKindOptional Kind of the first assignment seen, if any
    * @param assignmentTreeOptional ExpressionTree of the first assignment seen, if any
    */
-  record AssignmentSwitchAnalysisState(
+  private record AssignmentSwitchAnalysisState(
       CaseQualifications assignmentSwitchCaseQualifications,
       Optional<ExpressionTree> assignmentTargetOptional,
       Optional<Tree.Kind> assignmentExpressionKindOptional,

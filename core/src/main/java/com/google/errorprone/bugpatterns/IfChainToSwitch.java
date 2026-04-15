@@ -1714,7 +1714,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /** Returns whether the {@code CaseIr} represents an unconditional pattern. */
-  public static boolean isUnconditionalPattern(
+  private static boolean isUnconditionalPattern(
       CaseIr caseIr, VisitorState state, ExpressionTree subject) {
     // The guard is the condition
     if (isGuarded(caseIr)) {
@@ -1736,7 +1736,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
    * <p>Domination refers to the notion of "is dominated" defined in e.g. JLS 21 § 14.11.1. Note
    * that this method does not support record types, which simplifies implementation.
    */
-  public static boolean isDominatedBy(
+  private static boolean isDominatedBy(
       CaseIr lhs, CaseIr rhs, VisitorState state, ExpressionTree subject) {
 
     // Nothing dominates the default case
@@ -1901,7 +1901,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
    * This record is an intermediate representation of a single `x instanceof Y` or `x instanceof Y
    * y` expression.
    */
-  record InstanceOfIr(
+  private record InstanceOfIr(
       // In the example above, the expression would be `y`.
       Optional<ExpressionTree> expression,
       // In the example above, the variable tree would be `Y y`.
@@ -1919,7 +1919,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
    * being synthesized. Its scope is roughly equivalent to a `CaseTree` in Java's AST, although does
    * not cover all of the same functionality.
    */
-  record CaseIr(
+  private record CaseIr(
       boolean hasCaseNull,
       boolean hasDefault,
       // The pattern, if any
@@ -1950,14 +1950,15 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
    * Container for the subject (of an if predicate) and a (non-empty) list of expressions that can
    * match that subject in the given case.
    */
-  record SubjectAndCaseExpressions(ExpressionTree subject, List<ExpressionTree> expressions) {
+  private record SubjectAndCaseExpressions(
+      ExpressionTree subject, List<ExpressionTree> expressions) {
     SubjectAndCaseExpressions {
       checkArgument(!expressions.isEmpty());
     }
   }
 
   /** This record represents the current state of the analysis of an if-chain. */
-  record IfChainAnalysisState(
+  private record IfChainAnalysisState(
       // The expression to be switched on (if known)
       Optional<ExpressionTree> subjectOptional,
       // Depth of the if statement being analyzed (relative to the start of the if-chain)
