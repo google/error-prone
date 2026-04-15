@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -91,18 +93,17 @@ public final class NotJavadocTest {
 
   @Test
   public void doubleJavadoc() {
-    // It would be nice if this were caught.
-    helper
-        .addInputLines(
+    compilationHelper
+        .addSourceLines(
             "Test.java",
             """
             class Test {
+              // BUG: Diagnostic contains: multiple Javadoc comments
               /** Not Javadoc. */
               /** Javadoc. */
               void test() {}
             }
             """)
-        .expectUnchanged()
         .doTest();
   }
 
@@ -326,6 +327,23 @@ public record Test(
             """)
         // TODO(b/494275366): Add a fix for this.
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void mixedJavadoc() {
+    assume().that(Runtime.version().feature()).isAtLeast(23);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: both markdown
+              /** Classic javadoc */
+              /// Markdown javadoc
+              void test() {}
+            }
+            """)
         .doTest();
   }
 }

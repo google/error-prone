@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDiagnosticPosition;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getJavadoccableTrees;
@@ -25,7 +26,9 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ErrorProneTokens.getTokens;
+import static java.util.Comparator.comparing;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableRangeSet;
 import com.google.common.collect.Range;
@@ -57,6 +60,30 @@ public final class NotJavadoc extends BugChecker implements CompilationUnitTreeM
         getSeeminglyJavadocableTrees(tree);
     ImmutableRangeSet<Integer> suppressedRegions = suppressedRegions(state);
     for (ErrorProneToken token : getTokens(state.getSourceCode().toString(), state.context)) {
+      ImmutableList<ErrorProneComment> javadoc =
+          token.comments().stream()
+              .filter(
+                  comment ->
+                      switch (comment.getStyle()) {
+                        case JAVADOC_BLOCK, JAVADOC_LINE -> true;
+                        default -> false;
+                      })
+              .collect(toImmutableList());
+      if (javadoc.size() > 1) {
+        ErrorProneComment firstComment =
+            javadoc.stream().min(comparing(ErrorProneComment::getPos)).get();
+        boolean bothStyles =
+            javadoc.stream().map(ErrorProneComment::getStyle).distinct().count() > 1;
+        state.reportMatch(
+            buildDescription(getDiagnosticPosition(firstComment.getPos(), tree))
+                .setMessage(
+                    (bothStyles
+                            ? "This element has both markdown `///` and traditional `/**` javadoc"
+                                + " comments"
+                            : "This element has multiple Javadoc comments")
+                        + "; only the last one will be used.")
+                .build());
+      }
       for (ErrorProneComment comment : token.comments()) {
         switch (comment.getStyle()) {
           case JAVADOC_BLOCK -> {
