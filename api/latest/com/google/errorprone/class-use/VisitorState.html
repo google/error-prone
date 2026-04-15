@@ -486,34 +486,19 @@ an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
 <div class="col-second even-row-color"><span class="type-name-label">CheckReturnValue.</span><code><a href="../bugpatterns/CheckReturnValue.html#isCovered(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">isCovered</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">IfChainToSwitch.</span><code><a href="../bugpatterns/IfChainToSwitch.html#isDominatedBy(com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr,com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr,com.google.errorprone.VisitorState,com.sun.source.tree.ExpressionTree)" class="member-name-link">isDominatedBy</a><wbr>(com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr&nbsp;lhs,
- com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr&nbsp;rhs,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;subject)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Compute whether the RHS is dominated by the LHS.</div>
-</div>
-<div class="col-first even-row-color"><code>boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">BugChecker.</span><code><a href="../bugpatterns/BugChecker.html#isSuppressed(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isSuppressed</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+<div class="col-first odd-row-color"><code>boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">BugChecker.</span><code><a href="../bugpatterns/BugChecker.html#isSuppressed(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isSuppressed</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Returns true if the given tree is annotated with a <code>@SuppressWarnings</code> that disables this
 bug checker.</div>
 </div>
-<div class="col-first odd-row-color"><code>boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">BugChecker.</span><code><a href="../bugpatterns/BugChecker.html#isSuppressed(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">isSuppressed</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
+<div class="col-first even-row-color"><code>boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">BugChecker.</span><code><a href="../bugpatterns/BugChecker.html#isSuppressed(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">isSuppressed</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Returns true if the given symbol is annotated with a <code>@SuppressWarnings</code> or other
 annotation that disables this bug checker.</div>
-</div>
-<div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">IfChainToSwitch.</span><code><a href="../bugpatterns/IfChainToSwitch.html#isUnconditionalPattern(com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr,com.google.errorprone.VisitorState,com.sun.source.tree.ExpressionTree)" class="member-name-link">isUnconditionalPattern</a><wbr>(com.google.errorprone.bugpatterns.IfChainToSwitch.CaseIr&nbsp;caseIr,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;subject)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Returns whether the <code>CaseIr</code> represents an unconditional pattern.</div>
 </div>
 <div class="col-first odd-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">AbstractReturnValueIgnored.</span><code><a href="../bugpatterns/AbstractReturnValueIgnored.html#lostType(com.google.errorprone.VisitorState)" class="member-name-link">lostType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
