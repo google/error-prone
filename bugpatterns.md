@@ -986,6 +986,9 @@ Test class inherits from JUnit 3&#39;s TestCase but has JUnit 4 @Test or @RunWit
 __[JUnitIncompatibleType](bugpattern/JUnitIncompatibleType)__<br>
 The types passed to this assertion are incompatible.
 
+__[JUnitMethodInvoked](bugpattern/JUnitMethodInvoked)__<br>
+Directly invoking a JUnit test method is discouraged; only the JUnit test runner should call these methods. If you need to share logic between tests, extract a helper method or class.
+
 __[JavaDurationGetSecondsGetNano](bugpattern/JavaDurationGetSecondsGetNano)__<br>
 duration.getNano() only accesses the underlying nanosecond adjustment from the whole second.
 
