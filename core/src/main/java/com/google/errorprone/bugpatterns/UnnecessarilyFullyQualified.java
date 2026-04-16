@@ -258,7 +258,15 @@ public final class UnnecessarilyFullyQualified extends BugChecker
       }
       SuggestedFix fix = fixBuilder.build();
       for (TreePath path : pathsToFix) {
-        state.reportMatch(describeMatch(path.getLeaf(), fix));
+        state.reportMatch(
+            buildDescription(path.getLeaf())
+                .addFix(fix)
+                .setMessage(
+                    String.format(
+                        "The fully qualified name '%s' is unambiguous to the compiler if imported,"
+                            + " prefer using the name '%s'.",
+                        type.getQualifiedName(), nameString))
+                .build());
         if (this.batchFindings) {
           break;
         }

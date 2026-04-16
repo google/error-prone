@@ -408,10 +408,10 @@ public final class UnnecessarilyFullyQualifiedTest {
             "Test.java",
             """
             interface Test {
-              // BUG: Diagnostic contains:
+              // BUG: Diagnostic contains: qualified name 'java.util.List' is unambiguous
               java.util.List foo();
 
-              // BUG: Diagnostic contains:
+              // BUG: Diagnostic contains: prefer using the name 'List'
               java.util.List bar();
             }
             """)
