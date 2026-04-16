@@ -31,3 +31,38 @@ Throwables should not override `equals()` or `hashCode()`.
     Exceptions for normal business logic or control flow, which is a known
     anti-pattern. Exceptions are for exceptional circumstances; they are heavy
     (because of the stack trace) and slow to generate.
+
+### **Recommended Alternative: A separate value object**
+
+If you find yourself needing to compare exceptions, **extract the state into a
+separate value object.**
+
+Instead of this:
+
+```java
+public class UserNotFoundException extends RuntimeException {
+  private final String userId;
+  private final String groupId;
+
+  // Override equals and hashCode based on userId and groupId...
+}
+```
+
+Do this: Create a custom Exception that *contains* a value object (like a Record
+or a POJO), and compare the value objects instead.
+
+```java
+public class UserNotFoundException extends RuntimeException {
+  private final ErrorDetails details;
+
+  public UserNotFoundException(ErrorDetails details) {
+    super("%s is not a member of %s:".formatted(details.userId(), details.groupId()));
+    this.details = details;
+  }
+
+  public ErrorDetails getDetails() { return details; }
+}
+
+// Compare the details, not the exceptions!
+if (e1.getDetails().equals(e2.getDetails())) { ... }
+```
