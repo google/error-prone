@@ -79,7 +79,6 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
               (t, s) -> hasParameterisationAnnotation(t.getModifiers().getAnnotations()),
               (t, s) -> t.getParameters().stream().allMatch(v -> isInjectable(v, s))),
           not(JUnitMatchers::hasJUnitAnnotation));
-  ;
 
   private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
       ImmutableSet.of("com.pdsl.runners.PdslTest", "com.pholser.junit.quickcheck.Property");

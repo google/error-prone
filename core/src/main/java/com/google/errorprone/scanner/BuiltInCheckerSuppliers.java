@@ -222,6 +222,7 @@ import com.google.errorprone.bugpatterns.JUnit4TestNotRun;
 import com.google.errorprone.bugpatterns.JUnit4TestsNotRunWithinEnclosed;
 import com.google.errorprone.bugpatterns.JUnitAmbiguousTestClass;
 import com.google.errorprone.bugpatterns.JUnitAssertSameCheck;
+import com.google.errorprone.bugpatterns.JUnitMethodInvoked;
 import com.google.errorprone.bugpatterns.JUnitParameterMethodNotFound;
 import com.google.errorprone.bugpatterns.JavaLangClash;
 import com.google.errorprone.bugpatterns.JavaUtilDateChecker;
@@ -1037,6 +1038,7 @@ public class BuiltInCheckerSuppliers {
           JUnit4EmptyMethods.class,
           JUnitAmbiguousTestClass.class,
           JUnitIncompatibleType.class,
+          JUnitMethodInvoked.class,
           JavaDurationGetSecondsGetNano.class,
           JavaDurationGetSecondsToToSeconds.class,
           JavaDurationWithNanos.class,
