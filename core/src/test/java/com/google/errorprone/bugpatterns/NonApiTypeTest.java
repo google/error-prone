@@ -163,8 +163,6 @@ public final class NonApiTypeTest {
 
               @AutoValue.Builder
               public abstract static class Builder {
-                // TODO(b/503669492): we probably shouldn't flag this!
-                // BUG: Diagnostic contains: Avoid Optional parameters
                 public abstract Builder setMiddleName(Optional<String> middleName);
 
                 public abstract User build();

@@ -25,6 +25,7 @@ import static com.google.errorprone.predicates.TypePredicates.isExactType;
 import static com.google.errorprone.predicates.TypePredicates.not;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.methodIsPublicAndNotAnOverride;
@@ -88,7 +89,11 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
           // Optionals
           withPublicVisibility(
               isExactType("java.util.Optional"),
-              NON_GRAPH_WRAPPER,
+              (type, state) ->
+                  NON_GRAPH_WRAPPER.apply(type, state)
+                      // NOTE(b/503669492): allow Optional parameters in @AutoValue.Builder methods
+                      && !hasAnnotation(
+                          type.tsym, "com.google.auto.value.AutoValue.Builder", state),
               "Avoid Optional parameters. " + OPTIONAL_AS_PARAM_LINK,
               ApiElementType.PARAMETER),
           withPublicVisibility(
