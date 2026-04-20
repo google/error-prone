@@ -339,8 +339,7 @@ public final class ConstantExpressions {
       return false;
     }
     Symbol symbol = getSymbol(receiver);
-    return symbol.owner.isEnum()
-        || (symbol instanceof VarSymbol && isConsideredFinal(symbol))
+    return (symbol instanceof VarSymbol && isConsideredFinal(symbol))
         || symbol instanceof ClassSymbol
         || symbol instanceof PackageSymbol;
   }
