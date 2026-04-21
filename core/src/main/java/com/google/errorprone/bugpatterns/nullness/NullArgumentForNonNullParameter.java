@@ -222,14 +222,6 @@ public final class NullArgumentForNonNullParameter extends BugChecker
   }
 
   private boolean argumentMustBeNonNull(VarSymbol sym, VisitorState state) {
-    // We hardcode checking of one test method, ArgumentCaptor.forClass, which throws as of
-    // https://github.com/mockito/mockito/commit/fe1cb2de0923e78bf7d7ae46cbab792dd4e94136#diff-8d274a9bda2d871524d15bbfcd6272bd893a47e6b1a0b460d82a8845615f26daR31
-    // For discussion of hardcoding in general, see below.
-    if (sym.owner.name.equals(FOR_CLASS_NAME.get(state))
-        && isParameterOfMethodOnType(sym, ARGUMENT_CAPTOR_CLASS, state)) {
-      return true;
-    }
-
     if (sym.asType().isPrimitive()) {
       return true;
     }
@@ -237,9 +229,15 @@ public final class NullArgumentForNonNullParameter extends BugChecker
     /*
      * Since not all the classes that we care about have nullness annotations, we can hardcode
      * specific APIs that feel worth the effort, such as those in the JDK. Here's where we put such
-     * hardcoding (for the tiny bit we have), aside from one case appears at the top of this method
-     * instead so that it can cover test code. (But see the TODO about test code above.)
+     * hardcoding (for the tiny bit we have).
      */
+
+    // Hardcoding: ArgumentCaptor.forClass, which throws as of
+    // https://github.com/mockito/mockito/commit/fe1cb2de0923e78bf7d7ae46cbab792dd4e94136#diff-8d274a9bda2d871524d15bbfcd6272bd893a47e6b1a0b460d82a8845615f26daR31
+    if (sym.owner.name.equals(FOR_CLASS_NAME.get(state))
+        && isParameterOfMethodOnType(sym, ARGUMENT_CAPTOR_CLASS, state)) {
+      return true;
+    }
 
     // Hardcoding: Optional.of
     if (sym.owner.name.equals(OF_NAME.get(state))
