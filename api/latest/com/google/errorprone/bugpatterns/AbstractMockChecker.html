@@ -62,6 +62,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#field-detail" tabindex="0">Field Details</a>
 <ol class="toc-list">
 <li><a href="#MOCKING_METHOD" tabindex="0">MOCKING_METHOD</a></li>
+<li><a href="#MOCKED_VAR" tabindex="0">MOCKED_VAR</a></li>
 </ol>
 </li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
@@ -161,11 +162,17 @@ type information about the Tree of interest.</div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#MOCKING_METHOD" class="member-name-link">MOCKING_METHOD</a></code></div>
+<div class="col-first even-row-color"><code>static final <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#MOCKED_VAR" class="member-name-link">MOCKED_VAR</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">A TypeExtractor for method invocations that create a mock using Mockito.mock, Mockito.spy, or
-EasyMock.create[...]Mock, extracting the type being mocked.</div>
+<div class="block">A <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns"><code>AbstractMockChecker.TypeExtractor</code></a> that extracts the type of a variable declaration that is annotated with
+either <code>@org.mockito.Mock</code> or <code>@org.mockito.Spy</code>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#MOCKING_METHOD" class="member-name-link">MOCKING_METHOD</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">A <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns"><code>AbstractMockChecker.TypeExtractor</code></a> that extracts the type being mocked for method invocations that use
+either <code>org.mockito.Mockito.mock(...)</code> or <code>org.mockito.Mockito.spy(...)</code>.</div>
 </div>
 </div>
 </section>
@@ -263,8 +270,18 @@ checks for Annotations of type <code>T</code>.</div>
 <h3>MOCKING_METHOD</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&gt;</span>&nbsp;<span class="element-name">MOCKING_METHOD</span></div>
-<div class="block">A TypeExtractor for method invocations that create a mock using Mockito.mock, Mockito.spy, or
-EasyMock.create[...]Mock, extracting the type being mocked.</div>
+<div class="block">A <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns"><code>AbstractMockChecker.TypeExtractor</code></a> that extracts the type being mocked for method invocations that use
+either <code>org.mockito.Mockito.mock(...)</code> or <code>org.mockito.Mockito.spy(...)</code>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="MOCKED_VAR">
+<h3>MOCKED_VAR</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;</span>&nbsp;<span class="element-name">MOCKED_VAR</span></div>
+<div class="block">A <a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns"><code>AbstractMockChecker.TypeExtractor</code></a> that extracts the type of a variable declaration that is annotated with
+either <code>@org.mockito.Mock</code> or <code>@org.mockito.Spy</code>.</div>
 </div>
 </section>
 </li>

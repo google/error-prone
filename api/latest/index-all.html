@@ -3271,8 +3271,8 @@ calls at compile-time instead failing at runtime.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/DoNotMockChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">DoNotMockChecker</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
-<div class="block">Points out if a Mockito or EasyMock mock is mocking an object that would be better off being
-tested using an alternative instance.</div>
+<div class="block">Points out if a Mockito mock is mocking an object that would be better off being tested using an
+alternative instance.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/DoNotMockChecker.html#%3Cinit%3E()" class="member-name-link">DoNotMockChecker()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/DoNotMockChecker.html" title="class in com.google.errorprone.bugpatterns">DoNotMockChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -10816,6 +10816,11 @@ others.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/MixedMutabilityReturnType.html#%3Cinit%3E()" class="member-name-link">MixedMutabilityReturnType()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MixedMutabilityReturnType.html" title="class in com.google.errorprone.bugpatterns">MixedMutabilityReturnType</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html#MOCKED_VAR" class="member-name-link">MOCKED_VAR</a> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker</a></dt>
+<dd>
+<div class="block">A <a href="com/google/errorprone/bugpatterns/AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns"><code>AbstractMockChecker.TypeExtractor</code></a> that extracts the type of a variable declaration that is annotated with
+either <code>@org.mockito.Mock</code> or <code>@org.mockito.Spy</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/MockIllegalThrows.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MockIllegalThrows</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A BugPattern; see the summary</div>
@@ -10828,8 +10833,8 @@ others.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html#MOCKING_METHOD" class="member-name-link">MOCKING_METHOD</a> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker</a></dt>
 <dd>
-<div class="block">A TypeExtractor for method invocations that create a mock using Mockito.mock, Mockito.spy, or
-EasyMock.create[...]Mock, extracting the type being mocked.</div>
+<div class="block">A <a href="com/google/errorprone/bugpatterns/AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns"><code>AbstractMockChecker.TypeExtractor</code></a> that extracts the type being mocked for method invocations that use
+either <code>org.mockito.Mockito.mock(...)</code> or <code>org.mockito.Mockito.spy(...)</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/MockitoDoSetup.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MockitoDoSetup</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
