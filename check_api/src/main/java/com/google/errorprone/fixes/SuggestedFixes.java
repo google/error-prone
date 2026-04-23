@@ -803,14 +803,16 @@ public final class SuggestedFixes {
     Tree methodSelect = tree.getMethodSelect();
     Name identifier;
     int startPos;
-    if (methodSelect instanceof MemberSelectTree memberSelectTree) {
-      identifier = memberSelectTree.getIdentifier();
-      startPos = state.getEndPosition(memberSelectTree.getExpression());
-    } else if (methodSelect instanceof IdentifierTree identifierTree) {
-      identifier = identifierTree.getName();
-      startPos = getStartPosition(tree);
-    } else {
-      throw malformedMethodInvocationTree(tree);
+    switch (methodSelect) {
+      case MemberSelectTree memberSelectTree -> {
+        identifier = memberSelectTree.getIdentifier();
+        startPos = state.getEndPosition(memberSelectTree.getExpression());
+      }
+      case IdentifierTree identifierTree -> {
+        identifier = identifierTree.getName();
+        startPos = getStartPosition(tree);
+      }
+      default -> throw malformedMethodInvocationTree(tree);
     }
     int endPos =
         tree.getArguments().isEmpty()

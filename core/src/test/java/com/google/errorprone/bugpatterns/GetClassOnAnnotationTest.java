@@ -58,4 +58,31 @@ public class GetClassOnAnnotationTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void i5743() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.annotation.Annotation;
+            import java.util.stream.Stream;
+
+            interface AnnotationLiteral extends Annotation {
+
+              @Override
+              @SuppressWarnings("unchecked")
+              default Class<? extends Annotation> annotationType() {
+                return (Class<? extends Annotation>)
+                    // BUG: Diagnostic contains: annotationType().getInterfaces()
+                    Stream.of(getClass().getInterfaces())
+                        .filter(Annotation.class::isAssignableFrom)
+                        .filter(iface -> !iface.equals(AnnotationLiteral.class))
+                        .findFirst()
+                        .orElseThrow();
+              }
+            }
+            """)
+        .doTest();
+  }
 }
