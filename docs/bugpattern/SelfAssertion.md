@@ -18,4 +18,4 @@ In our experience, `assertThat(x).isEqualTo(x)` and similar are *more likely to
 be typos* than assertions about an `equals` method. This alone is sufficient
 motivation to choose a dedicated approach for testing `equals` implementations.
 
-[javadoc]: https://static.javadoc.io/com.google.guava/guava-testlib/21.0/com/google/common/testing/EqualsTester.html
+[javadoc]: https://javadoc.io/doc/com.google.guava/guava-testlib/latest/com/google/common/testing/EqualsTester.html
