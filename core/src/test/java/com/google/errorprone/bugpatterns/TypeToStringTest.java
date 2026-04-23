@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -105,6 +106,159 @@ public class TypeToStringTest {
             "jdk.compiler/com.sun.tools.javac.code",
             "jdk.compiler/com.sun.tools.javac.tree",
             "jdk.compiler/com.sun.tools.javac.util")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringWithTypes() {
+    BugCheckerRefactoringTestHelper.newInstance(TypeToString.class, getClass())
+        .addInputLines(
+            "Example.java",
+            """
+            import javax.lang.model.type.TypeMirror;
+            import javax.lang.model.util.Types;
+
+            class Example {
+              void foo(TypeMirror type, Types types, TypeMirror other) {
+                if (type.toString().equals(other.toString())) {}
+              }
+            }
+            """)
+        .addOutputLines(
+            "Example.java",
+            """
+            import javax.lang.model.type.TypeMirror;
+            import javax.lang.model.util.Types;
+
+            class Example {
+              void foo(TypeMirror type, Types types, TypeMirror other) {
+                if (types.isSameType(type, other)) {}
+              }
+            }
+            """)
+        .addModules("jdk.compiler/com.sun.tools.javac.code")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringWithStringLiteral() {
+    BugCheckerRefactoringTestHelper.newInstance(TypeToString.class, getClass())
+        .addInputLines(
+            "Example.java",
+            """
+            import javax.lang.model.type.TypeMirror;
+            import javax.lang.model.util.Elements;
+            import javax.lang.model.util.Types;
+
+            class Example {
+              void foo(TypeMirror type, Types types, Elements elements) {
+                if (type.toString().equals("java.lang.String")) {}
+              }
+            }
+            """)
+        .addOutputLines(
+            "Example.java",
+            """
+            import java.util.Objects;
+            import javax.lang.model.type.TypeMirror;
+            import javax.lang.model.util.Elements;
+            import javax.lang.model.util.Types;
+
+            class Example {
+              void foo(TypeMirror type, Types types, Elements elements) {
+                if (Objects.equals(types.asElement(type), elements.getTypeElement("java.lang.String"))) {}
+              }
+            }
+            """)
+        .addModules("jdk.compiler/com.sun.tools.javac.code")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringWithPrimitiveStringLiteral() {
+    BugCheckerRefactoringTestHelper.newInstance(TypeToString.class, getClass())
+        .addInputLines(
+            "Example.java",
+            """
+            import javax.lang.model.type.TypeMirror;
+            import javax.lang.model.util.Elements;
+            import javax.lang.model.util.Types;
+
+            class Example {
+              void foo(TypeMirror type, Types types, Elements elements) {
+                if (type.toString().equals("void")) {}
+              }
+            }
+            """)
+        .addOutputLines(
+            "Example.java",
+            """
+            import javax.lang.model.type.TypeKind;
+            import javax.lang.model.type.TypeMirror;
+            import javax.lang.model.util.Elements;
+            import javax.lang.model.util.Types;
+
+            class Example {
+              void foo(TypeMirror type, Types types, Elements elements) {
+                if (type.getKind() == TypeKind.VOID) {}
+              }
+            }
+            """)
+        .addModules("jdk.compiler/com.sun.tools.javac.code")
+        .doTest();
+  }
+
+  @Test
+  public void refactoringWithProcessingEnvironment() {
+    BugCheckerRefactoringTestHelper.newInstance(TypeToString.class, getClass())
+        .addInputLines(
+            "Example.java",
+            """
+            import javax.annotation.processing.ProcessingEnvironment;
+            import javax.lang.model.type.TypeMirror;
+
+            class Example {
+              void foo(ProcessingEnvironment env, TypeMirror type) {
+                if (type.toString().equals("java.lang.String")) {}
+              }
+            }
+            """)
+        .addOutputLines(
+            "Example.java",
+            """
+            import java.util.Objects;
+            import javax.annotation.processing.ProcessingEnvironment;
+            import javax.lang.model.type.TypeMirror;
+
+            class Example {
+              void foo(ProcessingEnvironment env, TypeMirror type) {
+                if (Objects.equals(
+                    env.getTypeUtils().asElement(type),
+                    env.getElementUtils().getTypeElement("java.lang.String"))) {}
+              }
+            }
+            """)
+        .addModules("jdk.compiler/com.sun.tools.javac.code")
+        .doTest();
+  }
+
+  @Test
+  public void unknownString() {
+    BugCheckerRefactoringTestHelper.newInstance(TypeToString.class, getClass())
+        .addInputLines(
+            "Example.java",
+            """
+            import javax.annotation.processing.ProcessingEnvironment;
+            import javax.lang.model.type.TypeMirror;
+
+            class Example {
+              boolean foo(ProcessingEnvironment env, TypeMirror type, String s) {
+                return type.toString().equals(s);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addModules("jdk.compiler/com.sun.tools.javac.code")
         .doTest();
   }
 }

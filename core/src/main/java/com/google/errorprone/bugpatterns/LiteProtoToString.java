@@ -110,12 +110,13 @@ public final class LiteProtoToString extends AbstractToString {
   }
 
   @Override
-  protected Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state) {
+  protected Optional<Fix> implicitToStringFix(ExpressionTree stringifiedExpr, VisitorState state) {
     return Optional.empty();
   }
 
   @Override
-  protected Optional<Fix> toStringFix(Tree parent, ExpressionTree tree, VisitorState state) {
+  protected Optional<Fix> toStringFix(
+      Tree toStringCall, ExpressionTree stringifiedExpr, VisitorState state) {
     return Optional.empty();
   }
 }

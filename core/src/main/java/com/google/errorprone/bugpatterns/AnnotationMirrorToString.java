@@ -53,24 +53,25 @@ public class AnnotationMirrorToString extends AbstractToString {
   }
 
   @Override
-  protected Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state) {
-    return fix(tree, tree, state);
+  protected Optional<Fix> implicitToStringFix(ExpressionTree stringifiedExpr, VisitorState state) {
+    return fix(stringifiedExpr, stringifiedExpr, state);
   }
 
   @Override
-  protected Optional<Fix> toStringFix(Tree parent, ExpressionTree tree, VisitorState state) {
-    return fix(parent, tree, state);
+  protected Optional<Fix> toStringFix(
+      Tree toStringCall, ExpressionTree stringifiedExpr, VisitorState state) {
+    return fix(toStringCall, stringifiedExpr, state);
   }
 
-  private static Optional<Fix> fix(Tree replace, Tree with, VisitorState state) {
+  private static Optional<Fix> fix(Tree toStringCall, Tree stringifiedExpr, VisitorState state) {
     SuggestedFix.Builder fix = SuggestedFix.builder();
     return Optional.of(
         fix.replace(
-                replace,
+                toStringCall,
                 String.format(
                     "%s.toString(%s)",
                     qualifyType(state, fix, "com.google.auto.common.AnnotationMirrors"),
-                    state.getSourceForNode(with)))
+                    state.getSourceForNode(stringifiedExpr)))
             .build());
   }
 }

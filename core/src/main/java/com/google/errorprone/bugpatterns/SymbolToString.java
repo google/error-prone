@@ -56,8 +56,8 @@ public class SymbolToString extends AbstractToString {
     if (!isBugCheckerCode(state)) {
       return false;
     }
-    Tree parentTree = state.getPath().getParentPath().getLeaf();
-    return IS_SYMBOL.apply(type, state) && STRING_EQUALS.matches(parentTree, state);
+    Tree equalsMethodSelect = state.getPath().getParentPath().getLeaf();
+    return IS_SYMBOL.apply(type, state) && STRING_EQUALS.matches(equalsMethodSelect, state);
   }
 
   @Inject
@@ -76,12 +76,13 @@ public class SymbolToString extends AbstractToString {
   }
 
   @Override
-  protected Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state) {
+  protected Optional<Fix> implicitToStringFix(ExpressionTree stringifiedExpr, VisitorState state) {
     return Optional.empty();
   }
 
   @Override
-  protected Optional<Fix> toStringFix(Tree parent, ExpressionTree tree, VisitorState state) {
+  protected Optional<Fix> toStringFix(
+      Tree toStringCall, ExpressionTree stringifiedExpr, VisitorState state) {
     return Optional.empty();
   }
 }

@@ -60,10 +60,10 @@ public class ArrayToString extends AbstractToString {
   }
 
   @Override
-  protected Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state) {
+  protected Optional<Fix> implicitToStringFix(ExpressionTree stringifiedExpr, VisitorState state) {
     // e.g. println(theArray) -> println(Arrays.toString(theArray))
     // or:  "" + theArray -> "" + Arrays.toString(theArray)
-    return toStringFix(tree, tree, state);
+    return toStringFix(stringifiedExpr, stringifiedExpr, state);
   }
 
   @Override
@@ -72,39 +72,42 @@ public class ArrayToString extends AbstractToString {
   }
 
   @Override
-  protected Optional<Fix> toStringFix(Tree parent, ExpressionTree tree, VisitorState state) {
+  protected Optional<Fix> toStringFix(
+      Tree toStringCall, ExpressionTree stringifiedExpr, VisitorState state) {
     // If the array is the result of calling e.getStackTrace(), replace
     // e.getStackTrace().toString() with Guava's Throwables.getStackTraceAsString(e).
-    if (GET_STACK_TRACE.matches(tree, state)) {
+    if (GET_STACK_TRACE.matches(stringifiedExpr, state)) {
       return Optional.of(
           SuggestedFix.builder()
               .addImport("com.google.common.base.Throwables")
               .replace(
-                  parent,
+                  toStringCall,
                   String.format(
                       "Throwables.getStackTraceAsString(%s)",
-                      state.getSourceForNode(ASTHelpers.getReceiver(tree))))
+                      state.getSourceForNode(ASTHelpers.getReceiver(stringifiedExpr))))
               .build());
     }
     // e.g. String.valueOf(theArray) -> Arrays.toString(theArray)
     // or:  theArray.toString() -> Arrays.toString(theArray)
     // or:  theArrayOfArrays.toString() -> Arrays.deepToString(theArrayOfArrays)
-    return fix(parent, tree, state);
+    return fix(toStringCall, stringifiedExpr, state);
   }
 
-  private static Optional<Fix> fix(Tree replace, Tree with, VisitorState state) {
-    String method = isNestedArray(with, state) ? "deepToString" : "toString";
+  private static Optional<Fix> fix(Tree toStringCall, Tree stringifiedExpr, VisitorState state) {
+    String method = isNestedArray(stringifiedExpr, state) ? "deepToString" : "toString";
 
     return Optional.of(
         SuggestedFix.builder()
             .addImport("java.util.Arrays")
-            .replace(replace, String.format("Arrays.%s(%s)", method, state.getSourceForNode(with)))
+            .replace(
+                toStringCall,
+                String.format("Arrays.%s(%s)", method, state.getSourceForNode(stringifiedExpr)))
             .build());
   }
 
-  private static boolean isNestedArray(Tree with, VisitorState state) {
+  private static boolean isNestedArray(Tree stringifiedExpr, VisitorState state) {
     Types types = state.getTypes();
-    Type withType = ASTHelpers.getType(with);
+    Type withType = ASTHelpers.getType(stringifiedExpr);
     return withType != null && types.isArray(withType) && types.isArray(types.elemtype(withType));
   }
 }

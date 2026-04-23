@@ -92,33 +92,37 @@ public class TreeToString extends AbstractToString {
   }
 
   @Override
-  protected Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state) {
-    return fix(tree, tree, state);
+  protected Optional<Fix> implicitToStringFix(ExpressionTree stringifiedExpr, VisitorState state) {
+    return fix(stringifiedExpr, stringifiedExpr, state);
   }
 
   @Override
-  protected Optional<Fix> toStringFix(Tree parent, ExpressionTree tree, VisitorState state) {
-    if (!(parent instanceof MethodInvocationTree methodInvocationTree)) {
+  protected Optional<Fix> toStringFix(
+      Tree toStringCall, ExpressionTree stringifiedExpr, VisitorState state) {
+    if (!(toStringCall instanceof MethodInvocationTree methodInvocationTree)) {
       return Optional.empty();
     }
     ExpressionTree receiver = getReceiver(methodInvocationTree);
     if (receiver == null) {
       return Optional.empty();
     }
-    return fix(receiver, parent, state);
+    return fix(receiver, toStringCall, state);
   }
 
-  private static Optional<Fix> fix(Tree target, Tree replace, VisitorState state) {
+  private static Optional<Fix> fix(Tree stringifiedExpr, Tree toStringCall, VisitorState state) {
     return FindIdentifiers.findAllIdents(state).stream()
         .filter(s -> isSubtype(s.type, COM_GOOGLE_ERRORPRONE_VISITORSTATE.get(state), state))
         .findFirst()
-        .map(s -> SuggestedFix.replace(replace, createStringReplacement(state, s, target)));
+        .map(
+            s ->
+                SuggestedFix.replace(
+                    toStringCall, createStringReplacement(state, s, stringifiedExpr)));
   }
 
   private static String createStringReplacement(
-      VisitorState state, VarSymbol visitorStateSymbol, Tree target) {
+      VisitorState state, VarSymbol visitorStateSymbol, Tree stringifiedExpr) {
     String visitorStateVariable = visitorStateSymbol.getSimpleName().toString();
-    if (target instanceof MethodInvocationTree targetMethodInvocationTree) {
+    if (stringifiedExpr instanceof MethodInvocationTree targetMethodInvocationTree) {
       if (TREEMAKER_LITERAL_CREATOR.matches(targetMethodInvocationTree, state)) {
         return String.format(
             "%s.getConstantExpression(%s)",
@@ -127,7 +131,7 @@ public class TreeToString extends AbstractToString {
       }
     }
     return String.format(
-        "%s.getSourceForNode(%s)", visitorStateVariable, state.getSourceForNode(target));
+        "%s.getSourceForNode(%s)", visitorStateVariable, state.getSourceForNode(stringifiedExpr));
   }
 
   private static final Supplier<Type> COM_GOOGLE_ERRORPRONE_VISITORSTATE =
