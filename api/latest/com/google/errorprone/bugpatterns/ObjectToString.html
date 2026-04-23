@@ -131,15 +131,15 @@ won't produce meaningful output.</div>
 <div class="block">Adds the description message for match on the type without fixes.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#implicitToStringFix(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">implicitToStringFix</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#implicitToStringFix(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">implicitToStringFix</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;stringifiedExpr,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Constructs a fix for an implicit toString call, e.g. from string concatenation or from passing
 an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">toStringFix</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;parent,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">toStringFix</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;toStringCall,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;stringifiedExpr,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Constructs a fix for an explicit toString call, e.g. from <code>Object.toString()</code> or <code>
@@ -209,7 +209,7 @@ String.valueOf()</code>.</div>
 <section class="detail" id="implicitToStringFix(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
 <h3>implicitToStringFix</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</span>&nbsp;<span class="element-name">implicitToStringFix</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</span>&nbsp;<span class="element-name">implicitToStringFix</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;stringifiedExpr,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="AbstractToString.html#implicitToStringFix(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">AbstractToString</a></code></span></div>
 <div class="block">Constructs a fix for an implicit toString call, e.g. from string concatenation or from passing
@@ -218,7 +218,7 @@ an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
 <dt>Specified by:</dt>
 <dd><code><a href="AbstractToString.html#implicitToStringFix(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">implicitToStringFix</a></code>&nbsp;in class&nbsp;<code><a href="AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></code></dd>
 <dt>Parameters:</dt>
-<dd><code>tree</code> - the tree node for the expression being converted to a String</dd>
+<dd><code>stringifiedExpr</code> - the tree node for the expression being converted to a String</dd>
 </dl>
 </div>
 </section>
@@ -227,8 +227,8 @@ an argument to <code>println</code> or <code>StringBuilder.append</code>.</div>
 <section class="detail" id="toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">
 <h3>toStringFix</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</span>&nbsp;<span class="element-name">toStringFix</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;parent,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;tree,
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</span>&nbsp;<span class="element-name">toStringFix</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;toStringCall,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;stringifiedExpr,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
 <div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="AbstractToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">AbstractToString</a></code></span></div>
 <div class="block">Constructs a fix for an explicit toString call, e.g. from <code>Object.toString()</code> or <code>
@@ -237,7 +237,11 @@ String.valueOf()</code>.</div>
 <dt>Specified by:</dt>
 <dd><code><a href="AbstractToString.html#toStringFix(com.sun.source.tree.Tree,com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)">toStringFix</a></code>&nbsp;in class&nbsp;<code><a href="AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></code></dd>
 <dt>Parameters:</dt>
-<dd><code>parent</code> - the expression's parent (e.g. <code>String.valueOf(expression)</code>)</dd>
+<dd><code>toStringCall</code> - the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodInvocationTree</code></a> corresponding to the explicit string
+    conversion: either <code>x.toString()</code> or <code>String.valueOf(x)</code></dd>
+<dd><code>stringifiedExpr</code> - the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ExpressionTree</code></a> that is being converted to a string (the
+    receiver <code>x</code> in <code>x.toString()</code>, or the argument <code>x</code> in <code>
+    String.valueOf(x)</code>)</dd>
 </dl>
 </div>
 </section>

@@ -1395,7 +1395,7 @@ __[TruthIncompatibleType](bugpattern/TruthIncompatibleType)__<br>
 Argument is not compatible with the subject&#39;s type.
 
 __[TypeEquals](bugpattern/TypeEquals)__<br>
-com.sun.tools.javac.code.Type doesn&#39;t override Object.equals and instances are not interned by javac, so testing types for equality should be done with Types#isSameType instead
+TypeMirror should be compared using Types#isSameType, not equality operators or equals().
 
 __[TypeNameShadowing](bugpattern/TypeNameShadowing)__<br>
 Type parameter declaration shadows another named type

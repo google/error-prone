@@ -1,8 +1,7 @@
 ---
 title: TypeEquals
-summary: com.sun.tools.javac.code.Type doesn't override Object.equals and instances
-  are not interned by javac, so testing types for equality should be done with Types#isSameType
-  instead
+summary: TypeMirror should be compared using Types#isSameType, not equality operators
+  or equals().
 layout: bugpattern
 tags: ''
 severity: WARNING
@@ -26,6 +25,9 @@ instance from `VisitorState`.
 
 If you're implementing `AnnotationProcessor`, you can get the `Types` instance
 from `javax.annotation.processing.ProcessingEnvironment`.
+
+For more discussion of preferred APIs for comparing types, see
+https://errorprone.info/bugpattern/TypeToString
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("TypeEquals")` to the enclosing element.
