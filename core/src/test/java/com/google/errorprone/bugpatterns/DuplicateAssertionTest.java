@@ -309,6 +309,7 @@ public final class DuplicateAssertionTest {
             "Test.java",
             """
             import static com.google.common.base.Preconditions.checkNotNull;
+
             class Test {
               void test(Object foo) {
                 checkNotNull(foo).toString();
@@ -331,6 +332,145 @@ public final class DuplicateAssertionTest {
               void test(int i, int size1, int size2) {
                 Preconditions.checkElementIndex(i, size1);
                 Preconditions.checkElementIndex(i, size2);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void truth_variousStyles() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.OptionalSubject.optionals;
+            import static com.google.common.truth.Truth.assertAbout;
+            import static com.google.common.truth.Truth.assertWithMessage;
+            import static com.google.common.truth.Truth.assert_;
+
+            import java.util.Optional;
+
+            class Test {
+              public void test(Optional<String> s) {
+                assert_().that(s).isPresent();
+                // BUG: Diagnostic contains:
+                assert_().that(s).isPresent();
+
+                assertWithMessage("msg").that(s).isPresent();
+                // BUG: Diagnostic contains:
+                assertWithMessage("msg").that(s).isPresent();
+
+                assertAbout(optionals()).that(s).isPresent();
+                // BUG: Diagnostic contains:
+                assertAbout(optionals()).that(s).isPresent();
+
+                assertWithMessage("msg").about(optionals()).that(s).isPresent();
+                // BUG: Diagnostic contains:
+                assertWithMessage("msg").about(optionals()).that(s).isPresent();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void truth_expectAndAssume() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.OptionalSubject.optionals;
+            import static com.google.common.truth.TruthJUnit.assume;
+
+            import com.google.common.truth.Expect;
+            import java.util.Optional;
+            import org.junit.Rule;
+
+            class Test {
+              @Rule public final Expect expect = Expect.create();
+
+              public void test(Optional<String> s) {
+                expect.that(s).isPresent();
+                // BUG: Diagnostic contains:
+                expect.that(s).isPresent();
+
+                assume().that(s).isPresent();
+                // BUG: Diagnostic contains:
+                assume().that(s).isPresent();
+
+                expect.about(optionals()).that(s).isPresent();
+                // BUG: Diagnostic contains:
+                expect.about(optionals()).that(s).isPresent();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void truth_withArguments() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import java.util.List;
+
+            class Test {
+              public void test(List<Integer> list) {
+                assertThat(list).containsAtLeast(1, 2);
+                // BUG: Diagnostic contains:
+                assertThat(list).containsAtLeast(1, 2);
+
+                assertThat(list).containsAtLeast(1, 2).inOrder();
+                // BUG: Diagnostic contains:
+                assertThat(list).containsAtLeast(1, 2).inOrder();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void truth_withDifferentArguments_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import java.util.List;
+
+            class Test {
+              public void test(List<Integer> list) {
+                assertThat(list).containsAtLeast(1, 2);
+                assertThat(list).containsAtLeast(1, 3);
+
+                assertThat(list).containsAtLeast(1, 2).inOrder();
+                assertThat(list).containsAtLeast(2, 1).inOrder();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void protoTruth() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+
+            import com.google.protobuf.Message;
+
+            class Test {
+              public void test(Message message) {
+                assertThat(message).hasAllRequiredFields();
+                // BUG: Diagnostic contains:
+                assertThat(message).hasAllRequiredFields();
               }
             }
             """)
