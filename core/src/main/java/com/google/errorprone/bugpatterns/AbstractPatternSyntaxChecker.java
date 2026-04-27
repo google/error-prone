@@ -58,7 +58,11 @@ public abstract class AbstractPatternSyntaxChecker extends BugChecker
               .onClass("java.util.regex.Pattern")
               .named("compile")
               .withParameters("java.lang.String"),
-          staticMethod().onClass("com.google.common.base.Splitter").named("onPattern"));
+          staticMethod().onClass("com.google.common.base.Splitter").named("onPattern"),
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.StringSubject")
+              .namedAnyOf("matches", "doesNotMatch", "containsMatch", "doesNotContainMatch")
+              .withParameters("java.lang.String"));
 
   private static final Matcher<MethodInvocationTree> REGEX_USAGE_WITH_FLAGS =
       anyOf(
