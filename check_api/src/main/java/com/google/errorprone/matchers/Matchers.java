@@ -16,6 +16,7 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
@@ -1391,9 +1392,29 @@ public class Matchers {
     return packageMatches(pattern.asPredicate());
   }
 
-  /** Matches an AST node whose compilation unit starts with this prefix. */
-  public static <T extends Tree> Matcher<T> packageStartsWith(String prefix) {
-    return packageMatches(s -> s.startsWith(prefix));
+  /**
+   * Matches an AST node whose compilation unit's package name equals the given package name or is a
+   * subpackage of the given package name.
+   *
+   * <p>For example, {@code packageStartsWith("com.google")} will match:
+   *
+   * <ul>
+   *   <li>{@code com.google}
+   *   <li>{@code com.google.common}
+   *   <li>{@code com.google.common.collect}
+   * </ul>
+   *
+   * but it will <b>not</b> match {@code com.googlebutnotreallygoogle}.
+   */
+  // TODO(kak): Consider renaming this to something like packageOrSubpackageOf()?
+  public static <T extends Tree> Matcher<T> packageStartsWith(String packageName) {
+    checkArgument(!packageName.isEmpty(), "Package name cannot be empty");
+    return (tree, state) -> {
+      String packageFullName = getPackageFullName(state);
+      return packageFullName.startsWith(packageName)
+          && (packageFullName.length() == packageName.length()
+              || packageFullName.charAt(packageName.length()) == '.');
+    };
   }
 
   private static String getPackageFullName(VisitorState state) {
