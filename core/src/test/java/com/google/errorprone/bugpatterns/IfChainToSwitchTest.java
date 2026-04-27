@@ -4190,6 +4190,252 @@ class Test {
         .doTest();
   }
 
+  @Test
+  public void ifChain_groupingInstanceof_error() {
+    // instanceofs can be grouped in later versions of Java.  Note that in this test, the order of
+    // Number and Object must be swapped due to dominance rules.
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Integer integer = s == null ? 0 : 1;
+                Object i = integer;
+                if (i instanceof Float) {
+                  System.out.println("It's a float");
+                } else if (i instanceof Object || i instanceof Number) {
+                  System.out.println("It's a number or object!");
+                } else if (i instanceof Integer) {
+                  System.out.println("It's an integer");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+class Test {
+  public void foo(Suit s) {
+    Integer integer = s == null ? 0 : 1;
+    Object i = integer;
+    if (i instanceof Float) {
+      System.out.println("It's a float");
+    } else if (i instanceof Object || i instanceof Number) {
+      System.out.println("It's a number or object!");
+    } else if (i instanceof Integer) {
+      System.out.println("It's an integer");
+    }
+  }
+}
+""")
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_groupingInstanceofSafe_noError() {
+    // cases cannot be reordered in safe mode
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Integer integer = s == null ? 0 : 1;
+                Object i = integer;
+                if (i instanceof Float) {
+                  System.out.println("It's a float");
+                } else if (i instanceof Object || i instanceof Number) {
+                  System.out.println("It's a number or object!");
+                } else if (i instanceof Integer) {
+                  System.out.println("It's an integer");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_groupingInstanceofPatternVariable_noError() {
+    // Bound patterns cannot be grouped (which binding would be used?)
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Integer integer = s == null ? 0 : 1;
+                Object i = integer;
+                if (i instanceof Float) {
+                  System.out.println("It's a float");
+                } else if (i instanceof Object || i instanceof Number n) {
+                  System.out.println("It's a number or object!");
+                } else if (i instanceof Integer) {
+                  System.out.println("It's an integer");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_groupingInstanceofDuplicated_noError() {
+    //  Duplication of `Object` should not be allowed
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Integer integer = s == null ? 0 : 1;
+                Object i = integer;
+                if (i instanceof Float) {
+                  System.out.println("It's a float");
+                } else if (i instanceof Object || i instanceof Number || i instanceof Object) {
+                  System.out.println("It's a number or object!");
+                } else if (i instanceof Integer) {
+                  System.out.println("It's an integer");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_groupingInstanceofSubjectMismatch_noError() {
+    //  instanceof subject must match between || terms
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Integer integer = s == null ? 0 : 1;
+                Object i = integer;
+                if (i instanceof Float) {
+                  System.out.println("It's a float");
+                } else if (i instanceof Object || i instanceof Number || s instanceof Object) {
+                  System.out.println("It's a number or object!");
+                } else if (i instanceof Integer) {
+                  System.out.println("It's an integer");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_groupingInstanceofEarlyJava_noError() {
+    // Earlier Java versions do not support multiple patterns in the same case
+    assume().that(Runtime.version().feature()).isLessThan(22);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Integer integer = s == null ? 0 : 1;
+                Object i = integer;
+                if (i instanceof Float) {
+                  System.out.println("It's a float");
+                } else if (i instanceof Object || i instanceof Number) {
+                  System.out.println("It's a number or object!");
+                } else if (i instanceof Integer) {
+                  System.out.println("It's an integer");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_groupingInstanceofNoReorderSafe_error() {
+    // Similar to ifChain_groupingInstanceof_error, but needing no reordering of cases is needed in
+    // safe mode, which allows the result to be produced
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s) {
+                Integer integer = s == null ? 0 : 1;
+                Object i = integer;
+                if (i instanceof Float) {
+                  System.out.println("It's a float");
+                } else if (i instanceof Integer) {
+                  System.out.println("It's an integer");
+                } else if (i instanceof Number || i instanceof Object) {
+                  System.out.println("It's a number or object!");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+"""
+class Test {
+  public void foo(Suit s) {
+    Integer integer = s == null ? 0 : 1;
+    Object i = integer;
+    if (i instanceof Float) {
+      System.out.println("It's a float");
+    } else if (i instanceof Integer) {
+      System.out.println("It's an integer");
+    } else if (i instanceof Number || i instanceof Object) {
+      System.out.println("It's a number or object!");
+    }
+  }
+}
+""")
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_allGroupedInstanceOf_error() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    // All cases are multiple instanceofs
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof Integer || o instanceof Float) {
+                  System.out.println("1");
+                } else if (o instanceof Double || o instanceof Long) {
+                  System.out.println("2");
+                } else if (o instanceof Short || o instanceof Byte) {
+                  System.out.println("3");
+                } else {
+                  System.out.println("4");
+                }
+              }
+            }
+            """)
+        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .doTest();
+  }
+
   /** Substitute underscore for {@code unused} variables, if supported. */
   private static String maybeChangeToUnnamedVariable(String s) {
     if (Runtime.version().feature() >= 22) {
