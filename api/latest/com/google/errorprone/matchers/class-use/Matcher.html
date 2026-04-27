@@ -1048,9 +1048,10 @@ given matcher.</div>
 <div class="block">Matches an AST node whose compilation unit's package name matches the given pattern.</div>
 </div>
 <div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#packageStartsWith(java.lang.String)" class="member-name-link">packageStartsWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#packageStartsWith(java.lang.String)" class="member-name-link">packageStartsWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;packageName)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Matches an AST node whose compilation unit starts with this prefix.</div>
+<div class="block">Matches an AST node whose compilation unit's package name equals the given package name or is a
+subpackage of the given package name.</div>
 </div>
 <div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#parentNode(com.google.errorprone.matchers.Matcher)" class="member-name-link">parentNode</a><wbr>(<a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;treeMatcher)</code></div>

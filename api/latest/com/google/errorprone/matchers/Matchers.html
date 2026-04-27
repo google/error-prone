@@ -864,9 +864,10 @@ given matcher.</div>
 <div class="block">Matches an AST node whose compilation unit's package name matches the given pattern.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#packageStartsWith(java.lang.String)" class="member-name-link">packageStartsWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#packageStartsWith(java.lang.String)" class="member-name-link">packageStartsWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;packageName)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Matches an AST node whose compilation unit starts with this prefix.</div>
+<div class="block">Matches an AST node whose compilation unit's package name equals the given package name or is a
+subpackage of the given package name.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#parentNode(com.google.errorprone.matchers.Matcher)" class="member-name-link">parentNode</a><wbr>(<a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;treeMatcher)</code></div>
@@ -2449,8 +2450,19 @@ isDirectImplementationOf(I1).match(\/*class tree for C*\/); // will not match </
 <section class="detail" id="packageStartsWith(java.lang.String)">
 <h3>packageStartsWith</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">packageStartsWith</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix)</span></div>
-<div class="block">Matches an AST node whose compilation unit starts with this prefix.</div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;T&gt;</span>&nbsp;<span class="element-name">packageStartsWith</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;packageName)</span></div>
+<div class="block">Matches an AST node whose compilation unit's package name equals the given package name or is a
+subpackage of the given package name.
+
+<p>For example, <code>packageStartsWith("com.google")</code> will match:
+
+<ul>
+  <li><code>com.google</code>
+  <li><code>com.google.common</code>
+  <li><code>com.google.common.collect</code>
+</ul>
+
+but it will <b>not</b> match <code>com.googlebutnotreallygoogle</code>.</div>
 </div>
 </section>
 </li>
