@@ -6,8 +6,8 @@ layout: documentation
 Our goal is to make it simple to add Error Prone checks to your existing Java
 compilation. Please note that Error Prone must be run on JDK 21 or newer. (It
 can still be used to build Java 8 code by setting the appropriate `-source` /
-`-target` / `-bootclasspath` or `--release` flags.)\
-If you still have to build with an older JDK version you can use
+`-target` / `-bootclasspath` or `--release` flags.) If you still have to build
+with an older JDK version you can use
 [older unmaintained Error Prone versions](#running-error-prone-on-earlier-jdk-versions).
 
 Please join our
@@ -16,7 +16,7 @@ when a new version is released!
 
 ## Bazel
 
-Error Prone works out of the box with [Bazel](https://bazel.io).
+Error Prone works out of the box with [Bazel](https://bazel.build).
 
 ```
 java_library(
@@ -115,8 +115,8 @@ file:
 --add-opens jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED
 ```
 
-See the [flags documentation](https://errorprone.info/docs/flags#maven) for details on
-how to customize the plugin's behavior.
+See the [flags documentation](https://errorprone.info/docs/flags#maven) for
+details on how to customize the plugin's behavior.
 
 ## Gradle
 

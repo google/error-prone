@@ -116,12 +116,12 @@ public class MyChecker extends BugChecker implements SomeTreeMatcher {
 
 ## Configuration file
 
-All arguments that are passed as `-Xep*` after `-Xplugin:ErrorProne` can also
-be passed through a configuration file using `@`.
+All arguments that are passed as `-Xep*` after `-Xplugin:ErrorProne` can also be
+passed through a configuration file using `@`.
 
-This allows easier sharing of errorprone configurations between various
-build systems (cli, maven, gradle, bazel, etc) and works around platform
-dependent line wrapping rules.
+This allows easier sharing of errorprone configurations between various build
+systems (cli, maven, gradle, bazel, etc) and works around platform-dependent
+line wrapping rules.
 
 The configuration file allows `#` as comment, both full line and inline.
 
@@ -151,13 +151,13 @@ Using it in command line:
 @~/project/errorprone.cfg
 ```
 
-NOTE: the `~` in the example above will not work in Windows, or Gradle,
-or Maven, as it is expanded by the shell. \
-You will need to use the methods specific to your platform and build system.
+NOTE: The `~` in the example above will not work in Windows, or Gradle, or
+Maven, as it is expanded by the shell. You will need to use the methods specific
+to your platform and build system.
 
-NOTE: it is supported to pass a mixture of flags and several arguments files.
-The final value of a flag will be the one set that last time, regardless if
-that was done in directly or in am arguments file.
+NOTE: It is supported to pass a mixture of flags and several arguments files.
+The final value of a flag will be the one set that last time, regardless of
+whether that was done directly or in an arguments file.
 
 ## Maven
 
@@ -210,6 +210,7 @@ NOTE: using an argument file (with `@`) allows bypassing this line wrapping bug:
   <arg>-Xplugin:ErrorProne @${project.basedir}/errorprone.cfg</arg>
 </compilerArgs>
 ```
+
 And move the flags to `errorprone.cfg`:
 
 ```
