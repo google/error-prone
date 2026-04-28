@@ -43,7 +43,6 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.UnionTypeTree;
-import com.sun.source.util.TreeScanner;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,9 +60,10 @@ public class TryFailRefactoring extends BugChecker implements MethodTreeMatcher 
     }
     VariableNamer namer = variableNamer(state);
     // Find matching try-fail blocks and report fixes
-    new TreeScanner<Void, Void>() {
+    new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
       public Void visitTry(TryTree tree, Void unused) {
+        VisitorState tryState = state.withPath(getCurrentPath());
         List<? extends StatementTree> body = tree.getBlock().getStatements();
         if (body.isEmpty() || tree.getFinallyBlock() != null || tree.getCatches().size() != 1) {
           // TODO(cushon): support finally
@@ -75,7 +75,7 @@ public class TryFailRefactoring extends BugChecker implements MethodTreeMatcher 
           // TODO(cushon): handle multi-catch
           return super.visitTry(tree, null);
         }
-        if (!FAIL_METHOD.matches(getLast(body), state)) {
+        if (!FAIL_METHOD.matches(getLast(body), tryState)) {
           return super.visitTry(tree, null);
         }
         // try body statements, excluding the trailing `fail()`
@@ -86,11 +86,11 @@ public class TryFailRefactoring extends BugChecker implements MethodTreeMatcher 
         Optional<Tree> message = Optional.ofNullable(Iterables.get(failArgs, 0, null));
         Optional<Fix> fix =
             AssertThrowsUtils.tryFailToAssertThrows(
-                tree, throwingStatements, message, state, namer);
-        fix.ifPresent(f -> state.reportMatch(describeMatch(tree, f)));
+                tree, throwingStatements, message, tryState, namer);
+        fix.ifPresent(f -> tryState.reportMatch(describeMatch(tree, f)));
         return super.visitTry(tree, null);
       }
-    }.scan(methodTree.getBody(), null);
+    }.scan(state.getPath(), null);
     return NO_MATCH;
   }
 }
