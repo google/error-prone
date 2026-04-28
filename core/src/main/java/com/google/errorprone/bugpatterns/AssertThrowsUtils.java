@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.errorprone.fixes.SuggestedFixes.renameVariableUsages;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.stream.Collectors.joining;
 
@@ -25,6 +26,7 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes.VariableNamer;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -74,7 +76,8 @@ public final class AssertThrowsUtils {
       TryTree tryTree,
       List<? extends StatementTree> throwingStatements,
       Optional<Tree> failureMessage,
-      VisitorState state) {
+      VisitorState state,
+      VariableNamer namer) {
     List<? extends CatchTree> catchTrees = tryTree.getCatches();
     if (catchTrees.size() != 1) {
       return Optional.empty();
@@ -95,8 +98,14 @@ public final class AssertThrowsUtils {
       fixSuffix = "\n}";
     }
     if (!catchStatements.isEmpty()) {
-      // TODO(cushon): pick a fresh name for the variable, if necessary
-      fixPrefix.append(String.format("%s = ", state.getSourceForNode(catchTree.getParameter())));
+      String name = catchTree.getParameter().getName().toString();
+      String newName = namer.avoidShadowing(name);
+      if (!name.equals(newName)) {
+        fix.merge(renameVariableUsages(catchTree.getParameter(), newName, state));
+      }
+      fixPrefix.append(
+          String.format(
+              "%s %s = ", state.getSourceForNode(catchTree.getParameter().getType()), newName));
     }
     fixPrefix.append(
         String.format(

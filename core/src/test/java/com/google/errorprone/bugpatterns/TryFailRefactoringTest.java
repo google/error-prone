@@ -294,8 +294,6 @@ public class TryFailRefactoringTest {
   @Test
   public void twoTryFailBlocksSameScope() {
     testHelper
-        // TODO(b/507350725): remove this and fix the bug!
-        .allowBreakingChanges()
         .addInputLines(
             "in/ExceptionTest.java",
             """
@@ -346,8 +344,8 @@ public class TryFailRefactoringTest {
                 Path p = Paths.get("NOSUCH");
                 IOException e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
                 assertThat(e).hasMessageThat().contains("NOSUCH");
-                IOException e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
-                assertThat(e).hasMessageThat().contains("NOSUCH");
+                IOException e2 = assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                assertThat(e2).hasMessageThat().contains("NOSUCH");
               }
             }
             """)

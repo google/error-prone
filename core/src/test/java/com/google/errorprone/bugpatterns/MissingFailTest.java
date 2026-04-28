@@ -1061,4 +1061,63 @@ public class MissingFailNegativeCases extends TestCase {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void twoTryFailBlocksSameScope() {
+    refactoringHelper
+        // TODO(b/507350725): remove this and fix the bug!
+        .allowBreakingChanges()
+        .addInputLines(
+            "in/ExceptionTest.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import java.io.IOException;
+            import java.nio.file.Files;
+            import java.nio.file.Path;
+            import java.nio.file.Paths;
+            import org.junit.Test;
+
+            class ExceptionTest {
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                try {
+                  Files.readAllBytes(p);
+                } catch (IOException e) {
+                  assertThat(e).hasMessageThat().contains("NOSUCH");
+                }
+                try {
+                  Files.readAllBytes(p);
+                } catch (IOException e) {
+                  assertThat(e).hasMessageThat().contains("NOSUCH");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/ExceptionTest.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.junit.Assert.assertThrows;
+
+            import java.io.IOException;
+            import java.nio.file.Files;
+            import java.nio.file.Path;
+            import java.nio.file.Paths;
+            import org.junit.Test;
+
+            class ExceptionTest {
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                IOException e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                assertThat(e).hasMessageThat().contains("NOSUCH");
+                IOException e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                assertThat(e).hasMessageThat().contains("NOSUCH");
+              }
+            }
+            """)
+        .doTest();
+  }
 }

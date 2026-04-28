@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.BugPattern.StandardTags.REFACTORING;
+import static com.google.errorprone.fixes.SuggestedFixes.variableNamer;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -27,8 +28,9 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.Fix;
+import com.google.errorprone.fixes.SuggestedFixes.VariableNamer;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
@@ -41,44 +43,54 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.UnionTypeTree;
+import com.sun.source.util.TreeScanner;
 import java.util.List;
 import java.util.Optional;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Prefer assertThrows to try/fail", severity = SUGGESTION, tags = REFACTORING)
-public class TryFailRefactoring extends BugChecker implements TryTreeMatcher {
+public class TryFailRefactoring extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<StatementTree> FAIL_METHOD =
       expressionStatement(staticMethod().anyClass().named("fail"));
 
   @Override
-  public Description matchTry(TryTree tree, VisitorState state) {
-    MethodTree enclosingMethod = state.findEnclosing(MethodTree.class);
-    if (enclosingMethod == null || !JUnitMatchers.TEST_CASE.matches(enclosingMethod, state)) {
+  public Description matchMethod(MethodTree methodTree, VisitorState state) {
+    if (methodTree.getBody() == null || !JUnitMatchers.TEST_CASE.matches(methodTree, state)) {
       return NO_MATCH;
     }
-    List<? extends StatementTree> body = tree.getBlock().getStatements();
-    if (body.isEmpty() || tree.getFinallyBlock() != null || tree.getCatches().size() != 1) {
-      // TODO(cushon): support finally
-      // TODO(cushon): support multiple catch blocks
-      return NO_MATCH;
-    }
-    CatchTree catchTree = getOnlyElement(tree.getCatches());
-    if (catchTree.getParameter().getType() instanceof UnionTypeTree) {
-      // TODO(cushon): handle multi-catch
-      return NO_MATCH;
-    }
-    if (!FAIL_METHOD.matches(getLast(body), state)) {
-      return NO_MATCH;
-    }
-    // try body statements, excluding the trailing `fail()`
-    List<? extends StatementTree> throwingStatements = body.subList(0, body.size() - 1);
-    List<? extends ExpressionTree> failArgs =
-        ((MethodInvocationTree) ((ExpressionStatementTree) getLast(body)).getExpression())
-            .getArguments();
-    Optional<Tree> message = Optional.ofNullable(Iterables.get(failArgs, 0, null));
-    Optional<Fix> fix =
-        AssertThrowsUtils.tryFailToAssertThrows(tree, throwingStatements, message, state);
-    return fix.map(f -> describeMatch(tree, f)).orElse(NO_MATCH);
+    VariableNamer namer = variableNamer(state);
+    // Find matching try-fail blocks and report fixes
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitTry(TryTree tree, Void unused) {
+        List<? extends StatementTree> body = tree.getBlock().getStatements();
+        if (body.isEmpty() || tree.getFinallyBlock() != null || tree.getCatches().size() != 1) {
+          // TODO(cushon): support finally
+          // TODO(cushon): support multiple catch blocks
+          return super.visitTry(tree, null);
+        }
+        CatchTree catchTree = getOnlyElement(tree.getCatches());
+        if (catchTree.getParameter().getType() instanceof UnionTypeTree) {
+          // TODO(cushon): handle multi-catch
+          return super.visitTry(tree, null);
+        }
+        if (!FAIL_METHOD.matches(getLast(body), state)) {
+          return super.visitTry(tree, null);
+        }
+        // try body statements, excluding the trailing `fail()`
+        List<? extends StatementTree> throwingStatements = body.subList(0, body.size() - 1);
+        List<? extends ExpressionTree> failArgs =
+            ((MethodInvocationTree) ((ExpressionStatementTree) getLast(body)).getExpression())
+                .getArguments();
+        Optional<Tree> message = Optional.ofNullable(Iterables.get(failArgs, 0, null));
+        Optional<Fix> fix =
+            AssertThrowsUtils.tryFailToAssertThrows(
+                tree, throwingStatements, message, state, namer);
+        fix.ifPresent(f -> state.reportMatch(describeMatch(tree, f)));
+        return super.visitTry(tree, null);
+      }
+    }.scan(methodTree.getBody(), null);
+    return NO_MATCH;
   }
 }

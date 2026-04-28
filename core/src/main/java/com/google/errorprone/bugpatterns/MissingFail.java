@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.fixes.SuggestedFixes.variableNamer;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4TestCases;
@@ -231,7 +232,8 @@ public class MissingFail extends BugChecker implements TryTreeMatcher {
       StatementTree lastTryStatement = tryStatements.getLast();
 
       Optional<Fix> assertThrowsFix =
-          AssertThrowsUtils.tryFailToAssertThrows(tree, tryStatements, Optional.empty(), state);
+          AssertThrowsUtils.tryFailToAssertThrows(
+              tree, tryStatements, Optional.empty(), state, variableNamer(state));
       Fix failFix = addFailCall(tree, lastTryStatement, state);
       return buildDescription(lastTryStatement)
           .addFix(assertThrowsFix.orElse(SuggestedFix.emptyFix()))
