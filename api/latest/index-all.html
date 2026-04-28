@@ -9359,6 +9359,8 @@ and methods that return an AutoCloseable.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ToStringReturnsNull.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod(MethodTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ToStringReturnsNull.html" title="class in com.google.errorprone.bugpatterns">ToStringReturnsNull</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/TryFailRefactoring.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod(MethodTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TryFailRefactoring.html" title="class in com.google.errorprone.bugpatterns">TryFailRefactoring</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TypeNameShadowing.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod(MethodTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeNameShadowing.html" title="class in com.google.errorprone.bugpatterns">TypeNameShadowing</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TypeParameterShadowing.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod(MethodTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeParameterShadowing.html" title="class in com.google.errorprone.bugpatterns">TypeParameterShadowing</a></dt>
@@ -10104,8 +10106,6 @@ statementMatcher</code>.</div>
 <dt><a href="com/google/errorprone/bugpatterns/InterruptedExceptionSwallowed.html#matchTry(com.sun.source.tree.TryTree,com.google.errorprone.VisitorState)" class="member-name-link">matchTry(TryTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/InterruptedExceptionSwallowed.html" title="class in com.google.errorprone.bugpatterns">InterruptedExceptionSwallowed</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/MissingFail.html#matchTry(com.sun.source.tree.TryTree,com.google.errorprone.VisitorState)" class="member-name-link">matchTry(TryTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MissingFail.html" title="class in com.google.errorprone.bugpatterns">MissingFail</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/TryFailRefactoring.html#matchTry(com.sun.source.tree.TryTree,com.google.errorprone.VisitorState)" class="member-name-link">matchTry(TryTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TryFailRefactoring.html" title="class in com.google.errorprone.bugpatterns">TryFailRefactoring</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TryFailThrowable.html#matchTry(com.sun.source.tree.TryTree,com.google.errorprone.VisitorState)" class="member-name-link">matchTry(TryTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TryFailThrowable.html" title="class in com.google.errorprone.bugpatterns">TryFailThrowable</a></dt>
 <dd>&nbsp;</dd>
@@ -14597,7 +14597,7 @@ expression is true.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/TryFailThrowable.html#%3Cinit%3E()" class="member-name-link">TryFailThrowable()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TryFailThrowable.html" title="class in com.google.errorprone.bugpatterns">TryFailThrowable</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/AssertThrowsUtils.html#tryFailToAssertThrows(com.sun.source.tree.TryTree,java.util.List,java.util.Optional,com.google.errorprone.VisitorState)" class="member-name-link">tryFailToAssertThrows(TryTree, List, Optional, VisitorState)</a> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AssertThrowsUtils.html" title="class in com.google.errorprone.bugpatterns">AssertThrowsUtils</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/AssertThrowsUtils.html#tryFailToAssertThrows(com.sun.source.tree.TryTree,java.util.List,java.util.Optional,com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFixes.VariableNamer)" class="member-name-link">tryFailToAssertThrows(TryTree, List, Optional, VisitorState, SuggestedFixes.VariableNamer)</a> - Static method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AssertThrowsUtils.html" title="class in com.google.errorprone.bugpatterns">AssertThrowsUtils</a></dt>
 <dd>
 <div class="block">Transforms a try-catch block in the try-fail pattern into a call to JUnit's <code>
 assertThrows</code>, inserting the behavior of the <code>try</code> block into a lambda parameter, and

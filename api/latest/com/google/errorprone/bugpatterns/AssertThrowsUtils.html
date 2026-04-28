@@ -58,7 +58,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#tryFailToAssertThrows(com.sun.source.tree.TryTree,java.util.List,java.util.Optional,com.google.errorprone.VisitorState)" tabindex="0">tryFailToAssertThrows(TryTree, List, Optional, VisitorState)</a></li>
+<li><a href="#tryFailToAssertThrows(com.sun.source.tree.TryTree,java.util.List,java.util.Optional,com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFixes.VariableNamer)" tabindex="0">tryFailToAssertThrows(TryTree, List, Optional, VisitorState, SuggestedFixes.VariableNamer)</a></li>
 </ol>
 </li>
 </ol>
@@ -94,10 +94,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#tryFailToAssertThrows(com.sun.source.tree.TryTree,java.util.List,java.util.Optional,com.google.errorprone.VisitorState)" class="member-name-link">tryFailToAssertThrows</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/TryTree.html" title="class or interface in com.sun.source.tree" class="external-link">TryTree</a>&nbsp;tryTree,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#tryFailToAssertThrows(com.sun.source.tree.TryTree,java.util.List,java.util.Optional,com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFixes.VariableNamer)" class="member-name-link">tryFailToAssertThrows</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/TryTree.html" title="class or interface in com.sun.source.tree" class="external-link">TryTree</a>&nbsp;tryTree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;&nbsp;throwingStatements,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;failureMessage,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ <a href="../fixes/SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a>&nbsp;namer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Transforms a try-catch block in the try-fail pattern into a call to JUnit's <code>
 assertThrows</code>, inserting the behavior of the <code>try</code> block into a lambda parameter, and
@@ -121,13 +122,14 @@ assigning the expected exception to a variable, if it is used within the <code>c
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="tryFailToAssertThrows(com.sun.source.tree.TryTree,java.util.List,java.util.Optional,com.google.errorprone.VisitorState)">
+<section class="detail" id="tryFailToAssertThrows(com.sun.source.tree.TryTree,java.util.List,java.util.Optional,com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFixes.VariableNamer)">
 <h3>tryFailToAssertThrows</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a>&gt;</span>&nbsp;<span class="element-name">tryFailToAssertThrows</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/TryTree.html" title="class or interface in com.sun.source.tree" class="external-link">TryTree</a>&nbsp;tryTree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;&nbsp;throwingStatements,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;failureMessage,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ <a href="../fixes/SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a>&nbsp;namer)</span></div>
 <div class="block">Transforms a try-catch block in the try-fail pattern into a call to JUnit's <code>
 assertThrows</code>, inserting the behavior of the <code>try</code> block into a lambda parameter, and
 assigning the expected exception to a variable, if it is used within the <code>catch</code> block.
