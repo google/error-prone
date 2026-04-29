@@ -4220,12 +4220,10 @@ class Test {
   public void foo(Suit s) {
     Integer integer = s == null ? 0 : 1;
     Object i = integer;
-    if (i instanceof Float) {
-      System.out.println("It's a float");
-    } else if (i instanceof Object || i instanceof Number) {
-      System.out.println("It's a number or object!");
-    } else if (i instanceof Integer) {
-      System.out.println("It's an integer");
+    switch (i) {
+      case Float _ -> System.out.println("It's a float");
+      case Integer _ -> System.out.println("It's an integer");
+      case Number _, Object _ -> System.out.println("It's a number or object!");
     }
   }
 }
@@ -4395,12 +4393,10 @@ class Test {
   public void foo(Suit s) {
     Integer integer = s == null ? 0 : 1;
     Object i = integer;
-    if (i instanceof Float) {
-      System.out.println("It's a float");
-    } else if (i instanceof Integer) {
-      System.out.println("It's an integer");
-    } else if (i instanceof Number || i instanceof Object) {
-      System.out.println("It's a number or object!");
+    switch (i) {
+      case Float _ -> System.out.println("It's a float");
+      case Integer _ -> System.out.println("It's an integer");
+      case Number _, Object _ -> System.out.println("It's a number or object!");
     }
   }
 }
@@ -4420,6 +4416,7 @@ class Test {
             """
             class Test {
               public void foo(Object o) {
+                // BUG: Diagnostic contains: This if-chain may be converted into a switch
                 if (o instanceof Integer || o instanceof Float) {
                   System.out.println("1");
                 } else if (o instanceof Double || o instanceof Long) {
