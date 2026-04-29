@@ -46,6 +46,7 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -157,9 +158,9 @@ public class JdkObsolete extends BugChecker
           .collect(toImmutableMap(Obsolete::qualifiedName, x -> x));
 
   private record ObsoleteApi(
-      Matcher<ExpressionTree> matcher, String message, int androidMinSdkVersion) {
+      Matcher<ExpressionTree> matcher, String message, int androidMinSdkVersion, int jdkVersion) {
     ObsoleteApi(Matcher<ExpressionTree> matcher, String message) {
-      this(matcher, message, 1);
+      this(matcher, message, 1, 1);
     }
   }
 
@@ -189,7 +190,8 @@ public class JdkObsolete extends BugChecker
                   .named("toString")
                   .withParameters("java.lang.String"),
               "Use ByteArrayOutputStream.toString(Charset) instead.",
-              33),
+              33,
+              10),
           new ObsoleteApi(
               instanceMethod()
                   .onExactClass("java.lang.String")
@@ -202,35 +204,40 @@ public class JdkObsolete extends BugChecker
                   .named("decode")
                   .withParameters("java.lang.String", "java.lang.String"),
               "Use URLDecoder.decode(String, Charset) instead.",
-              33),
+              33,
+              10),
           new ObsoleteApi(
               staticMethod()
                   .onClass("java.net.URLEncoder")
                   .named("encode")
                   .withParameters("java.lang.String", "java.lang.String"),
               "Use URLEncoder.encode(String, Charset) instead.",
-              33),
+              33,
+              10),
           new ObsoleteApi(
               staticMethod()
                   .onClass("java.nio.channels.Channels")
                   .named("newReader")
                   .withParameters("java.nio.channels.ReadableByteChannel", "java.lang.String"),
               "Use Channels.newReader(ReadableByteChannel, Charset) instead.",
-              33),
+              33,
+              10),
           new ObsoleteApi(
               staticMethod()
                   .onClass("java.nio.channels.Channels")
                   .named("newWriter")
                   .withParameters("java.nio.channels.WritableByteChannel", "java.lang.String"),
               "Use Channels.newWriter(WritableByteChannel, Charset) instead.",
-              33),
+              33,
+              10),
           new ObsoleteApi(
               instanceMethod()
                   .onExactClass("java.util.Properties")
                   .named("storeToXML")
                   .withParameters("java.io.OutputStream", "java.lang.String", "java.lang.String"),
               "Use Properties.storeToXML(OutputStream, String, Charset) instead.",
-              35),
+              35,
+              10),
           new ObsoleteApi(
               staticMethod()
                   .onClass(IO_UTILS)
@@ -343,25 +350,29 @@ public class JdkObsolete extends BugChecker
                   .forClass("java.util.Scanner")
                   .withParameters("java.io.InputStream", "java.lang.String"),
               "Use new Scanner(InputStream, Charset) instead.",
-              34),
+              34,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Scanner")
                   .withParameters("java.io.File", "java.lang.String"),
               "Use new Scanner(File, Charset) instead.",
-              34),
+              34,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Scanner")
                   .withParameters("java.nio.file.Path", "java.lang.String"),
               "Use new Scanner(Path, Charset) instead.",
-              34),
+              34,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Scanner")
                   .withParameters("java.nio.channels.ReadableByteChannel", "java.lang.String"),
               "Use new Scanner(ReadableByteChannel, Charset) instead.",
-              34),
+              34,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.lang.String")
@@ -386,63 +397,79 @@ public class JdkObsolete extends BugChecker
               constructor()
                   .forClass("java.io.PrintStream")
                   .withParameters("java.io.OutputStream", "boolean", "java.lang.String"),
-              "Use new PrintStream(OutputStream, boolean, Charset) instead."),
+              "Use new PrintStream(OutputStream, boolean, Charset) instead.",
+              1,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.io.PrintStream")
                   .withParameters("java.lang.String", "java.lang.String"),
-              "Use new PrintStream(String, Charset) instead."),
+              "Use new PrintStream(String, Charset) instead.",
+              1,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.io.PrintStream")
                   .withParameters("java.io.File", "java.lang.String"),
-              "Use new PrintStream(File, Charset) instead."),
+              "Use new PrintStream(File, Charset) instead.",
+              1,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.io.PrintWriter")
                   .withParameters("java.lang.String", "java.lang.String"),
-              "Use new PrintWriter(String, Charset) instead."),
+              "Use new PrintWriter(String, Charset) instead.",
+              1,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.io.PrintWriter")
                   .withParameters("java.io.File", "java.lang.String"),
-              "Use new PrintWriter(File, Charset) instead."),
+              "Use new PrintWriter(File, Charset) instead.",
+              1,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Formatter")
                   .withParameters("java.lang.String", "java.lang.String"),
               "Use new Formatter(String, Charset) instead.",
-              34),
+              34,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Formatter")
                   .withParameters("java.lang.String", "java.lang.String", "java.util.Locale"),
               "Use new Formatter(String, Charset, Locale) instead.",
-              34),
+              34,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Formatter")
                   .withParameters("java.io.File", "java.lang.String"),
               "Use new Formatter(File, Charset) instead.",
-              34),
+              34,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Formatter")
                   .withParameters("java.io.File", "java.lang.String", "java.util.Locale"),
               "Use new Formatter(File, Charset, Locale) instead.",
-              34),
+              34,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Formatter")
                   .withParameters("java.io.OutputStream", "java.lang.String"),
               "Use new Formatter(OutputStream, Charset) instead.",
-              34),
+              34,
+              10),
           new ObsoleteApi(
               constructor()
                   .forClass("java.util.Formatter")
                   .withParameters("java.io.OutputStream", "java.lang.String", "java.util.Locale"),
               "Use new Formatter(OutputStream, Charset, Locale) instead.",
-              34));
+              34,
+              10));
 
   static final Matcher<ExpressionTree> MATCHER_STRINGBUFFER =
       anyOf(
@@ -748,6 +775,8 @@ public class JdkObsolete extends BugChecker
             api ->
                 (androidMinSdkVersion.isEmpty()
                         || androidMinSdkVersion.get() >= api.androidMinSdkVersion())
+                    && (api.jdkVersion() <= 1
+                        || SourceVersion.sourceIsAtLeast(state.context, api.jdkVersion()))
                     && api.matcher().matches(tree, state))
         .map(api -> buildDescription(tree).setMessage(api.message()).build())
         .findFirst()
