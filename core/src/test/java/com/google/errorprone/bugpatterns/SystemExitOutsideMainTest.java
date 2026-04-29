@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +48,7 @@ public class SystemExitOutsideMainTest {
 
   @Test
   public void systemExitMainLookalikeWithoutParameters() {
+    assume().that(Runtime.version().feature()).isLessThan(25);
     helper
         .addSourceLines(
             "Test.java",
@@ -53,6 +56,22 @@ public class SystemExitOutsideMainTest {
             class Test {
               public static void main() {
                 // BUG: Diagnostic contains: SystemExitOutsideMain
+                System.exit(0);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void systemExitMainNoArgsNegative() {
+    assume().that(Runtime.version().feature()).isAtLeast(25);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public static void main() {
                 System.exit(0);
               }
             }
@@ -78,6 +97,7 @@ public class SystemExitOutsideMainTest {
 
   @Test
   public void systemExitMainLookalikeWithoutStatic() {
+    assume().that(Runtime.version().feature()).isLessThan(25);
     helper
         .addSourceLines(
             "Test.java",
@@ -85,6 +105,22 @@ public class SystemExitOutsideMainTest {
             class Test {
               public void main(String[] args) {
                 // BUG: Diagnostic contains: SystemExitOutsideMain
+                System.exit(0);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void systemExitInstanceMainNegative() {
+    assume().that(Runtime.version().feature()).isAtLeast(25);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void main(String[] args) {
                 System.exit(0);
               }
             }
@@ -221,4 +257,124 @@ public class SystemExitOutsideMainTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void systemExitMainLookalikePackagePrivate() {
+    assume().that(Runtime.version().feature()).isLessThan(25);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static void main(String[] args) {
+                // BUG: Diagnostic contains: SystemExitOutsideMain
+                System.exit(0);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void systemExitProtectedMainNegative() {
+    assume().that(Runtime.version().feature()).isAtLeast(25);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              protected static void main(String[] args) {
+                System.exit(0);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void systemExitPackagePrivateMainNegative() {
+    assume().that(Runtime.version().feature()).isAtLeast(25);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static void main(String[] args) {
+                System.exit(0);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void systemExitInstanceNoArgsMainNegative() {
+    assume().that(Runtime.version().feature()).isAtLeast(25);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void main() {
+                System.exit(0);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void systemExitInMethodNoArgsMainInClassNegative() {
+    assume().that(Runtime.version().feature()).isAtLeast(25);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void main() {
+                foo();
+              }
+
+              static void foo() {
+                System.exit(0);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void systemExitInMethodInstanceMainInClassNegative() {
+    assume().that(Runtime.version().feature()).isAtLeast(25);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void main(String[] args) {
+                foo();
+              }
+
+              static void foo() {
+                System.exit(0);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void systemExitImplicitlyDeclaredClassNegative() {
+    assume().that(Runtime.version().feature()).isAtLeast(25);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            void main() {
+              System.exit(0);
+            }
+            """)
+        .doTest();
+  }
+
 }
