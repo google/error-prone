@@ -351,4 +351,61 @@ public class TryFailRefactoringTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void commentsArePreserved() {
+    testHelper
+        .addInputLines(
+            "in/ExceptionTest.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.junit.Assert.fail;
+
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.junit.Test;
+
+            class ExceptionTest {
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                // This is a comment inside test method, before the try block
+                try {
+                  // This is a comment inside try block, before the statement
+                  Files.readAllBytes(p);
+                  // This is a comment inside try block, after the statement
+                  fail();
+                  // This is a comment inside try block, after the fail statement
+                } catch (IOException e) {
+                  // This is a comment inside catch block
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/ExceptionTest.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.junit.Assert.assertThrows;
+            import static org.junit.Assert.fail;
+
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.junit.Test;
+
+            class ExceptionTest {
+              @Test
+              public void test() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                // This is a comment inside test method, before the try block
+                // This is a comment inside try block, before the statement
+                // This is a comment inside try block, after the statement
+                // This is a comment inside try block, after the fail statement
+                // This is a comment inside catch block
+                assertThrows(IOException.class, () -> Files.readAllBytes(p));
+              }
+            }
+            """)
+        .doTest();
+  }
 }

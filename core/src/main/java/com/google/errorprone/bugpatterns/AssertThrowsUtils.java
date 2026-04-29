@@ -16,18 +16,21 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.fixes.SuggestedFixes.renameVariableUsages;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.stream.Collectors.joining;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes.VariableNamer;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.ErrorProneComment;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.StatementTree;
@@ -85,6 +88,17 @@ public final class AssertThrowsUtils {
     CatchTree catchTree = Iterables.getOnlyElement(catchTrees);
     SuggestedFix.Builder fix = SuggestedFix.builder();
     StringBuilder fixPrefix = new StringBuilder();
+    ImmutableList<String> comments =
+        state
+            .getOffsetTokens(getStartPosition(tryTree.getBlock()), state.getEndPosition(tryTree))
+            .stream()
+            .flatMap(errorProneToken -> errorProneToken.comments().stream())
+            .filter(comment -> !comment.getText().isEmpty())
+            .map(ErrorProneComment::getText)
+            .collect(toImmutableList());
+    if (!comments.isEmpty()) {
+      fixPrefix.append(comments.stream().collect(joining("\n", "", "\n")));
+    }
     String fixSuffix = "";
     if (throwingStatements.isEmpty()) {
       return Optional.empty();
