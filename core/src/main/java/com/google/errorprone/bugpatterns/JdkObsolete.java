@@ -152,7 +152,8 @@ public class JdkObsolete extends BugChecker
                   "Dictionary is a nonstandard class that predates the Java Collections Framework;"
                       + " use LinkedHashMap."),
               new Obsolete(
-                  "java.util.Enumeration", "Enumeration is an ancient precursor to Iterator."))
+                  "java.util.Enumeration", "Enumeration is an ancient precursor to Iterator."),
+              new Obsolete("junit.framework.TestCase", "JUnit3 is obsolete; use JUnit4 instead."))
           .stream()
           .collect(toImmutableMap(Obsolete::qualifiedName, x -> x));
 
