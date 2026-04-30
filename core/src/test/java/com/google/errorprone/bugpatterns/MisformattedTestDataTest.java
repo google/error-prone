@@ -153,6 +153,76 @@ public final class MisformattedTestDataTest {
   }
 
   @Test
+  public void misformattedMultiple_suggestsFixesCombined() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                        "Test.java",
+                        \"""
+                        package foo;
+                        class Test {
+                          void method() {
+                            int a =
+                            1;
+                          }
+                        }
+                        \""")
+                    .addOutputLines(
+                        "Test.java",
+                        \"""
+                        package foo;
+                        class Test {
+                          void method() {
+                            int a =
+                            1;
+                          }
+                        }
+                        \""");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                        "Test.java",
+                        \"""
+                        package foo;
+
+                        class Test {
+                          void method() {
+                            int a = 1;
+                          }
+                        }
+                        \""")
+                    .addOutputLines(
+                        "Test.java",
+                        \"""
+                        package foo;
+
+                        class Test {
+                          void method() {
+                            int a = 1;
+                          }
+                        }
+                        \""");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void trailingComments_notIncludedInPrefix() {
     refactoringHelper
         .addInputLines(
