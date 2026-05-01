@@ -364,6 +364,108 @@ public final class NullNeedsCastForVarargsTest {
   }
 
   @Test
+  public void usingCorrespondence_containsExactly_refactoring_object() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.truth.Correspondence;
+            import java.util.List;
+
+            class Test {
+              void test(List<String> list, Correspondence<Object, Object> c) {
+                assertThat(list).comparingElementsUsing(c).containsExactly(null);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.truth.Correspondence;
+            import java.util.List;
+
+            class Test {
+              void test(List<String> list, Correspondence<Object, Object> c) {
+                assertThat(list).comparingElementsUsing(c).containsExactly((Object) null);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void usingCorrespondence_containsExactly_refactoring_string() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.truth.Correspondence;
+            import java.util.List;
+
+            class Test {
+              void test(List<String> list, Correspondence<String, String> c) {
+                assertThat(list).comparingElementsUsing(c).containsExactly(null);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.truth.Correspondence;
+            import java.util.List;
+
+            class Test {
+              void test(List<String> list, Correspondence<String, String> c) {
+                assertThat(list).comparingElementsUsing(c).containsExactly((String) null);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void usingCorrespondence_containsAnyOf_refactoring_string() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.truth.Correspondence;
+            import java.util.List;
+
+            class Test {
+              void test(List<String> list, Correspondence<String, String> c) {
+                assertThat(list).comparingElementsUsing(c).containsAnyOf("a", "b", null);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            import com.google.common.truth.Correspondence;
+            import java.util.List;
+
+            class Test {
+              void test(List<String> list, Correspondence<String, String> c) {
+                assertThat(list).comparingElementsUsing(c).containsAnyOf("a", "b", (String) null);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void moreGuavaMethods() {
     compilationHelper
         .addSourceLines(

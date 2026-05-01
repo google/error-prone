@@ -26,7 +26,6 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE_ARRAY;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.TargetType.targetType;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 import static javax.lang.model.type.TypeKind.ARRAY;
 
@@ -63,7 +62,9 @@ public final class NullNeedsCastForVarargs extends BugChecker
     } else if (METHOD_WITH_THIRD_PARAMETER_OBJECT_VARARGS.matches(tree, state)) {
       return matchObjectVarargs(arguments, /* varargsStart= */ 2);
     } else if (METHOD_WITH_SOLE_PARAMETER_GENERIC_VARARGS.matches(tree, state)) {
-      return matchGenericVarargs(state, arguments);
+      return matchGenericVarargs(tree, /* varargsStart= */ 0, state);
+    } else if (METHOD_WITH_THIRD_PARAMETER_GENERIC_VARARGS.matches(tree, state)) {
+      return matchGenericVarargs(tree, /* varargsStart= */ 2, state);
     }
 
     return NO_MATCH;
@@ -82,13 +83,15 @@ public final class NullNeedsCastForVarargs extends BugChecker
   }
 
   private Description matchGenericVarargs(
-      VisitorState state, List<? extends ExpressionTree> arguments) {
-    if (arguments.size() != 1) {
+      MethodInvocationTree tree, int varargsStart, VisitorState state) {
+    var arguments = tree.getArguments();
+    if (arguments.size() != varargsStart + 1) {
       return NO_MATCH;
     }
     var arg = arguments.getLast();
-    if (arg.getKind() == NULL_LITERAL || isCastOfNullToArrayOfTargetTypeElementType(arg, state)) {
-      var elementType = targetTypeElementType(state);
+    if (arg.getKind() == NULL_LITERAL
+        || isCastOfNullToArrayOfTargetTypeElementType(tree, arg, state)) {
+      var elementType = varargElementType(tree);
       var fix = SuggestedFix.builder();
       var prettyName = qualifyType(state, fix, elementType);
       fix.replace(arg, "(%s) null".formatted(prettyName));
@@ -113,23 +116,20 @@ public final class NullNeedsCastForVarargs extends BugChecker
    * call at the path of {@code state} is {@code SomeGenericType<Foo>}.
    */
   private static boolean isCastOfNullToArrayOfTargetTypeElementType(
-      ExpressionTree arg, VisitorState state) {
+      MethodInvocationTree tree, ExpressionTree arg, VisitorState state) {
     if (!isCastOfNullToArray(arg)) {
       return false;
     }
 
     var castTree = (TypeCastTree) arg;
     var castType = (ArrayType) getType(castTree.getType());
-    var elementType = targetTypeElementType(state);
+    var elementType = varargElementType(tree);
     return state.getTypes().isSubtype(castType.getComponentType(), elementType);
   }
 
-  private static Type targetTypeElementType(VisitorState state) {
-    var targetType = targetType(state);
-    return (targetType != null && !targetType.type().getTypeArguments().isEmpty())
-        // The target is likely List<T>/Stream<T>/..., so the signature has `T...`. Return `T`.
-        ? targetType.type().getTypeArguments().getFirst()
-        : state.getSymtab().objectType;
+  private static Type varargElementType(MethodInvocationTree tree) {
+    var varargsArrayType = getType(tree.getMethodSelect()).getParameterTypes().getLast();
+    return ((ArrayType) varargsArrayType).elemtype;
   }
 
   private static final Matcher<ExpressionTree> METHOD_WITH_SOLE_PARAMETER_OBJECT_VARARGS =
@@ -144,7 +144,10 @@ public final class NullNeedsCastForVarargs extends BugChecker
           .named("invoke")
           .withParametersOfType(OBJECT_TYPE, OBJECT_TYPE_ARRAY);
 
-  // TODO: b/429160687 - Also cover the methods in UsingCorrespondence.
+  private static final Matcher<ExpressionTree> METHOD_WITH_THIRD_PARAMETER_GENERIC_VARARGS =
+      instanceMethod()
+          .onDescendantOf("com.google.common.truth.IterableSubject$UsingCorrespondence")
+          .namedAnyOf("containsAnyOf", "containsAtLeast", "containsNoneOf");
 
   private static final Matcher<ExpressionTree> METHOD_WITH_THIRD_PARAMETER_OBJECT_VARARGS =
       instanceMethod()
@@ -154,6 +157,9 @@ public final class NullNeedsCastForVarargs extends BugChecker
 
   private static final Matcher<ExpressionTree> METHOD_WITH_SOLE_PARAMETER_GENERIC_VARARGS =
       anyOf(
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.IterableSubject$UsingCorrespondence")
+              .named("containsExactly"),
           staticMethod()
               .onClass("com.google.common.collect.AndroidAccessToCompactDataStructures")
               .namedAnyOf("newCompactHashSet", "newCompactLinkedHashSet")
