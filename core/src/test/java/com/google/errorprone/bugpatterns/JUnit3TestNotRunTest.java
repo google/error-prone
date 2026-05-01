@@ -204,6 +204,22 @@ public class JUnit3TestNotRunTest {
   }
 
   @Test
+  public void staticTestMethod() {
+    compilationHelper
+        .addSourceLines(
+            "KansasGlobalMetadataUtilsTest.java",
+            """
+            import junit.framework.TestCase;
+
+            public class KansasGlobalMetadataUtilsTest extends TestCase {
+              // TODO(b/508592495): this should have `static` removed!
+              public static void testParseGlobalMetadata() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void hasModifiersAndThrows() {
     refactorHelper
         .addInputLines(
