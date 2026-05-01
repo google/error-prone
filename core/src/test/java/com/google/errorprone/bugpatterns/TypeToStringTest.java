@@ -261,4 +261,48 @@ public class TypeToStringTest {
         .addModules("jdk.compiler/com.sun.tools.javac.code")
         .doTest();
   }
+
+  @Test
+  public void noMatch_autoValue() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.auto.value.AutoValue;
+            import javax.lang.model.type.TypeMirror;
+
+            @AutoValue
+            abstract class Test {
+              abstract TypeMirror type();
+            }
+            """)
+        .addSourceLines(
+            "AutoValue_Test.java",
+            """
+            import javax.annotation.processing.Generated;
+            import javax.lang.model.type.TypeMirror;
+
+            @Generated("com.google.auto.value.processor.AutoValueProcessor")
+            abstract class AutoValue_Test extends Test {
+              private final TypeMirror type;
+
+              AutoValue_Test(TypeMirror type) {
+                this.type = type;
+              }
+
+              @Override
+              public boolean equals(Object o) {
+                if (o == this) {
+                  return true;
+                }
+                if (o instanceof Test) {
+                  Test that = (Test) o;
+                  return this.type.toString().equals(that.type().toString());
+                }
+                return false;
+              }
+            }
+            """)
+        .doTest();
+  }
 }

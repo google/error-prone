@@ -90,14 +90,23 @@ public class TypeEqualsChecker extends BugChecker
     return type != null && isSubtype(type, ProcessingEnvUtils.TYPE_MIRROR_TYPE.get(state), state);
   }
 
+  private static boolean isAutoValueGenerated(VisitorState state) {
+    return ASTHelpers.getGeneratedBy(state).stream()
+        .anyMatch(s -> s.startsWith("com.google.auto.value.processor."));
+  }
+
   private Description describe(
       Tree tree, ExpressionTree lhs, ExpressionTree rhs, boolean negate, VisitorState state) {
     if (lhs.getKind() == Kind.NULL_LITERAL || rhs.getKind() == Kind.NULL_LITERAL) {
       return NO_MATCH;
     }
+    if (isAutoValueGenerated(state)) {
+      return NO_MATCH;
+    }
     if (!isTypeMirror(lhs, state) && !isTypeMirror(rhs, state)) {
       return NO_MATCH;
     }
+
     Description.Builder description = buildDescription(tree);
     ProcessingEnvUtils.getTypesExpr(state)
         .ifPresent(

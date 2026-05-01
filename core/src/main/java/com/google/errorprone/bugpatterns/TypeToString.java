@@ -62,7 +62,15 @@ public class TypeToString extends AbstractToString {
           MemberSelectTree.class,
           instanceMethod().onExactClass("java.lang.String").named("equals"));
 
+  private static boolean isAutoValueGenerated(VisitorState state) {
+    return ASTHelpers.getGeneratedBy(state).stream()
+        .anyMatch(s -> s.startsWith("com.google.auto.value.processor."));
+  }
+
   private static boolean typeToString(Type type, VisitorState state) {
+    if (isAutoValueGenerated(state)) {
+      return false;
+    }
     Tree equalsMethodSelect = state.getPath().getParentPath().getLeaf();
     return IS_TYPE.apply(type, state) && STRING_EQUALS.matches(equalsMethodSelect, state);
   }
