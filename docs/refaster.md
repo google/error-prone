@@ -123,6 +123,9 @@ $ cat error-prone.patch
 $ patch -p0 -u -i error-prone.patch
 ```
 
+You can also use `-XepPatchLocation:IN_PLACE`, and Error Prone will modify
+the source files in place, without creating `.patch` files.
+
 ## Anatomy of a Refaster Rule
 
 The idea of Refaster is, more or less, to take the pseudocode you'd write to explain a refactoring you wanted to perform, and make that into real code that performs a real refactoring.

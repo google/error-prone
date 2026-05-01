@@ -48,6 +48,23 @@ cd /full/path/to/your/source/root
 patch -p0 -u -i error-prone.patch
 ```
 
+## Patching in place
+
+To apply the suggested fixes directly, without the intermediate
+`error-prone.patch` files, use `-XepPatchChecks` as documented above, but use
+the special value `IN_PLACE` for `-XepPatchLocation`:
+
+```
+-XepPatchChecks:MissingOverride,DefaultCharset,DeadException
+-XepPatchLocation:IN_PLACE
+```
+
+Same as before, the first flag determines which checks to try and fix.
+But the there is will be no patch files generated, for you to manually apply.
+Error Prone will update the code directly.
+
+---
+
 NOTE: This feature is experimental, and subject to change. If you have any
 feedback about this process, please let us know via the [Google Group][grp].
 
