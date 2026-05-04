@@ -23,6 +23,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -35,7 +36,9 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import java.util.List;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -43,6 +46,13 @@ import java.util.List;
     severity = SeverityLevel.WARNING)
 public class AssertThrowsMultipleStatements extends BugChecker
     implements MethodInvocationTreeMatcher {
+  private final boolean checkComplexSingleStatementLambdas;
+
+  @Inject
+  AssertThrowsMultipleStatements(ErrorProneFlags flags) {
+    this.checkComplexSingleStatementLambdas =
+        flags.getBoolean("AssertThrowsMultipleStatements:CheckComplexSingleStatement").orElse(true);
+  }
 
   private static final Matcher<ExpressionTree> MATCHER =
       staticMethod().onClass("org.junit.Assert").named("assertThrows");
@@ -61,22 +71,44 @@ public class AssertThrowsMultipleStatements extends BugChecker
       return NO_MATCH;
     }
     List<? extends StatementTree> statements = blockTree.getStatements();
-    if (statements.size() <= 1) {
-      return NO_MATCH;
-    }
-    StatementTree last = getLast(statements);
-    int startPosition = getStartPosition(statements.getFirst());
-    int endPosition = state.getEndPosition(statements.get(statements.size() - 2));
-    SuggestedFix.Builder fix = SuggestedFix.builder();
-    // if the last statement is an expression, convert from a block to expression lambda
-    if (last instanceof ExpressionStatementTree expressionStatementTree) {
-      fix.replace(body, state.getSourceForNode(expressionStatementTree.getExpression()));
-    } else {
-      fix.replace(startPosition, endPosition, "");
-    }
-    fix.prefixWith(
-        state.findEnclosing(StatementTree.class),
-        state.getSourceCode(startPosition, endPosition).toString());
-    return describeMatch(last, fix.build());
+    return switch (statements.size()) {
+      case 0 -> NO_MATCH;
+      case 1 -> {
+        if (!checkComplexSingleStatementLambdas) {
+          yield NO_MATCH;
+        }
+        var singleStatement = statements.getLast();
+        if (isSimpleStatement(singleStatement)) {
+          yield NO_MATCH;
+        }
+        // It's a single compound statement (like try-catch).
+        // Generating an automated fix would be hard.
+        yield buildDescription(singleStatement)
+            .setMessage(
+                "The lambda passed to assertThrows contains control flow or nested blocks. Extract"
+                    + " setup logic outside the lambda.")
+            .build();
+      }
+      default -> {
+        StatementTree last = statements.getLast();
+        int startPosition = getStartPosition(statements.getFirst());
+        int endPosition = state.getEndPosition(statements.get(statements.size() - 2));
+        SuggestedFix.Builder fix = SuggestedFix.builder();
+        // if the last statement is an expression, convert from a block to expression lambda
+        if (last instanceof ExpressionStatementTree expressionStatementTree) {
+          fix.replace(body, state.getSourceForNode(expressionStatementTree.getExpression()));
+        } else {
+          fix.replace(startPosition, endPosition, "");
+        }
+        fix.prefixWith(
+            state.findEnclosing(StatementTree.class),
+            state.getSourceCode(startPosition, endPosition).toString());
+        yield describeMatch(last, fix.build());
+      }
+    };
+  }
+
+  private static boolean isSimpleStatement(StatementTree statement) {
+    return statement instanceof ExpressionStatementTree || statement instanceof VariableTree;
   }
 }
