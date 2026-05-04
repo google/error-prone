@@ -343,6 +343,7 @@ import com.google.errorprone.bugpatterns.RandomCast;
 import com.google.errorprone.bugpatterns.RandomModInteger;
 import com.google.errorprone.bugpatterns.ReachabilityFenceUsage;
 import com.google.errorprone.bugpatterns.RecordAccessorInCompactConstructor;
+import com.google.errorprone.bugpatterns.RecordComponentOverride;
 import com.google.errorprone.bugpatterns.RedundantControlFlow;
 import com.google.errorprone.bugpatterns.RedundantOverride;
 import com.google.errorprone.bugpatterns.RedundantSetterCall;
@@ -1131,6 +1132,7 @@ public class BuiltInCheckerSuppliers {
           ProtoTimestampGetSecondsGetNano.class,
           QualifierOrScopeOnInjectMethod.class,
           ReachabilityFenceUsage.class,
+          RecordComponentOverride.class,
           RedundantControlFlow.class,
           RefactorSwitch.class,
           ReferenceEquality.class,
