@@ -1265,6 +1265,9 @@ Qualifiers/Scope annotations on @Inject methods don&#39;t have any effect. Move 
 __[ReachabilityFenceUsage](bugpattern/ReachabilityFenceUsage)__<br>
 reachabilityFence should always be called inside a finally block
 
+__[RecordComponentOverride](bugpattern/RecordComponentOverride)__<br>
+@Override annotations on record components don&#39;t do anything.
+
 __[RedundantControlFlow](bugpattern/RedundantControlFlow)__<br>
 This continue statement is redundant and can be removed. It may be misleading.
 
