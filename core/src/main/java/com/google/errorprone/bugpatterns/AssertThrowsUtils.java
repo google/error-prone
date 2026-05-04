@@ -94,6 +94,7 @@ public final class AssertThrowsUtils {
             .stream()
             .flatMap(errorProneToken -> errorProneToken.comments().stream())
             .filter(comment -> !comment.getText().isEmpty())
+            .filter(comment -> !comment.getText().matches("/\\*.*=\\s*\\*/"))
             .map(ErrorProneComment::getText)
             .collect(toImmutableList());
     if (!comments.isEmpty()) {
