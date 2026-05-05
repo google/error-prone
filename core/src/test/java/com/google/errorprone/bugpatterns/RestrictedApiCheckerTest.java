@@ -160,6 +160,31 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
+  public void restrictedCallProhibited_withLink() {
+    helper
+        .addSourceLines(
+            "Testcase.java",
+            """
+            package separate.test;
+
+            import com.google.errorprone.annotations.RestrictedApi;
+
+            class Testcase {
+              void caller() {
+                // BUG: Diagnostic contains: test
+                //    (see http://example.com)
+                restrictedMethod();
+              }
+
+              @RestrictedApi(explanation = "test", link = "http://example.com")
+              void restrictedMethod() {}
+            }
+            """)
+        .expectResult(Result.ERROR)
+        .doTest();
+  }
+
+  @Test
   public void restrictedCallProhibited_inherited() {
     helper
         .addSourceLines(

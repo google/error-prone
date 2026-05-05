@@ -255,6 +255,9 @@ public class RestrictedApiChecker extends BugChecker
     SeverityLevel level = warn ? SeverityLevel.WARNING : SeverityLevel.ERROR;
     Description.Builder description =
         buildDescription(where).setMessage(restriction.explanation()).overrideSeverity(level);
+    if (!restriction.link().isEmpty()) {
+      description.setLinkUrl(restriction.link());
+    }
     return description.build();
   }
 
