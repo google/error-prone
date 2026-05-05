@@ -111,4 +111,24 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void joinerIterable() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.base.Joiner;
+            import java.util.List;
+            import java.util.stream.Stream;
+
+            class Test {
+              String test(Joiner j, List<Stream<String>> a) {
+                // BUG: Diagnostic contains: StreamToString
+                return j.join(a);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

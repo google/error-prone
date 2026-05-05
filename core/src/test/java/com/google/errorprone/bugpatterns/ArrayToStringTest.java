@@ -449,4 +449,42 @@ public class ArrayToStringTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void joinerIterable() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.base.Joiner;
+            import java.util.List;
+
+            class Test {
+              String test(Joiner j, List<int[]> a) {
+                // BUG: Diagnostic contains: ArrayToString
+                return j.join(a);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void joinerIterable_disabled() {
+    compilationHelper
+        .setArgs("-XepOpt:AbstractToString:JoinerIterable=false")
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.base.Joiner;
+            import java.util.List;
+
+            class Test {
+              String test(Joiner j, List<int[]> a) {
+                return j.join(a);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

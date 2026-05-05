@@ -127,10 +127,18 @@ public abstract class AbstractToString extends BugChecker
   private static final Matcher<ExpressionTree> JOINER =
       instanceMethod().onDescendantOf("com.google.common.base.Joiner").named("join");
 
-  private final boolean handleJoiner;
+  private static final Matcher<ExpressionTree> JOINER_ITERABLE =
+      instanceMethod()
+          .onDescendantOf("com.google.common.base.Joiner")
+          .named("join")
+          .withParameters("java.lang.Iterable");
+
+  private final boolean handleJoinerVarargs;
+  private final boolean handleJoinerIterable;
 
   protected AbstractToString(ErrorProneFlags flags) {
-    this.handleJoiner = flags.getBoolean("AbstractToString:Joiner").orElse(true);
+    this.handleJoinerVarargs = flags.getBoolean("AbstractToString:Joiner").orElse(true);
+    this.handleJoinerIterable = flags.getBoolean("AbstractToString:JoinerIterable").orElse(true);
   }
 
   private static boolean isInVarargsPosition(
@@ -195,9 +203,9 @@ public abstract class AbstractToString extends BugChecker
         handleStringifiedTree(argTree, ToStringKind.FLOGGER, state);
       }
     }
-    if (handleJoiner && JOINER.matches(tree, state)) {
+    if (JOINER.matches(tree, state)) {
       var symbol = getSymbol(tree);
-      if (symbol.isVarArgs()) {
+      if (handleJoinerVarargs && symbol.isVarArgs()) {
         for (ExpressionTree argTree : tree.getArguments()) {
           if (isVarargsArray(argTree, tree, state)) {
             handleStringifiedTree(
@@ -209,6 +217,22 @@ public abstract class AbstractToString extends BugChecker
           } else {
             handleStringifiedTree(argTree, ToStringKind.IMPLICIT, state);
           }
+        }
+      } else if (handleJoinerIterable && JOINER_ITERABLE.matches(tree, state)) {
+        var argTree = tree.getArguments().getFirst();
+        Type elementType =
+            state
+                .getTypes()
+                .asSuper(
+                    state.getTypes().capture(getType(argTree)),
+                    state.getSymtab().iterableType.tsym);
+        if (elementType != null && !elementType.getTypeArguments().isEmpty()) {
+          handleStringifiedTree(
+              elementType.getTypeArguments().getFirst(),
+              argTree,
+              argTree,
+              ToStringKind.NONE,
+              state);
         }
       }
     }
