@@ -56,7 +56,8 @@ public final class SourceVersion {
     return sourceIsAtLeast(context, 25);
   }
 
-  private static boolean sourceIsAtLeast(Context context, int version) {
+  /** Returns true if the compiler source version level is at least the given version. */
+  public static boolean sourceIsAtLeast(Context context, int version) {
     Source lowerBound = Source.lookup(Integer.toString(version));
     return lowerBound != null && Source.instance(context).compareTo(lowerBound) >= 0;
   }
