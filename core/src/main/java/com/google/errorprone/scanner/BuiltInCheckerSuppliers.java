@@ -343,6 +343,7 @@ import com.google.errorprone.bugpatterns.RandomCast;
 import com.google.errorprone.bugpatterns.RandomModInteger;
 import com.google.errorprone.bugpatterns.ReachabilityFenceUsage;
 import com.google.errorprone.bugpatterns.RecordAccessorInCompactConstructor;
+import com.google.errorprone.bugpatterns.RecordComponentAccessorAnnotationConflict;
 import com.google.errorprone.bugpatterns.RecordComponentOverride;
 import com.google.errorprone.bugpatterns.RedundantControlFlow;
 import com.google.errorprone.bugpatterns.RedundantOverride;
@@ -1305,6 +1306,7 @@ public class BuiltInCheckerSuppliers {
           PrivateConstructorForUtilityClass.class,
           PublicApiNamedStreamShouldReturnStream.class,
           QualifierWithTypeUse.class,
+          RecordComponentAccessorAnnotationConflict.class,
           RedundantNullCheck.class,
           RedundantOverride.class,
           RedundantThrows.class,

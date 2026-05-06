@@ -19,6 +19,7 @@ package com.google.errorprone.util;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.Streams;
 import com.sun.tools.javac.code.Attribute;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -87,6 +88,25 @@ public final class MoreAnnotations {
       }
     }
     return Optional.ofNullable(a.accept(new Visitor(), null));
+  }
+
+  public static <T extends Enum<T>> EnumSet<T> asEnumValues(Class<T> clazz, AnnotationValue a) {
+    EnumSet<T> result = EnumSet.noneOf(clazz);
+    class Visitor extends SimpleAnnotationValueVisitor8<Void, Void> {
+      @Override
+      public Void visitEnumConstant(VariableElement c, Void unused) {
+        result.add(Enum.valueOf(clazz, c.getSimpleName().toString()));
+        return null;
+      }
+
+      @Override
+      public Void visitArray(List<? extends AnnotationValue> list, Void unused) {
+        list.stream().forEach(a -> a.accept(this, null));
+        return null;
+      }
+    }
+    a.accept(new Visitor(), null);
+    return result;
   }
 
   /** Converts the given attribute to a type. */
