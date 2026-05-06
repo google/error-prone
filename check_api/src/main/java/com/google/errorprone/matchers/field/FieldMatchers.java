@@ -89,14 +89,22 @@ public final class FieldMatchers {
   public static InstanceFieldMatcher instanceField() {
     return (className) -> {
       Supplier<Symbol> symbol = VisitorState.memoize(state -> state.getSymbolFromString(className));
-      return fieldClassMatcher((sym, state) -> !sym.isStatic() && sym.owner == symbol.get(state));
+      return fieldClassMatcher(
+          (sym, state) -> {
+            Symbol classSymbol = symbol.get(state);
+            return classSymbol != null && !sym.isStatic() && sym.owner == classSymbol;
+          });
     };
   }
 
   public static StaticFieldMatcher staticField() {
     return className -> {
       Supplier<Symbol> symbol = VisitorState.memoize(state -> state.getSymbolFromString(className));
-      return fieldClassMatcher((sym, state) -> sym.isStatic() && sym.owner == symbol.get(state));
+      return fieldClassMatcher(
+          (sym, state) -> {
+            Symbol classSymbol = symbol.get(state);
+            return classSymbol != null && sym.isStatic() && sym.owner == classSymbol;
+          });
     };
   }
 
