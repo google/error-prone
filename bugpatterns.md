@@ -1695,6 +1695,9 @@ Passing a primitive array to a varargs method is usually wrong
 __[QualifierWithTypeUse](bugpattern/QualifierWithTypeUse)__<br>
 Injection frameworks currently don&#39;t understand Qualifiers in TYPE_PARAMETER or TYPE_USE contexts.
 
+__[RecordComponentAccessorAnnotationConflict](bugpattern/RecordComponentAccessorAnnotationConflict)__<br>
+Annotation on record component is ignored.
+
 __[RedundantNullCheck](bugpattern/RedundantNullCheck)__<br>
 Null check on an expression that is statically determined to be non-null according to language semantics or nullness annotations.
 
