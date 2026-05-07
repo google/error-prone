@@ -21,6 +21,8 @@ import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ALL;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.variableType;
 import static com.google.errorprone.predicates.TypePredicates.isPrimitive;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
@@ -147,7 +149,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
             /* shouldMatch= */ false, new MethodHasParameters(ALL, variableType(isPrimitive()))));
   }
 
-  private abstract class ScannerTest extends Scanner {
+  private abstract static class ScannerTest extends Scanner {
     abstract void assertDone();
   }
 
@@ -166,7 +168,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
           }
 
           private boolean isConstructor(MethodTree node) {
-            return node.getName().contentEquals("<init>");
+            return getSymbol(node).getKind() == CONSTRUCTOR;
           }
 
           @Override
