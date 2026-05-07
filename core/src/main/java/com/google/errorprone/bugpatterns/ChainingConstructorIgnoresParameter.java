@@ -210,13 +210,5 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
         && identifierTree.getName().contentEquals(name);
   }
 
-  private static final class Caller {
-    final MethodInvocationTree tree;
-    final VisitorState state;
-
-    Caller(MethodInvocationTree tree, VisitorState state) {
-      this.tree = tree;
-      this.state = state;
-    }
-  }
+  private record Caller(MethodInvocationTree tree, VisitorState state) {}
 }

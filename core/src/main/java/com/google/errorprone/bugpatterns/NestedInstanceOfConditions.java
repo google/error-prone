@@ -78,13 +78,8 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
     return Description.NO_MATCH;
   }
 
-  private static class AssignmentTreeMatcher implements Matcher<Tree> {
-    private final ExpressionTree variableExpressionTree;
-
-    AssignmentTreeMatcher(ExpressionTree e) {
-      variableExpressionTree = e;
-    }
-
+  private record AssignmentTreeMatcher(ExpressionTree variableExpressionTree)
+      implements Matcher<Tree> {
     @Override
     public boolean matches(Tree tree, VisitorState visitorState) {
       if (tree instanceof AssignmentTree assignmentTree) {
@@ -102,15 +97,8 @@ public class NestedInstanceOfConditions extends BugChecker implements IfTreeMatc
    * if an expression is an instanceof a type that is disjoint from the matcher's type that is set
    * beforehand.
    */
-  private static class NestedInstanceOfMatcher implements Matcher<Tree> {
-    private final ExpressionTree expressionTree;
-    private final Tree typeTree;
-
-    NestedInstanceOfMatcher(ExpressionTree e, Tree t) {
-      expressionTree = e;
-      typeTree = t;
-    }
-
+  private record NestedInstanceOfMatcher(ExpressionTree expressionTree, Tree typeTree)
+      implements Matcher<Tree> {
     @Override
     public boolean matches(Tree tree, VisitorState state) {
       if (tree instanceof IfTree ifTree) {

@@ -175,17 +175,7 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
     }
   }
 
-  private static class CastState {
-    final Name name;
-    final String castToType;
-    final SuggestedFix.Builder fix;
-
-    CastState(Name name, String castToType, SuggestedFix.Builder fix) {
-      this.name = name;
-      this.castToType = castToType;
-      this.fix = fix;
-    }
-  }
+  private record CastState(Name name, String castToType, SuggestedFix.Builder fix) {}
 
   /** A Scanner used to replace all references to a variable with a casted version. */
   private static class CastScanner extends TreeScanner<Void, CastState> {

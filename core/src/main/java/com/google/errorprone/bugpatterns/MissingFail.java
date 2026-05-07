@@ -481,14 +481,8 @@ public class MissingFail extends BugChecker implements MethodTreeMatcher {
   /**
    * Matches if any two of the given list of expressions are integer literals with different values.
    */
-  private static class UnequalIntegerLiteralMatcher implements Matcher<MethodInvocationTree> {
-
-    private final Matcher<ExpressionTree> methodSelectMatcher;
-
-    private UnequalIntegerLiteralMatcher(Matcher<ExpressionTree> methodSelectMatcher) {
-      this.methodSelectMatcher = methodSelectMatcher;
-    }
-
+  private record UnequalIntegerLiteralMatcher(Matcher<ExpressionTree> methodSelectMatcher)
+      implements Matcher<MethodInvocationTree> {
     @Override
     public boolean matches(MethodInvocationTree methodInvocationTree, VisitorState state) {
       return methodSelectMatcher.matches(methodInvocationTree, state)

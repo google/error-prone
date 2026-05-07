@@ -98,15 +98,8 @@ public class URLEqualsHashCode extends BugChecker
     return Description.NO_MATCH;
   }
 
-  private static class URLTypeArgumentMatcher implements Matcher<Tree> {
-    private final String clazz;
-    private final int typeArgumentIndex;
-
-    URLTypeArgumentMatcher(String clazz, int index) {
-      this.clazz = clazz;
-      this.typeArgumentIndex = index;
-    }
-
+  private record URLTypeArgumentMatcher(String clazz, int typeArgumentIndex)
+      implements Matcher<Tree> {
     @Override
     public boolean matches(Tree tree, VisitorState state) {
       Symbol sym = state.getSymbolFromString(clazz);

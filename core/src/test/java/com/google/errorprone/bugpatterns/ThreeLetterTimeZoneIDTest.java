@@ -191,6 +191,6 @@ public class ThreeLetterTimeZoneIDTest {
   }
 
   private static ImmutableList<String> replacements(String zone, boolean inJodaTimeContext) {
-    return ThreeLetterTimeZoneID.getReplacement(zone, inJodaTimeContext, "message").replacements;
+    return ThreeLetterTimeZoneID.getReplacement(zone, inJodaTimeContext, "message").replacements();
   }
 }

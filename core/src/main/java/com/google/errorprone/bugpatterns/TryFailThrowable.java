@@ -272,7 +272,7 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
             : catchesError ? JAVA_LANG_ERROR : SOME_ASSERTION_FAILURE);
   }
 
-  static final class MatchResult {
+  record MatchResult(StatementTree failStatement, CaughtType caughtType) {
     static final MatchResult DOES_NOT_MATCH = new MatchResult(null, null);
 
     static MatchResult matches(StatementTree failStatement, CaughtType caughtType) {
@@ -281,14 +281,6 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
 
     static MatchResult doesNotMatch() {
       return DOES_NOT_MATCH;
-    }
-
-    final StatementTree failStatement;
-    final CaughtType caughtType;
-
-    MatchResult(StatementTree failStatement, CaughtType caughtType) {
-      this.failStatement = failStatement;
-      this.caughtType = caughtType;
     }
 
     boolean matched() {

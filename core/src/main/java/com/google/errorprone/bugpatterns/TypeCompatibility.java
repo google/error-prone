@@ -386,15 +386,7 @@ public final class TypeCompatibility {
     }
   }
 
-  private static final class TypePair {
-    final Type left;
-    final Type right;
-
-    TypePair(Type left, Type right) {
-      this.left = left;
-      this.right = right;
-    }
-  }
+  private record TypePair(Type left, Type right) {}
 
   private static final Supplier<Name> EQUALS =
       VisitorState.memoize(state -> state.getName("equals"));

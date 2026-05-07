@@ -302,22 +302,11 @@ public final class FloggerRequiredModifiers extends BugChecker
     }
   }
 
-  private static final class LocalLogger {
-
-    LocalLogger(Provenance provenance, Optional<Symbol> sym, String name) {
-      this.provenance = provenance;
-      this.sym = sym;
-      this.name = name;
-    }
-
+  private record LocalLogger(Provenance provenance, Optional<Symbol> sym, String name) {
     enum Provenance {
       ALREADY_PRESENT,
       DEFINED_BY_FIX
     }
-
-    final Provenance provenance;
-    final Optional<Symbol> sym;
-    final String name;
   }
 
   private LocalLogger findOrDefineLogger(VisitorState state, SuggestedFix.Builder fix) {

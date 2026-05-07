@@ -201,14 +201,8 @@ public class RefactoringCollection implements DescriptionListener.Factory {
     return appliedDiff;
   }
 
-  private static final class DelegatingDescriptionListener implements DescriptionListener {
-    final DescriptionBasedDiff base;
-    final DescriptionListener listener;
-
-    DelegatingDescriptionListener(DescriptionListener listener, DescriptionBasedDiff base) {
-      this.listener = listener;
-      this.base = base;
-    }
+  private record DelegatingDescriptionListener(
+      DescriptionListener listener, DescriptionBasedDiff base) implements DescriptionListener {
 
     @Override
     public void onDescribed(Description description) {
