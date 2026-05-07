@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +33,61 @@ public class JUnit3FloatingPointComparisonWithoutDeltaTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(
           JUnit3FloatingPointComparisonWithoutDelta.class, getClass());
+
+  private final BugCheckerRefactoringTestHelper testHelper =
+      BugCheckerRefactoringTestHelper.newInstance(
+          JUnit3FloatingPointComparisonWithoutDelta.class, getClass());
+
+  @Test
+  public void refactoring() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import junit.framework.TestCase;
+
+            public class Test extends TestCase {
+              public void test() {
+                assertEquals(1.0, 2.0);
+                assertEquals("msg", 1.0, 2.0);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static com.google.common.truth.Truth.assertWithMessage;
+
+            import junit.framework.TestCase;
+
+            public class Test extends TestCase {
+              public void test() {
+                assertThat(2.0).isEqualTo(1.0);
+                assertWithMessage("msg").that(2.0).isEqualTo(1.0);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void testMultipleFixes() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import junit.framework.TestCase;
+
+            public class Test extends TestCase {
+              public void test() {
+                // BUG: Diagnostic contains: 0.0
+                assertEquals(1.0, 2.0);
+              }
+            }
+            """)
+        .doTest();
+  }
 
   @Test
   public void match_twoPrimitiveDoubles() {
@@ -141,22 +197,26 @@ public class JUnit3FloatingPointComparisonWithoutDeltaTest {
   }
 
   private void checkAssertEquals(String assertEqualsArgumentsText, boolean matchExpected) {
-    String assertEqualsLine = String.format("    assertEquals(%s);", assertEqualsArgumentsText);
+    String assertEqualsLine = "assertEquals(%s);".formatted(assertEqualsArgumentsText);
     checkTest(assertEqualsLine, matchExpected);
   }
 
   private void checkTest(String methodInvocationLine, boolean matchExpected) {
-    String diagnosticLine = matchExpected ? "    // BUG: Diagnostic contains:" : "";
+    String diagnosticLine = matchExpected ? "// BUG: Diagnostic contains:" : "";
     compilationHelper
         .addSourceLines(
             "SampleTest.java",
-            "import junit.framework.TestCase;",
-            "public class SampleTest extends TestCase {",
-            "  public void testComparison() {",
-            diagnosticLine,
-            methodInvocationLine,
-            "  }",
-            "}")
+            """
+            import junit.framework.TestCase;
+
+            public class SampleTest extends TestCase {
+              public void testComparison() {
+                %s
+                %s
+              }
+            }
+            """
+                .formatted(diagnosticLine, methodInvocationLine))
         .doTest();
   }
 }
