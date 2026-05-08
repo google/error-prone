@@ -1,10 +1,3 @@
-# RecordAccessorInCompactConstructor
-
-**Summary:** Record accessors should not be used inside compact constructors
-because they read uninitialized fields.
-
-## The Problem
-
 In a Java `record`, using the accessor method (like `d()`) inside a **compact
 constructor** (the one without arguments, `Foo { ... }`) reads the record's
 underlying field before it has been set. This means the method will always
@@ -25,7 +18,6 @@ record User(String name) {
     }
   }
 }
-
 ```
 
 ### Good: Using the parameter name directly
@@ -39,7 +31,6 @@ record User(String name) {
     }
   }
 }
-
 ```
 
 ## Explanation
@@ -59,8 +50,3 @@ hasn't happened yet, `this.name` still holds its default value, which is `null`
 
 To fix this, refer to the component by its name (e.g., `name`). This accesses
 the **parameter** passed to the constructor, which holds the correct value.
-
-## Suppression
-
-Suppress false positives by adding the suppression annotation
-`@SuppressWarnings("RecordAccessorInCompactConstructor")` to the enclosing code.
