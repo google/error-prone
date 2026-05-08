@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
@@ -135,5 +136,5 @@ public class TreeToString extends AbstractToString {
   }
 
   private static final Supplier<Type> COM_GOOGLE_ERRORPRONE_VISITORSTATE =
-      VisitorState.memoize(state -> state.getTypeFromString("com.google.errorprone.VisitorState"));
+      typeFromString("com.google.errorprone.VisitorState");
 }

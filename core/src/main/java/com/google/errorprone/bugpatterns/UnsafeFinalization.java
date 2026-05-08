@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
@@ -151,6 +152,5 @@ public class UnsafeFinalization extends BugChecker implements MethodInvocationTr
       VisitorState.memoize(state -> state.getName("finalize"));
 
   private static final Supplier<Type> COM_GOOGLE_COMMON_LABS_BASE_FINALIZER =
-      VisitorState.memoize(
-          state -> state.getTypeFromString("com.google.common.labs.base.Finalizer"));
+      typeFromString("com.google.common.labs.base.Finalizer");
 }

@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
@@ -41,8 +42,7 @@ public final class UsingJsr305CheckReturnValue extends BugChecker implements Imp
   private static final String EP_CRV = "com.google.errorprone.annotations.CheckReturnValue";
   private static final String JSR305_CRV = "javax.annotation.CheckReturnValue";
 
-  private static final Supplier<Type> JSR305_TYPE =
-      VisitorState.memoize(state -> state.getTypeFromString(JSR305_CRV));
+  private static final Supplier<Type> JSR305_TYPE = typeFromString(JSR305_CRV);
 
   @Override
   public Description matchImport(ImportTree tree, VisitorState state) {

@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.CLASS_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -292,5 +293,5 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
       VisitorState.memoize(state -> state.getSymbolFromString("org.hamcrest.Matcher"));
 
   private static final Supplier<Type> ORG_HAMCREST_MATCHER_TYPE =
-      VisitorState.memoize(state -> state.getTypeFromString("org.hamcrest.Matcher"));
+      typeFromString("org.hamcrest.Matcher");
 }

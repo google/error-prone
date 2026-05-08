@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.AnnotationNames.CAN_IGNORE_RETURN_VALUE_ANNOTATION;
 
@@ -150,5 +151,5 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
   private final Supplier<Type> futureType = Suppliers.typeFromString("java.util.concurrent.Future");
 
   private static final Supplier<Type> JAVA_UTIL_CONCURRENT_FUTURE =
-      VisitorState.memoize(state -> state.getTypeFromString("java.util.concurrent.Future"));
+      typeFromString("java.util.concurrent.Future");
 }

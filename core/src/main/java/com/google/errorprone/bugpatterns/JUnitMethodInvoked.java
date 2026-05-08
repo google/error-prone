@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -104,5 +105,5 @@ public final class JUnitMethodInvoked extends BugChecker implements MethodInvoca
   }
 
   private static final Supplier<Type> JUNIT_FRAMEWORK_TESTCASE =
-      VisitorState.memoize(state -> state.getTypeFromString("junit.framework.TestCase"));
+      typeFromString("junit.framework.TestCase");
 }

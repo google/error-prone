@@ -16,10 +16,10 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Ascii.toUpperCase;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.fixes.SuggestedFixes.renameMethodInvocation;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -148,8 +148,8 @@ public final class AvoidValueSetter extends BugChecker implements MethodInvocati
   private static final Pattern PREFIX = Pattern.compile("^(set|add|put)(.+)$");
 
   private static final Supplier<Type> MESSAGE_BUILDER =
-      memoize(state -> state.getTypeFromString("com.google.protobuf.Message.Builder"));
+      typeFromString("com.google.protobuf.Message.Builder");
 
   private static final Supplier<Type> PROTOCOL_MESSAGE_ENUM =
-      memoize(state -> state.getTypeFromString("com.google.protobuf.ProtocolMessageEnum"));
+      typeFromString("com.google.protobuf.ProtocolMessageEnum");
 }

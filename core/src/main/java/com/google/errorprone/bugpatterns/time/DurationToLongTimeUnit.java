@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.time;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MICROSECONDS;
@@ -181,6 +182,5 @@ public final class DurationToLongTimeUnit extends BugChecker
     return Optional.empty();
   }
 
-  private static final Supplier<Type> JAVA_UTIL_CONCURRENT_TIMEUNIT =
-      VisitorState.memoize(state -> state.getTypeFromString(TIME_UNIT));
+  private static final Supplier<Type> JAVA_UTIL_CONCURRENT_TIMEUNIT = typeFromString(TIME_UNIT);
 }

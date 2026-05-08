@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
@@ -155,5 +156,5 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
   }
 
   private static final Supplier<Type> ORG_JUNIT_TEST =
-      VisitorState.memoize(state -> state.getTypeFromString(JUnitMatchers.JUNIT4_TEST_ANNOTATION));
+      typeFromString(JUnitMatchers.JUNIT4_TEST_ANNOTATION);
 }

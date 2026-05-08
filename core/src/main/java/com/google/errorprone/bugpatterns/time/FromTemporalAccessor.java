@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.packageStartsWith;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -462,5 +463,5 @@ public final class FromTemporalAccessor extends BugChecker implements MethodInvo
   }
 
   private static final Supplier<Type> JAVA_TIME_TEMPORAL_TEMPORALACCESSOR =
-      VisitorState.memoize(state -> state.getTypeFromString(TEMPORAL_ACCESSOR));
+      typeFromString(TEMPORAL_ACCESSOR);
 }

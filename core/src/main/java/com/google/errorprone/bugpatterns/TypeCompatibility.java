@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Iterables.isEmpty;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.findMatchingMethods;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isCastable;
@@ -392,14 +393,13 @@ public final class TypeCompatibility {
       VisitorState.memoize(state -> state.getName("equals"));
 
   private static final Supplier<Type> COM_GOOGLE_PROTOBUF_DYNAMICMESSAGE =
-      VisitorState.memoize(state -> state.getTypeFromString("com.google.protobuf.DynamicMessage"));
+      typeFromString("com.google.protobuf.DynamicMessage");
 
   private static final Supplier<Type> COM_GOOGLE_PROTOBUF_MESSAGE =
-      VisitorState.memoize(state -> state.getTypeFromString("com.google.protobuf.Message"));
+      typeFromString("com.google.protobuf.Message");
 
   private static final Supplier<Type> COM_GOOGLE_PROTOBUF_MESSAGELITE =
-      VisitorState.memoize(state -> state.getTypeFromString("com.google.protobuf.MessageLite"));
+      typeFromString("com.google.protobuf.MessageLite");
 
-  private static final Supplier<Type> JAVA_UTIL_COLLECTION =
-      VisitorState.memoize(state -> state.getTypeFromString("java.util.Collection"));
+  private static final Supplier<Type> JAVA_UTIL_COLLECTION = typeFromString("java.util.Collection");
 }

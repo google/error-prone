@@ -24,6 +24,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -1113,5 +1114,5 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
   }
 
   private static final Supplier<Type> PARCELABLE_CREATOR =
-      VisitorState.memoize(state -> state.getTypeFromString("android.os.Parcelable.Creator"));
+      typeFromString("android.os.Parcelable.Creator");
 }

@@ -16,11 +16,11 @@
 package com.google.errorprone.bugpatterns.time;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -117,6 +117,5 @@ public final class TimeInStaticInitializer extends BugChecker
    * As a heuristic, Flags seem fine, given those usually do want to capture something at start
    * time.
    */
-  private static final Supplier<Type> FLAG =
-      memoize(s -> s.getTypeFromString("com.google.common.flags.Flag"));
+  private static final Supplier<Type> FLAG = typeFromString("com.google.common.flags.Flag");
 }

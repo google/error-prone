@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -95,6 +96,5 @@ public class ExtendingJUnitAssert extends BugChecker implements ClassTreeMatcher
     return fix.replace(startPos, endOfExtendsClause, "").build();
   }
 
-  private static final Supplier<Type> ORG_JUNIT_ASSERT =
-      VisitorState.memoize(state -> state.getTypeFromString("org.junit.Assert"));
+  private static final Supplier<Type> ORG_JUNIT_ASSERT = typeFromString("org.junit.Assert");
 }

@@ -25,6 +25,7 @@ import static com.google.errorprone.names.NamingConventions.splitToLowercaseTerm
 import static com.google.errorprone.suppliers.Suppliers.DOUBLE_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.LONG_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -813,5 +814,5 @@ public final class TimeUnitMismatch extends BugChecker
   private static final Description ANY_MATCHES_WERE_ALREADY_REPORTED = Description.NO_MATCH;
 
   private static final Supplier<Type> JAVA_UTIL_CONCURRENT_TIMEUNIT =
-      VisitorState.memoize(state -> state.getTypeFromString("java.util.concurrent.TimeUnit"));
+      typeFromString("java.util.concurrent.TimeUnit");
 }

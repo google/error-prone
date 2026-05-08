@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.constructor;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.Iterables;
@@ -80,5 +81,5 @@ public class RethrowReflectiveOperationExceptionAsLinkageError extends BugChecke
   }
 
   private static final Supplier<Type> JAVA_LANG_REFLECTIVEOPERATIONEXCEPTION =
-      VisitorState.memoize(state -> state.getTypeFromString(REFLECTIVE_OPERATION_EXCEPTION));
+      typeFromString(REFLECTIVE_OPERATION_EXCEPTION);
 }

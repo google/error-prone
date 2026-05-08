@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -110,6 +111,5 @@ public class IdentityHashMapUsage extends BugChecker
     return Description.NO_MATCH;
   }
 
-  private static final Supplier<Type> JAVA_UTIL_IDENTITYHASHMAP =
-      VisitorState.memoize(state -> state.getTypeFromString(IDENTITY_HASH_MAP));
+  private static final Supplier<Type> JAVA_UTIL_IDENTITYHASHMAP = typeFromString(IDENTITY_HASH_MAP);
 }

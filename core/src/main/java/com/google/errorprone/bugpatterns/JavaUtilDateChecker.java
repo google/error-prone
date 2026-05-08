@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -71,6 +72,5 @@ public class JavaUtilDateChecker extends BugChecker
     return ASTHelpers.isSameType(type, JAVA_UTIL_DATE.get(state), state);
   }
 
-  private static final Supplier<Type> JAVA_UTIL_DATE =
-      VisitorState.memoize(state -> state.getTypeFromString("java.util.Date"));
+  private static final Supplier<Type> JAVA_UTIL_DATE = typeFromString("java.util.Date");
 }

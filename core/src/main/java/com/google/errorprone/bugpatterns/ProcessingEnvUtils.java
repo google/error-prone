@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.collect.Streams;
@@ -32,15 +33,12 @@ import java.util.stream.Stream;
 /** Utilities for working with TypeMirrors in bug checkers. */
 final class ProcessingEnvUtils {
 
-  static final Supplier<Type> TYPE_MIRROR_TYPE =
-      VisitorState.memoize(state -> state.getTypeFromString("javax.lang.model.type.TypeMirror"));
-  private static final Supplier<Type> TYPES_TYPE =
-      VisitorState.memoize(state -> state.getTypeFromString("javax.lang.model.util.Types"));
+  static final Supplier<Type> TYPE_MIRROR_TYPE = typeFromString("javax.lang.model.type.TypeMirror");
+  private static final Supplier<Type> TYPES_TYPE = typeFromString("javax.lang.model.util.Types");
   private static final Supplier<Type> ELEMENTS_TYPE =
-      VisitorState.memoize(state -> state.getTypeFromString("javax.lang.model.util.Elements"));
+      typeFromString("javax.lang.model.util.Elements");
   private static final Supplier<Type> PROCESSING_ENV_TYPE =
-      VisitorState.memoize(
-          state -> state.getTypeFromString("javax.annotation.processing.ProcessingEnvironment"));
+      typeFromString("javax.annotation.processing.ProcessingEnvironment");
 
   private static Optional<String> findVariableInScope(VisitorState state, Type type) {
     if (type == null) {

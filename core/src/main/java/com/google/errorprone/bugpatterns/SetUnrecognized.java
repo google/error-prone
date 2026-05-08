@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
@@ -75,6 +76,5 @@ public final class SetUnrecognized extends BugChecker implements MethodInvocatio
           .withNameMatching(Pattern.compile("(add|set).*"));
 
   private static final Supplier<Type> ENUM_LITE =
-      VisitorState.memoize(
-          state -> state.getTypeFromString("com.google.protobuf.Internal.EnumLite"));
+      typeFromString("com.google.protobuf.Internal.EnumLite");
 }

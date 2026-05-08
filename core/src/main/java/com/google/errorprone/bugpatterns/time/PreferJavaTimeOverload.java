@@ -20,6 +20,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasOverloadWithOnlyOneParameter;
@@ -341,15 +342,12 @@ public final class PreferJavaTimeOverload extends BugChecker
         calledMethod, state.getName(timeSourceBasedName), TIME_SOURCE_TYPE.get(state), state);
   }
 
-  private static final Supplier<Type> JAVA_DURATION_TYPE =
-      VisitorState.memoize(state -> state.getTypeFromString(JAVA_DURATION));
+  private static final Supplier<Type> JAVA_DURATION_TYPE = typeFromString(JAVA_DURATION);
 
-  private static final Supplier<Type> JAVA_INSTANT_TYPE =
-      VisitorState.memoize(state -> state.getTypeFromString(JAVA_INSTANT));
+  private static final Supplier<Type> JAVA_INSTANT_TYPE = typeFromString(JAVA_INSTANT);
 
   private static final Supplier<Type> TIME_UNIT_TYPE =
-      VisitorState.memoize(state -> state.getTypeFromString("java.util.concurrent.TimeUnit"));
+      typeFromString("java.util.concurrent.TimeUnit");
 
-  private static final Supplier<Type> TIME_SOURCE_TYPE =
-      VisitorState.memoize(state -> state.getTypeFromString(TIME_SOURCE));
+  private static final Supplier<Type> TIME_SOURCE_TYPE = typeFromString(TIME_SOURCE);
 }

@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
@@ -126,8 +127,7 @@ public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher 
       VisitorState.memoize(state -> state.getSymbolFromString("java.lang.ThreadLocal"));
 
   private static final Supplier<Type> COM_GOOGLE_INJECT_SCOPE =
-      VisitorState.memoize(state -> state.getTypeFromString("com.google.inject.Scope"));
+      typeFromString("com.google.inject.Scope");
 
-  private static final Supplier<Type> JAVA_TEXT_DATEFORMAT =
-      VisitorState.memoize(state -> state.getTypeFromString("java.text.DateFormat"));
+  private static final Supplier<Type> JAVA_TEXT_DATEFORMAT = typeFromString("java.text.DateFormat");
 }

@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
@@ -31,7 +32,7 @@ import com.sun.tools.javac.code.Type;
 public final class MemorySegmentReferenceEquality extends AbstractReferenceEquality {
 
   private static final Supplier<Type> MEMORY_SEGMENT_TYPE =
-      VisitorState.memoize(state -> state.getTypeFromString("java.lang.foreign.MemorySegment"));
+      typeFromString("java.lang.foreign.MemorySegment");
 
   @Override
   protected boolean matchArgument(ExpressionTree tree, VisitorState state) {

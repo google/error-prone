@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static java.util.Arrays.asList;
 
@@ -305,5 +306,5 @@ public final class FormatStringValidation {
   private FormatStringValidation() {}
 
   private static final Supplier<Type> COM_GOOGLE_COMMON_FLOGGER_LAZYARG =
-      VisitorState.memoize(state -> state.getTypeFromString("com.google.common.flogger.LazyArg"));
+      typeFromString("com.google.common.flogger.LazyArg");
 }

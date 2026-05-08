@@ -22,6 +22,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
@@ -310,5 +311,5 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
   }
 
   private static final Supplier<Type> JAVA_UTIL_REGEX_PATTERN =
-      VisitorState.memoize(state -> state.getTypeFromString("java.util.regex.Pattern"));
+      typeFromString("java.util.regex.Pattern");
 }

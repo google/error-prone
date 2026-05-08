@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.renameVariable;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
@@ -103,6 +104,5 @@ public class DateFormatConstant extends BugChecker implements VariableTreeMatche
     return fix.build();
   }
 
-  private static final Supplier<Type> JAVA_TEXT_DATEFORMAT =
-      VisitorState.memoize(state -> state.getTypeFromString("java.text.DateFormat"));
+  private static final Supplier<Type> JAVA_TEXT_DATEFORMAT = typeFromString("java.text.DateFormat");
 }

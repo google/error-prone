@@ -17,12 +17,12 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.assertEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.assertNotEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -160,11 +160,11 @@ public final class DuplicateAssertion extends BugChecker implements BlockTreeMat
   private record Assertion(String line, ConstantExpression assertee) {}
 
   private static final Supplier<Type> STANDARD_SUBJECT_BUILDER =
-      memoize(state -> state.getTypeFromString("com.google.common.truth.StandardSubjectBuilder"));
+      typeFromString("com.google.common.truth.StandardSubjectBuilder");
 
   private static final Supplier<Type> SIMPLE_SUBJECT_BUILDER =
-      memoize(state -> state.getTypeFromString("com.google.common.truth.SimpleSubjectBuilder"));
+      typeFromString("com.google.common.truth.SimpleSubjectBuilder");
 
   private static final Supplier<Type> CUSTOM_SUBJECT_BUILDER =
-      memoize(state -> state.getTypeFromString("com.google.common.truth.CustomSubjectBuilder"));
+      typeFromString("com.google.common.truth.CustomSubjectBuilder");
 }

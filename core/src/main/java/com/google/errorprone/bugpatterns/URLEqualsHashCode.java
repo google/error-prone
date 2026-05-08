@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableMap;
@@ -124,6 +125,5 @@ public class URLEqualsHashCode extends BugChecker
     }
   }
 
-  private static final Supplier<Type> JAVA_NET_URL =
-      VisitorState.memoize(state -> state.getTypeFromString(URL_CLASS));
+  private static final Supplier<Type> JAVA_NET_URL = typeFromString(URL_CLASS);
 }

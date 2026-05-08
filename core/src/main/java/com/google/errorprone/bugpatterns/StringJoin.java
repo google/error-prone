@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.replace;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
@@ -45,8 +46,7 @@ public final class StringJoin extends BugChecker implements MethodInvocationTree
   private static final Matcher<ExpressionTree> MATCHER =
       staticMethod().onClass("java.lang.String").named("join");
 
-  private static final Supplier<Type> CHAR_SEQUENCE_TYPE =
-      VisitorState.memoize(state -> state.getTypeFromString("java.lang.CharSequence"));
+  private static final Supplier<Type> CHAR_SEQUENCE_TYPE = typeFromString("java.lang.CharSequence");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

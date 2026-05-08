@@ -16,8 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -150,6 +150,5 @@ public final class RuleNotRun extends BugChecker implements CompilationUnitTreeM
     return matched.get();
   }
 
-  private static final Supplier<Type> TEST_RULE =
-      memoize(state -> state.getTypeFromString("org.junit.rules.TestRule"));
+  private static final Supplier<Type> TEST_RULE = typeFromString("org.junit.rules.TestRule");
 }

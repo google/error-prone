@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getDeclaredSymbol;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -292,5 +293,5 @@ public final class ChainedAssertionLosesContext extends BugChecker
           .namedAnyOf("withMessage", "about");
 
   private static final Supplier<Type> COM_GOOGLE_COMMON_TRUTH_SUBJECT =
-      VisitorState.memoize(state -> state.getTypeFromString(SUBJECT_CLASS));
+      typeFromString(SUBJECT_CLASS);
 }
