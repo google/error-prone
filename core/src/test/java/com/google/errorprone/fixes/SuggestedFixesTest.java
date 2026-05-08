@@ -23,6 +23,7 @@ import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import com.google.common.base.Verify;
@@ -44,6 +45,7 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.RemoveUnusedImports;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.tree.AnnotationTree;
@@ -530,7 +532,7 @@ public class SuggestedFixesTest {
   public static class AddAnnotation extends BugChecker implements BugChecker.MethodTreeMatcher {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
-      Type type = state.getTypeFromString("some.pkg.SomeAnnotation");
+      Type type = SOMEANNOTATION.get(state);
       SuggestedFix.Builder builder = SuggestedFix.builder();
       String qualifiedName = SuggestedFixes.qualifyType(state, builder, type);
       return describeMatch(
@@ -2811,4 +2813,6 @@ public class Test {
             """)
         .doTest();
   }
+
+  private static final Supplier<Type> SOMEANNOTATION = typeFromString("some.pkg.SomeAnnotation");
 }

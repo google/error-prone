@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -37,6 +38,7 @@ import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AnnotationTree;
@@ -202,7 +204,7 @@ public class RestrictedApiChecker extends BugChecker
     if (sym == null) {
       return null;
     }
-    return sym.attribute(state.getSymbolFromString(RESTRICTED_API_ANNOTATION));
+    return sym.attribute(RESTRICTED_API_TYPE.get(state));
   }
 
   private Description checkRestriction(
@@ -290,4 +292,7 @@ public class RestrictedApiChecker extends BugChecker
             .orElse(Stream.empty())
             .collect(toImmutableList()));
   }
+
+  private static final Supplier<Symbol> RESTRICTED_API_TYPE =
+      memoize(state -> state.getSymbolFromString(RESTRICTED_API_ANNOTATION));
 }
