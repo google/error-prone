@@ -26,12 +26,9 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static java.util.Collections.unmodifiableList;
 
 import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
-import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.CompilationUnitTree;
@@ -41,8 +38,10 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,53 +69,49 @@ import java.util.Map;
             + "its caller's parameters, but its caller doesn't pass that parameter to it.  It's "
             + "likely that it was intended to.")
 public final class ChainingConstructorIgnoresParameter extends BugChecker
-    implements CompilationUnitTreeMatcher, MethodInvocationTreeMatcher, MethodTreeMatcher {
-  private final Map<MethodSymbol, List<VariableTree>> paramTypesForMethod = newHashMap();
-  private final ListMultimap<MethodSymbol, Caller> callersToEvaluate = ArrayListMultimap.create();
-
+    implements CompilationUnitTreeMatcher {
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    /*
-     * Clear the collections to save memory. (I wonder if it also helps to handle weird cases when a
-     * class has multiple definitions. But I would expect for multiple definitions within the same
-     * compiler invocation to cause deeper problems.)
-     */
-    paramTypesForMethod.clear();
-    callersToEvaluate.clear(); // should have already been cleared
+    var paramTypesForMethod = new HashMap<MethodSymbol, List<VariableTree>>();
+    var callersToEvaluate = ArrayListMultimap.<MethodSymbol, Caller>create();
+
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
+        // TODO(cpovirk): determine whether anyone might be calling Foo.this()
+        if (isIdentifierWithName(tree.getMethodSelect(), "this")) {
+          var symbol = getSymbol(tree);
+          callersToEvaluate.put(symbol, new Caller(tree, state.withPath(getCurrentPath())));
+        }
+        return super.visitMethodInvocation(tree, null);
+      }
+
+      @Override
+      public Void visitMethod(MethodTree tree, Void unused) {
+        var symbol = getSymbol(tree);
+        if (symbol.isConstructor()) {
+          paramTypesForMethod.put(symbol, unmodifiableList(tree.getParameters()));
+        }
+        return super.visitMethod(tree, null);
+      }
+    }.scan(tree, null);
+
+    for (var symbol : callersToEvaluate.keySet()) {
+      evaluateCallers(paramTypesForMethod.get(symbol), callersToEvaluate.get(symbol));
+    }
+
+    // All matches are reported through reportMatch calls instead of return values.
     return NO_MATCH;
   }
 
-  @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    MethodSymbol symbol = getSymbol(tree);
-    // TODO(cpovirk): determine whether anyone might be calling Foo.this()
-    if (!isIdentifierWithName(tree.getMethodSelect(), "this")) {
-      return NO_MATCH;
-    }
-    callersToEvaluate.put(symbol, new Caller(tree, state));
-    return evaluateCallers(symbol);
-  }
-
-  @Override
-  public Description matchMethod(MethodTree tree, VisitorState state) {
-    MethodSymbol symbol = getSymbol(tree);
-    if (!symbol.isConstructor()) {
-      return NO_MATCH;
-    }
-    paramTypesForMethod.put(symbol, unmodifiableList(tree.getParameters()));
-    return evaluateCallers(symbol);
-  }
-
-  private Description evaluateCallers(MethodSymbol symbol) {
-    List<VariableTree> paramTypes = paramTypesForMethod.get(symbol);
-    if (paramTypes == null) {
-      // We haven't seen the declaration yet. We'll evaluate the call when we do.
-      return NO_MATCH;
-    }
-
-    for (Caller caller : callersToEvaluate.removeAll(symbol)) {
+  private void evaluateCallers(List<VariableTree> paramTypes, List<Caller> callers) {
+    for (var caller : callers) {
       VisitorState state = caller.state;
       MethodInvocationTree invocation = caller.tree;
+
+      if (isSuppressed(state)) {
+        continue;
+      }
 
       MethodTree callerConstructor = state.findEnclosing(MethodTree.class);
       if (callerConstructor == null) {
@@ -175,9 +170,6 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
          */
       }
     }
-
-    // All matches are reported through reportMatch calls instead of return values.
-    return NO_MATCH;
   }
 
   private static Map<String, Type> indexTypeByName(List<? extends VariableTree> parameters) {
@@ -186,6 +178,15 @@ public final class ChainingConstructorIgnoresParameter extends BugChecker
       result.put(parameter.getName().toString(), getType(parameter.getType()));
     }
     return result;
+  }
+
+  private boolean isSuppressed(VisitorState state) {
+    for (Tree tree : state.getPath()) {
+      if (isSuppressed(tree, state)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private void reportMatch(
