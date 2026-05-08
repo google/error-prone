@@ -509,6 +509,30 @@ public final class SuggestedFixes {
       String qualifiedName, SuggestedFix.Builder fix, VisitorState state) {
     String name = qualifiedName.substring(qualifiedName.lastIndexOf(".") + 1);
     AtomicBoolean foundConflict = new AtomicBoolean(false);
+    AtomicBoolean alreadyInScope = new AtomicBoolean(false);
+    var identifierName = state.getName(name);
+    stream(state.getPath())
+        .filter(ClassTree.class::isInstance)
+        .map(ClassTree.class::cast)
+        .map(ASTHelpers::getSymbol)
+        .filter(s -> s != null)
+        .flatMap(
+            enclosingClass ->
+                stream(
+                    state
+                        .getTypes()
+                        .membersClosure(enclosingClass.type, /* skipInterface= */ false)
+                        .getSymbolsByName(identifierName)))
+        .forEach(
+            sym -> {
+              var identifierQualifiedName =
+                  sym.owner.getQualifiedName() + "." + sym.getSimpleName();
+              if (qualifiedName.equals(identifierQualifiedName)) {
+                alreadyInScope.set(true);
+              } else {
+                foundConflict.set(true);
+              }
+            });
     new TreeScanner<Void, Void>() {
       @Override
       public Void visitMethod(MethodTree method, Void unused) {
@@ -541,7 +565,9 @@ public final class SuggestedFixes {
       String className = qualifiedName.substring(0, qualifiedName.lastIndexOf("."));
       return qualifyType(state, fix, className) + "." + name;
     }
-    fix.addStaticImport(qualifiedName);
+    if (!alreadyInScope.get()) {
+      fix.addStaticImport(qualifiedName);
+    }
     return name;
   }
 
@@ -1376,7 +1402,7 @@ public final class SuggestedFixes {
 
     // If we reached the maximum number of diagnostics of a given kind without finding one in the
     // modified compilation unit, we won't find any more diagnostics, but we can't be sure that
-    // there isn't an diagnostic, as the diagnostic may simply be the (max+1)-th diagnostic, and
+    // there isn't a diagnostic, as the diagnostic may simply be the (max+1)-th diagnostic, and
     // thus was dropped.
     int countErrors = 0;
     int countWarnings = 0;
