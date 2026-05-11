@@ -37,6 +37,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeTag;
 
 /** Flags TypeMirror equality usage. */
 @BugPattern(
@@ -95,9 +96,18 @@ public class TypeEqualsChecker extends BugChecker
         .anyMatch(s -> s.startsWith("com.google.auto.value.processor."));
   }
 
+  private static boolean isNull(ExpressionTree tree) {
+    if (tree.getKind() == Kind.NULL_LITERAL) {
+      return true;
+    }
+    // Handles e.g. `(null)`
+    Type type = getType(tree);
+    return type != null && type.hasTag(TypeTag.BOT);
+  }
+
   private Description describe(
       Tree tree, ExpressionTree lhs, ExpressionTree rhs, boolean negate, VisitorState state) {
-    if (lhs.getKind() == Kind.NULL_LITERAL || rhs.getKind() == Kind.NULL_LITERAL) {
+    if (isNull(lhs) || isNull(rhs)) {
       return NO_MATCH;
     }
     if (isAutoValueGenerated(state)) {

@@ -141,6 +141,7 @@ public class TypeEqualsCheckerTest {
               void foo(TypeMirror type1) {
                 if (type1 == null) {}
                 if (null == type1) {}
+                if ((null) == type1) {}
                 if (type1.equals(null)) {}
                 if (Objects.equals(type1, null)) {}
                 if (Objects.equals(null, type1)) {}
