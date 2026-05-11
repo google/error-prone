@@ -40,7 +40,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
-import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -88,7 +87,7 @@ public class MethodInvocationMatcher {
     KIND {
       @Override
       MethodKind extract(Context ctx, VisitorState s) {
-        return ctx.sym.getKind() == ElementKind.CONSTRUCTOR
+        return ctx.sym.isConstructor()
             ? MethodKind.CONSTRUCTOR
             : ctx.sym.isStatic() ? MethodKind.STATIC : MethodKind.INSTANCE;
       }

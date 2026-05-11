@@ -38,7 +38,6 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.MoreAnnotations.asStrings;
 import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
 import static java.lang.String.format;
-import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 import static javax.lang.model.element.ElementKind.FIELD;
 import static javax.lang.model.element.Modifier.FINAL;
 
@@ -239,7 +238,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
       }
 
       private boolean isExemptedConstructor(MethodSymbol methodSymbol, VisitorState state) {
-        if (!methodSymbol.getKind().equals(CONSTRUCTOR)) {
+        if (!methodSymbol.isConstructor()) {
           return false;
         }
         // Don't delete unused zero-arg constructors, given those are often there to limit

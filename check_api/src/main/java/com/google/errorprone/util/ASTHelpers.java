@@ -29,7 +29,6 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toCollection;
-import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -816,7 +815,7 @@ public class ASTHelpers {
   public static MethodSymbol canonicalConstructor(ClassSymbol record, VisitorState state) {
     var fieldTypes =
         record.getRecordComponents().stream().map(rc -> rc.type).collect(toImmutableList());
-    return stream(record.members().getSymbols(s -> s.getKind() == CONSTRUCTOR))
+    return stream(record.members().getSymbols(s -> s.isConstructor()))
         .map(c -> (MethodSymbol) c)
         .filter(
             c ->

@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAS
 import static com.google.errorprone.matchers.Matchers.variableType;
 import static com.google.errorprone.predicates.TypePredicates.isPrimitive;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.scanner.Scanner;
@@ -168,7 +167,7 @@ public class MethodHasParametersTest extends CompilerBasedAbstractTest {
           }
 
           private boolean isConstructor(MethodTree node) {
-            return getSymbol(node).getKind() == CONSTRUCTOR;
+            return getSymbol(node).isConstructor();
           }
 
           @Override
