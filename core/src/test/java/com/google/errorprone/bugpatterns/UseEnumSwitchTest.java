@@ -63,12 +63,15 @@ public class UseEnumSwitchTest {
 
               int f(E e) {
                 switch (e) {
-                  case ONE:
+                  case ONE -> {
                     return 1;
-                  case TWO:
+                  }
+                  case TWO -> {
                     return 2;
-                  default:
+                  }
+                  default -> {
                     return 3;
+                  }
                 }
               }
             }
