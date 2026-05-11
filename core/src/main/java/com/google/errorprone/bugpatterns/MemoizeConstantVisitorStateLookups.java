@@ -16,9 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.fixes.SuggestedFixes.qualifyStaticImport;
+import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 import static java.util.Comparator.comparingInt;
 import static java.util.Comparator.naturalOrder;
@@ -37,6 +40,7 @@ import com.google.errorprone.fixes.SuggestedFixes.AdditionPosition;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
+import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -79,7 +83,7 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
   }
 
   private Description fixLookupsInClass(ClassTree tree, VisitorState state) {
-    ImmutableList<CallSite> lookups = findConstantLookups(tree, state);
+    ImmutableList<CallSite> lookups = findConstantLookups(state);
     if (lookups.isEmpty()) {
       return NO_MATCH;
     }
@@ -134,32 +138,20 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
     return describeMatch(fixTree, fix.build());
   }
 
-  private static final class CallSite {
-    /** The method on VisitorState being called. */
-    final Name method;
+  /**
+   * @param method The method on VisitorState being called.
+   * @param argumentValue The compile-time constant value being passed to that method.
+   * @param argumentExpression The actual expression with that value: a string literal, or a
+   *     constant with such a value.
+   * @param entireTree The entire invocation of the VisitorState method.
+   */
+  private record CallSite(
+      Name method,
+      String argumentValue,
+      ExpressionTree argumentExpression,
+      MethodInvocationTree entireTree) {}
 
-    /** The compile-time constant value being passed to that method. */
-    final String argumentValue;
-
-    /** The actual expression with that value: a string literal, or a constant with such a value. */
-    final ExpressionTree argumentExpression;
-
-    /** The entire invocation of the VisitorState method. */
-    final MethodInvocationTree entireTree;
-
-    CallSite(
-        Name method,
-        String argumentValue,
-        ExpressionTree argumentExpression,
-        MethodInvocationTree entireTree) {
-      this.method = method;
-      this.argumentValue = argumentValue;
-      this.argumentExpression = argumentExpression;
-      this.entireTree = entireTree;
-    }
-  }
-
-  private ImmutableList<CallSite> findConstantLookups(ClassTree tree, VisitorState state) {
+  private ImmutableList<CallSite> findConstantLookups(VisitorState state) {
     ImmutableList.Builder<CallSite> result = ImmutableList.builder();
     new SuppressibleTreePathScanner<Void, Void>(state) {
       @Override
@@ -212,20 +204,31 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
     String newConstantName =
         namingStrategy.apply(newConstantPrefix, Ascii.toUpperCase(returnTypeName));
 
+    var rhs =
+        methodName.contentEquals("getTypeFromString")
+            ? "%s(%s)"
+                .formatted(
+                    qualifyStaticImport(
+                        Suppliers.class.getCanonicalName() + ".typeFromString", fix, state),
+                    state.getSourceForNode(prototype.argumentExpression))
+            : "%s.memoize(state -> state.%s(%s))"
+                .formatted(
+                    qualifyType(state, fix, VisitorState.class.getCanonicalName()),
+                    methodName,
+                    state.getSourceForNode(prototype.argumentExpression));
+
     memberConsumer.accept(
-        String.format(
-            "private static final %s<%s> %s = %s.memoize(state -> state.%s(%s));",
-            SuggestedFixes.qualifyType(state, fix, Supplier.class.getCanonicalName()),
-            SuggestedFixes.qualifyType(state, fix, returnType.getQualifiedName().toString()),
-            newConstantName,
-            SuggestedFixes.qualifyType(state, fix, VisitorState.class.getCanonicalName()),
-            methodName,
-            state.getSourceForNode(prototype.argumentExpression)));
+        "private static final %s<%s> %s = %s;"
+            .formatted(
+                qualifyType(state, fix, Supplier.class.getCanonicalName()),
+                qualifyType(state, fix, returnType.getQualifiedName().toString()),
+                newConstantName,
+                rhs));
     for (CallSite instance : instances) {
-      ExpressionTree visitorStateExpr = ASTHelpers.getReceiver(instance.entireTree);
+      var visitorStateExpr = getReceiver(instance.entireTree);
       fix.replace(
           instance.entireTree,
-          String.format("%s.get(%s)", newConstantName, state.getSourceForNode(visitorStateExpr)));
+          "%s.get(%s)".formatted(newConstantName, state.getSourceForNode(visitorStateExpr)));
     }
   }
 

@@ -89,6 +89,8 @@ class Test {
         .addOutputLines(
             "Test.java",
             """
+            import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+
             import com.google.errorprone.VisitorState;
             import com.google.errorprone.suppliers.Supplier;
             import com.sun.tools.javac.code.Type;
@@ -101,8 +103,7 @@ class Test {
                 Type map2 = JAVA_UTIL_MAP.get(state);
               }
 
-              private static final Supplier<Type> JAVA_UTIL_MAP =
-                  VisitorState.memoize(state -> state.getTypeFromString(MAP));
+              private static final Supplier<Type> JAVA_UTIL_MAP = typeFromString(MAP);
             }
             """)
         .doTest();
@@ -129,6 +130,8 @@ class Test {
         .addOutputLines(
             "Test.java",
             """
+            import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+
             import com.google.errorprone.VisitorState;
             import com.google.errorprone.suppliers.Supplier;
             import com.sun.tools.javac.code.Type;
@@ -144,8 +147,7 @@ class Test {
               private static final Supplier<Name> JAVA_LANG_CLASS_NAME =
                   VisitorState.memoize(state -> state.getName("java.lang.Class"));
 
-              private static final Supplier<Type> JAVA_LANG_CLASS_TYPE =
-                  VisitorState.memoize(state -> state.getTypeFromString("java.lang.Class"));
+              private static final Supplier<Type> JAVA_LANG_CLASS_TYPE = typeFromString("java.lang.Class");
             }
             """)
         .doTest();
