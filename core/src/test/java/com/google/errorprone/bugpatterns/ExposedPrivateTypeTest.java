@@ -387,4 +387,20 @@ public final class ExposedPrivateTypeTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void constructorName() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Outer {
+              private static class PrivateInner {}
+
+              // BUG: Diagnostic contains: member 'Outer'
+              Outer(PrivateInner privateInner) {}
+            }
+            """)
+        .doTest();
+  }
 }

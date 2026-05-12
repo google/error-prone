@@ -174,10 +174,11 @@ public final class ExposedPrivateType extends BugChecker
           .forEach(
               declaration -> increaseVisibility.merge(visibility.refactor(declaration, state)));
       description.addFix(increaseVisibility.build());
+      var sym = getSymbol(tree);
       description.setMessage(
           String.format(
               "Signature of non-private member '%s' should not reference private classes: %s",
-              getSymbol(tree).getSimpleName(),
+              sym.isConstructor() ? sym.owner.getSimpleName() : sym.getSimpleName(),
               found.stream().map(s -> s.getSimpleName()).collect(joining(", "))));
       return description.build();
     }
