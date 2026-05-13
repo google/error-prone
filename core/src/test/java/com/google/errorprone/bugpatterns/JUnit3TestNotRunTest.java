@@ -215,15 +215,7 @@ public class JUnit3TestNotRunTest {
               public static void testParseGlobalMetadata() {}
             }
             """)
-        .addOutputLines(
-            "out/KansasGlobalMetadataUtilsTest.java",
-            """
-            import junit.framework.TestCase;
-
-            public class KansasGlobalMetadataUtilsTest extends TestCase {
-              public void testParseGlobalMetadata() {}
-            }
-            """)
+        .expectUnchanged()
         .doTest();
   }
 

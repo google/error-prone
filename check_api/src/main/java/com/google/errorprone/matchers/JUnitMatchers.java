@@ -155,7 +155,6 @@ public final class JUnitMatchers {
    *   <li>The method's name begins with "test".
    *   <li>The method has no parameters.
    *   <li>The method is public.
-   *   <li>The method is not static.
    *   <li>The method returns void.
    * </ol>
    */
@@ -164,7 +163,6 @@ public final class JUnitMatchers {
           methodNameStartsWith("test"),
           methodHasNoParameters(),
           Matchers.<MethodTree>hasModifier(Modifier.PUBLIC),
-          not(Matchers.<MethodTree>hasModifier(Modifier.STATIC)),
           methodReturns(VOID_TYPE));
 
   /** Common matcher for possible JUnit setUp/tearDown methods. */
