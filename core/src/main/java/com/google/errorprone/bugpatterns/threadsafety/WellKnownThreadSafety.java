@@ -131,6 +131,7 @@ public final class WellKnownThreadSafety implements ThreadSafetyKnownTypes {
         .add("io.reactivex.Single", "T")
         .add("io.reactivex.Flowable", "T")
         .add(Throwable.class) // Unsafe due to initCause, but generally used across threads
+        .add("io.grpc.stub.AbstractStub")
         .add("java.lang.ThreadLocal")
         .add("java.lang.invoke.MethodHandle")
         .add(java.lang.reflect.Method.class)
