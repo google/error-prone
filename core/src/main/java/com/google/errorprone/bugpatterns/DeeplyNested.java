@@ -146,9 +146,7 @@ public class DeeplyNested extends BugChecker implements CompilationUnitTreeMatch
           tokens.stream().filter(t -> t.kind() == Tokens.TokenKind.DOT).findFirst().get().pos();
       replacement.append(
           String.format(
-              "%sbuilder%s;",
-              state.getSourceCode().subSequence(start, dot),
-              state.getSourceCode().subSequence(dot, end)));
+              "%sbuilder%s;", state.getSourceCode(start, dot), state.getSourceCode(dot, end)));
     }
 
     if (enclosing instanceof ReturnTree) {

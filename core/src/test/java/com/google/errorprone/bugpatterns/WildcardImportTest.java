@@ -617,6 +617,7 @@ public class WildcardImportTest {
             package test;
 
             import static java.util.Arrays.asList;
+
             import java.util.List;
 
             public class Test {
@@ -678,6 +679,7 @@ public class WildcardImportTest {
         .addOutputLines(
             "out/Test.java",
             """
+            // BUG: Diagnostic matches: X
             import e.E;
 
             public class Test {

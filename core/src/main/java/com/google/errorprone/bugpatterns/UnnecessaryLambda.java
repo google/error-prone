@@ -207,7 +207,9 @@ public class UnnecessaryLambda extends BugChecker
     } catch (FunctionDescriptorLookupError e) {
       return false;
     }
-    if (!PACKAGES_TO_FIX.contains(enclosingPackage(descriptor).getQualifiedName().toString())) {
+    if (!enclosingPackage(descriptor)
+        .map(p -> PACKAGES_TO_FIX.contains(p.getQualifiedName().toString()))
+        .orElse(false)) {
       return false;
     }
     class Scanner extends TreePathScanner<Void, Void> {

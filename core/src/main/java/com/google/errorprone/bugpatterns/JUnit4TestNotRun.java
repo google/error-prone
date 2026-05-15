@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestClass;
-import static com.google.errorprone.matchers.JUnitMatchers.isJunit3TestCase;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
@@ -79,7 +78,6 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
               (t, s) -> hasParameterisationAnnotation(t.getModifiers().getAnnotations()),
               (t, s) -> t.getParameters().stream().allMatch(v -> isInjectable(v, s))),
           not(JUnitMatchers::hasJUnitAnnotation));
-  ;
 
   private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
       ImmutableSet.of("com.pdsl.runners.PdslTest", "com.pholser.junit.quickcheck.Property");
@@ -172,7 +170,8 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
    *       {@code @BeforeClass}, or {@code @AfterClass};
    *   <li>and, the method appears to be a test method, that is:
    *       <ol type="a">
-   *         <li>The method is named like a JUnit 3 test case,
+   *         <li>The method name starts with "test" (which is a JUnit 3 convention),
+   *         <li>The method name contains underscores,
    *         <li>or, the method body contains a method call with a name that contains "assert",
    *             "verify", "check", "fail", or "expect".
    *       </ol>
@@ -193,13 +192,10 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
       return Optional.of(describeFixes(methodTree, state));
     }
 
-    // Method appears to be a JUnit 3 test case (name prefixed with "test"), probably a test.
-    if (isJunit3TestCase.matches(methodTree, state)) {
-      return Optional.of(describeFixes(methodTree, state));
-    }
-
-    // Method name contains underscores: it's either a test or a style violation.
-    if (methodTree.getName().toString().contains("_")) {
+    // If the method name starts with "test", it's likely a JUnit 3 test case.
+    // If the method name contains underscores, it's either a test or a style violation.
+    String methodName = methodTree.getName().toString();
+    if (methodName.startsWith("test") || methodName.contains("_")) {
       return Optional.of(describeFixes(methodTree, state));
     }
 
@@ -240,10 +236,7 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
             .prefixWith(methodTree, "@Ignore ")
             .build();
 
-    SuggestedFix visibilityFix =
-        SuggestedFix.merge(
-            SuggestedFixes.removeModifiers(methodTree, state, Modifier.PUBLIC).orElse(emptyFix()),
-            SuggestedFixes.addModifiers(methodTree, state, Modifier.PRIVATE).orElse(emptyFix()));
+    SuggestedFix visibilityFix = SuggestedFixes.Visibility.PRIVATE.refactor(methodTree, state);
 
     // Suggest @Ignore first if test method is named like a purposely disabled test.
     String methodName = methodTree.getName().toString();

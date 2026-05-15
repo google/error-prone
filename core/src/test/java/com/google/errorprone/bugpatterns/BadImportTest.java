@@ -16,7 +16,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +36,7 @@ public final class BadImportTest {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -54,6 +54,7 @@ public final class BadImportTest {
             "Test.java",
             """
             import static com.google.errorprone.CompilationTestHelper.newInstance;
+
             import com.google.errorprone.CompilationTestHelper;
             import com.google.errorprone.bugpatterns.BugChecker;
 
@@ -73,6 +74,7 @@ public final class BadImportTest {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -90,6 +92,7 @@ public final class BadImportTest {
             "Test.java",
 """
 import static com.google.common.collect.ImmutableList.of;
+
 import com.google.common.collect.ImmutableList;
 
 class Test {
@@ -108,6 +111,7 @@ class Test {
             "Test.java",
             """
             import static com.google.common.truth.Truth8.assertThat;
+
             import java.util.stream.IntStream;
 
             class Test {
@@ -127,6 +131,7 @@ class Test {
             "in/Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -145,6 +150,7 @@ class Test {
             "out/Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -457,6 +463,8 @@ import org.jspecify.annotations.Nullable;
  */
 class BadImportPositiveCases {
   public void variableDeclarations() {
+    // Only the first match is reported; but all occurrences are fixed.
+    // BUG: Diagnostic contains: ImmutableList.Builder
     ImmutableList.Builder<String> qualified;
     ImmutableList.Builder raw;
   }
@@ -503,7 +511,7 @@ class BadImportPositiveCases {
   }
 }
 """)
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   @Test
@@ -582,6 +590,7 @@ class BadImportPositiveCases {
             "Test.java",
             """
             import static com.google.common.truth.Truth8.assertThat;
+
             import java.util.stream.IntStream;
 
             class Test {
@@ -617,6 +626,7 @@ class BadImportPositiveCases {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             @SuppressWarnings("BadImport")
@@ -635,6 +645,7 @@ class BadImportPositiveCases {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -655,6 +666,7 @@ class BadImportPositiveCases {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.of;
+
             import com.google.common.collect.ImmutableList;
 
             class Test {
@@ -722,6 +734,7 @@ class BadImportPositiveCases {
             package pkg;
 
             import static a.E.INSTANCE;
+
             import a.E;
 
             class Test {
@@ -840,6 +853,7 @@ class BadImportPositiveCases {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.toImmutableList;
+
             import com.google.common.collect.ImmutableList;
             import java.util.stream.Collector;
 

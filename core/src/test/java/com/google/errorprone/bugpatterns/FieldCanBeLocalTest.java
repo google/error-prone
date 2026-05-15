@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -106,6 +105,7 @@ public final class FieldCanBeLocalTest {
             "Test.java",
             """
             class Test {
+
               int foo() {
                 int a = 1;
                 a = 2;
@@ -178,6 +178,7 @@ public final class FieldCanBeLocalTest {
             "Test.java",
             """
             class Test {
+
               int foo() {
                 @Field int a = 1;
                 return a;
@@ -221,7 +222,7 @@ public final class FieldCanBeLocalTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -256,6 +257,7 @@ public final class FieldCanBeLocalTest {
             "Test.java",
             """
             class Test {
+
               int foo() {
                 @Field int a = 1;
                 return a;
@@ -389,6 +391,7 @@ public final class FieldCanBeLocalTest {
             "Test.java",
             """
             class Test {
+
               int foo() {
                 int a = 1;
                 return a;
@@ -427,6 +430,7 @@ public final class FieldCanBeLocalTest {
             "Test.java",
             """
             class Test {
+
               int foo() {
                 int a = 1;
                 return a;
@@ -470,7 +474,9 @@ public final class FieldCanBeLocalTest {
             "Test.java",
             """
             class Test {
+
               Test(int a) {
+
                 int b = a + 2;
               }
 
@@ -589,9 +595,9 @@ public final class FieldCanBeLocalTest {
         .addSourceLines(
             "Test.java",
 """
+import java.util.Collections;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import java.util.Collections;
 
 class Test {
   private Integer a;

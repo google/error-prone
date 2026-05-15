@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import java.util.Enumeration;
@@ -167,7 +165,7 @@ public class JdkObsoleteTest {
                   };
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -312,7 +310,7 @@ public class JdkObsoleteTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -337,6 +335,30 @@ public class JdkObsoleteTest {
             "            });",
             "  }",
             "}")
+        .doTest();
+  }
+
+  @Test
+  public void concurrentHashMap() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.Enumeration;
+            import java.util.concurrent.ConcurrentHashMap;
+
+            class Test {
+              Enumeration<String> keys(ConcurrentHashMap<String, Integer> map) {
+                // BUG: Diagnostic contains: ConcurrentHashMap.keySet()
+                return map.keys();
+              }
+
+              Enumeration<Integer> elements(ConcurrentHashMap<String, Integer> map) {
+                // BUG: Diagnostic contains: ConcurrentHashMap.values()
+                return map.elements();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -369,8 +391,8 @@ public class JdkObsoleteTest {
             "Test.java",
             """
             import java.util.Map;
-            import java.util.Set;
             import java.util.NavigableMap;
+            import java.util.Set;
 
             class Test {
               void f(NavigableMap<String, Integer> m) {
@@ -510,6 +532,62 @@ public class JdkObsoleteTest {
               }
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  public void preferCharsetAcceptingApis_androidMinSdk32() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+
+            import java.io.*;
+            import java.net.*;
+            import java.nio.channels.*;
+            import java.nio.file.Path;
+            import java.util.*;
+
+            class Test {
+              private static final String UTF8_NAME = UTF_8.name();
+
+              void string(byte[] bytes) throws Exception {
+                // BUG: Diagnostic contains: String.getBytes(Charset)
+                "foo".getBytes(UTF8_NAME);
+                // BUG: Diagnostic contains: new String(byte[], Charset)
+                new String(bytes, UTF8_NAME);
+                // BUG: Diagnostic contains: new String(byte[], int, int, Charset)
+                new String(bytes, 0, 1, UTF8_NAME);
+              }
+
+              void byteArrayOutputStream(String UTF8_NAME) throws Exception {
+                new ByteArrayOutputStream().toString(UTF8_NAME);
+              }
+
+              void urlDecoder(String UTF8_NAME) throws Exception {
+                URLDecoder.decode("foo", UTF8_NAME);
+              }
+
+              void urlEncoder(String UTF8_NAME) throws Exception {
+                URLEncoder.encode("foo", UTF8_NAME);
+              }
+
+              void newReader(ReadableByteChannel rbc) throws Exception {
+                Channels.newReader(rbc, UTF8_NAME);
+              }
+
+              void newWriter(WritableByteChannel wbc) throws Exception {
+                Channels.newWriter(wbc, UTF8_NAME);
+              }
+
+              void inputStreamReader(InputStream is) throws Exception {
+                // BUG: Diagnostic contains: new InputStreamReader(InputStream, Charset)
+                new InputStreamReader(is, UTF8_NAME);
+              }
+            }
+            """)
+        .setArgs("-XepOpt:JdkObsolete:AndroidMinSdkVersion=32")
         .doTest();
   }
 }

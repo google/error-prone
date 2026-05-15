@@ -88,10 +88,10 @@ public class DistinctVarargsCheckerTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.collect.Ordering;
-            import com.google.common.collect.ImmutableSortedMap;
             import com.google.common.collect.ImmutableSet;
+            import com.google.common.collect.ImmutableSortedMap;
             import com.google.common.collect.ImmutableSortedSet;
+            import com.google.common.collect.Ordering;
             import java.util.Map;
             import java.util.Set;
 
@@ -128,11 +128,11 @@ public class DistinctVarargsCheckerTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.collect.Ordering;
             import com.google.common.collect.ImmutableBiMap;
-            import com.google.common.collect.ImmutableSortedMap;
             import com.google.common.collect.ImmutableSet;
+            import com.google.common.collect.ImmutableSortedMap;
             import com.google.common.collect.ImmutableSortedSet;
+            import com.google.common.collect.Ordering;
             import java.util.Map;
             import java.util.Set;
 

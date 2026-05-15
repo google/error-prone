@@ -121,8 +121,8 @@ public class FromTemporalAccessorTest {
             import java.time.OffsetTime;
             import java.time.Year;
             import java.time.YearMonth;
-            import java.time.ZonedDateTime;
             import java.time.ZoneOffset;
+            import java.time.ZonedDateTime;
             import java.time.temporal.TemporalAccessor;
 
             public class TestClass {

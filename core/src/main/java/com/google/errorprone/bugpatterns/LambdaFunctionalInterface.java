@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Streams.findLast;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.Optional.ofNullable;
@@ -32,6 +33,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -52,55 +54,54 @@ import java.util.Optional;
         "Use Java's utility functional interfaces instead of Function<A, B> for primitive types.",
     severity = SUGGESTION)
 public class LambdaFunctionalInterface extends BugChecker implements MethodTreeMatcher {
-  private static final String JAVA_UTIL_FUNCTION_FUNCTION = "java.util.function.Function";
-  private static final String JAVA_LANG_NUMBER = "java.lang.Number";
+  private static final String JAVA_UTIL_FUNCTION_FUNCTION_NAME = "java.util.function.Function";
 
   private static final ImmutableMap<String, String> METHOD_MAPPINGS =
       ImmutableMap.<String, String>builder()
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Double,java.lang.Double>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<java.lang.Double,java.lang.Double>",
               "java.util.function.DoubleFunction<Double>")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Double,java.lang.Integer>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<java.lang.Double,java.lang.Integer>",
               "java.util.function.DoubleToIntFunction")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Double,java.lang.Long>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<java.lang.Double,java.lang.Long>",
               "java.util.function.DoubleToLongFunction")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Double,T>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<java.lang.Double,T>",
               "java.util.function.DoubleFunction<T>")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Integer,java.lang.Integer>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<java.lang.Integer,java.lang.Integer>",
               "java.util.function.IntFunction<Integer>")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Integer,java.lang.Double>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<java.lang.Integer,java.lang.Double>",
               "java.util.function.IntToDoubleFunction")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Integer,java.lang.Long>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<java.lang.Integer,java.lang.Long>",
               "java.util.function.IntToLongFunction")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Integer,T>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<java.lang.Integer,T>",
               "java.util.function.IntFunction<T>")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Long,java.lang.Long>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<java.lang.Long,java.lang.Long>",
               "java.util.function.LongFunction<Long>")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Long,java.lang.Integer>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<java.lang.Long,java.lang.Integer>",
               "java.util.function.LongToIntFunction")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Long,java.lang.Double>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<java.lang.Long,java.lang.Double>",
               "java.util.function.LongToDoubleFunction")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<java.lang.Long,T>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<java.lang.Long,T>",
               "java.util.function.LongFunction<T>")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<T,java.lang.Long>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<T,java.lang.Long>",
               "java.util.function.ToLongFunction<T>")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<T,java.lang.Integer>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<T,java.lang.Integer>",
               "java.util.function.ToIntFunction<T>")
           .put(
-              JAVA_UTIL_FUNCTION_FUNCTION + "<T,java.lang.Double>",
+              JAVA_UTIL_FUNCTION_FUNCTION_NAME + "<T,java.lang.Double>",
               "java.util.function.ToDoubleFunction<T>")
           .buildOrThrow();
 
@@ -155,10 +156,8 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
             .filter(param -> hasFunctionAsArg(param, state))
             .filter(
                 param ->
-                    isFunctionArgSubtypeOf(
-                            param, 0, state.getTypeFromString(JAVA_LANG_NUMBER), state)
-                        || isFunctionArgSubtypeOf(
-                            param, 1, state.getTypeFromString(JAVA_LANG_NUMBER), state))
+                    isFunctionArgSubtypeOf(param, 0, JAVA_LANG_NUMBER.get(state), state)
+                        || isFunctionArgSubtypeOf(param, 1, JAVA_LANG_NUMBER.get(state), state))
             .collect(toImmutableList());
 
     // preconditions (2) and (3)
@@ -221,9 +220,8 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
           .filter(a -> hasFunctionAsArg(a, state))
           .noneMatch(
               a ->
-                  isFunctionArgSubtypeOf(a, 0, state.getTypeFromString(JAVA_LANG_NUMBER), state)
-                      || isFunctionArgSubtypeOf(
-                          a, 1, state.getTypeFromString(JAVA_LANG_NUMBER), state))) {
+                  isFunctionArgSubtypeOf(a, 0, JAVA_LANG_NUMBER.get(state), state)
+                      || isFunctionArgSubtypeOf(a, 1, JAVA_LANG_NUMBER.get(state), state))) {
         return false;
       }
     }
@@ -260,7 +258,7 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
 
   private static boolean hasFunctionAsArg(Tree param, VisitorState state) {
     return ASTHelpers.isSameType(
-        ASTHelpers.getType(param), state.getTypeFromString(JAVA_UTIL_FUNCTION_FUNCTION), state);
+        ASTHelpers.getType(param), JAVA_UTIL_FUNCTION_FUNCTION.get(state), state);
   }
 
   private static boolean isFunctionArgSubtypeOf(
@@ -290,4 +288,9 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
 
     return (cutPosition < 0) ? fullyQualifiedName : fullyQualifiedName.substring(0, cutPosition);
   }
+
+  private static final Supplier<Type> JAVA_LANG_NUMBER = typeFromString("java.lang.Number");
+
+  private static final Supplier<Type> JAVA_UTIL_FUNCTION_FUNCTION =
+      typeFromString(JAVA_UTIL_FUNCTION_FUNCTION_NAME);
 }

@@ -190,7 +190,7 @@ public final class ConstantExpressions {
   /** Represents a constant expression. */
   public sealed interface ConstantExpression {
     /** Represents a constant literal. */
-    public static record Literal(Object object) implements ConstantExpression {
+    public static record Literal(@Nullable Object object) implements ConstantExpression {
       @Override
       public void accept(ConstantExpressionVisitor visitor) {
         visitor.visitConstant(object());
@@ -198,7 +198,7 @@ public final class ConstantExpressions {
 
       @Override
       public final String toString() {
-        return object().toString();
+        return String.valueOf(object());
       }
     }
 
@@ -273,8 +273,8 @@ public final class ConstantExpressions {
         return Optional.of(new ConstantExpression.ConstantEquals(lhs.get(), rhs.get()));
       }
     }
-    Object value = constValue(tree);
-    if (value != null && tree instanceof LiteralTree) {
+    Object value = tree instanceof LiteralTree ? constValue(tree) : null;
+    if (value != null || tree.getKind() == Kind.NULL_LITERAL) {
       return Optional.of(new ConstantExpression.Literal(value));
     }
     return symbolizeImmutableExpression(tree, state).map(x -> x);
@@ -339,8 +339,7 @@ public final class ConstantExpressions {
       return false;
     }
     Symbol symbol = getSymbol(receiver);
-    return symbol.owner.isEnum()
-        || (symbol instanceof VarSymbol && isConsideredFinal(symbol))
+    return (symbol instanceof VarSymbol && isConsideredFinal(symbol))
         || symbol instanceof ClassSymbol
         || symbol instanceof PackageSymbol;
   }

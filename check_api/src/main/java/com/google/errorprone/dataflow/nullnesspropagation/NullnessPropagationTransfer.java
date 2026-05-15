@@ -945,28 +945,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   }
 
   @VisibleForTesting
-  static final class MemberName {
-    final String clazz;
-    final String member;
-
-    MemberName(String clazz, String member) {
-      this.clazz = clazz;
-      this.member = member;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (obj instanceof MemberName other) {
-        return clazz.equals(other.clazz) && member.equals(other.member);
-      }
-      return false;
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(clazz, member);
-    }
-  }
+  record MemberName(String clazz, String member) {}
 
   static final record ClassAndMethod(
       MethodSymbol methodSymbol, ClassSymbol classSymbol, @Nullable Types types)

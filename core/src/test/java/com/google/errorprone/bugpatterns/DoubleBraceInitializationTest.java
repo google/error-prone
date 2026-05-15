@@ -305,9 +305,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 class Test {
-  static final ImmutableMap<Integer, String> a = ImmutableMap.of(1, "a", 2, "b");
-  static final ImmutableMap<Integer, String> b = ImmutableMap.of(1, "a", 2, "b");
-  Map<Integer, String> c = new HashMap<Integer, String>(ImmutableMap.of(1, "a", 2, "b"));
+  static final ImmutableMap<Integer, String> a =
+      ImmutableMap.of(
+          1, "a",
+          2, "b");
+  static final ImmutableMap<Integer, String> b =
+      ImmutableMap.of(
+          1, "a",
+          2, "b");
+  Map<Integer, String> c =
+      new HashMap<Integer, String>(
+          ImmutableMap.of(
+              1, "a",
+              2, "b"));
   static final ImmutableMap<Integer, String> d =
       ImmutableMap.<Integer, String>builder()
           .put(1, "a")

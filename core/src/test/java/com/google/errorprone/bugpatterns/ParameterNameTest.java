@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
@@ -63,7 +61,7 @@ public class ParameterNameTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -809,7 +807,7 @@ class Test {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -839,7 +837,7 @@ class Test {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test

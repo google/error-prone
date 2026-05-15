@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -149,7 +148,7 @@ public class TypeParameterShadowingTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -375,8 +374,8 @@ public class TypeParameterShadowingTest {
 """
 package foo.bar;
 
-import java.util.Map;
 import java.util.Comparator;
+import java.util.Map;
 
 class Test {
   static Comparator<Map.Entry<Integer, String>> ENTRY_COMPARATOR =

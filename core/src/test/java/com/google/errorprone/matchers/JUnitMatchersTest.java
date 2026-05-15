@@ -154,8 +154,8 @@ public final class JUnitMatchersTest {
             "MyRule.java",
             """
             import org.junit.rules.TestRule;
-            import org.junit.runners.model.Statement;
             import org.junit.runner.Description;
+            import org.junit.runners.model.Statement;
 
             public class MyRule implements TestRule {
               public Statement apply(Statement s, Description d) {
@@ -196,9 +196,9 @@ public final class JUnitMatchersTest {
             "AmbiguousRunWith.java",
             """
             import junit.framework.TestCase;
+            import org.junit.Test;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
-            import org.junit.Test;
 
             @RunWith(JUnit4.class)
             // BUG: Diagnostic contains: Version:Both
@@ -210,9 +210,9 @@ public final class JUnitMatchersTest {
             "AmbiguousTest.java",
             """
             import junit.framework.TestCase;
+            import org.junit.Test;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
-            import org.junit.Test;
 
             // BUG: Diagnostic contains: Version:Both
             public class AmbiguousTest extends TestCase {

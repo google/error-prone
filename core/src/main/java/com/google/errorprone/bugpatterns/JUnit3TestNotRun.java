@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Ascii.toUpperCase;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.fixes.SuggestedFixes.addModifiers;
 import static com.google.errorprone.fixes.SuggestedFixes.removeModifiers;
 import static com.google.errorprone.fixes.SuggestedFixes.renameMethod;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -41,6 +40,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.CompilationUnitTree;
@@ -166,9 +166,7 @@ public final class JUnit3TestNotRun extends BugChecker implements CompilationUni
       fix.merge(renameMethod(methodTree, fixedName, state));
     }
 
-    addModifiers(methodTree, state, Modifier.PUBLIC).ifPresent(fix::merge);
-    removeModifiers(methodTree, state, Modifier.PRIVATE, Modifier.PROTECTED).ifPresent(fix::merge);
-    // N.B. must occur in separate step because removeModifiers only removes one modifier at a time.
+    fix.merge(SuggestedFixes.Visibility.PUBLIC.refactor(methodTree, state));
     removeModifiers(methodTree, state, Modifier.STATIC).ifPresent(fix::merge);
 
     return describeMatch(methodTree, fix.build());

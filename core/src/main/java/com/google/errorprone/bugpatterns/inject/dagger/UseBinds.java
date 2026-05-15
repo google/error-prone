@@ -64,35 +64,32 @@ import javax.lang.model.element.Modifier;
     severity = WARNING)
 public class UseBinds extends BugChecker implements MethodTreeMatcher {
   private static final Matcher<MethodTree> SIMPLE_METHOD =
-      new Matcher<MethodTree>() {
-        @Override
-        public boolean matches(MethodTree t, VisitorState state) {
-          List<? extends VariableTree> parameters = t.getParameters();
-          if (parameters.size() != 1) {
-            return false;
-          }
-          VariableTree onlyParameter = Iterables.getOnlyElement(parameters);
-
-          BlockTree body = t.getBody();
-          if (body == null) {
-            return false;
-          }
-          List<? extends StatementTree> statements = body.getStatements();
-          if (statements.size() != 1) {
-            return false;
-          }
-          StatementTree onlyStatement = Iterables.getOnlyElement(statements);
-
-          if (!(onlyStatement instanceof ReturnTree returnTree)) {
-            return false;
-          }
-          Symbol returnedSymbol = getSymbol(returnTree.getExpression());
-          if (returnedSymbol == null) {
-            return false;
-          }
-
-          return getSymbol(onlyParameter).equals(returnedSymbol);
+      (MethodTree t, VisitorState state) -> {
+        List<? extends VariableTree> parameters = t.getParameters();
+        if (parameters.size() != 1) {
+          return false;
         }
+        VariableTree onlyParameter = Iterables.getOnlyElement(parameters);
+
+        BlockTree body = t.getBody();
+        if (body == null) {
+          return false;
+        }
+        List<? extends StatementTree> statements = body.getStatements();
+        if (statements.size() != 1) {
+          return false;
+        }
+        StatementTree onlyStatement = Iterables.getOnlyElement(statements);
+
+        if (!(onlyStatement instanceof ReturnTree returnTree)) {
+          return false;
+        }
+        Symbol returnedSymbol = getSymbol(returnTree.getExpression());
+        if (returnedSymbol == null) {
+          return false;
+        }
+
+        return getSymbol(onlyParameter).equals(returnedSymbol);
       };
 
   private static final Matcher<MethodTree> CAN_BE_A_BINDS_METHOD =

@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static java.util.Arrays.asList;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -257,7 +256,7 @@ public class UnusedNestedClassTest {
             """
             class A {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test

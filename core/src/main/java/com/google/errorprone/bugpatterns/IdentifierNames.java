@@ -22,6 +22,7 @@ import static com.google.common.base.Ascii.toUpperCase;
 import static java.lang.Character.isDigit;
 
 import com.google.errorprone.ErrorProneFlags;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 
@@ -68,7 +69,9 @@ final class IdentifierNames {
   }
 
   static String fixInitialisms(String input) {
-    return PROBABLE_INITIALISM.matcher(input).replaceAll(r -> titleCase(r.group(1)) + r.group(2));
+    return PROBABLE_INITIALISM
+        .matcher(input)
+        .replaceAll(r -> Matcher.quoteReplacement(titleCase(r.group(1)) + r.group(2)));
   }
 
   private static String titleCase(String input) {

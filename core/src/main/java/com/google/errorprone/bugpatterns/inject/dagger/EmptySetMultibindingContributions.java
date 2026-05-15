@@ -124,15 +124,12 @@ public final class EmptySetMultibindingContributions extends BugChecker
       Matchers.singleStatementReturnMatcher(EMPTY_SET);
 
   private static final Matcher<MethodTree> RETURNS_EMPTY_SET =
-      new Matcher<MethodTree>() {
-        @Override
-        public boolean matches(MethodTree method, VisitorState state) {
-          List<? extends VariableTree> parameters = method.getParameters();
-          if (!parameters.isEmpty()) {
-            return false;
-          }
-          return DIRECTLY_RETURNS_EMPTY_SET.matches(method, state);
+      (MethodTree method, VisitorState state) -> {
+        List<? extends VariableTree> parameters = method.getParameters();
+        if (!parameters.isEmpty()) {
+          return false;
         }
+        return DIRECTLY_RETURNS_EMPTY_SET.matches(method, state);
       };
 
   private static final Matcher<Tree> ANNOTATED_WITH_PRODUCES_OR_PROVIDES =

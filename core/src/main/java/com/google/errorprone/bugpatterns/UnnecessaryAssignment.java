@@ -44,6 +44,7 @@ import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.matchers.MultiMatcher;
@@ -84,11 +85,10 @@ public final class UnnecessaryAssignment extends BugChecker
     implements AssignmentTreeMatcher, VariableTreeMatcher {
 
   private static final ImmutableSet<String> FRAMEWORK_ANNOTATIONS =
-      ImmutableSet.of(
-          "com.google.testing.junit.testparameterinjector.TestParameter",
-          "com.google.inject.Inject",
-          "jakarta.inject.Inject",
-          "javax.inject.Inject");
+      ImmutableSet.<String>builder()
+          .addAll(InjectMatchers.INJECT_ANNOTATIONS)
+          .add("com.google.testing.junit.testparameterinjector.TestParameter")
+          .build();
 
   private static final String MOCK_ANNOTATION = "org.mockito.Mock";
   private static final Matcher<Tree> HAS_MOCK_ANNOTATION = symbolHasAnnotation(MOCK_ANNOTATION);
@@ -101,9 +101,10 @@ public final class UnnecessaryAssignment extends BugChecker
                   .collect(toImmutableList())),
           not(UnnecessaryAssignment::isOptionalInject));
 
+  /** Returns true if the tree is annotated with @com.google.inject.Inject(optional = true). */
   private static boolean isOptionalInject(Tree tree, VisitorState state) {
     var symbol = getSymbol(tree);
-    var compound = symbol.attribute(INJECT.get(state));
+    var compound = symbol.attribute(GUICE_INJECT.get(state));
     if (compound == null) {
       return false;
     }
@@ -112,8 +113,9 @@ public final class UnnecessaryAssignment extends BugChecker
         .orElse(false);
   }
 
-  private static final Supplier<Symbol> INJECT =
-      VisitorState.memoize(state -> state.getSymbolFromString("com.google.inject.Inject"));
+  private static final Supplier<Symbol> GUICE_INJECT =
+      VisitorState.memoize(
+          state -> state.getSymbolFromString(InjectMatchers.GUICE_INJECT_ANNOTATION));
 
   private static final Matcher<ExpressionTree> MOCK_FACTORY =
       staticMethod().onClass("org.mockito.Mockito").named("mock");

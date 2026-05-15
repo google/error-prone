@@ -166,7 +166,7 @@ public class ParameterName extends BugChecker
       int offset,
       VisitorState state,
       Consumer<ErrorProneToken> consumer) {
-    String source = state.getSourceCode().subSequence(offset, positions.upperEndpoint()).toString();
+    String source = state.getSourceCode(offset, positions.upperEndpoint()).toString();
     Deque<ErrorProneToken> tokens =
         new ArrayDeque<>(ErrorProneTokens.getTokens(source, offset, state.context));
     if (advanceTokens(tokens, positions)) {

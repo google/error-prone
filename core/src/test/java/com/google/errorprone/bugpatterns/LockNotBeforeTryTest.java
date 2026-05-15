@@ -130,6 +130,7 @@ public final class LockNotBeforeTryTest {
               private void test(ReentrantLock lock) {
                 lock.lock();
                 try {
+
                   System.out.println("hi");
                 } finally {
                   lock.unlock();
@@ -194,6 +195,7 @@ public final class LockNotBeforeTryTest {
               private void test(ReentrantLock lock) {
                 lock.lock();
                 try {
+
                   System.out.println("hi");
                   System.out.println("hi");
                 } finally {
@@ -383,6 +385,7 @@ public final class LockNotBeforeTryTest {
             "Test.java",
             """
             import static java.util.Objects.requireNonNull;
+
             import java.util.concurrent.locks.ReentrantLock;
 
             class Test {
@@ -401,12 +404,14 @@ public final class LockNotBeforeTryTest {
             "Test.java",
             """
             import static java.util.Objects.requireNonNull;
+
             import java.util.concurrent.locks.ReentrantLock;
 
             class Test {
               private void test(ReentrantLock lock, Runnable r) {
                 lock.lock();
                 try {
+
                   requireNonNull(r);
                   r.run();
                 } finally {

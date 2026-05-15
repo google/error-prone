@@ -19,12 +19,10 @@ package com.google.errorprone.bugpatterns;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.annotations.DoNotMock;
-import com.sun.source.tree.VariableTree;
-import java.util.stream.Stream;
 
 /**
- * Points out if a Mockito or EasyMock mock is mocking an object that would be better off being
- * tested using an alternative instance.
+ * Points out if a Mockito mock is mocking an object that would be better off being tested using an
+ * alternative instance.
  *
  * @author amalloy@google.com (Alan Malloy)
  */
@@ -34,9 +32,6 @@ import java.util.stream.Stream;
     summary = "Identifies undesirable mocks.",
     documentSuppression = false)
 public class DoNotMockChecker extends AbstractMockChecker<DoNotMock> {
-
-  private static final TypeExtractor<VariableTree> MOCKED_VAR =
-      fieldAnnotatedWithOneOf(Stream.of("org.mockito.Mock", "org.mockito.Spy"));
 
   public DoNotMockChecker() {
     super(MOCKED_VAR, MOCKING_METHOD, DoNotMock.class, DoNotMock::value);

@@ -17,12 +17,17 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.errorprone.fixes.SuggestedFixes.replaceVariableType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
+import com.google.common.base.Ascii;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.errorprone.BugPattern;
@@ -30,6 +35,7 @@ import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -154,11 +160,16 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
     }
 
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-    fixBuilder.replace(tree.getType(), unboxed.tsym.getSimpleName().toString());
+    replaceVariableType(tree, unboxed.tsym.getSimpleName().toString(), state)
+        .ifPresent(fixBuilder::merge);
 
     fixMethodInvocations(usages.fixableSimpleMethodInvocations.get(varSymbol), fixBuilder, state);
     fixNullCheckInvocations(usages.fixableNullCheckInvocations.get(varSymbol), fixBuilder, state);
     fixCastingInvocations(usages.fixableCastMethodInvocations.get(varSymbol), fixBuilder, state);
+    fixAssignments(usages.fixableAssignments.get(varSymbol), fixBuilder, state);
+    if (tree.getInitializer() != null) {
+      fixAssignment(tree.getInitializer(), fixBuilder, state);
+    }
 
     // Remove @Nullable annotation, if present.
     AnnotationTree nullableAnnotation =
@@ -266,6 +277,56 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
     }
   }
 
+  private static void fixAssignments(
+      List<TreePath> paths, SuggestedFix.Builder fixBuilder, VisitorState state) {
+    for (TreePath path : paths) {
+      ExpressionTree expressionTree = (ExpressionTree) path.getLeaf();
+      fixAssignment(expressionTree, fixBuilder, state);
+    }
+  }
+
+  private static void fixAssignment(
+      ExpressionTree expressionTree, SuggestedFix.Builder fixBuilder, VisitorState state) {
+    Type boxedType = getType(expressionTree);
+    Type unboxedType = state.getTypes().unboxedType(boxedType);
+    if (unboxedType.hasTag(TypeTag.NONE)) {
+      return;
+    }
+    String name = unboxedType.tsym.getSimpleName().toString();
+    String parseName = "parse" + Ascii.toUpperCase(name.charAt(0)) + name.substring(1);
+    switch (expressionTree) {
+      case MethodInvocationTree methodInvocation -> {
+        if (VALUE_OF_MATCHER.matches(expressionTree, state)) {
+          Tree argument = getOnlyElement(methodInvocation.getArguments());
+          Type argumentType = ASTHelpers.getType(argument);
+          if (isSameType(argumentType, state.getSymtab().stringType, state)) {
+            fixBuilder.merge(
+                SuggestedFixes.renameMethodInvocation(
+                    (MethodInvocationTree) expressionTree, parseName, state));
+          } else if (isSameType(argumentType, unboxedType, state)) {
+            fixBuilder.replace(expressionTree, state.getSourceForNode(argument));
+          }
+        }
+      }
+      case NewClassTree newClassTree -> {
+        Tree argument = getOnlyElement(newClassTree.getArguments());
+        Type argumentType = ASTHelpers.getType(argument);
+        if (isSameType(argumentType, state.getSymtab().stringType, state)) {
+          fixBuilder.replace(
+              expressionTree,
+              String.format(
+                  "%s.%s(%s)",
+                  SuggestedFixes.qualifyType(state, fixBuilder, boxedType),
+                  parseName,
+                  state.getSourceForNode(argument)));
+        } else if (isSameType(argumentType, unboxedType, state)) {
+          fixBuilder.replace(expressionTree, state.getSourceForNode(argument));
+        }
+      }
+      default -> {}
+    }
+  }
+
   /**
    * Check to see if the variable should be considered for replacement, i.e.
    *
@@ -346,6 +407,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
         ArrayListMultimap.create();
     private final ListMultimap<VarSymbol, TreePath> fixableCastMethodInvocations =
         ArrayListMultimap.create();
+    private final ListMultimap<VarSymbol, TreePath> fixableAssignments = ArrayListMultimap.create();
 
     private final Set<VarSymbol> boxedUsageFound = new HashSet<>();
     private final Set<VarSymbol> dereferenced = new HashSet<>();
@@ -369,13 +431,15 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
       if (!isBoxed(nodeSymbol, state)) {
         return super.visitAssignment(node, null);
       }
+      VarSymbol varSymbol = (VarSymbol) nodeSymbol;
+      fixableAssignments.put(varSymbol, new TreePath(getCurrentPath(), node.getExpression()));
       // The variable of interest is being assigned. Check if the expression is non-primitive,
       // and go on to scan the expression.
       if (!checkAssignmentExpression(node.getExpression())) {
         return scan(node.getExpression(), null);
       }
 
-      boxedUsageFound.add((VarSymbol) nodeSymbol);
+      boxedUsageFound.add(varSymbol);
       return null;
     }
 

@@ -67,6 +67,7 @@ public final class MisleadingEscapedSpace extends BugChecker implements LiteralT
         for (int i = 0; i < literal.length(); ++i) {
           switch (literal.charAt(i)) {
             case '\n':
+            case '\r':
               seenEscape = false;
               break;
             case '\\':

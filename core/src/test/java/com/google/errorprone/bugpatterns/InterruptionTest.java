@@ -160,10 +160,10 @@ public class InterruptionTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.concurrent.Future;
             import org.junit.Test;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
-            import java.util.concurrent.Future;
 
             @RunWith(JUnit4.class)
             class FutureTest {

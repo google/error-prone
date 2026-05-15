@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
@@ -108,9 +109,14 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
         parts.add(getOnlyElement(methodInvocationTree.getArguments()));
         path = parentPath.getParentPath();
       } else if (TO_STRING.matches(methodInvocationTree, state)) {
+        String replacement = replacement(state, parts);
+        Tree parent = grandParent.getParentPath().getLeaf();
+        if (parent instanceof MemberSelectTree memberSelectTree
+            && memberSelectTree.getExpression().equals(methodInvocationTree)) {
+          replacement = "(" + replacement + ")";
+        }
         return describeMatch(
-            methodInvocationTree,
-            SuggestedFix.replace(methodInvocationTree, replacement(state, parts)));
+            methodInvocationTree, SuggestedFix.replace(methodInvocationTree, replacement));
       } else {
         // another instance method on StringBuilder
         return NO_MATCH;
@@ -188,9 +194,8 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
         .collect(joining(" + "));
   }
 
-  private static final Supplier<Type> JAVA_LANG_APPENDABLE =
-      VisitorState.memoize(state -> state.getTypeFromString("java.lang.Appendable"));
+  private static final Supplier<Type> JAVA_LANG_APPENDABLE = typeFromString("java.lang.Appendable");
 
   private static final Supplier<Type> JAVA_LANG_CHARSEQUENCE =
-      VisitorState.memoize(state -> state.getTypeFromString("java.lang.CharSequence"));
+      typeFromString("java.lang.CharSequence");
 }

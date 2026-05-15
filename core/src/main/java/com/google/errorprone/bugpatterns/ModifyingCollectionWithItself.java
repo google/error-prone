@@ -22,9 +22,9 @@ import static com.google.errorprone.bugpatterns.ReplacementVariableFinder.fixesB
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.receiverSameAsArgument;
 import static com.google.errorprone.matchers.Matchers.variableType;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -144,7 +144,7 @@ public class ModifyingCollectionWithItself extends BugChecker
   }
 
   private static Predicate<JCVariableDecl> isCollectionVariable(VisitorState state) {
-    return var -> variableType(isSubtypeOf("java.util.Collection")).matches(var, state);
+    return var -> variableType(isDescendantOf("java.util.Collection")).matches(var, state);
   }
 
   private static ImmutableList<Fix> literalReplacement(

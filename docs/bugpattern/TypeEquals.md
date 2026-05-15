@@ -9,3 +9,6 @@ instance from `VisitorState`.
 
 If you're implementing `AnnotationProcessor`, you can get the `Types` instance
 from `javax.annotation.processing.ProcessingEnvironment`.
+
+For more discussion of preferred APIs for comparing types, see
+https://errorprone.info/bugpattern/TypeToString

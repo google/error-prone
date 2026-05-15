@@ -34,6 +34,7 @@ public final class ImmutableSetForContainsTest {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.toImmutableList;
+
             import com.google.common.collect.ImmutableList;
             import java.util.ArrayList;
 
@@ -59,6 +60,7 @@ public final class ImmutableSetForContainsTest {
             """
             import static com.google.common.collect.ImmutableList.toImmutableList;
             import static com.google.common.collect.ImmutableSet.toImmutableSet;
+
             import com.google.common.collect.ImmutableList;
             import com.google.common.collect.ImmutableSet;
             import java.util.ArrayList;
@@ -90,6 +92,7 @@ public final class ImmutableSetForContainsTest {
             "Test.java",
             """
             import static com.google.common.collect.ImmutableList.toImmutableList;
+
             import com.google.common.collect.ImmutableList;
             import java.util.ArrayList;
 
@@ -109,6 +112,7 @@ public final class ImmutableSetForContainsTest {
             "Test.java",
 """
 import static com.google.common.collect.ImmutableList.toImmutableList;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import java.util.ArrayList;
@@ -214,6 +218,7 @@ class Test {
             "Test.java",
             """
             import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
+
             import com.google.common.collect.ImmutableList;
             import com.sun.source.tree.Tree.Kind;
             import java.util.ArrayList;
@@ -424,6 +429,7 @@ class Test {
             "Test.java",
             """
             import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
+
             import com.google.common.collect.ImmutableList;
             import com.sun.source.tree.Tree.Kind;
             import java.util.ArrayList;

@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.annotations;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
@@ -302,5 +303,5 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
   }
 
   private static final Supplier<Type> COM_GOOGLE_PROTOBUF_MESSAGELITE =
-      VisitorState.memoize(state -> state.getTypeFromString(MESSAGE_LITE));
+      typeFromString(MESSAGE_LITE);
 }

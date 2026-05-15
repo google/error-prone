@@ -89,23 +89,20 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
       anyOf(staticMethod().onClass(Futures.class.getName()).named("getChecked"));
 
   private static final Matcher<ExpressionTree> CLASS_OBJECT_FOR_CLASS_EXTENDING_RUNTIME_EXCEPTION =
-      new Matcher<ExpressionTree>() {
-        @Override
-        public boolean matches(ExpressionTree tree, VisitorState state) {
-          Types types = state.getTypes();
-          Type classType = state.getSymtab().classType;
-          Type runtimeExceptionType = state.getSymtab().runtimeExceptionType;
-          Type argType = getType(tree);
+      (ExpressionTree tree, VisitorState state) -> {
+        Types types = state.getTypes();
+        Type classType = state.getSymtab().classType;
+        Type runtimeExceptionType = state.getSymtab().runtimeExceptionType;
+        Type argType = getType(tree);
 
-          // Make sure that the argument is a Class<Something> (and not null/bottom).
-          if (!isSubtype(argType, classType, state) || argType.getTag() == BOT) {
-            return false;
-          }
-
-          List<Type> typeArguments = argType.getTypeArguments();
-          Type exceptionType = Iterables.getFirst(typeArguments, null);
-          return types.isSubtype(exceptionType, runtimeExceptionType);
+        // Make sure that the argument is a Class<Something> (and not null/bottom).
+        if (!isSubtype(argType, classType, state) || argType.getTag() == BOT) {
+          return false;
         }
+
+        List<Type> typeArguments = argType.getTypeArguments();
+        Type exceptionType = Iterables.getFirst(typeArguments, null);
+        return types.isSubtype(exceptionType, runtimeExceptionType);
       };
 
   private static final Matcher<MethodInvocationTree> PASSED_RUNTIME_EXCEPTION_TYPE =
@@ -113,30 +110,27 @@ public final class FuturesGetCheckedIllegalExceptionType extends BugChecker
 
   private static final Matcher<ExpressionTree> CLASS_OBJECT_FOR_CLASS_WITHOUT_USABLE_CONSTRUCTOR =
       classLiteral(
-          new Matcher<ExpressionTree>() {
-            @Override
-            public boolean matches(ExpressionTree tree, VisitorState state) {
-              ClassSymbol classSymbol = (ClassSymbol) getSymbol(tree);
-              if (classSymbol == null) {
-                return false;
-              }
+          (ExpressionTree tree, VisitorState state) -> {
+            ClassSymbol classSymbol = (ClassSymbol) getSymbol(tree);
+            if (classSymbol == null) {
+              return false;
+            }
 
-              if (classSymbol.isInner()) {
-                return true;
-              }
-
-              for (Symbol enclosedSymbol : getEnclosedElements(classSymbol)) {
-                if (!enclosedSymbol.isConstructor()) {
-                  continue;
-                }
-                MethodSymbol constructorSymbol = (MethodSymbol) enclosedSymbol;
-                if (canBeUsedByGetChecked(constructorSymbol, state)) {
-                  return false;
-                }
-              }
-
+            if (classSymbol.isInner()) {
               return true;
             }
+
+            for (Symbol enclosedSymbol : getEnclosedElements(classSymbol)) {
+              if (!enclosedSymbol.isConstructor()) {
+                continue;
+              }
+              MethodSymbol constructorSymbol = (MethodSymbol) enclosedSymbol;
+              if (canBeUsedByGetChecked(constructorSymbol, state)) {
+                return false;
+              }
+            }
+
+            return true;
           });
 
   private static final Matcher<MethodInvocationTree> PASSED_TYPE_WITHOUT_USABLE_CONSTRUCTOR =

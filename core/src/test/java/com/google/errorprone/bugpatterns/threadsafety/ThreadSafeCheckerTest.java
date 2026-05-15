@@ -1123,6 +1123,7 @@ class Test {
 
             import static java.lang.annotation.ElementType.TYPE;
             import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
             import java.lang.annotation.Retention;
             import java.lang.annotation.Target;
 
@@ -1291,8 +1292,8 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.ArrayList;
             import com.google.common.collect.ImmutableList;
+            import java.util.ArrayList;
 
             class Test {
               // BUG: Diagnostic contains:
@@ -1361,8 +1362,8 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.annotations.ThreadSafe;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
+            import com.google.errorprone.annotations.ThreadSafe;
 
             @ThreadSafe
             class Test<@ImmutableTypeParameter T> {
@@ -1468,6 +1469,7 @@ class Test {
             "Test.java",
             """
             import static java.lang.annotation.ElementType.TYPE_USE;
+
             import java.lang.annotation.Target;
 
             @Target(TYPE_USE)

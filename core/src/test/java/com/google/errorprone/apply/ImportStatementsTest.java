@@ -16,7 +16,6 @@
 
 package com.google.errorprone.apply;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -153,7 +152,7 @@ public class ImportStatementsTest {
             suffix)
         .addOutputLines("Test.java", prefix, Joiner.on('\n').join(expected), suffix)
         .addModules("jdk.compiler/com.sun.tools.javac.tree")
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   /** Test that adding a new import inserts it in the correct position. */

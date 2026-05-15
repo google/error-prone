@@ -105,6 +105,7 @@ public class ForEachIterableTest {
 
               void iteratorWhile(Iterable<T> list) {
                 for (T t : list) {
+
                   doSomething(t);
                 }
               }
@@ -226,8 +227,8 @@ public class ForEachIterableTest {
         .addInputLines(
             "in/Test.java",
             """
-            import java.util.Iterator;
             import java.lang.Iterable;
+            import java.util.Iterator;
 
             class Test<V> implements Iterable<V> {
               @Override
@@ -246,8 +247,8 @@ public class ForEachIterableTest {
         .addOutputLines(
             "out/Test.java",
             """
-            import java.util.Iterator;
             import java.lang.Iterable;
+            import java.util.Iterator;
 
             class Test<V> implements Iterable<V> {
               @Override

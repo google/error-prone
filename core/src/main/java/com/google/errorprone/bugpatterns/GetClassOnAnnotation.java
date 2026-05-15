@@ -17,14 +17,13 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.fixes.SuggestedFixes.renameMethodInvocation;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import java.lang.annotation.Annotation;
@@ -45,12 +44,7 @@ public class GetClassOnAnnotation extends BugChecker
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (ANNOTATION_CLASS.matches(tree, state)) {
-      return describeMatch(
-          tree,
-          SuggestedFix.replace(
-              state.getEndPosition(ASTHelpers.getReceiver(tree)),
-              state.getEndPosition(tree),
-              ".annotationType()"));
+      return describeMatch(tree, renameMethodInvocation(tree, "annotationType", state));
     }
     return Description.NO_MATCH;
   }

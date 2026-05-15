@@ -117,8 +117,11 @@ public class ModifySourceCollectionInStream extends BugChecker
   /**
    * Returns true if and only if the given MethodInvocationTree
    *
-   * <p>1) is a Stream API invocation, .e.g. map, filter, collect 2) the source of the stream has
-   * the same expression representation as streamSourceExpression.
+   * <ol>
+   *   <li>is a Stream API invocation (e.g. map, filter, collect);
+   *   <li>the source of the stream has the same expression representation as
+   *       streamSourceExpression.
+   * </ol>
    */
   private static boolean isStreamApiInvocationOnStreamSource(
       @Nullable ExpressionTree rootTree,

@@ -38,7 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import javax.tools.JavaFileObject;
 
 /**
@@ -49,7 +49,7 @@ import javax.tools.JavaFileObject;
 public class JavacErrorDescriptionListener implements DescriptionListener {
   private final Log log;
   private final JavaFileObject sourceFile;
-  private final Function<Fix, AppliedFix> fixToAppliedFix;
+  private final BiFunction<Description, Fix, AppliedFix> fixToAppliedFix;
   private final Context context;
 
   // When we're trying to refactor using error prone fixes, any error halts compilation of other
@@ -86,8 +86,16 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     try {
       CharSequence sourceFileContent = sourceFile.getCharContent(true);
       fixToAppliedFix =
-          fix ->
-              cache.computeIfAbsent(fix, f -> AppliedFix.apply(sourceFileContent, endPositions, f));
+          (description, fix) ->
+              cache.computeIfAbsent(
+                  fix,
+                  f -> {
+                    try {
+                      return AppliedFix.apply(sourceFileContent, endPositions, f);
+                    } catch (SourcePositionException e) {
+                      throw e.toErrorProneError(description.checkName, sourceFile);
+                    }
+                  });
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
@@ -98,7 +106,7 @@ public class JavacErrorDescriptionListener implements DescriptionListener {
     ImmutableList<AppliedFix> appliedFixes =
         description.fixes.stream()
             .filter(f -> !shouldSkipImportTreeFix(description.position, f))
-            .map(fixToAppliedFix)
+            .map(f -> fixToAppliedFix.apply(description, f))
             .filter(Objects::nonNull)
             .collect(toImmutableList());
 

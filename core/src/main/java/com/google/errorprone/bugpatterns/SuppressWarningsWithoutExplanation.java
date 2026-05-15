@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -57,9 +56,7 @@ import com.sun.source.tree.Tree;
         "Use of @SuppressWarnings should be accompanied by a comment describing why the warning is"
             + " safe to ignore.",
     tags = BugPattern.StandardTags.STYLE,
-    severity = WARNING,
-    linkType = CUSTOM,
-    link = "https://google.github.io/styleguide/javaguide.html#s8.4.2-how-to-handle-a-warning")
+    severity = WARNING)
 public final class SuppressWarningsWithoutExplanation extends BugChecker
     implements CompilationUnitTreeMatcher {
   private static final Matcher<AnnotationTree> SUPPRESS_WARNINGS =

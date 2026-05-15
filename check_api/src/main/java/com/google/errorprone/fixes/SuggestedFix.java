@@ -236,7 +236,7 @@ public abstract class SuggestedFix implements Fix {
 
     @CanIgnoreReturnValue
     public Builder replace(ErrorPronePosition position, String replaceWith) {
-      checkNotSyntheticConstructor(position.getTree());
+      checkExplicitSource(position.getTree());
       return with(ReplacementFix.create(position, replaceWith));
     }
 
@@ -271,7 +271,7 @@ public abstract class SuggestedFix implements Fix {
     @CanIgnoreReturnValue
     public Builder replace(
         Tree node, String replaceWith, int startPosAdjustment, int endPosAdjustment) {
-      checkNotSyntheticConstructor(node);
+      checkExplicitSource(node);
       return with(
           ReplacementFix.create(
               new AdjustedPosition((JCTree) node, startPosAdjustment, endPosAdjustment),
@@ -296,7 +296,7 @@ public abstract class SuggestedFix implements Fix {
 
     @CanIgnoreReturnValue
     public Builder postfixWith(ErrorPronePosition position, String postfix) {
-      checkNotSyntheticConstructor(position.getTree());
+      checkExplicitSource(position.getTree());
       return with(PostfixInsertion.create(position, postfix));
     }
 
@@ -307,14 +307,14 @@ public abstract class SuggestedFix implements Fix {
 
     @CanIgnoreReturnValue
     public Builder delete(ErrorPronePosition node) {
-      checkNotSyntheticConstructor(node.getTree());
+      checkExplicitSource(node.getTree());
       return replace(node, "");
     }
 
     @CanIgnoreReturnValue
     public Builder swap(Tree node1, Tree node2, VisitorState state) {
-      checkNotSyntheticConstructor(node1);
-      checkNotSyntheticConstructor(node2);
+      checkExplicitSource(node1);
+      checkExplicitSource(node2);
       fixes.add(
           ReplacementFix.create(ErrorPronePosition.from(node1), state.getSourceForNode(node2)));
       fixes.add(
@@ -404,6 +404,11 @@ public abstract class SuggestedFix implements Fix {
       if (tree instanceof MethodTree methodTree && ASTHelpers.isGeneratedConstructor(methodTree)) {
         throw new IllegalArgumentException("Cannot edit synthetic AST nodes");
       }
+    }
+
+    private static void checkExplicitSource(Tree tree) {
+      ErrorProneEndPosTable.checkExplicitSource(tree);
+      checkNotSyntheticConstructor(tree);
     }
   }
 

@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,6 +62,7 @@ public class TypeEqualsCheckerTest {
             "ExampleChecker.java",
             """
             import static com.google.errorprone.util.ASTHelpers.getSymbol;
+
             import com.google.errorprone.BugPattern;
             import com.google.errorprone.BugPattern.SeverityLevel;
             import com.google.errorprone.VisitorState;
@@ -98,6 +100,137 @@ public class TypeEqualsCheckerTest {
             """)
         .addModules(
             "jdk.compiler/com.sun.tools.javac.code", "jdk.compiler/com.sun.tools.javac.util")
+        .doTest();
+  }
+
+  @Test
+  public void match() {
+    testHelper
+        .addSourceLines(
+            "Example.java",
+            """
+            import java.util.Objects;
+            import javax.lang.model.type.TypeMirror;
+
+            class Example {
+              void foo(TypeMirror type1, TypeMirror type2) {
+                // BUG: Diagnostic contains: TypeEquals
+                if (type1 == type2) {}
+                // BUG: Diagnostic contains: TypeEquals
+                if (type1 != type2) {}
+                // BUG: Diagnostic contains: TypeEquals
+                if (type1.equals(type2)) {}
+                // BUG: Diagnostic contains: TypeEquals
+                if (Objects.equals(type1, type2)) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void noMatch_nullComparisons() {
+    testHelper
+        .addSourceLines(
+            "Example.java",
+            """
+            import java.util.Objects;
+            import javax.lang.model.type.TypeMirror;
+
+            class Example {
+              void foo(TypeMirror type1) {
+                if (type1 == null) {}
+                if (null == type1) {}
+                if ((null) == type1) {}
+                if (type1.equals(null)) {}
+                if (Objects.equals(type1, null)) {}
+                if (Objects.equals(null, type1)) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void refactoring() {
+    BugCheckerRefactoringTestHelper.newInstance(TypeEqualsChecker.class, getClass())
+        .addInputLines(
+            "Example.java",
+            """
+            import java.util.Objects;
+            import javax.lang.model.type.TypeMirror;
+            import javax.lang.model.util.Types;
+
+            class Example {
+              void foo(TypeMirror type1, TypeMirror type2, Types types) {
+                if (type1 == type2) {}
+                if (type1 != type2) {}
+                if (type1.equals(type2)) {}
+                if (Objects.equals(type1, type2)) {}
+              }
+            }
+            """)
+        .addOutputLines(
+            "Example.java",
+            """
+            import java.util.Objects;
+            import javax.lang.model.type.TypeMirror;
+            import javax.lang.model.util.Types;
+
+            class Example {
+              void foo(TypeMirror type1, TypeMirror type2, Types types) {
+                if (types.isSameType(type1, type2)) {}
+                if (!types.isSameType(type1, type2)) {}
+                if (types.isSameType(type1, type2)) {}
+                if (types.isSameType(type1, type2)) {}
+              }
+            }
+            """)
+        .addModules("jdk.compiler/com.sun.tools.javac.code")
+        .doTest();
+  }
+
+  @Test
+  public void noMatch_autoValue() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.auto.value.AutoValue;
+            import javax.lang.model.type.TypeMirror;
+
+            @AutoValue
+            abstract class Test {
+              abstract TypeMirror type();
+            }
+            """)
+        .addSourceLines(
+            "AutoValue_Test.java",
+            """
+            import javax.annotation.processing.Generated;
+            import javax.lang.model.type.TypeMirror;
+
+            @Generated("com.google.auto.value.processor.AutoValueProcessor")
+            abstract class AutoValue_Test extends Test {
+              private final TypeMirror type;
+
+              AutoValue_Test(TypeMirror type) {
+                this.type = type;
+              }
+
+              @Override
+              public boolean equals(Object o) {
+                if (o == this) {
+                  return true;
+                }
+                if (o instanceof Test) {
+                  Test that = (Test) o;
+                  return this.type.equals(that.type());
+                }
+                return false;
+              }
+            }
+            """)
         .doTest();
   }
 }

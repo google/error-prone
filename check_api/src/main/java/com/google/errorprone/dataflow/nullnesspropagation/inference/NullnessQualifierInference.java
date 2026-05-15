@@ -18,7 +18,6 @@ package com.google.errorprone.dataflow.nullnesspropagation.inference;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
@@ -78,14 +77,11 @@ public class NullnessQualifierInference extends TreeScanner<Void, Void> {
       Caffeine.newBuilder()
           .maximumSize(1)
           .build(
-              new CacheLoader<Tree, InferredNullability>() {
-                @Override
-                public InferredNullability load(Tree methodOrInitializer) {
-                  NullnessQualifierInference inferenceEngine =
-                      new NullnessQualifierInference(methodOrInitializer);
-                  inferenceEngine.scan(methodOrInitializer, null);
-                  return new InferredNullability(inferenceEngine.qualifierConstraints);
-                }
+              (Tree methodOrInitializer) -> {
+                NullnessQualifierInference inferenceEngine =
+                    new NullnessQualifierInference(methodOrInitializer);
+                inferenceEngine.scan(methodOrInitializer, null);
+                return new InferredNullability(inferenceEngine.qualifierConstraints);
               });
 
   public static InferredNullability getInferredNullability(Tree methodOrInitializerOrLambda) {

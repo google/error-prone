@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -29,7 +30,6 @@ import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -49,6 +49,12 @@ import javax.inject.Inject;
     documentSuppression = false)
 public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
     implements ReturnTreeMatcher {
+  private static final Supplier<Type> FUTURE =
+      memoize(
+          state -> {
+            var symbol = state.getElements().getTypeElement("java.util.concurrent.Future");
+            return symbol == null ? null : (Type) symbol.asType();
+          });
 
   private static final Matcher<ExpressionTree> IGNORED_METHODS =
       anyOf(
@@ -88,41 +94,38 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
               .namedAnyOf("exceptionally", "completeAsync", "orTimeout", "completeOnTimeout"));
 
   private static final Matcher<ExpressionTree> MATCHER =
-      new Matcher<ExpressionTree>() {
-        @Override
-        public boolean matches(ExpressionTree tree, VisitorState state) {
-          Type futureType = JAVA_UTIL_CONCURRENT_FUTURE.get(state);
-          if (futureType == null) {
-            return false;
-          }
-          if (!(ASTHelpers.getSymbol(tree) instanceof MethodSymbol sym)) {
-            Type resultType = ASTHelpers.getResultType(tree);
-            return resultType != null
-                && ASTHelpers.isSubtype(
-                    ASTHelpers.getUpperBound(resultType, state.getTypes()), futureType, state);
-          }
-          if (hasAnnotation(sym, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)) {
-            return false;
-          }
-          for (MethodSymbol superSym : ASTHelpers.findSuperMethods(sym, state.getTypes())) {
-            // There are interfaces annotated with @CanIgnoreReturnValue (like Guava's Function)
-            // whose return value really shouldn't be ignored - as a heuristic, check if the super's
-            // method is returning a future subtype.
-            if (hasAnnotation(superSym, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)
-                && ASTHelpers.isSubtype(
-                    ASTHelpers.getUpperBound(superSym.getReturnType(), state.getTypes()),
-                    futureType,
-                    state)) {
-              return false;
-            }
-          }
-          if (IGNORED_METHODS.matches(tree, state)) {
-            return false;
-          }
-          Type returnType = sym.getReturnType();
-          return ASTHelpers.isSubtype(
-              ASTHelpers.getUpperBound(returnType, state.getTypes()), futureType, state);
+      (tree, state) -> {
+        Type futureType = FUTURE.get(state);
+        if (futureType == null) {
+          return false;
         }
+        if (!(ASTHelpers.getSymbol(tree) instanceof MethodSymbol sym)) {
+          Type resultType = ASTHelpers.getResultType(tree);
+          return resultType != null
+              && ASTHelpers.isSubtype(
+                  ASTHelpers.getUpperBound(resultType, state.getTypes()), futureType, state);
+        }
+        if (hasAnnotation(sym, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)) {
+          return false;
+        }
+        for (MethodSymbol superSym : ASTHelpers.findSuperMethods(sym, state.getTypes())) {
+          // There are interfaces annotated with @CanIgnoreReturnValue (like Guava's Function)
+          // whose return value really shouldn't be ignored - as a heuristic, check if the super's
+          // method is returning a future subtype.
+          if (hasAnnotation(superSym, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)
+              && ASTHelpers.isSubtype(
+                  ASTHelpers.getUpperBound(superSym.getReturnType(), state.getTypes()),
+                  futureType,
+                  state)) {
+            return false;
+          }
+        }
+        if (IGNORED_METHODS.matches(tree, state)) {
+          return false;
+        }
+        Type returnType = sym.getReturnType();
+        return ASTHelpers.isSubtype(
+            ASTHelpers.getUpperBound(returnType, state.getTypes()), futureType, state);
       };
 
   @Inject
@@ -137,7 +140,7 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
 
   @Override
   protected Optional<Type> lostType(VisitorState state) {
-    return Optional.ofNullable(futureType.get(state));
+    return Optional.ofNullable(FUTURE.get(state));
   }
 
   @Override
@@ -146,9 +149,4 @@ public final class FutureReturnValueIgnored extends AbstractReturnValueIgnored
         "Returning %s from method that returns %s. Errors from the returned future may be ignored.",
         returnedType, declaredReturnType);
   }
-
-  private final Supplier<Type> futureType = Suppliers.typeFromString("java.util.concurrent.Future");
-
-  private static final Supplier<Type> JAVA_UTIL_CONCURRENT_FUTURE =
-      VisitorState.memoize(state -> state.getTypeFromString("java.util.concurrent.Future"));
 }

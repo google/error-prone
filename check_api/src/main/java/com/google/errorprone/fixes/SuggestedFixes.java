@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.fixes.ErrorProneEndPosTable.getEndPosition;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
@@ -28,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.sun.tools.javac.code.TypeTag.CLASS;
@@ -35,6 +37,7 @@ import static com.sun.tools.javac.util.Position.NOPOS;
 import static java.lang.Math.max;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toCollection;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
@@ -56,6 +59,7 @@ import com.google.errorprone.fixes.SuggestedFixes.FixCompiler.Result;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.ErrorProneToken;
+import com.google.errorprone.util.ErrorProneTokens;
 import com.google.errorprone.util.FindIdentifiers;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.doctree.ParamTree;
@@ -117,6 +121,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Deque;
+import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -136,6 +142,7 @@ import javax.lang.model.element.Name;
 import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.type.WildcardType;
 import javax.lang.model.util.SimpleTypeVisitor8;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -413,6 +420,17 @@ public final class SuggestedFixes {
           }
 
           @Override
+          public String visitWildcard(WildcardType t, SuggestedFix.Builder builder) {
+            if (t.getExtendsBound() != null) {
+              return "? extends " + t.getExtendsBound().accept(this, builder);
+            }
+            if (t.getSuperBound() != null) {
+              return "? super " + t.getSuperBound().accept(this, builder);
+            }
+            return t.toString();
+          }
+
+          @Override
           public String visitDeclared(DeclaredType t, SuggestedFix.Builder builder) {
             String baseType = qualifyType(state, builder, ((Type) t).tsym);
             if (t.getTypeArguments().isEmpty()) {
@@ -423,7 +441,7 @@ public final class SuggestedFixes {
             boolean started = false;
             for (TypeMirror arg : t.getTypeArguments()) {
               if (started) {
-                b.append(',');
+                b.append(", ");
               }
               b.append(arg.accept(this, builder));
               started = true;
@@ -491,6 +509,30 @@ public final class SuggestedFixes {
       String qualifiedName, SuggestedFix.Builder fix, VisitorState state) {
     String name = qualifiedName.substring(qualifiedName.lastIndexOf(".") + 1);
     AtomicBoolean foundConflict = new AtomicBoolean(false);
+    AtomicBoolean alreadyInScope = new AtomicBoolean(false);
+    var identifierName = state.getName(name);
+    stream(state.getPath())
+        .filter(ClassTree.class::isInstance)
+        .map(ClassTree.class::cast)
+        .map(ASTHelpers::getSymbol)
+        .filter(s -> s != null)
+        .flatMap(
+            enclosingClass ->
+                stream(
+                    state
+                        .getTypes()
+                        .membersClosure(enclosingClass.type, /* skipInterface= */ false)
+                        .getSymbolsByName(identifierName)))
+        .forEach(
+            sym -> {
+              var identifierQualifiedName =
+                  sym.owner.getQualifiedName() + "." + sym.getSimpleName();
+              if (qualifiedName.equals(identifierQualifiedName)) {
+                alreadyInScope.set(true);
+              } else {
+                foundConflict.set(true);
+              }
+            });
     new TreeScanner<Void, Void>() {
       @Override
       public Void visitMethod(MethodTree method, Void unused) {
@@ -523,7 +565,9 @@ public final class SuggestedFixes {
       String className = qualifiedName.substring(0, qualifiedName.lastIndexOf("."));
       return qualifyType(state, fix, className) + "." + name;
     }
-    fix.addStaticImport(qualifiedName);
+    if (!alreadyInScope.get()) {
+      fix.addStaticImport(qualifiedName);
+    }
     return name;
   }
 
@@ -721,14 +765,25 @@ public final class SuggestedFixes {
   public static SuggestedFix renameVariable(
       VariableTree tree, String replacement, VisitorState state) {
     String name = tree.getName().toString();
-    int typeEndPos = state.getEndPosition(tree.getType());
-    // handle implicit lambda parameter types
-    int searchOffset = typeEndPos == -1 ? 0 : (typeEndPos - getStartPosition(tree));
-    int pos = getStartPosition(tree) + state.getSourceForNode(tree).indexOf(name, searchOffset);
-    return SuggestedFix.builder()
-        .replace(pos, pos + name.length(), replacement)
-        .merge(renameVariableUsages(tree, replacement, state))
-        .build();
+    int startPos = getStartPosition(tree);
+    // For implicit lambda parameter types  getType() returns null after JDK 27 (JDK-8268850)
+    // and a tree without an end position for earlier versions.
+    int typeEndPos = tree.getType() != null ? state.getEndPosition(tree.getType()) : -1;
+    int searchOffset = typeEndPos == -1 ? 0 : (typeEndPos - startPos);
+    SuggestedFix.Builder fix = SuggestedFix.builder();
+    state.getOffsetTokens(startPos + searchOffset, state.getEndPosition(tree)).stream()
+        .filter(
+            token ->
+                switch (token.kind()) {
+                  // VariableTree#getName is empty for unnamed _ variables
+                  case UNDERSCORE -> name.isEmpty();
+                  case IDENTIFIER -> token.name().contentEquals(name);
+                  default -> false;
+                })
+        .findFirst()
+        .ifPresent(token -> fix.replace(token.pos(), token.endPos(), replacement));
+    fix.merge(renameVariableUsages(tree, replacement, state));
+    return fix.build();
   }
 
   /**
@@ -774,14 +829,16 @@ public final class SuggestedFixes {
     Tree methodSelect = tree.getMethodSelect();
     Name identifier;
     int startPos;
-    if (methodSelect instanceof MemberSelectTree memberSelectTree) {
-      identifier = memberSelectTree.getIdentifier();
-      startPos = state.getEndPosition(memberSelectTree.getExpression());
-    } else if (methodSelect instanceof IdentifierTree identifierTree) {
-      identifier = identifierTree.getName();
-      startPos = getStartPosition(tree);
-    } else {
-      throw malformedMethodInvocationTree(tree);
+    switch (methodSelect) {
+      case MemberSelectTree memberSelectTree -> {
+        identifier = memberSelectTree.getIdentifier();
+        startPos = state.getEndPosition(memberSelectTree.getExpression());
+      }
+      case IdentifierTree identifierTree -> {
+        identifier = identifierTree.getName();
+        startPos = getStartPosition(tree);
+      }
+      default -> throw malformedMethodInvocationTree(tree);
     }
     int endPos =
         tree.getArguments().isEmpty()
@@ -1345,7 +1402,7 @@ public final class SuggestedFixes {
 
     // If we reached the maximum number of diagnostics of a given kind without finding one in the
     // modified compilation unit, we won't find any more diagnostics, but we can't be sure that
-    // there isn't an diagnostic, as the diagnostic may simply be the (max+1)-th diagnostic, and
+    // there isn't a diagnostic, as the diagnostic may simply be the (max+1)-th diagnostic, and
     // thus was dropped.
     int countErrors = 0;
     int countWarnings = 0;
@@ -1757,6 +1814,114 @@ public final class SuggestedFixes {
         + (needsParentheses ? "(" : "")
         + state.getSourceForNode(expressionTree)
         + (needsParentheses ? ")" : "");
+  }
+
+  /**
+   * Replaces the type of the given variable with {@code replacementType}.
+   *
+   * <p>If the tree is a {@code var} declaration, the {@code var} keyword will be replaced with the
+   * {@code replacementType}.
+   */
+  public static Optional<SuggestedFix> replaceVariableType(
+      VariableTree tree, String replacementType, VisitorState state) {
+    Tree type = tree.getType();
+    if (hasExplicitSource(type, state)) {
+      return Optional.of(SuggestedFix.replace(type, replacementType));
+    }
+    int pos = getStartPosition(type);
+    if (pos == Position.NOPOS) {
+      pos = getStartPosition(tree);
+    }
+    int end =
+        tree.getInitializer() != null
+            ? getStartPosition(tree.getInitializer())
+            : state.getEndPosition(tree);
+    ImmutableList<ErrorProneToken> tokens =
+        ErrorProneTokens.getTokens(state.getSourceCode(pos, end).toString(), state.context).stream()
+            .filter(
+                token ->
+                    token.kind().equals(TokenKind.IDENTIFIER) && token.name().contentEquals("var"))
+            .collect(toImmutableList());
+    if (tokens.size() != 1) {
+      return Optional.empty();
+    }
+    ErrorProneToken token = getOnlyElement(tokens);
+    return Optional.of(
+        SuggestedFix.replace(pos + token.pos(), pos + token.endPos(), replacementType));
+  }
+
+  /** Visibility modifiers. */
+  public enum Visibility {
+    PUBLIC(Optional.of(Modifier.PUBLIC)),
+    PRIVATE(Optional.of(Modifier.PRIVATE)),
+    PROTECTED(Optional.of(Modifier.PROTECTED)),
+    PACKAGE(Optional.empty());
+
+    private final Optional<Modifier> modifier;
+
+    Visibility(Optional<Modifier> modifier) {
+      this.modifier = modifier;
+    }
+
+    public SuggestedFix refactor(Tree tree, VisitorState state) {
+      SuggestedFix.Builder fix = SuggestedFix.builder();
+      modifier.flatMap(mod -> SuggestedFixes.addModifiers(tree, state, mod)).ifPresent(fix::merge);
+      Set<Modifier> toRemove =
+          EnumSet.allOf(Visibility.class).stream()
+              .filter(v -> v != this)
+              .flatMap(v -> v.modifier.stream())
+              .collect(toCollection(() -> EnumSet.noneOf(Modifier.class)));
+      SuggestedFixes.removeModifiers(getModifiers(tree), state, toRemove).ifPresent(fix::merge);
+      return fix.build();
+    }
+
+    private static Optional<Visibility> from(Modifier modifier) {
+      return switch (modifier) {
+        case PUBLIC -> Optional.of(PUBLIC);
+        case PROTECTED -> Optional.of(PROTECTED);
+        case PRIVATE -> Optional.of(PRIVATE);
+        default -> Optional.empty();
+      };
+    }
+
+    public static Visibility from(Tree tree) {
+      ImmutableList<Visibility> visibilities =
+          getSymbol(tree).getModifiers().stream()
+              .flatMap(modifier -> from(modifier).stream())
+              .collect(toImmutableList());
+      if (visibilities.isEmpty()) {
+        return PACKAGE;
+      }
+      if (visibilities.size() > 1) {
+        throw new IllegalArgumentException("Conflicting visibility modifiers: " + visibilities);
+      }
+      return getOnlyElement(visibilities);
+    }
+  }
+
+  public static VariableNamer variableNamer(VisitorState state) {
+    return new VariableNamer(state);
+  }
+
+  /** Helper class for avoiding variable name shadowing. */
+  public static class VariableNamer {
+    private final Set<String> idents;
+
+    private VariableNamer(VisitorState state) {
+      this.idents =
+          FindIdentifiers.findAllIdents(state).stream()
+              .map(s -> s.getSimpleName().toString())
+              .collect(toCollection(HashSet::new));
+    }
+
+    public String avoidShadowing(String name) {
+      for (int i = 1; ; i++) {
+        String n = i == 1 ? name : (name + i);
+        if (idents.add(n)) {
+          return n;
+        }
+      }
+    }
   }
 
   private SuggestedFixes() {}

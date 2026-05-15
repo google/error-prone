@@ -16,6 +16,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
@@ -145,6 +146,5 @@ public class ThreadJoinLoop extends BugChecker implements MethodInvocationTreeMa
     return count.get() > 0;
   }
 
-  private static final Supplier<Type> JAVA_LANG_THREAD =
-      VisitorState.memoize(state -> state.getTypeFromString("java.lang.Thread"));
+  private static final Supplier<Type> JAVA_LANG_THREAD = typeFromString("java.lang.Thread");
 }

@@ -50,6 +50,7 @@ public class InlineFormatStringTest {
             "Test.java",
             """
             class Test {
+
               void f() {
                 System.err.printf("hello %s", 42);
               }
@@ -116,6 +117,7 @@ public class InlineFormatStringTest {
             import com.google.common.base.Preconditions;
 
             class Test {
+
               void f(boolean b) {
                 Preconditions.checkArgument(b, "hello %s", 42);
               }
@@ -241,6 +243,7 @@ public class InlineFormatStringTest {
             """
             class Test {
               void f() {
+
                 System.err.printf("hello %s", 42);
               }
             }

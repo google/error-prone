@@ -20,6 +20,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
@@ -128,6 +129,5 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
     return MATCHER;
   }
 
-  private static final Supplier<Type> JAVA_UTIL_MAP =
-      VisitorState.memoize(state -> state.getTypeFromString("java.util.Map"));
+  private static final Supplier<Type> JAVA_UTIL_MAP = typeFromString("java.util.Map");
 }

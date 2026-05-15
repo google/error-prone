@@ -321,11 +321,8 @@ public class ArgumentSelectionDefectCheckerTest {
   }
 
   private static Function<ParameterPair, Double> buildEqualityFunction() {
-    return new Function<ParameterPair, Double>() {
-      @Override
-      public Double apply(ParameterPair parameterPair) {
-        return parameterPair.formal().name().equals(parameterPair.actual().name()) ? 0.0 : 1.0;
-      }
+    return (ParameterPair parameterPair) -> {
+      return parameterPair.formal().name().equals(parameterPair.actual().name()) ? 0.0 : 1.0;
     };
   }
 

@@ -54,33 +54,24 @@ public class NonAtomicVolatileUpdate extends BugChecker
 
   /** Extracts the expression from a UnaryTree and applies a matcher to it. */
   private static Matcher<UnaryTree> expressionFromUnaryTree(Matcher<ExpressionTree> exprMatcher) {
-    return new Matcher<UnaryTree>() {
-      @Override
-      public boolean matches(UnaryTree tree, VisitorState state) {
-        return exprMatcher.matches(tree.getExpression(), state);
-      }
+    return (UnaryTree tree, VisitorState state) -> {
+      return exprMatcher.matches(tree.getExpression(), state);
     };
   }
 
   /** Extracts the variable from a CompoundAssignmentTree and applies a matcher to it. */
   private static Matcher<CompoundAssignmentTree> variableFromCompoundAssignmentTree(
       Matcher<ExpressionTree> exprMatcher) {
-    return new Matcher<CompoundAssignmentTree>() {
-      @Override
-      public boolean matches(CompoundAssignmentTree tree, VisitorState state) {
-        return exprMatcher.matches(tree.getVariable(), state);
-      }
+    return (CompoundAssignmentTree tree, VisitorState state) -> {
+      return exprMatcher.matches(tree.getVariable(), state);
     };
   }
 
   /** Extracts the variable from an AssignmentTree and applies a matcher to it. */
   private static Matcher<AssignmentTree> variableFromAssignmentTree(
       Matcher<ExpressionTree> exprMatcher) {
-    return new Matcher<AssignmentTree>() {
-      @Override
-      public boolean matches(AssignmentTree tree, VisitorState state) {
-        return exprMatcher.matches(tree.getVariable(), state);
-      }
+    return (AssignmentTree tree, VisitorState state) -> {
+      return exprMatcher.matches(tree.getVariable(), state);
     };
   }
 

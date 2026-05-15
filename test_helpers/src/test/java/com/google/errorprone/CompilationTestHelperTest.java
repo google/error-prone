@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static org.junit.Assert.assertThrows;
@@ -26,9 +27,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.main.Main.Result;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -522,5 +528,47 @@ public class CompilationTestHelperTest {
     public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
       throw new AssertionError();
     }
+  }
+
+  @BugPattern(summary = "Replaces var types", severity = ERROR)
+  public static class ReplaceVarTypes extends BugChecker implements VariableTreeMatcher {
+    @SuppressWarnings("TreeToString")
+    @Override
+    public Description matchVariable(VariableTree tree, VisitorState state) {
+      Tree type = tree.getType();
+      if (ASTHelpers.hasExplicitSource(type, state)) {
+        return Description.NO_MATCH;
+      }
+      return describeMatch(type, SuggestedFix.replace(type, "Object"));
+    }
+  }
+
+  @SuppressWarnings("MissingTestCall") // used in a method reference in assertThrows
+  @Test
+  public void replaceVarTypes() {
+    // after JDK-8358604 in JDK 27, var types have source positions
+    // after JDK-8359383 in JDK 26, var type start and end positions are the same
+    assume().that(Runtime.version().feature()).isLessThan(26);
+    var compilationTestHelper =
+        CompilationTestHelper.newInstance(ReplaceVarTypes.class, getClass())
+            .addSourceLines(
+                "Test.java",
+                """
+                public class Test {
+                  public void foo() {
+                    var x = 1 + 2;
+                    System.out.println(x);
+                  }
+                }
+                """);
+    AssertionError e = assertThrows(AssertionError.class, compilationTestHelper::doTest);
+    assertThat(e)
+        .hasMessageThat()
+        .contains(
+            """
+            Test.java:3: error: An unhandled exception was thrown by the Error Prone static analysis plugin.
+                var x = 1 + 2;
+            """);
+    assertThat(e).hasMessageThat().contains("BugPattern: ReplaceVarTypes");
   }
 }

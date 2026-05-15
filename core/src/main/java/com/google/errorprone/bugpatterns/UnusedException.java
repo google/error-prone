@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.BugPattern.StandardTags.STYLE;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
@@ -191,5 +192,5 @@ public final class UnusedException extends BugChecker implements CatchTreeMatche
   }
 
   private static final Supplier<Type> JAVA_IO_INTERRUPTEDIOEXCEPTION =
-      VisitorState.memoize(state -> state.getTypeFromString("java.io.InterruptedIOException"));
+      typeFromString("java.io.InterruptedIOException");
 }

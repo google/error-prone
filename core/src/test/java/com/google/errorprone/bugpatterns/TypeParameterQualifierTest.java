@@ -67,6 +67,64 @@ public class TypeParameterQualifierTest {
   }
 
   @Test
+  public void instanceMethodReference() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.function.Function;
+
+            class Test {
+              static <T extends Enum<T>> void get() {
+                // BUG: Diagnostic contains: Enum::name
+                Function<T, String> f = T::name;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodReference() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static class Foo {
+                static void bar() {}
+              }
+
+              static <T extends Foo> void get() {
+                // BUG: Diagnostic contains: Foo::bar
+                Runnable r = T::bar;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_flagDisabled() {
+    compilationHelper
+        .setArgs("-XepOpt:TypeParameterQualifier:MatchMethodReferences=false")
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static class Foo {
+                static void bar() {}
+              }
+
+              static <T extends Foo> void get() {
+                Runnable r = T::bar;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     compilationHelper
         .addSourceLines(

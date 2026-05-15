@@ -59,10 +59,10 @@ public class NonCanonicalStaticMemberImportTest {
             """
             package b;
 
-            // BUG: Diagnostic contains: import static a.A.foo;
-            import static b.B.foo;
             // BUG: Diagnostic contains: of 'bar'
             import static b.B.bar;
+            // BUG: Diagnostic contains: import static a.A.foo;
+            import static b.B.foo;
 
             class Test {}
             """)

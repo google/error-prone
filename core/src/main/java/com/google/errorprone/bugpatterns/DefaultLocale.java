@@ -19,12 +19,12 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.FieldMatchers.staticField;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.field.FieldMatchers.staticField;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
@@ -135,10 +135,7 @@ public class DefaultLocale extends BugChecker
               .withParametersOfType(PATTERN_AND_ARGS));
 
   private static final Matcher<MethodInvocationTree> SYSTEM_OUT_RECEIVER =
-      receiverOfInvocation(
-          anyOf(
-              staticField(System.class.getName(), "out"),
-              staticField(System.class.getName(), "err")));
+      receiverOfInvocation(staticField().onClass(System.class.getName()).namedAnyOf("out", "err"));
 
   private static final Matcher<ExpressionTree> STRING_FORMATTED =
       instanceMethod().onExactClass(Suppliers.STRING_TYPE).named("formatted");

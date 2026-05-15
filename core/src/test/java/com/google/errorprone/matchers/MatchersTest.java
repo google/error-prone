@@ -26,7 +26,6 @@ import static com.google.errorprone.matchers.Matchers.isVoidType;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.fail;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
@@ -37,6 +36,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers;
+import com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.sun.source.tree.ClassTree;
@@ -56,21 +56,11 @@ public class MatchersTest {
 
   @Test
   public void methodNameWithParenthesisThrows() {
-    try {
-      Matchers.instanceMethod().onExactClass("java.lang.String").named("getBytes()");
-      fail("Expected an IAE to be throw but wasn't");
-    } catch (IllegalArgumentException expected) {
-    }
-    try {
-      Matchers.instanceMethod().onExactClass("java.lang.String").named("getBytes)");
-      fail("Expected an IAE to be throw but wasn't");
-    } catch (IllegalArgumentException expected) {
-    }
-    try {
-      Matchers.instanceMethod().onExactClass("java.lang.String").named("getBytes(");
-      fail("Expected an IAE to be throw but wasn't");
-    } catch (IllegalArgumentException expected) {
-    }
+    MethodClassMatcher methodClassMatcher =
+        Matchers.instanceMethod().onExactClass("java.lang.String");
+    assertThrows(IllegalArgumentException.class, () -> methodClassMatcher.named("getBytes()"));
+    assertThrows(IllegalArgumentException.class, () -> methodClassMatcher.named("getBytes)"));
+    assertThrows(IllegalArgumentException.class, () -> methodClassMatcher.named("getBytes("));
   }
 
   @Test
@@ -435,26 +425,24 @@ public class MatchersTest {
 
   @Test
   public void sameArgumentGoesOutOfBounds() {
+    CompilationTestHelper compilationTestHelper =
+        CompilationTestHelper.newInstance(SameArgumentChecker.class, getClass())
+            .addSourceLines(
+                "test/SameArgumentCheckerTest.java",
+                """
+                package test;
+
+                public class SameArgumentCheckerTest {
+                  public void matches(Object... args) {}
+
+                  public void callsMatch() {
+                    Object obj = new Object();
+                    matches(obj, "some arg");
+                  }
+                }
+                """);
     AssertionError thrown =
-        assertThrows(
-            AssertionError.class,
-            () ->
-                CompilationTestHelper.newInstance(SameArgumentChecker.class, getClass())
-                    .addSourceLines(
-                        "test/SameArgumentCheckerTest.java",
-                        """
-                        package test;
-
-                        public class SameArgumentCheckerTest {
-                          public void matches(Object... args) {}
-
-                          public void callsMatch() {
-                            Object obj = new Object();
-                            matches(obj, "some arg");
-                          }
-                        }
-                        """)
-                    .doTest());
+        assertThrows(AssertionError.class, () -> compilationTestHelper.doTest());
     assertThat(thrown).hasMessageThat().contains("IndexOutOfBoundsException");
   }
 
@@ -480,7 +468,10 @@ public class MatchersTest {
   }
 
   @Test
-  public void packageNameChecker() {
+  public void packageStartsWith() {
+    assertThrows(NullPointerException.class, () -> Matchers.packageStartsWith(null));
+    assertThrows(IllegalArgumentException.class, () -> Matchers.packageStartsWith(""));
+
     CompilationTestHelper.newInstance(PackageNameChecker.class, getClass())
         .addSourceLines(
             "test/foo/ClassName.java",
@@ -524,7 +515,7 @@ public class MatchersTest {
             """
             package test.foobar;
 
-            // BUG: Diagnostic contains:
+            // No match, the package is not "test.foo" and is not in a subpackage of "test.foo".
             public class ClassName {}
             """)
         .doTest();
@@ -561,7 +552,6 @@ public class MatchersTest {
 
   /** Simple checker to make sure hasAnnotation doesn't match on MethodInvocationTree. */
   @BugPattern(
-      name = "MethodInvocationTreeChecker",
       summary = "Checker that flags the given method invocation if the given matcher matches",
       severity = ERROR)
   public static class NoAnnotatedCallsChecker extends BugChecker

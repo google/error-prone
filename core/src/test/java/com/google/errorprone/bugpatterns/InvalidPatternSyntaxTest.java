@@ -109,4 +109,33 @@ public class InvalidPatternSyntaxTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void truth() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains:
+                assertThat("").matches("*");
+                // BUG: Diagnostic contains:
+                assertThat("").doesNotMatch("*");
+                // BUG: Diagnostic contains:
+                assertThat("").containsMatch("*");
+                // BUG: Diagnostic contains:
+                assertThat("").doesNotContainMatch("*");
+
+                assertThat("").matches(".");
+                assertThat("").doesNotMatch(".");
+                assertThat("").containsMatch(".");
+                assertThat("").doesNotContainMatch(".");
+              }
+            }
+            """)
+        .doTest();
+  }
 }

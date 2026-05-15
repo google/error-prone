@@ -24,7 +24,6 @@ import static com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParamete
 import com.google.common.truth.Subject;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.bugpatterns.TypeParameterNaming.TypeParameterNamingClassification;
 import org.junit.Test;
@@ -85,7 +84,7 @@ public class TypeParameterNamingTest {
             }
             """)
         .setFixChooser(FixChoosers.FIRST)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -118,7 +117,7 @@ public class TypeParameterNamingTest {
             }
             """)
         .setFixChooser(FixChoosers.SECOND)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -364,7 +363,7 @@ public class TypeParameterNamingTest {
             }
             """)
         .setFixChooser(FixChoosers.FIRST)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test

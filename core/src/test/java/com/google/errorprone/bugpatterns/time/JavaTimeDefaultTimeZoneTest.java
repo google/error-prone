@@ -35,6 +35,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.Clock;
 
             public class TestClass {
@@ -79,6 +80,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.LocalDate;
 
             public class TestClass {
@@ -97,6 +99,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.LocalTime;
 
             public class TestClass {
@@ -115,6 +118,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.LocalDateTime;
 
             public class TestClass {
@@ -133,6 +137,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.MonthDay;
 
             public class TestClass {
@@ -151,6 +156,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.OffsetDateTime;
 
             public class TestClass {
@@ -169,6 +175,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.OffsetTime;
 
             public class TestClass {
@@ -187,6 +194,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.Year;
 
             public class TestClass {
@@ -205,6 +213,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.YearMonth;
 
             public class TestClass {
@@ -223,6 +232,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.ZonedDateTime;
 
             public class TestClass {
@@ -241,6 +251,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.chrono.JapaneseDate;
 
             public class TestClass {
@@ -259,6 +270,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.chrono.MinguoDate;
 
             public class TestClass {
@@ -277,6 +289,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.chrono.HijrahDate;
 
             public class TestClass {
@@ -295,6 +308,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.chrono.ThaiBuddhistDate;
 
             public class TestClass {
@@ -313,8 +327,9 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
-            import java.time.chrono.Chronology;
+
             import java.time.chrono.ChronoLocalDate;
+            import java.time.chrono.Chronology;
 
             public class TestClass {
               // BUG: Diagnostic matches: REPLACEME
@@ -332,6 +347,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.chrono.HijrahChronology;
             import java.time.chrono.HijrahDate;
 
@@ -351,6 +367,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.LocalDate;
             import java.time.chrono.IsoChronology;
 
@@ -370,6 +387,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.chrono.JapaneseChronology;
             import java.time.chrono.JapaneseDate;
 
@@ -389,6 +407,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
             """
             import static java.time.ZoneId.systemDefault;
+
             import java.time.chrono.MinguoChronology;
             import java.time.chrono.MinguoDate;
 
@@ -408,6 +427,7 @@ public class JavaTimeDefaultTimeZoneTest {
             "TestClass.java",
 """
 import static java.time.ZoneId.systemDefault;
+
 import java.time.chrono.ThaiBuddhistChronology;
 import java.time.chrono.ThaiBuddhistDate;
 

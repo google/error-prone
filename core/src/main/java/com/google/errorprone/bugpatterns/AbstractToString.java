@@ -65,9 +65,10 @@ public abstract class AbstractToString extends BugChecker
    * Constructs a fix for an implicit toString call, e.g. from string concatenation or from passing
    * an argument to {@code println} or {@code StringBuilder.append}.
    *
-   * @param tree the tree node for the expression being converted to a String
+   * @param stringifiedExpr the tree node for the expression being converted to a String
    */
-  protected abstract Optional<Fix> implicitToStringFix(ExpressionTree tree, VisitorState state);
+  protected abstract Optional<Fix> implicitToStringFix(
+      ExpressionTree stringifiedExpr, VisitorState state);
 
   /** Adds the description message for match on the type without fixes. */
   protected Optional<String> descriptionMessageForDefaultMatch(Type type, VisitorState state) {
@@ -83,10 +84,14 @@ public abstract class AbstractToString extends BugChecker
    * Constructs a fix for an explicit toString call, e.g. from {@code Object.toString()} or {@code
    * String.valueOf()}.
    *
-   * @param parent the expression's parent (e.g. {@code String.valueOf(expression)})
+   * @param toStringCall the {@link MethodInvocationTree} corresponding to the explicit string
+   *     conversion: either {@code x.toString()} or {@code String.valueOf(x)}
+   * @param stringifiedExpr the {@link ExpressionTree} that is being converted to a string (the
+   *     receiver {@code x} in {@code x.toString()}, or the argument {@code x} in {@code
+   *     String.valueOf(x)})
    */
   protected abstract Optional<Fix> toStringFix(
-      Tree parent, ExpressionTree expression, VisitorState state);
+      Tree toStringCall, ExpressionTree stringifiedExpr, VisitorState state);
 
   private static final Matcher<ExpressionTree> TO_STRING =
       instanceMethod().anyClass().named("toString").withNoParameters();
@@ -122,10 +127,18 @@ public abstract class AbstractToString extends BugChecker
   private static final Matcher<ExpressionTree> JOINER =
       instanceMethod().onDescendantOf("com.google.common.base.Joiner").named("join");
 
-  private final boolean handleJoiner;
+  private static final Matcher<ExpressionTree> JOINER_ITERABLE =
+      instanceMethod()
+          .onDescendantOf("com.google.common.base.Joiner")
+          .named("join")
+          .withParameters("java.lang.Iterable");
+
+  private final boolean handleJoinerVarargs;
+  private final boolean handleJoinerIterable;
 
   protected AbstractToString(ErrorProneFlags flags) {
-    this.handleJoiner = flags.getBoolean("AbstractToString:Joiner").orElse(true);
+    this.handleJoinerVarargs = flags.getBoolean("AbstractToString:Joiner").orElse(true);
+    this.handleJoinerIterable = flags.getBoolean("AbstractToString:JoinerIterable").orElse(true);
   }
 
   private static boolean isInVarargsPosition(
@@ -190,9 +203,9 @@ public abstract class AbstractToString extends BugChecker
         handleStringifiedTree(argTree, ToStringKind.FLOGGER, state);
       }
     }
-    if (handleJoiner && JOINER.matches(tree, state)) {
+    if (JOINER.matches(tree, state)) {
       var symbol = getSymbol(tree);
-      if (symbol.isVarArgs()) {
+      if (handleJoinerVarargs && symbol.isVarArgs()) {
         for (ExpressionTree argTree : tree.getArguments()) {
           if (isVarargsArray(argTree, tree, state)) {
             handleStringifiedTree(
@@ -204,6 +217,22 @@ public abstract class AbstractToString extends BugChecker
           } else {
             handleStringifiedTree(argTree, ToStringKind.IMPLICIT, state);
           }
+        }
+      } else if (handleJoinerIterable && JOINER_ITERABLE.matches(tree, state)) {
+        var argTree = tree.getArguments().getFirst();
+        Type elementType =
+            state
+                .getTypes()
+                .asSuper(
+                    state.getTypes().capture(getType(argTree)),
+                    state.getSymtab().iterableType.tsym);
+        if (elementType != null && !elementType.getTypeArguments().isEmpty()) {
+          handleStringifiedTree(
+              elementType.getTypeArguments().getFirst(),
+              argTree,
+              argTree,
+              ToStringKind.NONE,
+              state);
         }
       }
     }
@@ -235,23 +264,36 @@ public abstract class AbstractToString extends BugChecker
   }
 
   private void handleStringifiedTree(
-      ExpressionTree tree, ToStringKind toStringKind, VisitorState state) {
-    handleStringifiedTree(tree, tree, toStringKind, state);
+      ExpressionTree stringifiedExpr, ToStringKind toStringKind, VisitorState state) {
+    handleStringifiedTree(stringifiedExpr, stringifiedExpr, toStringKind, state);
   }
 
   private void handleStringifiedTree(
-      Tree parent, ExpressionTree tree, ToStringKind toStringKind, VisitorState state) {
-    handleStringifiedTree(type(tree), parent, tree, toStringKind, state);
+      Tree toStringCall,
+      ExpressionTree stringifiedExpr,
+      ToStringKind toStringKind,
+      VisitorState state) {
+    handleStringifiedTree(
+        type(stringifiedExpr), toStringCall, stringifiedExpr, toStringKind, state);
   }
 
   private void handleStringifiedTree(
-      Type type, Tree parent, ExpressionTree tree, ToStringKind toStringKind, VisitorState state) {
+      Type type,
+      Tree toStringCall,
+      ExpressionTree stringifiedExpr,
+      ToStringKind toStringKind,
+      VisitorState state) {
     if (type.getKind() == TypeKind.NULL
         || !typePredicate().apply(type, state)
         || allowableToStringKind(toStringKind)) {
       return;
     }
-    state.reportMatch(maybeFix(tree, state, type, getFix(tree, state, parent, toStringKind)));
+    state.reportMatch(
+        maybeFix(
+            stringifiedExpr,
+            state,
+            type,
+            getFix(stringifiedExpr, state, toStringCall, toStringKind)));
   }
 
   private static Type type(ExpressionTree tree) {
@@ -263,21 +305,20 @@ public abstract class AbstractToString extends BugChecker
   }
 
   private Optional<Fix> getFix(
-      ExpressionTree tree, VisitorState state, Tree parent, ToStringKind toStringKind) {
-    switch (toStringKind) {
-      case IMPLICIT, FLOGGER, FORMAT_METHOD -> {
-        return implicitToStringFix(tree, state);
-      }
-      case EXPLICIT -> {
-        return toStringFix(parent, tree, state);
-      }
-      case NONE -> {}
-    }
-    throw new AssertionError();
+      ExpressionTree stringifiedExpr,
+      VisitorState state,
+      Tree toStringCall,
+      ToStringKind toStringKind) {
+    return switch (toStringKind) {
+      case IMPLICIT, FLOGGER, FORMAT_METHOD -> implicitToStringFix(stringifiedExpr, state);
+      case EXPLICIT -> toStringFix(toStringCall, stringifiedExpr, state);
+      case NONE -> Optional.empty();
+    };
   }
 
-  private Description maybeFix(Tree tree, VisitorState state, Type matchedType, Optional<Fix> fix) {
-    Description.Builder description = buildDescription(tree);
+  private Description maybeFix(
+      Tree stringifiedExpr, VisitorState state, Type matchedType, Optional<Fix> fix) {
+    Description.Builder description = buildDescription(stringifiedExpr);
     fix.ifPresent(description::addFix);
     descriptionMessageForDefaultMatch(matchedType, state).ifPresent(description::setMessage);
     return description.build();

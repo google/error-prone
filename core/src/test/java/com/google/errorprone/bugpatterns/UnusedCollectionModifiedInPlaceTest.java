@@ -34,8 +34,8 @@ public class UnusedCollectionModifiedInPlaceTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Collections;
             import java.util.ArrayList;
+            import java.util.Collections;
             import java.util.List;
 
             class Test {

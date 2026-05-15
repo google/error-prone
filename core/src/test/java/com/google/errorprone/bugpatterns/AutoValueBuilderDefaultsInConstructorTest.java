@@ -102,6 +102,7 @@ public final class AutoValueBuilderDefaultsInConstructorTest {
 
               @AutoValue.Builder
               abstract static class Builder {
+
                 abstract Builder setFoo(int foo);
 
                 abstract Test build();

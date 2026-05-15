@@ -438,6 +438,7 @@ public final class AlreadyCheckedTest {
             "Test.java",
             """
             import static java.time.Duration.ofSeconds;
+
             import java.time.Duration;
 
             class Test {
@@ -614,6 +615,42 @@ public final class AlreadyCheckedTest {
                   } else {
                   }
                 }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void i5710() {
+    helper
+        .addSourceLines(
+            "Demo.java",
+            """
+            package com.example;
+
+            public enum Demo {
+              ;
+
+              final String val;
+
+              Demo(String v) {
+                val = v;
+              }
+
+              static Demo min = null;
+
+              static Demo minLength() {
+                if (min == null) {
+                  for (Demo d : Demo.values()) {
+                    if (min == null) {
+                      min = d;
+                    } else if (d.val.length() < min.val.length()) {
+                      min = d;
+                    }
+                  }
+                }
+                return min;
               }
             }
             """)

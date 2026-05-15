@@ -408,10 +408,10 @@ public final class UnnecessarilyFullyQualifiedTest {
             "Test.java",
             """
             interface Test {
-              // BUG: Diagnostic contains:
+              // BUG: Diagnostic contains: qualified name 'java.util.List' is unambiguous
               java.util.List foo();
 
-              // BUG: Diagnostic contains:
+              // BUG: Diagnostic contains: prefer using the name 'List'
               java.util.List bar();
             }
             """)
@@ -429,6 +429,36 @@ public final class UnnecessarilyFullyQualifiedTest {
               java.util.List foo();
 
               java.util.List bar();
+            }
+            """)
+        .setArgs("-XepOpt:UnnecessarilyFullyQualified:BatchFindings=true")
+        .doTest();
+  }
+
+  @Test
+  public void lambdaParameter() {
+    compilationHelper
+        .addSourceLines(
+            "Lib.java",
+            """
+            import java.util.List;
+            import java.util.stream.Stream;
+
+            interface Lib {
+              Stream<List<String>> f();
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(Lib l) {
+                l.f().map(x -> x);
+              }
+
+              void g(Lib l) {
+                l.f().map(x -> x);
+              }
             }
             """)
         .setArgs("-XepOpt:UnnecessarilyFullyQualified:BatchFindings=true")

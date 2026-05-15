@@ -38,7 +38,6 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.MoreAnnotations.asStrings;
 import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
 import static java.lang.String.format;
-import static javax.lang.model.element.ElementKind.CONSTRUCTOR;
 import static javax.lang.model.element.ElementKind.FIELD;
 import static javax.lang.model.element.Modifier.FINAL;
 
@@ -239,7 +238,7 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
       }
 
       private boolean isExemptedConstructor(MethodSymbol methodSymbol, VisitorState state) {
-        if (!methodSymbol.getKind().equals(CONSTRUCTOR)) {
+        if (!methodSymbol.isConstructor()) {
           return false;
         }
         // Don't delete unused zero-arg constructors, given those are often there to limit
@@ -329,10 +328,20 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         sym.getRawAttributes().stream()
             .filter(a -> a.type.tsym.getQualifiedName().equals(name))
             .findAny()
-            // get the annotation value array as a set of Names
-            .flatMap(a -> getAnnotationValue(a, "value"))
+            // get the annotation value array as a set of Names,
+            // normalizing unset value to the empty value
             .map(
-                y -> asStrings(y).map(state::getName).map(Name::toString).collect(toImmutableSet()))
+                a ->
+                    getAnnotationValue(a, "value")
+                        .map(
+                            y ->
+                                asStrings(y)
+                                    .map(state::getName)
+                                    .map(Name::toString)
+                                    .collect(toImmutableSet()))
+                        .orElse(ImmutableSet.of()))
+            // if no explicit method sources were specified, use method name instead
+            .map(names -> names.isEmpty() ? ImmutableSet.of(sym.name.toString()) : names)
             // remove all potentially unused methods referenced by the @MethodSource
             .ifPresent(
                 referencedNames ->

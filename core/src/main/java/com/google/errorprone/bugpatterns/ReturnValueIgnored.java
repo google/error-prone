@@ -46,7 +46,9 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Type;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
@@ -134,7 +136,11 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
     }
     Symbol symbol = getSymbol(tree);
     if (symbol instanceof MethodSymbol) {
-      String qualifiedName = enclosingPackage(symbol.owner).getQualifiedName().toString();
+      Optional<PackageSymbol> enclosingPackage = enclosingPackage(symbol.owner);
+      if (enclosingPackage.isEmpty()) {
+        return false;
+      }
+      String qualifiedName = enclosingPackage.get().getQualifiedName().toString();
       return (qualifiedName.startsWith("java.time") || qualifiedName.startsWith("org.threeten.bp"))
           && symbol.getModifiers().contains(Modifier.PUBLIC)
           && !ALLOWED_JAVA_TIME_METHODS.matches(tree, state);
@@ -149,7 +155,9 @@ public class ReturnValueIgnored extends AbstractReturnValueIgnored {
   private static boolean functionalMethod(ExpressionTree tree, VisitorState state) {
     Symbol symbol = getSymbol(tree);
     return symbol instanceof MethodSymbol
-        && enclosingPackage(symbol.owner).getQualifiedName().contentEquals("java.util.function");
+        && enclosingPackage(symbol.owner)
+            .map(p -> p.getQualifiedName().contentEquals("java.util.function"))
+            .orElse(false);
   }
 
   /**

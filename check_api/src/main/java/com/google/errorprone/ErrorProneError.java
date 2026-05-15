@@ -16,6 +16,8 @@
 
 package com.google.errorprone;
 
+import static java.util.Objects.requireNonNull;
+
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.sun.tools.javac.util.Context;
@@ -47,7 +49,7 @@ public class ErrorProneError extends Error {
     this.checkName = checkName;
     this.cause = cause;
     this.pos = pos;
-    this.source = source;
+    this.source = requireNonNull(source);
   }
 
   public void logFatalError(Log log, Context context) {

@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -88,6 +89,5 @@ public class ConditionalExpressionNumericPromotion extends BugChecker
     return describeMatch(conditionalExpression, builder.build());
   }
 
-  private static final Supplier<Type> JAVA_LANG_NUMBER =
-      VisitorState.memoize(state -> state.getTypeFromString("java.lang.Number"));
+  private static final Supplier<Type> JAVA_LANG_NUMBER = typeFromString("java.lang.Number");
 }

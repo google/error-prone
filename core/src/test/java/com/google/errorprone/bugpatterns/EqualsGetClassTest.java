@@ -124,6 +124,7 @@ public final class EqualsGetClassTest {
 
               @Override
               public boolean equals(Object o) {
+
                 if (!(o instanceof Test)) {
                   return false;
                 }
@@ -164,6 +165,7 @@ public final class EqualsGetClassTest {
 
               @Override
               public boolean equals(Object o) {
+
                 if (!(o instanceof Test)) {
                   return false;
                 }

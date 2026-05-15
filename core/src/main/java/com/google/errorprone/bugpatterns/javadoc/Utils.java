@@ -18,6 +18,8 @@ package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.errorprone.names.LevenshteinEditDistance.getEditDistance;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
+import static com.google.errorprone.util.ASTHelpers.isRecord;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.VisitorState;
@@ -40,7 +42,8 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DocCommentTable;
 import com.sun.tools.javac.tree.JCTree;
@@ -48,8 +51,6 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.JCDiagnostic.DiagnosticPosition;
 import com.sun.tools.javac.util.Position;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
@@ -149,7 +150,7 @@ final class Utils {
 
   /** Returns a map of positions to trees which can be documented by Javadoc. */
   static ImmutableMap<Integer, TreePath> getJavadoccableTrees(CompilationUnitTree tree) {
-    Map<Integer, TreePath> javadoccablePositions = new HashMap<>();
+    ImmutableMap.Builder<Integer, TreePath> javadoccablePositions = ImmutableMap.builder();
     new TreePathScanner<Void, Void>() {
       @Override
       public Void visitPackage(PackageTree packageTree, Void unused) {
@@ -159,7 +160,7 @@ final class Utils {
 
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
-        if (!(getSymbol(classTree).owner instanceof MethodSymbol)) {
+        if (isJavadoccableClass(getSymbol(classTree))) {
           javadoccablePositions.put(ASTHelpers.getStartPosition(classTree), getCurrentPath());
         }
         return super.visitClass(classTree, null);
@@ -167,7 +168,7 @@ final class Utils {
 
       @Override
       public Void visitMethod(MethodTree methodTree, Void unused) {
-        if (!ASTHelpers.isGeneratedConstructor(methodTree)) {
+        if (!isGeneratedConstructor(methodTree) && isJavadoccableClass(getSymbol(methodTree))) {
           javadoccablePositions.put(ASTHelpers.getStartPosition(methodTree), getCurrentPath());
         }
         return super.visitMethod(methodTree, null);
@@ -175,19 +176,22 @@ final class Utils {
 
       @Override
       public Void visitVariable(VariableTree variableTree, Void unused) {
-        ElementKind kind = getSymbol(variableTree).getKind();
-        if (kind == ElementKind.FIELD) {
-          javadoccablePositions.put(ASTHelpers.getStartPosition(variableTree), getCurrentPath());
-        }
-        // For enum constants, skip past the desugared class declaration.
-        if (kind == ElementKind.ENUM_CONSTANT) {
-          javadoccablePositions.put(ASTHelpers.getStartPosition(variableTree), getCurrentPath());
-          if (variableTree.getInitializer() instanceof NewClassTree newClassTree) {
-            ClassTree classBody = newClassTree.getClassBody();
-            if (classBody != null) {
-              scan(classBody.getMembers(), null);
+        Symbol symbol = getSymbol(variableTree);
+        if (isJavadoccableClass(symbol)) {
+          ElementKind kind = symbol.getKind();
+          if (kind == ElementKind.FIELD && !isRecord(symbol)) {
+            javadoccablePositions.put(ASTHelpers.getStartPosition(variableTree), getCurrentPath());
+          }
+          // For enum constants, skip past the desugared class declaration.
+          if (kind == ElementKind.ENUM_CONSTANT) {
+            javadoccablePositions.put(ASTHelpers.getStartPosition(variableTree), getCurrentPath());
+            if (variableTree.getInitializer() instanceof NewClassTree newClassTree) {
+              ClassTree classBody = newClassTree.getClassBody();
+              if (classBody != null) {
+                scan(classBody.getMembers(), null);
+              }
+              return null;
             }
-            return null;
           }
         }
         return super.visitVariable(variableTree, null);
@@ -199,7 +203,18 @@ final class Utils {
         return super.visitModule(moduleTree, null);
       }
     }.scan(tree, null);
-    return ImmutableMap.copyOf(javadoccablePositions);
+    return javadoccablePositions.buildKeepingLast();
+  }
+
+  /**
+   * Returns true if the given symbol represents a class that can be documented by Javadoc.
+   *
+   * <p>Notably, anonymous classes and local classes <b>cannot</b> have Javadoc.
+   */
+  private static boolean isJavadoccableClass(Symbol sym) {
+    // enclClass returns sym if sym is a ClassSymbol, which is what we want in this case
+    ClassSymbol classSym = sym.enclClass();
+    return classSym != null && !classSym.isDirectlyOrIndirectlyLocal();
   }
 
   private Utils() {}

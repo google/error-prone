@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.equalsMethodDeclaration;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -97,6 +98,5 @@ public final class BigDecimalEquals extends BugChecker implements MethodInvocati
     return describeMatch(tree);
   }
 
-  private static final Supplier<Type> JAVA_MATH_BIGDECIMAL =
-      VisitorState.memoize(state -> state.getTypeFromString(BIG_DECIMAL));
+  private static final Supplier<Type> JAVA_MATH_BIGDECIMAL = typeFromString(BIG_DECIMAL);
 }

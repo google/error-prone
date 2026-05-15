@@ -36,6 +36,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.BreakTree;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.ExpressionTree;
@@ -190,8 +191,11 @@ public final class SwitchUtils {
 
       @Override
       public Void visitAssignment(AssignmentTree tree, Void unused) {
-        // Only looks at the right-hand side of the assignment
-        return scan(tree.getExpression(), null);
+        if (tree.getVariable() instanceof IdentifierTree) {
+          // Bare assignments are pure writes to the variable, reads happen only on RHS
+          return scan(tree.getExpression(), null);
+        }
+        return super.visitAssignment(tree, null);
       }
 
       @Override
@@ -323,6 +327,34 @@ public final class SwitchUtils {
   }
 
   /**
+   * Determines whether any `break` statements that jump out of the {@code tree} are present within
+   * the {@code tree}.
+   */
+  static boolean hasBreakOutOfTree(Tree tree, VisitorState state) {
+    Boolean result =
+        new TreeScanner<Boolean, Void>() {
+          @Override
+          public Boolean visitBreak(BreakTree breakTree, Void unused) {
+            Tree breakTarget = skipLabel(requireNonNull(((JCTree.JCBreak) breakTree).target));
+            // If the break transfers control to somewhere above the tree, it is jumping out.
+            var pathIterator = state.getPath().iterator();
+            for (Tree at = tree; pathIterator.hasNext(); at = pathIterator.next()) {
+              if (at == breakTarget) {
+                return true;
+              }
+            }
+            return false;
+          }
+
+          @Override
+          public Boolean reduce(@Nullable Boolean left, @Nullable Boolean right) {
+            return Objects.equals(left, true) || Objects.equals(right, true);
+          }
+        }.scan(tree, null);
+    return result != null && result;
+  }
+
+  /**
    * In a switch with multiple assignments, determine whether a subsequent assignment target is
    * compatible with the first assignment target.
    */
@@ -440,6 +472,31 @@ public final class SwitchUtils {
       case KIND_DEFAULT -> removeDefault ? "" : "default";
       case KIND_NEITHER -> "case ";
     };
+  }
+
+  public static Set<VarSymbol> getReferencedLocalVariablesInTree(Tree tree) {
+    Set<VarSymbol> referencedLocalVariables = new HashSet<>();
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitMemberSelect(MemberSelectTree memberSelect, Void unused) {
+        handle(memberSelect);
+        return super.visitMemberSelect(memberSelect, null);
+      }
+
+      @Override
+      public Void visitIdentifier(IdentifierTree identifier, Void unused) {
+        handle(identifier);
+        return super.visitIdentifier(identifier, null);
+      }
+
+      private void handle(Tree tree) {
+        var symbol = getSymbol(tree);
+        if (symbol instanceof VarSymbol varSymbol) {
+          referencedLocalVariables.add(varSymbol);
+        }
+      }
+    }.scan(tree, null);
+    return referencedLocalVariables;
   }
 
   private SwitchUtils() {}

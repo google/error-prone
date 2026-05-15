@@ -15,13 +15,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.TruthJUnit.assume;
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -493,10 +491,13 @@ public class UnusedVariableTest {
             package unusedvars;
 
             public class Unuseds {
+
               private static final String CONST_STR = "test";
+
               public int publicOne;
 
               void test() {
+
                 System.out.println(CONST_STR);
               }
             }
@@ -662,7 +663,7 @@ public class UnusedVariableTest {
 
             public class UnusedWithComment {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -684,7 +685,7 @@ public class UnusedVariableTest {
               public static final int A = 1; // foo
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -709,7 +710,7 @@ public class UnusedVariableTest {
               public static final int A = 1; // foo
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -729,7 +730,7 @@ public class UnusedVariableTest {
             @SuppressWarnings("foo" /* { */)
             public class Test {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -813,8 +814,8 @@ public class UnusedVariableTest {
             """
             package unusedvars;
 
-            import java.util.Map;
             import java.util.HashMap;
+            import java.util.Map;
 
             public class Test {
               private int next = 1;
@@ -968,6 +969,7 @@ public class UnusedVariableTest {
             import com.google.common.collect.ImmutableList;
 
             class Test {
+
               void test() {}
             }
             """)
@@ -1036,6 +1038,7 @@ public class UnusedVariableTest {
               int a = foo();
 
               private int foo() {
+
                 return 1;
               }
             }
@@ -1244,6 +1247,7 @@ public class UnusedVariableTest {
             "Test.java",
             """
             class Test {
+
               public int a() {
                 a();
                 return 1;
@@ -1272,6 +1276,7 @@ public class UnusedVariableTest {
             """
             class Test {
               void foo() {
+
                 if (hashCode() > 0) {}
               }
             }
@@ -1417,6 +1422,7 @@ public class UnusedVariableTest {
 
             public class Test {
               public String test() {
+
                 hashCode();
                 String a = toString();
                 return a;
@@ -1481,6 +1487,7 @@ public class UnusedVariableTest {
 
             public class Test {
               public void test() {
+
                 int a = 3;
                 System.out.println(a);
               }
@@ -1672,10 +1679,11 @@ public class UnusedVariableTest {
         .addInputLines(
             "Test.java",
 """
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import static java.util.stream.Collectors.toList;
 
 public class Test {
   public void f(List<List<String>> lists) {
@@ -1688,10 +1696,11 @@ public class Test {
         .addOutputLines(
             "Test.java",
             """
+            import static java.util.stream.Collectors.toList;
+
             import java.util.ArrayList;
             import java.util.Collection;
             import java.util.List;
-            import static java.util.stream.Collectors.toList;
 
             public class Test {
               public void f(List<List<String>> lists) {}
@@ -1707,10 +1716,11 @@ public class Test {
         .addInputLines(
             "Test.java",
 """
+import static java.util.stream.Collectors.toList;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import static java.util.stream.Collectors.toList;
 
 public class Test {
   public void f(List<List<String>> lists) {
@@ -1723,10 +1733,11 @@ public class Test {
         .addOutputLines(
             "Test.java",
             """
+            import static java.util.stream.Collectors.toList;
+
             import java.util.ArrayList;
             import java.util.Collection;
             import java.util.List;
-            import static java.util.stream.Collectors.toList;
 
             public class Test {
               public void f(List<List<String>> lists) {
@@ -1900,6 +1911,7 @@ public class Test {
             """
             public class Test {
               public void test() {
+
                 Integer a = 3;
                 a.hashCode();
               }
@@ -2191,6 +2203,7 @@ public class Test {
 
             class Test {
               public static void main(String[] args) {
+
                 var _ = new Object();
 
                 Collections.sort(Arrays.asList(args), (a, _) -> a.isEmpty() ? 1 : 0);
@@ -2221,6 +2234,6 @@ public class Test {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 }

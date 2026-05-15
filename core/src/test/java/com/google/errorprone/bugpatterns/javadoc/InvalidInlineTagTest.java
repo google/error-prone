@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.javadoc;
 import static org.junit.Assert.assertEquals;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +56,7 @@ public final class InvalidInlineTagTest {
               void foo();
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -94,7 +93,7 @@ public final class InvalidInlineTagTest {
               void foo();
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -120,7 +119,7 @@ public final class InvalidInlineTagTest {
               interface A {}
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -142,7 +141,7 @@ public final class InvalidInlineTagTest {
               void foo(int a);
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -164,7 +163,7 @@ public final class InvalidInlineTagTest {
               void foo(int a);
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -201,7 +200,7 @@ public final class InvalidInlineTagTest {
               void frobnicate(String foo);
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -238,7 +237,7 @@ public final class InvalidInlineTagTest {
               void frobnicate(String foo);
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -260,7 +259,7 @@ public final class InvalidInlineTagTest {
               void frobnicate(String foo);
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -278,7 +277,7 @@ public final class InvalidInlineTagTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -303,6 +302,32 @@ public final class InvalidInlineTagTest {
             class Test {}
             """)
         .setArgs("-XepOpt:Javadoc:customInlineTags=customTag1,customTag2")
+        .doTest();
+  }
+
+  @Test
+  public void blockTagUsedInline() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            interface Test {
+              // BUG: Diagnostic contains: Tag name `see` is not a valid inline tag, but it is a valid block
+              // tag.
+              /** Provide an {@see #foo} */
+              void foo(int a);
+
+              // BUG: Diagnostic contains: Tag name `author` is not a valid inline tag, but it is a valid block
+              // tag.
+              /** {@author ghm} */
+              int bar();
+
+              // BUG: Diagnostic contains: Tag name `since` is not a valid inline tag, but it is a valid block
+              // tag.
+              /** {@since 1.0} */
+              void baz();
+            }
+            """)
         .doTest();
   }
 }

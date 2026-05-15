@@ -17,13 +17,9 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
-import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
-import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNOTATION;
-import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.HAS_QUALIFIER_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.HAS_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
 
@@ -45,10 +41,7 @@ import com.sun.source.tree.ClassTree;
     severity = ERROR)
 public class OverlappingQualifierAndScopeAnnotation extends BugChecker implements ClassTreeMatcher {
   private static final Matcher<ClassTree> ANNOTATION_WITH_BOTH_TYPES =
-      allOf(
-          kindIs(ANNOTATION_TYPE),
-          anyOf(hasAnnotation(GUICE_BINDING_ANNOTATION), hasAnnotation(JAVAX_QUALIFIER_ANNOTATION)),
-          anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION)));
+      allOf(kindIs(ANNOTATION_TYPE), HAS_QUALIFIER_ANNOTATION, HAS_SCOPE_ANNOTATION);
 
   @Override
   public final Description matchClass(ClassTree classTree, VisitorState state) {

@@ -17,21 +17,24 @@
 package com.google.errorprone;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -129,7 +132,7 @@ public class BugCheckerRefactoringTestHelperTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -155,7 +158,7 @@ public class BugCheckerRefactoringTestHelperTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -184,7 +187,7 @@ public class BugCheckerRefactoringTestHelperTest {
                       }
                     }
                     """)
-                .doTest(TestMode.TEXT_MATCH));
+                .doTest());
   }
 
   @Test
@@ -226,7 +229,7 @@ public class BugCheckerRefactoringTestHelperTest {
 
             public class Bar {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   /** Mock {@link BugChecker} for testing only. */
@@ -286,13 +289,13 @@ public class BugCheckerRefactoringTestHelperTest {
         .addOutputLines(
             "out/pkg/A.java",
             """
-            import java.util.ArrayList;
-
             import static java.lang.Math.min;
+
+            import java.util.ArrayList;
 
             class A {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   /** Mock {@link BugChecker} for testing only. */
@@ -315,5 +318,139 @@ public class BugCheckerRefactoringTestHelperTest {
     IllegalStateException expected =
         assertThrows(IllegalStateException.class, () -> helper.doTest());
     assertThat(expected).hasMessageThat().contains("doTest");
+  }
+
+  @BugPattern(summary = "Replaces var types", severity = SUGGESTION)
+  public static class ReplaceVarTypes extends BugChecker implements VariableTreeMatcher {
+    @SuppressWarnings("TreeToString")
+    @Override
+    public Description matchVariable(VariableTree tree, VisitorState state) {
+      Tree type = tree.getType();
+      return describeMatch(type, SuggestedFix.replace(type, "Object"));
+    }
+  }
+
+  @SuppressWarnings("MissingTestCall") // used in a method reference in assertThrows
+  @Test
+  public void replaceVarTypes() {
+    // after JDK-8358604 in JDK 27, var types have source positions
+    // after JDK-8359383 in JDK 26, var type start and end positions are the same
+    assume().that(Runtime.version().feature()).isLessThan(26);
+    BugCheckerRefactoringTestHelper helper =
+        BugCheckerRefactoringTestHelper.newInstance(ReplaceVarTypes.class, getClass())
+            .addInputLines(
+                "Test.java",
+                """
+                public class Test {
+                  public void foo() {
+                    var x = 1 + 2;
+                    System.out.println(x);
+                  }
+                }
+                """)
+            .expectUnchanged();
+    AssertionError e = assertThrows(AssertionError.class, helper::doTest);
+    assertThat(e)
+        .hasMessageThat()
+        .contains(
+            """
+            Test.java:3: error: An unhandled exception was thrown by the Error Prone static analysis plugin.
+                var x = 1 + 2;
+            """);
+    assertThat(e).hasMessageThat().contains("BugPattern: ReplaceVarTypes");
+  }
+
+  @Test
+  public void varTypeSourcePositions() {
+    // after JDK-8358604 in JDK 27, var types have source positions
+    assume().that(Runtime.version().feature()).isAtLeast(27);
+    BugCheckerRefactoringTestHelper.newInstance(ReplaceVarTypes.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              public void foo() {
+                var x = 1 + 2;
+                System.out.println(x);
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            public class Test {
+              public void foo() {
+                Object x = 1 + 2;
+                System.out.println(x);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void reorderImports() {
+    helper
+        .addInputLines(
+            "in/Test.java",
+            """
+            import static java.lang.Math.min;
+
+            import java.util.List;
+
+            public class Test {
+              public Integer foo(List<Integer> xs) {
+                Integer i = null;
+                for (int x : xs) {
+                  if (i == null) {
+                    i = x;
+                  } else {
+                    i = min(i, x);
+                  }
+                }
+                return i;
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            import static java.lang.Math.min;
+
+            import java.util.List;
+
+            public class Test {
+              public Integer foo(List<Integer> xs) {
+                Integer i = null;
+                for (int x : xs) {
+                  if (i == null) {
+                    i = x;
+                  } else {
+                    i = min(i, x);
+                  }
+                }
+                return null;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void emptyTestInput() {
+    BugCheckerRefactoringTestHelper bugCheckerRefactoringTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(ReplaceVarTypes.class, getClass())
+            .addInputLines(
+                "Test.java",
+                """
+                import java.util.List;
+                """)
+            .expectUnchanged();
+    IllegalArgumentException thrown =
+        assertThrows(
+            IllegalArgumentException.class, () -> bugCheckerRefactoringTestHelper.doTest());
+    assertThat(thrown)
+        .hasMessageThat()
+        .contains("Expected a class, package, or module declaration");
   }
 }

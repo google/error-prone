@@ -149,6 +149,30 @@ public final class NonApiTypeTest {
   }
 
   @Test
+  public void autoValueBuilderWithJdkOptionalParameters() {
+    helper
+        .addSourceLines(
+            "User.java",
+            """
+            import com.google.auto.value.AutoValue;
+            import java.util.Optional;
+
+            @AutoValue
+            public abstract class User {
+              public abstract Optional<String> middleName();
+
+              @AutoValue.Builder
+              public abstract static class Builder {
+                public abstract Builder setMiddleName(Optional<String> middleName);
+
+                public abstract User build();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void immutableFoos() {
     helper
         .addSourceLines(
@@ -369,6 +393,7 @@ public final class NonApiTypeTest {
             "Test.java",
             """
             import static com.google.common.base.Preconditions.checkArgument;
+
             import com.google.common.collect.ImmutableSet;
 
             public class Test {

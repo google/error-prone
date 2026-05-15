@@ -23,4 +23,8 @@ import java.io.Serializable;
 /** A predicate for testing {@link Type}s. */
 public interface TypePredicate extends Serializable {
   boolean apply(Type type, VisitorState state);
+
+  default TypePredicate and(TypePredicate other) {
+    return (type, state) -> apply(type, state) && other.apply(type, state);
+  }
 }

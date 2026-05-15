@@ -351,6 +351,143 @@ public class TimeUnitMismatchTest {
   }
 
   @Test
+  public void addingMillisAndMicros() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.protobuf.Timestamp;
+            import java.util.Date;
+
+            class Test {
+              record Container(Timestamp timestamp) {}
+
+              Date test(Container c) {
+                // BUG: Diagnostic contains: This operation seems to mix up time units: MILLISECONDS and
+                // MICROSECONDS.
+                return new Date(c.timestamp().getSeconds() * 1000 + c.timestamp().getNanos() / 1000);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void returningMillisFromMicrosMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private int millis = 1;
+
+              long getMicros() {
+                // BUG: Diagnostic contains: expected microseconds but was milliseconds
+                return millis;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void lambda() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              interface MySupplier {
+                long getMillis();
+              }
+
+              private long micros = 1;
+
+              void test() {
+                MySupplier s =
+                    () -> {
+                      // BUG: Diagnostic contains: expected milliseconds but was microseconds
+                      return micros;
+                    };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodReference() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              interface MySupplier {
+                long getMillis();
+              }
+
+              private long getMicros() {
+                return 1;
+              }
+
+              void test() {
+                // BUG: Diagnostic contains: expected milliseconds but was microseconds
+                MySupplier s2 = this::getMicros;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_nonNumericReturnType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              interface MySupplier {
+                String getMillis();
+              }
+
+              private String getMicros() {
+                return "1";
+              }
+
+              void test() {
+                // Surely cursed, but don't complain: we can't hope to fix non-numbers.
+                MySupplier s2 = this::getMicros;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void ternary() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private long millis = 1;
+              private long micros = 1;
+
+              long foo(boolean condition) {
+                // BUG: Diagnostic contains:
+                return condition ? millis : micros;
+              }
+
+              long bar(boolean condition) {
+                // BUG: Diagnostic contains:
+                return condition ? micros : millis;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void testUnitSuggestedByName() {
     assertSeconds("sleepSec", "deadlineSeconds", "secondsTimeout", "msToS");
     assertUnknown(

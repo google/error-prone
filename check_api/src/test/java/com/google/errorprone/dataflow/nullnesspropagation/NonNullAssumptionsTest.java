@@ -63,14 +63,16 @@ public class NonNullAssumptionsTest {
     for (MemberName member : NullnessPropagationTransfer.NULL_IMPLIES_TRUE_PARAMETERS.keySet()) {
       ImmutableSet<Integer> nullParameters =
           NullnessPropagationTransfer.NULL_IMPLIES_TRUE_PARAMETERS.get(member);
-      assertWithMessage("%s#%s()", member.clazz, member.member).that(nullParameters).isNotEmpty();
-      if (member.clazz.startsWith("android.")) {
+      assertWithMessage("%s#%s()", member.clazz(), member.member())
+          .that(nullParameters)
+          .isNotEmpty();
+      if (member.clazz().startsWith("android.")) {
         // Can't load Android SDK classes.
         continue;
       }
       int found = 0;
-      for (Method method : loadClass(member.clazz).getMethods()) {
-        if (!method.getName().equals(member.member)) {
+      for (Method method : loadClass(member.clazz()).getMethods()) {
+        if (!method.getName().equals(member.member())) {
           continue;
         }
         ++found;
@@ -79,7 +81,7 @@ public class NonNullAssumptionsTest {
           assertThat(invokeWithSingleNullArgument(method, nullParam)).isEqualTo(Boolean.TRUE);
         }
       }
-      assertWithMessage("%s#%s()", member.clazz, member.member).that(found).isGreaterThan(0);
+      assertWithMessage("%s#%s()", member.clazz(), member.member()).that(found).isGreaterThan(0);
     }
   }
 
@@ -88,12 +90,12 @@ public class NonNullAssumptionsTest {
     for (MemberName member : NullnessPropagationTransfer.REQUIRED_NON_NULL_PARAMETERS.keySet()) {
       ImmutableSet<Integer> nonNullParameters =
           NullnessPropagationTransfer.REQUIRED_NON_NULL_PARAMETERS.get(member);
-      assertWithMessage("%s#%s()", member.clazz, member.member)
+      assertWithMessage("%s#%s()", member.clazz(), member.member())
           .that(nonNullParameters)
           .isNotEmpty();
       int found = 0;
-      for (Method method : loadClass(member.clazz).getMethods()) {
-        if (!method.getName().equals(member.member)) {
+      for (Method method : loadClass(member.clazz()).getMethods()) {
+        if (!method.getName().equals(member.member())) {
           continue;
         }
         ++found;
@@ -109,7 +111,7 @@ public class NonNullAssumptionsTest {
           }
         }
       }
-      assertWithMessage("%s#%s()", member.clazz, member.member).that(found).isGreaterThan(0);
+      assertWithMessage("%s#%s()", member.clazz(), member.member()).that(found).isGreaterThan(0);
     }
   }
 

@@ -16,11 +16,14 @@
 
 package com.google.errorprone.matchers;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.matchers.MethodVisibility.Visibility.PUBLIC;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
+import static com.google.errorprone.predicates.TypePredicates.isExactType;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
@@ -394,7 +397,7 @@ public class Matchers {
    * @param typeStr a string representation of the type, e.g., "java.util.AbstractList"
    */
   public static <T extends Tree> Matcher<T> isSubtypeOf(String typeStr) {
-    return new IsSubtypeOf<>(typeStr);
+    return typePredicateMatcher(isDescendantOf(typeStr));
   }
 
   /**
@@ -403,7 +406,7 @@ public class Matchers {
    * @param type the type to check against
    */
   public static <T extends Tree> Matcher<T> isSubtypeOf(Supplier<Type> type) {
-    return new IsSubtypeOf<>(type);
+    return typePredicateMatcher(isDescendantOf(type));
   }
 
   /**
@@ -412,22 +415,22 @@ public class Matchers {
    * @param clazz a class representation of the type, e.g., Action.class.
    */
   public static <T extends Tree> Matcher<T> isSubtypeOf(Class<?> clazz) {
-    return new IsSubtypeOf<>(typeFromClass(clazz));
+    return typePredicateMatcher(isDescendantOf(typeFromClass(clazz)));
   }
 
   /** Matches an AST node if it has the same erased type as the given type. */
   public static <T extends Tree> Matcher<T> isSameType(Supplier<Type> type) {
-    return new IsSameType<>(type);
+    return typePredicateMatcher(isExactType(type));
   }
 
   /** Matches an AST node if it has the same erased type as the given type. */
   public static <T extends Tree> Matcher<T> isSameType(String typeString) {
-    return new IsSameType<>(typeString);
+    return typePredicateMatcher(isExactType(typeString));
   }
 
   /** Matches an AST node if it has the same erased type as the given class. */
   public static <T extends Tree> Matcher<T> isSameType(Class<?> clazz) {
-    return new IsSameType<>(typeFromClass(clazz));
+    return typePredicateMatcher(isExactType(typeFromClass(clazz)));
   }
 
   /**
@@ -960,10 +963,10 @@ public class Matchers {
   /**
    * Matches on the type of a VariableTree AST node.
    *
-   * @param treeMatcher A matcher on the type of the variable.
+   * @param typePredicate the type predicate to apply to the variable type
    */
-  public static Matcher<VariableTree> variableType(Matcher<Tree> treeMatcher) {
-    return (variableTree, state) -> treeMatcher.matches(variableTree.getType(), state);
+  public static Matcher<VariableTree> variableType(TypePredicate typePredicate) {
+    return (variableTree, state) -> typePredicate.apply(getType(variableTree), state);
   }
 
   /**
@@ -1389,9 +1392,29 @@ public class Matchers {
     return packageMatches(pattern.asPredicate());
   }
 
-  /** Matches an AST node whose compilation unit starts with this prefix. */
-  public static <T extends Tree> Matcher<T> packageStartsWith(String prefix) {
-    return packageMatches(s -> s.startsWith(prefix));
+  /**
+   * Matches an AST node whose compilation unit's package name equals the given package name or is a
+   * subpackage of the given package name.
+   *
+   * <p>For example, {@code packageStartsWith("com.google")} will match:
+   *
+   * <ul>
+   *   <li>{@code com.google}
+   *   <li>{@code com.google.common}
+   *   <li>{@code com.google.common.collect}
+   * </ul>
+   *
+   * but it will <b>not</b> match {@code com.googlebutnotreallygoogle}.
+   */
+  // TODO(kak): Consider renaming this to something like packageOrSubpackageOf()?
+  public static <T extends Tree> Matcher<T> packageStartsWith(String packageName) {
+    checkArgument(!packageName.isEmpty(), "Package name cannot be empty");
+    return (tree, state) -> {
+      String packageFullName = getPackageFullName(state);
+      return packageFullName.startsWith(packageName)
+          && (packageFullName.length() == packageName.length()
+              || packageFullName.charAt(packageName.length()) == '.');
+    };
   }
 
   private static String getPackageFullName(VisitorState state) {
@@ -1499,7 +1522,7 @@ public class Matchers {
       allOf(
           methodIsNamed("equals"),
           methodHasVisibility(PUBLIC),
-          methodHasParameters(variableType(isSameType("java.lang.Object"))),
+          methodHasParameters(variableType(isExactType("java.lang.Object"))),
           anyOf(methodReturns(BOOLEAN_TYPE), methodReturns(JAVA_LANG_BOOLEAN_TYPE)));
 
   /** Matches {@link Object#equals} method declaration. */

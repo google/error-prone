@@ -110,8 +110,8 @@ public final class JUnit4TestsNotRunWithinEnclosedTest {
         .addSourceLines(
             "FooTest.java",
             """
-            import org.junit.experimental.runners.Enclosed;
             import org.junit.Test;
+            import org.junit.experimental.runners.Enclosed;
             import org.junit.runner.RunWith;
 
             @RunWith(Enclosed.class)
@@ -131,8 +131,8 @@ public final class JUnit4TestsNotRunWithinEnclosedTest {
         .addSourceLines(
             "FooTest.java",
             """
-            import org.junit.experimental.runners.Enclosed;
             import org.junit.Test;
+            import org.junit.experimental.runners.Enclosed;
             import org.junit.runner.RunWith;
 
             @RunWith(Enclosed.class)

@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -51,7 +49,7 @@ public class MixedArrayDimensionsTest {
               int[][][][] d;
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -91,7 +89,7 @@ public class MixedArrayDimensionsTest {
               abstract int[][][][] i();
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test

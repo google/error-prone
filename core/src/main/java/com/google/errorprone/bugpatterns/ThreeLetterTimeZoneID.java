@@ -174,15 +174,7 @@ public class ThreeLetterTimeZoneID extends BugChecker implements MethodInvocatio
   }
 
   @VisibleForTesting
-  static final class Replacement {
+  record Replacement(String message, ImmutableList<String> replacements) {
     static final Replacement NO_REPLACEMENT = new Replacement("", ImmutableList.of());
-
-    final String message;
-    final ImmutableList<String> replacements;
-
-    Replacement(String message, ImmutableList<String> replacements) {
-      this.message = message;
-      this.replacements = replacements;
-    }
   }
 }

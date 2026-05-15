@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.AnnotationNames.MUST_BE_CLOSED_ANNOTATION;
 
@@ -35,15 +36,17 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import java.util.List;
+import com.sun.tools.javac.code.Type;
 
 /**
  * Checks if a constructor or method annotated with {@link
@@ -141,8 +144,7 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
       } else {
         SuggestedFix.Builder builder = SuggestedFix.builder();
         String suggestedFixName =
-            SuggestedFixes.qualifyType(
-                state, builder, state.getTypeFromString(MUST_BE_CLOSED_ANNOTATION));
+            SuggestedFixes.qualifyType(state, builder, MUST_BE_CLOSED_TYPE.get(state));
         SuggestedFix fix = builder.prefixWith(methodTree, "@" + suggestedFixName + " ").build();
 
         state.reportMatch(
@@ -159,15 +161,22 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
   }
 
   private static boolean invokedConstructorMustBeClosed(VisitorState state, MethodTree methodTree) {
-    // The first statement in a constructor should be an invocation of the super/this constructor.
-    List<? extends StatementTree> statements = methodTree.getBody().getStatements();
-    if (statements.isEmpty()) {
-      // Not sure how the body would be empty, but just filter it out in case.
-      return false;
+    for (StatementTree statement : methodTree.getBody().getStatements()) {
+      if (!(statement instanceof ExpressionStatementTree est)) {
+        continue;
+      }
+      if (!(est.getExpression() instanceof MethodInvocationTree mit)) {
+        continue;
+      }
+      if (mit.getMethodSelect() instanceof IdentifierTree id
+          && (id.getName().contentEquals("super") || id.getName().contentEquals("this"))) {
+        MethodSymbol invokedConstructorSymbol = ASTHelpers.getSymbol(mit);
+        return hasAnnotation(invokedConstructorSymbol, MUST_BE_CLOSED_ANNOTATION, state);
+      }
     }
-    ExpressionStatementTree est = (ExpressionStatementTree) statements.getFirst();
-    MethodInvocationTree mit = (MethodInvocationTree) est.getExpression();
-    MethodSymbol invokedConstructorSymbol = ASTHelpers.getSymbol(mit);
-    return hasAnnotation(invokedConstructorSymbol, MUST_BE_CLOSED_ANNOTATION, state);
+    return false;
   }
+
+  private static final Supplier<Type> MUST_BE_CLOSED_TYPE =
+      typeFromString(MUST_BE_CLOSED_ANNOTATION);
 }

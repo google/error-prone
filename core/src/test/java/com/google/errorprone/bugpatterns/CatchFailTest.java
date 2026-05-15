@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -297,7 +296,7 @@ public class CatchFailTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -306,8 +305,8 @@ public class CatchFailTest {
         .addInputLines(
             "in/Foo.java",
             """
-            import org.junit.Test;
             import java.io.IOException;
+            import org.junit.Test;
 
             class Foo {
               @Test(expected = IOException.class)
@@ -323,8 +322,8 @@ public class CatchFailTest {
         .addOutputLines(
             "out/Foo.java",
             """
-            import org.junit.Test;
             import java.io.IOException;
+            import org.junit.Test;
 
             class Foo {
               @Test(expected = IOException.class)

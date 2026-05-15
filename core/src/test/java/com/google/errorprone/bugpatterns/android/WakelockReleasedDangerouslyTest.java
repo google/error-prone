@@ -110,10 +110,11 @@ public class WakelockReleasedDangerouslyTest {
               void foo(WakeLock wakelock) {
                 wakelock.acquire(100);
                 doSomethingElse();
+
                 try {
                   wakelock.release();
                 } catch (RuntimeException unused) {
-                  // Ignore: wakelock already released by timeout.
+                  // Ignore: already released by timeout.
                   // TODO: Log this exception.
                 }
 
@@ -153,10 +154,11 @@ public class WakelockReleasedDangerouslyTest {
               void foo(WakeLock wl1, WakeLock wl2) {
                 wl1.acquire(100);
                 if (wl2.isHeld()) {
+
                   try {
                     wl1.release();
                   } catch (RuntimeException unused) {
-                    // Ignore: wakelock already released by timeout.
+                    // Ignore: already released by timeout.
                     // TODO: Log this exception.
                   }
                 }
@@ -196,7 +198,7 @@ public class WakelockReleasedDangerouslyTest {
                       try {
                         wakelock.release();
                       } catch (RuntimeException unused) {
-                        // Ignore: wakelock already released by timeout.
+                        // Ignore: already released by timeout.
                         // TODO: Log this exception.
                       }
                     });

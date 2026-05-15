@@ -22,11 +22,11 @@ import static com.google.common.base.CaseFormat.UPPER_UNDERSCORE;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.enumValues;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -207,7 +207,7 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
   }
 
   private static final Supplier<Type> MESSAGE_LITE =
-      memoize(state -> state.getTypeFromString("com.google.protobuf.MessageLite"));
+      typeFromString("com.google.protobuf.MessageLite");
 
   private Description describe(
       Field field, Collection<FieldWithValue> locations, VisitorState state) {

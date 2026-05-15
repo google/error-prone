@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_AT_INJECT;
-import static com.google.errorprone.matchers.InjectMatchers.IS_BINDING_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.IS_QUALIFIER_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.IS_SCOPING_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.hasProvidesAnnotation;
 import static com.google.errorprone.matchers.Matchers.annotations;
@@ -55,7 +55,7 @@ import java.util.List;
 public class QualifierOrScopeOnInjectMethod extends BugChecker implements MethodTreeMatcher {
 
   private static final MultiMatcher<MethodTree, AnnotationTree> QUALIFIER_ANNOTATION_FINDER =
-      annotations(AT_LEAST_ONE, anyOf(IS_BINDING_ANNOTATION, IS_SCOPING_ANNOTATION));
+      annotations(AT_LEAST_ONE, anyOf(IS_QUALIFIER_ANNOTATION, IS_SCOPING_ANNOTATION));
 
   private static final MultiMatcher<MethodTree, AnnotationTree> HAS_INJECT =
       annotations(AT_LEAST_ONE, IS_APPLICATION_OF_AT_INJECT);

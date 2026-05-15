@@ -100,6 +100,7 @@ public class JodaWithDurationAddedLongTest {
             "TestClass.java",
             """
             import static org.joda.time.Duration.ZERO;
+
             import org.joda.time.Duration;
 
             public class TestClass {
@@ -119,6 +120,7 @@ public class JodaWithDurationAddedLongTest {
             "TestClass.java",
             """
             import static org.joda.time.Duration.ZERO;
+
             import org.joda.time.Duration;
 
             public class TestClass {
@@ -164,8 +166,8 @@ public class JodaWithDurationAddedLongTest {
         .addSourceLines(
             "TestClass.java",
             """
-            import org.joda.time.Duration;
             import org.joda.time.DateTime;
+            import org.joda.time.Duration;
 
             public class TestClass {
               private static final DateTime NOW = DateTime.now();

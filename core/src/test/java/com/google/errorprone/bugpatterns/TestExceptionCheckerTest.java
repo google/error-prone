@@ -34,6 +34,7 @@ public class TestExceptionCheckerTest {
             "in/ExceptionTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -52,6 +53,7 @@ public class TestExceptionCheckerTest {
             """
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.assertThrows;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -75,6 +77,7 @@ public class TestExceptionCheckerTest {
             "in/ExceptionTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -92,6 +95,7 @@ public class TestExceptionCheckerTest {
             """
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.assertThrows;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -128,6 +132,7 @@ public class TestExceptionCheckerTest {
             "in/ExceptionTest.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -162,6 +167,7 @@ public class TestExceptionCheckerTest {
             "in/ExceptionTest.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;

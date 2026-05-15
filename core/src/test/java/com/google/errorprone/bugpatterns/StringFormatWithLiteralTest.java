@@ -434,7 +434,7 @@ public class ExampleClass {
             """
             public class ExampleClass {
               String test() {
-                return "hello ['world']";
+                return "hello [\\'world\\']";
               }
             }
             """)

@@ -20,11 +20,9 @@ import static com.google.errorprone.bugpatterns.inject.ElementPredicates.doesNot
 import static com.google.errorprone.bugpatterns.inject.ElementPredicates.hasSourceRetention;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.InjectMatchers.DAGGER_MAP_KEY_ANNOTATION;
-import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.GUICE_MAP_KEY_ANNOTATION;
-import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
-import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNOTATION;
-import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.QUALIFIER_ANNOTATIONS;
+import static com.google.errorprone.matchers.InjectMatchers.SCOPE_ANNOTATIONS;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
 import static com.google.errorprone.util.ASTHelpers.getDeclaredSymbol;
@@ -68,13 +66,10 @@ public class MissingRuntimeRetention extends BugChecker implements ClassTreeMatc
   private static final Supplier<ImmutableSet<Name>> INJECT_ANNOTATIONS =
       VisitorState.memoize(
           state ->
-              Stream.of(
-                      GUICE_SCOPE_ANNOTATION,
-                      JAVAX_SCOPE_ANNOTATION,
-                      GUICE_BINDING_ANNOTATION,
-                      JAVAX_QUALIFIER_ANNOTATION,
-                      GUICE_MAP_KEY_ANNOTATION,
-                      DAGGER_MAP_KEY_ANNOTATION)
+              Streams.concat(
+                      SCOPE_ANNOTATIONS.stream(),
+                      QUALIFIER_ANNOTATIONS.stream(),
+                      Stream.of(GUICE_MAP_KEY_ANNOTATION, DAGGER_MAP_KEY_ANNOTATION))
                   .map(state::binaryNameFromClassname)
                   .collect(toImmutableSet()));
 

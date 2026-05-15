@@ -49,7 +49,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
@@ -325,7 +324,7 @@ public class CompilationTestHelper {
     Result result = compile();
     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnosticHelper.getDiagnostics()) {
       if (diagnostic.getCode().contains("error.prone.crash")) {
-        fail(diagnostic.getMessage(Locale.ENGLISH));
+        fail(diagnostic.toString());
       }
     }
     String stringifiedOutput = outputStream.toString(UTF_8);

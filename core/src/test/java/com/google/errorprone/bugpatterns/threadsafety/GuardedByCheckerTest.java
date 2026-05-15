@@ -99,8 +99,8 @@ public class GuardedByCheckerTest {
             """
             package threadsafety;
 
-            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import com.google.common.util.concurrent.Monitor;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
 
             class Test {
               final Monitor monitor = null;
@@ -388,8 +388,8 @@ public class GuardedByCheckerTest {
             """
             package threadsafety;
 
-            import java.util.List;
             import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.List;
 
             class Itself {
               @GuardedBy("itself")
@@ -425,8 +425,8 @@ public class GuardedByCheckerTest {
             """
             package threadsafety;
 
-            import java.util.List;
             import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.List;
 
             class Itself {
               @GuardedBy("this")
@@ -1455,8 +1455,8 @@ class WrongInnerClassInstance {
             package threadsafety;
 
             import com.google.errorprone.annotations.concurrent.GuardedBy;
-            import java.util.List;
             import java.util.ArrayList;
+            import java.util.List;
 
             class Names {
               @GuardedBy("this")
@@ -1482,10 +1482,10 @@ class WrongInnerClassInstance {
             """
             package threadsafety;
 
-            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import com.google.common.util.concurrent.Monitor;
-            import java.util.List;
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
               final Monitor monitor = new Monitor();
@@ -2383,10 +2383,10 @@ abstract class Test {
         .addSourceLines(
             "Test.java",
             """
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.ArrayList;
             import java.util.List;
             import java.util.Optional;
-            import com.google.errorprone.annotations.concurrent.GuardedBy;
 
             class Test {
               @GuardedBy("this")
@@ -2414,11 +2414,11 @@ abstract class Test {
         .addSourceLines(
             "Test.java",
             """
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.ArrayList;
             import java.util.List;
             import java.util.Optional;
             import java.util.function.Predicate;
-            import com.google.errorprone.annotations.concurrent.GuardedBy;
 
             class Test {
               @GuardedBy("this")
@@ -2441,11 +2441,11 @@ abstract class Test {
         .addSourceLines(
             "Test.java",
             """
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.ArrayList;
             import java.util.List;
             import java.util.Optional;
             import java.util.function.Predicate;
-            import com.google.errorprone.annotations.concurrent.GuardedBy;
 
             class Test {
               private final List<Predicate<String>> preds = new ArrayList<>();
@@ -2471,8 +2471,8 @@ abstract class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
             import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.List;
 
             class Test {
               @GuardedBy("this")

@@ -155,8 +155,8 @@ public class Test {
         .addSourceLines(
             "Test.java",
 """
-import java.io.IOException;
 import dagger.Provides;
+import java.io.IOException;
 
 public class Test {
   @Provides
@@ -220,6 +220,7 @@ public class Test {
             "Nullable.java",
             """
             import static java.lang.annotation.ElementType.TYPE_USE;
+
             import java.lang.annotation.Target;
 
             @Target(TYPE_USE)

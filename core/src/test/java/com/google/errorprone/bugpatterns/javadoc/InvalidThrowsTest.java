@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.javadoc;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -53,7 +52,7 @@ public final class InvalidThrowsTest {
               void foo(int a, int b);
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -77,7 +76,7 @@ public final class InvalidThrowsTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -94,7 +93,7 @@ public final class InvalidThrowsTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -113,6 +112,6 @@ public final class InvalidThrowsTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 }

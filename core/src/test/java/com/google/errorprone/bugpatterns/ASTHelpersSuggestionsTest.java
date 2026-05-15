@@ -49,6 +49,7 @@ public class ASTHelpersSuggestionsTest {
             """
             import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
             import static com.google.errorprone.util.ASTHelpers.isStatic;
+
             import com.sun.tools.javac.code.Symbol;
 
             class Test {
@@ -80,6 +81,7 @@ public class ASTHelpersSuggestionsTest {
             "Test.java",
             """
             import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
+
             import com.sun.tools.javac.code.Symbol.VarSymbol;
 
             class Test {
@@ -110,6 +112,7 @@ public class ASTHelpersSuggestionsTest {
             "Test.java",
             """
             import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
+
             import com.sun.tools.javac.code.Symbol.ClassSymbol;
 
             class Test {
@@ -159,6 +162,7 @@ public class ASTHelpersSuggestionsTest {
             "Test.java",
             """
             import static com.google.errorprone.util.ASTHelpers.enclosingClass;
+
             import com.sun.tools.javac.code.Symbol.ClassSymbol;
 
             class Test {

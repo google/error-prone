@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,7 +67,7 @@ public class UnnecessaryAnonymousClassTest {
             }
             """)
         // Make sure the method body is still reformatted correctly.
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test

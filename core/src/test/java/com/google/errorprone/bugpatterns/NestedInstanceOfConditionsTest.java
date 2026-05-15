@@ -231,4 +231,25 @@ public class NestedInstanceOfConditionsNegativeCases {
             """)
         .doTest();
   }
+
+  @Test
+  public void patternMatchingInstanceofRecord() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            public class Test {
+              void test(Bar foo, Object x) {
+                if (foo instanceof Bar(final String a)) {
+                  if (x instanceof String) {
+                    System.out.println(a + x);
+                  }
+                }
+              }
+
+              record Bar(String a) {}
+            }
+            """)
+        .doTest();
+  }
 }

@@ -53,14 +53,7 @@ final class RefasterSuppressionHelper {
   }
 
   /** Adapts a {@link RefasterRule<?, ?>} into a {@link Suppressible}. */
-  private static class RefasterSuppressible implements Suppressible {
-
-    private final RefasterRule<?, ?> rule;
-
-    RefasterSuppressible(RefasterRule<?, ?> rule) {
-      this.rule = rule;
-    }
-
+  private record RefasterSuppressible(RefasterRule<?, ?> rule) implements Suppressible {
     @Override
     public Set<String> allNames() {
       return ImmutableSet.of(canonicalName());

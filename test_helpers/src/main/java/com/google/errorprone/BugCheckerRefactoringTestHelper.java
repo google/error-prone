@@ -23,6 +23,7 @@ import static com.google.common.collect.Streams.stream;
 import static com.google.common.truth.Truth.assertAbout;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
+import static com.google.errorprone.BaseErrorProneJavaCompiler.setupMessageBundle;
 import static com.google.errorprone.FileObjects.forResource;
 import static com.google.errorprone.FileObjects.forSourceLines;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
@@ -49,6 +50,8 @@ import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
+import com.google.googlejavaformat.java.ImportOrderer;
+import com.google.googlejavaformat.java.JavaFormatterOptions.Style;
 import com.google.googlejavaformat.java.StringWrapper;
 import com.google.testing.compile.JavaFileObjects;
 import com.sun.source.tree.CompilationUnitTree;
@@ -59,6 +62,7 @@ import com.sun.tools.javac.main.JavaCompiler;
 import com.sun.tools.javac.tree.JCTree.JCClassDecl;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Log;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -87,29 +91,55 @@ public class BugCheckerRefactoringTestHelper {
   public enum TestMode {
     TEXT_MATCH {
       @Override
-      void verifyMatch(JavaFileObject refactoredSource, JavaFileObject expectedSource)
+      void verifyMatch(
+          JavaFileObject refactoredSource,
+          JavaFileObject expectedSource,
+          boolean allowFormattingErrors)
           throws IOException {
-        assertThat(maybeFormat(refactoredSource.getCharContent(false).toString()))
-            .isEqualTo(maybeFormat(expectedSource.getCharContent(false).toString()));
+        assertThat(
+                maybeFormat(
+                    refactoredSource.getCharContent(false).toString(), allowFormattingErrors))
+            .isEqualTo(
+                maybeFormat(
+                    expectedSource.getCharContent(false).toString(), allowFormattingErrors));
       }
 
-      private String maybeFormat(String input) {
+      private String maybeFormat(String input, boolean allowFormattingErrors) {
         try {
           Formatter formatter = new Formatter();
-          return StringWrapper.wrap(formatter.formatSource(input), formatter);
+          String formatted = formatter.formatSource(input);
+          formatted = StringWrapper.wrap(formatted, formatter);
+          formatted = ImportOrderer.reorderImports(formatted, Style.GOOGLE);
+          return formatted;
         } catch (FormatterException e) {
-          return input;
+          if (allowFormattingErrors) {
+            return input;
+          }
+          throw new AssertionError(
+              "Failed to format source, and allowFormattingErrors is false", e);
         }
       }
     },
+    /**
+     * @deprecated prefer {@link #TEXT_MATCH}, which formats the actual and expected output to be
+     *     lenient of whitespace differences. {@link #AST_MATCH} will ignore differences in
+     *     comments, and may miss other differences that aren't detectable in the AST.
+     */
+    @Deprecated
     AST_MATCH {
       @Override
-      void verifyMatch(JavaFileObject refactoredSource, JavaFileObject expectedSource) {
+      void verifyMatch(
+          JavaFileObject refactoredSource,
+          JavaFileObject expectedSource,
+          boolean allowFormattingErrors) {
         assertAbout(javaSource()).that(refactoredSource).parsesAs(expectedSource);
       }
     };
 
-    abstract void verifyMatch(JavaFileObject refactoredSource, JavaFileObject expectedSource)
+    abstract void verifyMatch(
+        JavaFileObject refactoredSource,
+        JavaFileObject expectedSource,
+        boolean allowFormattingErrors)
         throws IOException;
   }
 
@@ -156,6 +186,7 @@ public class BugCheckerRefactoringTestHelper {
   private FixChooser fixChooser = FixChoosers.FIRST;
   private ImmutableList<String> options = ImmutableList.of();
   private boolean allowBreakingChanges = false;
+  private boolean allowFormattingErrors = false;
   private String importOrder = "static-first";
 
   private boolean run = false;
@@ -241,16 +272,39 @@ public class BugCheckerRefactoringTestHelper {
     return this;
   }
 
+  /** If set, formatting errors in the output are allowed. Off by default. */
+  @CanIgnoreReturnValue
+  public BugCheckerRefactoringTestHelper allowFormattingErrors() {
+    allowFormattingErrors = true;
+    return this;
+  }
+
   @CanIgnoreReturnValue
   public BugCheckerRefactoringTestHelper setImportOrder(String importOrder) {
     this.importOrder = importOrder;
     return this;
   }
 
+  /**
+   * Runs the test.
+   *
+   * <p>By default outputs are compared with {@link TestMode#TEXT_MATCH}.
+   */
   public void doTest() {
-    this.doTest(TestMode.AST_MATCH);
+    this.doTest(TestMode.TEXT_MATCH);
   }
 
+  /**
+   * Runs the test.
+   *
+   * @param testMode the comparison to use to for the test outputs. The default is {@link
+   *     TestMode#TEXT_MATCH}.
+   * @deprecated prefer {@link #doTest()}, which is equivalent to {@code doTest(TEXT_MATCH)}. {@link
+   *     TestMode#TEXT_MATCH} formats the actual and expected output to be lenient of whitespace
+   *     differences. {@link TestMode#AST_MATCH} will ignore differences in comments, and may miss
+   *     other differences that aren't detectable in the AST.
+   */
+  @Deprecated
   public void doTest(TestMode testMode) {
     checkState(!run, "doTest should only be called once");
 
@@ -280,10 +334,14 @@ public class BugCheckerRefactoringTestHelper {
   private void runTestOnPair(JavaFileObject input, JavaFileObject output, TestMode testMode)
       throws IOException {
     Context context = new Context();
-    JCCompilationUnit tree = doCompile(input, sources.keySet(), context);
+    setupMessageBundle(context);
+    DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
+    JCCompilationUnit tree = doCompile(input, sources.keySet(), context, diagnosticsCollector);
+    handleDiagnostics(diagnosticsCollector);
     JavaFileObject transformed = applyDiff(input, context, tree);
+    handleDiagnostics(diagnosticsCollector);
     closeCompiler(context);
-    testMode.verifyMatch(transformed, output);
+    testMode.verifyMatch(transformed, output, allowFormattingErrors);
     if (!allowBreakingChanges) {
       Context anotherContext = new Context();
       doCompile(output, sources.values(), anotherContext);
@@ -294,8 +352,20 @@ public class BugCheckerRefactoringTestHelper {
   @CanIgnoreReturnValue
   private JCCompilationUnit doCompile(
       JavaFileObject input, Iterable<JavaFileObject> files, Context context) throws IOException {
-    JavacTool tool = JavacTool.create();
     DiagnosticCollector<JavaFileObject> diagnosticsCollector = new DiagnosticCollector<>();
+    JCCompilationUnit unit = doCompile(input, files, context, diagnosticsCollector);
+    handleDiagnostics(diagnosticsCollector);
+    return unit;
+  }
+
+  @CanIgnoreReturnValue
+  private JCCompilationUnit doCompile(
+      JavaFileObject input,
+      Iterable<JavaFileObject> files,
+      Context context,
+      DiagnosticCollector<JavaFileObject> diagnosticsCollector)
+      throws IOException {
+    JavacTool tool = JavacTool.create();
     ErrorProneOptions errorProneOptions;
     try {
       errorProneOptions = ErrorProneOptions.processArgs(options);
@@ -323,13 +393,16 @@ public class BugCheckerRefactoringTestHelper {
         .that(byUri)
         .containsKey(inputUri);
     JCCompilationUnit tree = (JCCompilationUnit) byUri.get(inputUri);
+    return tree;
+  }
+
+  private static void handleDiagnostics(DiagnosticCollector<JavaFileObject> diagnosticsCollector) {
     Iterable<Diagnostic<? extends JavaFileObject>> errorDiagnostics =
         Iterables.filter(
             diagnosticsCollector.getDiagnostics(), d -> d.getKind() == Diagnostic.Kind.ERROR);
     if (!Iterables.isEmpty(errorDiagnostics)) {
       fail("compilation failed unexpectedly: " + errorDiagnostics);
     }
-    return tree;
   }
 
   private JavaFileObject applyDiff(
@@ -337,15 +410,19 @@ public class BugCheckerRefactoringTestHelper {
     ImportOrganizer importOrganizer = ImportOrderParser.getImportOrganizer(importOrder);
     DescriptionBasedDiff diff = DescriptionBasedDiff.create(tree, importOrganizer);
     ErrorProneOptions errorProneOptions = context.get(ErrorProneOptions.class);
-    ErrorProneScannerTransformer.create(scannerSupplier.applyOverrides(errorProneOptions).get())
-        .apply(
-            new TreePath(tree),
-            context,
-            description -> {
-              if (!description.fixes.isEmpty()) {
-                diff.handleFix(fixChooser.choose(description.fixes));
-              }
-            });
+    try {
+      ErrorProneScannerTransformer.create(scannerSupplier.applyOverrides(errorProneOptions).get())
+          .apply(
+              new TreePath(tree),
+              context,
+              description -> {
+                if (!description.fixes.isEmpty()) {
+                  diff.handleFix(description, fixChooser.choose(description.fixes));
+                }
+              });
+    } catch (ErrorProneError e) {
+      e.logFatalError(Log.instance(context), context);
+    }
     SourceFile sourceFile = SourceFile.create(sourceFileObject);
     diff.applyDifferences(sourceFile);
 
@@ -366,7 +443,11 @@ public class BugCheckerRefactoringTestHelper {
       return tree.getPackage().packge.package_info.toString();
     }
     // ..or a `module-info.java`.
-    return tree.getModuleDecl().sym.getQualifiedName().toString();
+    if (tree.getModuleDecl() != null) {
+      return tree.getModuleDecl().sym.getQualifiedName().toString();
+    }
+    throw new IllegalArgumentException(
+        "Expected a class, package, or module declaration:\n" + tree);
   }
 
   /** To assert the proper {@code .addInput().addOutput()} chain. */

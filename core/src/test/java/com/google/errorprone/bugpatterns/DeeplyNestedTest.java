@@ -81,7 +81,7 @@ public class DeeplyNestedTest {
             }
             """)
         .setArgs("-XepOpt:DeeplyNested:MaxDepth=10")
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -133,7 +133,7 @@ public class DeeplyNestedTest {
             }
             """)
         .setArgs("-XepOpt:DeeplyNested:MaxDepth=10")
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -185,7 +185,7 @@ public class DeeplyNestedTest {
             }
             """)
         .setArgs("-XepOpt:DeeplyNested:MaxDepth=10")
-        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test

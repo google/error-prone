@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.flogger;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -248,11 +247,9 @@ public class FloggerRedundantIsEnabledNegativeCases {
 
             import com.google.common.flogger.FluentLogger;
 
-            /** Created by mariasam on 7/17/17. */
             class FloggerRedundantIsEnabledPositiveCases {
 
               public void basicCase(FluentLogger logger) {
-                // BUG: Diagnostic contains: redundant
                 if (logger.atInfo().isEnabled()) {
                   logger.atInfo().log("test");
                 }
@@ -260,7 +257,6 @@ public class FloggerRedundantIsEnabledNegativeCases {
 
               public void nestedIf(FluentLogger logger) {
                 if (7 == 7) {
-                  // BUG: Diagnostic contains: redundant
                   if (logger.atInfo().isEnabled()) {
                     logger.atInfo().log("test");
                   }
@@ -268,77 +264,66 @@ public class FloggerRedundantIsEnabledNegativeCases {
               }
 
               public void checkBinaryInIf(FluentLogger logger) {
-                // BUG: Diagnostic contains: redundant
                 if (7 == 7 && logger.atInfo().isEnabled()) {
                   logger.atInfo().log("test");
                 }
               }
 
               public void checkBinaryOtherWay(FluentLogger logger) {
-                // BUG: Diagnostic contains: redundant
                 if (logger.atInfo().isEnabled() && 7 == 7) {
                   logger.atInfo().log("test");
                 }
               }
 
               public void complexBinary(FluentLogger logger) {
-                // BUG: Diagnostic contains: redundant
                 if (7 == 7 && (logger != null && logger.atInfo().isEnabled())) {
                   logger.atInfo().log("test");
                 }
               }
 
               public void negated(FluentLogger logger) {
-                // BUG: Diagnostic contains: redundant
                 if (!logger.atInfo().isEnabled()) {
                   logger.atInfo().log("test");
                 }
               }
 
               public void binaryNegated(FluentLogger logger) {
-                // BUG: Diagnostic contains: redundant
                 if (!logger.atInfo().isEnabled() && 7 == 7) {
                   logger.atInfo().log("test");
                 }
               }
 
               public void checkConfig(FluentLogger logger) {
-                // BUG: Diagnostic contains: redundant
                 if (logger.atConfig().isEnabled()) {
                   logger.atConfig().log("test");
                 }
               }
 
               public void checkFine(FluentLogger logger) {
-                // BUG: Diagnostic contains: redundant
                 if (logger.atFine().isEnabled()) {
                   logger.atFine().log("test");
                 }
               }
 
               public void checkFiner(FluentLogger logger) {
-                // BUG: Diagnostic contains: redundant
                 if (logger.atFiner().isEnabled()) {
                   logger.atFiner().log("test");
                 }
               }
 
               public void checkFinest(FluentLogger logger) {
-                // BUG: Diagnostic contains: redundant
                 if (logger.atFinest().isEnabled()) {
                   logger.atFinest().log("test");
                 }
               }
 
               public void checkWarning(FluentLogger logger) {
-                // BUG: Diagnostic contains: redundant
                 if (logger.atWarning().isEnabled()) {
                   logger.atWarning().log("test");
                 }
               }
 
               public void checkSevere(FluentLogger logger) {
-                // BUG: Diagnostic contains: redundant
                 if (logger.atSevere().isEnabled()) {
                   logger.atSevere().log("test");
                 }
@@ -352,9 +337,6 @@ public class FloggerRedundantIsEnabledNegativeCases {
 
             import com.google.common.flogger.FluentLogger;
 
-            /**
-             * @author mariasam@google.com (Maria Sam)
-             */
             class FloggerRedundantIsEnabledPositiveCases {
 
               public void basicCase(FluentLogger logger) {
@@ -420,6 +402,6 @@ public class FloggerRedundantIsEnabledNegativeCases {
               }
             }
             """)
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 }

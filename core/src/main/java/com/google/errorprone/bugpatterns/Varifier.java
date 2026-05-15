@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiverType;
@@ -37,7 +38,6 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.method.MethodMatchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
@@ -45,6 +45,7 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.regex.Pattern;
+import javax.lang.model.element.TypeElement;
 
 /** Converts some local variables to use {@code var}. */
 @BugPattern(severity = WARNING, summary = "Consider using `var` here to avoid boilerplate.")
@@ -55,7 +56,7 @@ public final class Varifier extends BugChecker implements VariableTreeMatcher {
   private static final Matcher<ExpressionTree> BUILDER_FACTORY =
       anyOf(
           staticMethod().anyClass().withNameMatching(Pattern.compile("(builder|newBuilder).*")),
-          MethodMatchers.constructor()
+          constructor()
               .forClass(
                   (type, state) -> type.tsym.getSimpleName().toString().startsWith("Builder")));
 
@@ -109,9 +110,17 @@ public final class Varifier extends BugChecker implements VariableTreeMatcher {
     if (BUILD_METHOD.matches(initializer, state)
         && streamReceivers(initializer)
             .anyMatch(
-                t ->
-                    BUILDER_FACTORY.matches(t, state)
-                        && isSameType(getReceiverType(t), getType(tree.getType()), state))) {
+                t -> {
+                  if (!BUILDER_FACTORY.matches(t, state)) {
+                    return false;
+                  }
+                  if (t instanceof NewClassTree) {
+                    var enclosing = getSymbol(t).owner.getEnclosingElement();
+                    return enclosing instanceof TypeElement
+                        && isSameType(enclosing.asType(), getType(tree.getType()), state);
+                  }
+                  return isSameType(getReceiverType(t), getType(tree.getType()), state);
+                })) {
       return fix(tree);
     }
     // Foo foo = Foo.createFoo(..);

@@ -40,7 +40,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
-import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -49,16 +48,8 @@ import org.jspecify.annotations.Nullable;
  */
 public class MethodInvocationMatcher {
 
-  static final class Context {
-    final MethodSymbol sym;
-    final ExpressionTree tree;
-
-    Context(MethodSymbol sym, ExpressionTree tree) {
-      this.sym = sym;
-      this.tree = tree;
-    }
-
-    public static Optional<Context> create(ExpressionTree tree) {
+  record Context(MethodSymbol sym, ExpressionTree tree) {
+    static Optional<Context> create(ExpressionTree tree) {
       Symbol sym = ASTHelpers.getSymbol(tree);
       if (!(sym instanceof MethodSymbol methodSymbol)) {
         return Optional.empty();
@@ -96,7 +87,7 @@ public class MethodInvocationMatcher {
     KIND {
       @Override
       MethodKind extract(Context ctx, VisitorState s) {
-        return ctx.sym.getKind() == ElementKind.CONSTRUCTOR
+        return ctx.sym.isConstructor()
             ? MethodKind.CONSTRUCTOR
             : ctx.sym.isStatic() ? MethodKind.STATIC : MethodKind.INSTANCE;
       }
@@ -289,18 +280,8 @@ public class MethodInvocationMatcher {
   /**
    * A map describing where to look next based on the current token, and a default if none match.
    */
-  private static class NodeWithDefault {
-
-    private final Set<Node> states;
-    final @Nullable Set<Node> def;
-    final SetMultimap<Token, Node> mapping;
-
-    NodeWithDefault(Set<Node> states, Set<Node> def, SetMultimap<Token, Node> mapping) {
-      this.states = states;
-      this.def = def;
-      this.mapping = mapping;
-    }
-  }
+  private record NodeWithDefault(
+      Set<Node> states, @Nullable Set<Node> def, SetMultimap<Token, Node> mapping) {}
 
   /** Shared by all compiled graphs, because it has no varying properties. */
   private static final Node ACCEPT = new Node();

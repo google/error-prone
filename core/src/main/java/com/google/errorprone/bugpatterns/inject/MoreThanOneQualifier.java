@@ -17,9 +17,7 @@
 package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
-import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNOTATION;
-import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
+import static com.google.errorprone.matchers.InjectMatchers.IS_QUALIFIER_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -27,8 +25,6 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
 import java.util.List;
@@ -37,22 +33,17 @@ import java.util.List;
  * @author sgoldfeder@google.com (Steven Goldfeder)
  */
 @BugPattern(
-    name = "InjectMoreThanOneQualifier",
+    altNames = "InjectMoreThanOneQualifier",
     summary = "Using more than one qualifier annotation on the same element is not allowed.",
     severity = ERROR)
-public class MoreThanOneQualifier extends BugChecker implements AnnotationTreeMatcher {
-
-  private static final Matcher<AnnotationTree> QUALIFIER_ANNOTATION_MATCHER =
-      Matchers.anyOf(
-          symbolHasAnnotation(GUICE_BINDING_ANNOTATION),
-          symbolHasAnnotation(JAVAX_QUALIFIER_ANNOTATION));
+public final class MoreThanOneQualifier extends BugChecker implements AnnotationTreeMatcher {
 
   @Override
   public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
     int numberOfQualifiers = 0;
-    if (QUALIFIER_ANNOTATION_MATCHER.matches(annotationTree, state)) {
+    if (IS_QUALIFIER_ANNOTATION.matches(annotationTree, state)) {
       for (AnnotationTree t : getSiblingAnnotations(state)) {
-        if (QUALIFIER_ANNOTATION_MATCHER.matches(t, state)) {
+        if (IS_QUALIFIER_ANNOTATION.matches(t, state)) {
           numberOfQualifiers++;
         }
       }

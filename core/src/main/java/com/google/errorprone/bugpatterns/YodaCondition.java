@@ -19,9 +19,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.FieldMatchers.staticField;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
+import static com.google.errorprone.matchers.field.FieldMatchers.staticField;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getNullnessValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
@@ -202,7 +202,7 @@ public final class YodaCondition extends BugChecker
   }
 
   private static final Matcher<ExpressionTree> IGNORELIST =
-      staticField("android.os.Build.VERSION", "SDK_INT");
+      staticField().onClass("android.os.Build.VERSION").named("SDK_INT");
 
   private static ConstantKind seemsConstant(ExpressionTree tree, VisitorState state) {
     if (IGNORELIST.matches(tree, state)) {

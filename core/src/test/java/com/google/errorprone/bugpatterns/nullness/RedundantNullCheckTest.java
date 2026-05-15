@@ -297,8 +297,8 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.NullMarked;
             import java.util.Map;
+            import org.jspecify.annotations.NullMarked;
 
             @NullMarked
             class Test {
@@ -334,8 +334,8 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.NullMarked;
             import mylib.AnnotatedLibNullable;
+            import org.jspecify.annotations.NullMarked;
 
             @NullMarked
             class Test {
@@ -370,8 +370,8 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.NullMarked;
             import mylib.NonAnnotatedLibNonNull;
+            import org.jspecify.annotations.NullMarked;
 
             @NullMarked
             class Test {
@@ -463,8 +463,8 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.NullMarked;
             import org.jspecify.annotations.NonNull;
+            import org.jspecify.annotations.NullMarked;
 
             @NullMarked
             class Test {
@@ -517,8 +517,8 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.NullMarked;
             import java.util.Map;
+            import org.jspecify.annotations.NullMarked;
 
             @NullMarked
             class Test {
@@ -553,8 +553,8 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.NullMarked;
             import mylib.AnnotatedLibNullable;
+            import org.jspecify.annotations.NullMarked;
 
             @NullMarked
             class Test {
@@ -587,8 +587,8 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.NullMarked;
             import mylib.NonAnnotatedLibNonNull;
+            import org.jspecify.annotations.NullMarked;
 
             @NullMarked
             class Test {
@@ -621,8 +621,8 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.NullMarked;
             import mylib.NullUnmarkedLib;
+            import org.jspecify.annotations.NullMarked;
 
             @NullMarked
             class Test {
@@ -735,8 +735,8 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.NullMarked;
             import java.util.function.Consumer;
+            import org.jspecify.annotations.NullMarked;
 
             @NullMarked
             class Test {
@@ -759,8 +759,8 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.NullMarked;
             import java.util.function.Consumer;
+            import org.jspecify.annotations.NullMarked;
 
             @NullMarked
             class Test {
@@ -782,9 +782,9 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.Nullable;
-            import org.jspecify.annotations.NullMarked;
             import java.util.function.Consumer;
+            import org.jspecify.annotations.NullMarked;
+            import org.jspecify.annotations.Nullable;
 
             @NullMarked
             class Test {
@@ -920,8 +920,8 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.NullMarked;
             import java.util.Objects;
+            import org.jspecify.annotations.NullMarked;
 
             @NullMarked
             class Test {
@@ -941,8 +941,8 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.NullMarked;
             import java.util.Objects;
+            import org.jspecify.annotations.NullMarked;
 
             @NullMarked
             class Test {
@@ -965,8 +965,8 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.jspecify.annotations.NullMarked;
             import java.util.Objects;
+            import org.jspecify.annotations.NullMarked;
 
             @NullMarked
             class Test {
@@ -985,9 +985,9 @@ public class RedundantNullCheckTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.util.Objects;
             import org.jspecify.annotations.NullMarked;
             import org.jspecify.annotations.Nullable;
-            import java.util.Objects;
 
             @NullMarked
             class Test {

@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.isSameType;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -159,6 +160,5 @@ public class FragmentInjection extends BugChecker implements ClassTreeMatcher {
       VisitorState.memoize(state -> state.getName("isValidFragment"));
 
   private static final Supplier<Type> ANDROID_PREFERENCE_PREFERENCEACTIVITY =
-      VisitorState.memoize(
-          state -> state.getTypeFromString("android.preference.PreferenceActivity"));
+      typeFromString("android.preference.PreferenceActivity");
 }

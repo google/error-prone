@@ -350,6 +350,7 @@ public class FormatStringAnnotationCheckerTest {
             import static org.mockito.ArgumentMatchers.any;
             import static org.mockito.ArgumentMatchers.eq;
             import static org.mockito.Mockito.verify;
+
             import com.google.errorprone.annotations.FormatMethod;
             import com.google.errorprone.annotations.FormatString;
 
@@ -376,6 +377,7 @@ public class FormatStringAnnotationCheckerTest {
             import static org.mockito.ArgumentMatchers.any;
             import static org.mockito.ArgumentMatchers.eq;
             import static org.mockito.Mockito.verify;
+
             import com.google.errorprone.annotations.FormatMethod;
             import com.google.errorprone.annotations.FormatString;
 

@@ -19,6 +19,8 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.method.ParameterPredicates.arrayOf;
+import static com.google.errorprone.matchers.method.ParameterPredicates.onlyTypeParameter;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.BugPattern;
@@ -47,7 +49,10 @@ public class CollectionToArraySafeParameter extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> TO_ARRAY_MATCHER =
-      instanceMethod().onDescendantOf("java.util.Collection").withSignature("<T>toArray(T[])");
+      instanceMethod()
+          .onDescendantOf("java.util.Collection")
+          .named("toArray")
+          .withParametersMatching(arrayOf(onlyTypeParameter()));
 
   @Override
   public Description matchMethodInvocation(

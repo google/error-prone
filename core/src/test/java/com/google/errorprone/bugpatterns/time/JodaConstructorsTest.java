@@ -255,9 +255,9 @@ public class JodaConstructorsTest {
             "TestClass.java",
             """
             import org.joda.time.Chronology;
-            import org.joda.time.chrono.GregorianChronology;
             import org.joda.time.DateTime;
             import org.joda.time.DateTimeZone;
+            import org.joda.time.chrono.GregorianChronology;
 
             public class TestClass {
               private static final DateTimeZone NYC = DateTimeZone.forID("America/New_York");

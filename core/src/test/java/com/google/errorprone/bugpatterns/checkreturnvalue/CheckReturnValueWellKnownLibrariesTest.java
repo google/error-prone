@@ -62,8 +62,9 @@ public class CheckReturnValueWellKnownLibrariesTest {
         .addSourceLines(
             "TestCase.java",
             """
-            import static org.mockito.Mockito.verify;
             import static org.mockito.Mockito.doReturn;
+            import static org.mockito.Mockito.verify;
+
             import org.mockito.Mockito;
 
             class TestCase {
@@ -705,8 +706,8 @@ class Test {
             package com.google.frobber;
 
             import com.google.auto.value.AutoBuilder;
-            import java.util.logging.Level;
             import com.google.errorprone.annotations.CheckReturnValue;
+            import java.util.logging.Level;
 
             @CheckReturnValue
             @AutoBuilder(callMethod = "log", ofClass = LogUtil.class)

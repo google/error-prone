@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 The Error Prone Authors.
+ * Copyright 2026 The Error Prone Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package com.google.errorprone.predicates.type;
+package com.google.errorprone.matchers.method;
 
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.predicates.TypePredicate;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 
-/** Matches arrays. */
-public enum Array implements TypePredicate {
-  INSTANCE {
-    @Override
-    public boolean apply(Type type, VisitorState state) {
-      return type != null && state.getTypes().isArray(type);
-    }
-  };
+/** A predicate on a method or constructor parameter. */
+public interface ParameterPredicate {
+
+  boolean matches(VarSymbol parameter, Type type, VisitorState state);
 }

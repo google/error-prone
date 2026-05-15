@@ -208,8 +208,8 @@ public class OptionalNotPresentTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Optional;
             import java.util.Map;
+            import java.util.Optional;
 
             class Test {
               <T> Optional<T> f(T t) {

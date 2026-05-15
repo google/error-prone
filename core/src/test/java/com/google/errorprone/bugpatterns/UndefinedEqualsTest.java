@@ -96,11 +96,12 @@ public final class UndefinedEqualsTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
-            import com.google.common.collect.FluentIterable;
-            import com.google.common.collect.Iterables;
             import static org.junit.Assert.assertEquals;
             import static org.junit.Assert.assertNotEquals;
+
+            import com.google.common.collect.FluentIterable;
+            import com.google.common.collect.Iterables;
+            import java.util.List;
 
             class Test {
               void test(List myList, List otherList) {
@@ -143,6 +144,7 @@ public final class UndefinedEqualsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.util.Queue;
 
             class Test {
@@ -362,6 +364,7 @@ public final class UndefinedEqualsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertWithMessage;
+
             import java.lang.Iterable;
 
             class Test {
@@ -374,6 +377,7 @@ public final class UndefinedEqualsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertWithMessage;
+
             import java.lang.Iterable;
 
             class Test {
@@ -392,6 +396,7 @@ public final class UndefinedEqualsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.lang.Iterable;
 
             class Test {
@@ -404,6 +409,7 @@ public final class UndefinedEqualsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.lang.Iterable;
 
             class Test {
@@ -432,6 +438,7 @@ public final class UndefinedEqualsTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.lang.Iterable;
 
             class Test {

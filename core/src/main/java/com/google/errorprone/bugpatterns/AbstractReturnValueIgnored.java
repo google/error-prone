@@ -491,18 +491,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     return NO_MATCH;
   }
 
-  private static final class TypeInfo {
-
-    private final TypeVariableSymbol sym;
-    private final Type resolvedVariableType;
-    private final Tree tree;
-
-    private TypeInfo(TypeVariableSymbol sym, Type resolvedVariableType, Tree tree) {
-      this.sym = sym;
-      this.resolvedVariableType = resolvedVariableType;
-      this.tree = tree;
-    }
-  }
+  private record TypeInfo(TypeVariableSymbol sym, Type resolvedVariableType, Tree tree) {}
 
   private static ListMultimap<TypeVariableSymbol, TypeInfo> getResolvedGenerics(
       MethodInvocationTree tree) {

@@ -686,8 +686,8 @@ public class EqualsIncompatibleTypeRecursiveTypes {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestOneOfMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
             public class Test {
               public void test() {
@@ -778,6 +778,7 @@ public class Test {
             "Test.java",
             """
             import static java.util.function.Predicate.isEqual;
+
             import java.util.stream.Stream;
 
             class Test {
@@ -797,6 +798,7 @@ public class Test {
             "Test.java",
             """
             import static java.util.function.Predicate.isEqual;
+
             import java.util.stream.Stream;
 
             class Test {

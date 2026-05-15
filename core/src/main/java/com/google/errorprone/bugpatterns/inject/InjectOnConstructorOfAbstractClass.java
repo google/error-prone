@@ -19,13 +19,10 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.delete;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
-import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
-import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
-import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 import static javax.lang.model.element.Modifier.ABSTRACT;
 
@@ -52,9 +49,7 @@ import com.sun.source.tree.MethodTree;
 public class InjectOnConstructorOfAbstractClass extends BugChecker implements MethodTreeMatcher {
 
   private static final MultiMatcher<MethodTree, AnnotationTree> INJECT_FINDER =
-      annotations(
-          AT_LEAST_ONE,
-          anyOf(isType(InjectMatchers.JAVAX_INJECT_ANNOTATION), isType(GUICE_INJECT_ANNOTATION)));
+      annotations(AT_LEAST_ONE, InjectMatchers.IS_APPLICATION_OF_AT_INJECT);
 
   private static final Matcher<MethodTree> TO_MATCH =
       allOf(methodIsConstructor(), enclosingClass(hasModifier(ABSTRACT)));

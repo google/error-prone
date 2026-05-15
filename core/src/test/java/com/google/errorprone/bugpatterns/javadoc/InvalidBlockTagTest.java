@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.javadoc;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,7 +55,7 @@ public final class InvalidBlockTagTest {
               void foo();
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
     // common_typos_enable
   }
 
@@ -74,7 +73,7 @@ public final class InvalidBlockTagTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -131,7 +130,7 @@ public final class InvalidBlockTagTest {
               void bar();
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -157,7 +156,7 @@ public final class InvalidBlockTagTest {
               void foo(int a);
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -199,7 +198,7 @@ public final class InvalidBlockTagTest {
               void frobnicate(String foo);
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test

@@ -79,8 +79,9 @@ public class NullnessInferenceTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class IdentityTest {
   @Nullable Object nullableObj;
@@ -126,10 +127,11 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
-import org.checkerframework.checker.nullness.compatqual.NullableDecl;
+
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.nullness.compatqual.NullableDecl;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class AnnotatedGenericMethodTest {
   <T> @NonNull T makeNonNull(@Nullable T t) {
@@ -175,8 +177,9 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class AnnotatedGenericMethodTest {
   <T extends @NonNull Object> T requireNonNull(T t) {
@@ -215,8 +218,9 @@ public class AnnotatedGenericMethodTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class IdentityTest {
   @NonNull Object returnNonnull(@Nullable Integer i) {
@@ -300,10 +304,11 @@ public class IdentityTest {
 """
 package com.google.errorprone.dataflow.nullnesspropagation;
 
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
-import org.checkerframework.checker.nullness.qual.Nullable;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ReturnTest {
   List<@NonNull Object> return_tests(Object o1, Object o2) {
@@ -337,8 +342,9 @@ abstract class List<T> {
 """
 package com.google.errorprone.dataflow.nullnesspropagation;
 
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -376,8 +382,9 @@ abstract class List<T> {
 """
 package com.google.errorprone.dataflow.nullnesspropagation;
 
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
+import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -412,9 +419,10 @@ public class VarArgsTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
+
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class AnnotatedAtGenericTypeUseTest {
   void test(MyInnerClass<@Nullable Object> nullable, MyInnerClass<@NonNull Object> nonnull) {
@@ -518,8 +526,9 @@ public class AnnotatedAtGenericTypeUseTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class BoundedAtGenericTypeUseTest {
   void test(
@@ -548,8 +557,9 @@ public class BoundedAtGenericTypeUseTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class BoundedAtGenericTypeDefTest {
   void test(NullableElementCollection<?> nullable) {
@@ -623,8 +633,9 @@ public class BoundedAtGenericTypeDefTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class IntersectionBoundsTest {
   void test(MyBoundedClass<?> bounded) {
@@ -649,8 +660,9 @@ public class IntersectionBoundsTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class AnnotatedMethodTypeParamsTest {
   public void test() {

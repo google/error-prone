@@ -289,11 +289,11 @@ public class UnnecessaryBoxedVariableTest {
               }
 
               void positive_assignedValueOf() {
-                int i = Integer.valueOf(0);
+                int i = 0;
               }
 
               int positive_assignedValueOf_return() {
-                int i = Integer.valueOf(0);
+                int i = 0;
                 return i;
               }
 
@@ -355,12 +355,12 @@ public class UnnecessaryBoxedVariableTest {
 
               int positive_assignmentInReturn() {
                 int myVariable;
-                return myVariable = Integer.valueOf(42);
+                return myVariable = 42;
               }
 
               int positive_assignmentInReturn2() {
                 int myVariable;
-                return myVariable = Integer.valueOf(42);
+                return myVariable = 42;
               }
 
               int positive_hashCode() {
@@ -428,10 +428,12 @@ public class UnnecessaryBoxedVariableTest {
               }
 
               static int positive_nullChecked_statement(int i) {
+
                 return i;
               }
 
               static int positive_nullChecked_statement_message(int i) {
+
                 return i;
               }
 
@@ -618,6 +620,64 @@ public class UnnecessaryBoxedVariableTest {
 
               public ImmutableList<Integer> foos() {
                 return ImmutableList.of(FOO);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void var() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private int a() {
+                var y = Integer.valueOf(42);
+                return y;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              private int a() {
+                int y = 42;
+                return y;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void assignment() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private void a() {
+                Integer y = Integer.valueOf("42");
+                y = Integer.valueOf("43");
+                y = Integer.valueOf(43);
+                y = new Integer("44");
+                y = new Integer(44);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              private void a() {
+                int y = Integer.parseInt("42");
+                y = Integer.parseInt("43");
+                y = 43;
+                y = Integer.parseInt("44");
+                y = 44;
               }
             }
             """)

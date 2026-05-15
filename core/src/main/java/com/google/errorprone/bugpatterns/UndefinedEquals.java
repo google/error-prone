@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -163,8 +164,7 @@ public final class UndefinedEquals extends BugChecker implements MethodInvocatio
   }
 
   private static final Supplier<Type> MULTIMAP =
-      VisitorState.memoize(state -> state.getTypeFromString("com.google.common.collect.Multimap"));
+      typeFromString("com.google.common.collect.Multimap");
 
-  private static final Supplier<Type> CHAR_SEQUENCE =
-      VisitorState.memoize(state -> state.getTypeFromString("java.lang.CharSequence"));
+  private static final Supplier<Type> CHAR_SEQUENCE = typeFromString("java.lang.CharSequence");
 }

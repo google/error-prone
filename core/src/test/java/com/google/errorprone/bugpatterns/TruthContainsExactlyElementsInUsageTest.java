@@ -39,6 +39,7 @@ public final class TruthContainsExactlyElementsInUsageTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             public class ExampleClassTest {
@@ -57,6 +58,7 @@ public final class TruthContainsExactlyElementsInUsageTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import java.util.List;
 
@@ -77,6 +79,7 @@ public final class TruthContainsExactlyElementsInUsageTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import java.util.List;
 
@@ -97,6 +100,7 @@ public final class TruthContainsExactlyElementsInUsageTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import java.util.List;
 
@@ -117,6 +121,7 @@ public final class TruthContainsExactlyElementsInUsageTest {
             "ExampleClassTest.java",
 """
 import static com.google.common.truth.Truth.assertThat;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 
@@ -136,6 +141,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
 """
 import static com.google.common.truth.Truth.assertThat;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
@@ -155,6 +161,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
 """
 import static com.google.common.truth.Truth.assertThat;
+
 import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
 
@@ -168,6 +175,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import java.util.Arrays;
 
@@ -187,6 +195,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import java.util.List;
 
@@ -200,6 +209,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import java.util.List;
 
@@ -219,6 +229,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import java.util.Arrays;
 
@@ -234,6 +245,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import java.util.Arrays;
 
@@ -253,8 +265,9 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
-            import com.google.common.collect.ImmutableList;
             import static java.util.Arrays.asList;
+
+            import com.google.common.collect.ImmutableList;
 
             public class ExampleClassTest {
               void test() {
@@ -266,8 +279,9 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
-            import com.google.common.collect.ImmutableList;
             import static java.util.Arrays.asList;
+
+            import com.google.common.collect.ImmutableList;
 
             public class ExampleClassTest {
               void test() {
@@ -285,6 +299,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
 """
 import static com.google.common.truth.Truth.assertThat;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
@@ -298,6 +313,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import com.google.common.collect.Lists;
 
@@ -317,6 +333,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
 """
 import static com.google.common.truth.Truth.assertThat;
+
 import com.google.common.collect.ImmutableList;
 import java.util.Collections;
 
@@ -330,6 +347,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import java.util.Collections;
 
@@ -349,6 +367,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import java.util.Arrays;
 
@@ -362,6 +381,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
             import java.util.Arrays;
 
@@ -381,6 +401,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
 """
 import static com.google.common.truth.Truth.assertThat;
+
 import com.google.common.collect.ImmutableList;
 
 public class ExampleClassTest {
@@ -393,6 +414,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             public class ExampleClassTest {
@@ -411,6 +433,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
 """
 import static com.google.common.truth.Truth.assertThat;
+
 import com.google.common.collect.ImmutableList;
 
 public class ExampleClassTest {
@@ -423,6 +446,7 @@ public class ExampleClassTest {
             "ExampleClassTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import com.google.common.collect.ImmutableList;
 
             public class ExampleClassTest {

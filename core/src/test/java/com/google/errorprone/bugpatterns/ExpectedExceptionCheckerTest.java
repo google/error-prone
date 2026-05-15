@@ -81,6 +81,7 @@ class ExceptionTest {
   public void test() throws Exception {
     if (true) {
       Path p = Paths.get("NOSUCH");
+
       IOException thrown = assertThrows(IOException.class, () -> Files.readAllBytes(p));
       assertThat(thrown, CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));
       assertThat(thrown.getCause(), CoreMatchers.is(CoreMatchers.instanceOf(IOException.class)));
@@ -140,6 +141,7 @@ class ExceptionTest {
               @Test
               public void test() throws Exception {
                 Path p = Paths.get("NOSUCH");
+
                 Throwable thrown =
                     assertThrows(
                         Throwable.class,
@@ -185,6 +187,7 @@ class ExceptionTest {
             """
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.assertThrows;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.hamcrest.CoreMatchers;
@@ -198,7 +201,9 @@ class ExceptionTest {
               @Test
               public void test() throws Exception {
                 Path p = Paths.get("NOSUCH");
+
                 assertThrows(IOException.class, () -> Files.readAllBytes(p));
+
                 assertThat(Files.exists(p)).isFalse();
               }
             }
@@ -249,6 +254,7 @@ class ExceptionTest {
               @Test
               public void test() throws Exception {
                 Path p = Paths.get("NOSUCH");
+
                 assertThrows(
                     IOException.class,
                     () -> {
@@ -309,6 +315,7 @@ class ExceptionTest {
               @Test
               public void test() throws Exception {
                 Path p = Paths.get("NOSUCH");
+
                 IOException thrown = assertThrows(IOException.class, () -> Files.readAllBytes(p));
                 assertThat(thrown).hasCauseThat().isInstanceOf(IOException.class);
                 assertThat(thrown).hasCauseThat().isInstanceOf(IOException.class);
@@ -367,6 +374,7 @@ class ExceptionTest {
               @Test
               public void test() throws Exception {
                 Path p = Paths.get("NOSUCH");
+
                 IOException thrown = assertThrows(IOException.class, () -> Files.readAllBytes(p));
                 assertThat(thrown, matcher);
                 assertThat(Files.exists(p)).isFalse();
@@ -411,6 +419,7 @@ class ExceptionTest {
 
               @Test
               public void test() throws Exception {
+
                 assertThat(false).isFalse();
                 assertThat(true).isTrue();
               }
@@ -483,14 +492,18 @@ class ExceptionTest {
               @Test
               public void one() throws Exception {
                 Path p = Paths.get("NOSUCH");
+
                 assertThrows(IOException.class, () -> Files.readAllBytes(p));
+
                 assertThat(Files.exists(p)).isFalse();
               }
 
               @Test
               public void two() throws Exception {
                 Path p = Paths.get("NOSUCH");
+
                 assertThrows(IOException.class, () -> Files.readAllBytes(p));
+
                 assertThat(Files.exists(p)).isFalse();
               }
             }
@@ -523,6 +536,7 @@ class ExceptionTest {
             "in/ExceptionTest.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import org.junit.Rule;
             import org.junit.Test;
             import org.junit.rules.ExpectedException;
@@ -532,6 +546,7 @@ class ExceptionTest {
 
               @Test
               public void testThrow(Class<? extends Throwable> clazz) throws Exception {
+
                 assertThrows(Throwable.class, () -> clazz.toString());
               }
             }

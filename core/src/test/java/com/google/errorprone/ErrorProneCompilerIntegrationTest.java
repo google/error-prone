@@ -17,6 +17,7 @@
 package com.google.errorprone;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
@@ -25,6 +26,7 @@ import static com.google.errorprone.FileObjects.forResources;
 import static com.google.errorprone.FileObjects.forSourceLines;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.constValue;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.Locale.ENGLISH;
 import static java.util.Objects.requireNonNull;
 import static org.junit.Assert.assertThrows;
@@ -37,6 +39,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.truth.Correspondence;
 import com.google.errorprone.bugpatterns.BadShiftAmount;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ExpressionStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -47,6 +50,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -849,5 +853,60 @@ public class ErrorProneCompilerIntegrationTest {
             .collect(toImmutableList());
     assertThat(diagnostics).doesNotContain("compiler.err.error.prone.crash");
     assertThat(diagnostics).hasSize(3);
+  }
+
+  /** A bugpattern for testing. */
+  @BugPattern(summary = "", severity = ERROR)
+  public static class InvalidSourceRange extends BugChecker implements ClassTreeMatcher {
+
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      StringBuilder source = new StringBuilder();
+      var members = tree.getMembers();
+      for (int i = 0; i < members.size() - 1; i++) {
+        var start = state.getEndPosition(members.get(i));
+        if (start == -1) {
+          continue;
+        }
+        var end = getStartPosition(members.get(i + 1));
+        source.append(state.getSourceCode(start, end).toString());
+      }
+      return buildDescription(tree).setMessage(source.toString()).build();
+    }
+  }
+
+  @Test
+  public void invalidSourceRange() throws Exception {
+    compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(InvalidSourceRange.class));
+    compiler = compilerBuilder.build();
+    Result exitCode =
+        compiler.compile(
+            new String[] {
+              "-XepDisableAllChecks", "-Xep:InvalidSourceRange:ERROR", "-XDcompilePolicy=byfile"
+            },
+            ImmutableList.of(
+                forSourceLines(
+                    "Test.java",
+                    """
+                    package test;
+                    class Test {
+                      int x, y;;
+                      int z;
+                    }
+                    """)));
+    outputStream.flush();
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
+    assertThat(diagnosticHelper.getDiagnostics()).hasSize(1);
+    Diagnostic<? extends JavaFileObject> diag = getOnlyElement(diagnosticHelper.getDiagnostics());
+    assertThat(diag.toString())
+        .contains(
+            """
+            Test.java:3: error: An unhandled exception was thrown by the Error Prone static analysis plugin.
+              int x, y;;
+                    ^
+            """);
+    assertThat(diag.toString())
+        .contains(
+            "com.google.errorprone.SourcePositionException: invalid source position: [35, 29)");
   }
 }

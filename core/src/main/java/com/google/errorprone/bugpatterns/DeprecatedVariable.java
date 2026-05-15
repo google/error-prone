@@ -28,6 +28,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import java.util.Optional;
 
@@ -47,6 +48,10 @@ public class DeprecatedVariable extends BugChecker implements VariableTreeMatche
       default -> {
         return NO_MATCH;
       }
+    }
+    if ((sym.flags() & Flags.MANDATED) == Flags.MANDATED) {
+      // Don't match on synthetic variable declarations for record components
+      return NO_MATCH;
     }
     Description.Builder description = buildDescription(tree);
     Optional.ofNullable(

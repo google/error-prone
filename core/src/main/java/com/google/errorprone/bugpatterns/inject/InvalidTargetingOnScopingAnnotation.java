@@ -17,12 +17,9 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.common.collect.Sets.immutableEnumSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
-import static com.google.errorprone.matchers.InjectMatchers.GUICE_SCOPE_ANNOTATION;
-import static com.google.errorprone.matchers.InjectMatchers.JAVAX_SCOPE_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.HAS_SCOPE_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.util.ASTHelpers.getAnnotation;
@@ -65,9 +62,7 @@ public class InvalidTargetingOnScopingAnnotation extends BugChecker implements C
       annotations(AT_LEAST_ONE, isType(TARGET_ANNOTATION));
 
   private static final Matcher<ClassTree> ANNOTATION_WITH_SCOPE_AND_TARGET =
-      allOf(
-          kindIs(ANNOTATION_TYPE),
-          anyOf(hasAnnotation(GUICE_SCOPE_ANNOTATION), hasAnnotation(JAVAX_SCOPE_ANNOTATION)));
+      allOf(kindIs(ANNOTATION_TYPE), HAS_SCOPE_ANNOTATION);
 
   private static final ImmutableSet<ElementType> REQUIRED_ELEMENT_TYPES =
       immutableEnumSet(TYPE, METHOD);

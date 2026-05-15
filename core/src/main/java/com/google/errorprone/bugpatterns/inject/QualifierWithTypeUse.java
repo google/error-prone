@@ -20,8 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
@@ -64,11 +62,7 @@ public class QualifierWithTypeUse extends BugChecker implements ClassTreeMatcher
       annotations(AT_LEAST_ONE, isType("java.lang.annotation.Target"));
 
   private static final Matcher<ClassTree> IS_QUALIFIER_WITH_TARGET =
-      allOf(
-          kindIs(ANNOTATION_TYPE),
-          anyOf(
-              hasAnnotation(InjectMatchers.JAVAX_QUALIFIER_ANNOTATION),
-              hasAnnotation(InjectMatchers.GUICE_BINDING_ANNOTATION)));
+      allOf(kindIs(ANNOTATION_TYPE), InjectMatchers.HAS_QUALIFIER_ANNOTATION);
 
   private static final ImmutableSet<ElementType> FORBIDDEN_ELEMENT_TYPES =
       ImmutableSet.of(ElementType.TYPE_PARAMETER, ElementType.TYPE_USE);

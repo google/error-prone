@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,7 +71,7 @@ public class CanonicalDurationTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -117,7 +115,7 @@ public class CanonicalDurationTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -129,6 +127,7 @@ public class CanonicalDurationTest {
             package a;
 
             import static java.time.Duration.ofSeconds;
+
             import java.time.Duration;
 
             public class A {
@@ -153,7 +152,7 @@ public class CanonicalDurationTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -190,7 +189,7 @@ public class CanonicalDurationTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -229,6 +228,7 @@ public class CanonicalDurationTest {
 
             import static java.time.Duration.ofSeconds;
             import static java.util.Arrays.asList;
+
             import java.time.Duration;
             import java.util.List;
 
@@ -247,6 +247,7 @@ public class CanonicalDurationTest {
             import static java.time.Duration.ofMinutes;
             import static java.time.Duration.ofSeconds;
             import static java.util.Arrays.asList;
+
             import java.time.Duration;
             import java.util.List;
 
@@ -269,6 +270,7 @@ public class CanonicalDurationTest {
             package a;
 
             import static java.time.Duration.ofSeconds;
+
             import java.time.Duration;
 
             public class A {
@@ -282,6 +284,7 @@ public class CanonicalDurationTest {
 
             import static java.time.Duration.ofMinutes;
             import static java.time.Duration.ofSeconds;
+
             import java.time.Duration;
 
             public class A {

@@ -43,6 +43,7 @@ public class PreconditionsCheckNotNullRepeatedTest {
             "in/Test.java",
             """
             import static com.google.common.base.Preconditions.checkNotNull;
+
             import com.google.common.base.Preconditions;
 
             public class Test {
@@ -57,6 +58,7 @@ public class PreconditionsCheckNotNullRepeatedTest {
             "out/Test.java",
             """
             import static com.google.common.base.Preconditions.checkNotNull;
+
             import com.google.common.base.Preconditions;
 
             public class Test {
@@ -77,6 +79,7 @@ public class PreconditionsCheckNotNullRepeatedTest {
             "out/Test.java",
             """
             import static com.google.common.base.Preconditions.checkNotNull;
+
             import com.google.common.base.Preconditions;
 
             public class Test {
@@ -103,6 +106,7 @@ public class PreconditionsCheckNotNullRepeatedTest {
             "out/Test.java",
             """
             import static com.google.common.base.Preconditions.checkNotNull;
+
             import com.google.common.base.Preconditions;
 
             public class Test {

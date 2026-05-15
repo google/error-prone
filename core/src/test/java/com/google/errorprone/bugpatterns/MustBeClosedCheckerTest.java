@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Ignore;
@@ -623,7 +625,7 @@ class MustBeClosedCheckerPositiveCases {
   }
 
   int existingDeclarationUsesVar() {
-    // Bug: Diagnostic contains:
+    // BUG: Diagnostic contains:
     try (var result = new Foo().mustBeClosedAnnotatedMethod()) {
       return 0;
     }
@@ -937,6 +939,52 @@ class MustBeClosedCheckerPositiveCases {
             }
             """)
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void flexibleConstructor() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.MustBeClosed;
+
+            class Test {
+              static class Parent implements AutoCloseable {
+                @MustBeClosed
+                Parent() {}
+
+                @Override
+                public void close() {}
+              }
+
+              static class Child extends Parent {
+                // BUG: Diagnostic contains: Invoked constructor is marked @MustBeClosed
+                Child(int i) {
+                  i++;
+                  super();
+                }
+              }
+
+              static class Other implements AutoCloseable {
+                @MustBeClosed
+                Other(int i) {}
+
+                // BUG: Diagnostic contains: Invoked constructor is marked @MustBeClosed
+                Other() {
+                  int i = 1;
+                  this(i);
+                }
+
+                @Override
+                public void close() {}
+              }
+            }
+            """)
+        .setArgs("--enable-preview", "--release", Integer.toString(Runtime.version().feature()))
         .doTest();
   }
 

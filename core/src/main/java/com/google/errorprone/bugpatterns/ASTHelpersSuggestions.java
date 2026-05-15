@@ -18,8 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.FieldMatchers.instanceField;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.field.FieldMatchers.instanceField;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
@@ -66,7 +66,7 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
       instanceMethod().onDescendantOf("com.sun.tools.javac.code.Symbol").namedAnyOf("enclClass");
 
   private static final Matcher<ExpressionTree> SYMBOL_OWNER =
-      instanceField("com.sun.tools.javac.code.Symbol", "owner");
+      instanceField().onClass("com.sun.tools.javac.code.Symbol").named("owner");
 
   private static final ImmutableMap<String, String> NAMES =
       ImmutableMap.of("packge", "enclosingPackage");

@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.delete;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
+import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_JAKARTA_INJECT;
 import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_JAVAX_INJECT;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
@@ -46,7 +47,8 @@ import com.sun.source.tree.MethodTree;
     severity = ERROR)
 public class JavaxInjectOnAbstractMethod extends BugChecker implements MethodTreeMatcher {
   private static final MultiMatcher<MethodTree, AnnotationTree> INJECT_FINDER =
-      annotations(AT_LEAST_ONE, IS_APPLICATION_OF_JAVAX_INJECT);
+      annotations(
+          AT_LEAST_ONE, anyOf(IS_APPLICATION_OF_JAVAX_INJECT, IS_APPLICATION_OF_JAKARTA_INJECT));
 
   private static final Matcher<MethodTree> ABSTRACT_OR_DEFAULT_METHOD_WITH_INJECT =
       allOf(anyOf(hasModifier(ABSTRACT), hasModifier(DEFAULT)));

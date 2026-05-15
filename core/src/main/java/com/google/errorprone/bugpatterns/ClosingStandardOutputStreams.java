@@ -18,8 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.FieldMatchers.staticField;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.field.FieldMatchers.staticField;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -38,7 +38,7 @@ import com.sun.source.tree.TryTree;
     severity = WARNING)
 public class ClosingStandardOutputStreams extends BugChecker implements TryTreeMatcher {
   private static final Matcher<ExpressionTree> MATCHER =
-      anyOf(staticField("java.lang.System", "err"), staticField("java.lang.System", "out"));
+      anyOf(staticField().onClass("java.lang.System").namedAnyOf("err", "out"));
 
   @Override
   public Description matchTry(TryTree tree, VisitorState state) {

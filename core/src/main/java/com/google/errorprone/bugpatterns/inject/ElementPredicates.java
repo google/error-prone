@@ -21,9 +21,10 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static javax.lang.model.util.ElementFilter.constructorsIn;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.matchers.InjectMatchers;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import javax.lang.model.element.Element;
@@ -43,8 +44,7 @@ public final class ElementPredicates {
   public static boolean isFirstConstructorOfMultiInjectedClass(Element injectedMember) {
     if (injectedMember.getKind() == ElementKind.CONSTRUCTOR) {
       List<ExecutableElement> injectConstructors =
-          getConstructorsWithAnnotations(
-              injectedMember, Arrays.asList("javax.inject.Inject", "com.google.inject.Inject"));
+          getConstructorsWithAnnotations(injectedMember, InjectMatchers.INJECT_ANNOTATIONS);
       if (injectConstructors.size() > 1 && injectConstructors.getFirst().equals(injectedMember)) {
         return true;
       }
@@ -70,20 +70,21 @@ public final class ElementPredicates {
   }
 
   private static ImmutableList<ExecutableElement> getConstructorsWithAnnotations(
-      Element exploringConstructor, List<String> annotations) {
+      Element exploringConstructor, ImmutableSet<String> annotations) {
     return constructorsIn(exploringConstructor.getEnclosingElement().getEnclosedElements()).stream()
         .filter(constructor -> hasAnyOfAnnotation(constructor, annotations))
         .sorted(Comparator.comparing((e -> e.getSimpleName().toString())))
         .collect(toImmutableList());
   }
 
-  private static boolean hasAnyOfAnnotation(ExecutableElement input, List<String> annotations) {
+  private static boolean hasAnyOfAnnotation(
+      ExecutableElement input, ImmutableSet<String> annotations) {
     return input.getAnnotationMirrors().stream()
         .map(annotationMirror -> asType(annotationMirror.getAnnotationType().asElement()))
         .anyMatch(type -> typeInAnnotations(type, annotations));
   }
 
-  private static boolean typeInAnnotations(TypeElement t, List<String> annotations) {
+  private static boolean typeInAnnotations(TypeElement t, ImmutableSet<String> annotations) {
     return annotations.stream()
         .anyMatch(annotation -> t.getQualifiedName().contentEquals(annotation));
   }

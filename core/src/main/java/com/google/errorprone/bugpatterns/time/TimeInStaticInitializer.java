@@ -16,11 +16,11 @@
 package com.google.errorprone.bugpatterns.time;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -41,7 +41,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 
@@ -106,10 +105,10 @@ public final class TimeInStaticInitializer extends BugChecker
       anyOf(
           staticMethod()
               .onClass(
-                  (t, s) -> {
-                    PackageSymbol pkg = enclosingPackage(t.tsym);
-                    return pkg != null && pkg.getQualifiedName().contentEquals("java.time");
-                  })
+                  (t, s) ->
+                      enclosingPackage(t.tsym)
+                          .map(p -> p.getQualifiedName().contentEquals("java.time"))
+                          .orElse(false))
               .named("now"),
           instanceMethod().onDescendantOf("java.time.InstantSource").named("instant"),
           instanceMethod().onDescendantOf("com.google.common.time.TimeSource").named("instant"));
@@ -118,6 +117,5 @@ public final class TimeInStaticInitializer extends BugChecker
    * As a heuristic, Flags seem fine, given those usually do want to capture something at start
    * time.
    */
-  private static final Supplier<Type> FLAG =
-      memoize(s -> s.getTypeFromString("com.google.common.flags.Flag"));
+  private static final Supplier<Type> FLAG = typeFromString("com.google.common.flags.Flag");
 }

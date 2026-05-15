@@ -24,6 +24,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -61,6 +62,7 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
@@ -132,19 +134,17 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   // TODO(ghm): Find a sensible place to dedupe this with UnnecessarilyVisible.
   private static final ImmutableSet<String> ANNOTATIONS_INDICATING_PARAMETERS_SHOULD_BE_CHECKED =
-      ImmutableSet.of(
-          "com.google.errorprone.refaster.annotation.AfterTemplate",
-          "com.google.errorprone.refaster.annotation.BeforeTemplate",
-          "com.google.inject.Inject",
-          "com.google.inject.Provides",
-          "com.google.inject.multibindings.ProvidesIntoMap",
-          "com.google.inject.multibindings.ProvidesIntoSet",
-          "dagger.Provides",
-          "jakarta.inject.Inject",
-          "javax.inject.Inject",
-          // Parameters on test methods imply the test is parameterised, and those parameters should
-          // be used or removed.
-          "org.junit.Test");
+      ImmutableSet.<String>builder()
+          .addAll(InjectMatchers.INJECT_ANNOTATIONS)
+          .addAll(InjectMatchers.PROVIDES_ANNOTATIONS)
+          .addAll(InjectMatchers.MULTIBINDINGS_ANNOTATIONS)
+          .add(
+              "com.google.errorprone.refaster.annotation.AfterTemplate",
+              "com.google.errorprone.refaster.annotation.BeforeTemplate",
+              // Parameters on test methods imply the test is parameterised, and those parameters
+              // should be used or removed.
+              "org.junit.Test")
+          .build();
 
   private final ImmutableSet<String> methodAnnotationsExemptingParameters;
 
@@ -1114,5 +1114,5 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
   }
 
   private static final Supplier<Type> PARCELABLE_CREATOR =
-      VisitorState.memoize(state -> state.getTypeFromString("android.os.Parcelable.Creator"));
+      typeFromString("android.os.Parcelable.Creator");
 }

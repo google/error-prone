@@ -40,4 +40,4 @@ new EqualsTester()
 Although consider omitting an explicit comparison with a different type, as
 `EqualsTester` does this already by default.
 
-[javadoc]: https://static.javadoc.io/com.google.guava/guava-testlib/21.0/com/google/common/testing/EqualsTester.html
+[javadoc]: https://javadoc.io/doc/com.google.guava/guava-testlib/latest/com/google/common/testing/EqualsTester.html

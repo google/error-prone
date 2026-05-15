@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -64,17 +63,20 @@ public class UseEnumSwitchTest {
 
               int f(E e) {
                 switch (e) {
-                  case ONE:
+                  case ONE -> {
                     return 1;
-                  case TWO:
+                  }
+                  case TWO -> {
                     return 2;
-                  default:
+                  }
+                  default -> {
                     return 3;
+                  }
                 }
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -106,7 +108,7 @@ public class UseEnumSwitchTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -136,6 +138,6 @@ public class UseEnumSwitchTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 }

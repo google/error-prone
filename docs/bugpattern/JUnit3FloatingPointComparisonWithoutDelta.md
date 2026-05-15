@@ -1,6 +1,14 @@
-Use `assertEquals(expected, actual, delta)` to compare floating-point numbers.
-This call to `assertEquals()` will either fail or not compile in JUnit 4. Use
-`assertEquals(expected, actual, 0.0)` if the delta must be `0.0`.
+JUnit 4's floating-point overloads of `assertEquals(expected, actual)` always
+throw an exception, and some floating-point calls to JUnit 4's `assertEquals` do
+not even compile.
 
-Alternatively, one can use Google Truth library's `DoubleSubject` class which
-has both `isEqualTo()` for delta `0.0` and `isWithin()` for non-zero deltas.
+To continue comparing floating-point numbers using `Double.equals` semantics,
+you may be able to cast one argument to `Object` or use Truth's
+`assertThat(actual).isEqualTo(expected)` /
+`assertWithMessage(message).that(actual).isEqualTo(expected)`.
+
+Alternatively, you can switch to tolerance-based equality testing, which changes
+your code's behavior for negative zero (in JUnit and Truth) and for infinities
+and NaN (in Truth). If you want that, use JUnit's `assertEquals(expected,
+actual, delta)` or Truth's `isWithin(...).of(...)`, possibly with a tolerance of
+zero.

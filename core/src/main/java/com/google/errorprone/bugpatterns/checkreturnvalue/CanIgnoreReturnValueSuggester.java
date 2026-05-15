@@ -20,6 +20,7 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getReturnType;
@@ -97,7 +98,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
           );
 
   private static final Supplier<Type> PROTO_BUILDER =
-      VisitorState.memoize(s -> s.getTypeFromString("com.google.protobuf.MessageLite.Builder"));
+      typeFromString("com.google.protobuf.MessageLite.Builder");
 
   private static final ImmutableSet<String> BANNED_METHOD_PREFIXES =
       ImmutableSet.of("get", "is", "has", "new", "clone", "copy");

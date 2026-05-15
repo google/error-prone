@@ -506,7 +506,7 @@ public final class Inliner extends BugChecker
   private record Api(
       String className,
       String methodName,
-      String packageName,
+      Optional<String> packageName,
       boolean isConstructor,
       boolean isDeprecated,
       String extraMessage) {
@@ -525,7 +525,7 @@ public final class Inliner extends BugChecker
       return new Api(
           method.owner.getQualifiedName().toString(),
           method.getSimpleName().toString(),
-          enclosingPackage(method).toString(),
+          enclosingPackage(method).map(p -> p.getQualifiedName().toString()),
           method.isConstructor(),
           hasAnnotation(method, "java.lang.Deprecated", state),
           extraMessage);
@@ -549,7 +549,8 @@ public final class Inliner extends BugChecker
      * `ClassName.methodName()`}).
      */
     final String shortName() {
-      String humanReadableClassName = className().replaceFirst(packageName() + ".", "");
+      String humanReadableClassName =
+          packageName().map(pn -> className().replaceFirst(pn + ".", "")).orElse(className());
       return format("`%s.%s()`", humanReadableClassName, methodName());
     }
 

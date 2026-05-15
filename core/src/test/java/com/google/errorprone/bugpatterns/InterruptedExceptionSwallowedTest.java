@@ -493,8 +493,8 @@ public final class InterruptedExceptionSwallowedTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.io.IOException;
             import java.io.FileNotFoundException;
+            import java.io.IOException;
             import java.util.concurrent.ExecutionException;
             import java.util.concurrent.Future;
 

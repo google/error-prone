@@ -40,6 +40,7 @@ public final class ProtoTruthMixedDescriptorsTest {
             "Test.java",
             """
             import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
@@ -61,6 +62,7 @@ public final class ProtoTruthMixedDescriptorsTest {
             "Test.java",
 """
 import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
@@ -83,6 +85,7 @@ final class Test {
             "Test.java",
             """
             import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
@@ -105,6 +108,7 @@ final class Test {
             "Test.java",
 """
 import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
+
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 import com.google.protobuf.Message;

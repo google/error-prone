@@ -21,6 +21,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.CLASS_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
@@ -68,7 +70,8 @@ public class UnnecessarySetDefault extends BugChecker implements MethodInvocatio
   private static final Matcher<ExpressionTree> SET_DEFAULT =
       instanceMethod()
           .onExactClass("com.google.common.testing.NullPointerTester")
-          .withSignature("<T>setDefault(java.lang.Class<T>,T)");
+          .named("setDefault")
+          .withParametersOfType(CLASS_TYPE, OBJECT_TYPE);
 
   @VisibleForTesting
   static final ImmutableMap<String, Matcher<ExpressionTree>> DEFAULTS =

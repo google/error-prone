@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.VisitorState.memoize;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -27,10 +28,13 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.MethodMatchers;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
+import com.sun.tools.javac.model.JavacElements;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,16 +48,17 @@ import javax.lang.model.type.TypeKind;
  *
  * @author mwacker@google.com (Mike Wacker)
  */
-@BugPattern(
-    summary = "Floating-point comparison without error tolerance",
-    // First sentence copied directly from JUnit 4.
-
-    severity = WARNING)
+@BugPattern(summary = "Floating-point comparison without error tolerance", severity = WARNING)
 public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker
     implements MethodInvocationTreeMatcher {
-
   private static final Matcher<ExpressionTree> ASSERT_EQUALS_MATCHER =
       MethodMatchers.staticMethod().onClass("junit.framework.TestCase").named("assertEquals");
+
+  private static final Supplier<Symbol> TRUTH =
+      memoize(
+          state ->
+              JavacElements.instance(state.context)
+                  .getTypeElement("com.google.common.truth.Truth"));
 
   @Override
   public Description matchMethodInvocation(
@@ -65,8 +70,13 @@ public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker
     if (canBeConvertedToJUnit4(state, argumentTypes)) {
       return Description.NO_MATCH;
     }
-    Fix fix = addDeltaArgument(methodInvocationTree, state, argumentTypes);
-    return describeMatch(methodInvocationTree, fix);
+    var description = buildDescription(methodInvocationTree);
+    // *not* `state.getTypeFromString(...) != null`: b/112270644, b/138753468
+    if (TRUTH.get(state) != null) {
+      description.addFix(useTruth(methodInvocationTree, state));
+    }
+    description.addFix(addDeltaArgument(methodInvocationTree, state, argumentTypes));
+    return description.build();
   }
 
   /** Gets the argument types, excluding the message argument if present. */
@@ -138,6 +148,33 @@ public class JUnit3FloatingPointComparisonWithoutDelta extends BugChecker
   private static Type unboxedTypeOrType(VisitorState state, Type type) {
     Types types = state.getTypes();
     return types.unboxedTypeOrType(type);
+  }
+
+  private static Fix useTruth(MethodInvocationTree methodInvocationTree, VisitorState state) {
+    var args = methodInvocationTree.getArguments();
+    return switch (args.size()) {
+      case 2 ->
+          SuggestedFix.builder()
+              .addStaticImport("com.google.common.truth.Truth.assertThat")
+              .replace(
+                  methodInvocationTree,
+                  "assertThat(%s).isEqualTo(%s)"
+                      .formatted(
+                          state.getSourceForNode(args.get(1)), state.getSourceForNode(args.get(0))))
+              .build();
+      case 3 ->
+          SuggestedFix.builder()
+              .addStaticImport("com.google.common.truth.Truth.assertWithMessage")
+              .replace(
+                  methodInvocationTree,
+                  "assertWithMessage(%s).that(%s).isEqualTo(%s)"
+                      .formatted(
+                          state.getSourceForNode(args.get(0)),
+                          state.getSourceForNode(args.get(2)),
+                          state.getSourceForNode(args.get(1))))
+              .build();
+      default -> throw new AssertionError(state.getSourceForNode(methodInvocationTree));
+    };
   }
 
   /** Creates the fix to add a delta argument. */

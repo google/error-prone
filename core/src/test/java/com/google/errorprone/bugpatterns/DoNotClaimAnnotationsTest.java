@@ -38,7 +38,6 @@ public class DoNotClaimAnnotationsTest {
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
 
 abstract class Test implements Processor {
@@ -53,7 +52,6 @@ abstract class Test implements Processor {
 """
 import java.util.Set;
 import javax.annotation.processing.Processor;
-import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
 
@@ -76,7 +74,6 @@ abstract class Test implements Processor {
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
 
 abstract class Test implements Processor {
@@ -98,7 +95,6 @@ abstract class Test implements Processor {
 """
 import java.util.Set;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
 
 abstract class Test {
@@ -119,7 +115,6 @@ abstract class Test {
 """
 import java.util.Set;
 import javax.annotation.processing.Processor;
-import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
 

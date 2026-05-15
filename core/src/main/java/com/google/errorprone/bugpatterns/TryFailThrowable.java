@@ -101,29 +101,26 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
           isSameType("junit.framework.AssertionFailedError"));
 
   private static final Matcher<ExpressionTree> failOrAssert =
-      new Matcher<ExpressionTree>() {
-        @Override
-        public boolean matches(ExpressionTree item, VisitorState state) {
-          if (!(item instanceof MethodInvocationTree)) {
-            return false;
-          }
-          Symbol sym = getSymbol(item);
-          if (!(sym instanceof MethodSymbol)) {
-            throw new IllegalArgumentException("not a method call");
-          }
-          if (!isStatic(sym)) {
-            return false;
-          }
-
-          String methodName = sym.getQualifiedName().toString();
-          String className = sym.owner.getQualifiedName().toString();
-          // TODO(cpovirk): Look for literal "throw new AssertionError()," etc.
-          return (methodName.startsWith("assert") || methodName.startsWith("fail"))
-              && (className.equals("org.junit.Assert")
-                  || className.equals("junit.framework.Assert")
-                  || className.equals("junit.framework.TestCase")
-                  || className.endsWith("MoreAsserts"));
+      (ExpressionTree item, VisitorState state) -> {
+        if (!(item instanceof MethodInvocationTree)) {
+          return false;
         }
+        Symbol sym = getSymbol(item);
+        if (!(sym instanceof MethodSymbol)) {
+          throw new IllegalArgumentException("not a method call");
+        }
+        if (!isStatic(sym)) {
+          return false;
+        }
+
+        String methodName = sym.getQualifiedName().toString();
+        String className = sym.owner.getQualifiedName().toString();
+        // TODO(cpovirk): Look for literal "throw new AssertionError()," etc.
+        return (methodName.startsWith("assert") || methodName.startsWith("fail"))
+            && (className.equals("org.junit.Assert")
+                || className.equals("junit.framework.Assert")
+                || className.equals("junit.framework.TestCase")
+                || className.endsWith("MoreAsserts"));
       };
 
   @Override
@@ -275,7 +272,7 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
             : catchesError ? JAVA_LANG_ERROR : SOME_ASSERTION_FAILURE);
   }
 
-  static final class MatchResult {
+  record MatchResult(StatementTree failStatement, CaughtType caughtType) {
     static final MatchResult DOES_NOT_MATCH = new MatchResult(null, null);
 
     static MatchResult matches(StatementTree failStatement, CaughtType caughtType) {
@@ -284,14 +281,6 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
 
     static MatchResult doesNotMatch() {
       return DOES_NOT_MATCH;
-    }
-
-    final StatementTree failStatement;
-    final CaughtType caughtType;
-
-    MatchResult(StatementTree failStatement, CaughtType caughtType) {
-      this.failStatement = failStatement;
-      this.caughtType = caughtType;
     }
 
     boolean matched() {

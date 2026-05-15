@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -31,7 +30,6 @@ import com.google.errorprone.bugpatterns.BugChecker.IfTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
@@ -88,15 +86,27 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
     return good[0];
   }
 
-  /** Returns the source code from a JCBlock {...} without the curly brackets. */
-  private static CharSequence getBlockContents(BlockTree block, VisitorState state) {
+  /**
+   * Returns the source code from a JCBlock {...} for use on the right hind side of a {@code ->}
+   * switch case.
+   */
+  private static CharSequence renderForSwitchRule(BlockTree block, VisitorState state) {
     List<? extends StatementTree> statements = block.getStatements();
     if (statements.isEmpty()) {
-      return "";
+      return "{}";
     }
     int start = getStartPosition(statements.getFirst());
-    int end = state.getEndPosition(getLast(statements));
-    return state.getSourceCode().subSequence(start, end);
+    int end = state.getEndPosition(statements.getLast());
+    CharSequence source = state.getSourceCode(start, end);
+    if (statements.size() == 1) {
+      switch (statements.getFirst().getKind()) {
+        case EXPRESSION_STATEMENT, THROW -> {
+          return source;
+        }
+        default -> {}
+      }
+    }
+    return "{" + source + "\n}";
   }
 
   @Override
@@ -160,22 +170,16 @@ public abstract class AbstractUseSwitch extends BugChecker implements IfTreeMatc
     StringBuilder builder = new StringBuilder();
     builder.append("switch (").append(var.getName()).append(") {\n");
     for (int i = 0; i < stringConstants.size(); i++) {
-      builder
-          .append("case ")
-          .append(stringConstants.get(i))
-          .append(":\n")
-          .append(getBlockContents(branches.get(i), state));
-      if (Reachability.canCompleteNormally(branches.get(i))) {
-        builder.append("\nbreak;\n");
-      }
+      builder.append("case ").append(stringConstants.get(i)).append(" -> ");
+      builder.append(renderForSwitchRule(branches.get(i), state));
     }
-    builder
-        .append("default:\n")
-        .append(
-            defaultBranch.isPresent()
-                ? getBlockContents(defaultBranch.get(), state)
-                : "// fall through")
-        .append("\n}");
+    builder.append("default -> ");
+    if (defaultBranch.isPresent()) {
+      builder.append(renderForSwitchRule(defaultBranch.get(), state));
+    } else {
+      builder.append("{}");
+    }
+    builder.append("\n}");
     return describeMatch(tree, SuggestedFix.replace(tree, builder.toString()));
   }
 }

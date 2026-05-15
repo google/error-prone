@@ -40,9 +40,9 @@ public class NewFileSystemTest {
         .addInputLines(
             "Test.java",
             """
+            import java.io.IOException;
             import java.nio.file.FileSystems;
             import java.nio.file.Paths;
-            import java.io.IOException;
 
             class Test {
               void f() throws IOException {
@@ -53,9 +53,9 @@ public class NewFileSystemTest {
         .addOutputLines(
             "Test.java",
             """
+            import java.io.IOException;
             import java.nio.file.FileSystems;
             import java.nio.file.Paths;
-            import java.io.IOException;
 
             class Test {
               void f() throws IOException {
@@ -72,9 +72,9 @@ public class NewFileSystemTest {
         .addSourceLines(
             "Test.java",
             """
+            import java.io.IOException;
             import java.nio.file.FileSystems;
             import java.nio.file.Paths;
-            import java.io.IOException;
 
             class Test {
               void f() throws IOException {

@@ -28,9 +28,6 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public class UnnamedVariableTest {
 
-  private final CompilationTestHelper testHelper =
-      CompilationTestHelper.newInstance(UnnamedVariable.class, getClass())
-          .setArgs("-XepOpt:UnnamedVariable:OnlyRenameVariablesNamedUnused=false");
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(UnnamedVariable.class, getClass())
           .setArgs("-XepOpt:UnnamedVariable:OnlyRenameVariablesNamedUnused=false");
@@ -46,36 +43,52 @@ public class UnnamedVariableTest {
         .addInputLines(
             "Test.java",
             """
+            import java.util.List;
             import java.util.function.Function;
 
             class Test {
               public static void main(String[] args) {
                 {
-                  var unused = new Object();
+                  int unused = 1;
+                  int unused1 = 2;
+                  String unused2 = "hello";
                 }
-                var bar = new Object();
+                Object bar = new Object();
                 bar = null;
                 Function<String, Integer> f = unused -> 1;
                 f = (String unused) -> 1;
                 f = (unused) -> 1;
+              }
+
+              public void foo(List<String> list) {
+                list.forEach(unused -> System.out.println());
+                list.forEach((String unused1) -> System.out.println());
               }
             }
             """)
         .addOutputLines(
             "Test.java",
             """
+            import java.util.List;
             import java.util.function.Function;
 
             class Test {
               public static void main(String[] args) {
                 {
-                  var _ = new Object();
+                  var _ = 1;
+                  var _ = 2;
+                  var _ = "hello";
                 }
-                var bar = new Object();
+                Object bar = new Object();
                 bar = null;
                 Function<String, Integer> f = _ -> 1;
-                f = (String _) -> 1;
                 f = (_) -> 1;
+                f = (_) -> 1;
+              }
+
+              public void foo(List<String> list) {
+                list.forEach(_ -> System.out.println());
+                list.forEach((String _) -> System.out.println());
               }
             }
             """)
@@ -84,8 +97,8 @@ public class UnnamedVariableTest {
 
   @Test
   public void negative() {
-    testHelper
-        .addSourceLines(
+    refactoringHelper
+        .addInputLines(
             "Test.java",
             """
             class Test {
@@ -96,22 +109,7 @@ public class UnnamedVariableTest {
               }
             }
             """)
-        .doTest();
-  }
-
-  @Test
-  public void positiveAllNames() {
-    testHelper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              public static void main(String[] args) {
-                // BUG: Diagnostic contains:
-                int x = 1;
-              }
-            }
-            """)
+        .expectUnchanged()
         .doTest();
   }
 
@@ -136,10 +134,13 @@ public class UnnamedVariableTest {
         .addInputLines(
             "Test.java",
             """
+            import java.io.IOException;
+
             class Test {
               void f() {
                 try {
-                  throw new Exception();
+                  throw new IOException();
+                } catch (IOException ioe) {
                 } catch (Exception e) {
                 }
               }
@@ -148,10 +149,13 @@ public class UnnamedVariableTest {
         .addOutputLines(
             "Test.java",
             """
+            import java.io.IOException;
+
             class Test {
               void f() {
                 try {
-                  throw new Exception();
+                  throw new IOException();
+                } catch (IOException _) {
                 } catch (Exception _) {
                 }
               }
@@ -167,8 +171,12 @@ public class UnnamedVariableTest {
             "Test.java",
             """
             class Test {
-              void f(AutoCloseable a) throws Exception {
-                try (var c = a) {}
+              void f1(AutoCloseable a) throws Exception {
+                try (AutoCloseable c = a) {}
+              }
+
+              void f2(AutoCloseable a) throws Exception {
+                try (var _ = a) {}
               }
             }
             """)
@@ -176,7 +184,11 @@ public class UnnamedVariableTest {
             "Test.java",
             """
             class Test {
-              void f(AutoCloseable a) throws Exception {
+              void f1(AutoCloseable a) throws Exception {
+                try (var _ = a) {}
+              }
+
+              void f2(AutoCloseable a) throws Exception {
                 try (var _ = a) {}
               }
             }
@@ -194,7 +206,7 @@ public class UnnamedVariableTest {
 
             class Test {
               void f(List<Integer> xs) {
-                for (var x : xs) {}
+                for (Integer x : xs) {}
               }
             }
             """)
@@ -236,6 +248,139 @@ public class UnnamedVariableTest {
                   case String _ -> true;
                   default -> false;
                 };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void declarationWithoutInitializer_noVar() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                String unused;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void localVariable_namedUnusedButActuallyUsed() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              public void foo() {
+                String unused = "Hello world!";
+                System.out.println(unused);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void traditionalForLoop_unused() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                for (int i = 0; ; ) {
+                  break;
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                for (var _ = 0; ; ) {
+                  break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void localVariable_initializedToNull() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                String unused = null;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                String _ = null;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void alreadyVar() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                var unused = 1;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                var _ = 1;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void multipleDeclarations() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int unused = 1, unused2 = 2;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int _ = 1, _ = 2;
               }
             }
             """)

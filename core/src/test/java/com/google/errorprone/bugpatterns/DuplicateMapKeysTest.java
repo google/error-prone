@@ -41,6 +41,7 @@ public class DuplicateMapKeysTest {
 package a;
 
 import static java.util.Map.entry;
+
 import java.util.Map;
 
 class A {
@@ -64,6 +65,7 @@ class A {
 package a;
 
 import static java.util.Map.entry;
+
 import java.util.Map;
 
 class A {

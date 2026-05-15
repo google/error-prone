@@ -102,8 +102,16 @@ import org.jspecify.annotations.Nullable;
 public class CheckReturnValue extends AbstractReturnValueIgnored
     implements MethodTreeMatcher, ClassTreeMatcher {
 
+  // https://errorprone.info/api/latest/com/google/errorprone/annotations/CheckReturnValue.html
   private static final String CHECK_RETURN_VALUE = "CheckReturnValue";
+  // https://errorprone.info/api/latest/com/google/errorprone/annotations/CanIgnoreReturnValue.html
   private static final String CAN_IGNORE_RETURN_VALUE = "CanIgnoreReturnValue";
+
+  // https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-must-use-return-values/
+  private static final String MUST_USE_RETURN_VALUES = "MustUseReturnValues";
+  // https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-ignorable-return-value/
+  private static final String IGNORABLE_RETURN_VALUE = "IgnorableReturnValue";
+
   private static final ImmutableList<String> MUTUALLY_EXCLUSIVE_ANNOTATIONS =
       ImmutableList.of(CHECK_RETURN_VALUE, CAN_IGNORE_RETURN_VALUE);
 
@@ -156,7 +164,9 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
                 // we should be checking declarations to ensure they aren't producing differing
                 // results (i.e. ensuring an @AutoValue.Builder setter method isn't annotated @CRV).
                 mapAnnotationSimpleName(CHECK_RETURN_VALUE, EXPECTED),
+                mapAnnotationSimpleName(MUST_USE_RETURN_VALUES, EXPECTED),
                 mapInheritedAnnotationSimpleName(CAN_IGNORE_RETURN_VALUE, OPTIONAL),
+                mapInheritedAnnotationSimpleName(IGNORABLE_RETURN_VALUE, OPTIONAL),
                 protoBuilders(),
                 mutableProtos(),
                 autoValues(),

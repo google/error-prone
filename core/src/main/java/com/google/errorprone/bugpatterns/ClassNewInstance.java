@@ -212,18 +212,11 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
     fix.addImport("java.lang.reflect.InvocationTargetException");
   }
 
-  static class UnhandledResult<T> {
-    /** Exceptions thrown by {@link Constructor#newInstance} that were unhandled. */
-    final ImmutableSet<Type> unhandled;
-
-    /** Handlers for reflective exceptions (e.g. a throws declaration or catch clause). */
-    final ImmutableMap<Type, T> handles;
-
-    UnhandledResult(ImmutableSet<Type> unhandled, ImmutableMap<Type, T> handles) {
-      this.unhandled = unhandled;
-      this.handles = handles;
-    }
-  }
+  /**
+   * @param unhandled Exceptions thrown by {@link Constructor#newInstance} that were unhandled.
+   * @param handles Handlers for reflective exceptions (e.g. a throws declaration or catch clause).
+   */
+  record UnhandledResult<T>(ImmutableSet<Type> unhandled, ImmutableMap<Type, T> handles) {}
 
   /**
    * Given a map of handled exception types and the trees of those handlers (i.e. catch clauses or

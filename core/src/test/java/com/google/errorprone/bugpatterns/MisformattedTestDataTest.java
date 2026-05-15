@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -137,7 +135,7 @@ public final class MisformattedTestDataTest {
                           }
                         }
                         \""")
-                  .addOutputLines(
+                    .addOutputLines(
                         "Test.java",
                         \"""
                         package foo;
@@ -148,10 +146,80 @@ public final class MisformattedTestDataTest {
                           }
                         }
                         \""");
-               }
+              }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
+  }
+
+  @Test
+  public void misformattedMultiple_suggestsFixesCombined() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                        "Test.java",
+                        \"""
+                        package foo;
+                        class Test {
+                          void method() {
+                            int a =
+                            1;
+                          }
+                        }
+                        \""")
+                    .addOutputLines(
+                        "Test.java",
+                        \"""
+                        package foo;
+                        class Test {
+                          void method() {
+                            int a =
+                            1;
+                          }
+                        }
+                        \""");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                        "Test.java",
+                        \"""
+                        package foo;
+
+                        class Test {
+                          void method() {
+                            int a = 1;
+                          }
+                        }
+                        \""")
+                    .addOutputLines(
+                        "Test.java",
+                        \"""
+                        package foo;
+
+                        class Test {
+                          void method() {
+                            int a = 1;
+                          }
+                        }
+                        \""");
+              }
+            }
+            """)
+        .doTest();
   }
 
   @Test
@@ -184,10 +252,10 @@ public final class MisformattedTestDataTest {
 
                     class Test {}
                     \""");
-               }
+              }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -215,7 +283,7 @@ public final class MisformattedTestDataTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -261,9 +329,64 @@ public final class MisformattedTestDataTest {
                       }
                     }
                     \""");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void reorderImports() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    package foo;
+
+                    import java.util.List;
+                    import static java.lang.Math.min;
+
+                    class Test {
+                      int method(List<Integer> xs) {
+                        return min(xs.get(0), xs.get(1));
+                      }
+                    }
+                    \""");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    package foo;
+
+                    import static java.lang.Math.min;
+
+                    import java.util.List;
+
+                    class Test {
+                      int method(List<Integer> xs) {
+                        return min(xs.get(0), xs.get(1));
+                      }
+                    }
+                    \""");
                }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 }

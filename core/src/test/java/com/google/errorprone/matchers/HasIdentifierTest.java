@@ -63,11 +63,8 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
         methodHasIdentifierMatching(
             /* shouldMatch= */ true,
             hasIdentifier(
-                new Matcher<IdentifierTree>() {
-                  @Override
-                  public boolean matches(IdentifierTree tree, VisitorState state) {
-                    return tree.getName().contentEquals("this");
-                  }
+                (IdentifierTree tree, VisitorState state) -> {
+                  return tree.getName().contentEquals("this");
                 })));
   }
 
@@ -87,11 +84,8 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
         methodHasIdentifierMatching(
             /* shouldMatch= */ true,
             hasIdentifier(
-                new Matcher<IdentifierTree>() {
-                  @Override
-                  public boolean matches(IdentifierTree tree, VisitorState state) {
-                    return tree.getName().contentEquals("foo");
-                  }
+                (IdentifierTree tree, VisitorState state) -> {
+                  return tree.getName().contentEquals("foo");
                 })));
   }
 
@@ -110,11 +104,8 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
         methodHasIdentifierMatching(
             /* shouldMatch= */ true,
             hasIdentifier(
-                new Matcher<IdentifierTree>() {
-                  @Override
-                  public boolean matches(IdentifierTree tree, VisitorState state) {
-                    return tree.getName().contentEquals("foo");
-                  }
+                (IdentifierTree tree, VisitorState state) -> {
+                  return tree.getName().contentEquals("foo");
                 })));
   }
 
@@ -133,11 +124,8 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
         methodHasIdentifierMatching(
             /* shouldMatch= */ false,
             hasIdentifier(
-                new Matcher<IdentifierTree>() {
-                  @Override
-                  public boolean matches(IdentifierTree tree, VisitorState state) {
-                    return tree.getName().contentEquals("foo");
-                  }
+                (IdentifierTree tree, VisitorState state) -> {
+                  return tree.getName().contentEquals("foo");
                 })));
   }
 
@@ -160,11 +148,8 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
         literalHasIdentifierMatching(
             /* shouldMatch= */ false,
             hasIdentifier(
-                new Matcher<IdentifierTree>() {
-                  @Override
-                  public boolean matches(IdentifierTree tree, VisitorState state) {
-                    return tree.getName().contentEquals("somethingElse");
-                  }
+                (IdentifierTree tree, VisitorState state) -> {
+                  return tree.getName().contentEquals("somethingElse");
                 })));
   }
 

@@ -966,6 +966,7 @@ public final class Client {
 package com.google.frobber;
 
 import static java.lang.String.format;
+
 import com.google.errorprone.annotations.InlineMe;
 
 public final class Client {
@@ -975,7 +976,6 @@ public final class Client {
     return format(template, arg);
   }
 }
-
 """)
         .doTest();
   }
@@ -1253,6 +1253,7 @@ public class Client {
             package com.google.security.keymaster;
 
             import static java.nio.charset.StandardCharsets.US_ASCII;
+
             import com.google.errorprone.annotations.InlineMe;
 
             public final class KeymasterEncrypter {
@@ -1265,7 +1266,6 @@ public class Client {
                 return plaintext;
               }
             }
-
             """)
         .addOutputLines(
             "KeymasterEncrypter.java",
@@ -1273,6 +1273,7 @@ public class Client {
             package com.google.security.keymaster;
 
             import static java.nio.charset.StandardCharsets.US_ASCII;
+
             import com.google.errorprone.annotations.InlineMe;
 
             public final class KeymasterEncrypter {
@@ -1288,7 +1289,6 @@ public class Client {
                 return plaintext;
               }
             }
-
             """)
         .doTest();
   }

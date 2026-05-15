@@ -365,6 +365,7 @@ class Test {
             """
             import static com.google.common.util.concurrent.Futures.immediateFuture;
             import static com.google.common.util.concurrent.Futures.transformAsync;
+
             import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
@@ -389,6 +390,7 @@ class Test {
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.Futures.transform;
 import static com.google.common.util.concurrent.Futures.transformAsync;
+
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.Executor;
@@ -606,8 +608,7 @@ class Test {
 
               ListenableFuture<String> test() {
                 ListenableFuture<String> future =
-                    FluentFuture.from(Futures.immediateFuture(5))
-                        .transform(value -> "v: " + value, executor);
+                    FluentFuture.from(Futures.immediateFuture(5)).transform(value -> "v: " + value, executor);
                 return future;
               }
             }
@@ -652,8 +653,7 @@ class Test {
                 ListenableFuture<Integer> future1 = Futures.immediateFuture(5);
                 ListenableFuture<Integer> future2 = Futures.immediateFuture(10);
                 ListenableFuture<String> future =
-                    Futures.whenAllSucceed(future1, future2)
-                        .call(() -> "All values succeeded", executor);
+                    Futures.whenAllSucceed(future1, future2).call(() -> "All values succeeded", executor);
                 return future;
               }
             }
@@ -705,11 +705,11 @@ class Test {
                 ListenableFuture<String> future =
                     Futures.whenAllSucceed(future1, future2)
                         .call(
-                        () -> {
-                          int total = Futures.getDone(future1) + Futures.getDone(future2);
-                          return "Sum = " + total;
-                        },
-                        executor);
+                            () -> {
+                              int total = Futures.getDone(future1) + Futures.getDone(future2);
+                              return "Sum = " + total;
+                            },
+                            executor);
                 return future;
               }
             }
@@ -812,6 +812,7 @@ class Test {
             """
             import static com.google.common.util.concurrent.Futures.immediateFuture;
             import static com.google.common.util.concurrent.Futures.submitAsync;
+
             import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
@@ -830,6 +831,7 @@ class Test {
             import static com.google.common.util.concurrent.Futures.immediateFuture;
             import static com.google.common.util.concurrent.Futures.submit;
             import static com.google.common.util.concurrent.Futures.submitAsync;
+
             import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;

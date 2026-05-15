@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -52,11 +53,10 @@ import javax.inject.Inject;
 public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
 
   private static final Supplier<Type> MESSAGE_LITE =
-      VisitorState.memoize(state -> state.getTypeFromString("com.google.protobuf.MessageLite"));
+      typeFromString("com.google.protobuf.MessageLite");
 
   private static final Supplier<Type> MUTABLE_MESSAGE_LITE =
-      VisitorState.memoize(
-          state -> state.getTypeFromString("com.google.protobuf.MutableMessageLite"));
+      typeFromString("com.google.protobuf.MutableMessageLite");
 
   @Inject
   IgnoredPureGetter(ConstantExpressions constantExpressions) {

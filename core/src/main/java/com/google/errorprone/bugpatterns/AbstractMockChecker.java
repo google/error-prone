@@ -42,7 +42,6 @@ import java.lang.annotation.Annotation;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
@@ -212,21 +211,21 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
   }
 
   /**
-   * A TypeExtractor for method invocations that create a mock using Mockito.mock, Mockito.spy, or
-   * EasyMock.create[...]Mock, extracting the type being mocked.
+   * A {@link TypeExtractor} that extracts the type being mocked for method invocations that use
+   * either {@code org.mockito.Mockito.mock(...)} or {@code org.mockito.Mockito.spy(...)}.
    */
   public static final TypeExtractor<MethodInvocationTree> MOCKING_METHOD =
       extractFirstArg(
-              Matchers.toType(
-                  MethodInvocationTree.class,
-                  Matchers.staticMethod().onClass("org.mockito.Mockito").namedAnyOf("mock", "spy")))
-          .or(
-              extractClassArg(
-                  Matchers.toType(
-                      MethodInvocationTree.class,
-                      Matchers.staticMethod()
-                          .onClass("org.easymock.EasyMock")
-                          .withNameMatching(Pattern.compile("^create.*Mock(Builder)?$")))));
+          Matchers.toType(
+              MethodInvocationTree.class,
+              Matchers.staticMethod().onClass("org.mockito.Mockito").namedAnyOf("mock", "spy")));
+
+  /**
+   * A {@link TypeExtractor} that extracts the type of a variable declaration that is annotated with
+   * either {@code @org.mockito.Mock} or {@code @org.mockito.Spy}.
+   */
+  public static final TypeExtractor<VariableTree> MOCKED_VAR =
+      fieldAnnotatedWithOneOf(Stream.of("org.mockito.Mock", "org.mockito.Spy"));
 
   @Override
   public final Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

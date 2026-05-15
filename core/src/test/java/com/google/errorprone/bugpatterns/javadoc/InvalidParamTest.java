@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -74,7 +72,7 @@ public final class InvalidParamTest {
               <T> void foo(int c);
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -104,7 +102,7 @@ public final class InvalidParamTest {
               <T> void foo(int a, int b);
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -132,7 +130,7 @@ public final class InvalidParamTest {
               <T> void foo(int a);
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -154,7 +152,7 @@ public final class InvalidParamTest {
               void foo(int foobar);
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test

@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns.inject;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_AT_INJECT;
-import static com.google.errorprone.matchers.InjectMatchers.IS_BINDING_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.IS_QUALIFIER_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.IS_SCOPING_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.hasProvidesAnnotation;
 import static com.google.errorprone.matchers.Matchers.annotations;
@@ -70,7 +70,7 @@ public class MisplacedScopeAnnotations extends BugChecker
             .flatMap(
                 variable ->
                     IS_SCOPE_ANNOTATION.multiMatchResult(variable, state).matchingNodes().stream())
-            .filter(annotation -> !IS_BINDING_ANNOTATION.matches(annotation, state))
+            .filter(annotation -> !IS_QUALIFIER_ANNOTATION.matches(annotation, state))
             .collect(toImmutableList());
 
     if (scopeAnnotations.isEmpty()) {
@@ -90,7 +90,7 @@ public class MisplacedScopeAnnotations extends BugChecker
     ImmutableList<AnnotationTree> scopeAnnotations =
         tree.getModifiers().getAnnotations().stream()
             .filter(annotation -> IS_SCOPING_ANNOTATION.matches(annotation, state))
-            .filter(annotation -> !IS_BINDING_ANNOTATION.matches(annotation, state))
+            .filter(annotation -> !IS_QUALIFIER_ANNOTATION.matches(annotation, state))
             .collect(toImmutableList());
     if (scopeAnnotations.isEmpty()) {
       return Description.NO_MATCH;

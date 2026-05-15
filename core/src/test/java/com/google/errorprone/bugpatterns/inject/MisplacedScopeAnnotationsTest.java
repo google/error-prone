@@ -177,8 +177,8 @@ public class MisplacedScopeAnnotationsTest {
         .addSourceLines(
             "Foo.java",
             """
-            import dagger.Provides;
             import dagger.Module;
+            import dagger.Provides;
             import javax.inject.Inject;
             import javax.inject.Named;
             import javax.inject.Singleton;
@@ -202,14 +202,14 @@ public class MisplacedScopeAnnotationsTest {
         .addSourceLines(
             "Foo.java",
             """
-            import dagger.Provides;
             import dagger.Module;
+            import dagger.Provides;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
             import javax.inject.Inject;
             import javax.inject.Named;
             import javax.inject.Qualifier;
             import javax.inject.Scope;
-            import java.lang.annotation.Retention;
-            import java.lang.annotation.RetentionPolicy;
 
             @Module
             class Foo {

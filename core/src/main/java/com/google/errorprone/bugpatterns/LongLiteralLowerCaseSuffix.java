@@ -41,17 +41,14 @@ import org.jspecify.annotations.Nullable;
 public class LongLiteralLowerCaseSuffix extends BugChecker implements LiteralTreeMatcher {
 
   private static final Matcher<LiteralTree> matcher =
-      new Matcher<LiteralTree>() {
-        @Override
-        public boolean matches(LiteralTree literalTree, VisitorState state) {
-          if (literalTree.getKind() == Kind.LONG_LITERAL) {
-            // The javac AST doesn't seem to record whether the suffix is present, or whether it's
-            // an 'l' or 'L'. We have to look at the original source
-            String longLiteral = getLongLiteral(literalTree, state);
-            return longLiteral != null && longLiteral.endsWith("l");
-          } else {
-            return false;
-          }
+      (LiteralTree literalTree, VisitorState state) -> {
+        if (literalTree.getKind() == Kind.LONG_LITERAL) {
+          // The javac AST doesn't seem to record whether the suffix is present, or whether it's
+          // an 'l' or 'L'. We have to look at the original source
+          String longLiteral = getLongLiteral(literalTree, state);
+          return longLiteral != null && longLiteral.endsWith("l");
+        } else {
+          return false;
         }
       };
 

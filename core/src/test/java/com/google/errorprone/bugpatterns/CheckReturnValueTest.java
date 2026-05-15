@@ -1495,8 +1495,8 @@ class Test {
         .addInputLines(
             "Super.java",
             """
-            import com.google.errorprone.annotations.CheckReturnValue;
             import com.google.errorprone.annotations.CanIgnoreReturnValue;
+            import com.google.errorprone.annotations.CheckReturnValue;
 
             @CheckReturnValue
             interface Super {

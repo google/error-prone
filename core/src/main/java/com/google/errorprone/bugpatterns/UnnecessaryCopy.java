@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -65,8 +66,7 @@ public final class UnnecessaryCopy extends BugChecker implements CompilationUnit
   private static final Matcher<ExpressionTree> PROTO_GETTER =
       instanceMethod().onDescendantOf("com.google.protobuf.MessageLite");
 
-  private static final Supplier<Type> MAP_TYPE =
-      VisitorState.memoize(state -> state.getTypeFromString("java.util.Map"));
+  private static final Supplier<Type> MAP_TYPE = typeFromString("java.util.Map");
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {

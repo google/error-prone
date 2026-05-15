@@ -22,8 +22,6 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.tools.javac.code.Symbol;
-import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -34,9 +32,8 @@ public class UseEnumSwitch extends AbstractUseSwitch {
 
   @Override
   protected @Nullable String getExpressionForCase(VisitorState state, ExpressionTree argument) {
-    Symbol sym = ASTHelpers.getSymbol(argument);
-    return sym != null && sym.getKind().equals(ElementKind.ENUM_CONSTANT)
-        ? sym.getSimpleName().toString()
+    return ASTHelpers.isEnumConstant(argument)
+        ? ASTHelpers.getSymbol(argument).getSimpleName().toString()
         : null;
   }
 }

@@ -89,6 +89,7 @@ public class BooleanLiteral extends BugChecker
     }
     TargetType targetType = TargetType.targetType(state);
     if (targetType == null
+        || targetType.type().hasTag(TypeTag.TYPEVAR)
         || !state.getTypes().unboxedType(targetType.type()).hasTag(TypeTag.NONE)) {
       return NO_MATCH;
     }

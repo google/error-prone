@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableMap;
@@ -98,15 +99,8 @@ public class URLEqualsHashCode extends BugChecker
     return Description.NO_MATCH;
   }
 
-  private static class URLTypeArgumentMatcher implements Matcher<Tree> {
-    private final String clazz;
-    private final int typeArgumentIndex;
-
-    URLTypeArgumentMatcher(String clazz, int index) {
-      this.clazz = clazz;
-      this.typeArgumentIndex = index;
-    }
-
+  private record URLTypeArgumentMatcher(String clazz, int typeArgumentIndex)
+      implements Matcher<Tree> {
     @Override
     public boolean matches(Tree tree, VisitorState state) {
       Symbol sym = state.getSymbolFromString(clazz);
@@ -131,6 +125,5 @@ public class URLEqualsHashCode extends BugChecker
     }
   }
 
-  private static final Supplier<Type> JAVA_NET_URL =
-      VisitorState.memoize(state -> state.getTypeFromString(URL_CLASS));
+  private static final Supplier<Type> JAVA_NET_URL = typeFromString(URL_CLASS);
 }

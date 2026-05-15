@@ -16,13 +16,16 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
+import static com.google.common.collect.Range.closedOpen;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getDiagnosticPosition;
+import static com.google.errorprone.bugpatterns.javadoc.Utils.getEndPosition;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getStartPosition;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
+import com.google.common.collect.ImmutableRangeSet;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -30,6 +33,7 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.sun.source.doctree.DocTree;
 import com.sun.source.doctree.DocTree.Kind;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.doctree.LiteralTree;
@@ -74,30 +78,32 @@ public final class UnrecognisedJavadocTag extends BugChecker
     if (path == null) {
       return NO_MATCH;
     }
-    ImmutableSet<Integer> recognisedTags = findRecognisedTags(path, state);
+    ImmutableRangeSet<Integer> recognisedTags = findRecognisedTags(path, state);
     ImmutableSet<Integer> tagStrings = findTags(((DCDocComment) path.getDocComment()).comment);
 
-    for (int pos : Sets.difference(tagStrings, recognisedTags)) {
-      state.reportMatch(
-          buildDescription(getDiagnosticPosition(pos, path.getTreePath().getLeaf())).build());
+    for (int pos : tagStrings) {
+      if (!recognisedTags.contains(pos)) {
+        state.reportMatch(
+            buildDescription(getDiagnosticPosition(pos, path.getTreePath().getLeaf())).build());
+      }
     }
 
     return NO_MATCH;
   }
 
-  private ImmutableSet<Integer> findRecognisedTags(DocTreePath path, VisitorState state) {
-    ImmutableSet.Builder<Integer> tags = ImmutableSet.builder();
+  private ImmutableRangeSet<Integer> findRecognisedTags(DocTreePath path, VisitorState state) {
+    ImmutableRangeSet.Builder<Integer> tags = ImmutableRangeSet.builder();
     new DocTreePathScanner<Void, Void>() {
       @Override
       public Void visitLink(LinkTree linkTree, Void unused) {
-        tags.add(getStartPosition(linkTree, state));
+        tags.add(getRange(linkTree, state));
         return super.visitLink(linkTree, null);
       }
 
       @Override
       public Void visitLiteral(LiteralTree literalTree, Void unused) {
         if (literalTree.getKind().equals(Kind.CODE)) {
-          tags.add(getStartPosition(literalTree, state));
+          tags.add(getRange(literalTree, state));
         }
         return super.visitLiteral(literalTree, null);
       }
@@ -112,5 +118,9 @@ public final class UnrecognisedJavadocTag extends BugChecker
       tags.add(comment.getSourcePos(matcher.start()));
     }
     return tags.build();
+  }
+
+  private static Range<Integer> getRange(DocTree tree, VisitorState state) {
+    return closedOpen(getStartPosition(tree, state), getEndPosition(tree, state));
   }
 }

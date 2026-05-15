@@ -68,17 +68,26 @@ public final class ErrorProneComment {
     return pos + index + offset;
   }
 
-  /** A compatibility wrapper for {@link CommentStyle}. */
+  /**
+   * A compatibility wrapper for {@link CommentStyle}.
+   *
+   * <p>Directly using {@link CommentStyle} would make Error Prone incompatible with older versions
+   * of javac (which only have {@code LINE}, {@code BLOCK}, and {@code JAVADOC}) and newer versions
+   * (which add {@code JAVADOC_LINE} and rename {@code JAVADOC} to {@code JAVADOC_BLOCK}).
+   */
   public enum ErrorProneCommentStyle {
     LINE,
     BLOCK,
     JAVADOC_LINE,
     JAVADOC_BLOCK;
 
-    static ErrorProneCommentStyle from(CommentStyle style) {
+    /** Returns the {@link ErrorProneCommentStyle} for the given {@link CommentStyle}. */
+    public static ErrorProneCommentStyle from(CommentStyle style) {
       return switch (style.name()) {
         case "LINE" -> ErrorProneCommentStyle.LINE;
         case "BLOCK" -> ErrorProneCommentStyle.BLOCK;
+        // Per JDK-8298405, CommentStyle changed in JDK 23:
+        // JAVADOC_LINE and JAVADOC_BLOCK are for JDK >= 23, and JAVADOC is for JDK < 21.
         case "JAVADOC_LINE" -> ErrorProneCommentStyle.JAVADOC_LINE;
         case "JAVADOC", "JAVADOC_BLOCK" -> ErrorProneCommentStyle.JAVADOC_BLOCK;
         default -> throw new AssertionError(style);

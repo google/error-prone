@@ -95,6 +95,31 @@ public final class MissingTestCallTest {
   }
 
   @Test
+  public void negative_memberReference() {
+    helper
+        .addSourceLines(
+            "Case.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            import com.google.common.testing.EqualsTester;
+            import com.google.errorprone.CompilationTestHelper;
+            import org.junit.Test;
+
+            class Case {
+              CompilationTestHelper helper;
+
+              @Test
+              void test() {
+                var equalsTester = new EqualsTester().addEqualityGroup(this, this);
+                assertThrows(AssertionError.class, equalsTester::testEquals);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negativeNotTest() {
     helper
         .addSourceLines(

@@ -48,6 +48,7 @@ public class ExtendingJUnitAssertTest {
             "in/Foo.java",
             """
             import static org.junit.Assert.assertEquals;
+
             import org.junit.Assert;
 
             class Foo {
@@ -81,6 +82,7 @@ public class ExtendingJUnitAssertTest {
             import static org.junit.Assert.assertEquals;
             import static org.junit.Assert.assertNotNull;
             import static org.junit.Assert.assertNull;
+
             import org.junit.Assert;
 
             class Foo<T extends String> {
@@ -113,6 +115,7 @@ public class ExtendingJUnitAssertTest {
             "in/Foo.java",
             """
             import static org.junit.Assert.assertEquals;
+
             import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
             import org.junit.Assert;
 

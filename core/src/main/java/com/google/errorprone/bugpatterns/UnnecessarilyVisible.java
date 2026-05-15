@@ -30,11 +30,13 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -57,25 +59,20 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
   private static final Supplier<ImmutableSet<Name>> FRAMEWORK_ANNOTATIONS =
       VisitorState.memoize(
           s ->
-              Stream.of(
-                      "com.google.errorprone.refaster.annotation.AfterTemplate",
-                      "com.google.errorprone.refaster.annotation.BeforeTemplate",
-                      "com.google.inject.Inject",
-                      "com.google.inject.Provides",
-                      "com.google.inject.multibindings.ProvidesIntoMap",
-                      "com.google.inject.multibindings.ProvidesIntoSet",
-                      "dagger.Provides",
-                      "jakarta.inject.Inject",
-                      "javax.inject.Inject")
+              Streams.concat(
+                      InjectMatchers.INJECT_ANNOTATIONS.stream(),
+                      InjectMatchers.PROVIDES_ANNOTATIONS.stream(),
+                      InjectMatchers.MULTIBINDINGS_ANNOTATIONS.stream(),
+                      Stream.of(
+                          "com.google.errorprone.refaster.annotation.AfterTemplate",
+                          "com.google.errorprone.refaster.annotation.BeforeTemplate"))
                   .map(s::getName)
                   .collect(toImmutableSet()));
 
   private static final Supplier<ImmutableSet<Name>> INJECT_ANNOTATIONS =
       VisitorState.memoize(
           s ->
-              Stream.of("com.google.inject.Inject", "javax.inject.Inject", "jakarta.inject.Inject")
-                  .map(s::getName)
-                  .collect(toImmutableSet()));
+              InjectMatchers.INJECT_ANNOTATIONS.stream().map(s::getName).collect(toImmutableSet()));
 
   private static final String VISIBLE_FOR_TESTING_CAVEAT =
       " If this is only for testing purposes, consider annotating the element with"

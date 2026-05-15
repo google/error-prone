@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns.nullness;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -1032,7 +1030,7 @@ public class ReturnMissingNullableTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -1542,8 +1540,8 @@ public class ReturnMissingNullableTest {
             """
             package com.google.errorprone.bugpatterns.nullness;
 
-            import javax.annotation.Nullable;
             import java.util.Optional;
+            import javax.annotation.Nullable;
 
             public class MissingNullableReturnTest {
               public String get() {
@@ -1566,8 +1564,8 @@ public class ReturnMissingNullableTest {
             """
             package com.google.errorprone.bugpatterns.nullness;
 
-            import javax.annotation.Nullable;
             import java.util.concurrent.Callable;
+            import javax.annotation.Nullable;
 
             public class MissingNullableReturnTest {
               public Callable<?> get() {
@@ -2161,8 +2159,7 @@ public class ReturnMissingNullableTest {
             "out/Test.java",
             """
             class T {
-              @org.jspecify.annotations.Nullable
-              private final Object method(boolean b) {
+              private final @org.jspecify.annotations.Nullable Object method(boolean b) {
                 return b ? null : 0;
               }
 
@@ -2275,7 +2272,7 @@ public class ReturnMissingNullableTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -2493,7 +2490,7 @@ public class ReturnMissingNullableTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test

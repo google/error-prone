@@ -20,6 +20,7 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.ErrorProneFlags;
+import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
@@ -63,7 +64,8 @@ public final class WellKnownKeep {
           "org.openqa.selenium.support.FindBys",
           "org.apache.beam.sdk.transforms.DoFn.TimerId",
           "org.apache.beam.sdk.transforms.DoFn.StateId",
-          "org.springframework.boot.test.mock.mockito.MockBean");
+          "org.springframework.boot.test.mock.mockito.MockBean",
+          "org.springframework.test.context.bean.override.mockito.MockitoBean");
 
   /**
    * Annotations that exempt methods from being considered unused.
@@ -73,68 +75,67 @@ public final class WellKnownKeep {
    * annotated.
    */
   private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
-      ImmutableSet.of(
-          "android.webkit.JavascriptInterface",
-          "com.fasterxml.jackson.annotation.JsonCreator",
-          "com.fasterxml.jackson.annotation.JsonProperty",
-          "com.fasterxml.jackson.annotation.JsonSetter",
-          "com.fasterxml.jackson.annotation.JsonValue",
-          "com.google.acai.AfterTest",
-          "com.google.acai.BeforeSuite",
-          "com.google.acai.BeforeTest",
-          "com.google.caliper.Benchmark",
-          "com.google.common.eventbus.Subscribe",
-          "com.google.inject.Provides",
-          "com.google.inject.Inject",
-          "com.google.inject.multibindings.ProvidesIntoMap",
-          "com.google.inject.multibindings.ProvidesIntoSet",
-          "com.google.inject.throwingproviders.CheckedProvides",
-          "com.tngtech.java.junit.dataprovider.DataProvider",
-          "jakarta.annotation.PreDestroy",
-          "jakarta.annotation.PostConstruct",
-          "jakarta.inject.Inject",
-          "jakarta.persistence.PostLoad",
-          "jakarta.persistence.PostPersist",
-          "jakarta.persistence.PostRemove",
-          "jakarta.persistence.PostUpdate",
-          "jakarta.persistence.PrePersist",
-          "jakarta.persistence.PreRemove",
-          "jakarta.persistence.PreUpdate",
-          "jakarta.validation.constraints.AssertFalse",
-          "jakarta.validation.constraints.AssertTrue",
-          "javax.annotation.PreDestroy",
-          "javax.annotation.PostConstruct",
-          "javax.inject.Inject",
-          "javax.persistence.PostLoad",
-          "javax.persistence.PostPersist",
-          "javax.persistence.PostRemove",
-          "javax.persistence.PostUpdate",
-          "javax.persistence.PrePersist",
-          "javax.persistence.PreRemove",
-          "javax.persistence.PreUpdate",
-          "javax.validation.constraints.AssertFalse",
-          "javax.validation.constraints.AssertTrue",
-          "net.bytebuddy.asm.Advice.OnMethodEnter",
-          "net.bytebuddy.asm.Advice.OnMethodExit",
-          "org.apache.beam.sdk.transforms.DoFn.FinishBundle",
-          "org.apache.beam.sdk.transforms.DoFn.ProcessElement",
-          "org.apache.beam.sdk.transforms.DoFn.StartBundle",
-          "org.aspectj.lang.annotation.Pointcut",
-          "org.aspectj.lang.annotation.After",
-          "org.aspectj.lang.annotation.Before",
-          "org.springframework.context.annotation.Bean",
-          "org.testng.annotations.AfterClass",
-          "org.testng.annotations.AfterMethod",
-          "org.testng.annotations.BeforeClass",
-          "org.testng.annotations.BeforeMethod",
-          "org.testng.annotations.DataProvider",
-          "org.junit.jupiter.api.BeforeAll",
-          "org.junit.jupiter.api.AfterAll",
-          "org.junit.jupiter.api.AfterEach",
-          "org.junit.jupiter.api.BeforeEach",
-          "org.junit.jupiter.api.RepeatedTest",
-          "org.junit.jupiter.api.Test",
-          "org.junit.jupiter.params.ParameterizedTest");
+      ImmutableSet.<String>builder()
+          .addAll(InjectMatchers.INJECT_ANNOTATIONS)
+          .addAll(InjectMatchers.PROVIDES_ANNOTATIONS)
+          .addAll(InjectMatchers.MULTIBINDINGS_ANNOTATIONS)
+          .add(
+              "android.webkit.JavascriptInterface",
+              "com.fasterxml.jackson.annotation.JsonCreator",
+              "com.fasterxml.jackson.annotation.JsonProperty",
+              "com.fasterxml.jackson.annotation.JsonSetter",
+              "com.fasterxml.jackson.annotation.JsonValue",
+              "com.google.acai.AfterTest",
+              "com.google.acai.BeforeSuite",
+              "com.google.acai.BeforeTest",
+              "com.google.caliper.Benchmark",
+              "com.google.common.eventbus.Subscribe",
+              "com.google.inject.throwingproviders.CheckedProvides",
+              "com.tngtech.java.junit.dataprovider.DataProvider",
+              "jakarta.annotation.PreDestroy",
+              "jakarta.annotation.PostConstruct",
+              "jakarta.persistence.PostLoad",
+              "jakarta.persistence.PostPersist",
+              "jakarta.persistence.PostRemove",
+              "jakarta.persistence.PostUpdate",
+              "jakarta.persistence.PrePersist",
+              "jakarta.persistence.PreRemove",
+              "jakarta.persistence.PreUpdate",
+              "jakarta.validation.constraints.AssertFalse",
+              "jakarta.validation.constraints.AssertTrue",
+              "javax.annotation.PreDestroy",
+              "javax.annotation.PostConstruct",
+              "javax.persistence.PostLoad",
+              "javax.persistence.PostPersist",
+              "javax.persistence.PostRemove",
+              "javax.persistence.PostUpdate",
+              "javax.persistence.PrePersist",
+              "javax.persistence.PreRemove",
+              "javax.persistence.PreUpdate",
+              "javax.validation.constraints.AssertFalse",
+              "javax.validation.constraints.AssertTrue",
+              "net.bytebuddy.asm.Advice.OnMethodEnter",
+              "net.bytebuddy.asm.Advice.OnMethodExit",
+              "org.apache.beam.sdk.transforms.DoFn.FinishBundle",
+              "org.apache.beam.sdk.transforms.DoFn.ProcessElement",
+              "org.apache.beam.sdk.transforms.DoFn.StartBundle",
+              "org.aspectj.lang.annotation.Pointcut",
+              "org.aspectj.lang.annotation.After",
+              "org.aspectj.lang.annotation.Before",
+              "org.springframework.context.annotation.Bean",
+              "org.testng.annotations.AfterClass",
+              "org.testng.annotations.AfterMethod",
+              "org.testng.annotations.BeforeClass",
+              "org.testng.annotations.BeforeMethod",
+              "org.testng.annotations.DataProvider",
+              "org.junit.jupiter.api.BeforeAll",
+              "org.junit.jupiter.api.AfterAll",
+              "org.junit.jupiter.api.AfterEach",
+              "org.junit.jupiter.api.BeforeEach",
+              "org.junit.jupiter.api.RepeatedTest",
+              "org.junit.jupiter.api.Test",
+              "org.junit.jupiter.params.ParameterizedTest")
+          .build();
 
   private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS =
       ImmutableSet.of("org.junit.jupiter.api.Nested");

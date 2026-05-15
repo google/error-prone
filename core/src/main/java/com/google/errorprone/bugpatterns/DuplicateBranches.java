@@ -84,7 +84,7 @@ public class DuplicateBranches extends BugChecker
     }
     String comments =
         ErrorProneTokens.getTokens(
-                state.getSourceCode().subSequence(getStartPosition(tree), start).toString(),
+                state.getSourceCode(getStartPosition(tree), start).toString(),
                 getStartPosition(tree),
                 state.context)
             .stream()
@@ -94,7 +94,7 @@ public class DuplicateBranches extends BugChecker
     if (!comments.isEmpty()) {
       comments += "\n";
     }
-    String replacement = comments + state.getSourceCode().subSequence(start, end);
+    String replacement = comments + state.getSourceCode(start, end);
     if (needsBraces) {
       replacement = "{\n" + replacement + "}";
     }

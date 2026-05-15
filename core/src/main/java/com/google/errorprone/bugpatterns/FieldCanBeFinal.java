@@ -27,6 +27,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
@@ -67,29 +68,29 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
   /** Annotations that imply a field is non-constant. */
   // TODO(cushon): consider supporting @Var as a meta-annotation
   private static final ImmutableSet<String> IMPLICIT_VAR_ANNOTATIONS =
-      ImmutableSet.of(
-          // keep-sorted start
-          "com.beust.jcommander.Parameter",
-          "com.google.common.annotations.NonFinalForGwt",
-          "com.google.errorprone.annotations.Var",
-          "com.google.gwt.uibinder.client.UiField",
-          "com.google.inject.Inject",
-          "com.google.inject.testing.fieldbinder.Bind",
-          "com.google.testing.junit.testparameterinjector.TestParameter",
-          "jakarta.inject.Inject",
-          "jakarta.jdo.annotations.Persistent",
-          "jakarta.persistence.Id",
-          "jakarta.xml.bind.annotation.XmlAttribute",
-          "javax.inject.Inject",
-          "javax.jdo.annotations.Persistent",
-          "javax.persistence.Id",
-          "javax.xml.bind.annotation.XmlAttribute",
-          "org.kohsuke.args4j.Argument",
-          "org.kohsuke.args4j.Option",
-          "org.mockito.Spy",
-          "picocli.CommandLine.Option"
-          // keep-sorted end
-          );
+      ImmutableSet.<String>builder()
+          .addAll(InjectMatchers.INJECT_ANNOTATIONS)
+          .add(
+              // keep-sorted start
+              "com.beust.jcommander.Parameter",
+              "com.google.common.annotations.NonFinalForGwt",
+              "com.google.errorprone.annotations.Var",
+              "com.google.gwt.uibinder.client.UiField",
+              "com.google.inject.testing.fieldbinder.Bind",
+              "com.google.testing.junit.testparameterinjector.TestParameter",
+              "jakarta.jdo.annotations.Persistent",
+              "jakarta.persistence.Id",
+              "jakarta.xml.bind.annotation.XmlAttribute",
+              "javax.jdo.annotations.Persistent",
+              "javax.persistence.Id",
+              "javax.xml.bind.annotation.XmlAttribute",
+              "org.kohsuke.args4j.Argument",
+              "org.kohsuke.args4j.Option",
+              "org.mockito.Spy",
+              "picocli.CommandLine.Option"
+              // keep-sorted end
+              )
+          .build();
 
   private static final String OBJECTIFY_PREFIX = "com.googlecode.objectify.";
 

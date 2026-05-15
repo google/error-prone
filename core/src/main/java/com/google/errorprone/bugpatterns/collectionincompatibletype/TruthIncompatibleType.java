@@ -524,6 +524,5 @@ public class TruthIncompatibleType extends BugChecker implements MethodInvocatio
     return parameter.isNumeric() || isSubtype(parameter, JAVA_LANG_NUMBER.get(state), state);
   }
 
-  private static final Supplier<Type> JAVA_LANG_NUMBER =
-      VisitorState.memoize(state -> state.getTypeFromString("java.lang.Number"));
+  private static final Supplier<Type> JAVA_LANG_NUMBER = typeFromString("java.lang.Number");
 }

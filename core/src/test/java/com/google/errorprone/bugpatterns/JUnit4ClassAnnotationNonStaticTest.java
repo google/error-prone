@@ -34,10 +34,10 @@ public class JUnit4ClassAnnotationNonStaticTest {
         .addSourceLines(
             "Test.java",
             """
+            import org.junit.AfterClass;
+            import org.junit.BeforeClass;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
-            import org.junit.BeforeClass;
-            import org.junit.AfterClass;
 
             @RunWith(JUnit4.class)
             public class Test {
@@ -64,10 +64,10 @@ public class JUnit4ClassAnnotationNonStaticTest {
         .addSourceLines(
             "Test.java",
             """
+            import org.junit.AfterClass;
+            import org.junit.BeforeClass;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
-            import org.junit.BeforeClass;
-            import org.junit.AfterClass;
 
             @RunWith(JUnit4.class)
             public class Test {

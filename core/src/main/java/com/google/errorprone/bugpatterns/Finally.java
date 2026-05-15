@@ -41,15 +41,18 @@ import com.sun.tools.javac.tree.JCTree.JCContinue;
 import com.sun.tools.javac.util.Name;
 
 /**
- * Matches the behaviour of javac's finally Xlint warning.
+ * Matches the behaviour of javac's {@code -Xlint:finally} flag.
  *
- * <p>1) Any return statement in a finally block is an error 2) An uncaught throw statement in a
- * finally block is an error. We can't always know whether a specific exception will be caught, so
- * we report errors for throw statements that are not contained in a try with at least one catch
- * block. 3) A continue statement in a finally block is an error if it breaks out of a (possibly
- * labeled) loop that is outside the enclosing finally. 4) A break statement in a finally block is
- * an error if it breaks out of a (possibly labeled) loop or a switch statement that is outside the
- * enclosing finally.
+ * <ol>
+ *   <li>Any return statement in a finally block is an error.
+ *   <li>An uncaught throw statement in a finally block is an error. We can't always know whether a
+ *       specific exception will be caught, so we report errors for throw statements that are not
+ *       contained in a try with at least one catch block.
+ *   <li>A continue statement in a finally block is an error if it breaks out of a (possibly
+ *       labeled) loop that is outside the enclosing finally.
+ *   <li>A break statement in a finally block is an error if it breaks out of a (possibly labeled)
+ *       loop or a switch statement that is outside the enclosing finally.
+ * </ol>
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  * @author cushon@google.com (Liam Miller-Cushon)

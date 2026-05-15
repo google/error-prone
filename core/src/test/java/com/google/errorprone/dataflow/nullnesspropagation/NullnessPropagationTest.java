@@ -1928,6 +1928,7 @@ public class InstanceofTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
 public class InstanceofTest {
@@ -2157,8 +2158,9 @@ public class UntrackableFieldsTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class AnnotatedAtGenericTypeUseTest {
   void test(MyInnerClass<@Nullable Object> nullable, MyInnerClass<@NonNull Object> nonnull) {
@@ -2227,8 +2229,9 @@ public class AnnotatedAtGenericTypeUseTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class BoundedAtGenericTypeUseTest {
   void test(
@@ -2261,8 +2264,9 @@ public class BoundedAtGenericTypeUseTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class BoundedAtGenericTypeDefTest {
   void test(NullableElementCollection<?> nullable, NonNullElementCollection<?> nonnull) {
@@ -2293,8 +2297,9 @@ public class BoundedAtGenericTypeDefTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class AnnotatedMethodTypeParamsTest {
   public void test() {
@@ -2492,8 +2497,9 @@ public class PartialCorrectnessTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class CastsTest {
   public void test(@Nullable Object o) {
@@ -2516,6 +2522,7 @@ public class CastsTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
 import com.google.auto.value.AutoValue;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -2556,8 +2563,9 @@ public class AutoValueTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
-import org.checkerframework.checker.nullness.qual.Nullable;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class GenericTypeInferenceTest {
   public void test(@NonNull Object o) {
@@ -2590,6 +2598,7 @@ public class GenericTypeInferenceTest {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 

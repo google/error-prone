@@ -221,8 +221,8 @@ public final class DoNotMockCheckerTest {
             """
             package lib;
 
-            import org.mockito.Mock;
             import lib.DoNotMockObjects.*;
+            import org.mockito.Mock;
 
             class Lib {
 
@@ -245,8 +245,8 @@ public final class DoNotMockCheckerTest {
             """
             package lib;
 
-            import org.mockito.Mockito;
             import lib.AutoValueObjects.*;
+            import org.mockito.Mockito;
 
             public class Lib {
 
@@ -292,8 +292,8 @@ public final class DoNotMockCheckerTest {
         .addSourceLines(
             "Test.java",
             """
-            import org.mockito.Mockito;
             import org.mockito.Mock;
+            import org.mockito.Mockito;
 
             class Test<E> {
               @Mock E e;

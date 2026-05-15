@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.variableType;
+import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -60,7 +61,7 @@ public final class FloggerSplitLogStatement extends BugChecker
       allOf(methodReturns(IS_LOGGER_API), CLASS_MATCHES);
 
   private static final Matcher<VariableTree> VARIABLE_MATCHES =
-      allOf(variableType(IS_LOGGER_API), CLASS_MATCHES);
+      allOf(variableType(isDescendantOf("com.google.common.flogger.LoggingApi")), CLASS_MATCHES);
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {

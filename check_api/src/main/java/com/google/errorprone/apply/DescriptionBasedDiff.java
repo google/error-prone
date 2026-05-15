@@ -19,6 +19,7 @@ package com.google.errorprone.apply;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.errorprone.DescriptionListener;
+import com.google.errorprone.SourcePositionException;
 import com.google.errorprone.fixes.ErrorProneEndPosTable;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.Replacement;
@@ -90,7 +91,15 @@ public final class DescriptionBasedDiff implements DescriptionListener, Diff {
   public void onDescribed(Description description) {
     // Use only first (most likely) suggested fix
     if (description.fixes.size() > 0) {
-      handleFix(description.fixes.getFirst());
+      handleFix(description, description.fixes.getFirst());
+    }
+  }
+
+  public void handleFix(Description description, Fix fix) {
+    try {
+      handleFix(fix);
+    } catch (SourcePositionException e) {
+      throw e.toErrorProneError(description.checkName, compilationUnit.getSourceFile());
     }
   }
 

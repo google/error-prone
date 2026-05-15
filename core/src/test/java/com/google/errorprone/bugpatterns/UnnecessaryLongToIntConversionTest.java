@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers.FIRST;
 import static com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers.SECOND;
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
@@ -260,7 +259,7 @@ public class UnnecessaryLongToIntConversionNegativeCases {
             }
             """)
         .setFixChooser(FIRST)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -291,7 +290,7 @@ public class UnnecessaryLongToIntConversionNegativeCases {
             }
             """)
         .setFixChooser(FIRST)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -324,7 +323,7 @@ public class UnnecessaryLongToIntConversionNegativeCases {
             }
             """)
         .setFixChooser(SECOND)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -357,7 +356,7 @@ public class UnnecessaryLongToIntConversionNegativeCases {
             }
             """)
         .setFixChooser(SECOND)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -392,7 +391,7 @@ public class UnnecessaryLongToIntConversionNegativeCases {
             }
             """)
         .setFixChooser(FIRST)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -427,7 +426,7 @@ public class UnnecessaryLongToIntConversionNegativeCases {
             }
             """)
         .setFixChooser(FIRST)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -463,7 +462,7 @@ public class UnnecessaryLongToIntConversionNegativeCases {
             }
             """)
         .setFixChooser(SECOND)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -494,7 +493,7 @@ public class UnnecessaryLongToIntConversionNegativeCases {
             }
             """)
         .setFixChooser(FIRST)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -527,6 +526,6 @@ public class UnnecessaryLongToIntConversionNegativeCases {
             }
             """)
         .setFixChooser(SECOND)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 }

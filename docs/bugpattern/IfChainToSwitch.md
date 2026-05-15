@@ -28,10 +28,8 @@ enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
 private void foo(Suit suit) {
   if (suit == Suit.SPADE) {
     System.out.println("spade");
-  } else if (suit == Suit.DIAMOND) {
-    System.out.println("diamond");
-  } else if (suit == Suit.HEART) {
-    System.out.println("heart);
+  } else if (suit == Suit.HEART || suit == Suit.DIAMOND) {
+    System.out.println("red suit");
   } else if (suit == Suit.CLUB) {
     System.out.println("club");
   }
@@ -46,8 +44,7 @@ enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
 private void foo(Suit suit) {
   switch (suit) {
     case Suit.SPADE -> System.out.println("spade");
-    case Suit.DIAMOND -> System.out.println("diamond");
-    case Suit.HEART -> System.out.println("heart");
+    case Suit.HEART, Suit.DIAMOND -> System.out.println("red suit");
     case Suit.CLUB -> System.out.println("club");
   }
 }
@@ -64,8 +61,7 @@ enum Suit {HEARTS, CLUBS, SPADES, DIAMONDS};
 private void foo(Suit suit) {
   switch (suit) {
     case Suit.SPADE -> System.out.println("spade");
-    case Suit.DIAMOND -> System.out.println("diamond");
-    case Suit.HEART -> System.out.println("heart");
+    case Suit.HEART, Suit.DIAMOND -> System.out.println("red suit");
     case Suit.CLUB -> System.out.println("club");
     case null -> {}
   }

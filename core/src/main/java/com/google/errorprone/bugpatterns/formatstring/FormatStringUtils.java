@@ -19,6 +19,9 @@ package com.google.errorprone.bugpatterns.formatstring;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.predicates.TypePredicates.isExactType;
+import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
@@ -28,6 +31,7 @@ import static com.google.errorprone.util.AnnotationNames.FORMAT_STRING_ANNOTATIO
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.matchers.method.ParameterPredicates;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -55,11 +59,17 @@ public final class FormatStringUtils {
           // Exclude zero-arg java.io.Console.readPassword from format methods.
           instanceMethod()
               .onExactClass("java.io.Console")
-              .withSignature("readPassword(java.lang.String,java.lang.Object...)"),
+              .named("readPassword")
+              .withParametersMatching(
+                  ParameterPredicates.of(isExactType(STRING_TYPE)),
+                  ParameterPredicates.varargsOf(ParameterPredicates.of(isExactType(OBJECT_TYPE)))),
           // Exclude zero-arg method java.io.Console.readLine from format methods.
           instanceMethod()
               .onExactClass("java.io.Console")
-              .withSignature("readLine(java.lang.String,java.lang.Object...)"));
+              .named("readLine")
+              .withParametersMatching(
+                  ParameterPredicates.of(isExactType(STRING_TYPE)),
+                  ParameterPredicates.varargsOf(ParameterPredicates.of(isExactType(OBJECT_TYPE)))));
 
   private static final Matcher<ExpressionTree> FORMATTED_METHOD =
       instanceMethod().onExactClass("java.lang.String").named("formatted");

@@ -121,8 +121,7 @@ public final class LockNotBeforeTry extends BugChecker implements MethodInvocati
         SuggestedFix fix =
             SuggestedFix.builder()
                 .replace(start, end, "")
-                .postfixWith(
-                    lockStatement, state.getSourceCode().subSequence(start, end).toString())
+                .postfixWith(lockStatement, state.getSourceCode(start, end).toString())
                 .build();
         return buildDescription(lockInvocation)
             .addFix(fix)

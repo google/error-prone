@@ -21,8 +21,14 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.assertEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.assertNotEqualsInvocation;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.errorprone.BugPattern;
@@ -33,11 +39,12 @@ import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Type;
 import javax.inject.Inject;
 
 /** A BugPattern; see the {@code summary}. */
@@ -45,6 +52,14 @@ import javax.inject.Inject;
 public final class DuplicateAssertion extends BugChecker implements BlockTreeMatcher {
   private static final Matcher<ExpressionTree> JUNIT_ASSERT =
       anyOf(assertEqualsInvocation(), assertNotEqualsInvocation());
+
+  private static final Matcher<ExpressionTree> PRECONDITIONS =
+      anyOf(
+          staticMethod()
+              .onClass("com.google.common.base.Preconditions")
+              .namedAnyOf("checkArgument", "checkState", "checkNotNull"),
+          staticMethod().onClass("com.google.common.base.Verify"),
+          staticMethod().onClass("java.util.Objects").named("requireNonNull"));
 
   private final ConstantExpressions constantExpressions;
 
@@ -93,7 +108,19 @@ public final class DuplicateAssertion extends BugChecker implements BlockTreeMat
                   method.getArguments().get(argumentsToSkip(method, state) + 1), state)
               .ifPresent(
                   ce -> lines.put(new Assertion(state.getSourceForNode(statement), ce), finalI));
-        } else if (symbol.getSimpleName().contentEquals("assertThat")
+        } else if (PRECONDITIONS.matches(method, state)
+            && method.equals(est.getExpression())
+            && !method.getArguments().isEmpty()) {
+          // Only consider the line up to the end of the first argument, given a duplicated
+          // assertion with a different message is definitely bad.
+          int start = getStartPosition(method);
+          int end = state.getEndPosition(method.getArguments().get(0));
+          String source = state.getSourceCode().subSequence(start, end).toString();
+          constantExpressions
+              .constantExpression(method.getArguments().get(0), state)
+              .ifPresent(ce -> lines.put(new Assertion(source, ce), finalI));
+        } else if ((symbol.getSimpleName().contentEquals("assertThat")
+                || isSubjectBuilderThatMethod(method, state))
             && method.getArguments().size() == 1) {
           constantExpressions
               .constantExpression(getOnlyElement(method.getArguments()), state)
@@ -105,10 +132,23 @@ public final class DuplicateAssertion extends BugChecker implements BlockTreeMat
     return lines.build();
   }
 
+  private static boolean isSubjectBuilderThatMethod(ExpressionTree method, VisitorState state) {
+    var symbol = getSymbol(method);
+    if (!symbol.getSimpleName().contentEquals("that")) {
+      return false;
+    }
+
+    // TODO: b/447504139 - Maybe match any "that" method that returns a subclass of Subject?
+    var receiver = getReceiver(method);
+    return isSubtype(getType(receiver), STANDARD_SUBJECT_BUILDER.get(state), state)
+        || isSubtype(getType(receiver), SIMPLE_SUBJECT_BUILDER.get(state), state)
+        || isSubtype(getType(receiver), CUSTOM_SUBJECT_BUILDER.get(state), state);
+  }
+
   /** Returns the number of arguments to skip so we ignore {@code message} arguments. */
   private static int argumentsToSkip(MethodInvocationTree tree, VisitorState state) {
     var parameters = getSymbol(tree).getParameters();
-    if (!ASTHelpers.isSameType(parameters.getFirst().type, state.getSymtab().stringType, state)) {
+    if (!isSameType(parameters.getFirst().type, state.getSymtab().stringType, state)) {
       return 0;
     }
     if (parameters.size() == 2) {
@@ -118,4 +158,13 @@ public final class DuplicateAssertion extends BugChecker implements BlockTreeMat
   }
 
   private record Assertion(String line, ConstantExpression assertee) {}
+
+  private static final Supplier<Type> STANDARD_SUBJECT_BUILDER =
+      typeFromString("com.google.common.truth.StandardSubjectBuilder");
+
+  private static final Supplier<Type> SIMPLE_SUBJECT_BUILDER =
+      typeFromString("com.google.common.truth.SimpleSubjectBuilder");
+
+  private static final Supplier<Type> CUSTOM_SUBJECT_BUILDER =
+      typeFromString("com.google.common.truth.CustomSubjectBuilder");
 }

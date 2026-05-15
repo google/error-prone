@@ -16,58 +16,105 @@
 
 package com.google.errorprone.fixes;
 
+import static java.util.Objects.requireNonNull;
+
 import com.google.common.base.Throwables;
+import com.google.errorprone.SourcePositionException;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.JCDiagnostic;
+import com.sun.tools.javac.util.Position;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
+import org.jspecify.annotations.Nullable;
 
 /** A compatibility wrapper around {@code EndPosTable}. */
 public interface ErrorProneEndPosTable {
 
-  static final MethodHandle GET_END_POS_HANDLE = getEndPosMethodHandle();
+  @Nullable MethodHandle GET_END_POS_HANDLE = getEndPosMethodHandle();
 
-  private static MethodHandle getEndPosMethodHandle() {
+  MethodHandle GET_END_POS_WITH_UNIT_HANDLE = getEndPosWithUnitMethodHandle();
+
+  private static @Nullable MethodHandle getEndPosMethodHandle() {
     MethodHandles.Lookup lookup = MethodHandles.lookup();
     try {
       // JDK versions after https://bugs.openjdk.org/browse/JDK-8372948
+      // pos -> pos.getEndPosition()
+      return lookup.findVirtual(
+          JCDiagnostic.DiagnosticPosition.class,
+          "getEndPosition",
+          MethodType.methodType(int.class));
+    } catch (ReflectiveOperationException e) {
+      return null;
+    }
+  }
+
+  private static MethodHandle getEndPosWithUnitMethodHandle() {
+    if (GET_END_POS_HANDLE != null) {
+      // JDK versions after https://bugs.openjdk.org/browse/JDK-8372948
       // (pos, unit) -> pos.getEndPosition()
-      return MethodHandles.dropArguments(
+      return MethodHandles.dropArguments(GET_END_POS_HANDLE, 1, JCCompilationUnit.class);
+    }
+    MethodHandles.Lookup lookup = MethodHandles.lookup();
+    try {
+      // JDK versions before https://bugs.openjdk.org/browse/JDK-8372948
+      // (pos, unit) -> pos.getEndPosition(unit.endPositions)
+      Class<?> endPosTableClass = Class.forName("com.sun.tools.javac.tree.EndPosTable");
+      return MethodHandles.filterArguments(
           lookup.findVirtual(
               JCDiagnostic.DiagnosticPosition.class,
               "getEndPosition",
-              MethodType.methodType(int.class)),
+              MethodType.methodType(int.class, endPosTableClass)),
           1,
-          JCCompilationUnit.class);
-    } catch (ReflectiveOperationException e1) {
-      try {
-        // JDK versions before https://bugs.openjdk.org/browse/JDK-8372948
-        // (pos, unit) -> pos.getEndPosition(unit.endPositions)
-        Class<?> endPosTableClass = Class.forName("com.sun.tools.javac.tree.EndPosTable");
-        return MethodHandles.filterArguments(
-            lookup.findVirtual(
-                JCDiagnostic.DiagnosticPosition.class,
-                "getEndPosition",
-                MethodType.methodType(int.class, endPosTableClass)),
-            1,
-            lookup
-                .findVarHandle(JCCompilationUnit.class, "endPositions", endPosTableClass)
-                .toMethodHandle(VarHandle.AccessMode.GET));
-      } catch (ReflectiveOperationException e2) {
-        e2.addSuppressed(e1);
-        throw new LinkageError(e2.getMessage(), e2);
-      }
+          lookup
+              .findVarHandle(JCCompilationUnit.class, "endPositions", endPosTableClass)
+              .toMethodHandle(VarHandle.AccessMode.GET));
+    } catch (ReflectiveOperationException e) {
+      throw new LinkageError(e.getMessage(), e);
+    }
+  }
+
+  static void checkExplicitSource(Tree tree) {
+    checkExplicitSource((JCDiagnostic.DiagnosticPosition) tree);
+  }
+
+  static void checkExplicitSource(JCTree tree) {
+    checkExplicitSource((JCDiagnostic.DiagnosticPosition) tree);
+  }
+
+  static void checkExplicitSource(JCDiagnostic.DiagnosticPosition pos) {
+    if (pos == null) {
+      return;
+    }
+    if (GET_END_POS_HANDLE == null) {
+      // End positions aren't stored directly on the tree, so skip validation to avoid having
+      // to plumb an EndPosTable through fix creation, and instead rely on validation later when
+      // fixes are applied.
+      // TODO: cushon - perform eager validation once JDK 27 is the minimum supported JDK
+      return;
+    }
+    int start = pos.getStartPosition();
+    int end;
+    try {
+      end = (int) GET_END_POS_HANDLE.invoke(pos);
+    } catch (Throwable e) {
+      Throwables.throwIfUnchecked(e);
+      throw new AssertionError(e);
+    }
+    if (start == Position.NOPOS || end == Position.NOPOS || start == end) {
+      throw new SourcePositionException(start, end);
     }
   }
 
   static ErrorProneEndPosTable create(CompilationUnitTree unit) {
-    MethodHandle getEndPosition = MethodHandles.insertArguments(GET_END_POS_HANDLE, 1, unit);
+    MethodHandle getEndPosition =
+        MethodHandles.insertArguments(GET_END_POS_WITH_UNIT_HANDLE, 1, unit);
     return pos -> {
+      requireNonNull(pos);
       try {
         return (int) getEndPosition.invokeExact(pos);
       } catch (Throwable e) {

@@ -65,9 +65,7 @@ final class Switches {
 
     var tokens =
         ErrorProneTokens.getTokens(
-            state.getSourceCode().subSequence(startPos, endPos).toString(),
-            startPos,
-            state.context);
+            state.getSourceCode(startPos, endPos).toString(), startPos, state.context);
 
     return tokens.stream()
         .flatMap(token -> token.comments().stream())
@@ -104,9 +102,7 @@ final class Switches {
 
     var tokens =
         ErrorProneTokens.getTokens(
-            state.getSourceCode().subSequence(startPos, endPos).toString(),
-            startPos,
-            state.context);
+            state.getSourceCode(startPos, endPos).toString(), startPos, state.context);
 
     return tokens.stream()
         .flatMap(token -> token.comments().stream())

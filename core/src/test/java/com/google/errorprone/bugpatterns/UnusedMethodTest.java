@@ -15,7 +15,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -251,7 +250,7 @@ public final class UnusedMethodTest {
 
             public class UnusedWithComment {}
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -318,7 +317,7 @@ public final class UnusedMethodTest {
             package org.junit.jupiter.params.provider;
 
             public @interface MethodSource {
-              String[] value();
+              String[] value() default "";
             }
             """)
         .addSourceLines(
@@ -340,6 +339,36 @@ public final class UnusedMethodTest {
   }
 
   @Test
+  public void implicitMethodSource() {
+    helper
+        .addSourceLines(
+            "MethodSource.java",
+            """
+            package org.junit.jupiter.params.provider;
+
+            public @interface MethodSource {
+              String[] value() default "";
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.stream.Stream;
+            import org.junit.jupiter.params.provider.MethodSource;
+
+            class Test {
+              @MethodSource
+              void test(String s) {}
+
+              private static Stream<String> test() {
+                return Stream.of();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void qualifiedMethodSource() {
     helper
         .addSourceLines(
@@ -348,7 +377,7 @@ public final class UnusedMethodTest {
             package org.junit.jupiter.params.provider;
 
             public @interface MethodSource {
-              String[] value();
+              String[] value() default "";
             }
             """)
         .addSourceLines(
@@ -378,7 +407,7 @@ public final class UnusedMethodTest {
             package org.junit.jupiter.params.provider;
 
             public @interface MethodSource {
-              String[] value();
+              String[] value() default "";
             }
             """)
         .addSourceLines(
@@ -680,6 +709,7 @@ public final class UnusedMethodTest {
               void f() {
                 var r =
                     new Runnable() {
+
                       @Override
                       public void run() {}
                     };
@@ -687,6 +717,7 @@ public final class UnusedMethodTest {
 
               enum E implements Runnable {
                 ONE {
+
                   @Override
                   public void run() {}
                 };

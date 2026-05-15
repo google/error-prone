@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
+import static java.util.Objects.requireNonNull;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
@@ -57,12 +58,14 @@ import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Names;
 import com.sun.tools.javac.util.Options;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import javax.lang.model.util.Elements;
+import javax.tools.JavaFileObject;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -473,16 +476,29 @@ public class VisitorState {
     return (pathToEnclosing == null) ? null : (T) pathToEnclosing.getLeaf();
   }
 
+  public CharSequence getSourceCode(int start, int end) {
+    CharSequence sourceCode = getSourceCode();
+    if (start > 0 && start < sourceCode.length() && start > end) {
+      // If the start position is a valid position position, but the [start, end) range is invalid,
+      // use the start position for the crash message. Otherwise if the start position is invalid
+      // continue below to let CharSequence#subSequence throw an exception.
+      throw new SourcePositionException(start, end);
+    }
+    return sourceCode.subSequence(start, end);
+  }
+
   /**
    * Gets the current source file.
    *
    * @return the source file as a sequence of characters, or null if it is not available
    */
-  public @Nullable CharSequence getSourceCode() {
+  public CharSequence getSourceCode() {
     try {
-      return getPath().getCompilationUnit().getSourceFile().getCharContent(false);
+      JavaFileObject javaFileObject = getPath().getCompilationUnit().getSourceFile();
+      return requireNonNull(javaFileObject.getCharContent(/* ignoreEncodingErrors= */ false));
     } catch (IOException e) {
-      return null;
+      // this should be impossible if ignoreEncodingErrors is false
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -539,8 +555,7 @@ public class VisitorState {
    * be used if a fix is already going to be emitted.
    */
   public ImmutableList<ErrorProneToken> getOffsetTokens(int start, int end) {
-    return ErrorProneTokens.getTokens(
-        getSourceCode().subSequence(start, end).toString(), start, context);
+    return ErrorProneTokens.getTokens(getSourceCode(start, end).toString(), start, context);
   }
 
   /** Returns the end position of the node, or -1 if it is not available. */

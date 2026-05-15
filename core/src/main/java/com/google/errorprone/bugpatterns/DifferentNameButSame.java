@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.FindIdentifiers.findIdent;
 
 import com.google.common.base.Ascii;
@@ -55,7 +56,6 @@ import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.util.Position;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
@@ -119,7 +119,7 @@ public final class DifferentNameButSame extends BugChecker implements Compilatio
       }
 
       private void handle(Tree tree) {
-        if (state.getEndPosition(tree) == Position.NOPOS) {
+        if (!hasExplicitSource(tree, state)) {
           return;
         }
         Symbol symbol = getSymbol(tree);

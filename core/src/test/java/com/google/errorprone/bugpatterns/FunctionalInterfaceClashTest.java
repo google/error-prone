@@ -37,8 +37,8 @@ public class FunctionalInterfaceClashTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.function.Function;
             import java.util.function.Consumer;
+            import java.util.function.Function;
 
             public class Test {
               // BUG: Diagnostic contains: foo(Function<String, String>)
@@ -103,8 +103,8 @@ public class FunctionalInterfaceClashTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.function.Function;
             import java.util.function.Consumer;
+            import java.util.function.Function;
 
             public class Test {
               // BUG: Diagnostic contains: foo(Function<String, Integer>)
@@ -172,8 +172,8 @@ public class FunctionalInterfaceClashTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.function.Function;
             import java.util.function.Consumer;
+            import java.util.function.Function;
 
             public class Test {
               // BUG: Diagnostic contains: Test(Function<String, String>)
@@ -191,8 +191,8 @@ public class FunctionalInterfaceClashTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.function.Function;
             import java.util.function.Consumer;
+            import java.util.function.Function;
 
             public class Test {
               // BUG: Diagnostic contains: foo(Function<String, String>)
@@ -211,8 +211,8 @@ public class FunctionalInterfaceClashTest {
             "Test.java",
             """
             import java.lang.SuppressWarnings;
-            import java.util.function.Function;
             import java.util.function.Consumer;
+            import java.util.function.Function;
 
             public class Test {
               @SuppressWarnings("FunctionalInterfaceClash")
@@ -291,8 +291,8 @@ public class FunctionalInterfaceClashTest {
             """
             package pkg2;
 
-            import java.util.function.Function;
             import java.util.function.Consumer;
+            import java.util.function.Function;
 
             public abstract class BaseClass {
               // BUG: Diagnostic contains: When passing lambda arguments to this function
@@ -306,8 +306,8 @@ public class FunctionalInterfaceClashTest {
             """
             package pkg2;
 
-            import java.util.function.Function;
             import java.util.function.Consumer;
+            import java.util.function.Function;
 
             public class DerivedClass extends BaseClass {
               @Override
@@ -328,8 +328,8 @@ public class FunctionalInterfaceClashTest {
             """
             package pkg2;
 
-            import java.util.function.Function;
             import java.util.function.Consumer;
+            import java.util.function.Function;
 
             public abstract class BaseClass {
               abstract void bar(Consumer<String> c);
@@ -340,8 +340,8 @@ public class FunctionalInterfaceClashTest {
             """
             package pkg2;
 
-            import java.util.function.Function;
             import java.util.function.Consumer;
+            import java.util.function.Function;
 
             public class DerivedClass extends BaseClass {
               @Override
@@ -359,8 +359,8 @@ public class FunctionalInterfaceClashTest {
             """
             package pkg2;
 
-            import java.util.function.Function;
             import java.util.function.Consumer;
+            import java.util.function.Function;
 
             public class BaseClass {
               void conduct(Consumer<String> c) {}
@@ -371,8 +371,8 @@ public class FunctionalInterfaceClashTest {
             """
             package pkg2;
 
-            import java.util.function.Function;
             import java.util.function.Consumer;
+            import java.util.function.Function;
 
             public class ConductClass extends BaseClass {
               @Override
@@ -393,8 +393,8 @@ public class FunctionalInterfaceClashTest {
             """
             package pkg2;
 
-            import java.util.function.Function;
             import java.util.function.Consumer;
+            import java.util.function.Function;
 
             public class BaseClass {
               void conduct(Consumer<String> c) {}
@@ -405,8 +405,8 @@ public class FunctionalInterfaceClashTest {
             """
             package pkg2;
 
-            import java.util.function.Function;
             import java.util.function.Consumer;
+            import java.util.function.Function;
 
             public class ConductClass extends BaseClass {
               @Override

@@ -56,6 +56,16 @@ public class ChainingConstructorIgnoresParameterPositiveCases {
     }
   }
 
+  static class SuppressedCallee {
+    @SuppressWarnings("ChainingConstructorIgnoresParameter")
+    SuppressedCallee(String foo, boolean bar) {}
+
+    SuppressedCallee(String foo) {
+      // BUG: Diagnostic contains: this(foo, false)
+      this("default", false);
+    }
+  }
+
   static class ClassRatherThanPrimitive {
     ClassRatherThanPrimitive(String foo, boolean bar) {}
 
@@ -231,6 +241,15 @@ public class ChainingConstructorIgnoresParameterNegativeCases {
 
     Varargs2() {
       this("something");
+    }
+  }
+
+  static class SuppressedCaller {
+    SuppressedCaller(String foo, boolean bar) {}
+
+    @SuppressWarnings("ChainingConstructorIgnoresParameter")
+    SuppressedCaller(String foo) {
+      this("default", false);
     }
   }
 }

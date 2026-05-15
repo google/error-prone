@@ -20,6 +20,7 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
@@ -152,6 +153,5 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
         false);
   }
 
-  private static final Supplier<Type> JAVA_IO_INPUTSTREAM =
-      VisitorState.memoize(state -> state.getTypeFromString("java.io.InputStream"));
+  private static final Supplier<Type> JAVA_IO_INPUTSTREAM = typeFromString("java.io.InputStream");
 }

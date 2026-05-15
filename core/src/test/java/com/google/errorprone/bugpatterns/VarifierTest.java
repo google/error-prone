@@ -350,4 +350,74 @@ class Test {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void constructorReceiver_positive() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              class Builder {
+                Builder setX(int x) {
+                  return this;
+                }
+
+                Test build() {
+                  return new Test();
+                }
+              }
+
+              void test() {
+                Test test = new Test.Builder().setX(1).build();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              class Builder {
+                Builder setX(int x) {
+                  return this;
+                }
+
+                Test build() {
+                  return new Test();
+                }
+              }
+
+              void test() {
+                var test = new Test.Builder().setX(1).build();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void constructorReceiver_negative() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              class Builder {
+                Builder setX(int x) {
+                  return this;
+                }
+
+                String build() {
+                  return "";
+                }
+              }
+
+              void test() {
+                String test = new Test.Builder().setX(1).build();
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }

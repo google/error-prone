@@ -56,7 +56,7 @@ public final class GuardedByBinder {
       return Optional.of(
           bind(
               exp,
-              BinderContext.of(
+              new BinderContext(
                   ALREADY_BOUND_RESOLVER,
                   ASTHelpers.getSymbol(visitorState.findEnclosing(ClassTree.class)),
                   visitorState.getTypes(),
@@ -73,7 +73,7 @@ public final class GuardedByBinder {
       return Optional.of(
           bind(
               GuardedByUtils.parseString(string, resolver.context()),
-              BinderContext.of(
+              new BinderContext(
                   resolver,
                   resolver.enclosingClass(),
                   resolver.visitorState().getTypes(),
@@ -83,23 +83,8 @@ public final class GuardedByBinder {
     }
   }
 
-  private static class BinderContext {
-    final Resolver resolver;
-    final ClassSymbol thisClass;
-    final Types types;
-    final Names names;
-
-    BinderContext(Resolver resolver, ClassSymbol thisClass, Types types, Names names) {
-      this.resolver = resolver;
-      this.thisClass = thisClass;
-      this.types = types;
-      this.names = names;
-    }
-
-    static BinderContext of(Resolver resolver, ClassSymbol thisClass, Types types, Names names) {
-      return new BinderContext(resolver, thisClass, types, names);
-    }
-  }
+  private record BinderContext(
+      Resolver resolver, ClassSymbol thisClass, Types types, Names names) {}
 
   private static GuardedByExpression bind(JCTree.JCExpression exp, BinderContext context) {
     GuardedByExpression expr = BINDER.visit(exp, context);

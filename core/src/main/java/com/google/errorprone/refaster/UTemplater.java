@@ -18,6 +18,7 @@ package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.AnnotationNames.REPEATED_ANNOTATION;
@@ -765,7 +766,8 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   public UVariableDecl visitVariable(VariableTree tree, Void v) {
     return UVariableDecl.create(
         tree.getName(),
-        templateType(tree.getType()),
+        (tree.getType() == null) ? null : templateType(tree.getType()),
+        template(getType(tree)),
         (tree.getInitializer() == null) ? null : template(tree.getInitializer()));
   }
 

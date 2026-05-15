@@ -161,6 +161,7 @@ class Test {
             "Test.java",
 """
 import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.*;
 
 class Test {
@@ -200,8 +201,8 @@ class Test {
         .addInputLines(
             "in/Test.java",
             """
-            import java.io.*;
             import com.google.common.io.Files;
+            import java.io.*;
 
             class Test {
               void f(String s, File f) throws Exception {
@@ -214,6 +215,7 @@ class Test {
             "out/Test.java",
             """
             import static java.nio.charset.StandardCharsets.UTF_8;
+
             import com.google.common.io.Files;
             import java.io.*;
             import java.io.File;
@@ -234,8 +236,8 @@ class Test {
         .addInputLines(
             "in/Test.java",
             """
-            import java.io.*;
             import com.google.common.io.Files;
+            import java.io.*;
 
             class Test {
               void f(String s, File f) throws Exception {
@@ -250,6 +252,7 @@ class Test {
             import static java.nio.charset.StandardCharsets.UTF_8;
             import static java.nio.file.StandardOpenOption.APPEND;
             import static java.nio.file.StandardOpenOption.CREATE;
+
             import com.google.common.io.Files;
             import java.io.*;
             import java.nio.file.Paths;
@@ -270,8 +273,8 @@ class Test {
         .addInputLines(
             "in/Test.java",
             """
-            import java.io.*;
             import com.google.common.io.Files;
+            import java.io.*;
 
             class Test {
               void f(String s, File f) throws Exception {
@@ -284,6 +287,7 @@ class Test {
             "out/Test.java",
             """
             import static java.nio.charset.StandardCharsets.UTF_8;
+
             import com.google.common.io.Files;
             import java.io.*;
             import java.io.File;
@@ -357,6 +361,7 @@ class Test {
             "out/Test.java",
             """
             import static java.nio.charset.StandardCharsets.UTF_8;
+
             import java.io.*;
             import java.io.Reader;
             import java.io.Writer;
@@ -394,6 +399,7 @@ class Test {
             "out/Test.java",
             """
             import static java.nio.charset.StandardCharsets.UTF_8;
+
             import java.io.*;
             import java.io.Reader;
             import java.io.Writer;
@@ -434,6 +440,7 @@ class Test {
             "out/Test.java",
 """
 import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.OutputStreamWriter;
@@ -529,6 +536,7 @@ class Test {
             "out/Test.java",
             """
             import static com.google.protobuf.ByteString.copyFrom;
+
             import java.nio.charset.Charset;
 
             class Test {
@@ -547,11 +555,11 @@ class Test {
         .addInputLines(
             "in/Test.java",
             """
-            import java.util.Scanner;
             import java.io.File;
             import java.io.InputStream;
             import java.nio.channels.ReadableByteChannel;
             import java.nio.file.Path;
+            import java.util.Scanner;
 
             class Test {
               void f() throws Exception {
@@ -566,6 +574,7 @@ class Test {
             "out/Test.java",
             """
             import static java.nio.charset.StandardCharsets.UTF_8;
+
             import java.io.File;
             import java.io.InputStream;
             import java.nio.channels.ReadableByteChannel;
@@ -603,6 +612,7 @@ class Test {
             "out/Test.java",
             """
             import static java.nio.charset.StandardCharsets.UTF_8;
+
             import java.io.File;
             import java.io.FileWriter;
             import java.nio.file.Files;
@@ -634,6 +644,7 @@ class Test {
             "out/Test.java",
             """
             import static java.nio.charset.StandardCharsets.UTF_8;
+
             import java.io.ByteArrayOutputStream;
 
             class Test {

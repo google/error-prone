@@ -188,7 +188,7 @@ public final class CheckedExceptionNotThrown extends BugChecker implements Metho
 
     int startPos =
         ErrorProneTokens.getTokens(
-                state.getSourceCode().subSequence(methodStartPos, endPos).toString(),
+                state.getSourceCode(methodStartPos, endPos).toString(),
                 methodStartPos,
                 state.context)
             .stream()

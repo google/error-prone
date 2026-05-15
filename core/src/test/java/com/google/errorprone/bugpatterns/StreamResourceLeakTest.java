@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns;
 import static java.lang.String.format;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.testing.junit.testparameterinjector.TestParameter;
 import com.google.testing.junit.testparameterinjector.TestParameterInjector;
@@ -295,7 +294,7 @@ public class StreamResourceLeakTest {
               }
             }
             """)
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -305,9 +304,9 @@ public class StreamResourceLeakTest {
             "Test.java",
             """
             import java.io.IOException;
+            import java.nio.file.DirectoryStream;
             import java.nio.file.Files;
             import java.nio.file.Path;
-            import java.nio.file.DirectoryStream;
 
             interface I {
               default DirectoryStream<Path> f(Path path) throws IOException {

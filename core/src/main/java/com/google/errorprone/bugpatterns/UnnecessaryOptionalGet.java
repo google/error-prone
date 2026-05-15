@@ -25,6 +25,7 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
@@ -83,14 +84,22 @@ public final class UnnecessaryOptionalGet extends BugChecker
       return Description.NO_MATCH;
     }
     VariableTree arg = getOnlyElement(lambdaExpressionTree.getParameters());
+    SuggestedFixes.VariableNamer variableNamer = SuggestedFixes.variableNamer(state);
     SuggestedFix.Builder fix = SuggestedFix.builder();
+    String replacement;
+    if (arg.getName().isEmpty()) {
+      replacement = variableNamer.avoidShadowing("value");
+      fix.merge(SuggestedFixes.renameVariable(arg, replacement, state));
+    } else {
+      replacement = arg.getName().toString();
+    }
     new TreeScanner<Void, VisitorState>() {
       @Override
       public Void visitMethodInvocation(
           MethodInvocationTree methodInvocationTree, VisitorState visitorState) {
         if (OPTIONAL_GET.matches(methodInvocationTree, visitorState)
             && sameVariable(getReceiver(tree), getReceiver(methodInvocationTree))) {
-          fix.replace(methodInvocationTree, state.getSourceForNode(arg));
+          fix.replace(methodInvocationTree, replacement);
         }
         return super.visitMethodInvocation(methodInvocationTree, visitorState);
       }

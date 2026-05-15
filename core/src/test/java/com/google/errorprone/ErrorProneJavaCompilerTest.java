@@ -390,7 +390,7 @@ public class ErrorProneJavaCompilerTest {
     assertThat(result.diagnosticHelper.getDiagnostics()).hasSize(1);
     assertThat(
             Iterables.getOnlyElement(result.diagnosticHelper.getDiagnostics()).getMessage(ENGLISH))
-        .contains("IllegalArgumentException: Cannot edit synthetic AST nodes");
+        .containsMatch("invalid source position|synthetic AST nodes");
   }
 
   @Test

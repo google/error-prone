@@ -16,7 +16,11 @@
 
 package com.google.errorprone;
 
+import static com.google.common.collect.ImmutableList.toImmutableList;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.google.auto.value.AutoBuilder;
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
@@ -30,11 +34,13 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Processes command-line options specific to error-prone.
@@ -63,6 +69,7 @@ public class ErrorProneOptions {
       "-XepDisableWarningsInGeneratedCode";
   private static final String COMPILING_TEST_ONLY_CODE = "-XepCompilingTestOnlyCode";
   private static final String COMPILING_PUBLICLY_VISIBLE_CODE = "-XepCompilingPubliclyVisibleCode";
+  private static final String ARGUMENT_FILE_PREFIX = "@";
 
   /** see {@link javax.tools.OptionChecker#isSupportedOption(String)} */
   public static int isSupportedOption(String option) {
@@ -381,6 +388,61 @@ public class ErrorProneOptions {
     return EMPTY;
   }
 
+  /** Check if an argument looks like a argument file. */
+  private static boolean isArgumentFile(String argument) {
+    return argument.startsWith(ARGUMENT_FILE_PREFIX);
+  }
+
+  /**
+   * Read a CLI argument file, ignoring blank lines and full line comments. It fails if a line tries
+   * to reference another argument file.
+   */
+  private static ImmutableList<String> loadArgumentFileContent(String fileName) {
+    Splitter splitter =
+        Splitter.on(CharMatcher.breakingWhitespace()).trimResults().omitEmptyStrings();
+    try (Stream<String> lines = Files.lines(Path.of(fileName), UTF_8)) {
+      return lines
+          // Remove comments. It also means it can damage file paths with `#`.
+          .map(line -> line.replace("#.*", ""))
+          // This might damage file paths with spaces.
+          .flatMap(splitter::splitToStream)
+          .filter(
+              line -> {
+                if (isArgumentFile(line)) {
+                  // This would in fact be quite tricky to get right.
+                  // Although `@a.cfg` seems pretty clear, relative path, when errorprone is
+                  // invoked from various tools (Maven, Gradle, IDEs), the concept becomes a lot
+                  // fuzzier. I'm in folder `x`, call `mvn -f y`, with arg
+                  // `@${project.basedir}/a.cfg`
+                  // where would `@b.cfg` invoked in `a.cfg` be?
+                  // Instead the user can explicitly specify the 2-3 config files they need.
+                  throw new InvalidCommandLineOptionException(
+                      "The parameter file cannot reference another parameter file " + line);
+                }
+                return true;
+              })
+          .collect(toImmutableList());
+    } catch (IOException unused) {
+      throw new InvalidCommandLineOptionException("Error loading parameters file " + fileName);
+    }
+  }
+
+  /**
+   * Pre-processes an argument list, replacing arguments of the form {@code @filename} by the lines
+   * read from the file.
+   */
+  private static ImmutableList<String> preprocessArgs(Iterable<String> args) {
+    ImmutableList.Builder<String> newArgs = ImmutableList.builder();
+    for (String arg : args) {
+      if (isArgumentFile(arg)) {
+        newArgs.addAll(loadArgumentFileContent(arg.substring(ARGUMENT_FILE_PREFIX.length())));
+      } else {
+        newArgs.add(arg);
+      }
+    }
+    return newArgs.build();
+  }
+
   /**
    * Given a list of command-line arguments, produce the corresponding {@link ErrorProneOptions}
    * instance.
@@ -403,7 +465,7 @@ public class ErrorProneOptions {
     boolean patchLocationSet = false;
     boolean patchCheckSet = false;
     Builder builder = new Builder();
-    for (String arg : args) {
+    for (String arg : preprocessArgs(args)) {
       switch (arg) {
         case IGNORE_SUPPRESSION_ANNOTATIONS -> builder.setIgnoreSuppressionAnnotations(true);
         case IGNORE_UNKNOWN_CHECKS_FLAG -> builder.setIgnoreUnknownChecks(true);

@@ -23,15 +23,12 @@ import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.CodeTransformer;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.Tree;
 import java.io.IOException;
-import java.util.List;
 import javax.tools.JavaFileObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,11 +47,8 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
         Iterables.getOnlyElement(
             FluentIterable.from(compilationUnits)
                 .transformAndConcat(
-                    new Function<CompilationUnitTree, Iterable<? extends Tree>>() {
-                      @Override
-                      public List<? extends Tree> apply(CompilationUnitTree input) {
-                        return input.getTypeDecls();
-                      }
+                    (CompilationUnitTree input) -> {
+                      return input.getTypeDecls();
                     })
                 .filter(ClassTree.class));
     return Iterables.getOnlyElement(RefasterRuleBuilderScanner.extractRules(classTree, context));

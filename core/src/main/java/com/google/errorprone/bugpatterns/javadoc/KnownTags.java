@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.javadoc;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.bugpatterns.javadoc.JavadocTag.blockTag;
+import static com.google.errorprone.bugpatterns.javadoc.JavadocTag.inlineTag;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
@@ -37,6 +38,7 @@ public final class KnownTags {
           blockTag("contact"),
           blockTag("fails"), // commonly used tag for denoting async failure modes
           blockTag("hide"),
+          inlineTag("if"), // used by Android for conditional API documentation
           blockTag("implNote"),
           blockTag("implSpec"),
           blockTag("removed"), // Used in the android framework (metalava)

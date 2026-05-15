@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -79,7 +77,7 @@ public final class UnicodeEscapeTest {
               private static final String BAR = " ";
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -99,7 +97,7 @@ public final class UnicodeEscapeTest {
               private static final String FOO = "\\\\]";
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -113,7 +111,7 @@ public final class UnicodeEscapeTest {
             "Test.java", //
             "class Test {\rprivate static final String FOO = null;",
             "}")
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -151,7 +149,7 @@ public final class UnicodeEscapeTest {
 """
 class A {}
 """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -164,6 +162,6 @@ class A {}
             class A {}
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 }

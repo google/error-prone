@@ -125,6 +125,7 @@ public final class ProtoBuilderReturnValueIgnoredTest {
             "Test.java",
             """
             import static com.google.common.base.Preconditions.checkState;
+
             import com.google.protobuf.Duration;
 
             final class Test {

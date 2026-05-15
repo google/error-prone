@@ -64,6 +64,24 @@ public final class SetUnrecognizedTest {
   }
 
   @Test
+  public void negative_explicitlyDefinedUnrecognized() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestEnumWithUnrecognizedValue;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
+            class Test {
+              void test() {
+                TestProtoMessage.newBuilder().setEnumField(TestEnumWithUnrecognizedValue.UNRECOGNIZED);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negativeNotEnum() {
     compilationHelper
         .addSourceLines(

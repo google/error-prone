@@ -18,6 +18,7 @@ package com.google.errorprone.matchers.method;
 
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
@@ -151,17 +152,6 @@ public final class MethodMatchers {
 
     /** Match methods with a name that matches the given regular expression. */
     MethodNameMatcher withNameMatching(Pattern pattern);
-
-    /**
-     * Match methods with the given signature.
-     *
-     * <p>Example: {@code format(java.lang.String,java.lang.Object...)}
-     *
-     * @deprecated The implementation uses javac internals to pretty-print the signatures, and the
-     *     signature format is not well-specified.
-     */
-    @Deprecated
-    MethodSignatureMatcher withSignature(String signature);
   }
 
   /**
@@ -189,6 +179,24 @@ public final class MethodMatchers {
 
     /** Match methods whose formal parameters have the given types. */
     ParameterMatcher withParametersOfType(Supplier<Type> first, Supplier<Type>... rest);
+
+    /**
+     * Match methods whose formal parameters have the given types.
+     *
+     * <p>Unlike other methods for matching on parameters which consider erased types, this method
+     * provides access to generic types. Note also that other methods like {@link
+     * TypePredicates#isExactType} still only compare erased types.
+     */
+    ParameterMatcher withParametersMatching(ParameterPredicate first, ParameterPredicate... rest);
+
+    /**
+     * Match methods whose formal parameters have the given types.
+     *
+     * <p>Unlike other methods for matching on parameters which consider erased types, this method
+     * provides access to generic types. Note also that other methods like {@link
+     * TypePredicates#isExactType} still only compare erased types.
+     */
+    ParameterMatcher withParametersMatching(Iterable<ParameterPredicate> parameters);
   }
 
   /**

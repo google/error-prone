@@ -18,8 +18,7 @@ package com.google.errorprone.bugpatterns.inject;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_INJECT_ANNOTATION;
-import static com.google.errorprone.matchers.InjectMatchers.GUICE_INJECT_ANNOTATION;
-import static com.google.errorprone.matchers.InjectMatchers.JAVAX_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.IS_APPLICATION_OF_AT_INJECT;
 import static com.google.errorprone.matchers.InjectMatchers.hasInjectAnnotation;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
@@ -52,10 +51,7 @@ public class AssistedInjectAndInjectOnSameConstructor extends BugChecker
 
   /** Matches the @Inject and @Assisted inject annotations. */
   private static final Matcher<AnnotationTree> injectOrAssistedInjectMatcher =
-      anyOf(
-          isType(JAVAX_INJECT_ANNOTATION),
-          isType(GUICE_INJECT_ANNOTATION),
-          isType(ASSISTED_INJECT_ANNOTATION));
+      anyOf(IS_APPLICATION_OF_AT_INJECT, isType(ASSISTED_INJECT_ANNOTATION));
 
   @Override
   public Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {

@@ -67,6 +67,7 @@ public class JUnit4EmptyMethodsTest {
             import org.junit.Test;
 
             class FooTest {
+
               @Test
               public void emptyTest() {}
             }

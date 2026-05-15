@@ -1028,6 +1028,54 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     assertCompiles(scanner);
   }
 
+  @Test
+  public void samePackageDefault() {
+    writeFile(
+        "A.java",
+        """
+        public class A {
+          public static final String BAR = "BAR";
+        }
+        """);
+    writeFile(
+        "B.java",
+        """
+        public class B {
+          public String bar() {
+            return A.BAR;
+          }
+        }
+        """);
+    TestScanner scanner = inSamePackageScanner(true);
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void samePackageDefaultNegative() {
+    writeFile(
+        "A.java",
+        """
+        package p;
+        public class A {
+          public static final String BAR = "BAR";
+        }
+        """);
+    writeFile(
+        "B.java",
+        """
+        import p.A;
+        public class B {
+          public String bar() {
+            return A.BAR;
+          }
+        }
+        """);
+    TestScanner scanner = inSamePackageScanner(false);
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
   /* Test infrastructure */
 
   private abstract static class TestScanner extends Scanner {
@@ -1545,9 +1593,9 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         .addSourceLines(
             "Test.java",
 """
-import java.util.concurrent.Callable;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.Callable;
 
 class Test {
   // BUG: Diagnostic contains: [FileNotFoundException UnsupportedEncodingException]
@@ -1856,7 +1904,7 @@ class Test {
     }
 
     Description check(Tree tree) {
-      PackageSymbol packageSymbol = ASTHelpers.enclosingPackage(ASTHelpers.getSymbol(tree));
+      PackageSymbol packageSymbol = ASTHelpers.enclosingPackage(ASTHelpers.getSymbol(tree)).get();
       return buildDescription(tree).setMessage(String.format("[%s]", packageSymbol)).build();
     }
   }
@@ -1923,8 +1971,9 @@ class Test {
         .addSourceLines(
             "Declaration.java",
             """
-            import static java.lang.annotation.ElementType.METHOD;
             import static java.lang.annotation.ElementType.FIELD;
+            import static java.lang.annotation.ElementType.METHOD;
+
             import java.lang.annotation.Target;
 
             class Declaration {
@@ -1936,6 +1985,7 @@ class Test {
             "TypeUse.java",
             """
             import static java.lang.annotation.ElementType.TYPE_USE;
+
             import java.lang.annotation.Target;
 
             class TypeUse {

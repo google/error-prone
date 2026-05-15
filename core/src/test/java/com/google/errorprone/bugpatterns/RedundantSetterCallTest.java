@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -206,7 +205,7 @@ final class ProtoRedundantSetPositiveCases {
   }
 }
 """)
-        .doTest(TestMode.AST_MATCH);
+        .doTest();
   }
 
   @Test

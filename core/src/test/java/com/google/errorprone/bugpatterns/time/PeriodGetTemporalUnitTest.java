@@ -56,6 +56,7 @@ public class PeriodGetTemporalUnitTest {
             import static java.time.temporal.ChronoUnit.MONTHS;
             import static java.time.temporal.ChronoUnit.SECONDS;
             import static java.time.temporal.ChronoUnit.YEARS;
+
             import java.time.Period;
 
             public class TestClass {

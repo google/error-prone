@@ -315,6 +315,7 @@ public class ReturnValueIgnoredTest {
             "Test.java",
             """
             import static org.junit.Assert.fail;
+
             import java.util.function.Function;
 
             class Test {
@@ -784,6 +785,7 @@ public class ReturnValueIgnoredTest {
 
             final class Test {
               public void f() {
+
                 var unused = Optional.of(42).orElseThrow(AssertionError::new);
                 Stream.of(Optional.of(42)).forEach(o -> o.orElseThrow(AssertionError::new));
               }

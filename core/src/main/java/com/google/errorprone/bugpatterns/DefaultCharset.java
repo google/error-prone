@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.collect.Iterables;
@@ -561,6 +562,5 @@ public class DefaultCharset extends BugChecker
     return description.build();
   }
 
-  private static final Supplier<Type> JAVA_IO_FILE =
-      VisitorState.memoize(state -> state.getTypeFromString("java.io.File"));
+  private static final Supplier<Type> JAVA_IO_FILE = typeFromString("java.io.File");
 }

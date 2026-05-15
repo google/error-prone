@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
+import static com.google.common.truth.TruthJUnit.assume;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
@@ -52,7 +52,7 @@ public final class NotJavadocTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -63,7 +63,7 @@ public final class NotJavadocTest {
             """
             class Test {
               void test() {
-                // BUG: Diagnostic contains: nested
+                // BUG: Diagnostic contains: local class
                 /** Not Javadoc. */
                 class A {}
               }
@@ -73,18 +73,37 @@ public final class NotJavadocTest {
   }
 
   @Test
+  public void nestedClassWithMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                class A {
+                  // BUG: Diagnostic contains: local class
+                  /** Not Javadoc. */
+                  void method() {}
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void doubleJavadoc() {
-    helper
-        .addInputLines(
-            "Test.java", //
-            "class Test {",
-            // It would be nice if this were caught.
-            "  /** Not Javadoc. */",
-            "  /** Javadoc. */",
-            "  void test() {",
-            "  }",
-            "}")
-        .expectUnchanged()
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: multiple Javadoc comments
+              /** Not Javadoc. */
+              /** Javadoc. */
+              void test() {}
+            }
+            """)
         .doTest();
   }
 
@@ -97,7 +116,10 @@ public final class NotJavadocTest {
             class Test {
               void test() {
                 /** Not Javadoc. */
-                class A {}
+                class A {
+                  /** Not Javadoc. */
+                  void method() {}
+                }
               }
             }
             """)
@@ -107,11 +129,14 @@ public final class NotJavadocTest {
             class Test {
               void test() {
                 /* Not Javadoc. */
-                class A {}
+                class A {
+                  /* Not Javadoc. */
+                  void method() {}
+                }
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -137,7 +162,7 @@ public final class NotJavadocTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -152,7 +177,7 @@ public final class NotJavadocTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -168,7 +193,7 @@ public final class NotJavadocTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -181,7 +206,7 @@ public final class NotJavadocTest {
             package foo;
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -194,7 +219,7 @@ public final class NotJavadocTest {
             module foo {}
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -211,6 +236,114 @@ public final class NotJavadocTest {
             }
             """)
         .expectUnchanged()
-        .doTest(TEXT_MATCH);
+        .doTest();
+  }
+
+  @Test
+  public void recordComponentWithClassicJavadoc() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public record Test(
+                /** age (must be positive) */
+                int age) {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public record Test(
+                /* age (must be positive) */
+                int age) {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void recordComponentWithMultiLineClassicJavadoc() {
+    helper
+        .addInputLines(
+            "Test.java",
+"""
+public record Test(
+    /**
+     * @param age Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+     *     incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+     *     exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+     *     dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+     *     Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
+     *     anim id est laborum.
+     */
+    int age) {}
+""")
+        // TODO(kak): it would be nice to hoist the @param up to the record's Javadocs
+        .addOutputLines(
+            "Test.java",
+"""
+public record Test(
+    /*
+     * @param age Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+     *     incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+     *     exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+     *     dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+     *     Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit
+     *     anim id est laborum.
+     */
+    int age) {}
+""")
+        .doTest();
+  }
+
+  @Test
+  public void recordComponentWithMarkdownJavadoc() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public record Test(
+                /// age (must be positive)
+                int age) {}
+            """)
+        // TODO(b/494275366): Add a fix for this.
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void recordComponentWithMultiLineMarkdownJavadoc() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            public record Test(
+                /// @param age Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                ///     eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                ///     minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                ///     ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+                ///     voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+                ///     sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+                ///     mollit anim id est laborum.
+                int age) {}
+            """)
+        // TODO(b/494275366): Add a fix for this.
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void mixedJavadoc() {
+    assume().that(Runtime.version().feature()).isAtLeast(23);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: both markdown
+              /** Classic javadoc */
+              /// Markdown javadoc
+              void test() {}
+            }
+            """)
+        .doTest();
   }
 }

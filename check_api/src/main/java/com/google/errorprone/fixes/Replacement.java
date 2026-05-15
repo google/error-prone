@@ -16,9 +16,8 @@
 
 package com.google.errorprone.fixes;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import com.google.common.collect.Range;
+import com.google.errorprone.SourcePositionException;
 
 /**
  * A replaced section of a source file.
@@ -36,12 +35,9 @@ public record Replacement(Range<Integer> range, String replaceWith) {
    * @param replaceWith the replacement text
    */
   public static Replacement create(int startPosition, int endPosition, String replaceWith) {
-    checkArgument(
-        startPosition >= 0 && startPosition <= endPosition,
-        "invalid replacement: [%s, %s) (%s)",
-        startPosition,
-        endPosition,
-        replaceWith);
+    if (startPosition < 0 || startPosition > endPosition) {
+      throw new SourcePositionException(startPosition, endPosition);
+    }
     return new Replacement(Range.closedOpen(startPosition, endPosition), replaceWith);
   }
 

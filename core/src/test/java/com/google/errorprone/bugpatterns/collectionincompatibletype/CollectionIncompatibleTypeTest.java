@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
-import com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -661,7 +660,7 @@ public class CollectionIncompatibleTypeNegativeCases {
             "  }",
             "}")
         .setArgs("-XepOpt:CollectionIncompatibleType:FixType=SUPPRESS_WARNINGS")
-        .doTest(TestMode.TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -717,8 +716,8 @@ public class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Set;
             import com.google.common.collect.Sets;
+            import java.util.Set;
 
             public class Test {
               void f(Set<String> a, Set<String> b) {
@@ -798,8 +797,8 @@ public class Test {
             "Test.java",
             """
             import com.google.common.collect.Sets;
-            import java.util.function.BiFunction;
             import java.util.Set;
+            import java.util.function.BiFunction;
 
             public class Test {
               <T extends String, M extends Integer> void a(BiFunction<Set<T>, Set<M>, Set<T>> b) {}
@@ -820,8 +819,8 @@ public class Test {
             "Test.java",
             """
             import com.google.common.collect.Sets;
-            import java.util.function.BiFunction;
             import java.util.Set;
+            import java.util.function.BiFunction;
 
             public class Test {
               <T extends String, M extends T> void a(BiFunction<Set<T>, Set<M>, Set<T>> b) {}
@@ -841,8 +840,8 @@ public class Test {
             "Test.java",
             """
             import com.google.common.collect.Sets;
-            import java.util.function.BiFunction;
             import java.util.Set;
+            import java.util.function.BiFunction;
 
             public class Test {
               void a(BiFunction<Set<Integer>, Set<String>, Set<Integer>> b) {}
@@ -863,8 +862,8 @@ public class Test {
             "Test.java",
             """
             import com.google.common.collect.Sets;
-            import java.util.function.BiFunction;
             import java.util.Set;
+            import java.util.function.BiFunction;
 
             public class Test {
               void a(BiFunction<Set<Integer>, Set<Number>, Set<Integer>> b) {}
@@ -884,8 +883,8 @@ public class Test {
             "Test.java",
             """
             import com.google.common.collect.Sets;
-            import java.util.function.BiFunction;
             import java.util.Set;
+            import java.util.function.BiFunction;
 
             public interface Test {
               Set<Integer> test(Set<Integer> a, Set<String> b);

@@ -71,6 +71,7 @@ public final class GuardedByUtils {
       ImmutableSet.of(
           "android.support.annotation.GuardedBy",
           "androidx.annotation.GuardedBy",
+          "com.android.internal.annotations.GuardedBy",
           "com.google.errorprone.annotations.concurrent.GuardedBy",
           "javax.annotation.concurrent.GuardedBy");
 

@@ -17,152 +17,143 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.CompilationTestHelper;
+import com.google.testing.junit.testparameterinjector.TestParameter;
+import com.google.testing.junit.testparameterinjector.TestParameterInjector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
-@RunWith(JUnit4.class)
+@RunWith(TestParameterInjector.class)
 public final class MisleadingEscapedSpaceTest {
   private final CompilationTestHelper testHelper =
       CompilationTestHelper.newInstance(MisleadingEscapedSpace.class, getClass());
 
+  private enum LineSeparator {
+    CRLF("\r\n"),
+    LF("\n");
+
+    final String separator;
+
+    LineSeparator(String separator) {
+      this.separator = separator;
+    }
+  }
+
+  @TestParameter private LineSeparator lineSeparator;
+
+  private void test(String text) {
+    testHelper.addSourceLines("Test.class", text.replace("\n", lineSeparator.separator)).doTest();
+  }
+
   @Test
   public void misleadingEscape() {
-    testHelper
-        .addSourceLines(
-            "Test.class",
-            """
-            class Test {
-              // BUG: Diagnostic contains:
-              private static final String FOO = " \\s ";
-            }
-            """)
-        .doTest();
+    test(
+        """
+        class Test {
+          // BUG: Diagnostic contains:
+          private static final String FOO = " \\s ";
+        }
+        """);
   }
 
   @Test
   public void literalBackslashS() {
-    testHelper
-        .addSourceLines(
-            "Test.class",
-            """
-            class Test {
-              private static final String FOO = " \\\\s ";
-            }
-            """)
-        .doTest();
+    test(
+        """
+        class Test {
+          private static final String FOO = " \\\\s ";
+        }
+        """);
   }
 
   @Test
   public void asSingleCharacter_misleading() {
-    testHelper
-        .addSourceLines(
-            "Test.class",
-            """
-            class Test {
-              // BUG: Diagnostic contains:
-              private static final char x = '\\s';
-            }
-            """)
-        .doTest();
+    test(
+        """
+        class Test {
+          // BUG: Diagnostic contains:
+          private static final char x = '\\s';
+        }
+        """);
   }
 
   @Test
   public void withinTextBlock_notAtEndOfLine_misleading() {
-    testHelper
-        .addSourceLines(
-            "Test.class",
-            """
-            class Test {
-              private static final String FOO =
-                  // BUG: Diagnostic contains:
-                  \"""
-              foo   \\s  bar
-              \""";
-              private static final String BAZ =
-                  // BUG: Diagnostic contains:
-                  \"""
-              foo   \\s
-              bar  \\s baz
-              \""";
-            }
-            """)
-        .doTest();
+    test(
+        """
+        class Test {
+          private static final String FOO =
+              // BUG: Diagnostic contains:
+              \"""
+          foo   \\s  bar
+          \""";
+          private static final String BAZ =
+              // BUG: Diagnostic contains:
+              \"""
+          foo   \\s
+          bar  \\s baz
+          \""";
+        }
+        """);
   }
 
   @Test
   public void atEndOfLine_notMisleading() {
-    testHelper
-        .addSourceLines(
-            "Test.class",
-            """
-            class Test {
-              private static final String FOO =
-                  \"""
-              foo   \\s
-              bar     \\s
-              \""";
-            }
-            """)
-        .doTest();
+    test(
+        """
+        class Test {
+          private static final String FOO =
+              \"""
+          foo   \\s
+          bar     \\s
+          \""";
+        }
+        """);
   }
 
   @Test
   public void multipleAtEndOfLine_notMisleading() {
-    testHelper
-        .addSourceLines(
-            "Test.class",
-            """
-            class Test {
-              private static final String FOO =
-                  \"""
-              foo   \\s\\s\\s\\s
-              \""";
-            }
-            """)
-        .doTest();
+    test(
+        """
+        class Test {
+          private static final String FOO =
+              \"""
+          foo   \\s\\s\\s\\s
+          \""";
+        }
+        """);
   }
 
   @Test
   public void withinCommentInBrokenUpString_noFinding() {
-    testHelper
-        .addSourceLines(
-            "Test.class",
-            """
-            class Test {
-              private static final String FOO = "foo" + /* \\s */ " bar";
-            }
-            """)
-        .doTest();
+    test(
+        """
+        class Test {
+          private static final String FOO = "foo" + /* \\s */ " bar";
+        }
+        """);
   }
 
   @Test
   public void atEndOfString_noFinding() {
-    testHelper
-        .addSourceLines(
-            "Test.class",
-            """
-            class Test {
-              private static final String FOO =
-                  \"""
-              foo
-              bar\\s\""";
-            }
-            """)
-        .doTest();
+    test(
+        """
+        class Test {
+          private static final String FOO =
+              \"""
+          foo
+          bar\\s\""";
+        }
+        """);
   }
 
   @Test
   public void escapedSpaceAtEndOfString() {
-    testHelper
-        .addSourceLines(
-            "Test.class",
-            """
-            class Test {
-              // BUG: Diagnostic contains:
-              private static final String FOO = "foo\\s";
-            }
-            """)
-        .doTest();
+    test(
+        """
+        class Test {
+          // BUG: Diagnostic contains:
+          private static final String FOO = "foo\\s";
+        }
+        """);
   }
 }

@@ -16,8 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH;
-
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -70,7 +68,7 @@ public class MultiVariableDeclarationTest {
               int y = 2;
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -99,7 +97,7 @@ public class MultiVariableDeclarationTest {
               int b = 1;
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -140,7 +138,7 @@ public class MultiVariableDeclarationTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -169,7 +167,7 @@ public class MultiVariableDeclarationTest {
               }
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -227,7 +225,7 @@ public class MultiVariableDeclarationTest {
               @Deprecated int y = 2;
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -252,7 +250,7 @@ public class MultiVariableDeclarationTest {
               int[][] y = {{0}};
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 
   @Test
@@ -277,6 +275,6 @@ public class MultiVariableDeclarationTest {
               int y;
             }
             """)
-        .doTest(TEXT_MATCH);
+        .doTest();
   }
 }

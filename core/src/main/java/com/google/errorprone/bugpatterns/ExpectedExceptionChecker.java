@@ -28,6 +28,8 @@ import static com.google.errorprone.matchers.Matchers.throwStatement;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.CLASS_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -77,15 +79,10 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
               .withNameMatching(Pattern.compile("expect.*")));
 
   static final Matcher<ExpressionTree> IS_A =
-      anyOf(
-          staticMethod()
-              .onClassAny(
-                  "org.hamcrest.Matchers", "org.hamcrest.CoreMatchers", "org.hamcrest.core.Is")
-              .withSignature("<T>isA(java.lang.Class<T>)"),
-          staticMethod()
-              .onClassAny(
-                  "org.hamcrest.Matchers", "org.hamcrest.CoreMatchers", "org.hamcrest.core.Is")
-              .withSignature("<T>isA(java.lang.Class<?>)"));
+      staticMethod()
+          .onClassAny("org.hamcrest.Matchers", "org.hamcrest.CoreMatchers", "org.hamcrest.core.Is")
+          .named("isA")
+          .withParametersOfType(CLASS_TYPE);
 
   static final Matcher<StatementTree> FAIL_MATCHER =
       anyOf(
@@ -296,5 +293,5 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
       VisitorState.memoize(state -> state.getSymbolFromString("org.hamcrest.Matcher"));
 
   private static final Supplier<Type> ORG_HAMCREST_MATCHER_TYPE =
-      VisitorState.memoize(state -> state.getTypeFromString("org.hamcrest.Matcher"));
+      typeFromString("org.hamcrest.Matcher");
 }

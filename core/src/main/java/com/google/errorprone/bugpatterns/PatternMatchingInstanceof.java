@@ -35,6 +35,7 @@ import com.google.errorprone.bugpatterns.BugChecker.InstanceOfTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression;
 import com.google.errorprone.fixes.SuggestedFix;
+import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.BinaryTree;
@@ -164,11 +165,12 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     String simpleName = IdentifierNames.fixInitialisms(targetType.tsym.getSimpleName().toString());
     String lowerFirstLetter = toLowerCase(String.valueOf(simpleName.charAt(0)));
     String camelCased = lowerFirstLetter + simpleName.substring(1);
+    SuggestedFixes.VariableNamer variableNamer = SuggestedFixes.variableNamer(state);
     if (SourceVersion.isKeyword(camelCased)
         || (unboxed != null && unboxed.getTag() != TypeTag.NONE)) {
-      return lowerFirstLetter;
+      return variableNamer.avoidShadowing(lowerFirstLetter);
     }
-    return camelCased;
+    return variableNamer.avoidShadowing(camelCased);
   }
 
   /** Finds trees which are implied by the {@code instanceOfTree}. */

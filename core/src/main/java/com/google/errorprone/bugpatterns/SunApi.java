@@ -33,6 +33,7 @@ import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ModuleSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
+import java.util.Optional;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -70,11 +71,11 @@ public class SunApi extends BugChecker implements MemberSelectTreeMatcher, Ident
   }
 
   private static boolean inJdkUnsupportedModule(Symbol sym) {
-    PackageSymbol packageSymbol = ASTHelpers.enclosingPackage(sym);
-    if (packageSymbol == null) {
+    Optional<PackageSymbol> packageSymbol = ASTHelpers.enclosingPackage(sym);
+    if (packageSymbol.isEmpty()) {
       return false;
     }
-    ModuleSymbol moduleSymbol = (ModuleSymbol) packageSymbol.getEnclosingElement();
+    ModuleSymbol moduleSymbol = (ModuleSymbol) packageSymbol.get().getEnclosingElement();
     if (moduleSymbol == null) {
       return false;
     }

@@ -333,13 +333,7 @@ public class DiagnosticTestHelper {
     return result;
   }
 
-  private static class SimpleStringContains implements Predicate<String> {
-    private final String pattern;
-
-    SimpleStringContains(String pattern) {
-      this.pattern = pattern;
-    }
-
+  private record SimpleStringContains(String pattern) implements Predicate<String> {
     @Override
     public boolean test(String input) {
       return input.contains(pattern);
