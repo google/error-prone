@@ -1556,6 +1556,10 @@ public final class SuggestedFixes {
   /** Create a plausible URI to use in {@link #compilesWithFix}. */
   @VisibleForTesting
   static URI sourceURI(URI uri) {
+    if (uri.getScheme() == null) {
+      String path = uri.toString();
+      return URI.create(path.startsWith("/") ? "file:" + path : "file:/" + path);
+    }
     if (!uri.getScheme().equals("jar")) {
       return uri;
     }
