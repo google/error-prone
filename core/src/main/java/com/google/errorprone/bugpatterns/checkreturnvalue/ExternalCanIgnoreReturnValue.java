@@ -18,6 +18,9 @@ package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.ImmutableSetMultimap.toImmutableSetMultimap;
+import static com.google.common.io.MoreFiles.asCharSource;
+import static com.google.common.io.Resources.asCharSource;
+import static com.google.common.io.Resources.getResource;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ApiFactory.fullyErasedAndUnannotatedType;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -26,7 +29,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.io.CharSource;
-import com.google.common.io.MoreFiles;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.checkreturnvalue.Rules.ErrorProneMethodRule;
 import com.google.errorprone.suppliers.Supplier;
@@ -98,13 +100,19 @@ public final class ExternalCanIgnoreReturnValue extends ErrorProneMethodRule {
     AS_STRINGS {
       @Override
       MethodPredicate load(String file) throws IOException {
-        return configByInterpretingMethodsAsStrings(MoreFiles.asCharSource(Paths.get(file), UTF_8));
+        return configByInterpretingMethodsAsStrings(asCharSource(Paths.get(file), UTF_8));
+      }
+    },
+    AS_STRINGS_FROM_RESOURCE {
+      @Override
+      MethodPredicate load(String file) throws IOException {
+        return configByInterpretingMethodsAsStrings(asCharSource(getResource(file), UTF_8));
       }
     },
     PARSE_TOKENS {
       @Override
       MethodPredicate load(String file) throws IOException {
-        return configByParsingApiObjects(MoreFiles.asCharSource(Paths.get(file), UTF_8));
+        return configByParsingApiObjects(asCharSource(Paths.get(file), UTF_8));
       }
     };
 
