@@ -153,18 +153,28 @@ public class ListRemoveAmbiguousTest {
               }
             }
             """)
-        .addOutputLines(
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void refactoringSequencedImplicitThisEnclosingClass() {
+    refactoringHelper
+        .addInputLines(
             "MyList.java",
             """
             import java.util.AbstractList;
 
             abstract class MyList extends AbstractList<Integer> {
-              void foo() {
-                removeFirst();
-                removeLast();
+              class Inner {
+                void foo() {
+                  remove(0);
+                  remove(size() - 1);
+                }
               }
             }
             """)
+        .expectUnchanged()
         .doTest();
   }
 

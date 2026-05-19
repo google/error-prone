@@ -22,7 +22,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
-import static com.google.errorprone.util.ASTHelpers.getReceiverType;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
@@ -38,7 +37,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.Commented;
 import com.google.errorprone.util.Comments;
 import com.sun.source.tree.BinaryTree;
-import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -88,17 +86,7 @@ public class ListRemoveAmbiguous extends BugChecker implements MethodInvocationT
     }
 
     Type argType = getType(arg);
-    Type receiverType;
-    ExpressionTree receiver = ASTHelpers.getReceiver(tree);
-    if (receiver == null) {
-      ClassTree enclosingClass = ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class);
-      if (enclosingClass == null) {
-        return NO_MATCH;
-      }
-      receiverType = ASTHelpers.getType(enclosingClass);
-    } else {
-      receiverType = getReceiverType(tree);
-    }
+    Type receiverType = ASTHelpers.getReceiverType(tree);
     if (receiverType == null) {
       return NO_MATCH;
     }
