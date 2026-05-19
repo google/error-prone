@@ -1247,6 +1247,9 @@ Including the first argument of checkNotNull in the failure message is not usefu
 __[PreferInstanceofOverGetKind](bugpattern/PreferInstanceofOverGetKind)__<br>
 Prefer instanceof over getKind() checks where possible, as these work well with pattern matching instanceofs
 
+__[PreferTestParameter](bugpattern/PreferTestParameter)__<br>
+When exhaustively testing all values of a single enum or boolean parameter, prefer @TestParameter over @TestParameters.
+
 __[PreferThrowsTag](bugpattern/PreferThrowsTag)__<br>
 Prefer the @throws javadoc tag instead of @exception.
 
