@@ -229,6 +229,7 @@ import com.google.errorprone.bugpatterns.JavaUtilDateChecker;
 import com.google.errorprone.bugpatterns.JdkObsolete;
 import com.google.errorprone.bugpatterns.LabelledBreakTarget;
 import com.google.errorprone.bugpatterns.LambdaFunctionalInterface;
+import com.google.errorprone.bugpatterns.ListRemoveAmbiguous;
 import com.google.errorprone.bugpatterns.LiteByteStringUtf8;
 import com.google.errorprone.bugpatterns.LiteEnumValueOf;
 import com.google.errorprone.bugpatterns.LiteProtoToString;
@@ -1062,6 +1063,7 @@ public class BuiltInCheckerSuppliers {
           JodaPlusMinusLong.class,
           JodaTimeConverterManager.class,
           JodaWithDurationAddedLong.class,
+          ListRemoveAmbiguous.class,
           LiteEnumValueOf.class,
           LiteProtoToString.class,
           LockNotBeforeTry.class,
