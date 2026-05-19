@@ -487,4 +487,53 @@ public class ArrayToStringTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void methodReference() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static java.util.stream.Collectors.joining;
+
+            import java.util.stream.Stream;
+
+            class Test {
+              void f(Stream<int[]> s) {
+                s.map(Object::toString).collect(joining(", "));
+              }
+
+              void g(Stream<int[][]> s) {
+                s.map(Object::toString).collect(joining(", "));
+              }
+
+              void h(Stream<int[]> s) {
+                s.map(String::valueOf).collect(joining(", "));
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static java.util.stream.Collectors.joining;
+
+            import java.util.Arrays;
+            import java.util.stream.Stream;
+
+            class Test {
+              void f(Stream<int[]> s) {
+                s.map(Arrays::toString).collect(joining(", "));
+              }
+
+              void g(Stream<int[][]> s) {
+                s.map(Arrays::deepToString).collect(joining(", "));
+              }
+
+              void h(Stream<int[]> s) {
+                s.map(Arrays::toString).collect(joining(", "));
+              }
+            }
+            """)
+        .doTest();
+  }
 }

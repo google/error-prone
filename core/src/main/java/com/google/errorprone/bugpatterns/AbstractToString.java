@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -30,21 +31,27 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.FormatMethod;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompoundAssignmentTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.util.TreePath;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import com.sun.tools.javac.code.Type.MethodType;
+import com.sun.tools.javac.util.Name;
 import java.util.List;
 import java.util.Optional;
 import javax.lang.model.type.TypeKind;
@@ -56,7 +63,10 @@ import javax.lang.model.type.TypeKind;
  * <p>See examples in {@link StreamToString} and {@link ArrayToString}.
  */
 public abstract class AbstractToString extends BugChecker
-    implements BinaryTreeMatcher, MethodInvocationTreeMatcher, CompoundAssignmentTreeMatcher {
+    implements BinaryTreeMatcher,
+        MethodInvocationTreeMatcher,
+        MemberReferenceTreeMatcher,
+        CompoundAssignmentTreeMatcher {
 
   /** The type to match on. */
   protected abstract TypePredicate typePredicate();
@@ -92,6 +102,37 @@ public abstract class AbstractToString extends BugChecker
    */
   protected abstract Optional<Fix> toStringFix(
       Tree toStringCall, ExpressionTree stringifiedExpr, VisitorState state);
+
+  /**
+   * Constructs a fix for a method reference to {@code toString()}, e.g. {@code Object::toString}.
+   *
+   * @param receiverType the type of the object {@code toString()} will be called on
+   */
+  protected Optional<Fix> memberReferenceFix(
+      MemberReferenceTree tree, Type receiverType, VisitorState state) {
+    return Optional.empty();
+  }
+
+  private static final Supplier<Name> TO_STRING_NAME = memoize(state -> state.getName("toString"));
+
+  private static final Supplier<Symbol> STRING_VALUE_OF_OBJECT =
+      memoize(
+          state -> {
+            var stringSymbol = state.getSymtab().stringType.tsym;
+            for (Symbol sym : stringSymbol.members().getSymbolsByName(state.getName("valueOf"))) {
+              if (sym instanceof MethodSymbol methodSym
+                  && methodSym.isStatic()
+                  && methodSym.getParameters().size() == 1
+                  && state
+                      .getTypes()
+                      .isSameType(
+                          methodSym.getParameters().get(0).asType(),
+                          state.getSymtab().objectType)) {
+                return methodSym;
+              }
+            }
+            return null;
+          });
 
   private static final Matcher<ExpressionTree> TO_STRING =
       instanceMethod().anyClass().named("toString").withNoParameters();
@@ -135,10 +176,12 @@ public abstract class AbstractToString extends BugChecker
 
   private final boolean handleJoinerVarargs;
   private final boolean handleJoinerIterable;
+  private final boolean handleMemberReference;
 
   protected AbstractToString(ErrorProneFlags flags) {
     this.handleJoinerVarargs = flags.getBoolean("AbstractToString:Joiner").orElse(true);
     this.handleJoinerIterable = flags.getBoolean("AbstractToString:JoinerIterable").orElse(true);
+    this.handleMemberReference = flags.getBoolean("AbstractToString:MemberReference").orElse(true);
   }
 
   private static boolean isInVarargsPosition(
@@ -231,12 +274,48 @@ public abstract class AbstractToString extends BugChecker
               elementType.getTypeArguments().getFirst(),
               argTree,
               argTree,
+              // TODO(cpovirk): Suggest a fix.
               ToStringKind.NONE,
               state);
         }
       }
     }
     return NO_MATCH;
+  }
+
+  @Override
+  public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
+    if (!handleMemberReference) {
+      return NO_MATCH;
+    }
+
+    MethodSymbol symbol = getSymbol(tree);
+    if (symbol == null || !isToStringOrIsStringValueOf(symbol, state)) {
+      return NO_MATCH;
+    }
+
+    Type targetType = getType(tree);
+    if (targetType == null) {
+      return NO_MATCH;
+    }
+
+    Type descriptorType = state.getTypes().findDescriptorType(targetType);
+    if (descriptorType == null || descriptorType.getParameterTypes().isEmpty()) {
+      return NO_MATCH;
+    }
+
+    Type receiverType = descriptorType.getParameterTypes().get(0);
+    if (typePredicate().apply(receiverType, state)) {
+      handleStringifiedTree(receiverType, tree, tree, ToStringKind.MEMBER_REFERENCE, state);
+    }
+
+    return NO_MATCH;
+  }
+
+  private boolean isToStringOrIsStringValueOf(MethodSymbol symbol, VisitorState state) {
+    return (symbol.getSimpleName().equals(TO_STRING_NAME.get(state))
+            && symbol.getParameters().isEmpty())
+        || symbol.equals(STRING_VALUE_OF_OBJECT.get(state));
   }
 
   @Override
@@ -293,7 +372,7 @@ public abstract class AbstractToString extends BugChecker
             stringifiedExpr,
             state,
             type,
-            getFix(stringifiedExpr, state, toStringCall, toStringKind)));
+            getFix(type, stringifiedExpr, state, toStringCall, toStringKind)));
   }
 
   private static Type type(ExpressionTree tree) {
@@ -305,6 +384,7 @@ public abstract class AbstractToString extends BugChecker
   }
 
   private Optional<Fix> getFix(
+      Type type,
       ExpressionTree stringifiedExpr,
       VisitorState state,
       Tree toStringCall,
@@ -312,6 +392,7 @@ public abstract class AbstractToString extends BugChecker
     return switch (toStringKind) {
       case IMPLICIT, FLOGGER, FORMAT_METHOD -> implicitToStringFix(stringifiedExpr, state);
       case EXPLICIT -> toStringFix(toStringCall, stringifiedExpr, state);
+      case MEMBER_REFERENCE -> memberReferenceFix((MemberReferenceTree) toStringCall, type, state);
       case NONE -> Optional.empty();
     };
   }
@@ -331,6 +412,7 @@ public abstract class AbstractToString extends BugChecker
     EXPLICIT,
     FORMAT_METHOD,
     FLOGGER,
+    MEMBER_REFERENCE,
     NONE,
   }
 }
