@@ -63,7 +63,7 @@ public class MoreThanOneScopeAnnotationOnClass extends BugChecker implements Cla
         return buildDescription(classTree)
             .setMessage(
                 "This class is annotated with more than one scope annotation: "
-                    + annotationDebugString(scopeAnnotations)
+                    + annotationDebugString(scopeAnnotations, state)
                     + ". However, classes can only have one scope annotation applied to them. "
                     + "Please remove all but one of them.")
             .build();
@@ -72,7 +72,8 @@ public class MoreThanOneScopeAnnotationOnClass extends BugChecker implements Cla
     return Description.NO_MATCH;
   }
 
-  private static String annotationDebugString(List<AnnotationTree> scopeAnnotations) {
-    return Joiner.on(", ").join(scopeAnnotations);
+  private static String annotationDebugString(
+      List<AnnotationTree> scopeAnnotations, VisitorState state) {
+    return Joiner.on(", ").join(scopeAnnotations.stream().map(state::getSourceForNode).iterator());
   }
 }
