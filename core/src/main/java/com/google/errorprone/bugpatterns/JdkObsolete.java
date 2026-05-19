@@ -153,7 +153,7 @@ public class JdkObsolete extends BugChecker
                       + " use LinkedHashMap."),
               new Obsolete(
                   "java.util.Enumeration", "Enumeration is an ancient precursor to Iterator."),
-              new Obsolete("junit.framework.TestCase", "JUnit3 is obsolete; use JUnit4 instead."))
+              new Obsolete("junit.framework.TestCase", "JUnit3 is obsolete."))
           .stream()
           .collect(toImmutableMap(Obsolete::qualifiedName, x -> x));
 
