@@ -177,21 +177,36 @@ public abstract class AbstractToString extends BugChecker
   private final boolean handleJoinerVarargs;
   private final boolean handleJoinerIterable;
   private final boolean handleMemberReference;
+  private final boolean handleVarargsFix;
 
   protected AbstractToString(ErrorProneFlags flags) {
     this.handleJoinerVarargs = flags.getBoolean("AbstractToString:Joiner").orElse(true);
     this.handleJoinerIterable = flags.getBoolean("AbstractToString:JoinerIterable").orElse(true);
     this.handleMemberReference = flags.getBoolean("AbstractToString:MemberReference").orElse(true);
+    this.handleVarargsFix = flags.getBoolean("AbstractToString:VarargsFix").orElse(true);
   }
 
-  private static boolean isInVarargsPosition(
+  private boolean isElementOfVarargsArray(
       ExpressionTree argTree, MethodInvocationTree methodInvocationTree, VisitorState state) {
-    int parameterCount = getSymbol(methodInvocationTree).getParameters().size();
+    MethodSymbol symbol = getSymbol(methodInvocationTree);
+    if (!symbol.isVarArgs()) {
+      return false;
+    }
+    int parameterCount = symbol.getParameters().size();
     List<? extends ExpressionTree> arguments = methodInvocationTree.getArguments();
-    // Don't match if we're passing an array into a varargs parameter, but do match if there are
-    // other parameters along with it.
-    return (arguments.size() > parameterCount || !state.getTypes().isArray(getType(argTree)))
-        && arguments.indexOf(argTree) >= parameterCount - 1;
+    int index = arguments.indexOf(argTree);
+    if (index < parameterCount - 1) {
+      return false;
+    }
+    if (arguments.size() > parameterCount) {
+      return true;
+    }
+    if (!handleVarargsFix) {
+      return !state.getTypes().isArray(getType(argTree));
+    }
+    Type argType = getType(argTree);
+    return !state.getTypes().isArray(argType)
+        || !state.getTypes().isSubtype(argType, symbol.getParameters().getLast().type);
   }
 
   private static boolean isVarargsArray(
@@ -229,14 +244,14 @@ public abstract class AbstractToString extends BugChecker
     }
     if (FORMAT_METHOD.matches(tree, state)) {
       for (ExpressionTree argTree : tree.getArguments()) {
-        if (isInVarargsPosition(argTree, tree, state)) {
+        if (isElementOfVarargsArray(argTree, tree, state)) {
           handleStringifiedTree(argTree, ToStringKind.FORMAT_METHOD, state);
         }
       }
     }
     if (STRING_FORMAT.matches(tree, state)) {
       for (ExpressionTree argTree : tree.getArguments()) {
-        if (isInVarargsPosition(argTree, tree, state)) {
+        if (isElementOfVarargsArray(argTree, tree, state)) {
           handleStringifiedTree(argTree, ToStringKind.IMPLICIT, state);
         }
       }

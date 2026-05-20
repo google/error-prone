@@ -536,4 +536,51 @@ public class ArrayToStringTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void stringFormat_array() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(int[] xs) {
+                // BUG: Diagnostic contains: Arrays.toString(xs)
+                String.format("%s", xs);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void varargsPassThrough() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(String format, Object... args) {
+                String.format(format, args);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void primitiveArray_varargs() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(int[] xs) {
+                // BUG: Diagnostic contains: Arrays.toString(xs)
+                String.format("%s", xs);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
