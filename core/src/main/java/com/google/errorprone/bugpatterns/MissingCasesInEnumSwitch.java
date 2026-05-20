@@ -30,9 +30,12 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 import java.util.Optional;
@@ -59,10 +62,23 @@ public class MissingCasesInEnumSwitch extends BugChecker
     Optional<? extends CaseTree> defaultCase =
         cases.stream().filter(ASTHelpers::isSwitchDefault).findFirst();
 
+    long unconditionalCases =
+        cases.stream()
+            .filter(c -> SwitchUtils.hasCasePattern(c) && !isGuarded(c))
+            .flatMap(c -> c.getLabels().stream())
+            .filter(label -> label instanceof PatternCaseLabelTree)
+            .map(label -> (PatternCaseLabelTree) label)
+            .filter(
+                patternLabel ->
+                    ASTHelpers.isSubtype(
+                        switchType, ASTHelpers.getType(patternLabel.getPattern()), state))
+            .count();
+
     // Continue to perform the check only if:
-    //  - there is no default case present or
+    //  - there is no default nor unconditional case present, or
     //  - the default case only exists for potential version skew.
-    if (defaultCase.isPresent() && !isDefaultCaseForSkew(tree, defaultCase.get(), state)) {
+    if ((defaultCase.isPresent() && !isDefaultCaseForSkew(tree, defaultCase.get(), state))
+        || unconditionalCases > 0) {
       return Description.NO_MATCH;
     }
 
@@ -141,5 +157,28 @@ public class MissingCasesInEnumSwitch extends BugChecker
       message.append(String.format(", and %d others", unhandled.size() - numberToShow));
     }
     return message.toString();
+  }
+
+  /**
+   * Determines whether the given case tree has a "guarded" pattern. As defined in the JLS,
+   * "unguarded" means that either there is no guard or the guard is the boolean literal `true`, and
+   * "guarded" is the logical negation of "unguarded".
+   */
+  private static boolean isGuarded(CaseTree caseTree) {
+    // Not a pattern
+    if (!SwitchUtils.hasCasePattern(caseTree)) {
+      return false;
+    }
+
+    if (caseTree.getGuard() == null) {
+      return false;
+    }
+
+    // Guard is present and is `true`
+    ExpressionTree guard = ASTHelpers.stripParentheses(caseTree.getGuard());
+    return !(guard.getKind() == Kind.BOOLEAN_LITERAL
+        && guard instanceof LiteralTree literalTree
+        && literalTree.getValue() instanceof Boolean b
+        && b);
   }
 }
