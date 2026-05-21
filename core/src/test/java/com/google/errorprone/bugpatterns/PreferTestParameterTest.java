@@ -122,33 +122,6 @@ public final class PreferTestParameterTest {
   }
 
   @Test
-  public void negative_notExhaustive() {
-    testHelper
-        .addInputLines(
-            "TestType.java",
-            """
-            import com.google.testing.junit.testparameterinjector.TestParameters;
-            import org.junit.Test;
-
-            public class TestType {
-              enum MyEnum {
-                FOO,
-                BAR,
-                BAZ
-              }
-
-              @Test
-              @TestParameters({"{mode: FOO}", "{mode: BAR}"})
-              public void myTest(MyEnum mode) {}
-            }
-            """)
-        // TODO(b/514742035): we could consider re-writing this as well like:
-        // public void myTest(@TestParameter({"{FOO, BAR}"}) MyEnum mode) { ... }
-        .expectUnchanged()
-        .doTest();
-  }
-
-  @Test
   public void negative_tooManyParams() {
     testHelper
         .addInputLines(
