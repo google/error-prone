@@ -335,7 +335,14 @@ public class JdkObsolete extends BugChecker
                       "java.lang.String",
                       "java.io.OutputStream",
                       "java.lang.String"),
-              "Use IOUtils.writeLines(Collection, String, OutputStream, Charset) instead."));
+              "Use IOUtils.writeLines(Collection, String, OutputStream, Charset) instead."),
+          new ObsoleteApi(
+              instanceMethod()
+                  .onExactClass("java.util.regex.Matcher")
+                  .namedAnyOf("hitEnd", "requireEnd"),
+              "The hitEnd() and requireEnd() methods are mostly for implementing java.util.Scanner"
+                  + " or similar streaming APIs. If you only want to know if a match extends to"
+                  + " the end of the input, compare matcher.end() to the input length instead."));
 
   private static final ImmutableList<ObsoleteApi> OBSOLETE_CONSTRUCTORS =
       ImmutableList.of(
