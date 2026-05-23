@@ -10,9 +10,9 @@ if (x.equals(y)) {
 }
 ```
 
-We understand that any `Integer` will *not* be equal to any `String`. However,
-the signature of the `equals` method accepts any Object, so the compiler will
-happily allow us to pass an Integer to the equals method. However, it will
+We understand that no `Integer` will be equal to any `String`. However, the
+signature of the `equals` method accepts any Object, so the compiler will
+happily allow us to pass an Integer to the equals method. That method will
 always return false, which is probably not what we intended.
 
 This check detects circumstances where the equals method is called when the two
