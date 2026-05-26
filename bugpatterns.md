@@ -1937,6 +1937,9 @@ Using static imports for types is unnecessary
 __[UseEnumSwitch](bugpattern/UseEnumSwitch)__<br>
 Prefer using a switch instead of a chained if-else for enums
 
+__[VarWithPrimitive](bugpattern/VarWithPrimitive)__<br>
+Avoid using &#96;var&#96; with primitive types. Explicit primitive type names are short and clear, and &#96;var&#96; provides no benefit in readability while potentially hiding the type.
+
 __[VoidMissingNullable](bugpattern/VoidMissingNullable)__<br>
 The type Void is not annotated @Nullable
 
