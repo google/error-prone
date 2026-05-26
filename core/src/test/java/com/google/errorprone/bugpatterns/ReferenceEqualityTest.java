@@ -54,7 +54,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_const() {
+  public void positive_const() {
     compilationHelper
         .addSourceLines(
             "Foo.java",
@@ -70,10 +70,12 @@ public class ReferenceEqualityTest {
               public static final Foo CONST = new Foo();
 
               boolean f(Foo a) {
+                // BUG: Diagnostic contains:
                 return a == CONST;
               }
 
               boolean f(Object o, Foo a) {
+                // BUG: Diagnostic contains:
                 return o == a;
               }
             }
@@ -82,7 +84,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_extends_equalsObject() {
+  public void extends_equalsObject() {
     compilationHelper
         .addSourceLines(
             "Sup.java",
@@ -100,6 +102,7 @@ public class ReferenceEqualityTest {
 
             class Test extends Sup {
               boolean f(Object a, Test b) {
+                // BUG: Diagnostic contains: a.equals(b)
                 return a == b;
               }
             }
@@ -158,7 +161,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_noEquals() {
+  public void positive_noEquals() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -167,6 +170,7 @@ public class ReferenceEqualityTest {
 
             class Test {
               boolean f(Test a, Test b) {
+                // BUG: Diagnostic contains: a.equals(b)
                 return a == b;
               }
             }
@@ -363,6 +367,7 @@ public class ReferenceEqualityTest {
 
             class Test implements Sup {
               boolean f(Object a, Test b) {
+                // BUG: Diagnostic contains: a.equals(b)
                 return a == b;
               }
             }
@@ -434,13 +439,17 @@ public class ReferenceEqualityTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import " + MayImplementEquals.class.getCanonicalName() + ";",
-            "abstract class Test {",
-            "  abstract MayImplementEquals getter();",
-            "  boolean f(MayImplementEquals b) {",
-            "    return getter() == b;",
-            "  }",
-            "}")
+            """
+            import %s;
+            abstract class Test {
+              abstract MayImplementEquals getter();
+              boolean f(MayImplementEquals b) {
+                // BUG: Diagnostic contains: getter().equals(b)
+                return getter() == b;
+              }
+            }
+            """
+                .formatted(MayImplementEquals.class.getCanonicalName()))
         .withClasspath(MayImplementEquals.class, ReferenceEqualityTest.class)
         .doTest();
   }
@@ -463,6 +472,7 @@ public class ReferenceEqualityTest {
               }
 
               boolean g(X x1, X x2) {
+                // BUG: Diagnostic contains:
                 return x1 == x2;
               }
             }

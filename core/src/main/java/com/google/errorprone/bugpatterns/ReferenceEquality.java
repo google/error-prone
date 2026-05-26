@@ -22,18 +22,15 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -63,9 +60,6 @@ public class ReferenceEquality extends AbstractReferenceEquality {
       return false;
     }
     if (ASTHelpers.isSubtype(type, state.getSymtab().classType, state)) {
-      return false;
-    }
-    if (!implementsEquals(type, state)) {
       return false;
     }
     return true;
@@ -113,28 +107,4 @@ public class ReferenceEquality extends AbstractReferenceEquality {
   private static Symbol getOnlyMember(VisitorState state, Type type, String name) {
     return getOnlyElement(type.tsym.members().getSymbolsByName(state.getName(name)));
   }
-
-  /** Check if the method declares or inherits an implementation of .equals() */
-  public static boolean implementsEquals(Type type, VisitorState state) {
-    Name equalsName = EQUALS.get(state);
-    Symbol objectEquals = getOnlyMember(state, state.getSymtab().objectType, "equals");
-    for (Type sup : state.getTypes().closure(type)) {
-      if (ASTHelpers.isSameType(sup, state.getSymtab().objectType, state)) {
-        continue;
-      }
-      Scope scope = sup.tsym.members();
-      if (scope == null) {
-        continue;
-      }
-      for (Symbol sym : scope.getSymbolsByName(equalsName)) {
-        if (sym.overrides(objectEquals, type.tsym, state.getTypes(), /* checkResult= */ false)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  private static final Supplier<Name> EQUALS =
-      VisitorState.memoize(state -> state.getName("equals"));
 }
