@@ -171,9 +171,13 @@ public class Finally extends BugChecker
     }
 
     /**
-     * The target of a jump statement (break or continue) is (1) the enclosing loop if the jump is
-     * unlabeled (2) the enclosing LabeledStatementTree with matching label if the jump is labeled
-     * (3) the enclosing switch statement if the jump is a break
+     * The target of a jump statement (break or continue) is:
+     *
+     * <ol>
+     *   <li>the enclosing loop if the jump is unlabeled;
+     *   <li>the enclosing LabeledStatementTree with matching label if the jump is labeled;
+     *   <li>the enclosing switch statement if the jump is a break.
+     * </ol>
      *
      * <p>If the target of a break or continue statement is encountered before reaching a finally
      * block, return NO_MATCH.

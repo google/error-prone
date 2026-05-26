@@ -165,8 +165,7 @@ public class WakelockReleasedDangerously extends BugChecker implements MethodInv
   /**
    * Whether the given WakeLock may throw an unexpected RuntimeException when released.
    *
-   * <p>Returns true if: 1) the given WakeLock was acquired with timeout, and 2) the given WakeLock
-   * is reference counted.
+   * <p>Returns true if the given WakeLock was acquired with timeout and it is reference counted.
    */
   private boolean wakelockMayThrow(Symbol wakelockSymbol, VisitorState state) {
     ClassTree enclosingClass = getTopLevelClass(state);
