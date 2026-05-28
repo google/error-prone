@@ -41,6 +41,7 @@ public class AssertThrowsMinimizerTest {
                   Builder setBar(Bar bar);
 
                   Builder setBar(Supplier<Bar> bar);
+
                   Foo build();
                 }
               }
@@ -514,7 +515,7 @@ class Test {
                 throw new Exception();
               }
 
-              public static Object getThingUnchecked()  {
+              public static Object getThingUnchecked() {
                 throw new RuntimeException();
               }
 
@@ -679,10 +680,11 @@ class Test {
         .addInputLines(
             "Test.java",
             """
+            import static org.junit.Assert.assertThrows;
+
             import java.util.ArrayList;
             import java.util.List;
             import java.util.function.Supplier;
-            import static org.junit.Assert.assertThrows;
 
             class Test {
               void f() {
@@ -706,10 +708,11 @@ class Test {
         .addInputLines(
             "Test.java",
             """
+            import static org.junit.Assert.assertThrows;
+
             import java.util.ArrayList;
             import java.util.List;
             import java.util.function.Supplier;
-            import static org.junit.Assert.assertThrows;
 
             class Test {
               void f() {
@@ -725,10 +728,11 @@ class Test {
         .addOutputLines(
             "Test.java",
             """
+            import static org.junit.Assert.assertThrows;
+
             import java.util.ArrayList;
             import java.util.List;
             import java.util.function.Supplier;
-            import static org.junit.Assert.assertThrows;
 
             class Test {
               void f() {
@@ -797,10 +801,11 @@ class Test {
         .addInputLines(
             "Test.java",
             """
+            import static org.junit.Assert.assertThrows;
+
             import java.util.ArrayList;
             import java.util.List;
             import java.util.function.Supplier;
-            import static org.junit.Assert.assertThrows;
 
             class Test {
               void f() {
@@ -867,10 +872,11 @@ class Test {
         .addOutputLines(
             "Test.java",
             """
+            import static org.junit.Assert.assertThrows;
+
             import java.util.ArrayList;
             import java.util.List;
             import java.util.function.Supplier;
-            import static org.junit.Assert.assertThrows;
 
             class Test {
               void f() {
@@ -984,10 +990,11 @@ class Test {
         .addInputLines(
             "Test.java",
             """
+            import static org.junit.Assert.assertThrows;
+
             import java.util.ArrayList;
             import java.util.List;
             import java.util.function.Supplier;
-            import static org.junit.Assert.assertThrows;
 
             abstract class Test {
               void f() {
@@ -1002,10 +1009,11 @@ class Test {
         .addOutputLines(
             "Test.java",
             """
+            import static org.junit.Assert.assertThrows;
+
             import java.util.ArrayList;
             import java.util.List;
             import java.util.function.Supplier;
-            import static org.junit.Assert.assertThrows;
 
             abstract class Test {
               void f() {
@@ -1028,10 +1036,11 @@ class Test {
         .addInputLines(
             "Test.java",
             """
+            import static org.junit.Assert.assertThrows;
+
             import java.util.ArrayList;
             import java.util.List;
             import java.util.function.Supplier;
-            import static org.junit.Assert.assertThrows;
 
             abstract class Test {
               void f(String s, Object o) {
@@ -1055,10 +1064,11 @@ class Test {
         .addOutputLines(
             "Test.java",
             """
+            import static org.junit.Assert.assertThrows;
+
             import java.util.ArrayList;
             import java.util.List;
             import java.util.function.Supplier;
-            import static org.junit.Assert.assertThrows;
 
             abstract class Test {
               void f(String s, Object o) {

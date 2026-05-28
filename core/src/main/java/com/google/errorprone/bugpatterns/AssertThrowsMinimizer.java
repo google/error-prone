@@ -69,13 +69,14 @@ import java.util.Optional;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
+import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(summary = "Minimize the amount of logic in assertThrows", severity = WARNING)
 public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<ExpressionTree> MATCHER =
-      staticMethod().onClass("org.junit.Assert").named("assertThrows");
+      anyOf(staticMethod().onClass("org.junit.Assert").named("assertThrows"));
 
   private final ConstantExpressions constantExpressions;
   private final boolean useVarType;
@@ -119,11 +120,10 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
     if (!(tree.getArguments().getLast() instanceof LambdaExpressionTree lambdaExpressionTree)) {
       return Optional.empty();
     }
-    Type firstArgumentType = getType(tree.getArguments().get(0));
-    if (firstArgumentType.getTypeArguments().isEmpty()) {
+    Type exceptionType = getExceptionType(tree, state);
+    if (exceptionType == null) {
       return Optional.empty();
     }
-    Type exceptionType = firstArgumentType.getTypeArguments().get(0);
     MethodInvocationTree runnable;
     switch (lambdaExpressionTree.getBody()) {
       case BlockTree blockTree -> {
@@ -280,7 +280,7 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
       // constant fields and string concatenation.
       return false;
     }
-    if (isCheckedException(exceptionType, state) && !throwsSubtypeOf(tree, exceptionType, state)) {
+    if (isCheckedExceptionType(exceptionType, state) && !maybeThrows(tree, exceptionType, state)) {
       return false;
     }
     boolean needsHoisting =
@@ -327,18 +327,22 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
     return !tree.getClassBody().getMembers().stream().allMatch(m -> m instanceof MethodTree);
   }
 
-  private static boolean throwsSubtypeOf(
-      ExpressionTree tree, Type exceptionType, VisitorState state) {
-    Types types = state.getTypes();
-    return types.isSubtype(state.getSymtab().runtimeExceptionType, exceptionType)
-        || getThrownExceptions(tree, state).stream()
-            .anyMatch(t -> isCheckedException(t, state) && types.isSubtype(t, exceptionType));
+  private static @Nullable Type getExceptionType(MethodInvocationTree tree, VisitorState state) {
+    Type firstArgumentType = getType(tree.getArguments().get(0));
+    if (firstArgumentType.getTypeArguments().isEmpty()) {
+      return null;
+    }
+    return firstArgumentType.getTypeArguments().get(0);
   }
 
-  private static boolean isCheckedException(Type exception, VisitorState state) {
+  private static boolean maybeThrows(ExpressionTree tree, Type exceptionType, VisitorState state) {
     Types types = state.getTypes();
-    return !types.isSubtype(exception, state.getSymtab().runtimeExceptionType)
-        && !types.isSubtype(exception, state.getSymtab().errorType);
+    if (types.isSubtype(state.getSymtab().runtimeExceptionType, exceptionType)) {
+      // The exception is Exception or Throwable, assume anything could throw it
+      return true;
+    }
+    return getThrownExceptions(tree, state).stream()
+        .anyMatch(t -> types.isAssignable(exceptionType, t));
   }
 
   private static final Matcher<ExpressionTree> KNOWN_SAFE =
