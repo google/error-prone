@@ -766,7 +766,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   public UVariableDecl visitVariable(VariableTree tree, Void v) {
     return UVariableDecl.create(
         tree.getName(),
-        (tree.getType() == null) ? null : templateType(tree.getType()),
+        UVariableDecl.isVarType(tree) ? null : templateType(tree.getType()),
         template(getType(tree)),
         (tree.getInitializer() == null) ? null : template(tree.getInitializer()));
   }

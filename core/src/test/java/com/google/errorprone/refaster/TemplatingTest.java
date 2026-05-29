@@ -847,4 +847,28 @@ public class TemplatingTest extends CompilerBasedTest {
                                                         UClassType.create("java.lang.String"))),
                                                 ULocalVarIdent.create("b")))))))))));
   }
+
+  @Test
+  public void localVariableWithVar() {
+    compile(
+        """
+        class LocalVariableExample {
+          public void example(String str) {
+            var x = str;
+          }
+        }
+        """);
+    assertThat(UTemplater.createTemplate(context, getMethodDeclaration("example")))
+        .isEqualTo(
+            BlockTemplate.create(
+                ImmutableMap.of("str", UClassType.create("java.lang.String")),
+                UVariableDecl.create(
+                    "x",
+                    // https://bugs.openjdk.org/browse/JDK-8268850
+                    Runtime.version().feature() >= 27
+                        ? null
+                        : UClassIdent.create("java.lang.String"),
+                    UClassType.create("java.lang.String"),
+                    UFreeIdent.create("str"))));
+  }
 }
