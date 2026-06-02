@@ -65,6 +65,7 @@ import com.google.errorprone.bugpatterns.BooleanLiteral;
 import com.google.errorprone.bugpatterns.BooleanParameter;
 import com.google.errorprone.bugpatterns.BoxedPrimitiveConstructor;
 import com.google.errorprone.bugpatterns.BoxedPrimitiveEquality;
+import com.google.errorprone.bugpatterns.BoxingComparator;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugPatternNaming;
 import com.google.errorprone.bugpatterns.ByteBufferBackingArray;
@@ -939,6 +940,7 @@ public class BuiltInCheckerSuppliers {
           BigDecimalLiteralDouble.class,
           BooleanLiteral.class,
           BoxedPrimitiveConstructor.class,
+          BoxingComparator.class,
           BugPatternNaming.class,
           ByteBufferBackingArray.class,
           CacheLoaderNull.class,
