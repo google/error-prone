@@ -668,6 +668,9 @@ This expression can be written more clearly with a boolean literal.
 __[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
 valueOf or autoboxing provides better time and space performance
 
+__[BoxingComparator](bugpattern/BoxingComparator)__<br>
+Comparator.comparing unnecessarily boxes numerical primitives
+
 __[BugPatternNaming](bugpattern/BugPatternNaming)__<br>
 Giving BugPatterns a name different to the enclosing class can be confusing
 
