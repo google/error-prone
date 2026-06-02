@@ -938,16 +938,21 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "abstract class LiteralNullReturnTest {",
-            "  final Object nullObject;",
-            "  {",
-            "    nullObject = null;", // or, more likely, in a constructor
-            "  }",
-            "  Object get() {",
-            "    return nullObject;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            abstract class LiteralNullReturnTest {
+              final Object nullObject;
+
+              {
+                nullObject = null; // or, more likely, in a constructor
+              }
+
+              Object get() {
+                return nullObject;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1224,20 +1229,26 @@ public class ReturnMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullReturnTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "public class NullReturnTest {",
-            "  @Nullable String message;",
-            "  public String getMessage() {",
-            "    return checkNotNull(message);",
-            "  }",
-            // One style of "check not null" method, whose type argument is unannotated, and accepts
-            // a @Nullable input.
-            "  private static <T> T checkNotNull(@Nullable T obj) {",
-            "    if (obj==null) throw new NullPointerException();",
-            "    return obj;",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            import javax.annotation.Nullable;
+
+            public class NullReturnTest {
+              @Nullable String message;
+
+              public String getMessage() {
+                return checkNotNull(message);
+              }
+
+              // One style of "check not null" method, whose type argument is unannotated, and
+              // accepts a @Nullable input.
+              private static <T> T checkNotNull(@Nullable T obj) {
+                if (obj == null) throw new NullPointerException();
+                return obj;
+              }
+            }
+            """)
         .doTest();
   }
 
