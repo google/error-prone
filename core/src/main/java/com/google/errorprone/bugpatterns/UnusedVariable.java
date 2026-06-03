@@ -455,6 +455,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     }
     ElementKind varKind = varSymbol.getKind();
     boolean encounteredSideEffects = false;
+    boolean preferToKeepSideEffects = false;
     SuggestedFix.Builder keepSideEffectsFix =
         SuggestedFix.builder().setShortDescription("remove unused variable");
     SuggestedFix.Builder removeSideEffectsFix =
@@ -468,6 +469,9 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         ExpressionTree initializer = variableTree.getInitializer();
         if (hasSideEffect(initializer) && TOP_LEVEL_EXPRESSIONS.contains(initializer.getKind())) {
           encounteredSideEffects = true;
+          if (isCallToCanIgnoreReturnValueMethod(initializer, state)) {
+            preferToKeepSideEffects = true;
+          }
           switch (varKind) {
             case FIELD -> {
               String newContent =
@@ -528,10 +532,13 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
             continue;
           }
         } else if (tree instanceof AssignmentTree assignmentTree) {
-          if (hasSideEffect(assignmentTree.getExpression())) {
+          var expression = assignmentTree.getExpression();
+          if (hasSideEffect(expression)) {
             encounteredSideEffects = true;
-            keepSideEffectsFix.replace(
-                getStartPosition(tree), getStartPosition(assignmentTree.getExpression()), "");
+            if (isCallToCanIgnoreReturnValueMethod(expression, state)) {
+              preferToKeepSideEffects = true;
+            }
+            keepSideEffectsFix.replace(getStartPosition(tree), getStartPosition(expression), "");
             removeSideEffectsFix.replace(statement, "");
             continue;
           }
@@ -541,9 +548,23 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       keepSideEffectsFix.replace(statement, replacement);
       removeSideEffectsFix.replace(statement, replacement);
     }
-    return encounteredSideEffects
-        ? ImmutableList.of(removeSideEffectsFix.build(), keepSideEffectsFix.build())
-        : ImmutableList.of(keepSideEffectsFix.build());
+    if (preferToKeepSideEffects) {
+      return ImmutableList.of(keepSideEffectsFix.build(), removeSideEffectsFix.build());
+    } else if (encounteredSideEffects) {
+      return ImmutableList.of(removeSideEffectsFix.build(), keepSideEffectsFix.build());
+    } else {
+      /*
+       * When there are no side effects, both fixes make the same edit, so we want to produce only
+       * one. We pick the one that doesn't warn about removing the (nonexistent) side effects.
+       */
+      return ImmutableList.of(keepSideEffectsFix.build());
+    }
+  }
+
+  private static boolean isCallToCanIgnoreReturnValueMethod(
+      ExpressionTree tree, VisitorState state) {
+    return getSymbol(tree) instanceof MethodSymbol method
+        && hasAnnotation(method, "com.google.errorprone.annotations.CanIgnoreReturnValue", state);
   }
 
   private static ImmutableList<SuggestedFix> buildUnusedParameterFixes(
