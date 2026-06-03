@@ -1968,10 +1968,12 @@ class Test extends Super {
         .addSourceLines(
             "Test.java",
             "import " + ClassPathTest.class.getCanonicalName() + ";",
-            "class Test extends ClassPathTest<String> {",
-            "  // BUG: Diagnostic contains: 'Test' has non-final field 'x'",
-            "  int x;",
-            "}")
+            """
+            class Test extends ClassPathTest<String> {
+              // BUG: Diagnostic contains: 'Test' has non-final field 'x'
+              int x;
+            }
+            """)
         .withClasspath(ImmutableCheckerTest.ClassPathTest.class, ImmutableCheckerTest.class)
         .doTest();
   }
@@ -2854,9 +2856,11 @@ class T<@ImmutableTypeParameter X> extends S {}
             """)
         .addSourceLines(
             "Test.class",
-            "class Test {",
-            "  private GenericWithImmutableParam<MutableClass> field;",
-            "}")
+            """
+            class Test {
+              private GenericWithImmutableParam<MutableClass> field;
+            }
+            """)
         .doTest();
   }
 
@@ -2873,9 +2877,11 @@ class T<@ImmutableTypeParameter X> extends S {}
             """)
         .addSourceLines(
             "Test.class",
-            "class Test {",
-            "  private GenericWithImmutableParam<ImmutableContainer<Object>> field;",
-            "}")
+            """
+            class Test {
+              private GenericWithImmutableParam<ImmutableContainer<Object>> field;
+            }
+            """)
         .doTest();
   }
 
@@ -2883,7 +2889,12 @@ class T<@ImmutableTypeParameter X> extends S {}
   public void nestedImmutableTypeParameter_noViolation() {
     withImmutableTypeParameterGeneric()
         .addSourceLines(
-            "Test.class", "class Test<T> {", "  private GenericWithImmutableParam<T> field;", "}")
+            "Test.class",
+            """
+            class Test<T> {
+              private GenericWithImmutableParam<T> field;
+            }
+            """)
         .doTest();
   }
 
@@ -2897,11 +2908,13 @@ class T<@ImmutableTypeParameter X> extends S {}
             """)
         .addSourceLines(
             "Test.class",
-            "class Test {",
-            "  public void method() {",
-            "    GenericWithImmutableParam<MutableClass> value = null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void method() {
+                GenericWithImmutableParam<MutableClass> value = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2915,9 +2928,11 @@ class T<@ImmutableTypeParameter X> extends S {}
             """)
         .addSourceLines(
             "Test.class",
-            "class Test {",
-            "  public void method(GenericWithImmutableParam<MutableClass> value) {}",
-            "}")
+            """
+            class Test {
+              public void method(GenericWithImmutableParam<MutableClass> value) {}
+            }
+            """)
         .doTest();
   }
 
@@ -2931,9 +2946,13 @@ class T<@ImmutableTypeParameter X> extends S {}
             """)
         .addSourceLines(
             "Test.class",
-            "class Test {",
-            "  public GenericWithImmutableParam<MutableClass> method() { return null; }",
-            "}")
+            """
+            class Test {
+              public GenericWithImmutableParam<MutableClass> method() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2942,9 +2961,11 @@ class T<@ImmutableTypeParameter X> extends S {}
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "Test.class",
-            "class Test {",
-            "  public static <T> void method(GenericWithImmutableParam<T> value) { }",
-            "}")
+            """
+            class Test {
+              public static <T> void method(GenericWithImmutableParam<T> value) {}
+            }
+            """)
         .doTest();
   }
 
@@ -2953,9 +2974,13 @@ class T<@ImmutableTypeParameter X> extends S {}
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "Test.class",
-            "class Test {",
-            "  public static <T> GenericWithImmutableParam<T> method() { return null; }",
-            "}")
+            """
+            class Test {
+              public static <T> GenericWithImmutableParam<T> method() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2964,9 +2989,11 @@ class T<@ImmutableTypeParameter X> extends S {}
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "Test.class",
-            "class Test<T> {",
-            "  public void method(GenericWithImmutableParam<T> value) {}",
-            "}")
+            """
+            class Test<T> {
+              public void method(GenericWithImmutableParam<T> value) {}
+            }
+            """)
         .doTest();
   }
 
@@ -2975,10 +3002,15 @@ class T<@ImmutableTypeParameter X> extends S {}
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "Test.class",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "class Test<T> {",
-            "  public GenericWithImmutableParam<T> method() { return null; }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+
+            class Test<T> {
+              public GenericWithImmutableParam<T> method() {
+                return null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -2987,10 +3019,13 @@ class T<@ImmutableTypeParameter X> extends S {}
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "Test.class",
-            "import com.google.errorprone.annotations.ImmutableTypeParameter;",
-            "class Test<T> {",
-            "  public Test(GenericWithImmutableParam<T> param) { }",
-            "}")
+            """
+            import com.google.errorprone.annotations.ImmutableTypeParameter;
+
+            class Test<T> {
+              public Test(GenericWithImmutableParam<T> param) {}
+            }
+            """)
         .doTest();
   }
 
@@ -3004,11 +3039,13 @@ class T<@ImmutableTypeParameter X> extends S {}
             """)
         .addSourceLines(
             "Test.class",
-            "class Test {",
-            "  public void method() {",
-            "    Object obj = (GenericWithImmutableParam<MutableClass>) null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void method() {
+                Object obj = (GenericWithImmutableParam<MutableClass>) null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -3022,14 +3059,16 @@ class T<@ImmutableTypeParameter X> extends S {}
             """)
         .addSourceLines(
             "Test.class",
-            "class Test {",
-            "  public Object method() {",
-            "    // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of"
-                + " type 'MutableClass' is not annotated with"
-                + " @com.google.errorprone.annotations.Immutable",
-            "    return new GenericWithImmutableParam<MutableClass>();",
-            "  }",
-            "}")
+            """
+            class Test {
+              public Object method() {
+                // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of
+                // type 'MutableClass' is not annotated with
+                // @com.google.errorprone.annotations.Immutable
+                return new GenericWithImmutableParam<MutableClass>();
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -3043,11 +3082,13 @@ class T<@ImmutableTypeParameter X> extends S {}
             """)
         .addSourceLines(
             "Test.class",
-            "class Test {",
-            "  public void method() {",
-            "    GenericWithImmutableParam<? extends MutableClass> value = null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void method() {
+                GenericWithImmutableParam<? extends MutableClass> value = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -3064,11 +3105,13 @@ class T<@ImmutableTypeParameter X> extends S {}
             """)
         .addSourceLines(
             "Test.class",
-            "class Test {",
-            "  public void method() {",
-            "    GenericWithImmutableParam<? extends ImmutableClass> value = null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void method() {
+                GenericWithImmutableParam<? extends ImmutableClass> value = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -3085,11 +3128,13 @@ class T<@ImmutableTypeParameter X> extends S {}
             """)
         .addSourceLines(
             "Test.class",
-            "class Test {",
-            "  public void method() {",
-            "    GenericWithImmutableParam<? super ImmutableClass> value = null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              public void method() {
+                GenericWithImmutableParam<? super ImmutableClass> value = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -3226,9 +3271,11 @@ class Invoker {
     withImmutableTypeParameterGeneric()
         .addSourceLines(
             "Test.class",
-            "class Test {",
-            "  private final GenericWithImmutableParam<?> value = null;",
-            "}")
+            """
+            class Test {
+              private final GenericWithImmutableParam<?> value = null;
+            }
+            """)
         .doTest();
   }
 

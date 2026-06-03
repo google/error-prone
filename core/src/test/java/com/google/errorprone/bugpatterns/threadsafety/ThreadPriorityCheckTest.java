@@ -104,13 +104,16 @@ public final class ThreadPriorityCheckTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import com.google.common.util.concurrent.ThreadFactoryBuilder;",
-            "class Test {",
-            "  public void foo() {",
-            "    // BUG: Diagnostic contains: ThreadPriorityCheck",
-            "    new ThreadFactoryBuilder().setPriority(Thread.MAX_PRIORITY);",
-            "  }",
-            "}")
+            """
+            import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+            class Test {
+              public void foo() {
+                // BUG: Diagnostic contains: ThreadPriorityCheck
+                new ThreadFactoryBuilder().setPriority(Thread.MAX_PRIORITY);
+              }
+            }
+            """)
         .doTest();
   }
 

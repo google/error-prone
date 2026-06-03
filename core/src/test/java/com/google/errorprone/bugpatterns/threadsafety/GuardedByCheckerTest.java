@@ -523,32 +523,40 @@ public class GuardedByCheckerTest {
     compilationHelper
         .addSourceLines(
             "threadsafety.Test",
-            "package threadsafety.Test;",
-            "import com.google.errorprone.annotations.concurrent.GuardedBy;",
-            "import java.util.concurrent.locks.ReentrantReadWriteLock;",
-            "import java.util.concurrent.locks.Lock;",
-            "class Test {",
-            "  final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();",
-            "  final Lock readLock = lock.readLock();",
-            "  final Lock writeLock = lock.writeLock();",
-            "  @GuardedBy(\"lock\") boolean b = false;",
-            "  void m() {",
-            "    readLock.lock();",
-            "    try {",
-            "      b = true;",
-            "    } finally {",
-            "      readLock.unlock();",
-            "    }",
-            "  }",
-            "  void n() {",
-            "    writeLock.lock();",
-            "    try {",
-            "      b = true;",
-            "    } finally {",
-            "      writeLock.unlock();",
-            "    }",
-            "  }",
-            "}")
+            """
+            package threadsafety.Test;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.concurrent.locks.Lock;
+            import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+            class Test {
+              final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+              final Lock readLock = lock.readLock();
+              final Lock writeLock = lock.writeLock();
+
+              @GuardedBy("lock")
+              boolean b = false;
+
+              void m() {
+                readLock.lock();
+                try {
+                  b = true;
+                } finally {
+                  readLock.unlock();
+                }
+              }
+
+              void n() {
+                writeLock.lock();
+                try {
+                  b = true;
+                } finally {
+                  writeLock.unlock();
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -1547,20 +1555,28 @@ class WrongInnerClassInstance {
     compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
-            "package threadsafety;",
-            "import com.google.errorprone.annotations.concurrent.GuardedBy;",
+            """
+            package threadsafety;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
             // do not remove, regression test for a bug when RWL is on the classpath
-            "import java.util.concurrent.locks.ReadWriteLock;",
-            "class Test {",
-            "  Object lock() { return null; }",
-            "  @GuardedBy(\"lock()\")",
-            "  int x;",
-            "  void m() {",
-            "    synchronized (lock()) {",
-            "      x++;",
-            "    }",
-            "  }",
-            "}")
+            import java.util.concurrent.locks.ReadWriteLock;
+
+            class Test {
+              Object lock() {
+                return null;
+              }
+
+              @GuardedBy("lock()")
+              int x;
+
+              void m() {
+                synchronized (lock()) {
+                  x++;
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
