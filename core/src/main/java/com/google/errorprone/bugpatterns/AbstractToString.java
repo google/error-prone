@@ -174,17 +174,7 @@ public abstract class AbstractToString extends BugChecker
           .named("join")
           .withParameters("java.lang.Iterable");
 
-  private final boolean handleJoinerVarargs;
-  private final boolean handleJoinerIterable;
-  private final boolean handleMemberReference;
-  private final boolean handleVarargsFix;
-
-  protected AbstractToString(ErrorProneFlags flags) {
-    this.handleJoinerVarargs = flags.getBoolean("AbstractToString:Joiner").orElse(true);
-    this.handleJoinerIterable = flags.getBoolean("AbstractToString:JoinerIterable").orElse(true);
-    this.handleMemberReference = flags.getBoolean("AbstractToString:MemberReference").orElse(true);
-    this.handleVarargsFix = flags.getBoolean("AbstractToString:VarargsFix").orElse(true);
-  }
+  protected AbstractToString(ErrorProneFlags flags) {}
 
   private boolean isElementOfVarargsArray(
       ExpressionTree argTree, MethodInvocationTree methodInvocationTree, VisitorState state) {
@@ -200,9 +190,6 @@ public abstract class AbstractToString extends BugChecker
     }
     if (arguments.size() > parameterCount) {
       return true;
-    }
-    if (!handleVarargsFix) {
-      return !state.getTypes().isArray(getType(argTree));
     }
     Type argType = getType(argTree);
     return !state.getTypes().isArray(argType)
@@ -263,7 +250,7 @@ public abstract class AbstractToString extends BugChecker
     }
     if (JOINER.matches(tree, state)) {
       var symbol = getSymbol(tree);
-      if (handleJoinerVarargs && symbol.isVarArgs()) {
+      if (symbol.isVarArgs()) {
         for (ExpressionTree argTree : tree.getArguments()) {
           if (isVarargsArray(argTree, tree, state)) {
             handleStringifiedTree(
@@ -276,7 +263,7 @@ public abstract class AbstractToString extends BugChecker
             handleStringifiedTree(argTree, ToStringKind.IMPLICIT, state);
           }
         }
-      } else if (handleJoinerIterable && JOINER_ITERABLE.matches(tree, state)) {
+      } else if (JOINER_ITERABLE.matches(tree, state)) {
         var argTree = tree.getArguments().getFirst();
         Type elementType =
             state
@@ -300,10 +287,6 @@ public abstract class AbstractToString extends BugChecker
 
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    if (!handleMemberReference) {
-      return NO_MATCH;
-    }
-
     MethodSymbol symbol = getSymbol(tree);
     if (symbol == null || !isToStringOrIsStringValueOf(symbol, state)) {
       return NO_MATCH;

@@ -470,25 +470,6 @@ public class ArrayToStringTest {
   }
 
   @Test
-  public void joinerIterable_disabled() {
-    compilationHelper
-        .setArgs("-XepOpt:AbstractToString:JoinerIterable=false")
-        .addSourceLines(
-            "Test.java",
-            """
-            import com.google.common.base.Joiner;
-            import java.util.List;
-
-            class Test {
-              String test(Joiner j, List<int[]> a) {
-                return j.join(a);
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
   public void methodReference() {
     refactoringHelper
         .addInputLines(
