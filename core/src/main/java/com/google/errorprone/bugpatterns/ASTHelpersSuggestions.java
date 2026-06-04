@@ -94,13 +94,17 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
     if (SYMBOL.matches(tree, state)) {
       MethodSymbol sym = getSymbol(tree);
       String name = sym.getSimpleName().toString();
+      boolean isPackge = name.equals("packge");
       name = NAMES.getOrDefault(name, name);
       return describeMatch(
           tree,
           SuggestedFix.builder()
               .addStaticImport(AST_HELPERS_NAME + "." + name)
               .prefixWith(tree, name + "(")
-              .replace(state.getEndPosition(receiver), state.getEndPosition(tree), ")")
+              .replace(
+                  state.getEndPosition(receiver),
+                  state.getEndPosition(tree),
+                  isPackge ? ").orElse(null)" : ")")
               .build());
     }
     if (SYMBOL_ENCLCLASS.matches(tree, state)) {

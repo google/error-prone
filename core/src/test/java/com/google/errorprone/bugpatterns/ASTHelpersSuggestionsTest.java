@@ -41,6 +41,7 @@ public class ASTHelpersSuggestionsTest {
               void f(Symbol s) {
                 s.isStatic();
                 s.packge();
+                String name = s.packge().fullname.toString();
               }
             }
             """)
@@ -55,7 +56,8 @@ public class ASTHelpersSuggestionsTest {
             class Test {
               void f(Symbol s) {
                 isStatic(s);
-                enclosingPackage(s);
+                enclosingPackage(s).orElse(null);
+                String name = enclosingPackage(s).orElse(null).fullname.toString();
               }
             }
             """)
@@ -87,7 +89,7 @@ public class ASTHelpersSuggestionsTest {
             class Test {
               void f(VarSymbol s) {
                 s.isStatic();
-                enclosingPackage(s);
+                enclosingPackage(s).orElse(null);
               }
             }
             """)
