@@ -38,8 +38,10 @@ import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -95,12 +97,19 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
       MethodSymbol sym = getSymbol(tree);
       String name = sym.getSimpleName().toString();
       name = NAMES.getOrDefault(name, name);
+      String suffix = ")";
+      if (name.equals("enclosingPackage")) {
+        Tree parent = state.getPath().getParentPath().getLeaf();
+        if (!(parent instanceof ExpressionStatementTree)) {
+          suffix = ").orElseThrow()";
+        }
+      }
       return describeMatch(
           tree,
           SuggestedFix.builder()
               .addStaticImport(AST_HELPERS_NAME + "." + name)
               .prefixWith(tree, name + "(")
-              .replace(state.getEndPosition(receiver), state.getEndPosition(tree), ")")
+              .replace(state.getEndPosition(receiver), state.getEndPosition(tree), suffix)
               .build());
     }
     if (SYMBOL_ENCLCLASS.matches(tree, state)) {
