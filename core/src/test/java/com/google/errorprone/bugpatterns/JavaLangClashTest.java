@@ -41,7 +41,7 @@ public class JavaLangClashTest {
             """
             package foo;
 
-            // BUG: Diagnostic contains:
+            // BUG: Diagnostic contains: foo.String clashes with java.lang.String
             public class String {}
             """)
         .doTest();
@@ -55,7 +55,7 @@ public class JavaLangClashTest {
             """
             package java.lang;
 
-            // BUG: Diagnostic contains:
+            // BUG: Diagnostic contains: String clashes with java.lang.String
             public class Foo<String> {}
             """)
         .setArgs(JAVA8_JAVACOPTS)
