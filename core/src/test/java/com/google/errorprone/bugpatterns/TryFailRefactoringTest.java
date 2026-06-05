@@ -45,12 +45,12 @@ public class TryFailRefactoringTest {
 
             class ExceptionTest {
               @Test
-              public void f(String message) throws Exception {
+              public void f(String msg) throws Exception {
                 Path p = Paths.get("NOSUCH");
                 try {
                   Files.readAllBytes(p);
                   Files.readAllBytes(p);
-                  fail(message);
+                  fail(msg);
                 } catch (IOException e) {
                   assertThat(e).hasMessageThat().contains("NOSUCH");
                 }
@@ -81,16 +81,10 @@ public class TryFailRefactoringTest {
 
             class ExceptionTest {
               @Test
-              public void f(String message) throws Exception {
+              public void f(String msg) throws Exception {
                 Path p = Paths.get("NOSUCH");
-                IOException e =
-                    assertThrows(
-                        message,
-                        IOException.class,
-                        () -> {
-                          Files.readAllBytes(p);
-                          Files.readAllBytes(p);
-                        });
+                Files.readAllBytes(p);
+                IOException e = assertThrows(msg, IOException.class, () -> Files.readAllBytes(p));
                 assertThat(e).hasMessageThat().contains("NOSUCH");
               }
 
@@ -169,11 +163,11 @@ public class TryFailRefactoringTest {
 
             class ExceptionTest {
               @Test
-              public void f(String message, CharSource cs) throws IOException {
+              public void f(String msg, CharSource cs) throws IOException {
                 try (BufferedReader buf = cs.openBufferedStream();
                     PushbackReader pbr = new PushbackReader(buf)) {
                   pbr.read();
-                  fail(message);
+                  fail(msg);
                 } catch (IOException e) {
                   assertThat(e).hasMessageThat().contains("NOSUCH");
                 }
@@ -195,10 +189,10 @@ public class TryFailRefactoringTest {
 
             class ExceptionTest {
               @Test
-              public void f(String message, CharSource cs) throws IOException {
+              public void f(String msg, CharSource cs) throws IOException {
                 try (BufferedReader buf = cs.openBufferedStream();
                     PushbackReader pbr = new PushbackReader(buf)) {
-                  IOException e = assertThrows(message, IOException.class, () -> pbr.read());
+                  IOException e = assertThrows(msg, IOException.class, () -> pbr.read());
                   assertThat(e).hasMessageThat().contains("NOSUCH");
                 }
               }

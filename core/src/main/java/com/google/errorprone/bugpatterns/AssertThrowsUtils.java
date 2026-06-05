@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.fixes.SuggestedFixes.renameVariableUsages;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.stream.Collectors.joining;
@@ -112,6 +111,10 @@ public final class AssertThrowsUtils {
           resources.stream().map(state::getSourceForNode).collect(joining("\n", "try (", ") {\n")));
       fixSuffix = "\n}";
     }
+    // Hoist all but the last statement out of the lambda to narrow the exception scope.
+    for (StatementTree statement : throwingStatements.subList(0, throwingStatements.size() - 1)) {
+      fixPrefix.append(state.getSourceForNode(statement)).append("\n");
+    }
     if (!catchStatements.isEmpty()) {
       String name = catchTree.getParameter().getName().toString();
       String newName = namer.avoidShadowing(name);
@@ -133,30 +136,22 @@ public final class AssertThrowsUtils {
                 .map(t -> state.getSourceForNode(t) + ", ")
                 .orElse(""),
             state.getSourceForNode(catchTree.getParameter().getType())));
-    boolean useExpressionLambda =
-        throwingStatements.size() == 1
-            && getOnlyElement(throwingStatements) instanceof ExpressionStatementTree;
+    StatementTree lastStatement = getLast(throwingStatements);
+    boolean useExpressionLambda = lastStatement instanceof ExpressionStatementTree;
     if (!useExpressionLambda) {
       fixPrefix.append("{");
     }
-    fix.replace(
-        getStartPosition(tryTree),
-        getStartPosition(throwingStatements.iterator().next()),
-        fixPrefix.toString());
+    fix.replace(getStartPosition(tryTree), getStartPosition(lastStatement), fixPrefix.toString());
     if (useExpressionLambda) {
-      fix.postfixWith(
-          ((ExpressionStatementTree) throwingStatements.iterator().next()).getExpression(), ")");
+      fix.postfixWith(((ExpressionStatementTree) lastStatement).getExpression(), ")");
     } else {
-      fix.postfixWith(getLast(throwingStatements), "});");
+      fix.postfixWith(lastStatement, "});");
     }
     if (catchStatements.isEmpty()) {
-      fix.replace(
-          state.getEndPosition(getLast(throwingStatements)),
-          state.getEndPosition(tryTree),
-          fixSuffix);
+      fix.replace(state.getEndPosition(lastStatement), state.getEndPosition(tryTree), fixSuffix);
     } else {
       fix.replace(
-          /* startPos= */ state.getEndPosition(getLast(throwingStatements)),
+          /* startPos= */ state.getEndPosition(lastStatement),
           /* endPos= */ getStartPosition(catchStatements.getFirst()),
           "\n");
       fix.replace(

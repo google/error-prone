@@ -948,13 +948,8 @@ public class MissingFailNegativeCases extends TestCase {
               @Test
               public void f() throws Exception {
                 Path p = Paths.get("NOSUCH");
-                IOException e =
-                    assertThrows(
-                        IOException.class,
-                        () -> {
-                          Files.readAllBytes(p);
-                          Files.readAllBytes(p);
-                        });
+                Files.readAllBytes(p);
+                IOException e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
                 assertThat(e).hasMessageThat().contains("NOSUCH");
               }
 
