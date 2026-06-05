@@ -1,5 +1,5 @@
 ---
-title: JavaLangClash
+title: AvoidCommonTypeNames
 summary: Never reuse class names from java.lang
 layout: bugpattern
 tags: Style
@@ -11,6 +11,7 @@ severity: WARNING
 To make changes, edit the @BugPattern annotation or the explanation in docs/bugpattern.
 -->
 
+_Alternate names: JavaLangClash_
 
 ## The problem
 Class names from `java.lang` should never be reused. From
@@ -24,4 +25,4 @@ Class names from `java.lang` should never be reused. From
 > to the new definition any time it is used inside its own package.
 
 ## Suppression
-Suppress false positives by adding the suppression annotation `@SuppressWarnings("JavaLangClash")` to the enclosing element.
+Suppress false positives by adding the suppression annotation `@SuppressWarnings("AvoidCommonTypeNames")` to the enclosing element.
