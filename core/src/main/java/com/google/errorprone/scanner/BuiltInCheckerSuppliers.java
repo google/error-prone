@@ -48,6 +48,7 @@ import com.google.errorprone.bugpatterns.AutoValueBuilderDefaultsInConstructor;
 import com.google.errorprone.bugpatterns.AutoValueFinalMethods;
 import com.google.errorprone.bugpatterns.AutoValueImmutableFields;
 import com.google.errorprone.bugpatterns.AutoValueSubclassLeaked;
+import com.google.errorprone.bugpatterns.AvoidCommonTypeNames;
 import com.google.errorprone.bugpatterns.AvoidObjectArrays;
 import com.google.errorprone.bugpatterns.AvoidValueSetter;
 import com.google.errorprone.bugpatterns.BadAnnotationImplementation;
@@ -225,7 +226,6 @@ import com.google.errorprone.bugpatterns.JUnitAmbiguousTestClass;
 import com.google.errorprone.bugpatterns.JUnitAssertSameCheck;
 import com.google.errorprone.bugpatterns.JUnitMethodInvoked;
 import com.google.errorprone.bugpatterns.JUnitParameterMethodNotFound;
-import com.google.errorprone.bugpatterns.JavaLangClash;
 import com.google.errorprone.bugpatterns.JavaUtilDateChecker;
 import com.google.errorprone.bugpatterns.JdkObsolete;
 import com.google.errorprone.bugpatterns.LabelledBreakTarget;
@@ -931,6 +931,7 @@ public class BuiltInCheckerSuppliers {
           AutoValueFinalMethods.class,
           AutoValueImmutableFields.class,
           AutoValueSubclassLeaked.class,
+          AvoidCommonTypeNames.class,
           AvoidValueSetter.class,
           BadComparable.class,
           BadImport.class,
@@ -1051,7 +1052,6 @@ public class BuiltInCheckerSuppliers {
           JavaDurationWithNanos.class,
           JavaDurationWithSeconds.class,
           JavaInstantGetSecondsGetNano.class,
-          JavaLangClash.class,
           JavaLocalDateTimeGetNano.class,
           JavaLocalTimeGetNano.class,
           JavaPeriodGetDays.class,

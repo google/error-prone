@@ -45,10 +45,11 @@ import com.sun.tools.javac.util.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
+    altNames = "JavaLangClash",
     summary = "Never reuse class names from java.lang",
     severity = WARNING,
     tags = StandardTags.STYLE)
-public class JavaLangClash extends BugChecker
+public class AvoidCommonTypeNames extends BugChecker
     implements ClassTreeMatcher, TypeParameterTreeMatcher {
 
   @Override

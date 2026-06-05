@@ -22,12 +22,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link JavaLangClash}Test */
+/** {@link AvoidCommonTypeNames}Test */
 @RunWith(JUnit4.class)
-public class JavaLangClashTest {
+public class AvoidCommonTypeNamesTest {
 
   private final CompilationTestHelper testHelper =
-      CompilationTestHelper.newInstance(JavaLangClash.class, getClass());
+      CompilationTestHelper.newInstance(AvoidCommonTypeNames.class, getClass());
 
   // TODO(b/67718586): javac 9 doesn't want to compile sources in java.lang
   private static final ImmutableList<String> JAVA8_JAVACOPTS =
