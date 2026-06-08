@@ -30,11 +30,14 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes.VariableNamer;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
+import com.sun.source.tree.VariableTree;
 import java.util.List;
 import java.util.Optional;
 
@@ -137,15 +140,26 @@ public final class AssertThrowsUtils {
                 .orElse(""),
             state.getSourceForNode(catchTree.getParameter().getType())));
     StatementTree lastStatement = getLast(throwingStatements);
-    boolean useExpressionLambda = lastStatement instanceof ExpressionStatementTree;
+    Tree targetTree = lastStatement;
+    if (targetTree instanceof ExpressionStatementTree expressionStatement) {
+      targetTree = expressionStatement.getExpression();
+    }
+    if (targetTree instanceof AssignmentTree assignment) {
+      targetTree = assignment.getExpression();
+    }
+    if (targetTree instanceof VariableTree variableTree && variableTree.getInitializer() != null) {
+      targetTree = variableTree.getInitializer();
+    }
+
+    boolean useExpressionLambda = targetTree instanceof ExpressionTree;
     if (!useExpressionLambda) {
       fixPrefix.append("{");
     }
-    fix.replace(getStartPosition(tryTree), getStartPosition(lastStatement), fixPrefix.toString());
+    fix.replace(getStartPosition(tryTree), getStartPosition(targetTree), fixPrefix.toString());
     if (useExpressionLambda) {
-      fix.postfixWith(((ExpressionStatementTree) lastStatement).getExpression(), ")");
+      fix.postfixWith(targetTree, ")");
     } else {
-      fix.postfixWith(lastStatement, "});");
+      fix.postfixWith(targetTree, "});");
     }
     if (catchStatements.isEmpty()) {
       fix.replace(state.getEndPosition(lastStatement), state.getEndPosition(tryTree), fixSuffix);

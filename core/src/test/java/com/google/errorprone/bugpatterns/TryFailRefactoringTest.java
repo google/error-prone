@@ -402,4 +402,155 @@ public class TryFailRefactoringTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void variableDeclaration() {
+    testHelper
+        .addInputLines(
+            "in/ExceptionTest.java",
+            """
+            import static org.junit.Assert.fail;
+
+            import org.junit.Test;
+
+            class ExceptionTest {
+              int getAge() {
+                return 42;
+              }
+
+              @Test
+              void f() {
+                try {
+                  int age = getAge();
+                  fail();
+                } catch (IllegalArgumentException e) {
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/ExceptionTest.java",
+            """
+            import static org.junit.Assert.assertThrows;
+            import static org.junit.Assert.fail;
+
+            import org.junit.Test;
+
+            class ExceptionTest {
+              int getAge() {
+                return 42;
+              }
+
+              @Test
+              void f() {
+                assertThrows(IllegalArgumentException.class, () -> getAge());
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void variableDeclarationWithAssignmentUsedOnce() {
+    testHelper
+        .addInputLines(
+            "in/ExceptionTest.java",
+            """
+            import static org.junit.Assert.fail;
+
+            import org.junit.Test;
+
+            class ExceptionTest {
+              int getAge() {
+                return 42;
+              }
+
+              @Test
+              void f() {
+                int age;
+                try {
+                  age = getAge();
+                  fail();
+                } catch (IllegalArgumentException e) {
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/ExceptionTest.java",
+            """
+            import static org.junit.Assert.assertThrows;
+            import static org.junit.Assert.fail;
+
+            import org.junit.Test;
+
+            class ExceptionTest {
+              int getAge() {
+                return 42;
+              }
+
+              @Test
+              void f() {
+                int age;
+                assertThrows(IllegalArgumentException.class, () -> getAge());
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void variableDeclarationWithAssignmentUsedTwice() {
+    testHelper
+        .addInputLines(
+            "in/ExceptionTest.java",
+            """
+            import static org.junit.Assert.fail;
+
+            import org.junit.Test;
+
+            class ExceptionTest {
+              int getAge() {
+                return 42;
+              }
+
+              @Test
+              void f() {
+                int age;
+                try {
+                  age = getAge();
+                  fail();
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                  age = getAge();
+                  fail();
+                } catch (IllegalArgumentException e) {
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/ExceptionTest.java",
+            """
+            import static org.junit.Assert.assertThrows;
+            import static org.junit.Assert.fail;
+
+            import org.junit.Test;
+
+            class ExceptionTest {
+              int getAge() {
+                return 42;
+              }
+
+              @Test
+              void f() {
+                int age;
+                assertThrows(IllegalArgumentException.class, () -> getAge());
+                assertThrows(IllegalArgumentException.class, () -> getAge());
+              }
+            }
+            """)
+        .doTest();
+  }
 }
