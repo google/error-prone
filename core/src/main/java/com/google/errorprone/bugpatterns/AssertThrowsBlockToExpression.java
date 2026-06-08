@@ -37,6 +37,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.VariableTree;
 import java.util.List;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -64,10 +65,16 @@ public class AssertThrowsBlockToExpression extends BugChecker
     if (statements.size() != 1) {
       return NO_MATCH;
     }
-    if (!(statements.getFirst() instanceof ExpressionStatementTree expressionStatementTree)) {
+    ExpressionTree expression =
+        switch (statements.getFirst()) {
+          case ExpressionStatementTree expressionStatement -> expressionStatement.getExpression();
+          case VariableTree variable -> variable.getInitializer();
+          default -> null;
+        };
+    if (expression == null) {
       return NO_MATCH;
     }
-    ExpressionTree expression = expressionStatementTree.getExpression();
+
     SuggestedFix.Builder fix = SuggestedFix.builder();
     replaceAndKeepComments(fix, getStartPosition(blockTree), getStartPosition(expression), state);
     replaceAndKeepComments(
