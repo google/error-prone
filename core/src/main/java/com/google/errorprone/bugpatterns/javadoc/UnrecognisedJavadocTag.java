@@ -26,6 +26,8 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import com.google.common.collect.ImmutableRangeSet;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Range;
+import com.google.common.collect.RangeSet;
+import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -92,7 +94,7 @@ public final class UnrecognisedJavadocTag extends BugChecker
   }
 
   private ImmutableRangeSet<Integer> findRecognisedTags(DocTreePath path, VisitorState state) {
-    ImmutableRangeSet.Builder<Integer> tags = ImmutableRangeSet.builder();
+    RangeSet<Integer> tags = TreeRangeSet.create();
     new DocTreePathScanner<Void, Void>() {
       @Override
       public Void visitLink(LinkTree linkTree, Void unused) {
@@ -108,7 +110,7 @@ public final class UnrecognisedJavadocTag extends BugChecker
         return super.visitLiteral(literalTree, null);
       }
     }.scan(path, null);
-    return tags.build();
+    return ImmutableRangeSet.copyOf(tags);
   }
 
   private static ImmutableSet<Integer> findTags(Comment comment) {

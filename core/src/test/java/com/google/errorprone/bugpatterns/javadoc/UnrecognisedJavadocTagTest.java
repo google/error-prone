@@ -113,4 +113,19 @@ public final class UnrecognisedJavadocTagTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void nestedLink() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /**
+             * @deprecated use {@link Test with {@link Test}} instead.
+             */
+            @Deprecated
+            class Test {}
+            """)
+        .doTest();
+  }
 }
