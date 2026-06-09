@@ -122,9 +122,7 @@ public final class AssertThrowsUtils {
       if (!name.equals(newName)) {
         fix.merge(renameVariableUsages(catchTree.getParameter(), newName, state));
       }
-      fixPrefix.append(
-          String.format(
-              "%s %s = ", state.getSourceForNode(catchTree.getParameter().getType()), newName));
+      fixPrefix.append(String.format("var %s = ", newName));
     }
     fixPrefix.append(
         String.format(

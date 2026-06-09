@@ -84,14 +84,14 @@ public class TryFailRefactoringTest {
               public void f(String msg) throws Exception {
                 Path p = Paths.get("NOSUCH");
                 Files.readAllBytes(p);
-                IOException e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                var e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
                 assertThat(e).hasMessageThat().contains("NOSUCH");
               }
 
               @Test
               public void g() throws Exception {
                 Path p = Paths.get("NOSUCH");
-                IOException e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                var e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
                 assertThat(e).hasMessageThat().contains("NOSUCH");
               }
             }
@@ -192,7 +192,7 @@ public class TryFailRefactoringTest {
               public void f(String msg, CharSource cs) throws IOException {
                 try (BufferedReader buf = cs.openBufferedStream();
                     PushbackReader pbr = new PushbackReader(buf)) {
-                  IOException e = assertThrows(IOException.class, () -> pbr.read());
+                  var e = assertThrows(IOException.class, () -> pbr.read());
                   assertThat(e).hasMessageThat().contains("NOSUCH");
                 }
               }
@@ -336,9 +336,9 @@ public class TryFailRefactoringTest {
               @Test
               public void test() throws Exception {
                 Path p = Paths.get("NOSUCH");
-                IOException e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                var e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
                 assertThat(e).hasMessageThat().contains("NOSUCH");
-                IOException e2 = assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                var e2 = assertThrows(IOException.class, () -> Files.readAllBytes(p));
                 assertThat(e2).hasMessageThat().contains("NOSUCH");
               }
             }
