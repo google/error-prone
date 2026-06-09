@@ -28,7 +28,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes.VariableNamer;
-import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CatchTree;
@@ -50,23 +49,23 @@ public final class AssertThrowsUtils {
   /**
    * Transforms a try-catch block in the try-fail pattern into a call to JUnit's {@code
    * assertThrows}, inserting the behavior of the {@code try} block into a lambda parameter, and
-   * assigning the expected exception to a variable, if it is used within the {@code catch} block.
-   * For example:
+   * assigning the thrown exception to a variable, if it is used within the {@code catch} block. For
+   * example:
    *
    * <pre>
    * try {
    *   foo();
    *   fail();
-   * } catch (MyException expected) {
-   *   assertThat(expected).isEqualTo(other);
+   * } catch (MyException thrown) {
+   *   assertThat(thrown).isEqualTo(other);
    * }
    * </pre>
    *
    * becomes
    *
    * <pre>
-   * {@code MyException expected = assertThrows(MyException.class, () -> foo());}
-   * assertThat(expected).isEqualTo(other);
+   * {@code MyException thrown = assertThrows(MyException.class, () -> foo());}
+   * assertThat(thrown).isEqualTo(other);
    * </pre>
    *
    * @param tryTree the tree representing the try-catch block to be refactored.
@@ -80,7 +79,6 @@ public final class AssertThrowsUtils {
   public static Optional<Fix> tryFailToAssertThrows(
       TryTree tryTree,
       List<? extends StatementTree> throwingStatements,
-      Optional<Tree> failureMessage,
       VisitorState state,
       VariableNamer namer) {
     List<? extends CatchTree> catchTrees = tryTree.getCatches();
@@ -130,14 +128,7 @@ public final class AssertThrowsUtils {
     }
     fixPrefix.append(
         String.format(
-            "assertThrows(%s%s.class, () -> ",
-            failureMessage
-                // Supplying a constant string adds little value, since a failure here always means
-                // the same thing: the method just called wasn't expected to complete normally, but
-                // it did.
-                .filter(t -> ASTHelpers.constValue(t, String.class) == null)
-                .map(t -> state.getSourceForNode(t) + ", ")
-                .orElse(""),
+            "assertThrows(%s.class, () -> ",
             state.getSourceForNode(catchTree.getParameter().getType())));
     StatementTree lastStatement = getLast(throwingStatements);
     Tree targetTree = lastStatement;

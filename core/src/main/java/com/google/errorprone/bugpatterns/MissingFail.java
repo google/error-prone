@@ -245,8 +245,7 @@ public class MissingFail extends BugChecker implements MethodTreeMatcher {
           StatementTree lastTryStatement = tryStatements.getLast();
 
           Optional<Fix> assertThrowsFix =
-              AssertThrowsUtils.tryFailToAssertThrows(
-                  tryTree, tryStatements, Optional.empty(), tryState, namer);
+              AssertThrowsUtils.tryFailToAssertThrows(tryTree, tryStatements, tryState, namer);
           Fix failFix = addFailCall(tryTree, lastTryStatement, tryState);
           state.reportMatch(
               buildDescription(lastTryStatement)
