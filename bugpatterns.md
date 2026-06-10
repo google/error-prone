@@ -1344,7 +1344,7 @@ __[StringCaseLocaleUsage](bugpattern/StringCaseLocaleUsage)__<br>
 Specify a &#96;Locale&#96; when calling &#96;String#to{Lower,Upper}Case&#96;. (Note: there are multiple suggested fixes; the third may be most appropriate if you&#39;re dealing with ASCII Strings.)
 
 __[StringCharset](bugpattern/StringCharset)__<br>
-StringCharset
+Prefer StandardCharsets over using string names for charsets
 
 __[StringConcatToTextBlock](bugpattern/StringConcatToTextBlock)__<br>
 This string literal can be written more clearly as a text block
