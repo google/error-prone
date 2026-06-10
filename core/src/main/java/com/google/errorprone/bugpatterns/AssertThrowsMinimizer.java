@@ -258,6 +258,8 @@ public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatch
           switch (tree) {
             case MethodInvocationTree methodInvocationTree -> methodInvocationTree.getArguments();
             case NewClassTree newClassTree -> newClassTree.getArguments();
+            case MemberReferenceTree memberReferenceTree ->
+                ImmutableList.of(memberReferenceTree.getQualifierExpression());
             default -> throw new AssertionError(tree.getKind());
           };
       if (arguments.stream().noneMatch(a -> needsHoisting(a, exceptionType, state))) {

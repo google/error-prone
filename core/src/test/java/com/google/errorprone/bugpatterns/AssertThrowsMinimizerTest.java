@@ -750,6 +750,59 @@ class Test {
   }
 
   @Test
+  public void memberReference() {
+    compilationHelper
+        .addInputLines(
+            "RpcClientContext.java",
+            """
+            package com.google.net.rpc3.client;
+
+            public class RpcClientContext {
+              public static RpcClientContext create() {
+                return null;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            import com.google.net.rpc3.client.RpcClientContext;
+            import java.util.function.Supplier;
+
+            class Test {
+              void consume(Supplier<RpcClientContext> r) {}
+
+              void m() {
+                assertThrows(IllegalArgumentException.class, () -> consume(RpcClientContext::create));
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void staticMethodCall_receiverIsNotHoisted() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              void f() {
+                assertThrows(RuntimeException.class, () -> Helper.onlyUnchecked());
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void newArray() {
     compilationHelper
         .addInputLines(
