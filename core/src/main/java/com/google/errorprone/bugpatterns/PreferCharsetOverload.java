@@ -42,6 +42,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -99,6 +100,11 @@ public final class PreferCharsetOverload extends BugChecker
     // 2. Find the best overload that accepts Charset.
     MethodSymbol bestOverload = findBestCharsetOverload(methodSymbol, candidateIndices, state);
     if (bestOverload == null) {
+      return Description.NO_MATCH;
+    }
+
+    MethodTree enclosingMethod = state.findEnclosing(MethodTree.class);
+    if (enclosingMethod != null && getSymbol(enclosingMethod).equals(bestOverload)) {
       return Description.NO_MATCH;
     }
 

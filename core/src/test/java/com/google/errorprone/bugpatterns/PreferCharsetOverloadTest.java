@@ -439,4 +439,28 @@ public class PreferCharsetOverloadTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void negativeDelegatingConstructor() {
+    helper
+        .addInputLines(
+            "JavaStringDecoder.java",
+            """
+            import java.nio.charset.Charset;
+
+            public class JavaStringDecoder {
+              private final String charsetName;
+
+              public JavaStringDecoder(Charset charset) {
+                this(charset.name());
+              }
+
+              public JavaStringDecoder(String charsetName) {
+                this.charsetName = charsetName;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }
