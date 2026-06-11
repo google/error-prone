@@ -600,4 +600,55 @@ public class TryFailRefactoringTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void catchBlock_unusedException() {
+    testHelper
+        .addInputLines(
+            "in/ExceptionTest.java",
+            """
+            import static org.junit.Assert.fail;
+
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.junit.Test;
+
+            class ExceptionTest {
+              private void cleanup() {}
+
+              @Test
+              public void f() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                try {
+                  Files.readAllBytes(p);
+                  fail();
+                } catch (IOException e) {
+                  cleanup();
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/ExceptionTest.java",
+            """
+            import static org.junit.Assert.assertThrows;
+            import static org.junit.Assert.fail;
+
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.junit.Test;
+
+            class ExceptionTest {
+              private void cleanup() {}
+
+              @Test
+              public void f() throws Exception {
+                Path p = Paths.get("NOSUCH");
+                assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                cleanup();
+              }
+            }
+            """)
+        .doTest();
+  }
 }

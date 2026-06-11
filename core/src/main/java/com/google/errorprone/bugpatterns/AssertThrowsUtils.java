@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.fixes.SuggestedFixes.renameVariableUsages;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
@@ -33,10 +34,13 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.List;
 import java.util.Optional;
 
@@ -116,7 +120,7 @@ public final class AssertThrowsUtils {
     for (StatementTree statement : throwingStatements.subList(0, throwingStatements.size() - 1)) {
       fixPrefix.append(state.getSourceForNode(statement)).append("\n");
     }
-    if (!catchStatements.isEmpty()) {
+    if (isExceptionReferenced(catchTree)) {
       String name = catchTree.getParameter().getName().toString();
       String newName = namer.avoidShadowing(name);
       if (!name.equals(newName)) {
@@ -161,6 +165,30 @@ public final class AssertThrowsUtils {
           state.getEndPosition(getLast(catchStatements)), state.getEndPosition(tryTree), fixSuffix);
     }
     return Optional.of(fix.build());
+  }
+
+  private static boolean isExceptionReferenced(CatchTree catchTree) {
+    VarSymbol exceptionSymbol = getSymbol(catchTree.getParameter());
+    if (exceptionSymbol == null) {
+      return false;
+    }
+    var scanner =
+        new TreeScanner<Void, Void>() {
+          private boolean isReferenced = false;
+
+          @Override
+          public Void scan(Tree tree, Void unused) {
+            return isReferenced ? null : super.scan(tree, null);
+          }
+
+          @Override
+          public Void visitIdentifier(IdentifierTree node, Void unused) {
+            isReferenced = isReferenced || exceptionSymbol.equals(getSymbol(node));
+            return super.visitIdentifier(node, null);
+          }
+        };
+    scanner.scan(catchTree.getBlock(), null);
+    return scanner.isReferenced;
   }
 
   private AssertThrowsUtils() {}
