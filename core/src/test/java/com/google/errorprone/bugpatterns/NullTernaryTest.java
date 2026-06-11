@@ -204,4 +204,24 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void nullTernaryInSwitchYield_referenceType_negative() {
+    testHelper
+            .addSourceLines(
+                    "Test.java",
+                    """
+                    class Test {
+                      String f(int n) {
+                        return switch (n) {
+                          case 0 -> "zero";
+                          default -> {
+                            yield (n % 2 == 0) ? "even" : null;
+                          }
+                        };
+                      }
+                    }
+                    """)
+            .doTest();
+  }
 }
