@@ -107,7 +107,7 @@ public final class IfChainToSwitchTest {
                 }
                 """))
         .allowFormattingErrors()
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -141,7 +141,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -197,7 +197,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -257,7 +257,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -284,7 +284,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -310,7 +310,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -381,7 +381,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -432,7 +432,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -515,7 +515,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -571,7 +571,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -625,7 +625,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -727,7 +727,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -824,7 +824,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -918,7 +918,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1012,7 +1012,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1059,7 +1059,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1109,7 +1109,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1161,7 +1161,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1204,7 +1204,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1246,7 +1246,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1287,7 +1287,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1315,7 +1315,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1360,7 +1360,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1420,7 +1420,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1455,7 +1455,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1506,7 +1506,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1534,7 +1534,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1564,7 +1564,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1598,7 +1598,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1664,7 +1664,7 @@ public final class IfChainToSwitchTest {
             }
             """)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1695,7 +1695,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1725,7 +1725,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1757,7 +1757,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1813,7 +1813,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1880,7 +1880,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1909,7 +1909,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1939,7 +1939,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1965,7 +1965,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1990,7 +1990,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -2107,7 +2107,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2156,7 +2156,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2295,7 +2295,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2445,7 +2445,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2777,7 +2777,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2842,7 +2842,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2952,7 +2952,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2975,7 +2975,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3002,7 +3002,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3040,7 +3040,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3185,7 +3185,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3306,7 +3306,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3333,7 +3333,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3415,7 +3415,7 @@ class Test {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3464,7 +3464,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3497,7 +3497,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3523,7 +3523,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3551,7 +3551,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3600,7 +3600,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3655,7 +3655,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3709,7 +3709,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3766,6 +3766,7 @@ class Test {
 """))
         .setArgs(
             ENABLE_MAIN,
+            DISABLE_SAFE,
             MIN_CHAIN_LENGTH_3,
             "--enable-preview",
             "--release",
@@ -3806,7 +3807,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3848,7 +3849,7 @@ class Test {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3898,7 +3899,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3931,7 +3932,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3972,7 +3973,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4005,7 +4006,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4046,7 +4047,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4105,7 +4106,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4173,7 +4174,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4261,7 +4262,7 @@ class Test {
   }
 }
 """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4314,7 +4315,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4392,7 +4393,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4434,7 +4435,7 @@ class Test {
   }
 }
 """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4462,7 +4463,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
