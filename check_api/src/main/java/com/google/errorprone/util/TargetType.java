@@ -112,9 +112,7 @@ public record TargetType(Type type, TreePath path) {
     Type type = new TargetTypeVisitor(current, state, parent).visit(parent.getLeaf(), null);
     if (type == null) {
       Tree actualTree = null;
-      if (parent.getLeaf() instanceof YieldTree) {
-        actualTree = parent.getParentPath().getParentPath().getParentPath().getLeaf();
-      } else if (CONSTANT_CASE_LABEL_TREE != null
+      if (CONSTANT_CASE_LABEL_TREE != null
           && CONSTANT_CASE_LABEL_TREE.isAssignableFrom(parent.getLeaf().getClass())) {
         actualTree = parent.getParentPath().getParentPath().getLeaf();
       }
@@ -222,6 +220,16 @@ public record TargetType(Type type, TreePath path) {
         return getType(switchTree);
       }
       return getType(getSwitchExpression(switchTree));
+    }
+
+    @Override
+    public @Nullable Type visitYield(YieldTree tree, Void unused) {
+      for (Tree ancestor : parent.getParentPath()) {
+        if (ancestor instanceof SwitchExpressionTree switchExpression) {
+          return getType(switchExpression);
+        }
+      }
+      return null;
     }
 
     private static @Nullable ExpressionTree getSwitchExpression(@Nullable Tree tree) {
