@@ -1866,10 +1866,10 @@ public final class SuggestedFixes {
   public static Optional<SuggestedFix> replaceVariableType(
       VariableTree tree, String replacementType, VisitorState state) {
     Tree type = tree.getType();
-    if (hasExplicitSource(type, state)) {
+    if (type != null && hasExplicitSource(type, state)) {
       return Optional.of(SuggestedFix.replace(type, replacementType));
     }
-    int pos = getStartPosition(type);
+    int pos = type != null ? getStartPosition(type) : Position.NOPOS;
     if (pos == Position.NOPOS) {
       pos = getStartPosition(tree);
     }
