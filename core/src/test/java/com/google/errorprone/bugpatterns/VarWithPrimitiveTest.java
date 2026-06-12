@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -339,9 +341,10 @@ public final class VarWithPrimitiveTest {
   }
 
   @Test
-  public void annotatedVarLocalVariable() {
-    // The token scan finds two 'var' tokens (@A(var=0) attribute + type keyword) and safely
-    // returns no fix rather than risk replacing the annotation attribute instead of the type.
+  public void annotatedVarLocalVariable_beforeJdk27() {
+    // Before JDK 27 there is no AST node for the var type, so the token scan finds two 'var'
+    // tokens (@A(var=0) attribute + type keyword) and safely returns no fix.
+    assume().that(Runtime.version().feature()).isLessThan(27);
     refactoringHelper
         .addInputLines("A.java", "@interface A { int var() default 0; }")
         .expectUnchanged()
@@ -355,6 +358,35 @@ public final class VarWithPrimitiveTest {
             }
             """)
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void annotatedVarLocalVariable_jdk27AndAbove() {
+    // On JDK 27+ there is an AST node for the var type with source positions, so hasExplicitSource
+    // returns true and the replacement targets the type keyword directly, preserving the annotation.
+    assume().that(Runtime.version().feature()).isAtLeast(27);
+    refactoringHelper
+        .addInputLines("A.java", "@interface A { int var() default 0; }")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void t() {
+                @A(var = 0) var n = 5;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void t() {
+                @A(var = 0) int n = 5;
+              }
+            }
+            """)
         .doTest();
   }
 
