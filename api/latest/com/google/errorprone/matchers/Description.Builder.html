@@ -63,6 +63,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#addFix(java.util.Optional)" tabindex="0">addFix(Optional)</a></li>
 <li><a href="#addAllFixes(java.util.List)" tabindex="0">addAllFixes(List)</a></li>
 <li><a href="#setMessage(java.lang.String)" tabindex="0">setMessage(String)</a></li>
+<li><a href="#setMessage(java.lang.String,java.lang.Object...)" tabindex="0">setMessage(String, Object...)</a></li>
 <li><a href="#setLinkUrl(java.lang.String)" tabindex="0">setLinkUrl(String)</a></li>
 <li><a href="#overrideSeverity(com.google.errorprone.BugPattern.SeverityLevel)" tabindex="0">overrideSeverity(BugPattern.SeverityLevel)</a></li>
 <li><a href="#build()" tabindex="0">build()</a></li>
@@ -138,6 +139,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMessage(java.lang.String)" class="member-name-link">setMessage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set a custom error message for this <code>Description</code>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMessage(java.lang.String,java.lang.Object...)" class="member-name-link">setMessage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;format,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;args)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Set a custom error message for this <code>Description</code>.</div>
 </div>
 </div>
@@ -222,6 +229,26 @@ instead of the summary field as the text for the diagnostic message.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>message</code> - A custom error message without the check name ("[checkname]") or link</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setMessage(java.lang.String,java.lang.Object...)">
+<h3>setMessage</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+<a href="../annotations/FormatMethod.html" title="annotation interface in com.google.errorprone.annotations">@FormatMethod</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Description.Builder.html" title="class in com.google.errorprone.matchers">Description.Builder</a></span>&nbsp;<span class="element-name">setMessage</span><wbr><span class="parameters">(<a href="../annotations/FormatString.html" title="annotation interface in com.google.errorprone.annotations">@FormatString</a>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;format,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;args)</span></div>
+<div class="block">Set a custom error message for this <code>Description</code>. The custom message will be used
+instead of the summary field as the text for the diagnostic message.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>format</code> - A custom error message format string without the check name ("[checkname]") or
+    link</dd>
+<dd><code>args</code> - arguments for the format string</dd>
 </dl>
 </div>
 </section>
