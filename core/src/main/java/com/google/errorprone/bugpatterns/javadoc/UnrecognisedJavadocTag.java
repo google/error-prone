@@ -23,8 +23,8 @@ import static com.google.errorprone.bugpatterns.javadoc.Utils.getEndPosition;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getStartPosition;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableRangeSet;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Range;
 import com.google.common.collect.RangeSet;
 import com.google.common.collect.TreeRangeSet;
@@ -81,12 +81,20 @@ public final class UnrecognisedJavadocTag extends BugChecker
       return NO_MATCH;
     }
     ImmutableRangeSet<Integer> recognisedTags = findRecognisedTags(path, state);
-    ImmutableSet<Integer> tagStrings = findTags(((DCDocComment) path.getDocComment()).comment);
+    ImmutableMap<Integer, String> tagStrings =
+        findTags(((DCDocComment) path.getDocComment()).comment);
 
-    for (int pos : tagStrings) {
+    for (var entry : tagStrings.entrySet()) {
+      int pos = entry.getKey();
       if (!recognisedTags.contains(pos)) {
         state.reportMatch(
-            buildDescription(getDiagnosticPosition(pos, path.getTreePath().getLeaf())).build());
+            buildDescription(getDiagnosticPosition(pos, path.getTreePath().getLeaf()))
+                .setMessage(
+                    String.format(
+                        "This Javadoc tag '%s' wasn't recognised by the parser. Is it malformed"
+                            + " somehow, perhaps with mismatched braces?",
+                        entry.getValue()))
+                .build());
       }
     }
 
@@ -113,11 +121,16 @@ public final class UnrecognisedJavadocTag extends BugChecker
     return ImmutableRangeSet.copyOf(tags);
   }
 
-  private static ImmutableSet<Integer> findTags(Comment comment) {
-    Matcher matcher = TAG.matcher(comment.getText());
-    ImmutableSet.Builder<Integer> tags = ImmutableSet.builder();
+  private static ImmutableMap<Integer, String> findTags(Comment comment) {
+    String text = comment.getText();
+    Matcher matcher = TAG.matcher(text);
+    ImmutableMap.Builder<Integer, String> tags = ImmutableMap.builder();
     while (matcher.find()) {
-      tags.add(comment.getSourcePos(matcher.start()));
+      int start = matcher.start();
+      int end = text.indexOf('}', start);
+      String tag =
+          text.substring(start, end == -1 ? text.length() : end).replaceAll("\\R", " ").trim();
+      tags.put(comment.getSourcePos(start), tag);
     }
     return tags.build();
   }
