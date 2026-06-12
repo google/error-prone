@@ -285,6 +285,80 @@ public final class VarWithPrimitiveTest {
   }
 
   @Test
+  public void varLambdaParam() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.function.IntUnaryOperator;
+            class Test {
+              void t() {
+                IntUnaryOperator op = (var n) -> n * 2;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.function.IntUnaryOperator;
+            class Test {
+              void t() {
+                IntUnaryOperator op = (int n) -> n * 2;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void annotatedVarLambdaParam() {
+    refactoringHelper
+        .addInputLines("A.java", "@interface A { int var() default 0; }")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.function.IntUnaryOperator;
+            class Test {
+              void t() {
+                IntUnaryOperator op = (@A(var = 0) var n) -> n * 2;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.function.IntUnaryOperator;
+            class Test {
+              void t() {
+                IntUnaryOperator op = (@A(var = 0) int n) -> n * 2;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void annotatedVarLocalVariable() {
+    // The token scan finds two 'var' tokens (@A(var=0) attribute + type keyword) and safely
+    // returns no fix rather than risk replacing the annotation attribute instead of the type.
+    refactoringHelper
+        .addInputLines("A.java", "@interface A { int var() default 0; }")
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void t() {
+                @A(var = 0) var n = 5;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void multiParamImplicitLambda_noMatch() {
     compilationHelper
         .addSourceLines(
