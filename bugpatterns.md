@@ -1253,6 +1253,9 @@ Prefer calling overloads that accept a Charset over those that accept a String e
 __[PreferInstanceofOverGetKind](bugpattern/PreferInstanceofOverGetKind)__<br>
 Prefer instanceof over getKind() checks where possible, as these work well with pattern matching instanceofs
 
+__[PreferPreconditions](bugpattern/PreferPreconditions)__<br>
+Consider using Preconditions instead of explicit if-throw for parameter validation.
+
 __[PreferTestParameter](bugpattern/PreferTestParameter)__<br>
 When exhaustively testing all values of a single enum or boolean parameter, prefer @TestParameter over @TestParameters.
 
