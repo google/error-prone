@@ -90,10 +90,9 @@ public final class UnrecognisedJavadocTag extends BugChecker
         state.reportMatch(
             buildDescription(getDiagnosticPosition(pos, path.getTreePath().getLeaf()))
                 .setMessage(
-                    String.format(
-                        "This Javadoc tag '%s' wasn't recognised by the parser. Is it malformed"
-                            + " somehow, perhaps with mismatched braces?",
-                        entry.getValue()))
+                    "This Javadoc tag '%s' wasn't recognised by the parser. Is it malformed"
+                        + " somehow, perhaps with mismatched braces?",
+                    entry.getValue())
                 .build());
       }
     }
