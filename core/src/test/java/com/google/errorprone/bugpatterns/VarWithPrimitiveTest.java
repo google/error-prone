@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
+import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -26,6 +27,9 @@ import org.junit.runners.JUnit4;
 public final class VarWithPrimitiveTest {
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(VarWithPrimitive.class, getClass());
+
+  private final CompilationTestHelper compilationHelper =
+      CompilationTestHelper.newInstance(VarWithPrimitive.class, getClass());
 
   // from https://openjdk.org/projects/amber/guides/lvti-style-guide#G7
   @Test
@@ -188,6 +192,124 @@ public final class VarWithPrimitiveTest {
 
               long getAgeAsLong() {
                 return 0L;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void enhancedForLoop() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void t() {
+                int[] arr = {1, 2, 3};
+                for (var x : arr) {
+                  System.out.println(x);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void t() {
+                int[] arr = {1, 2, 3};
+                for (int x : arr) {
+                  System.out.println(x);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void forLoopInitializer() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void t() {
+                for (var i = 0; i < 10; i++) {
+                  System.out.println(i);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void t() {
+                for (int i = 0; i < 10; i++) {
+                  System.out.println(i);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void implicitLambdaParameter_noMatch() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Map;
+            import java.util.stream.Collectors;
+            import java.util.stream.IntStream;
+            class Test {
+              void foo() {
+                byte[] bar = new byte[6];
+                Map<Byte, List<Byte>> indicesMap =
+                    IntStream.range(0, 6)
+                        .mapToObj(n -> n)
+                        .collect(
+                            Collectors.groupingBy(
+                                n -> bar[n],
+                                Collectors.mapping(
+                                    n -> (byte) n.intValue(), Collectors.toList())));
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void multiParamImplicitLambda_noMatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.function.IntBinaryOperator;
+            class Test {
+              void t() {
+                IntBinaryOperator op = (a, b) -> a + b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void explicitLambdaParam_noMatch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.function.IntUnaryOperator;
+            class Test {
+              void t() {
+                IntUnaryOperator op = (int n) -> n * 2;
               }
             }
             """)
