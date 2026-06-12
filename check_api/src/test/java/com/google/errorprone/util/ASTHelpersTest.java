@@ -1108,7 +1108,7 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
     public Description matchVariable(VariableTree tree, VisitorState state) {
       Object value = ASTHelpers.constValue(tree.getInitializer());
       return buildDescription(tree)
-          .setMessage(String.format("%s(%s)", value.getClass().getSimpleName(), value))
+          .setMessage("%s(%s)", value.getClass().getSimpleName(), value)
           .build();
     }
   }
@@ -1905,7 +1905,7 @@ class Test {
 
     Description check(Tree tree) {
       PackageSymbol packageSymbol = ASTHelpers.enclosingPackage(ASTHelpers.getSymbol(tree)).get();
-      return buildDescription(tree).setMessage(String.format("[%s]", packageSymbol)).build();
+      return buildDescription(tree).setMessage("[%s]", packageSymbol).build();
     }
   }
 

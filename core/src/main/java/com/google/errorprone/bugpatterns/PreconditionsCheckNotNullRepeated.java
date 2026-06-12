@@ -70,15 +70,13 @@ public class PreconditionsCheckNotNullRepeated extends BugChecker
       // checkNotNull(T reference, Object errorMessage)
       if (numArgs == 2) {
         return buildDescription(args.get(1))
-            .setMessage(String.format(MESSAGE, nullArgSource))
+            .setMessage(MESSAGE, nullArgSource)
             .addFix(
                 SuggestedFix.replace(
                     args.get(1), String.format("\"%s must not be null\"", nullArgSource)))
             .build();
       }
-      return buildDescription(args.get(i))
-          .setMessage(String.format(MESSAGE, nullArgSource))
-          .build();
+      return buildDescription(args.get(i)).setMessage(MESSAGE, nullArgSource).build();
     }
     return Description.NO_MATCH;
   }

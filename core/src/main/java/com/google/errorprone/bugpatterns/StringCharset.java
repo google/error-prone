@@ -90,9 +90,7 @@ public class StringCharset extends BugChecker
     try {
       charset = Charset.forName(value);
     } catch (IllegalArgumentException e) {
-      return buildDescription(tree)
-          .setMessage(String.format("%s is not a valid charset", value))
-          .build();
+      return buildDescription(tree).setMessage("%s is not a valid charset", value).build();
     }
     if (!CHARSETS.contains(charset)) {
       return NO_MATCH;

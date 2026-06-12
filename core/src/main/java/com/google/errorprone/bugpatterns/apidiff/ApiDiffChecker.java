@@ -84,9 +84,7 @@ public abstract class ApiDiffChecker extends BugChecker
     // check for information associated with the class
     if (apiDiff.isClassUnsupported(Signatures.classDescriptor(receiver.type, state))
         || classOrEnclosingClassIsForbiddenByAnnotation(receiver, state)) {
-      return buildDescription(tree)
-          .setMessage(String.format("%s is not available", receiver))
-          .build();
+      return buildDescription(tree).setMessage("%s is not available", receiver).build();
     }
     // check for fields and methods that are not present in the old API
     if (!(sym instanceof VarSymbol || sym instanceof MethodSymbol)) {
@@ -99,7 +97,7 @@ public abstract class ApiDiffChecker extends BugChecker
     if (apiDiff.isMemberUnsupported(Signatures.classDescriptor(owner.type, state), memberKey)
         || hasAnnotationForbiddingUse(sym, state)) {
       return buildDescription(tree)
-          .setMessage(String.format("%s#%s is not available in %s", owner, sym, receiver))
+          .setMessage("%s#%s is not available in %s", owner, sym, receiver)
           .build();
     }
     return Description.NO_MATCH;

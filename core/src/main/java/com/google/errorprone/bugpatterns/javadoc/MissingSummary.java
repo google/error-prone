@@ -143,7 +143,7 @@ public final class MissingSummary extends BugChecker
                     lowerFirstLetter(description), description.endsWith(".") ? "" : "."))
             .build();
     return buildDescription(diagnosticPosition(docTreePath, state))
-        .setMessage(String.format(CONSIDER_USING_MESSAGE, "return"))
+        .setMessage(CONSIDER_USING_MESSAGE, "return")
         .addFix(fix)
         .build();
   }
@@ -166,7 +166,7 @@ public final class MissingSummary extends BugChecker
                             .collect(joining(" "))))
                 .build();
     return buildDescription(diagnosticPosition(docTreePath, state))
-        .setMessage(String.format(CONSIDER_USING_MESSAGE, "see"))
+        .setMessage(CONSIDER_USING_MESSAGE, "see")
         .addFix(fix)
         .build();
   }

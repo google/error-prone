@@ -94,7 +94,7 @@ public class AvoidCommonTypeNames extends BugChecker
       // If the symbol isn't the java.lang class, there's a clash.
       if (symbol != null && !clashingSymbol.equals(symbol)) {
         return buildDescription(tree)
-            .setMessage(String.format("%s clashes with %s", symbol, clashingSymbol))
+            .setMessage("%s clashes with %s", symbol, clashingSymbol)
             .build();
       }
     }

@@ -424,7 +424,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
           lostType,
           state)) {
         return buildDescription(tree)
-            .setMessage(format("Method returns a nested type, %s", returnType))
+            .setMessage("Method returns a nested type, %s", returnType)
             .build();
       }
 

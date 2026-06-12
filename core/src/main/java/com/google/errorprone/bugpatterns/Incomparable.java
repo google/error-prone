@@ -86,8 +86,6 @@ public class Incomparable extends BugChecker implements NewClassTreeMatcher {
     if (ASTHelpers.isCastable(keyType, state.getSymtab().comparableType, state)) {
       return NO_MATCH;
     }
-    return buildDescription(tree)
-        .setMessage(String.format("%s does not implement Comparable", keyType))
-        .build();
+    return buildDescription(tree).setMessage("%s does not implement Comparable", keyType).build();
   }
 }
