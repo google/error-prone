@@ -39,6 +39,12 @@ public final class IfChainToSwitchTest {
         CLUB
       };
       """;
+
+  private static final String ENABLE_MAIN = "-XepOpt:IfChainToSwitch:EnableMain";
+  private static final String DISABLE_SAFE = "-XepOpt:IfChainToSwitch:EnableSafe=false";
+  private static final String ENABLE_SAFE = "-XepOpt:IfChainToSwitch:EnableSafe";
+  private static final String ENABLE_SAFE_TRUE = "-XepOpt:IfChainToSwitch:EnableSafe=true";
+  private static final String MIN_CHAIN_LENGTH_3 = "-XepOpt:IfChainToSwitch:MinChainLength=3";
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(IfChainToSwitch.class, getClass())
           .addSourceLines("Suit.java", SUIT);
@@ -101,7 +107,7 @@ public final class IfChainToSwitchTest {
                 }
                 """))
         .allowFormattingErrors()
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -135,7 +141,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -191,7 +197,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -251,7 +257,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -278,7 +284,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -304,7 +310,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -349,7 +355,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -400,7 +406,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -452,7 +458,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -483,7 +489,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -539,7 +545,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -593,7 +599,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -648,7 +654,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -695,7 +701,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -742,7 +748,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -792,7 +798,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -842,7 +848,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -886,7 +892,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -930,7 +936,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -980,7 +986,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1027,7 +1033,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1077,7 +1083,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1129,7 +1135,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1172,7 +1178,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1214,7 +1220,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1255,7 +1261,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1283,7 +1289,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1328,7 +1334,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1356,7 +1362,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1388,7 +1394,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1423,7 +1429,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1474,7 +1480,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1502,7 +1508,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1532,7 +1538,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1566,7 +1572,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1632,7 +1638,7 @@ public final class IfChainToSwitchTest {
             }
             """)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1663,7 +1669,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1693,7 +1699,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1725,7 +1731,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1781,7 +1787,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1848,7 +1854,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1877,7 +1883,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1907,7 +1913,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1933,7 +1939,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1958,7 +1964,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -2075,7 +2081,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2124,7 +2130,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2173,7 +2179,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2263,7 +2269,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2352,7 +2358,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2413,7 +2419,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2471,7 +2477,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe=false")
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2529,7 +2535,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2560,7 +2566,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe=false")
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -2592,7 +2598,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe=false")
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -2625,7 +2631,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe=false")
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -2685,7 +2691,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2745,7 +2751,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2810,7 +2816,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2865,7 +2871,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2920,7 +2926,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2943,7 +2949,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -2970,7 +2976,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3008,7 +3014,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3033,7 +3039,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe=true")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE_TRUE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3093,7 +3099,7 @@ class Test {
   }
 }
 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3153,7 +3159,7 @@ class Test {
   }
 }
 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3214,7 +3220,7 @@ class Test {
   }
 }
 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3274,7 +3280,7 @@ class Test {
   }
 }
 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3301,7 +3307,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3332,7 +3338,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3383,7 +3389,7 @@ class Test {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3432,7 +3438,7 @@ class Test {
   }
 }
 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3465,7 +3471,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3491,7 +3497,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3519,7 +3525,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3568,7 +3574,7 @@ class Test {
   }
 }
 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3623,7 +3629,7 @@ class Test {
   }
 }
 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3677,7 +3683,7 @@ class Test {
   }
 }
 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3733,7 +3739,8 @@ class Test {
 }
 """))
         .setArgs(
-            "-XepOpt:IfChainToSwitch:EnableMain",
+            ENABLE_MAIN,
+            MIN_CHAIN_LENGTH_3,
             "--enable-preview",
             "--release",
             Integer.toString(Runtime.version().feature()))
@@ -3773,7 +3780,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3815,7 +3822,7 @@ class Test {
                   }
                 }
                 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3865,7 +3872,7 @@ class Test {
   }
 }
 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3898,7 +3905,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3939,7 +3946,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3972,7 +3979,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4013,7 +4020,7 @@ class Test {
   }
 }
 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4072,7 +4079,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4114,7 +4121,7 @@ class Test {
   }
 }
 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4140,7 +4147,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4185,7 +4192,7 @@ class Test {
   }
 }
 """))
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4228,7 +4235,7 @@ class Test {
   }
 }
 """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4255,7 +4262,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4281,7 +4288,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4307,7 +4314,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4333,7 +4340,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain", "-XepOpt:IfChainToSwitch:EnableSafe")
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4359,7 +4366,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4401,7 +4408,7 @@ class Test {
   }
 }
 """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4429,7 +4436,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepOpt:IfChainToSwitch:EnableMain")
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 

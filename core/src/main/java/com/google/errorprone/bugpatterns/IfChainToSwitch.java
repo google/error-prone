@@ -116,6 +116,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   private final boolean enableMain;
   private final boolean enableSafe;
   private final int maxChainLength;
+  private final int minChainLength;
   private final ConstantExpressions constantExpressions;
 
   @Inject
@@ -123,6 +124,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     enableMain = flags.getBoolean("IfChainToSwitch:EnableMain").orElse(false);
     enableSafe = flags.getBoolean("IfChainToSwitch:EnableSafe").orElse(false);
     maxChainLength = flags.getInteger("IfChainToSwitch:MaxChainLength").orElse(50);
+    minChainLength = flags.getInteger("IfChainToSwitch:MinChainLength").orElse(5);
     this.constantExpressions = constantExpressions;
   }
 
@@ -184,7 +186,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
     if (!ifChainAnalysisState.validity().equals(Validity.VALID)
         // Exclude short if-chains, since they may be more readable as-is
-        || ifChainAnalysisState.depth() < 3) {
+        || ifChainAnalysisState.depth() < minChainLength) {
       return NO_MATCH;
     }
 
