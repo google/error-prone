@@ -43,7 +43,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
  *
  * @author andrewrice@google.com (Andrew Rice)
  */
-public class BranchedSuggestedFixes {
+public final class BranchedSuggestedFixes {
 
   private final ImmutableList<SuggestedFix> fixes;
 

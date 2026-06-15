@@ -30,7 +30,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
  *
  * @author bhagwani@google.com (Sumit Bhagwani)
  */
-public class TestNgMatchers {
+public final class TestNgMatchers {
 
   /**
    * Checks if a method, or any overridden method, is annotated with any annotation from the

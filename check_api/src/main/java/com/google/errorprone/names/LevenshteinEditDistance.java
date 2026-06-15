@@ -28,7 +28,7 @@ import com.google.common.primitives.Ints;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class LevenshteinEditDistance {
+public final class LevenshteinEditDistance {
 
   private LevenshteinEditDistance() {
     /* disallow instantiation */

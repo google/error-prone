@@ -650,7 +650,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         || exemptNames.contains(nameString);
   }
 
-  private class VariableFinder extends TreePathScanner<Void, Void> {
+  private final class VariableFinder extends TreePathScanner<Void, Void> {
     private final Map<Symbol, TreePath> unusedElements = new HashMap<>();
 
     private final Set<Symbol> onlyCheckForReassignments = new HashSet<>();

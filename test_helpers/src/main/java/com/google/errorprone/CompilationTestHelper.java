@@ -59,7 +59,7 @@ import org.jspecify.annotations.Nullable;
 
 /** Helps test Error Prone bug checkers and compilations. */
 @CheckReturnValue
-public class CompilationTestHelper {
+public final class CompilationTestHelper {
   private static final ImmutableList<String> DEFAULT_ARGS =
       ImmutableList.of(
           "-encoding",

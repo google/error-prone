@@ -46,7 +46,7 @@ import org.jspecify.annotations.Nullable;
  * The machinery and type definitions necessary to model and compile a single efficient matcher out
  * of a list of {@link com.google.errorprone.matchers.method.MethodMatchers.MethodMatcher}s.
  */
-public class MethodInvocationMatcher {
+public final class MethodInvocationMatcher {
 
   record Context(MethodSymbol sym, ExpressionTree tree) {
     static Optional<Context> create(ExpressionTree tree) {

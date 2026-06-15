@@ -49,7 +49,7 @@ import java.util.stream.Stream;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class ErrorProneOptions {
+public final class ErrorProneOptions {
 
   private static final String PREFIX = "-Xep";
   private static final String SEVERITY_PREFIX = "-Xep:";

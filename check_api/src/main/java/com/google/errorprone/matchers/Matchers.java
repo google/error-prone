@@ -114,7 +114,7 @@ import javax.lang.model.type.TypeMirror;
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class Matchers {
+public final class Matchers {
 
   private Matchers() {}
 

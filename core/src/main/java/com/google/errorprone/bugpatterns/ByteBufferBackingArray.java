@@ -123,7 +123,7 @@ public class ByteBufferBackingArray extends BugChecker implements MethodInvocati
    * Scan for a call to ByteBuffer.arrayOffset() or check if buffer was initialized with either
    * ByteBuffer.wrap() or ByteBuffer.allocate().
    */
-  private static class ValidByteBufferArrayScanner extends TreeScanner<Void, VisitorState> {
+  private static final class ValidByteBufferArrayScanner extends TreeScanner<Void, VisitorState> {
 
     private final Symbol searchedBufferSymbol;
     private boolean visited;
@@ -185,7 +185,7 @@ public class ByteBufferBackingArray extends BugChecker implements MethodInvocati
   }
 
   /** Scan for a call to ByteBuffer.wrap() or ByteBuffer.allocate(). */
-  private static class ValidByteBufferInitializerScanner
+  private static final class ValidByteBufferInitializerScanner
       extends TreeScanner<Boolean, VisitorState> {
 
     static Boolean scan(ExpressionTree tree, VisitorState state) {

@@ -47,7 +47,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @Immutable
 @CheckReturnValue
-public class SuppressionInfo {
+public final class SuppressionInfo {
   public static final SuppressionInfo EMPTY =
       new SuppressionInfo(ImmutableSet.of(), ImmutableSet.of(), false);
 

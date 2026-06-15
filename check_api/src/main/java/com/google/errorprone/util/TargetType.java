@@ -176,7 +176,7 @@ public record TargetType(Type type, TreePath path) {
   }
 
   @VisibleForTesting
-  static class TargetTypeVisitor extends SimpleTreeVisitor<Type, Void> {
+  static final class TargetTypeVisitor extends SimpleTreeVisitor<Type, Void> {
     private final VisitorState state;
     private final TreePath parent;
     private final ExpressionTree current;

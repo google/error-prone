@@ -202,7 +202,7 @@ public class EqualsIncompatibleType extends BugChecker
         + " are incompatible.";
   }
 
-  private static class TypeStringPair {
+  private static final class TypeStringPair {
     private String receiverTypeString;
     private String argumentTypeString;
 

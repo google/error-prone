@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.joining;
 import java.util.List;
 
 /** Error messages used by {@link com.google.errorprone.bugpatterns.CheckReturnValue}. */
-public class ErrorMessages {
+public final class ErrorMessages {
   private ErrorMessages() {}
 
   /**

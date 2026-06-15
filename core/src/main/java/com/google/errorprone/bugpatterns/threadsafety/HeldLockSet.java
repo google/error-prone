@@ -30,7 +30,7 @@ import org.pcollections.PSet;
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-class HeldLockSet {
+final class HeldLockSet {
 
   final PSet<GuardedByExpression> locks;
 

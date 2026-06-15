@@ -345,7 +345,7 @@ public class CompileTimeConstantCheckerTest {
   }
 
   /** Holder for a method we wish to reference from a test. */
-  public static class Holder {
+  public static final class Holder {
     public static void m(String s, @CompileTimeConstant String... p) {}
 
     private Holder() {}

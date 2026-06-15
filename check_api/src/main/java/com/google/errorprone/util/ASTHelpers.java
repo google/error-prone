@@ -162,7 +162,8 @@ import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
 
 /** This class contains utility methods to work with the javac AST. */
-public class ASTHelpers {
+@SuppressWarnings("IdentifierName") // should have been "AstHelpers" but too disruptive to change
+public final class ASTHelpers {
   /**
    * Determines whether two expressions refer to the same variable. Note that returning false
    * doesn't necessarily mean the expressions do *not* refer to the same field. We don't attempt to

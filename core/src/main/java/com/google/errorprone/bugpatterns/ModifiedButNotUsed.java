@@ -301,7 +301,7 @@ public class ModifiedButNotUsed extends BugChecker
         .orElse(false);
   }
 
-  private static class UnusedScanner extends TreePathScanner<Void, Void> {
+  private static final class UnusedScanner extends TreePathScanner<Void, Void> {
     private final Symbol symbol;
     private final VisitorState state;
     private final Matcher<IdentifierTree> matcher;

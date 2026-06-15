@@ -164,7 +164,7 @@ public class MissingSuperCall extends BugChecker
   }
 
   /** Scans a tree looking for calls to a method that is overridden by the given one. */
-  private static class FindSuperTreeScanner extends TreeScanner<Boolean, Void> {
+  private static final class FindSuperTreeScanner extends TreeScanner<Boolean, Void> {
     private final String overridingMethodName;
 
     private FindSuperTreeScanner(String overridingMethodName) {

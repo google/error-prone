@@ -71,7 +71,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author bennostein@google.com (Benno Stein)
  */
-public class NullnessQualifierInference extends TreeScanner<Void, Void> {
+public final class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
   private static final LoadingCache<Tree, InferredNullability> inferenceCache =
       Caffeine.newBuilder()

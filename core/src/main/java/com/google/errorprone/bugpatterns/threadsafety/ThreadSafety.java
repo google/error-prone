@@ -421,7 +421,7 @@ public final class ThreadSafety {
         null);
   }
 
-  private class ThreadSafeTypeVisitor extends Types.SimpleVisitor<Violation, Void> {
+  private final class ThreadSafeTypeVisitor extends Types.SimpleVisitor<Violation, Void> {
 
     private final boolean allowContainerTypeParameters;
     private final Set<String> containerTypeParameters;

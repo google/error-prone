@@ -23,7 +23,9 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
-public class Refaster {
+// We need to call these methods from templates that aren't run as normal Java code.
+@SuppressWarnings("DoNotCallSuggester")
+public final class Refaster {
   private Refaster() {}
 
   /**
@@ -98,6 +100,7 @@ public class Refaster {
    *
    * @throws IllegalArgumentException if T is not specified explicitly.
    */
+  @SuppressWarnings("UnusedTypeParameter") // The type parameter supports extralinguistic magic
   public static <T> boolean isInstance(Object o) {
     // real code wouldn't have an unused type parameter (T) or an unused argument (o)
     throw new UnsupportedOperationException(o.toString());

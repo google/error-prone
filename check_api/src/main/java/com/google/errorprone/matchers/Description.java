@@ -42,7 +42,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class Description {
+public final class Description {
   /** Describes the sentinel value of the case where the match failed. */
   public static final Description NO_MATCH =
       new Description(
@@ -151,7 +151,7 @@ public class Description {
   }
 
   /** Builder for {@code Description}s. */
-  public static class Builder {
+  public static final class Builder {
     private final ErrorPronePosition position;
     private final String name;
     private String linkUrl;

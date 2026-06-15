@@ -301,7 +301,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   }
 
   private static boolean methodReturnsIgnorableValues(MethodTree tree, VisitorState state) {
-    class ReturnValuesFromMethodAreIgnorable extends TreeScanner<Void, Void> {
+    final class ReturnValuesFromMethodAreIgnorable extends TreeScanner<Void, Void> {
       private final VisitorState state;
       private final Type enclosingClassType;
       private final Type methodReturnType;

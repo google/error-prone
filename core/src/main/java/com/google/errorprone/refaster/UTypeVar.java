@@ -31,7 +31,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author Louis Wasserman
  */
-public class UTypeVar extends UType {
+public final class UTypeVar extends UType {
   // This can't be @AutoValue'd, since the fields are mutable.
 
   /** Bindings key linked to a {@code UTypeVar}. */

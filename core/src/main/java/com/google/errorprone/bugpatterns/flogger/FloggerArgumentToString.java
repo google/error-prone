@@ -117,7 +117,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
   private static final Character HEX_FORMAT = 'x';
   private static final Character UPPER_HEX_FORMAT = 'X';
 
-  static class Parameter {
+  static final class Parameter {
 
     final Supplier<String> source;
     final Type type;

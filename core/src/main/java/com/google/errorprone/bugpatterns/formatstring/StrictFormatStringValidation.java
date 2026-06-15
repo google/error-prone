@@ -49,7 +49,7 @@ import org.jspecify.annotations.Nullable;
  * Format string validation utility that fails on more cases than {@link FormatStringValidation} to
  * enforce strict format string checking.
  */
-public class StrictFormatStringValidation {
+public final class StrictFormatStringValidation {
 
   private static final Matcher<ExpressionTree> MOCKITO_MATCHERS =
       staticMethod().onClassAny("org.mockito.Matchers", "org.mockito.ArgumentMatchers");

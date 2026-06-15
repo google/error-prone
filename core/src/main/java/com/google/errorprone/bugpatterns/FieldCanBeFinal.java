@@ -253,7 +253,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
   }
 
   /** Record assignments to possibly-final variables in a compilation unit. */
-  private class FinalScanner extends TreePathScanner<Void, InitializationContext> {
+  private final class FinalScanner extends TreePathScanner<Void, InitializationContext> {
 
     private final VariableAssignmentRecords writes;
     private final VisitorState compilationState;

@@ -52,7 +52,7 @@ import javax.tools.JavaFileObject;
 
 /** A {@link TaskListener} that runs Error Prone over attributed compilation units. */
 @Trusted
-public class ErrorProneAnalyzer implements TaskListener {
+public final class ErrorProneAnalyzer implements TaskListener {
 
   // The set of trees that have already been scanned.
   private final Set<Tree> seen = new HashSet<>();

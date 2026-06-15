@@ -671,7 +671,7 @@ import java.util.Arrays;
  * Static helper class that provides {@link ScannerSupplier}s and {@link BugChecker}s for the
  * built-in Error Prone checks, as opposed to plugin checks or checks used in tests.
  */
-public class BuiltInCheckerSuppliers {
+public final class BuiltInCheckerSuppliers {
   @SafeVarargs
   public static ImmutableSet<BugCheckerInfo> getSuppliers(Class<? extends BugChecker>... checkers) {
     return getSuppliers(Arrays.asList(checkers));

@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
  *
  * <p>TODO(glorioso): Coalesce this with ByteBufferBackingArray since they have similar aims?
  */
-public class NearbyCallers {
+public final class NearbyCallers {
   private NearbyCallers() {}
 
   // lifted from com.google.devtools.javatools.refactory.refaster.cleanups.proto.ProtoMatchers

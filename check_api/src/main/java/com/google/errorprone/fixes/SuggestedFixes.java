@@ -1942,7 +1942,7 @@ public final class SuggestedFixes {
   }
 
   /** Helper class for avoiding variable name shadowing. */
-  public static class VariableNamer {
+  public static final class VariableNamer {
     private final Set<String> idents;
 
     private VariableNamer(VisitorState state) {
