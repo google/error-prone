@@ -497,6 +497,9 @@ public final class SuggestedFixes {
         return components.subList(i, components.size()).stream().collect(joining("."));
       }
       // Type already imported or otherwise visible.
+      if (found.getKind().equals(ElementKind.OTHER)) {
+        continue;
+      }
       if (found.getQualifiedName().contentEquals(qualifiedName)) {
         return components.subList(i, components.size()).stream().collect(joining("."));
       }

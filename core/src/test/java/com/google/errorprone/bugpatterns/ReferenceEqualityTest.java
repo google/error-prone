@@ -900,4 +900,30 @@ public class ReferenceEqualityTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void ambiguousImport() {
+    compilationHelper
+        .addSourceLines(
+            "Objects.java",
+            """
+            package test;
+
+            public class Objects {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.*;
+            import test.*;
+
+            class Test {
+              boolean f(String a, String b) {
+                // BUG: Diagnostic contains: java.util.Objects.equals(a, b)
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
 }

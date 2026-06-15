@@ -16,9 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
+import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.VisitorState.memoize;
+import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -34,7 +35,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
-import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -105,14 +105,16 @@ public class ReferenceEquality extends AbstractReferenceEquality {
       Type overriddenType,
       String overriddenMethodName,
       VisitorState state) {
-    Symbol overriddenMethodSymbol = getOnlyMember(state, overriddenType, overriddenMethodName);
+    Symbol overriddenMethodSymbol = getOnlyMember(overriddenType, overriddenMethodName);
     return methodSymbol.getSimpleName().contentEquals(overriddenMethodName)
         && methodSymbol.overrides(
             overriddenMethodSymbol, classType.tsym, state.getTypes(), /* checkResult= */ false);
   }
 
-  private static Symbol getOnlyMember(VisitorState state, Type type, String name) {
-    return getOnlyElement(type.tsym.members().getSymbolsByName(state.getName(name)));
+  private static Symbol getOnlyMember(Type type, String name) {
+    return getEnclosedElements(type.tsym).stream()
+        .filter(s -> s.getSimpleName().contentEquals(name))
+        .collect(onlyElement());
   }
 
   /**
@@ -184,18 +186,16 @@ public class ReferenceEquality extends AbstractReferenceEquality {
    */
   private static boolean implementsEquals(Type type, VisitorState state) {
     Name equalsName = EQUALS.get(state);
-    Symbol objectEquals = getOnlyMember(state, state.getSymtab().objectType, "equals");
+    Symbol objectEquals = getOnlyMember(state.getSymtab().objectType, "equals");
     for (Type sup : state.getTypes().closure(type)) {
       if (isSameType(sup, state.getSymtab().objectType, state)) {
         continue;
       }
-      Scope scope = sup.tsym.members();
-      if (scope == null) {
-        continue;
-      }
-      for (Symbol sym : scope.getSymbolsByName(equalsName)) {
-        if (sym.overrides(objectEquals, type.tsym, state.getTypes(), /* checkResult= */ false)) {
-          return true;
+      for (Symbol sym : getEnclosedElements(sup.tsym)) {
+        if (sym.getSimpleName().contentEquals(equalsName)) {
+          if (sym.overrides(objectEquals, type.tsym, state.getTypes(), /* checkResult= */ false)) {
+            return true;
+          }
         }
       }
     }
