@@ -71,7 +71,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public /* TODO: cl/931120620 - final */ class VisitorState {
+public final class VisitorState {
 
   private final SharedState sharedState;
   public final Context context;
