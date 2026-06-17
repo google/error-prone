@@ -36,10 +36,7 @@ import com.sun.tools.javac.code.Symbol;
 import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
-@BugPattern(
-    summary = "Type parameter used as type qualifier",
-    severity = ERROR,
-    suppressionAnnotations = {})
+@BugPattern(summary = "Type parameter used as type qualifier", severity = ERROR)
 public class TypeParameterQualifier extends BugChecker
     implements MemberSelectTreeMatcher, MemberReferenceTreeMatcher {
   private final boolean matchMethodReferences;

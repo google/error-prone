@@ -125,6 +125,22 @@ public class TypeParameterQualifierTest {
   }
 
   @Test
+  public void suppression() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              @SuppressWarnings("TypeParameterQualifier")
+              static <T extends Enum<T>> T get(Class<T> clazz, String value) {
+                return T.valueOf(clazz, value);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     compilationHelper
         .addSourceLines(
