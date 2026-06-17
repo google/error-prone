@@ -144,6 +144,25 @@ public class TypeParameterQualifierTest {
   }
 
   @Test
+  public void methodReference_inAfterTemplate() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.refaster.annotation.AfterTemplate;
+            import java.util.function.Function;
+
+            class Test {
+              @AfterTemplate
+              <T extends Enum<T>> Function<T, String> rule() {
+                return T::name;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void memberSelect_inBeforeTemplate() {
     compilationHelper
         .addSourceLines(
