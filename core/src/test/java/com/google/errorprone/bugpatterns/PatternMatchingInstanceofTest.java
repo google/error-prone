@@ -1048,11 +1048,8 @@ public final class PatternMatchingInstanceofTest {
   }
 
   @Test
-  public void castVariableReassigned_brokenRefactoring() {
-    // TODO: b/395603588 - This refactoring is broken because 's' is reassigned,
-    // but pattern variables are implicitly final. It should be expectUnchanged().
+  public void castVariableReassigned_noFinding() {
     helper
-        .allowBreakingChanges()
         .addInputLines(
             "Test.java",
             """
@@ -1066,19 +1063,47 @@ public final class PatternMatchingInstanceofTest {
               }
             }
             """)
-        .addOutputLines(
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void castVariableIncremented_noFinding() {
+    helper
+        .addInputLines(
             "Test.java",
             """
             class Test {
               void test(Object o) {
-                if (o instanceof String s) {
-
-                  s = "new value";
-                  System.out.println(s);
+                if (o instanceof Integer) {
+                  Integer i = (Integer) o;
+                  i++;
+                  System.out.println(i);
                 }
               }
             }
             """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void castVariableCompoundAssigned_noFinding() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Integer) {
+                  Integer i = (Integer) o;
+                  i += 1;
+                  System.out.println(i);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
         .doTest();
   }
 

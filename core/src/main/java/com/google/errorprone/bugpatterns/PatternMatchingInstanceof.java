@@ -21,9 +21,11 @@ import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.SourceVersion.supportsPatternMatchingInstanceof;
 import static com.google.errorprone.util.TargetType.targetType;
+import static java.lang.Boolean.TRUE;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.joining;
 
@@ -38,8 +40,10 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.Reachability;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
@@ -49,12 +53,17 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
+import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
+import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.SourceVersion;
@@ -90,10 +99,8 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
       return NO_MATCH;
     }
     Type targetType = getType(instanceOfTree.getType());
-    var allCasts = new HashSet<>(findAllCasts(constant, impliedStatements, targetType, state));
-    String name = null;
-    SuggestedFix.Builder fix = SuggestedFix.builder();
 
+    var allCasts = findAllCasts(constant, impliedStatements, targetType, state);
     int typeArgCount = getType(instanceOfTree.getType()).tsym.getTypeParameters().size();
     if (typeArgCount != 0
         && allCasts.stream()
@@ -102,24 +109,43 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
       return NO_MATCH;
     }
 
-    // If we find a variable tree which exists only to be assigned the cast result, use that as
-    // the name and delete it.
-    // NOTE: an even nicer approach would be to delete all such VariableTrees, and rename all
-    // the names to one. That would require another scan, though.
+    // Find if we can delete at least one variable, and collect casts to replace.
+    // We prefer to delete a variable that holds the cast result and reuse its name,
+    // but we can only do so if it is not reassigned (since pattern variables are final).
+    Set<TreePath> castsToReplace = new HashSet<>();
+    boolean hasCastsInExpressions = false;
+    VariableTree variableToDelete = null;
+    String name = null;
+    SuggestedFix.Builder fix = SuggestedFix.builder();
     for (TreePath cast : allCasts) {
       VariableTree variableTree = isVariableAssignedFromCast(cast, instanceOfTree, state);
       if (variableTree != null) {
-        allCasts.remove(cast);
-        fix.delete(variableTree);
-        name = variableTree.getName().toString();
-        break;
+        if (!isReassigned(variableTree, impliedStatements) && variableToDelete == null) {
+          // Use this variable's name and delete its declaration.
+          variableToDelete = variableTree;
+          name = variableTree.getName().toString();
+        } else {
+          // The variable is reassigned (so we can't delete it or reuse its name as the pattern
+          // variable), or we already selected another variable to delete.
+          castsToReplace.add(cast);
+        }
+      } else {
+        // The cast is used in an expression, not just a simple variable assignment.
+        castsToReplace.add(cast);
+        hasCastsInExpressions = true;
       }
     }
 
-    if (!allCasts.isEmpty() || !fix.isEmpty()) {
+    // We refactor if we can delete a local variable and replace it with a pattern variable,
+    // OR if there are cast expressions that should be replaced with a pattern variable
+    // (even if some other variables assigned from the casts are reassigned elsewhere).
+    boolean shouldRefactor = variableToDelete != null || hasCastsInExpressions;
+
+    if (shouldRefactor) {
+      if (variableToDelete != null) {
+        fix.delete(variableToDelete);
+      }
       if (name == null) {
-        // This is a gamble as to an appropriate name. We could make sure it doesn't clash with
-        // anything in scope, but that's effort.
         name = generateVariableName(targetType, state);
       }
       if (typeArgCount != 0 && !(instanceOfTree.getType() instanceof ParameterizedTypeTree)) {
@@ -132,7 +158,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
           instanceOfTree,
           fix.postfixWith(instanceOfTree, " " + name)
               .merge(
-                  allCasts.stream()
+                  castsToReplace.stream()
                       .map(c -> SuggestedFix.replace(c.getLeaf(), fn))
                       .collect(mergeFixes()))
               .build());
@@ -288,5 +314,44 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
           false;
       default -> true;
     };
+  }
+
+  /** Returns true if the given variable is reassigned anywhere in the given trees. */
+  private static boolean isReassigned(VariableTree variableTree, List<Tree> trees) {
+    VarSymbol varSymbol = getSymbol(variableTree);
+    if (varSymbol == null) {
+      return false;
+    }
+    var scanner =
+        new TreeScanner<Boolean, Void>() {
+          @Override
+          public Boolean visitAssignment(AssignmentTree node, Void unused) {
+            return varSymbol.equals(getSymbol(node.getVariable()))
+                || super.visitAssignment(node, null);
+          }
+
+          @Override
+          public Boolean visitCompoundAssignment(CompoundAssignmentTree node, Void unused) {
+            return varSymbol.equals(getSymbol(node.getVariable()))
+                || super.visitCompoundAssignment(node, null);
+          }
+
+          @Override
+          public Boolean visitUnary(UnaryTree node, Void unused) {
+            return (switch (node.getKind()) {
+                  case POSTFIX_INCREMENT, POSTFIX_DECREMENT, PREFIX_INCREMENT, PREFIX_DECREMENT ->
+                      varSymbol.equals(getSymbol(node.getExpression()));
+                  default -> false;
+                })
+                || super.visitUnary(node, null);
+          }
+
+          @Override
+          public Boolean reduce(Boolean left, Boolean right) {
+            // be careful because the parameters can be null!
+            return TRUE.equals(left) || TRUE.equals(right);
+          }
+        };
+    return scanner.scan(trees, null);
   }
 }
