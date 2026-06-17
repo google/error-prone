@@ -125,6 +125,44 @@ public class TypeParameterQualifierTest {
   }
 
   @Test
+  public void methodReference_inBeforeTemplate() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.refaster.annotation.BeforeTemplate;
+            import java.util.function.Function;
+
+            class Test {
+              @BeforeTemplate
+              <T extends Enum<T>> Function<T, String> rule() {
+                return T::name;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void memberSelect_inBeforeTemplate() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.refaster.annotation.BeforeTemplate;
+
+            class Test {
+              @BeforeTemplate
+              <T extends Enum<T>> T rule(Class<T> clazz, String value) {
+                // BUG: Diagnostic contains: Enum.valueOf(clazz, value);
+                return T.valueOf(clazz, value);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     compilationHelper
         .addSourceLines(
