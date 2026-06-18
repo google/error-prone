@@ -1904,6 +1904,10 @@ public final class SuggestedFixes {
       this.modifier = modifier;
     }
 
+    public Optional<Modifier> modifier() {
+      return modifier;
+    }
+
     public SuggestedFix refactor(Tree tree, VisitorState state) {
       SuggestedFix.Builder fix = SuggestedFix.builder();
       modifier.flatMap(mod -> SuggestedFixes.addModifiers(tree, state, mod)).ifPresent(fix::merge);
