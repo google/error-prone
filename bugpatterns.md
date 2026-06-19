@@ -1901,6 +1901,9 @@ Public methods named stream() are generally expected to return a type whose name
 __[RemoveUnusedImports](bugpattern/RemoveUnusedImports)__<br>
 Unused imports
 
+__[RequireNonNullRefactoring](bugpattern/RequireNonNullRefactoring)__<br>
+Refactor explicit null checks to Objects.requireNonNull
+
 __[ReturnMissingNullable](bugpattern/ReturnMissingNullable)__<br>
 Method returns a definitely null value but is not annotated @Nullable
 
