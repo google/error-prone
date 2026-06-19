@@ -169,9 +169,6 @@ public final class AssertThrowsUtils {
 
   private static boolean isExceptionReferenced(CatchTree catchTree) {
     VarSymbol exceptionSymbol = getSymbol(catchTree.getParameter());
-    if (exceptionSymbol == null) {
-      return false;
-    }
     var scanner =
         new TreeScanner<Void, Void>() {
           private boolean isReferenced = false;

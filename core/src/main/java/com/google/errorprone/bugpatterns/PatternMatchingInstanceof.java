@@ -319,9 +319,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
   /** Returns true if the given variable is reassigned anywhere in the given trees. */
   private static boolean isReassigned(VariableTree variableTree, List<Tree> trees) {
     VarSymbol varSymbol = getSymbol(variableTree);
-    if (varSymbol == null) {
-      return false;
-    }
+
     var scanner =
         new TreeScanner<Boolean, Void>() {
           @Override

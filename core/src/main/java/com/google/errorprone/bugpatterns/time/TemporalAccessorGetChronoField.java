@@ -136,7 +136,7 @@ public final class TemporalAccessorGetChronoField extends BugChecker
 
     String declaringType = sym.owner.getQualifiedName().toString();
     ImmutableList<ChronoField> invalidChronoFields = UNSUPPORTED.get(declaringType);
-    if (invalidChronoFields != null && isDefinitelyInvalidChronoField(tree, invalidChronoFields)) {
+    if (isDefinitelyInvalidChronoField(tree, invalidChronoFields)) {
       return describeMatch(tree);
     }
     return Description.NO_MATCH;

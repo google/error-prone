@@ -797,9 +797,6 @@ public final class Matchers {
   public static Matcher<MethodTree> hasAnnotationOnAnyOverriddenMethod(String annotationClass) {
     return (tree, state) -> {
       MethodSymbol methodSym = getSymbol(tree);
-      if (methodSym == null) {
-        return false;
-      }
       if (ASTHelpers.hasAnnotation(methodSym, annotationClass, state)) {
         return true;
       }

@@ -60,9 +60,6 @@ final class Matchers {
     }
 
     Type superType = owner.getSuperclass();
-    if (superType == null) {
-      return false;
-    }
 
     Symbol superSymbol = superType.tsym;
     if (superSymbol == null) {

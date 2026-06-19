@@ -96,9 +96,6 @@ public final class ExposedPrivateType extends BugChecker
       return NO_MATCH;
     }
     VarSymbol sym = getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     if (sym.getKind() != ElementKind.FIELD) {
       return NO_MATCH;
     }

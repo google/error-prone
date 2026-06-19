@@ -91,11 +91,6 @@ public class AssistedInjectScoping extends BugChecker implements ClassTreeMatche
     }
 
     AnnotationTree annotationWithScopeAnnotation = hasScopeAnnotations.matchingNodes().getFirst();
-    if (annotationWithScopeAnnotation == null) {
-      throw new IllegalStateException(
-          "Expected to find an annotation that was annotated with @ScopeAnnotation");
-    }
-
     return describeMatch(
         annotationWithScopeAnnotation, SuggestedFix.delete(annotationWithScopeAnnotation));
   }

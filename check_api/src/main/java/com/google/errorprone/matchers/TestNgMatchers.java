@@ -22,7 +22,6 @@ import com.google.errorprone.VisitorState;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /**
@@ -38,9 +37,6 @@ public final class TestNgMatchers {
    */
   public static boolean hasTestNgAnnotation(MethodTree tree, VisitorState state) {
     MethodSymbol methodSym = getSymbol(tree);
-    if (methodSym == null) {
-      return false;
-    }
     if (hasTestNgAttr(methodSym)) {
       return true;
     }
@@ -49,8 +45,7 @@ public final class TestNgMatchers {
 
   /** Checks if a class is annotated with any annotation from the org.testng package. */
   public static boolean hasTestNgAnnotation(ClassTree tree) {
-    ClassSymbol classSym = getSymbol(tree);
-    return classSym != null && hasTestNgAttr(classSym);
+    return hasTestNgAttr(getSymbol(tree));
   }
 
   /** Checks if a symbol has any attribute from the org.testng package. */

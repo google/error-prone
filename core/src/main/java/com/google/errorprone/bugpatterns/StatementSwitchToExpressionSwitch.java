@@ -254,10 +254,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
     for (StatementTree statement : statements) {
       if (statement instanceof VariableTree variableTree) {
-        VarSymbol symbol = ASTHelpers.getSymbol(variableTree);
-        if (symbol != null) {
-          symbolsDefinedInStatementBlock.put(symbol, variableTree);
-        }
+        symbolsDefinedInStatementBlock.put(getSymbol(variableTree), variableTree);
       }
     }
     return symbolsDefinedInStatementBlock;

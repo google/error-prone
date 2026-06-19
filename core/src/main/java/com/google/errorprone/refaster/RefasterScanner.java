@@ -67,7 +67,7 @@ abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
       return null;
     }
     Symbol sym = ASTHelpers.getSymbol(node);
-    if (sym == null || !sym.getQualifiedName().contentEquals(rule().qualifiedTemplateClass())) {
+    if (!sym.getQualifiedName().contentEquals(rule().qualifiedTemplateClass())) {
       ListBuffer<JCStatement> statements = new ListBuffer<>();
       for (Tree tree : node.getMembers()) {
         if (tree instanceof JCStatement jCStatement) {

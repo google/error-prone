@@ -53,7 +53,7 @@ public class RecordComponentAccessorAnnotationConflict extends BugChecker
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     ClassSymbol classSymbol = getSymbol(tree);
-    if (classSymbol == null || !isRecord(classSymbol)) {
+    if (!isRecord(classSymbol)) {
       return NO_MATCH;
     }
 

@@ -69,9 +69,6 @@ public final class PreferTestParameter extends BugChecker implements MethodTreeM
 
     VariableTree paramTree = getOnlyElement(tree.getParameters());
     VarSymbol paramSym = getSymbol(paramTree);
-    if (paramSym == null) {
-      return NO_MATCH;
-    }
 
     // Check if the parameter itself already has @TestParameter, if so skip.
     if (hasAnnotation(paramSym, TEST_PARAMETER, state)) {

@@ -526,7 +526,6 @@ public final class SuggestedFixes {
         .filter(ClassTree.class::isInstance)
         .map(ClassTree.class::cast)
         .map(ASTHelpers::getSymbol)
-        .filter(s -> s != null)
         .flatMap(
             enclosingClass ->
                 stream(

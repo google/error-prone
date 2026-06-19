@@ -233,9 +233,6 @@ public class ThreadSafeChecker extends BugChecker
   private Description handleAnonymousClass(
       ClassTree tree, VisitorState state, ThreadSafeAnalysis analysis) {
     ClassSymbol sym = getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     Type superType = threadSafeSupertype(sym, state);
     if (superType == null) {
       return NO_MATCH;
@@ -261,9 +258,6 @@ public class ThreadSafeChecker extends BugChecker
   /** Check for classes without {@code @ThreadSafe} that have threadsafe supertypes. */
   private Description checkSubtype(ClassTree tree, VisitorState state) {
     ClassSymbol sym = getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     Type superType = threadSafeSupertype(sym, state);
     if (superType == null) {
       return NO_MATCH;
