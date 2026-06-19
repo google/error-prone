@@ -612,6 +612,7 @@ import com.google.errorprone.bugpatterns.nullness.NullableTypeParameter;
 import com.google.errorprone.bugpatterns.nullness.NullableWildcard;
 import com.google.errorprone.bugpatterns.nullness.ParameterMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.RedundantNullCheck;
+import com.google.errorprone.bugpatterns.nullness.RequireNonNullRefactoring;
 import com.google.errorprone.bugpatterns.nullness.ReturnMissingNullable;
 import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
 import com.google.errorprone.bugpatterns.nullness.UnsafeWildcard;
@@ -1323,6 +1324,7 @@ public final class BuiltInCheckerSuppliers {
           RedundantThrows.class,
           RefersToDaggerCodegen.class,
           RemoveUnusedImports.class,
+          RequireNonNullRefactoring.class,
           ReturnMissingNullable.class,
           ReturnsNullCollection.class,
           ScopeOnModule.class,
