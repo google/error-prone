@@ -926,4 +926,376 @@ public class ReferenceEqualityTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void privateConstructor_noSubclasses() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private Test() {}
+
+              boolean f(Test a, Test b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateConstructor_withSubclasses_allRefEq() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private Test() {}
+
+              static final class Sub1 extends Test {}
+
+              static final class Sub2 extends Test {
+                static final Test INSTANCE = new Test() {};
+              }
+
+              boolean f(Test a, Test b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateConstructor_withSubclasses_oneOverridesEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private Test() {}
+
+              static final class Sub1 extends Test {}
+
+              static final class Sub2 extends Test {
+                @Override
+                public boolean equals(Object o) {
+                  return true;
+                }
+              }
+
+              boolean f(Test a, Test b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void packagePrivateConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              Test() {}
+
+              boolean f(Test a, Test b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void implicitDefaultConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Test a, Test b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void anonymousClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Test t) {
+                return t == new Test() {};
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateConstructor_differentCompilationUnit() {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            """
+            public class Foo {
+              private Foo() {}
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Foo a, Foo b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateClass_nonPrivateConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static class PrivateClass {
+                public PrivateClass() {}
+              }
+
+              static final class Sub extends PrivateClass {}
+
+              boolean f(PrivateClass a, PrivateClass b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateClass_subclassOverridesEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static class PrivateClass {
+                public PrivateClass() {}
+              }
+
+              static class Sub extends PrivateClass {
+                @Override
+                public boolean equals(Object o) {
+                  return true;
+                }
+              }
+
+              boolean f(PrivateClass a, PrivateClass b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unionType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Throwable expected) {
+                try {
+                  doSomething();
+                } catch (RuntimeException | Error e) {
+                  // BUG: Diagnostic contains:
+                  return e == expected;
+                }
+                return false;
+              }
+
+              void doSomething() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void intersectionType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              <T extends Foo & Bar> boolean f(T a, T b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+
+              interface Foo {}
+
+              interface Bar {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateConstructor_subclassInSuppressedClassOverridesEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private Test() {}
+
+              @SuppressWarnings("ReferenceEquality")
+              static class Suppressed {
+                static class Sub extends Test {
+                  @Override
+                  public boolean equals(Object o) {
+                    return true;
+                  }
+                }
+              }
+
+              boolean f(Test a, Test b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nonPrivateInterface() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              interface NonPrivateInterface {}
+
+              boolean f(NonPrivateInterface a, NonPrivateInterface b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateInterface_implOverridesEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private interface PrivateInterface {}
+
+              static class Impl implements PrivateInterface {
+                @Override
+                public boolean equals(Object o) {
+                  return true;
+                }
+              }
+
+              boolean f(PrivateInterface a, PrivateInterface b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateInterface_implDoesNotOverrideEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private interface PrivateInterface {}
+
+              static final class Impl implements PrivateInterface {}
+
+              boolean f(PrivateInterface a, PrivateInterface b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateClass_anonymousSubclassOverridesEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static class PrivateClass {}
+
+              PrivateClass instance =
+                  new PrivateClass() {
+                    @Override
+                    public boolean equals(Object o) {
+                      return true;
+                    }
+                  };
+
+              boolean f(PrivateClass a, PrivateClass b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateInterface_anonymousSubclassOverridesEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private interface PrivateInterface {}
+
+              PrivateInterface instance =
+                  new PrivateInterface() {
+                    @Override
+                    public boolean equals(Object o) {
+                      return true;
+                    }
+                  };
+
+              boolean f(PrivateInterface a, PrivateInterface b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
