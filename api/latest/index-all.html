@@ -8911,8 +8911,6 @@ empty statement, and - The else part of the parent if does not exist</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/NullnessMatcher.html#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matches(ExpressionTree, VisitorState)</a> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/NullnessMatcher.html" title="class in com.google.errorprone.matchers">NullnessMatcher</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/matchers/StringLiteral.html#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matches(ExpressionTree, VisitorState)</a> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/StringLiteral.html" title="class in com.google.errorprone.matchers">StringLiteral</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html#matches(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">matches(ExpressionTree, VisitorState)</a> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/UnusedReturnValueMatcher.html" title="class in com.google.errorprone.matchers">UnusedReturnValueMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/MethodInvocationArgument.html#matches(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matches(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/MethodInvocationArgument.html" title="class in com.google.errorprone.matchers">MethodInvocationArgument</a></dt>
@@ -11842,7 +11840,7 @@ must invoke <code>super.theAnnotatedMethod(...)</code> at some point.</div>
 <dd>
 <div class="block">Matches an AST node whose compilation unit's package name matches the given predicate.</div>
 </dd>
-<dt><a href="com/google/errorprone/matchers/Matchers.html#packageMatches(java.util.regex.Pattern)" class="member-name-link">packageMatches(Pattern)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dt><a href="com/google/errorprone/matchers/Matchers.html#packageMatches(org.safere.Pattern)" class="member-name-link">packageMatches(Pattern)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches an AST node whose compilation unit's package name matches the given pattern.</div>
 </dd>
@@ -13722,14 +13720,12 @@ enforce strict format string checking.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#stringLiteral(java.util.regex.Pattern)" class="member-name-link">stringLiteral(Pattern)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
-<div class="block">Matches a Literal AST node if it is a string literal which matches the given <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/regex/Pattern.html" title="class or interface in java.util.regex" class="external-link"><code>Pattern</code></a>.</div>
+<div class="block">Matches a Literal AST node if it is a string literal which matches the given <code>Pattern</code>.</div>
 </dd>
-<dt><a href="com/google/errorprone/matchers/StringLiteral.html" class="type-name-link" title="class in com.google.errorprone.matchers">StringLiteral</a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/matchers/StringLiteral.html#%3Cinit%3E(java.lang.String)" class="member-name-link">StringLiteral(String)</a> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/StringLiteral.html" title="class in com.google.errorprone.matchers">StringLiteral</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/matchers/StringLiteral.html#%3Cinit%3E(java.util.regex.Pattern)" class="member-name-link">StringLiteral(Pattern)</a> - Constructor for class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/StringLiteral.html" title="class in com.google.errorprone.matchers">StringLiteral</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/Matchers.html#stringLiteral(org.safere.Pattern)" class="member-name-link">stringLiteral(Pattern)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches a Literal AST node if it is a string literal which matches the given <code>Pattern</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/refaster/StringName.html" class="type-name-link" title="class in com.google.errorprone.refaster">StringName</a> - Class in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
 <dd>
 <div class="block">A simple wrapper to view a <code>String</code> as a <code>Name</code>.</div>
@@ -16486,6 +16482,11 @@ classpath of the test execution.</div>
 present on <code>sym</code> as well as those already stored in <code>this</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#withNameMatching(java.util.regex.Pattern)" class="member-name-link">withNameMatching(Pattern)</a> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match methods with a name that matches the given regular expression.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html#withNameMatching(org.safere.Pattern)" class="member-name-link">withNameMatching(Pattern)</a> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></dt>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match methods with a name that matches the given regular expression.</div>
