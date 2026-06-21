@@ -50,9 +50,9 @@ import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DCTree.DCText;
 import com.sun.tools.javac.tree.DocTreeMaker;
 import com.sun.tools.javac.util.Log;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.lang.model.element.Element;
+import org.safere.Matcher;
+import org.safere.Pattern;
 
 /** Finds some common errors in {@literal @}link tags. */
 @BugPattern(summary = "This @link tag looks wrong.", severity = WARNING)

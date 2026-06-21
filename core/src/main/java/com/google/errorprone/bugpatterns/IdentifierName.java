@@ -58,11 +58,11 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.util.Name;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
+import org.safere.Pattern;
 
 /** Flags a few ways in which member names may violate the style guide. */
 @BugPattern(

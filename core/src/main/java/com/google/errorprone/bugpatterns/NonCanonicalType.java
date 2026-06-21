@@ -36,9 +36,9 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.jspecify.annotations.Nullable;
+import org.safere.Matcher;
+import org.safere.Pattern;
 
 /** Flags types being referred to by their non-canonical name. */
 @BugPattern(

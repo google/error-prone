@@ -78,8 +78,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
 import javax.lang.model.element.Name;
+import org.safere.Pattern;
 
 /**
  * @author schmitt@google.com (Peter Schmitt)

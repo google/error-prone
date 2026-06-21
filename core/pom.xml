@@ -425,6 +425,7 @@
                   <include>javax.inject:javax.inject</include>
                   <include>com.google.googlejavaformat:google-java-format</include>
                   <include>org.jspecify:jspecify</include>
+                  <include>org.safere:safere</include>
                 </includes>
               </artifactSet>
               <filters>

@@ -35,7 +35,7 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /**
  * @author Louis Wasserman

@@ -60,10 +60,10 @@ import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
+import org.safere.Pattern;
 
 /** Check for non-allowlisted callers to RestrictedApiChecker. */
 @BugPattern(

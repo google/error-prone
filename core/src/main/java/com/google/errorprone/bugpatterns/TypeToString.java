@@ -40,9 +40,9 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.lang.model.type.TypeKind;
+import org.safere.Pattern;
 
 /**
  * Flags {@code javax.lang.model.type.TypeMirror#toString} usage in {@link BugChecker}s.

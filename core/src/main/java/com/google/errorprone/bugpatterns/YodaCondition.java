@@ -45,8 +45,8 @@ import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.Objects;
-import java.util.regex.Pattern;
 import org.jspecify.annotations.Nullable;
+import org.safere.Pattern;
 
 /** See the summary. */
 @BugPattern(

@@ -61,10 +61,10 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ArrayType;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
+import org.safere.Pattern;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -83,13 +83,9 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
    * used incredibly rarely and not worth automating.
    */
   private static final Pattern PRINTF_TERM_CAPTURE_PATTERN =
-      // TODO(amalloy): I think this can be done without possessive quantifiers:
-      // (?:^|[^%])(?:%%)*(%[^%a-zA-Z]*[a-zA-Z])
-      // I think this also means we no longer need the special-case "at current position" check,
-      // since skipping % characters can't cause it to match.
       Pattern.compile(
           // Skip escaped pairs of '%' before the next term.
-          "[^%]*+(?:%%[^%]*+)*+"
+          "[^%]*(?:%%[^%]*)*"
               // Capture an unescaped '%' and anything up to the first letter.
               + "(%[^%a-zA-Z]*[a-zA-Z])");
 
@@ -357,7 +353,7 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
     int start = 0;
-    java.util.regex.Matcher matcher = PRINTF_TERM_CAPTURE_PATTERN.matcher(formatString);
+    org.safere.Matcher matcher = PRINTF_TERM_CAPTURE_PATTERN.matcher(formatString);
     StringBuilder sb = new StringBuilder();
     int idx = 0;
     boolean fixed = false;

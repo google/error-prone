@@ -39,7 +39,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /**
  * Matchers for the various checkers in this package. They are factored out into this class so that

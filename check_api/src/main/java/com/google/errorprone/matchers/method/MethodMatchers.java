@@ -22,7 +22,6 @@ import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.tools.javac.code.Type;
-import java.util.regex.Pattern;
 
 public final class MethodMatchers {
 
@@ -151,7 +150,10 @@ public final class MethodMatchers {
     MethodNameMatcher withAnyName();
 
     /** Match methods with a name that matches the given regular expression. */
-    MethodNameMatcher withNameMatching(Pattern pattern);
+    MethodNameMatcher withNameMatching(org.safere.Pattern pattern);
+
+    /** Match methods with a name that matches the given regular expression. */
+    MethodNameMatcher withNameMatching(java.util.regex.Pattern pattern);
   }
 
   /**

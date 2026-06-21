@@ -43,11 +43,11 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.lang.model.element.Name;
+import org.safere.Matcher;
+import org.safere.Pattern;
 
 /**
  * Enforces type parameters match the google style guide.

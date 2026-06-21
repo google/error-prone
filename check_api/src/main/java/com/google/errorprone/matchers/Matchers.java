@@ -99,13 +99,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import org.safere.Pattern;
 
 /**
  * Static factory methods which make the DSL read more fluently. Since matchers are run in a tight
@@ -598,21 +598,37 @@ public final class Matchers {
     };
   }
 
+  static Matcher<ExpressionTree> stringLiteral(Predicate<String> matcher) {
+    return (tree, state) ->
+        tree instanceof LiteralTree literalTree
+            && literalTree.getValue() instanceof String string
+            && matcher.test(string);
+  }
+
   /**
    * Matches a Literal AST node if it is a string literal with the given value. For example, {@code
    * stringLiteral("thing")} matches the literal {@code "thing"}
    */
   public static Matcher<ExpressionTree> stringLiteral(String value) {
-    return new StringLiteral(value);
+    return stringLiteral(value::equals);
   }
 
   /**
-   * Matches a Literal AST node if it is a string literal which matches the given {@link Pattern}.
+   * Matches a Literal AST node if it is a string literal which matches the given {@code Pattern}.
    *
    * @see #stringLiteral(String)
    */
   public static Matcher<ExpressionTree> stringLiteral(Pattern pattern) {
-    return new StringLiteral(pattern);
+    return stringLiteral(pattern.asMatchPredicate());
+  }
+
+  /**
+   * Matches a Literal AST node if it is a string literal which matches the given {@code Pattern}.
+   *
+   * @see #stringLiteral(String)
+   */
+  public static Matcher<ExpressionTree> stringLiteral(java.util.regex.Pattern pattern) {
+    return stringLiteral(pattern.asMatchPredicate());
   }
 
   public static Matcher<ExpressionTree> booleanLiteral(boolean value) {

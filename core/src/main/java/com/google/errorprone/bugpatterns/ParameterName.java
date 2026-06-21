@@ -54,8 +54,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
 import javax.inject.Inject;
+import org.safere.Matcher;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(

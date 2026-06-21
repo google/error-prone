@@ -142,6 +142,12 @@
       <artifactId>javax.inject</artifactId>
       <version>1</version>
     </dependency>
+    <dependency>
+      <!-- BSD 3-Clause -->
+      <groupId>org.safere</groupId>
+      <artifactId>safere</artifactId>
+      <version>0.8.0</version>
+    </dependency>
   </dependencies>
 
   <build>

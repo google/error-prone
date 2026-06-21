@@ -61,10 +61,10 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Name;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.element.NestingKind;
+import org.safere.Pattern;
 
 /** Finds fields which can be safely made static. */
 @BugPattern(

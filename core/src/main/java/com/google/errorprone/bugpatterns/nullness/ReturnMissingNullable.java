@@ -42,8 +42,8 @@ import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 import static java.lang.Boolean.FALSE;
-import static java.util.regex.Pattern.compile;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
+import static org.safere.Pattern.compile;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;

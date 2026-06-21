@@ -41,10 +41,10 @@ import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Name;
+import org.safere.Matcher;
+import org.safere.Pattern;
 
 @BugPattern(
     summary = "Type parameter declaration overrides another type parameter already declared",

@@ -39,7 +39,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /** Matches {@code AutoValue_} uses outside the containing file. */
 @BugPattern(

@@ -27,7 +27,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /** Rules for methods on proto messages and builders. */
 public final class ProtoRules {

@@ -38,7 +38,7 @@ import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.TreePath;
 import java.util.Optional;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /**
  * Flags comments which appear to be intended to be Javadoc, but are not started with an extra

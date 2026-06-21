@@ -49,10 +49,10 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
+import org.safere.Pattern;
 
 /** A checker which produces an error when a return value is accidentally discarded. */
 @BugPattern(

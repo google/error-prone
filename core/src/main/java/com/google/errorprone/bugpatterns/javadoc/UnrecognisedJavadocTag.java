@@ -46,9 +46,9 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.jspecify.annotations.Nullable;
+import org.safere.Matcher;
+import org.safere.Pattern;
 
 /** Flags tags which haven't been recognised by the Javadoc parser. */
 @BugPattern(

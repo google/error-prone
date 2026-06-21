@@ -36,7 +36,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree.JCIf;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)

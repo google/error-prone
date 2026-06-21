@@ -54,9 +54,9 @@ import com.sun.tools.javac.util.Position;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.jspecify.annotations.Nullable;
+import org.safere.Matcher;
+import org.safere.Pattern;
 
 /**
  * Finds unescaped entities in Javadocs.

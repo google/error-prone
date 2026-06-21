@@ -47,8 +47,8 @@ import com.sun.tools.javac.util.PropagatedException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Pattern;
 import javax.tools.JavaFileObject;
+import org.safere.Pattern;
 
 /** A {@link TaskListener} that runs Error Prone over attributed compilation units. */
 @Trusted

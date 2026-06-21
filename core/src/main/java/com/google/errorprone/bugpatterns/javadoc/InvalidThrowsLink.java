@@ -33,8 +33,8 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DCTree.DCErroneous;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.safere.Matcher;
+import org.safere.Pattern;
 
 /** Matches misuse of link tags within throws tags. */
 @BugPattern(

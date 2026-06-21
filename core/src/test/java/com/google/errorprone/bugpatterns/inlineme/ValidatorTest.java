@@ -18,10 +18,10 @@ package com.google.errorprone.bugpatterns.inlineme;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.util.regex.Pattern;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.safere.Pattern;
 
 /** Tests for the {@code @InlineMe} {@link Validator}. */
 @RunWith(JUnit4.class)

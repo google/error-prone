@@ -30,7 +30,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /** Check for disallowed access to private_do_not_access_or_else proto fields. */
 @BugPattern(

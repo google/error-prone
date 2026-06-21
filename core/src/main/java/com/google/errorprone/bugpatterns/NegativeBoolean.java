@@ -25,10 +25,10 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
+import org.safere.Matcher;
+import org.safere.Pattern;
 
 /** Discourages the use of negative boolean names. */
 @BugPattern(summary = "Prefer positive boolean names", severity = WARNING)
