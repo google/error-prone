@@ -54,36 +54,6 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void positive_const() {
-    compilationHelper
-        .addSourceLines(
-            "Foo.java",
-            """
-            class Foo {}
-            """)
-        .addSourceLines(
-            "Test.java",
-            """
-            import com.google.common.base.Optional;
-
-            class Test {
-              public static final Foo CONST = new Foo();
-
-              boolean f(Foo a) {
-                // BUG: Diagnostic contains:
-                return a == CONST;
-              }
-
-              boolean f(Object o, Foo a) {
-                // BUG: Diagnostic contains:
-                return o == a;
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
   public void extends_equalsObject() {
     compilationHelper
         .addSourceLines(
@@ -98,8 +68,6 @@ public class ReferenceEqualityTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.base.Optional;
-
             class Test extends Sup {
               boolean f(Object a, Test b) {
                 // BUG: Diagnostic contains: a.equals(b)
@@ -123,8 +91,6 @@ public class ReferenceEqualityTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.base.Optional;
-
             abstract class Test extends Sup {
               boolean f(Test a, Test b) {
                 // BUG: Diagnostic contains: a.equals(b)
@@ -148,8 +114,6 @@ public class ReferenceEqualityTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.base.Optional;
-
             class Test implements Sup {
               boolean f(Test a, Test b) {
                 // BUG: Diagnostic contains: a.equals(b)
@@ -166,8 +130,6 @@ public class ReferenceEqualityTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.base.Optional;
-
             class Test {
               boolean f(Test a, Test b) {
                 // BUG: Diagnostic contains: a.equals(b)
@@ -1293,6 +1255,93 @@ public class ReferenceEqualityTest {
               boolean f(PrivateInterface a, PrivateInterface b) {
                 // BUG: Diagnostic contains:
                 return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sentinel_object_newClassNoEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final Object SENTINEL = new Object();
+
+              boolean f(Object o) {
+                return o == SENTINEL;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sentinel_object_newClassWithEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            """
+            class Foo {
+              @Override
+              public boolean equals(Object o) {
+                return true;
+              }
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final Object SENTINEL = new Foo();
+
+              boolean f(Object o) {
+                // BUG: Diagnostic contains:
+                return o == SENTINEL;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sentinel_enumConstant() {
+    compilationHelper
+        .addSourceLines(
+            "MyEnum.java",
+            """
+            enum MyEnum {
+              VAL;
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final MyEnum SENTINEL = MyEnum.VAL;
+
+              boolean f(Object o) {
+                return o == SENTINEL;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sentinel_string() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final String SENTINEL = "hello";
+
+              boolean f(String o) {
+                // BUG: Diagnostic contains:
+                return o == SENTINEL;
               }
             }
             """)

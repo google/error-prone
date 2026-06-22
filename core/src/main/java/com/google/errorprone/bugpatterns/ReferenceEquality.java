@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.sun.source.tree.Tree.Kind.EQUAL_TO;
 import static com.sun.source.tree.Tree.Kind.NOT_EQUAL_TO;
@@ -35,6 +36,7 @@ import static javax.lang.model.type.TypeKind.INTERSECTION;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
@@ -48,6 +50,7 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
@@ -60,6 +63,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.util.Name;
 import java.util.List;
 import java.util.Objects;
+import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -84,6 +88,8 @@ public class ReferenceEquality extends AbstractReferenceEquality
     ImmutableListMultimap.Builder<ClassSymbol, Type> subclassesBySuperclassBuilder =
         ImmutableListMultimap.builder();
     ImmutableList.Builder<TreePath> comparisonsBuilder = ImmutableList.builder();
+    ImmutableMap.Builder<Symbol, ExpressionTree> constantFieldInitializersBuilder =
+        ImmutableMap.builder();
 
     /*
      * We avoid SuppressibleTreePathScanner because we want to visit all *classes* to build the
@@ -109,6 +115,12 @@ public class ReferenceEquality extends AbstractReferenceEquality
 
       @Override
       public Void visitVariable(VariableTree tree, Boolean isSuppressed) {
+        if (tree.getInitializer() != null) {
+          Symbol sym = getSymbol(tree);
+          if (sym.getKind() == ElementKind.FIELD && isStatic(sym) && sym.isFinal()) {
+            constantFieldInitializersBuilder.put(sym, tree.getInitializer());
+          }
+        }
         return super.visitVariable(
             tree, isSuppressed || isSuppressed(tree, stateForCompilationUnit));
       }
@@ -125,11 +137,20 @@ public class ReferenceEquality extends AbstractReferenceEquality
     ImmutableListMultimap<ClassSymbol, Type> subclassesBySuperclass =
         subclassesBySuperclassBuilder.build();
     ImmutableList<TreePath> comparisons = comparisonsBuilder.build();
+    ImmutableMap<Symbol, ExpressionTree> constantFieldInitializers =
+        constantFieldInitializersBuilder.buildOrThrow();
 
     for (TreePath path : comparisons) {
+      BinaryTree binaryTree = (BinaryTree) path.getLeaf();
+      if (isSentinelComparison(
+              binaryTree.getLeftOperand(), stateForCompilationUnit, constantFieldInitializers)
+          || isSentinelComparison(
+              binaryTree.getRightOperand(), stateForCompilationUnit, constantFieldInitializers)) {
+        continue;
+      }
       stateForCompilationUnit.reportMatch(
           doMatchBinary(
-              (BinaryTree) path.getLeaf(),
+              binaryTree,
               stateForCompilationUnit.withPath(path),
               (tree, state) -> matchArgument(tree, subclassesBySuperclass, state)));
     }
@@ -166,6 +187,40 @@ public class ReferenceEquality extends AbstractReferenceEquality
       return false;
     }
     return true;
+  }
+
+  /**
+   * True if this operand is a sentinel value (a static final field declared in the same file
+   * initialized inline to a new class instance that doesn't override equals, or initialized to an
+   * enum constant).
+   */
+  private static boolean isSentinelComparison(
+      ExpressionTree tree,
+      VisitorState state,
+      ImmutableMap<Symbol, ExpressionTree> constantFieldInitializers) {
+    Symbol sym = ASTHelpers.getSymbol(tree);
+    if (sym == null) {
+      return false;
+    }
+    boolean finalField = sym.getKind() == ElementKind.FIELD && sym.isFinal();
+    if (!finalField) {
+      return false;
+    }
+    if (sym.getKind() == ElementKind.ENUM_CONSTANT) {
+      return true;
+    }
+    ExpressionTree initializer = constantFieldInitializers.get(sym);
+    if (initializer == null) {
+      return false;
+    }
+    initializer = ASTHelpers.stripParentheses(initializer);
+    if (initializer instanceof NewClassTree newClassTree) {
+      Type instantiatedType = ASTHelpers.getType(newClassTree);
+      if (instantiatedType != null && !implementsEquals(instantiatedType, state)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   private static boolean inComparisonMethod(Type classType, Type type, VisitorState state) {
