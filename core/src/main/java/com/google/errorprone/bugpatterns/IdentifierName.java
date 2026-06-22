@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.base.Ascii.isUpperCase;
+import static com.google.common.base.Ascii.toUpperCase;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.LinkType.CUSTOM;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
@@ -115,18 +117,18 @@ public final class IdentifierName extends BugChecker
       // declarations.
       return NO_MATCH;
     }
-    String renamed = suggestedClassRename(name);
+    String renamed = suggestedRename(symbol, name);
     String suggested = identifierNames.fixInitialismsIfNeeded(renamed);
-    boolean fixable = !suggested.equals(name) && canBeRemoved(symbol);
+    boolean fixable = canBeRemoved(symbol);
     String diagnostic =
         "Classes should be named in UpperCamelCase"
             + (suggested.equals(renamed) ? "" : INITIALISM_DETAIL);
     return buildDescription(tree)
-        .setMessage(
-            fixable
-                ? diagnostic
-                : diagnostic + String.format("; did you" + " mean '%s'?", suggested))
-        .addFix(fixable ? renameClassWithUses(tree, suggested, state) : emptyFix())
+        .setMessage(buildMessage(diagnostic, suggested, name, fixable))
+        .addFix(
+            fixable && !suggested.equals(name)
+                ? renameClassWithUses(tree, suggested, state)
+                : emptyFix())
         .build();
   }
 
@@ -166,7 +168,7 @@ public final class IdentifierName extends BugChecker
     }
     String renamed = suggestedRename(symbol, name);
     String suggested = IdentifierNames.fixInitialisms(renamed);
-    boolean fixable = !suggested.equals(name) && canBeRemoved(symbol, state);
+    boolean fixable = canBeRemoved(symbol, state);
     String diagnostic =
         "Methods and non-static variables should be named in lowerCamelCase"
             + (suggested.equals(renamed) ? "" : INITIALISM_DETAIL)
@@ -174,9 +176,11 @@ public final class IdentifierName extends BugChecker
             + symbol.getSimpleName()
             + " is not";
     return buildDescription(tree)
-        .setMessage(
-            fixable ? diagnostic : diagnostic + String.format("; did you mean '%s'?", suggested))
-        .addFix(fixable ? renameMethodWithInvocations(tree, suggested, state) : emptyFix())
+        .setMessage(buildMessage(diagnostic, suggested, name, fixable))
+        .addFix(
+            fixable && !suggested.equals(name)
+                ? renameMethodWithInvocations(tree, suggested, state)
+                : emptyFix())
         .build();
   }
 
@@ -217,8 +221,11 @@ public final class IdentifierName extends BugChecker
       return NO_MATCH;
     }
     String renamed = suggestedRename(symbol, name);
-    String suggested = IdentifierNames.fixInitialisms(renamed);
-    boolean fixable = !suggested.equals(name) && canBeRenamed(symbol);
+    // Skip fixInitialisms if we suggested a conformant static name (UPPER_SNAKE_CASE)
+    // to avoid mangling it (e.g. JSON_KEY_SCHEMA -> JsoN_KeY_Schema).
+    String suggested =
+        isConformantStaticVariableName(renamed) ? renamed : IdentifierNames.fixInitialisms(renamed);
+    boolean fixable = canBeRenamed(symbol);
     String diagnostic =
         (isStaticVariable(symbol) ? STATIC_VARIABLE_FINDING : message())
             + (suggested.equals(renamed) ? "" : INITIALISM_DETAIL)
@@ -226,11 +233,11 @@ public final class IdentifierName extends BugChecker
             + symbol.getSimpleName()
             + " is not";
     return buildDescription(tree)
-        .setMessage(
-            fixable
-                ? diagnostic
-                : diagnostic + String.format("; did you" + " mean '%s'?", suggested))
-        .addFix(fixable ? renameVariable(tree, suggested, state) : emptyFix())
+        .setMessage(buildMessage(diagnostic, suggested, name, fixable))
+        .addFix(
+            fixable && !suggested.equals(name)
+                ? renameVariable(tree, suggested, state)
+                : emptyFix())
         .build();
   }
 
@@ -238,31 +245,51 @@ public final class IdentifierName extends BugChecker
       ImmutableSet.of("serialVersionUID");
 
   private static String suggestedRename(Symbol symbol, String name) {
-    if (!isStaticVariable(symbol) && isConformantStaticVariableName(name)) {
-      return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
+    // Strip '$' to suggest a compliant name.
+    String cleanName = stripDollarSigns(name);
+    if (cleanName.isEmpty()) {
+      // If the name consists only of '$', we can't infer the intended case format, so we return
+      // the original name.
+      return name;
     }
-    if (LOWER_UNDERSCORE_PATTERN.matcher(name).matches()) {
-      return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
+    CaseFormat targetFormat = targetFormat(symbol, cleanName);
+    // Use cleanName to detect the intended case format.
+    if (UPPER_UNDERSCORE_PATTERN.matcher(cleanName).matches()) {
+      return CaseFormat.UPPER_UNDERSCORE.to(targetFormat, cleanName);
+    }
+    if (LOWER_UNDERSCORE_PATTERN.matcher(cleanName).matches()) {
+      return CaseFormat.LOWER_UNDERSCORE.to(targetFormat, cleanName);
     }
     // If we get this far, it's likely a mixture of lower camelcase and underscores.
-    return CaseFormat.UPPER_CAMEL.to(
-        CaseFormat.LOWER_CAMEL,
+    CaseFormat segmentSourceFormat =
+        (targetFormat == CaseFormat.UPPER_CAMEL) ? CaseFormat.UPPER_CAMEL : CaseFormat.LOWER_CAMEL;
+    String upperCamel =
         UNDERSCORE_SPLITTER
-            .splitToStream(name)
-            .map(c -> CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, c))
-            .collect(joining("")));
+            .splitToStream(cleanName)
+            .map(c -> segmentSourceFormat.to(CaseFormat.UPPER_CAMEL, c))
+            .collect(joining(""));
+    if (targetFormat == CaseFormat.UPPER_CAMEL) {
+      return isUpperCase(upperCamel.charAt(0))
+          ? upperCamel
+          : toUpperCase(upperCamel.charAt(0)) + upperCamel.substring(1);
+    }
+    return CaseFormat.UPPER_CAMEL.to(targetFormat, upperCamel);
   }
 
-  private static String suggestedClassRename(String name) {
-    if (LOWER_UNDERSCORE_PATTERN.matcher(name).matches()) {
-      return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, name);
+  private static CaseFormat targetFormat(Symbol symbol, String cleanName) {
+    if (symbol instanceof ClassSymbol) {
+      return CaseFormat.UPPER_CAMEL;
     }
-    return CaseFormat.LOWER_CAMEL.to(
-        CaseFormat.UPPER_CAMEL,
-        UNDERSCORE_SPLITTER
-            .splitToStream(name)
-            .map(c -> CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_CAMEL, c))
-            .collect(joining("")));
+    if (isStaticVariable(symbol)
+        && (UPPER_UNDERSCORE_PATTERN.matcher(cleanName).matches()
+            || LOWER_UNDERSCORE_PATTERN.matcher(cleanName).matches())) {
+      return CaseFormat.UPPER_UNDERSCORE;
+    }
+    return CaseFormat.LOWER_CAMEL;
+  }
+
+  private static String stripDollarSigns(String name) {
+    return name.replace("$", "");
   }
 
   private static boolean canBeRenamed(Symbol symbol) {
@@ -290,7 +317,15 @@ public final class IdentifierName extends BugChecker
     return symbol instanceof VarSymbol && isStatic(symbol);
   }
 
-  private static final Pattern LOWER_UNDERSCORE_PATTERN = Pattern.compile("[a-z0-9$_]+");
-  private static final Pattern UPPER_UNDERSCORE_PATTERN = Pattern.compile("[A-Z0-9$_]+");
+  // Strict patterns for compliance check (disallows '$').
+  private static final Pattern LOWER_UNDERSCORE_PATTERN = Pattern.compile("[a-z0-9_]+");
+  private static final Pattern UPPER_UNDERSCORE_PATTERN = Pattern.compile("[A-Z0-9_]+");
   private static final Splitter UNDERSCORE_SPLITTER = Splitter.on('_');
+
+  private static String buildMessage(
+      String diagnostic, String suggested, String name, boolean fixable) {
+    return fixable || suggested.equals(name)
+        ? diagnostic
+        : diagnostic + String.format("; did you mean '%s'?", suggested);
+  }
 }

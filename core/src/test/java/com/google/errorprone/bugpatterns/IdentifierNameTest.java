@@ -802,12 +802,95 @@ public class IdentifierNameTest {
 
   @Test
   public void dollarSign() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private static final String JSON_KEY_$SCHEMA = "$schema";
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              private static final String JSON_KEY_SCHEMA = "$schema";
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void dollarSignLocal() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                try {
+                  int x = 1 / 0;
+                } catch (Exception $ex) {
+                  $ex.printStackTrace();
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                try {
+                  int x = 1 / 0;
+                } catch (Exception ex) {
+                  ex.printStackTrace();
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void onlyDollarSigns() {
+    // TODO(kak): I'm not even really sure _what_ we should recommend here.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            // BUG: Diagnostic contains: Classes should be named in UpperCamelCase
+            class $ {
+              // BUG: Diagnostic contains: non-static variables should be named in lowerCamelCase
+              private int $$;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void typeNameWithDollarSign() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            // BUG: Diagnostic contains: MyClassName
+            class MyClass$Name {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void lowerUnderscoreStaticAndNonStatic() {
     helper
         .addSourceLines(
             "Test.java",
             """
             class Test {
-              private static final String JSON_KEY_$SCHEMA = "$schema";
+              // BUG: Diagnostic contains: MY_CONST
+              private static int my_const$;
+              // BUG: Diagnostic contains: myLocalVar
+              private int my_local_var$;
             }
             """)
         .doTest();
