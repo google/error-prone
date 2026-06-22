@@ -455,6 +455,7 @@ import com.google.errorprone.bugpatterns.UnnecessaryBreakInSwitch;
 import com.google.errorprone.bugpatterns.UnnecessaryCopy;
 import com.google.errorprone.bugpatterns.UnnecessaryDefaultInEnumSwitch;
 import com.google.errorprone.bugpatterns.UnnecessaryFinal;
+import com.google.errorprone.bugpatterns.UnnecessaryInheritedNestedTypeQualifier;
 import com.google.errorprone.bugpatterns.UnnecessaryLambda;
 import com.google.errorprone.bugpatterns.UnnecessaryLongToIntConversion;
 import com.google.errorprone.bugpatterns.UnnecessaryMethodInvocationMatcher;
@@ -1203,6 +1204,7 @@ public final class BuiltInCheckerSuppliers {
           UnnecessaryAsync.class,
           UnnecessaryBreakInSwitch.class,
           UnnecessaryCopy.class,
+          UnnecessaryInheritedNestedTypeQualifier.class,
           UnnecessaryLambda.class,
           UnnecessaryLongToIntConversion.class,
           UnnecessaryMethodInvocationMatcher.class,
