@@ -2275,6 +2275,8 @@ public class Test {
   public void sourceURITest() throws Exception {
     assertThat(SuggestedFixes.sourceURI(URI.create("file:/com/google/Foo.java")))
         .isEqualTo(URI.create("file:/com/google/Foo.java"));
+    assertThat(SuggestedFixes.sourceURI(URI.create("/C:/Users/antho/path/to/Foo.java")))
+        .isEqualTo(URI.create("file:/C:/Users/antho/path/to/Foo.java"));
     assertThat(SuggestedFixes.sourceURI(URI.create("jar:file:sources.jar!/com/google/Foo.java")))
         .isEqualTo(URI.create("file:/com/google/Foo.java"));
   }
