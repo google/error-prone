@@ -42,7 +42,9 @@ import org.jspecify.annotations.Nullable;
 
 /** Identifies Comparators that are unnecessarily boxing the comparison key. */
 @BugPattern(
-    summary = "Comparator.comparing unnecessarily boxes numerical primitives",
+    summary =
+        "Comparator.comparing() unnecessarily boxes numerical primitives; please use the"
+            + " primitive-specific method instead (e.g., comparingInt()).",
     severity = WARNING)
 public final class BoxingComparator extends BugChecker implements MethodInvocationTreeMatcher {
   private static final String COMPARATOR = Comparator.class.getCanonicalName();
