@@ -1,6 +1,7 @@
 ---
 title: BoxingComparator
-summary: Comparator.comparing unnecessarily boxes numerical primitives
+summary: Comparator.comparing() unnecessarily boxes numerical primitives; please use
+  the primitive-specific method instead (e.g., comparingInt()).
 layout: bugpattern
 tags: ''
 severity: WARNING

@@ -672,7 +672,7 @@ __[BoxedPrimitiveConstructor](bugpattern/BoxedPrimitiveConstructor)__<br>
 valueOf or autoboxing provides better time and space performance
 
 __[BoxingComparator](bugpattern/BoxingComparator)__<br>
-Comparator.comparing unnecessarily boxes numerical primitives
+Comparator.comparing() unnecessarily boxes numerical primitives; please use the primitive-specific method instead (e.g., comparingInt()).
 
 __[BugPatternNaming](bugpattern/BugPatternNaming)__<br>
 Giving BugPatterns a name different to the enclosing class can be confusing
