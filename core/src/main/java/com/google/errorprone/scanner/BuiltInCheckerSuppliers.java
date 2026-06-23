@@ -627,6 +627,7 @@ import com.google.errorprone.bugpatterns.threadsafety.ImmutableRefactoring;
 import com.google.errorprone.bugpatterns.threadsafety.StaticGuardedByInstance;
 import com.google.errorprone.bugpatterns.threadsafety.SynchronizeOnNonFinalField;
 import com.google.errorprone.bugpatterns.threadsafety.ThreadPriorityCheck;
+import com.google.errorprone.bugpatterns.threadsafety.ThreadSafeChecker;
 import com.google.errorprone.bugpatterns.time.DateChecker;
 import com.google.errorprone.bugpatterns.time.DurationFrom;
 import com.google.errorprone.bugpatterns.time.DurationGetTemporalUnit;
@@ -1340,6 +1341,7 @@ public final class BuiltInCheckerSuppliers {
           SystemExitOutsideMain.class,
           SystemOut.class,
           TestExceptionChecker.class,
+          ThreadSafeChecker.class,
           ThrowSpecificExceptions.class,
           ThrowsUncheckedException.class,
           TimeUnitMismatch.class,
