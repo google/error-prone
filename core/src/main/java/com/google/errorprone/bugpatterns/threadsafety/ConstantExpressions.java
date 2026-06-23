@@ -33,6 +33,7 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.Modifier.ABSTRACT;
@@ -264,6 +265,7 @@ public final class ConstantExpressions {
   }
 
   public Optional<ConstantExpression> constantExpression(ExpressionTree tree, VisitorState state) {
+    tree = stripParentheses(tree);
     if (tree.getKind().equals(Kind.EQUAL_TO) || tree.getKind().equals(Kind.NOT_EQUAL_TO)) {
       BinaryTree binaryTree = (BinaryTree) tree;
 

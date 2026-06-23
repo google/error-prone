@@ -1180,4 +1180,64 @@ public final class PatternMatchingInstanceofTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void parenthesizedOperand() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String) {
+                  String s = (String) (o);
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String s) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void parenthesizedCastAndOperand() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String) {
+                  String s = ((String) (o));
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String s) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }
