@@ -13,11 +13,19 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-Reference types that declare an `equals()` method, or that inherit `equals()`
-from a type other than `Object`, should not be compared for reference equality
-with `==` or `!=`. Instead, always compare for value equality with `.equals()`.
+Reference types should normally be compared for value equality with `equals()`,
+not for object identity with `==` or `!=`.
 
 ## FAQs
+
+### What if I know that this class's `equals()` method uses object identity anyway?
+
+This check allows you to use `==` and `!=` in cases in which it can reliably
+determine that they would behave identically to `equals()`, such as for enums or
+for final classes that inherit the default `equals()` implementation from
+`Object`. You might prefer `==` and `!=` in such cases, since it is less
+verbose, especially compared to using `Objects.equals(a, b)` in cases in which
+you need to tolerate null values.
 
 ### How about comparing interned objects?
 
@@ -65,7 +73,8 @@ and then falls back to content equality for non-null arguments.
 
 ### How about asserting in a test that two different references point to the same object (or not)?
 
-Both Truth and JUnit provide clearer ways to assert this.
+Assertion libraries provide clearer ways to assert this, with the bonus of
+providing better failure messages:
 
 Truth:
 
@@ -74,11 +83,11 @@ assertThat(a).isSameInstanceAs(b);
 assertThat(a).isNotSameInstanceAs(b);
 ```
 
-JUnit:
+AssertJ:
 
 ```
-assertSame(b, a);
-assertNotSame(b, a);
+assertThat(a).isSameAs(b);
+assertThat(a).isNotSameAs(b);
 ```
 
 ### How about comparing against a special marker instance?
