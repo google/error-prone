@@ -1347,4 +1347,25 @@ public class ReferenceEqualityTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void negative_thread() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Thread a, Thread b) {
+                return a == b;
+              }
+
+              boolean g(MyThread a, MyThread b) {
+                return a == b;
+              }
+
+              static class MyThread extends Thread {}
+            }
+            """)
+        .doTest();
+  }
 }

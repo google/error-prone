@@ -20,6 +20,7 @@ import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.findClass;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -181,6 +182,10 @@ public class ReferenceEquality extends AbstractReferenceEquality
       return false;
     }
     if (inComparisonMethod(classType, type, state)) {
+      return false;
+    }
+    // https://github.com/google/error-prone/issues/5900
+    if (isSubtype(type, JAVA_LANG_THREAD.get(state), state)) {
       return false;
     }
     if (definitelyUsesReferenceEquality(type, subclassMap, state)) {
@@ -411,4 +416,5 @@ public class ReferenceEquality extends AbstractReferenceEquality
   }
 
   private static final Supplier<Name> EQUALS = memoize(state -> state.getName("equals"));
+  private static final Supplier<Type> JAVA_LANG_THREAD = typeFromString("java.lang.Thread");
 }
