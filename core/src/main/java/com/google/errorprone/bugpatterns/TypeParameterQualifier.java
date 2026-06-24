@@ -19,7 +19,10 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.BEFORE_TEMPLATE_ANNOTATION;
 import static javax.lang.model.element.ElementKind.TYPE_PARAMETER;
 
 import com.google.errorprone.BugPattern;
@@ -32,6 +35,7 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Symbol;
 import javax.inject.Inject;
 
@@ -57,10 +61,16 @@ public class TypeParameterQualifier extends BugChecker
 
   @Override
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
-    if (!matchMethodReferences) {
+    if (!matchMethodReferences || isInRefasterBeforeTemplate(state)) {
       return NO_MATCH;
     }
     return match(tree, tree.getQualifierExpression(), state);
+  }
+
+  private static boolean isInRefasterBeforeTemplate(VisitorState state) {
+    MethodTree enclosingMethod = findEnclosingMethod(state);
+    return enclosingMethod != null
+        && hasAnnotation(enclosingMethod, BEFORE_TEMPLATE_ANNOTATION, state);
   }
 
   private Description match(ExpressionTree tree, ExpressionTree qualifier, VisitorState state) {
