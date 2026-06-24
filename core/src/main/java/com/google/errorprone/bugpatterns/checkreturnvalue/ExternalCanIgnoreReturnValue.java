@@ -93,9 +93,6 @@ public final class ExternalCanIgnoreReturnValue extends ErrorProneMethodRule {
     boolean methodMatches(MethodSymbol methodSymbol, VisitorState state);
   }
 
-  // TODO(b/232240203): Api Parsing at analysis time is expensive - there are many ways to
-  // load and use the config file.
-  // Decide on what works best, taking into account hit rate, load time, etc.
   enum ConfigParser {
     AS_STRINGS {
       @Override
