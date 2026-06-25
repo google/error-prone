@@ -166,4 +166,26 @@ public class MultipleNullnessAnnotationsTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void falseNullnessAnnotations() {
+    testHelper
+        .addSourceLines(
+            "T.java",
+            """
+            import static java.lang.annotation.ElementType.*;
+            import java.lang.annotation.Target;
+            import org.jspecify.annotations.Nullable;
+
+            @Target(FIELD)
+            @interface NotNull {}
+
+            abstract class T {
+              @jakarta.validation.constraints.NotNull @Nullable Object negative;
+              // BUG: Diagnostic contains:
+              @NotNull @Nullable Object positive;
+            }
+            """)
+        .doTest();
+  }
 }
