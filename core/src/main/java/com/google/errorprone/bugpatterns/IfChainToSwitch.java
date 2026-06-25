@@ -90,6 +90,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
 
 /** Checks for chains of if statements that may be converted to a switch. */
@@ -113,6 +114,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
           "java.lang.Integer",
           "java.lang.String");
 
+  // Non-reference types that are allowed for switch subjects, as specified in JLS 21 §14.11.
+  private static final ImmutableSet<TypeKind> ALLOWED_SWITCH_SUBJECT_NON_REFERENCE_TYPES =
+      ImmutableSet.of(TypeKind.CHAR, TypeKind.BYTE, TypeKind.SHORT, TypeKind.INT);
   private final boolean enableMain;
   private final boolean enableSafe;
   private final int maxChainLength;
@@ -729,6 +733,18 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
           // Check for compile-time constants
           Object constant = constValue(expression);
           if (constant != null) {
+            // Canonicialize constants (by widening) to detect identical values across various
+            // (boxed) primitive types
+            constant =
+                switch (constant) {
+                  case Float f -> (double) f;
+                  case Double d -> d;
+                  case Number n -> n.longValue(); // primitive integer type
+                  case Boolean bool -> bool;
+                  case Character c -> (long) c;
+                  default -> constant;
+                };
+
             if (seenConstants.contains(constant)) {
               return Optional.empty();
             }
@@ -1412,6 +1428,20 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       return Optional.empty();
     }
 
+    // The variable being switched on must also be one of the following types; this is
+    // an outer bound (relaxed in preview features, which this checker does not yet support)
+    if (subject.isPresent()) {
+      var switchExpressionType = getType(subject.get());
+      boolean validSwitchExpressionType =
+          switchExpressionType != null // Should never be null
+              && (switchExpressionType.isReference()
+                  || ALLOWED_SWITCH_SUBJECT_NON_REFERENCE_TYPES.contains(
+                      switchExpressionType.getKind()));
+      if (!validSwitchExpressionType) {
+        return Optional.empty();
+      }
+    }
+
     boolean addDefault = hasElse && !hasElseIf;
     int previousCaseEndPosition =
         cases.isEmpty()
@@ -1425,7 +1455,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             /* guardOptional= */ Optional.empty(),
             /* expressionsOptional= */ Optional.of(ImmutableList.of(compileTimeConstant)),
             /* arrowRhsOptional= */ arrowRhsOptional,
-            /* caseSourceCodeRange= */ Range.openClosed(previousCaseEndPosition, caseEndPosition)));
+            /* caseSourceCodeRange= */ Range.closedOpen(previousCaseEndPosition, caseEndPosition)));
     if (addDefault) {
       previousCaseEndPosition =
           cases.isEmpty()
@@ -1439,7 +1469,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ elseOptional,
-              /* caseSourceCodeRange= */ Range.openClosed(
+              /* caseSourceCodeRange= */ Range.closedOpen(
                   previousCaseEndPosition,
                   elseOptional.isPresent()
                       ? getStartPosition(elseOptional.get())

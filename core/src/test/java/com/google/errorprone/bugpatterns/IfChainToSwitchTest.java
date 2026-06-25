@@ -315,6 +315,32 @@ public final class IfChainToSwitchTest {
   }
 
   @Test
+  public void ifChain_longSwitchExpression_noError() {
+    // Similar to ifChain_longSwitch_noError, but constants are ints instead of longs
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.Number;
+
+            class Test {
+              public void foo(Suit s) {
+                long l = s == null ? 1 : 2;
+                if (l == 23) {
+                  System.out.println("It's 23");
+                } else if (l == 45) {
+                  System.out.println("It's 45");
+                } else if (l == 67) {
+                  System.out.println("It's 67");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
   public void ifChain_intSwitch_error() {
     // Switch on int is supported
     refactoringHelper
@@ -4436,6 +4462,54 @@ class Test {
               }
             }
             """)
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_intDuplicateConstantDifferentTypes_fails() {
+    // Because 'a' is encoded as 97 (in ASCII), they are both the same (when cast to int)
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int x) {
+                if (x == 'a') {
+                  System.out.println("a");
+                } else if (x == 97) {
+                  System.out.println("97");
+                } else if (x == 98) {
+                  System.out.println("98");
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_shortDuplicateConstantDifferentTypes_fails() {
+    // Because 'a' is encoded as 97 (in ASCII), they are both the same (when cast to short)
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(short x) {
+                if (x == 'a') {
+                  System.out.println("a");
+                } else if (x == 97) {
+                  System.out.println("97");
+                } else if (x == 98) {
+                  System.out.println("98");
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
         .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
