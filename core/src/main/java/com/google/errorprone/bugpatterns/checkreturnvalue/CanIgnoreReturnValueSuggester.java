@@ -301,32 +301,24 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   }
 
   private static boolean methodReturnsIgnorableValues(MethodTree tree, VisitorState state) {
-    final class ReturnValuesFromMethodAreIgnorable extends TreeScanner<Void, Void> {
-      private final VisitorState state;
-      private final Type enclosingClassType;
-      private final Type methodReturnType;
+    MethodSymbol methodSymbol = getSymbol(tree);
+    Type enclosingClassType = methodSymbol.enclClass().type;
+    Type methodReturnType = methodSymbol.getReturnType();
+    class ReturnValuesFromMethodAreIgnorable extends TreeScanner<Void, Void> {
       private boolean atLeastOneReturn = false;
       private boolean allReturnsIgnorable = true;
-
-      private ReturnValuesFromMethodAreIgnorable(VisitorState state, MethodSymbol methSymbol) {
-        this.state = state;
-        this.methodReturnType = methSymbol.getReturnType();
-        this.enclosingClassType = methSymbol.enclClass().type;
-      }
 
       @Override
       public Void visitReturn(ReturnTree returnTree, Void unused) {
         atLeastOneReturn = true;
-        if (!returnsThisOrSelf(returnTree)
-            && !isIgnorableMethodCallOnSameInstance(returnTree, state)) {
+        if (!returnsThisOrSelf(returnTree) && !isIgnorableMethodCallOnSameInstance(returnTree)) {
           allReturnsIgnorable = false;
         }
         // Don't descend deeper into returns, since we already checked the body of this return.
         return null;
       }
 
-      private boolean isIgnorableMethodCallOnSameInstance(
-          ReturnTree returnTree, VisitorState state) {
+      private boolean isIgnorableMethodCallOnSameInstance(ReturnTree returnTree) {
         if (returnTree.getExpression() instanceof MethodInvocationTree mit) {
           ExpressionTree receiver = getReceiver(mit);
           MethodSymbol calledMethod = getSymbol(mit);
@@ -357,7 +349,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
       }
     }
 
-    var scanner = new ReturnValuesFromMethodAreIgnorable(state, getSymbol(tree));
+    var scanner = new ReturnValuesFromMethodAreIgnorable();
     scanner.scan(tree, null);
     return scanner.atLeastOneReturn && scanner.allReturnsIgnorable;
   }
