@@ -304,54 +304,54 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     MethodSymbol methodSymbol = getSymbol(tree);
     Type enclosingClassType = methodSymbol.enclClass().type;
     Type methodReturnType = methodSymbol.getReturnType();
-    class ReturnValuesFromMethodAreIgnorable extends TreeScanner<Void, Void> {
-      private boolean atLeastOneReturn = false;
-      private boolean allReturnsIgnorable = true;
+    var returnValuesScanner =
+        new TreeScanner<Void, Void>() {
+          private boolean atLeastOneReturn = false;
+          private boolean allReturnsIgnorable = true;
 
-      @Override
-      public Void visitReturn(ReturnTree returnTree, Void unused) {
-        atLeastOneReturn = true;
-        if (!returnsThisOrSelf(returnTree) && !isIgnorableMethodCallOnSameInstance(returnTree)) {
-          allReturnsIgnorable = false;
-        }
-        // Don't descend deeper into returns, since we already checked the body of this return.
-        return null;
-      }
-
-      private boolean isIgnorableMethodCallOnSameInstance(ReturnTree returnTree) {
-        if (returnTree.getExpression() instanceof MethodInvocationTree mit) {
-          ExpressionTree receiver = getReceiver(mit);
-          MethodSymbol calledMethod = getSymbol(mit);
-          if ((receiver == null && !calledMethod.isStatic())
-              || isIdentifier(receiver, "this")
-              || isIdentifier(receiver, "super")) {
-            // If the method we're calling is @CIRV and the enclosing class could be represented by
-            // the object being returned by the other method, then it's probable that the other
-            // method is likely to be an ignorable result.
-            return hasDirectAnnotationWithSimpleName(calledMethod, CIRV_SIMPLE_NAME)
-                && isSubtype(enclosingClassType, methodReturnType, state)
-                && isSubtype(enclosingClassType, getReturnType(mit), state);
+          @Override
+          public Void visitReturn(ReturnTree returnTree, Void unused) {
+            atLeastOneReturn = true;
+            if (!returnsThisOrSelf(returnTree)
+                && !isIgnorableMethodCallOnSameInstance(returnTree)) {
+              allReturnsIgnorable = false;
+            }
+            // Don't descend deeper into returns, since we already checked the body of this return.
+            return null;
           }
-        }
-        return false;
-      }
 
-      @Override
-      public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
-        // don't descend into lambdas
-        return null;
-      }
+          private boolean isIgnorableMethodCallOnSameInstance(ReturnTree returnTree) {
+            if (returnTree.getExpression() instanceof MethodInvocationTree mit) {
+              ExpressionTree receiver = getReceiver(mit);
+              MethodSymbol calledMethod = getSymbol(mit);
+              if ((receiver == null && !calledMethod.isStatic())
+                  || isIdentifier(receiver, "this")
+                  || isIdentifier(receiver, "super")) {
+                // If the method we're calling is @CIRV and the enclosing class could be represented
+                // by the object being returned by the other method, then it's probable that the
+                // other method is likely to be an ignorable result.
+                return hasDirectAnnotationWithSimpleName(calledMethod, CIRV_SIMPLE_NAME)
+                    && isSubtype(enclosingClassType, methodReturnType, state)
+                    && isSubtype(enclosingClassType, getReturnType(mit), state);
+              }
+            }
+            return false;
+          }
 
-      @Override
-      public Void visitNewClass(NewClassTree node, Void unused) {
-        // don't descend into declarations of anonymous classes
-        return null;
-      }
-    }
+          @Override
+          public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
+            // don't descend into lambdas
+            return null;
+          }
 
-    var scanner = new ReturnValuesFromMethodAreIgnorable();
-    scanner.scan(tree, null);
-    return scanner.atLeastOneReturn && scanner.allReturnsIgnorable;
+          @Override
+          public Void visitNewClass(NewClassTree node, Void unused) {
+            // don't descend into declarations of anonymous classes
+            return null;
+          }
+        };
+    returnValuesScanner.scan(tree, null);
+    return returnValuesScanner.atLeastOneReturn && returnValuesScanner.allReturnsIgnorable;
   }
 
   private static boolean methodAlwaysReturnsInputParam(MethodTree methodTree, VisitorState state) {
@@ -359,37 +359,36 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     if (methodTree.getParameters().isEmpty()) {
       return false;
     }
-    class AllReturnsAreInputParams extends TreeScanner<Void, Void> {
-      private final Set<Symbol> returnedSymbols = new HashSet<>();
+    var allReturnsScanner =
+        new TreeScanner<Void, Void>() {
+          private final Set<Symbol> returnedSymbols = new HashSet<>();
 
-      @Override
-      public Void visitReturn(ReturnTree returnTree, Void unused) {
-        // even for cases where getExpression() or getSymbol() returns null, we still want to add
-        // those to the returnedSymbols set (that's important if there's > 1 returns)
-        returnedSymbols.add(getSymbol(stripParentheses(returnTree.getExpression())));
-        return null;
-      }
+          @Override
+          public Void visitReturn(ReturnTree returnTree, Void unused) {
+            // even for cases where getExpression() or getSymbol() returns null, we still want to
+            // add those to the returnedSymbols set (that's important if there's > 1 returns)
+            returnedSymbols.add(getSymbol(stripParentheses(returnTree.getExpression())));
+            return null;
+          }
 
-      @Override
-      public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
-        // don't descend into lambdas
-        return null;
-      }
+          @Override
+          public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
+            // don't descend into lambdas
+            return null;
+          }
 
-      @Override
-      public Void visitNewClass(NewClassTree node, Void unused) {
-        // don't descend into declarations of anonymous classes
-        return null;
-      }
-    }
-
-    AllReturnsAreInputParams scanner = new AllReturnsAreInputParams();
-    scanner.scan(methodTree, null);
+          @Override
+          public Void visitNewClass(NewClassTree node, Void unused) {
+            // don't descend into declarations of anonymous classes
+            return null;
+          }
+        };
+    allReturnsScanner.scan(methodTree, null);
     // if we have more than 1 returned symbol, then the value isn't ignorable
-    if (scanner.returnedSymbols.size() != 1) {
+    if (allReturnsScanner.returnedSymbols.size() != 1) {
       return false;
     }
-    Symbol returnedSymbol = getOnlyElement(scanner.returnedSymbols);
+    Symbol returnedSymbol = getOnlyElement(allReturnsScanner.returnedSymbols);
     if (returnedSymbol == null) {
       return false;
     }
