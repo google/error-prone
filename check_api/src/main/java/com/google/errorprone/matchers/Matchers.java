@@ -619,7 +619,7 @@ public final class Matchers {
    * @see #stringLiteral(String)
    */
   public static Matcher<ExpressionTree> stringLiteral(Pattern pattern) {
-    return stringLiteral(pattern.asMatchPredicate());
+    return stringLiteral(pattern.asPredicate());
   }
 
   /**
@@ -628,7 +628,7 @@ public final class Matchers {
    * @see #stringLiteral(String)
    */
   public static Matcher<ExpressionTree> stringLiteral(java.util.regex.Pattern pattern) {
-    return stringLiteral(pattern.asMatchPredicate());
+    return stringLiteral(pattern.asPredicate());
   }
 
   public static Matcher<ExpressionTree> booleanLiteral(boolean value) {
