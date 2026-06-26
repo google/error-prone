@@ -9,6 +9,8 @@ updates:
         applies-to: version-updates
         patterns:
           - "*"
+    ignore:
+      - dependency-name: "io.github.eisop:dataflow-errorprone"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
