@@ -212,54 +212,54 @@ public class UnnecessaryLambda extends BugChecker
         .orElse(false)) {
       return false;
     }
-    class Scanner extends TreePathScanner<Void, Void> {
+    var scanner =
+        new TreePathScanner<Void, Void>() {
+          boolean fixable = true;
+          boolean inInitializer = false;
 
-      boolean fixable = true;
-      boolean inInitializer = false;
+          @Override
+          public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
+            check(node);
+            return super.visitMethodInvocation(node, null);
+          }
 
-      @Override
-      public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
-        check(node);
-        return super.visitMethodInvocation(node, null);
-      }
+          @Override
+          public Void visitVariable(VariableTree node, Void unused) {
+            boolean wasInInitializer = inInitializer;
+            if (sym.equals(getSymbol(node))) {
+              inInitializer = true;
+            }
+            super.visitVariable(node, null);
+            inInitializer = wasInInitializer;
+            return null;
+          }
 
-      @Override
-      public Void visitVariable(VariableTree node, Void unused) {
-        boolean wasInInitializer = inInitializer;
-        if (sym.equals(getSymbol(node))) {
-          inInitializer = true;
-        }
-        super.visitVariable(node, null);
-        inInitializer = wasInInitializer;
-        return null;
-      }
+          @Override
+          public Void visitMemberSelect(MemberSelectTree node, Void unused) {
+            if (inInitializer && sym.equals(getSymbol(node))) {
+              // We're not smart enough to rewrite a recursive lambda.
+              fixable = false;
+            }
+            return super.visitMemberSelect(node, null);
+          }
 
-      @Override
-      public Void visitMemberSelect(MemberSelectTree node, Void unused) {
-        if (inInitializer && sym.equals(getSymbol(node))) {
-          // We're not smart enough to rewrite a recursive lambda.
-          fixable = false;
-        }
-        return super.visitMemberSelect(node, null);
-      }
+          private void check(MethodInvocationTree node) {
+            ExpressionTree lhs = node.getMethodSelect();
+            if (!(lhs instanceof MemberSelectTree memberSelectTree)) {
+              return;
+            }
+            ExpressionTree receiver = memberSelectTree.getExpression();
+            if (!Objects.equals(sym, getSymbol(receiver))) {
+              return;
+            }
+            Symbol symbol = getSymbol(lhs);
+            if (Objects.equals(descriptor, symbol)) {
+              return;
+            }
+            fixable = false;
+          }
+        };
 
-      private void check(MethodInvocationTree node) {
-        ExpressionTree lhs = node.getMethodSelect();
-        if (!(lhs instanceof MemberSelectTree memberSelectTree)) {
-          return;
-        }
-        ExpressionTree receiver = memberSelectTree.getExpression();
-        if (!Objects.equals(sym, getSymbol(receiver))) {
-          return;
-        }
-        Symbol symbol = getSymbol(lhs);
-        if (Objects.equals(descriptor, symbol)) {
-          return;
-        }
-        fixable = false;
-      }
-    }
-    Scanner scanner = new Scanner();
     scanner.scan(state.getPath().getCompilationUnit(), null);
     return scanner.fixable;
   }
