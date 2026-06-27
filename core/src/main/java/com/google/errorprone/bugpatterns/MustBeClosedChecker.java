@@ -29,6 +29,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.AnnotationNames.MUST_BE_CLOSED_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -47,6 +48,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import javax.inject.Inject;
 
 /**
  * Checks if a constructor or method annotated with {@link
@@ -63,6 +65,10 @@ import com.sun.tools.javac.code.Type;
     severity = ERROR)
 public class MustBeClosedChecker extends AbstractMustBeClosedChecker
     implements MethodTreeMatcher, ClassTreeMatcher {
+  @Inject
+  MustBeClosedChecker(ErrorProneFlags flags) {
+    super(flags);
+  }
 
   private static final Matcher<Tree> IS_AUTOCLOSEABLE = isSubtypeOf(AutoCloseable.class);
 

@@ -22,6 +22,7 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.canonicalConstructor;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -2116,5 +2117,68 @@ class Test {
             }
             """)
         .doTest();
+  }
+
+  @Test
+  public void findEnclosingMethodBoundaries() {
+    writeFile(
+        "Test.java",
+        """
+        class Test {
+          void outerMethod() {
+            interface LocalInterface {
+              String x = "NO-METHOD";
+
+              default void foo() {
+                String y = "foo";
+              }
+            }
+
+            enum LocalEnum {
+              A;
+
+              String x = "NO-METHOD";
+
+              void foo() {
+                String y = "foo";
+              }
+            }
+
+            record LocalRecord(int val) {
+              static String x = "NO-METHOD";
+
+              void foo() {
+                String y = "foo";
+              }
+            }
+          }
+        }
+        """);
+
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitVariable(VariableTree tree, VisitorState state) {
+            String value = ASTHelpers.constValue(tree.getInitializer(), String.class);
+            VisitorState pathState = state.withPath(getCurrentPath());
+
+            switch (value) {
+              case null -> {
+                // Fall through to super.visitVariable.
+              }
+              case "NO-METHOD" -> {
+                setAssertionsComplete();
+                assertThat(findEnclosingMethod(pathState)).isNull();
+              }
+              default -> {
+                setAssertionsComplete();
+                assertThat(findEnclosingMethod(pathState).getName().toString()).isEqualTo(value);
+              }
+            }
+            return super.visitVariable(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
   }
 }

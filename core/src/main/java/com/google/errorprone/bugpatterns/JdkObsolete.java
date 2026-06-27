@@ -30,6 +30,8 @@ import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.arrayOf;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingMethodPath;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -633,7 +635,7 @@ public class JdkObsolete extends BugChecker
       return Optional.empty();
     }
     VarSymbol varSym = ASTHelpers.getSymbol(varTree);
-    TreePath methodPath = findEnclosingMethod(state);
+    TreePath methodPath = findEnclosingMethodPath(state.getPath());
     if (methodPath == null) {
       return Optional.empty();
     }
@@ -671,29 +673,8 @@ public class JdkObsolete extends BugChecker
     return Optional.of(fix.build());
   }
 
-  private static @Nullable TreePath findEnclosingMethod(VisitorState state) {
-    TreePath path = state.getPath();
-    while (path != null) {
-      switch (path.getLeaf().getKind()) {
-        case METHOD -> {
-          return path;
-        }
-        case CLASS, LAMBDA_EXPRESSION -> {
-          return null;
-        }
-        default -> {}
-      }
-      path = path.getParentPath();
-    }
-    return null;
-  }
-
   private boolean shouldSkip(VisitorState state, Type type) {
-    TreePath path = findEnclosingMethod(state);
-    if (path == null) {
-      return false;
-    }
-    MethodTree enclosingMethod = (MethodTree) path.getLeaf();
+    MethodTree enclosingMethod = findEnclosingMethod(state);
     if (enclosingMethod == null) {
       return false;
     }

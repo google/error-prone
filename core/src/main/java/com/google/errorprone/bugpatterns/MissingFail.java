@@ -453,7 +453,7 @@ public class MissingFail extends BugChecker implements MethodTreeMatcher {
   }
 
   /**
-   * Matches any try-tree that is in a JUNit3 {@code setUp} or {@code tearDown} method, their JUnit4
+   * Matches any try-tree that is in a JUnit3 {@code setUp} or {@code tearDown} method, their JUnit4
    * equivalents, a JUnit {@code suite()} method or a {@code main} method.
    */
   private static class IgnoredEnclosingMethodMatcher implements Matcher<TryTree> {

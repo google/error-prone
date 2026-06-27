@@ -23,11 +23,13 @@ import static com.google.errorprone.matchers.Matchers.expressionStatement;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingMethodPath;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -58,6 +60,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
@@ -68,6 +71,13 @@ import javax.lang.model.element.Modifier;
             + " pattern.",
     severity = ERROR)
 public class DoubleBraceInitialization extends BugChecker implements NewClassTreeMatcher {
+
+  private final boolean enclosingMethodFix;
+
+  @Inject
+  DoubleBraceInitialization(ErrorProneFlags flags) {
+    this.enclosingMethodFix = flags.getBoolean("ASTHelpers:EnclosingMethodFix").orElse(true);
+  }
 
   @SuppressWarnings("ImmutableEnumChecker") // Matcher is immutable in practice
   enum CollectionTypes {
@@ -100,7 +110,8 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
                   .named("unmodifiable" + type));
     }
 
-    Optional<Fix> maybeFix(NewClassTree tree, VisitorState state, BlockTree block) {
+    Optional<Fix> maybeFix(
+        NewClassTree tree, VisitorState state, BlockTree block, boolean enclosingMethodFix) {
       // scan the body for mutator methods (add, put) and record their arguments for rewriting as
       // a static factory method
       List<List<? extends ExpressionTree>> arguments = new ArrayList<>();
@@ -156,7 +167,14 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
         }
         if (enclosing instanceof ReturnTree returnTree) {
           toReplace = returnTree.getExpression();
-          MethodTree enclosingMethod = ASTHelpers.findEnclosingNode(path, MethodTree.class);
+          MethodTree enclosingMethod;
+          if (enclosingMethodFix) {
+            TreePath enclosingMethodPath = findEnclosingMethodPath(path);
+            enclosingMethod =
+                enclosingMethodPath == null ? null : (MethodTree) enclosingMethodPath.getLeaf();
+          } else {
+            enclosingMethod = ASTHelpers.findEnclosingNode(path, MethodTree.class);
+          }
           typeTree = enclosingMethod == null ? null : enclosingMethod.getReturnType();
         }
         break;
@@ -233,7 +251,10 @@ public class DoubleBraceInitialization extends BugChecker implements NewClassTre
       return NO_MATCH;
     }
     Description.Builder description = buildDescription(tree);
-    collectionType.get().maybeFix(tree, state, block).ifPresent(description::addFix);
+    collectionType
+        .get()
+        .maybeFix(tree, state, block, enclosingMethodFix)
+        .ifPresent(description::addFix);
     return description.build();
   }
 }

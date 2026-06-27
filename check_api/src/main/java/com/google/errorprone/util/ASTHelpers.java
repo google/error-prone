@@ -434,6 +434,10 @@ public final class ASTHelpers {
   /**
    * Given a TreePath, finds the first enclosing node of the given type and returns the path from
    * the enclosing node to the top-level {@code CompilationUnitTree}.
+   *
+   * <p>If you are looking for "the enclosing method," consider whether {@link
+   * #findEnclosingMethodPath} would be more appropriate: It avoids crossing class and lambda
+   * boundaries.
    */
   public static <T> @Nullable TreePath findPathFromEnclosingNodeToTopLevel(
       TreePath path, Class<T> klass) {
@@ -457,26 +461,37 @@ public final class ASTHelpers {
   /**
    * Given a TreePath, walks up the tree until it finds a node of the given type. Returns null if no
    * such node is found.
+   *
+   * <p>If you are looking for "the enclosing method," consider whether {@link #findEnclosingMethod}
+   * would be more appropriate: It avoids crossing class and lambda boundaries.
    */
   public static <T> @Nullable T findEnclosingNode(TreePath path, Class<T> klass) {
     path = findPathFromEnclosingNodeToTopLevel(path, klass);
     return (path == null) ? null : klass.cast(path.getLeaf());
   }
 
-  /** Finds the enclosing {@link MethodTree}. Returns {@code null} if no such node found. */
-  public static @Nullable MethodTree findEnclosingMethod(VisitorState state) {
-    for (Tree parent : state.getPath()) {
-      switch (parent.getKind()) {
-        case METHOD -> {
-          return (MethodTree) parent;
-        }
-        case CLASS, LAMBDA_EXPRESSION -> {
-          return null;
-        }
-        default -> {}
+  /**
+   * Finds the {@link TreePath} to the enclosing {@link MethodTree} in the current scope (not
+   * crossing class or lambda boundaries). Returns {@code null} if no such node found.
+   */
+  public static @Nullable TreePath findEnclosingMethodPath(TreePath path) {
+    checkNotNull(path);
+    for (; path != null; path = path.getParentPath()) {
+      Tree leaf = path.getLeaf();
+      if (leaf instanceof MethodTree) {
+        return path;
+      }
+      if (leaf instanceof ClassTree || leaf instanceof LambdaExpressionTree) {
+        return null;
       }
     }
     return null;
+  }
+
+  /** Finds the enclosing {@link MethodTree}. Returns {@code null} if no such node found. */
+  public static @Nullable MethodTree findEnclosingMethod(VisitorState state) {
+    TreePath path = findEnclosingMethodPath(state.getPath());
+    return path == null ? null : (MethodTree) path.getLeaf();
   }
 
   /**

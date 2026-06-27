@@ -30,6 +30,8 @@ import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.typeFromClass;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -1123,13 +1125,23 @@ public final class Matchers {
   /** Matches if this Tree is enclosed by either a synchronized block or a synchronized method. */
   public static <T extends Tree> Matcher<T> inSynchronized() {
     return (tree, state) -> {
+      // TODO(cpovirk): Look for `synchronized` only within the current method?
       SynchronizedTree synchronizedTree =
           ASTHelpers.findEnclosingNode(state.getPath(), SynchronizedTree.class);
       if (synchronizedTree != null) {
         return true;
       }
 
-      MethodTree methodTree = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
+      boolean enclosingMethodFix =
+          state
+              .errorProneOptions()
+              .getFlags()
+              .getBoolean("ASTHelpers:EnclosingMethodFix")
+              .orElse(true);
+      MethodTree methodTree =
+          enclosingMethodFix
+              ? findEnclosingMethod(state)
+              : findEnclosingNode(state.getPath(), MethodTree.class);
       return methodTree != null
           && methodTree.getModifiers().getFlags().contains(Modifier.SYNCHRONIZED);
     };

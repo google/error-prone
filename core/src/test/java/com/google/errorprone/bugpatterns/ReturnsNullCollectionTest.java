@@ -74,6 +74,15 @@ public class ReturnsNullCollectionTest {
                 }
                 return new ArrayList();
               }
+
+              List<String> methodReturnsNullListInCatch() {
+                try {
+                  return new ArrayList();
+                } catch (Exception e) {
+                  // BUG: Diagnostic contains: ReturnsNullCollection
+                  return null;
+                }
+              }
             }
             """)
         .doTest();
