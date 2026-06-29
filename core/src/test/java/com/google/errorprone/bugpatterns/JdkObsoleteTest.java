@@ -536,6 +536,70 @@ public class JdkObsoleteTest {
   }
 
   @Test
+  public void preferCharsetAcceptingApis_jdk9() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static java.nio.charset.StandardCharsets.UTF_8;
+
+            import java.io.*;
+            import java.net.*;
+            import java.nio.channels.*;
+            import java.util.*;
+
+            class Test {
+              private static final String UTF8_NAME = UTF_8.name();
+
+              void string(byte[] bytes) throws Exception {
+                // BUG: Diagnostic contains: String.getBytes(Charset)
+                "foo".getBytes(UTF8_NAME);
+                // BUG: Diagnostic contains: new String(byte[], Charset)
+                new String(bytes, UTF8_NAME);
+                // BUG: Diagnostic contains: new String(byte[], int, int, Charset)
+                new String(bytes, 0, 1, UTF8_NAME);
+              }
+
+              void inputStreamReader(InputStream is) throws Exception {
+                // BUG: Diagnostic contains: new InputStreamReader(InputStream, Charset)
+                new InputStreamReader(is, UTF8_NAME);
+              }
+
+              void outputStreamWriter(OutputStream os) throws Exception {
+                // BUG: Diagnostic contains: new OutputStreamWriter(OutputStream, Charset)
+                new OutputStreamWriter(os, UTF8_NAME);
+              }
+
+              void urlEncoder(String UTF8_NAME) throws Exception {
+                URLEncoder.encode("foo", UTF8_NAME);
+              }
+
+              void urlDecoder(String UTF8_NAME) throws Exception {
+                URLDecoder.decode("foo", UTF8_NAME);
+              }
+
+              void newReader(ReadableByteChannel rbc) throws Exception {
+                Channels.newReader(rbc, UTF8_NAME);
+              }
+
+              void printStream(String fileName) throws Exception {
+                new PrintStream(fileName, UTF8_NAME);
+              }
+
+              void printWriter(String fileName) throws Exception {
+                new PrintWriter(fileName, UTF8_NAME);
+              }
+
+              void scanner(InputStream is) throws Exception {
+                new Scanner(is, UTF8_NAME);
+              }
+            }
+            """)
+        .setArgs("--release", "9")
+        .doTest();
+  }
+
+  @Test
   public void preferCharsetAcceptingApis_androidMinSdk32() {
     testHelper
         .addSourceLines(
