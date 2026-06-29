@@ -333,6 +333,48 @@ public final class UnescapedEntityTest {
   }
 
   @Test
+  public void markdownJavadoc_ampersand() {
+    assume().that(Runtime.version().feature()).isAtLeast(23);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /// Foo & bar
+            interface Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadoc_htmlTags() {
+    assume().that(Runtime.version().feature()).isAtLeast(23);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /// <em>important</em> stuff
+            interface Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadoc_codeBlock() {
+    assume().that(Runtime.version().feature()).isAtLeast(23);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /// Example:
+            /// ```
+            /// List<Foo> list = new ArrayList<>();
+            /// ```
+            interface Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
   public void nestedGenericType_properlyEscaped() {
     refactoring
         .addInputLines(
