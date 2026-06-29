@@ -147,4 +147,22 @@ public final class AssignmentExpressionTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void parenthesizedAssignmentInDeclaration() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                int a = 0;
+                int b = 1;
+                // BUG: Diagnostic contains:
+                int k = (a = b);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
