@@ -29,11 +29,11 @@ import java.lang.annotation.Target;
  * <pre>{@code
  * @IncompatibleModifiers(modifier = Modifier.PUBLIC)
  * @interface MyAnnotation {}
- * </pre>
+ * }</pre>
  *
  * <p>will be considered illegal when used as:
  *
- * <pre>
+ * <pre>{@code
  * @MyAnnotation public void foo() {}
  * }</pre>
  *
