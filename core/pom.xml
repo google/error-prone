@@ -364,7 +364,7 @@
       <!-- MIT -->
       <groupId>org.checkerframework</groupId>
       <artifactId>checker-qual</artifactId>
-      <version>3.42.0</version>
+      <version>4.2.0</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
