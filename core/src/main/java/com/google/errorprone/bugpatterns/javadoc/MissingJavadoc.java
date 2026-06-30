@@ -56,7 +56,7 @@ import javax.lang.model.element.Modifier;
     summary = "Public types and public/protected members must have Javadoc comments.",
     severity = WARNING,
     linkType = CUSTOM,
-    link = "https://google.github.io/styleguide/javaguide.html#s7.1.1-where-required",
+    link = "https://google.github.io/styleguide/javaguide.html#s7.3-javadoc-where-required",
     documentSuppression = false)
 public final class MissingJavadoc extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
