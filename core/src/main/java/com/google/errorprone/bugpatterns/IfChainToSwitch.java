@@ -125,7 +125,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
   @Inject
   IfChainToSwitch(ErrorProneFlags flags, ConstantExpressions constantExpressions) {
-    enableMain = flags.getBoolean("IfChainToSwitch:EnableMain").orElse(false);
+    enableMain = flags.getBoolean("IfChainToSwitch:EnableMain").orElse(true);
     enableSafe = flags.getBoolean("IfChainToSwitch:EnableSafe").orElse(false);
     maxChainLength = flags.getInteger("IfChainToSwitch:MaxChainLength").orElse(50);
     minChainLength = flags.getInteger("IfChainToSwitch:MinChainLength").orElse(5);
