@@ -242,6 +242,28 @@ public class TemplatingTest extends CompilerBasedTest {
   }
 
   @Test
+  public void concatLiterals() {
+    compile(
+            "import com.google.errorprone.refaster.Refaster;",
+            "class ConcatLiteralsExample {",
+            "  public boolean example(String str) {",
+            "    return str.contains(Refaster.concatLiterals(\"foo\", \"bar\"));",
+            "  }",
+            "}");
+    assertThat(UTemplater.createTemplate(context, getMethodDeclaration("example")))
+        .isEqualTo(
+            ExpressionTemplate.create(
+                ImmutableMap.of("str", UClassType.create("java.lang.String")),
+                UMethodInvocation.create(
+                    UMemberSelect.create(
+                        UFreeIdent.create("str"),
+                        "contains",
+                        UMethodType.create(UPrimitiveType.BOOLEAN, UClassType.create("java.lang.CharSequence"))),
+                    UConcatLiterals.create(ULiteral.stringLit("foo"), ULiteral.stringLit("bar"))),
+                UPrimitiveType.BOOLEAN));
+  }
+
+  @Test
   public void unary() {
     compile(
         "import java.util.Arrays;",
