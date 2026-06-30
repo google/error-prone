@@ -47,6 +47,12 @@ Throwables should not override `equals()` or `hashCode()`.
     anti-pattern. Exceptions are for exceptional circumstances; they are heavy
     (because of the stack trace) and slow to generate.
 
+4.  **Java Still Sometimes Compares Exceptions by Object Identity** Even if two
+    exceptions are "the same" according to `equals`, Java will still print both
+    if it encounters them during a call to `printStackTrace`, and it will allow
+    one to be a suppressed exception of the other. In both ways, two exceptions
+    that are "the same" will continue to be treated as different by Java.
+
 ### **Recommended Alternative: A separate value object**
 
 If you find yourself needing to compare exceptions, **extract the state into a
