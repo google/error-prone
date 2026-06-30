@@ -72,6 +72,11 @@ public final class MissingJavadoc extends BugChecker
     if (symbol == null) {
       return NO_MATCH;
     }
+    if (symbol.isConstructor()) {
+      // Constructors have a better than average change of being "self-explanatory":
+      // https://google.github.io/styleguide/javaguide.html#s7.3.1-javadoc-exception-self-explanatory
+      return NO_MATCH;
+    }
     if (!findSuperMethods(symbol, state.getTypes()).isEmpty()) {
       return NO_MATCH;
     }

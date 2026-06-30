@@ -171,4 +171,18 @@ public final class MissingJavadocTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void publicConstructorWithoutJavadoc_passes() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            /** This is class doc. */
+            public class Test {
+              public Test() {}
+            }
+            """)
+        .doTest();
+  }
 }
