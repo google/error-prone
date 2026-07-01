@@ -98,7 +98,7 @@ public class StringConcatToTextBlock extends BugChecker
             .filter(t -> t.kind().equals(Tokens.TokenKind.STRINGLITERAL))
             .map(t -> t.stringVal())
             .collect(toImmutableList());
-    boolean trailingNewline = getLast(strings).endsWith("\n");
+    boolean trailingNewline = !strings.isEmpty() && getLast(strings) != null && getLast(strings).endsWith("\n");
     // Only migrate if there are enough lines to make it worthwhile. Escaping the trailing newline
     // slightly reduces the readability benefit of migrating, so require an extra line to make it
     // worth it.
