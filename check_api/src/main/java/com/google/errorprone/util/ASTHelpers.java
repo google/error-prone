@@ -1941,7 +1941,10 @@ public final class ASTHelpers {
     }
   }
 
-  /** Returns the start position of the node. */
+  /**
+   * Returns the start position of the node. To get the end position of a node, use {@link
+   * VisitorState#getEndPosition}.
+   */
   public static int getStartPosition(Tree tree) {
     return ((JCTree) tree).getStartPosition();
   }
