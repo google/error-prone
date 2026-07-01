@@ -95,6 +95,83 @@ public class ASTHelpersSuggestionsTest {
   }
 
   @Test
+  public void packgeChained() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import com.sun.tools.javac.code.Symbol;",
+            "import com.sun.tools.javac.util.Name;",
+            "class Test {",
+            "  void f(Symbol s) {",
+            "    Name n = s.packge().fullname;",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.google.errorprone.util.ASTHelpers.enclosingPackage;",
+            "import com.sun.tools.javac.code.Symbol;",
+            "import com.sun.tools.javac.util.Name;",
+            "class Test {",
+            "  void f(Symbol s) {",
+            "    Name n = enclosingPackage(s).orElseThrow().fullname;",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void packgeAssigned() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import com.sun.tools.javac.code.Symbol;",
+            "import com.sun.tools.javac.code.Symbol.PackageSymbol;",
+            "class Test {",
+            "  void f(Symbol s) {",
+            "    PackageSymbol p = s.packge();",
+            "  }",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.google.errorprone.util.ASTHelpers.enclosingPackage;",
+            "import com.sun.tools.javac.code.Symbol;",
+            "import com.sun.tools.javac.code.Symbol.PackageSymbol;",
+            "class Test {",
+            "  void f(Symbol s) {",
+            "    PackageSymbol p = enclosingPackage(s).orElseThrow();",
+            "  }",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void packgePassedToMethod() {
+    testHelper
+        .addInputLines(
+            "Test.java",
+            "import com.sun.tools.javac.code.Symbol;",
+            "import com.sun.tools.javac.code.Symbol.PackageSymbol;",
+            "class Test {",
+            "  void f(Symbol s) {",
+            "    g(s.packge());",
+            "  }",
+            "  void g(PackageSymbol p) {}",
+            "}")
+        .addOutputLines(
+            "Test.java",
+            "import static com.google.errorprone.util.ASTHelpers.enclosingPackage;",
+            "import com.sun.tools.javac.code.Symbol;",
+            "import com.sun.tools.javac.code.Symbol.PackageSymbol;",
+            "class Test {",
+            "  void f(Symbol s) {",
+            "    g(enclosingPackage(s).orElseThrow());",
+            "  }",
+            "  void g(PackageSymbol p) {}",
+            "}")
+        .doTest();
+  }
+
+  @Test
   public void symbolGetEnclosedElements() {
     testHelper
         .addInputLines(

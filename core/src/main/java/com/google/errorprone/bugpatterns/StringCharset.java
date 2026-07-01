@@ -40,9 +40,8 @@ import java.nio.charset.StandardCharsets;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
-    summary = "StringCharset",
-    severity = WARNING,
-    explanation = "Prefer StandardCharsets over using string names for charsets")
+    summary = "Prefer StandardCharsets over using string names for charsets",
+    severity = WARNING)
 public class StringCharset extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
@@ -91,9 +90,7 @@ public class StringCharset extends BugChecker
     try {
       charset = Charset.forName(value);
     } catch (IllegalArgumentException e) {
-      return buildDescription(tree)
-          .setMessage(String.format("%s is not a valid charset", value))
-          .build();
+      return buildDescription(tree).setMessage("%s is not a valid charset", value).build();
     }
     if (!CHARSETS.contains(charset)) {
       return NO_MATCH;

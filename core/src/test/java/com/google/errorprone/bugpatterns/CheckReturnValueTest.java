@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 import com.google.common.base.Joiner;
@@ -47,6 +48,11 @@ public class CheckReturnValueTest {
 
   @Test
   public void positiveCases() {
+    /*
+     * TODO(cpovirk): Split or otherwise modify this test to work when run under Java 21, where we
+     * suggest `var unused =` instead of `var _ =`.
+     */
+    assume().that(Runtime.version().feature()).isAtLeast(22);
     compilationHelper
         .addSourceLines(
             "CheckReturnValuePositiveCases.java",
@@ -72,7 +78,7 @@ public class CheckReturnValuePositiveCases {
     int i = 1;
     // BUG: Diagnostic contains: The result of `increment(...)` must be used
     //
-    // If you really don't want to use the result, then assign it to a variable: `var unused = ...`.
+    // If you really don't want to use the result, then assign it to a variable: `var _ = ...`.
     //
     // If callers of `increment(...)` shouldn't be required to use its result, then annotate it with
     // `@CanIgnoreReturnValue`.
@@ -109,7 +115,7 @@ public class CheckReturnValuePositiveCases {
     // To use the result, you may need to restructure your code.
     //
     // If you really don't want to use the result, then switch to a lambda that assigns it to a
-    // variable: `() -> { var unused = ...; }`.
+    // variable: `() -> { var _ = ...; }`.
     //
     // If callers of `increment()` shouldn't be required to use its result, then annotate it with
     // `@CanIgnoreReturnValue`.
@@ -127,7 +133,7 @@ public class CheckReturnValuePositiveCases {
     // To use the result, you may need to restructure your code.
     //
     // If you really don't want to use the result, then switch to a lambda that assigns it to a
-    // variable: `() -> { var unused = ...; }`.
+    // variable: `() -> { var _ = ...; }`.
     //
     // If callers of `MyObject()` shouldn't be required to use its result, then annotate it with
     // `@CanIgnoreReturnValue`.
@@ -167,7 +173,7 @@ public class CheckReturnValuePositiveCases {
 
     // BUG: Diagnostic contains: The result of `new MyObject()` must be used
     //
-    // If you really don't want to use the result, then assign it to a variable: `var unused = ...`.
+    // If you really don't want to use the result, then assign it to a variable: `var _ = ...`.
     //
     // If callers of `MyObject()` shouldn't be required to use its result, then annotate it with
     // `@CanIgnoreReturnValue`.
@@ -1382,6 +1388,11 @@ class Test {
 
   @Test
   public void doesNotSuggestCanIgnoreReturnValueForOtherFile() {
+    /*
+     * This is the one test of introducing an unused variable that we run targeting Java 22+ to test
+     * that we suggest `var unused =` instead of `var _ =` there.
+     */
+    assume().that(Runtime.version().feature()).isAtLeast(22);
     refactoringHelper
         .addInputLines(
             "Lib.java",
@@ -1417,7 +1428,7 @@ class Test {
             @CheckReturnValue
             class Test {
               void foo(Lib l) {
-                var unused = l.makeBarOrThrow();
+                var _ = l.makeBarOrThrow();
               }
             }
             """)
@@ -1427,6 +1438,7 @@ class Test {
   @Test
   public void suggestsVarUnusedForConstructor() {
     refactoringHelper
+        .setArgs("-source", "21")
         .addInputLines(
             "Test.java",
             """
@@ -1453,6 +1465,7 @@ class Test {
   @Test
   public void suggestsVarUnused2() {
     refactoringHelper
+        .setArgs("-source", "21")
         .addInputLines(
             "Lib.java",
             """
@@ -1492,6 +1505,7 @@ class Test {
   @Test
   public void inheritsCanIgnoreReturnValue() {
     refactoringHelper
+        .setArgs("-source", "21")
         .addInputLines(
             "Super.java",
             """

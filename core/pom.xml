@@ -72,7 +72,7 @@
       <!-- MIT -->
       <groupId>org.pcollections</groupId>
       <artifactId>pcollections</artifactId>
-      <version>4.0.1</version>
+      <version>5.0.0</version>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
@@ -131,21 +131,21 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.testparameterinjector</groupId>
       <artifactId>test-parameter-injector</artifactId>
-      <version>1.16</version>
+      <version>1.22</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <!-- BSD New (3 clause) -->
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-core</artifactId>
-      <version>2.2</version>
+      <version>3.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <!-- BSD New (3 clause) -->
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-library</artifactId>
-      <version>2.2</version>
+      <version>3.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -173,28 +173,28 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.inject</groupId>
       <artifactId>guice</artifactId>
-      <version>5.1.0</version>
+      <version>7.0.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-assistedinject</artifactId>
-      <version>5.1.0</version>
+      <version>7.0.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-servlet</artifactId>
-      <version>5.1.0</version>
+      <version>7.0.0</version>
       <scope>test</scope>
     </dependency>
       <!-- Apache 2.0 -->
     <dependency>
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-testlib</artifactId>
-      <version>5.1.0</version>
+      <version>7.0.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -215,14 +215,14 @@
       <!-- BSD -->
       <groupId>org.jmock</groupId>
       <artifactId>jmock</artifactId>
-      <version>2.12.0</version>
+      <version>2.13.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <!-- BSD -->
       <groupId>org.jmock</groupId>
       <artifactId>jmock-junit4</artifactId>
-      <version>2.12.0</version>
+      <version>2.13.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -235,14 +235,14 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.dagger</groupId>
       <artifactId>dagger</artifactId>
-      <version>2.50</version>
+      <version>2.60</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
       <groupId>com.google.dagger</groupId>
       <artifactId>dagger-producers</artifactId>
-      <version>2.50</version>
+      <version>2.60</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -277,7 +277,7 @@
       <!-- ICU License -->
       <groupId>com.ibm.icu</groupId>
       <artifactId>icu4j</artifactId>
-      <version>74.2</version>
+      <version>78.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -298,7 +298,7 @@
       <!-- Apache 2.0 -->
       <groupId>joda-time</groupId>
       <artifactId>joda-time</artifactId>
-      <version>2.12.5</version>
+      <version>2.14.2</version>
       <scope>test</scope>
     </dependency>
 
@@ -327,7 +327,7 @@
       <!-- Apache 2.0 -->
       <groupId>org.easymock</groupId>
       <artifactId>easymock</artifactId>
-      <version>5.2.0</version>
+      <version>5.6.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -340,7 +340,7 @@
     <dependency>
       <groupId>org.threeten</groupId>
       <artifactId>threeten-extra</artifactId>
-      <version>1.7.2</version>
+      <version>1.10.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -360,6 +360,13 @@
       <artifactId>javax.inject</artifactId>
       <version>1</version>
     </dependency>
+    <dependency>
+      <!-- MIT -->
+      <groupId>org.checkerframework</groupId>
+      <artifactId>checker-qual</artifactId>
+      <version>4.2.0</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -367,7 +374,7 @@
       <extension>
         <groupId>kr.motd.maven</groupId>
         <artifactId>os-maven-plugin</artifactId>
-        <version>1.7.0</version>
+        <version>1.7.1</version>
       </extension>
     </extensions>
     <plugins>
@@ -425,6 +432,7 @@
                   <include>javax.inject:javax.inject</include>
                   <include>com.google.googlejavaformat:google-java-format</include>
                   <include>org.jspecify:jspecify</include>
+                  <include>org.safere:safere</include>
                 </includes>
               </artifactSet>
               <filters>

@@ -51,7 +51,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
-public class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
+public final class GuardedBySymbolResolver implements GuardedByBinder.Resolver {
 
   private final ClassSymbol enclosingClass;
   private final MethodInfo method;

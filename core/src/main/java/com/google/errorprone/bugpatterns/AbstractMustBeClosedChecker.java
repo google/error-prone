@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getReturnType;
@@ -44,6 +45,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.ForOverride;
 import com.google.errorprone.annotations.MustBeClosed;
@@ -82,6 +84,12 @@ import org.jspecify.annotations.Nullable;
  * {@link MustBeClosedChecker}.
  */
 public abstract class AbstractMustBeClosedChecker extends BugChecker {
+  private final boolean useAstHelpersEnclosingMethod;
+
+  protected AbstractMustBeClosedChecker(ErrorProneFlags flags) {
+    this.useAstHelpersEnclosingMethod =
+        flags.getBoolean("ASTHelpers:EnclosingMethodFix").orElse(true);
+  }
 
   private static final String MUST_BE_CLOSED_ANNOTATION_NAME =
       MustBeClosed.class.getCanonicalName();
@@ -249,7 +257,8 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
 
   private Optional<Change> checkClosed(
       ExpressionTree tree, VisitorState state, NameSuggester suggester) {
-    MethodTree callerMethodTree = enclosingMethod(state);
+    MethodTree callerMethodTree =
+        useAstHelpersEnclosingMethod ? findEnclosingMethod(state) : buggyFindEnclosingMethod(state);
     TreePath path = state.getPath();
     OUTER:
     while (true) {
@@ -357,9 +366,9 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
 
   /**
    * Returns the enclosing method of the given visitor state. Returns null if the state is within a
-   * lambda expression or anonymous class.
+   * lambda expression or anonymous class <b>or (bug!) other class-creation expression</b>.
    */
-  private static @Nullable MethodTree enclosingMethod(VisitorState state) {
+  private static @Nullable MethodTree buggyFindEnclosingMethod(VisitorState state) {
     for (Tree node : state.getPath().getParentPath()) {
       switch (node) {
         case LambdaExpressionTree let -> {

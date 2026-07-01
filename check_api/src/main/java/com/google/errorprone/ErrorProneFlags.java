@@ -191,7 +191,7 @@ public final class ErrorProneFlags implements Serializable {
   }
 
   /** Builder for Error Prone command-line flags object. Parses flags from strings. */
-  public static class Builder {
+  public static final class Builder {
 
     private final HashMap<String, String> flagsMap = new HashMap<>();
 

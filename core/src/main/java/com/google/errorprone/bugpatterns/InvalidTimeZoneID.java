@@ -30,7 +30,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import java.util.TimeZone;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /**
  * @author awturner@google.com (Andy Turner)

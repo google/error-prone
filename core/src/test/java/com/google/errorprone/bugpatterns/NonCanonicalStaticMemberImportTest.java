@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -24,13 +24,13 @@ import org.junit.runners.JUnit4;
 /** {@link NonCanonicalStaticMemberImport}Test */
 @RunWith(JUnit4.class)
 public class NonCanonicalStaticMemberImportTest {
-  private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(NonCanonicalStaticMemberImport.class, getClass());
+  private final BugCheckerRefactoringTestHelper refactoringHelper =
+      BugCheckerRefactoringTestHelper.newInstance(NonCanonicalStaticMemberImport.class, getClass());
 
   @Test
   public void positiveMethod() {
-    compilationHelper
-        .addSourceLines(
+    refactoringHelper
+        .addInputLines(
             "a/A.java",
             """
             package a;
@@ -45,7 +45,8 @@ public class NonCanonicalStaticMemberImportTest {
               }
             }
             """)
-        .addSourceLines(
+        .expectUnchanged()
+        .addInputLines(
             "b/B.java",
             """
             package b;
@@ -54,128 +55,23 @@ public class NonCanonicalStaticMemberImportTest {
 
             public class B extends A {}
             """)
-        .addSourceLines(
+        .expectUnchanged()
+        .addInputLines(
             "b/Test.java",
             """
             package b;
 
-            // BUG: Diagnostic contains: of 'bar'
             import static b.B.bar;
-            // BUG: Diagnostic contains: import static a.A.foo;
             import static b.B.foo;
 
             class Test {}
             """)
-        .doTest();
-  }
-
-  @Test
-  public void positiveField() {
-    compilationHelper
-        .addSourceLines(
-            "a/A.java",
-            """
-            package a;
-
-            public class A {
-              public static final int CONST = 42;
-            }
-            """)
-        .addSourceLines(
-            "b/B.java",
-            """
-            package b;
-
-            import a.A;
-
-            public class B extends A {}
-            """)
-        .addSourceLines(
+        .addOutputLines(
             "b/Test.java",
             """
             package b;
 
-            // BUG: Diagnostic contains: import static a.A.CONST;
-            import static b.B.CONST;
-
-            class Test {}
-            """)
-        .doTest();
-  }
-
-  // We can't test e.g. a.B.Inner.CONST (a double non-canonical reference), because
-  // they're illegal.
-  @Test
-  public void positiveClassAndField() {
-    compilationHelper
-        .addSourceLines(
-            "a/Super.java",
-            """
-            package a;
-
-            public class Super {
-              public static final int CONST = 42;
-            }
-            """)
-        .addSourceLines(
-            "a/A.java",
-            """
-            package a;
-
-            public class A {
-              public static class Inner extends Super {}
-            }
-            """)
-        .addSourceLines(
-            "b/B.java",
-            """
-            package b;
-
-            import a.A;
-
-            public class B extends A {}
-            """)
-        .addSourceLines(
-            "b/Test.java",
-            """
-            package b;
-
-            // BUG: Diagnostic contains: import static a.Super.CONST;
-            import static a.A.Inner.CONST;
-
-            class Test {}
-            """)
-        .doTest();
-  }
-
-  @Test
-  public void negativeMethod() {
-    compilationHelper
-        .addSourceLines(
-            "a/A.java",
-            """
-            package a;
-
-            public class A {
-              public static final int foo() {
-                return 42;
-              }
-            }
-            """)
-        .addSourceLines(
-            "b/B.java",
-            """
-            package b;
-
-            import a.A;
-
-            public class B extends A {}
-            """)
-        .addSourceLines(
-            "b/Test.java",
-            """
-            package b;
-
+            import static a.A.bar;
             import static a.A.foo;
 
             class Test {}
@@ -184,9 +80,9 @@ public class NonCanonicalStaticMemberImportTest {
   }
 
   @Test
-  public void negativeField() {
-    compilationHelper
-        .addSourceLines(
+  public void positiveField() {
+    refactoringHelper
+        .addInputLines(
             "a/A.java",
             """
             package a;
@@ -195,7 +91,8 @@ public class NonCanonicalStaticMemberImportTest {
               public static final int CONST = 42;
             }
             """)
-        .addSourceLines(
+        .expectUnchanged()
+        .addInputLines(
             "b/B.java",
             """
             package b;
@@ -204,7 +101,17 @@ public class NonCanonicalStaticMemberImportTest {
 
             public class B extends A {}
             """)
-        .addSourceLines(
+        .expectUnchanged()
+        .addInputLines(
+            "b/Test.java",
+            """
+            package b;
+
+            import static b.B.CONST;
+
+            class Test {}
+            """)
+        .addOutputLines(
             "b/Test.java",
             """
             package b;
@@ -216,10 +123,12 @@ public class NonCanonicalStaticMemberImportTest {
         .doTest();
   }
 
+  // We can't test e.g. a.B.Inner.CONST (a double non-canonical reference), because
+  // they're illegal.
   @Test
-  public void negativeClassAndField() {
-    compilationHelper
-        .addSourceLines(
+  public void positiveClassAndField() {
+    refactoringHelper
+        .addInputLines(
             "a/Super.java",
             """
             package a;
@@ -228,7 +137,8 @@ public class NonCanonicalStaticMemberImportTest {
               public static final int CONST = 42;
             }
             """)
-        .addSourceLines(
+        .expectUnchanged()
+        .addInputLines(
             "a/A.java",
             """
             package a;
@@ -237,7 +147,8 @@ public class NonCanonicalStaticMemberImportTest {
               public static class Inner extends Super {}
             }
             """)
-        .addSourceLines(
+        .expectUnchanged()
+        .addInputLines(
             "b/B.java",
             """
             package b;
@@ -246,7 +157,17 @@ public class NonCanonicalStaticMemberImportTest {
 
             public class B extends A {}
             """)
-        .addSourceLines(
+        .expectUnchanged()
+        .addInputLines(
+            "b/Test.java",
+            """
+            package b;
+
+            import static a.A.Inner.CONST;
+
+            class Test {}
+            """)
+        .addOutputLines(
             "b/Test.java",
             """
             package b;
@@ -255,6 +176,150 @@ public class NonCanonicalStaticMemberImportTest {
 
             class Test {}
             """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveMockitoAny() {
+    refactoringHelper
+        .addInputLines(
+            "b/Test.java",
+            """
+            package b;
+
+            import static org.mockito.Mockito.any;
+
+            class Test {}
+            """)
+        .addOutputLines(
+            "b/Test.java",
+            """
+            package b;
+
+            import static org.mockito.ArgumentMatchers.any;
+
+            class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeMethod() {
+    refactoringHelper
+        .addInputLines(
+            "a/A.java",
+            """
+            package a;
+
+            public class A {
+              public static final int foo() {
+                return 42;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "b/Test.java",
+            """
+            package b;
+
+            import static a.A.foo;
+
+            class Test {}
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void negativeField() {
+    refactoringHelper
+        .addInputLines(
+            "a/A.java",
+            """
+            package a;
+
+            public class A {
+              public static final int CONST = 42;
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "b/Test.java",
+            """
+            package b;
+
+            import static a.A.CONST;
+
+            class Test {}
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void negativeClassAndField() {
+    refactoringHelper
+        .addInputLines(
+            "a/Super.java",
+            """
+            package a;
+
+            public class Super {
+              public static final int CONST = 42;
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "a/A.java",
+            """
+            package a;
+
+            public class A {
+              public static class Inner extends Super {}
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "b/B.java",
+            """
+            package b;
+
+            import a.A;
+
+            public class B extends A {}
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "b/Test.java",
+            """
+            package b;
+
+            import static a.Super.CONST;
+
+            class Test {}
+            """)
+        .expectUnchanged()
         .doTest();
   }
 }

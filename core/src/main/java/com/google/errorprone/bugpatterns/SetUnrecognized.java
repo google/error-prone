@@ -33,7 +33,7 @@ import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /** A BugPattern; see the summary. */
 @BugPattern(

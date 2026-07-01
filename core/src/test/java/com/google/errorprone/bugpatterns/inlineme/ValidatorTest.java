@@ -18,10 +18,10 @@ package com.google.errorprone.bugpatterns.inlineme;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
-import java.util.regex.Pattern;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.safere.Pattern;
 
 /** Tests for the {@code @InlineMe} {@link Validator}. */
 @RunWith(JUnit4.class)
@@ -1019,5 +1019,28 @@ public class ValidatorTest {
   private BugCheckerRefactoringTestHelper getHelperInCleanupMode() {
     return BugCheckerRefactoringTestHelper.newInstance(Validator.class, getClass())
         .setArgs("-XepOpt:" + Validator.CLEANUP_INLINE_ME_FLAG + "=true");
+  }
+
+  @Test
+  public void instanceMethod_withClassLevelTypeParameter() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.ArrayList;
+
+            public final class Client<E> {
+              @InlineMe(replacement = "new ArrayList<E>()", imports = "java.util.ArrayList")
+              @Deprecated
+              // BUG: Diagnostic contains: deprecated or less visible API elements: E
+              public ArrayList<E> create() {
+                return new ArrayList<E>();
+              }
+            }
+            """)
+        .doTest();
   }
 }

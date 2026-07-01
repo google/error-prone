@@ -1046,4 +1046,198 @@ public final class PatternMatchingInstanceofTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void castVariableReassigned_noFinding() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String) {
+                  String s = (String) o;
+                  s = "new value";
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void castVariableIncremented_noFinding() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Integer) {
+                  Integer i = (Integer) o;
+                  i++;
+                  System.out.println(i);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void castVariableCompoundAssigned_noFinding() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof Integer) {
+                  Integer i = (Integer) o;
+                  i += 1;
+                  System.out.println(i);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void scopeExpansionClobbering_brokenRefactoring() {
+    // TODO: b/395603588 - This refactoring is broken because the pattern variable 's'
+    // scope expands and clashes with 'int s = 0'. It should be expectUnchanged().
+    helper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof String)) {
+                  return;
+                }
+                {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+                int s = 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof String s)) {
+                  return;
+                }
+                {
+                  System.out.println(s);
+                }
+                int s = 0;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void patternVariableScopeDoesNotOverlapWithLaterDeclaration() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+                int s = 0;
+                System.out.println(s);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String s) {
+
+                  System.out.println(s);
+                }
+                int s = 0;
+                System.out.println(s);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void parenthesizedOperand() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String) {
+                  String s = (String) (o);
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String s) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void parenthesizedCastAndOperand() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String) {
+                  String s = ((String) (o));
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String s) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }

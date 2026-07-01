@@ -132,7 +132,7 @@ public class JUnitParameterMethodNotFound extends BugChecker implements MethodTr
     }
 
     return buildDescription(tree)
-        .setMessage(String.format("%s method(s) not found", String.join(",", missingMethods)))
+        .setMessage("%s method(s) not found", String.join(",", missingMethods))
         .build();
   }
 

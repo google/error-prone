@@ -39,7 +39,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /** Analyzes trees for references to their enclosing instance. */
-public class CanBeStaticAnalyzer extends TreeScanner {
+public final class CanBeStaticAnalyzer extends TreeScanner {
 
   /** Returns true if the tree references its enclosing class. */
   public static boolean referencesOuter(Tree tree, Symbol owner, VisitorState state) {

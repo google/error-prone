@@ -948,20 +948,15 @@ public class MissingFailNegativeCases extends TestCase {
               @Test
               public void f() throws Exception {
                 Path p = Paths.get("NOSUCH");
-                IOException e =
-                    assertThrows(
-                        IOException.class,
-                        () -> {
-                          Files.readAllBytes(p);
-                          Files.readAllBytes(p);
-                        });
+                Files.readAllBytes(p);
+                var e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
                 assertThat(e).hasMessageThat().contains("NOSUCH");
               }
 
               @Test
               public void g() throws Exception {
                 Path p = Paths.get("NOSUCH");
-                IOException e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                var e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
                 assertThat(e).hasMessageThat().contains("NOSUCH");
               }
             }
@@ -1109,9 +1104,9 @@ public class MissingFailNegativeCases extends TestCase {
               @Test
               public void test() throws Exception {
                 Path p = Paths.get("NOSUCH");
-                IOException e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                var e = assertThrows(IOException.class, () -> Files.readAllBytes(p));
                 assertThat(e).hasMessageThat().contains("NOSUCH");
-                IOException e2 = assertThrows(IOException.class, () -> Files.readAllBytes(p));
+                var e2 = assertThrows(IOException.class, () -> Files.readAllBytes(p));
                 assertThat(e2).hasMessageThat().contains("NOSUCH");
               }
             }

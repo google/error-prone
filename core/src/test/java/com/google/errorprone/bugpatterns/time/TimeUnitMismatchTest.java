@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.time;
 
 import static com.google.common.truth.Truth.assertWithMessage;
+import static com.google.common.truth.TruthJUnit.assume;
 import static com.google.errorprone.bugpatterns.time.TimeUnitMismatch.unitSuggestedByName;
 import static java.util.concurrent.TimeUnit.MICROSECONDS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -296,6 +297,23 @@ public class TimeUnitMismatchTest {
             class Test {
               static int MILLIS_PER_MINUTE = 42;
               long fooMicros = 0 * MILLIS_PER_MINUTE;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unnamedVariable() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test(int startMillis) throws Exception {
+                int _ = startMillis;
+                try (AutoCloseable _ = () -> {}) {}
+              }
             }
             """)
         .doTest();

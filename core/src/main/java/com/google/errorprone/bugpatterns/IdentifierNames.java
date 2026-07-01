@@ -38,15 +38,19 @@ final class IdentifierNames {
   }
 
   static boolean isConformantLowerCamelName(String name) {
-    return underscoresAreFlankedByDigits(name)
-        && !isUpperCase(name.charAt(0))
+    return hasConformantStructure(name, /* expectUpperCase= */ false)
         && !PROBABLE_INITIALISM.matcher(name).find();
   }
 
   boolean isConformantTypeName(String name) {
-    return underscoresAreFlankedByDigits(name)
-        && isUpperCase(name.charAt(0))
+    return hasConformantStructure(name, /* expectUpperCase= */ true)
         && (allowInitialismsInTypeName || !PROBABLE_INITIALISM.matcher(name).find());
+  }
+
+  private static boolean hasConformantStructure(String name, boolean expectUpperCase) {
+    return !name.contains("$")
+        && underscoresAreFlankedByDigits(name)
+        && isUpperCase(name.charAt(0)) == expectUpperCase;
   }
 
   private static boolean underscoresAreFlankedByDigits(String name) {

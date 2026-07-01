@@ -30,6 +30,8 @@ import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.typeFromClass;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -99,13 +101,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import org.safere.Pattern;
 
 /**
  * Static factory methods which make the DSL read more fluently. Since matchers are run in a tight
@@ -114,7 +116,7 @@ import javax.lang.model.type.TypeMirror;
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class Matchers {
+public final class Matchers {
 
   private Matchers() {}
 
@@ -598,21 +600,37 @@ public class Matchers {
     };
   }
 
+  static Matcher<ExpressionTree> stringLiteral(Predicate<String> matcher) {
+    return (tree, state) ->
+        tree instanceof LiteralTree literalTree
+            && literalTree.getValue() instanceof String string
+            && matcher.test(string);
+  }
+
   /**
    * Matches a Literal AST node if it is a string literal with the given value. For example, {@code
    * stringLiteral("thing")} matches the literal {@code "thing"}
    */
   public static Matcher<ExpressionTree> stringLiteral(String value) {
-    return new StringLiteral(value);
+    return stringLiteral(value::equals);
   }
 
   /**
-   * Matches a Literal AST node if it is a string literal which matches the given {@link Pattern}.
+   * Matches a Literal AST node if it is a string literal which matches the given {@code Pattern}.
    *
    * @see #stringLiteral(String)
    */
   public static Matcher<ExpressionTree> stringLiteral(Pattern pattern) {
-    return new StringLiteral(pattern);
+    return stringLiteral(pattern.asPredicate());
+  }
+
+  /**
+   * Matches a Literal AST node if it is a string literal which matches the given {@code Pattern}.
+   *
+   * @see #stringLiteral(String)
+   */
+  public static Matcher<ExpressionTree> stringLiteral(java.util.regex.Pattern pattern) {
+    return stringLiteral(pattern.asPredicate());
   }
 
   public static Matcher<ExpressionTree> booleanLiteral(boolean value) {
@@ -797,9 +815,6 @@ public class Matchers {
   public static Matcher<MethodTree> hasAnnotationOnAnyOverriddenMethod(String annotationClass) {
     return (tree, state) -> {
       MethodSymbol methodSym = getSymbol(tree);
-      if (methodSym == null) {
-        return false;
-      }
       if (ASTHelpers.hasAnnotation(methodSym, annotationClass, state)) {
         return true;
       }
@@ -1110,13 +1125,23 @@ public class Matchers {
   /** Matches if this Tree is enclosed by either a synchronized block or a synchronized method. */
   public static <T extends Tree> Matcher<T> inSynchronized() {
     return (tree, state) -> {
+      // TODO(cpovirk): Look for `synchronized` only within the current method?
       SynchronizedTree synchronizedTree =
           ASTHelpers.findEnclosingNode(state.getPath(), SynchronizedTree.class);
       if (synchronizedTree != null) {
         return true;
       }
 
-      MethodTree methodTree = ASTHelpers.findEnclosingNode(state.getPath(), MethodTree.class);
+      boolean enclosingMethodFix =
+          state
+              .errorProneOptions()
+              .getFlags()
+              .getBoolean("ASTHelpers:EnclosingMethodFix")
+              .orElse(true);
+      MethodTree methodTree =
+          enclosingMethodFix
+              ? findEnclosingMethod(state)
+              : findEnclosingNode(state.getPath(), MethodTree.class);
       return methodTree != null
           && methodTree.getModifiers().getFlags().contains(Modifier.SYNCHRONIZED);
     };

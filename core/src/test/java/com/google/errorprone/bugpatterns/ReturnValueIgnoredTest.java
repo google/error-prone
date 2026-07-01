@@ -763,6 +763,7 @@ public class ReturnValueIgnoredTest {
   @Test
   public void refactoringDeletesConstantExpressionCall() {
     refactoringHelper
+        .setArgs("-source", "21")
         .addInputLines(
             "Test.java",
             """
@@ -825,6 +826,7 @@ public class ReturnValueIgnoredTest {
   @Test
   public void refactoringDoesNotAssignToOriginalForTypeArgumentMismatch() {
     refactoringHelper
+        .setArgs("-source", "21")
         .addInputLines(
             "Test.java",
             """

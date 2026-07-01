@@ -17,7 +17,10 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.getReceiver;
+import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -27,8 +30,8 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
@@ -77,14 +80,14 @@ public class ArrayToString extends AbstractToString {
     // If the array is the result of calling e.getStackTrace(), replace
     // e.getStackTrace().toString() with Guava's Throwables.getStackTraceAsString(e).
     if (GET_STACK_TRACE.matches(stringifiedExpr, state)) {
+      var fix = SuggestedFix.builder();
       return Optional.of(
-          SuggestedFix.builder()
-              .addImport("com.google.common.base.Throwables")
-              .replace(
+          fix.replace(
                   toStringCall,
                   String.format(
-                      "Throwables.getStackTraceAsString(%s)",
-                      state.getSourceForNode(ASTHelpers.getReceiver(stringifiedExpr))))
+                      "%s.getStackTraceAsString(%s)",
+                      qualifyType(state, fix, "com.google.common.base.Throwables"),
+                      state.getSourceForNode(getReceiver(stringifiedExpr))))
               .build());
     }
     // e.g. String.valueOf(theArray) -> Arrays.toString(theArray)
@@ -93,21 +96,31 @@ public class ArrayToString extends AbstractToString {
     return fix(toStringCall, stringifiedExpr, state);
   }
 
-  private static Optional<Fix> fix(Tree toStringCall, Tree stringifiedExpr, VisitorState state) {
-    String method = isNestedArray(stringifiedExpr, state) ? "deepToString" : "toString";
-
+  @Override
+  protected Optional<Fix> memberReferenceFix(
+      MemberReferenceTree tree, Type receiverType, VisitorState state) {
+    String method = isNestedArray(receiverType, state) ? "deepToString" : "toString";
+    var fix = SuggestedFix.builder();
     return Optional.of(
-        SuggestedFix.builder()
-            .addImport("java.util.Arrays")
-            .replace(
+        fix.replace(tree, qualifyType(state, fix, "java.util.Arrays") + "::" + method).build());
+  }
+
+  private static Optional<Fix> fix(Tree toStringCall, Tree stringifiedExpr, VisitorState state) {
+    String method = isNestedArray(getType(stringifiedExpr), state) ? "deepToString" : "toString";
+    var fix = SuggestedFix.builder();
+    return Optional.of(
+        fix.replace(
                 toStringCall,
-                String.format("Arrays.%s(%s)", method, state.getSourceForNode(stringifiedExpr)))
+                String.format(
+                    "%s.%s(%s)",
+                    qualifyType(state, fix, "java.util.Arrays"),
+                    method,
+                    state.getSourceForNode(stringifiedExpr)))
             .build());
   }
 
-  private static boolean isNestedArray(Tree stringifiedExpr, VisitorState state) {
+  private static boolean isNestedArray(Type type, VisitorState state) {
     Types types = state.getTypes();
-    Type withType = ASTHelpers.getType(stringifiedExpr);
-    return withType != null && types.isArray(withType) && types.isArray(types.elemtype(withType));
+    return type != null && types.isArray(type) && types.isArray(types.elemtype(type));
   }
 }

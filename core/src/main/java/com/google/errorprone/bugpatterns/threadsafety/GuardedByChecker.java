@@ -240,7 +240,7 @@ public class GuardedByChecker extends BugChecker
       return Description.NO_MATCH;
     }
     return buildDescription(tree)
-        .setMessage(String.format("Invalid @GuardedBy expression: %s", result.message()))
+        .setMessage("Invalid @GuardedBy expression: %s", result.message())
         .build();
   }
 

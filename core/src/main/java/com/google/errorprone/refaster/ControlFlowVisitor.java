@@ -52,7 +52,7 @@ import javax.lang.model.element.Name;
  *
  * @author lowasser@google.com (Louis Wasserman)
  */
-public class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
+public final class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> {
   public static final ControlFlowVisitor INSTANCE = new ControlFlowVisitor();
 
   /**
@@ -120,7 +120,7 @@ public class ControlFlowVisitor extends SimpleTreeVisitor<Result, BreakContext> 
     abstract Result then(Result other);
   }
 
-  static class BreakContext {
+  static final class BreakContext {
     final Set<Name> internalLabels;
     int loopDepth;
 

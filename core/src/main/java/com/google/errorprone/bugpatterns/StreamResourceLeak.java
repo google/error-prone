@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -44,6 +45,7 @@ import com.sun.source.util.TreeScanner;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -53,6 +55,10 @@ import java.util.Optional;
             + " try-with-resources",
     severity = WARNING)
 public class StreamResourceLeak extends AbstractMustBeClosedChecker implements MethodTreeMatcher {
+  @Inject
+  StreamResourceLeak(ErrorProneFlags flags) {
+    super(flags);
+  }
 
   public static final Matcher<ExpressionTree> MATCHER =
       MethodMatchers.staticMethod()

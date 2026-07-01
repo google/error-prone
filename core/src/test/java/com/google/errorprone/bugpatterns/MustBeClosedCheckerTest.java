@@ -42,6 +42,7 @@ package com.google.errorprone.bugpatterns.testdata;
 import static java.io.OutputStream.nullOutputStream;
 
 import com.google.errorprone.annotations.MustBeClosed;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -296,6 +297,18 @@ class MustBeClosedCheckerPositiveCases {
         // handled above
         mustBeClosedOutputStream());
   }
+
+  OutputStream nestedDecoratorMustBeClosed() {
+    class MustBeClosedFilter extends FilterOutputStream {
+      @MustBeClosed
+      MustBeClosedFilter(OutputStream out) {
+        super(out);
+      }
+    }
+    return new BufferedOutputStream(
+      // BUG: Diagnostic contains:
+        new MustBeClosedFilter(mustBeClosedOutputStream()));
+  }
 }
 """;
 
@@ -526,6 +539,7 @@ package com.google.errorprone.bugpatterns.testdata;
 import static java.io.OutputStream.nullOutputStream;
 
 import com.google.errorprone.annotations.MustBeClosed;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -804,6 +818,19 @@ class MustBeClosedCheckerPositiveCases {
     return new MustBeClosedFilter(
         // handled above
         mustBeClosedOutputStream());
+  }
+
+  @MustBeClosed
+  OutputStream nestedDecoratorMustBeClosed() {
+    class MustBeClosedFilter extends FilterOutputStream {
+      @MustBeClosed
+      MustBeClosedFilter(OutputStream out) {
+        super(out);
+      }
+    }
+    return new BufferedOutputStream(
+        // BUG: Diagnostic contains:
+        new MustBeClosedFilter(mustBeClosedOutputStream()));
   }
 }
 """)

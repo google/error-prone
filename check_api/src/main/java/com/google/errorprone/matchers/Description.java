@@ -26,6 +26,8 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.CheckReturnValue;
+import com.google.errorprone.annotations.FormatMethod;
+import com.google.errorprone.annotations.FormatString;
 import com.google.errorprone.annotations.RestrictedApi;
 import com.google.errorprone.fixes.ErrorPronePosition;
 import com.google.errorprone.fixes.Fix;
@@ -40,7 +42,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class Description {
+public final class Description {
   /** Describes the sentinel value of the case where the match failed. */
   public static final Description NO_MATCH =
       new Description(
@@ -149,7 +151,7 @@ public class Description {
   }
 
   /** Builder for {@code Description}s. */
-  public static class Builder {
+  public static final class Builder {
     private final ErrorPronePosition position;
     private final String name;
     private String linkUrl;
@@ -223,6 +225,20 @@ public class Description {
       checkNotNull(message, "message must not be null");
       this.rawMessage = message;
       return this;
+    }
+
+    /**
+     * Set a custom error message for this {@code Description}. The custom message will be used
+     * instead of the summary field as the text for the diagnostic message.
+     *
+     * @param format A custom error message format string without the check name ("[checkname]") or
+     *     link
+     * @param args arguments for the format string
+     */
+    @CanIgnoreReturnValue
+    @FormatMethod
+    public Builder setMessage(@FormatString String format, Object... args) {
+      return setMessage(String.format(format, args));
     }
 
     /**

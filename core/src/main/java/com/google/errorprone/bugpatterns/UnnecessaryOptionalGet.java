@@ -86,13 +86,8 @@ public final class UnnecessaryOptionalGet extends BugChecker
     VariableTree arg = getOnlyElement(lambdaExpressionTree.getParameters());
     SuggestedFixes.VariableNamer variableNamer = SuggestedFixes.variableNamer(state);
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    String replacement;
-    if (arg.getName().isEmpty()) {
-      replacement = variableNamer.avoidShadowing("value");
-      fix.merge(SuggestedFixes.renameVariable(arg, replacement, state));
-    } else {
-      replacement = arg.getName().toString();
-    }
+    String replacement =
+        arg.getName().isEmpty() ? variableNamer.avoidShadowing("value") : arg.getName().toString();
     new TreeScanner<Void, VisitorState>() {
       @Override
       public Void visitMethodInvocation(
@@ -106,6 +101,9 @@ public final class UnnecessaryOptionalGet extends BugChecker
     }.scan(onlyArg, state);
     if (fix.isEmpty()) {
       return Description.NO_MATCH;
+    }
+    if (arg.getName().isEmpty()) {
+      fix.merge(SuggestedFixes.renameVariable(arg, replacement, state));
     }
     return describeMatch(tree, fix.build());
   }

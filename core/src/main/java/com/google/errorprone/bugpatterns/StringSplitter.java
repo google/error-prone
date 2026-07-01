@@ -141,84 +141,89 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
       }
     }.scan(enclosing, null);
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    // a mutable boolean to track whether we want split or splitToList
-    boolean[] needsList = {false};
-    boolean[] needsMutableList = {false};
-    // try to fix all uses of the variable
-    for (TreePath path : uses) {
-      class UseFixer extends TreePathScanner<Boolean, Void> {
-        @Override
-        public Boolean visitEnhancedForLoop(EnhancedForLoopTree tree, Void unused) {
-          // The syntax for looping over an array or iterable variable is the same, so there's no
-          // fix here.
-          return sym.equals(ASTHelpers.getSymbol(tree.getExpression()));
-        }
+    var useFixer =
+        new TreePathScanner<Boolean, Void>() {
+          // mutable booleans to track whether we want split or splitToList
+          boolean needsList = false;
+          boolean needsMutableList = false;
 
-        @Override
-        public Boolean visitArrayAccess(ArrayAccessTree tree, Void unused) {
-          // replace `pieces[N]` with `pieces.get(N)`
-          ExpressionTree expression = tree.getExpression();
-          ExpressionTree index = tree.getIndex();
-          if (!sym.equals(ASTHelpers.getSymbol(expression))) {
-            return false;
+          @Override
+          public Boolean visitEnhancedForLoop(EnhancedForLoopTree tree, Void unused) {
+            // The syntax for looping over an array or iterable variable is the same, so there's no
+            // fix here.
+            return sym.equals(ASTHelpers.getSymbol(tree.getExpression()));
           }
-          Tree parent = getCurrentPath().getParentPath().getLeaf();
-          if (parent instanceof AssignmentTree assignmentTree
-              && assignmentTree.getVariable() == tree) {
-            fix.replace(
-                    /* startPos= */ state.getEndPosition(expression),
-                    /* endPos= */ getStartPosition(index),
-                    ".set(")
-                .replace(
-                    /* startPos= */ state.getEndPosition(index),
-                    /* endPos= */ getStartPosition(assignmentTree.getExpression()),
-                    ", ")
-                .postfixWith(assignmentTree, ")");
-            needsMutableList[0] = true;
-          } else {
-            fix.replace(
-                    /* startPos= */ state.getEndPosition(expression),
-                    /* endPos= */ getStartPosition(index),
-                    ".get(")
-                .replace(state.getEndPosition(index), state.getEndPosition(tree), ")");
-          }
-          // we want a list for indexing
-          needsList[0] = true;
-          return true;
-        }
 
-        @Override
-        public Boolean visitMemberSelect(MemberSelectTree tree, Void unused) {
-          // replace `pieces.length` with `pieces.size`
-          if (sym.equals(ASTHelpers.getSymbol(tree.getExpression()))
-              && tree.getIdentifier().contentEquals("length")) {
-            fix.replace(
-                state.getEndPosition(tree.getExpression()), state.getEndPosition(tree), ".size()");
-            needsList[0] = true;
+          @Override
+          public Boolean visitArrayAccess(ArrayAccessTree tree, Void unused) {
+            // replace `pieces[N]` with `pieces.get(N)`
+            ExpressionTree expression = tree.getExpression();
+            ExpressionTree index = tree.getIndex();
+            if (!sym.equals(ASTHelpers.getSymbol(expression))) {
+              return false;
+            }
+            Tree parent = getCurrentPath().getParentPath().getLeaf();
+            if (parent instanceof AssignmentTree assignmentTree
+                && assignmentTree.getVariable() == tree) {
+              fix.replace(
+                      /* startPos= */ state.getEndPosition(expression),
+                      /* endPos= */ getStartPosition(index),
+                      ".set(")
+                  .replace(
+                      /* startPos= */ state.getEndPosition(index),
+                      /* endPos= */ getStartPosition(assignmentTree.getExpression()),
+                      ", ")
+                  .postfixWith(assignmentTree, ")");
+              needsMutableList = true;
+            } else {
+              fix.replace(
+                      /* startPos= */ state.getEndPosition(expression),
+                      /* endPos= */ getStartPosition(index),
+                      ".get(")
+                  .replace(state.getEndPosition(index), state.getEndPosition(tree), ")");
+            }
+            // we want a list for indexing
+            needsList = true;
             return true;
           }
-          return false;
-        }
-      }
-      if (!firstNonNull(new UseFixer().scan(path.getParentPath(), null), false)) {
+
+          @Override
+          public Boolean visitMemberSelect(MemberSelectTree tree, Void unused) {
+            // replace `pieces.length` with `pieces.size`
+            if (sym.equals(ASTHelpers.getSymbol(tree.getExpression()))
+                && tree.getIdentifier().contentEquals("length")) {
+              fix.replace(
+                  state.getEndPosition(tree.getExpression()),
+                  state.getEndPosition(tree),
+                  ".size()");
+              needsList = true;
+              return true;
+            }
+            return false;
+          }
+        };
+    // try to fix all uses of the variable
+    for (TreePath path : uses) {
+      if (!firstNonNull(useFixer.scan(path.getParentPath(), null), false)) {
         return Optional.empty();
       }
     }
 
     Tree varType = varTree.getType();
     boolean isImplicitlyTyped = hasImplicitType(varTree, state); // Is it a use of `var`?
-    if (needsList[0]) {
+    if (useFixer.needsList) {
       if (!isImplicitlyTyped) {
         fix.replace(varType, "List<String>").addImport("java.util.List");
       }
       return Optional.of(
-          replaceWithSplitter(fix, tree, arg, state, "splitToList", needsMutableList[0]).build());
+          replaceWithSplitter(fix, tree, arg, state, "splitToList", useFixer.needsMutableList)
+              .build());
     }
     if (!isImplicitlyTyped) {
       fix.replace(varType, "Iterable<String>");
     }
     return Optional.of(
-        replaceWithSplitter(fix, tree, arg, state, "split", needsMutableList[0]).build());
+        replaceWithSplitter(fix, tree, arg, state, "split", useFixer.needsMutableList).build());
   }
 
   private static String getMethodAndArgument(

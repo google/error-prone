@@ -70,6 +70,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
@@ -329,7 +330,10 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
 
   private Description describeInvocationResultIgnored(
       ExpressionTree invocationTree, String shortCall, MethodSymbol symbol, VisitorState state) {
-    String assignmentToUnused = "var unused = ...";
+    String assignmentToUnused =
+        SourceVersion.supportsUnnamedVariablesAndPatterns(state.context)
+            ? "var _ = ..."
+            : "var unused = ...";
     String message =
         invocationResultIgnored(shortCall, assignmentToUnused, apiTrailer(symbol, state));
     return buildDescription(invocationTree)
@@ -373,7 +377,11 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
             + "."
             + state.getTypes().findDescriptorSymbol(getType(tree).asElement()).getSimpleName();
     String methodReference = state.getSourceForNode(tree);
-    String assignmentLambda = parensAndMaybeEllipsis + " -> { var unused = ...; }";
+    String assignmentLambda =
+        parensAndMaybeEllipsis
+            + (SourceVersion.supportsUnnamedVariablesAndPatterns(state.context)
+                ? " -> { var _ = ...; }"
+                : " -> { var unused = ...; }");
     String message =
         methodReferenceIgnoresResult(
             shortCall,

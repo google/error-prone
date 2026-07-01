@@ -35,7 +35,7 @@ import org.jspecify.annotations.Nullable;
  * An accessor for information about a single bug checker, including the metadata in the check's
  * {@code @BugPattern} annotation and the class that implements the check.
  */
-public class BugCheckerInfo implements Serializable {
+public final class BugCheckerInfo implements Serializable {
 
   /** The BugChecker class. */
   private final Class<? extends BugChecker> checker;

@@ -30,7 +30,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /** Flags fields which would be better expressed as time types rather than primitive integers. */
 @BugPattern(

@@ -50,8 +50,8 @@ import com.sun.tools.javac.code.Symbol;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
-import java.util.regex.Pattern;
 import org.jspecify.annotations.Nullable;
+import org.safere.Pattern;
 
 /**
  * Migrates Truth subjects from a manual "test and fail" approach to one using {@code

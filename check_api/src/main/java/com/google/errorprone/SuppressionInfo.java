@@ -16,6 +16,8 @@
 
 package com.google.errorprone;
 
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.Immutable;
@@ -27,14 +29,12 @@ import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Pair;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Immutable container of "suppression signals" - annotations or other information gathered from
@@ -47,7 +47,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @Immutable
 @CheckReturnValue
-public class SuppressionInfo {
+public final class SuppressionInfo {
   public static final SuppressionInfo EMPTY =
       new SuppressionInfo(ImmutableSet.of(), ImmutableSet.of(), false);
 
@@ -101,17 +101,20 @@ public class SuppressionInfo {
    * {@code isGenerated} is determined by inspecting the annotations of the outermost class so that
    * matchers on {@link CompilationUnitTree} will also be suppressed.
    */
+  // TODO(cpovirk): Remove this unused `state` parameter?
   public SuppressionInfo forCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-    AtomicBoolean generated = new AtomicBoolean(false);
-    new SimpleTreeVisitor<Void, Void>() {
-      @Override
-      public Void visitClass(ClassTree node, Void unused) {
-        ClassSymbol symbol = ASTHelpers.getSymbol(node);
-        generated.compareAndSet(false, symbol != null && isGenerated(symbol));
-        return null;
-      }
-    }.visit(tree.getTypeDecls(), null);
-    return new SuppressionInfo(suppressWarningsStrings, customSuppressions, generated.get());
+    var visitor =
+        new SimpleTreeVisitor<Void, Void>() {
+          boolean generated;
+
+          @Override
+          public Void visitClass(ClassTree node, Void unused) {
+            generated |= isGenerated(getSymbol(node));
+            return null;
+          }
+        };
+    visitor.visit(tree.getTypeDecls(), null);
+    return new SuppressionInfo(suppressWarningsStrings, customSuppressions, visitor.generated);
   }
 
   /**

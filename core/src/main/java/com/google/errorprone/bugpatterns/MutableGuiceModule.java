@@ -55,9 +55,6 @@ public class MutableGuiceModule extends BugChecker implements VariableTreeMatche
       return NO_MATCH;
     }
     VarSymbol sym = getSymbol(tree);
-    if (sym == null) {
-      return NO_MATCH;
-    }
     if (!sym.getKind().equals(ElementKind.FIELD)) {
       return NO_MATCH;
     }

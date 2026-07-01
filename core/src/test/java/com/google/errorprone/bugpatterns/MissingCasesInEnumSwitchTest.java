@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -496,6 +498,121 @@ public class MissingCasesInEnumSwitchTest {
                       case TWO -> 2;
                       // fallback for library skew
                       default -> -1;
+                    };
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switch_exhaustive_noError() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                switch (c) {
+                  case ONE -> System.out.println("ONE");
+                  case TWO -> System.out.println("TWO");
+                  case Case ccc -> System.out.println("OTHER");
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switch_exhaustiveTrueGuard_noError() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                switch (c) {
+                  case ONE -> {
+                    System.out.println("ONE");
+                  }
+                  case TWO -> {
+                    System.out.println("TWO");
+                  }
+                  case Case _ when (true) -> {
+                    System.out.println("OTHER");
+                  }
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switch_nonExhaustiveNonLiteralGuard_error() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                // BUG: Diagnostic contains:
+                switch (c) {
+                  case ONE -> {
+                    System.out.println("ONE");
+                  }
+                  case TWO -> {
+                    System.out.println("TWO");
+                  }
+                  case Case ccc when false || true -> {
+                    System.out.println("OTHER");
+                  }
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switchExpression_exhaustive_noError() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              enum Case {
+                ONE,
+                TWO,
+                THREE
+              }
+
+              void m(Case c) {
+                int x =
+                    switch (c) {
+                      case ONE -> 1;
+                      case TWO -> 2;
+                      case Case ccc -> 3;
                     };
               }
             }

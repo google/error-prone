@@ -64,9 +64,13 @@ final class CreatesDuplicateCallHeuristic implements Heuristic {
    * Find all the other calls to {@code calledMethod} within the method (or class) which enclosed
    * the original call.
    *
-   * <p>We are interested in two different cases: 1) where there are other calls to the method we
-   * are calling; 2) declarations of the method we are calling (this catches the case when there is
-   * a recursive call with the arguments correctly swapped).
+   * <p>We are interested in two different cases:
+   *
+   * <ol>
+   *   <li>where there are other calls to the method we are calling
+   *   <li>declarations of the method we are calling (this catches the case when there is a
+   *       recursive call with the arguments correctly swapped).
+   * </ol>
    *
    * @param calledMethod is the method call we are analysing for swaps
    * @param currentNode is the tree node the method call occurred at

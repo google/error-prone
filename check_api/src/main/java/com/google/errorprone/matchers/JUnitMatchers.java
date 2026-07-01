@@ -81,9 +81,6 @@ public final class JUnitMatchers {
    */
   public static boolean hasJUnitAnnotation(MethodTree tree, VisitorState state) {
     MethodSymbol methodSym = getSymbol(tree);
-    if (methodSym == null) {
-      return false;
-    }
     if (hasJUnitAttr(methodSym)) {
       return true;
     }

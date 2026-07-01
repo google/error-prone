@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
+import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -32,6 +33,7 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.Modifier.ABSTRACT;
@@ -62,7 +64,6 @@ import com.sun.tools.javac.code.Type;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Pattern;
 import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
@@ -264,6 +265,7 @@ public final class ConstantExpressions {
   }
 
   public Optional<ConstantExpression> constantExpression(ExpressionTree tree, VisitorState state) {
+    tree = stripParentheses(tree);
     if (tree.getKind().equals(Kind.EQUAL_TO) || tree.getKind().equals(Kind.NOT_EQUAL_TO)) {
       BinaryTree binaryTree = (BinaryTree) tree;
 
@@ -351,8 +353,6 @@ public final class ConstantExpressions {
     default void visitIdentifier(Symbol identifier) {}
   }
 
-  private static final Pattern NOT_NOW = Pattern.compile("^?!(now)");
-
   private final Matcher<ExpressionTree> basePureMethods =
       anyOf(
           staticMethod()
@@ -405,12 +405,17 @@ public final class ConstantExpressions {
               .withParameters("long"),
           constructor().forClass("org.joda.time.Instant").withParameters("long"),
           constructor().forClass("org.joda.time.DateTime").withParameters("long"),
-          staticMethod().onClass("java.time.LocalDate").withNameMatching(NOT_NOW),
-          staticMethod().onClass("java.time.LocalDateTime").withNameMatching(NOT_NOW),
-          staticMethod().onClass("java.time.LocalTime").withNameMatching(NOT_NOW),
-          staticMethod().onClass("java.time.MonthDay"),
-          staticMethod().onClass("java.time.OffsetDateTime").withNameMatching(NOT_NOW),
-          staticMethod().onClass("java.time.OffsetTime").withNameMatching(NOT_NOW),
+          allOf(
+              staticMethod()
+                  .onClassAny(
+                      "java.time.LocalDate",
+                      "java.time.LocalDateTime",
+                      "java.time.LocalTime",
+                      "java.time.OffsetDateTime",
+                      "java.time.OffsetTime",
+                      "java.time.ZonedDateTime",
+                      "java.time.MonthDay"),
+              not(staticMethod().anyClass().named("now"))),
           staticMethod()
               .onClassAny(
                   "java.time.Period",
@@ -419,7 +424,6 @@ public final class ConstantExpressions {
                   "java.time.ZoneId",
                   "java.time.ZoneOffset"),
           instanceMethod().onDescendantOf("java.lang.String"),
-          staticMethod().onClass("java.time.ZonedDateTime").withNameMatching(NOT_NOW),
           staticMethod()
               .onClassAny(
                   "java.util.Optional",

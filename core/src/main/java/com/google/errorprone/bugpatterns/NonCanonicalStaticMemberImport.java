@@ -35,6 +35,8 @@ import com.sun.source.tree.ImportTree;
     summary = "Static import of member uses non-canonical name",
     severity = WARNING,
     documentSuppression = false)
+// TODO(b/516778721): Enable this as an AutoKlippy:
+// @RefactoringMetadata(automationStatus = FOR_GLOBAL_APPROVAL, behaviorChanges = NO_KNOWN_ISSUES)
 public class NonCanonicalStaticMemberImport extends BugChecker implements ImportTreeMatcher {
 
   @Override

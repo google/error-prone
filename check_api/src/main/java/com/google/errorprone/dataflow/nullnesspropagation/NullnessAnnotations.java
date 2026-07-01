@@ -29,7 +29,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -42,9 +41,10 @@ import javax.lang.model.type.IntersectionType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.type.TypeVariable;
 import org.jspecify.annotations.Nullable;
+import org.safere.Pattern;
 
 /** Utilities to extract {@link Nullness} from annotations. */
-public class NullnessAnnotations {
+public final class NullnessAnnotations {
   // TODO(kmb): Correctly handle JSR 305 @Nonnull(NEVER) etc.
   private static final Predicate<String> ANNOTATION_RELEVANT_TO_NULLNESS =
       Pattern.compile(

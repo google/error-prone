@@ -47,12 +47,12 @@ import com.sun.tools.javac.util.PropagatedException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.regex.Pattern;
 import javax.tools.JavaFileObject;
+import org.safere.Pattern;
 
 /** A {@link TaskListener} that runs Error Prone over attributed compilation units. */
 @Trusted
-public class ErrorProneAnalyzer implements TaskListener {
+public final class ErrorProneAnalyzer implements TaskListener {
 
   // The set of trees that have already been scanned.
   private final Set<Tree> seen = new HashSet<>();

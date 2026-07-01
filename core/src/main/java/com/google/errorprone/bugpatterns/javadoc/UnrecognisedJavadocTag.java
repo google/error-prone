@@ -23,9 +23,11 @@ import static com.google.errorprone.bugpatterns.javadoc.Utils.getEndPosition;
 import static com.google.errorprone.bugpatterns.javadoc.Utils.getStartPosition;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableRangeSet;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Range;
+import com.google.common.collect.RangeSet;
+import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -44,9 +46,9 @@ import com.sun.source.util.DocTreePath;
 import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.parser.Tokens.Comment;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.jspecify.annotations.Nullable;
+import org.safere.Matcher;
+import org.safere.Pattern;
 
 /** Flags tags which haven't been recognised by the Javadoc parser. */
 @BugPattern(
@@ -79,12 +81,19 @@ public final class UnrecognisedJavadocTag extends BugChecker
       return NO_MATCH;
     }
     ImmutableRangeSet<Integer> recognisedTags = findRecognisedTags(path, state);
-    ImmutableSet<Integer> tagStrings = findTags(((DCDocComment) path.getDocComment()).comment);
+    ImmutableMap<Integer, String> tagStrings =
+        findTags(((DCDocComment) path.getDocComment()).comment);
 
-    for (int pos : tagStrings) {
+    for (var entry : tagStrings.entrySet()) {
+      int pos = entry.getKey();
       if (!recognisedTags.contains(pos)) {
         state.reportMatch(
-            buildDescription(getDiagnosticPosition(pos, path.getTreePath().getLeaf())).build());
+            buildDescription(getDiagnosticPosition(pos, path.getTreePath().getLeaf()))
+                .setMessage(
+                    "This Javadoc tag '%s' wasn't recognised by the parser. Is it malformed"
+                        + " somehow, perhaps with mismatched braces?",
+                    entry.getValue())
+                .build());
       }
     }
 
@@ -92,7 +101,7 @@ public final class UnrecognisedJavadocTag extends BugChecker
   }
 
   private ImmutableRangeSet<Integer> findRecognisedTags(DocTreePath path, VisitorState state) {
-    ImmutableRangeSet.Builder<Integer> tags = ImmutableRangeSet.builder();
+    RangeSet<Integer> tags = TreeRangeSet.create();
     new DocTreePathScanner<Void, Void>() {
       @Override
       public Void visitLink(LinkTree linkTree, Void unused) {
@@ -108,14 +117,19 @@ public final class UnrecognisedJavadocTag extends BugChecker
         return super.visitLiteral(literalTree, null);
       }
     }.scan(path, null);
-    return tags.build();
+    return ImmutableRangeSet.copyOf(tags);
   }
 
-  private static ImmutableSet<Integer> findTags(Comment comment) {
-    Matcher matcher = TAG.matcher(comment.getText());
-    ImmutableSet.Builder<Integer> tags = ImmutableSet.builder();
+  private static ImmutableMap<Integer, String> findTags(Comment comment) {
+    String text = comment.getText();
+    Matcher matcher = TAG.matcher(text);
+    ImmutableMap.Builder<Integer, String> tags = ImmutableMap.builder();
     while (matcher.find()) {
-      tags.add(comment.getSourcePos(matcher.start()));
+      int start = matcher.start();
+      int end = text.indexOf('}', start);
+      String tag =
+          text.substring(start, end == -1 ? text.length() : end).replaceAll("\\R", " ").trim();
+      tags.put(comment.getSourcePos(start), tag);
     }
     return tags.build();
   }

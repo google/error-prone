@@ -23,6 +23,7 @@ import com.google.common.base.Function;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.tree.JCTree.JCModifiers;
@@ -84,11 +85,16 @@ public abstract class UVariableDecl extends USimpleStatement implements Variable
     return new ULocalVarIdent.Key(getName());
   }
 
+  static boolean isVarType(VariableTree tree) {
+    Tree type = tree.getType();
+    return type == null || type.getKind().name().equals("VAR_TYPE");
+  }
+
   @Override
   public Choice<Unifier> visitVariable(VariableTree decl, Unifier unifier) {
     return Choice.condition(unifier.getBinding(key()) == null, unifier)
         .flatMap(
-            (getType() != null && decl.getType() != null)
+            (getType() != null && !isVarType(decl))
                 ? unifications(getType(), decl.getType())
                 : unifications(getVariableType(), ASTHelpers.getType(decl)))
         .flatMap(unifications(getInitializer(), decl.getInitializer()))

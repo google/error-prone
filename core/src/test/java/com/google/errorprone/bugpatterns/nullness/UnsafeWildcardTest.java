@@ -365,23 +365,30 @@ public class UnsafeWildcardTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  class WithBound<T extends Number> {}",
-            "  public void foo(String s, List<String> xs, List<? super String> contra) {",
-            "    foo(null, null, null);",
-            "  }",
-            "  public void negative(WithBound<Integer> xs, WithBound<? super Integer> contra) {",
-            "    negative(null, null);",
-            "  }",
-            "  public <U> void positive(WithBound<? super U> implicit) {",
-            "    // BUG: Diagnostic contains: Cast to wildcard type unsafe",
-            "    this.<U>positive(null);",
-            "    // BUG: Diagnostic contains: impossible",
-            // Compiler uses U = Object and ? super Object doesn't intersect with upper bound Number
-            "    positive(null);",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+
+            class Test {
+              class WithBound<T extends Number> {}
+
+              public void foo(String s, List<String> xs, List<? super String> contra) {
+                foo(null, null, null);
+              }
+
+              public void negative(WithBound<Integer> xs, WithBound<? super Integer> contra) {
+                negative(null, null);
+              }
+
+              public <U> void positive(WithBound<? super U> implicit) {
+                // BUG: Diagnostic contains: Cast to wildcard type unsafe
+                this.<U>positive(null);
+                // Compiler uses U = Object and ? super Object doesn't intersect with upper bound
+                // Number
+                // BUG: Diagnostic contains: impossible
+                positive(null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -390,19 +397,25 @@ public class UnsafeWildcardTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.util.List;",
-            "class Test {",
-            "  static class WithBound<T extends Number> {}",
-            "  public <U> List<WithBound<? super U>> positive(WithBound<? super U> safe) {",
-            "    // BUG: Diagnostic contains: Unsafe wildcard in inferred type argument",
-            "    return List.of(safe,",
-            "        // BUG: Diagnostic contains: Cast to wildcard type unsafe",
-            "        null);", // implicitly upcast to WithBound<? super U>
-            "  }",
-            "  public List<WithBound<? super Integer>> negative(WithBound<Integer> safe) {",
-            "    return List.of(safe, null);",
-            "  }",
-            "}")
+            """
+            import java.util.List;
+
+            class Test {
+              static class WithBound<T extends Number> {}
+
+              public <U> List<WithBound<? super U>> positive(WithBound<? super U> safe) {
+                // BUG: Diagnostic contains: Unsafe wildcard in inferred type argument
+                return List.of(
+                    safe,
+                    // BUG: Diagnostic contains: Cast to wildcard type unsafe
+                    null); // implicitly upcast to WithBound<? super U>
+              }
+
+              public List<WithBound<? super Integer>> negative(WithBound<Integer> safe) {
+                return List.of(safe, null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -495,27 +508,32 @@ public class UnsafeWildcardTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test<T> {",
-            "  static class WithBound<T extends Number> {}",
-            "  Test(WithBound<Integer> xs, WithBound<? super T>... args) {}",
-            "  static <U> void hasVararg(WithBound<Integer> xs, WithBound<? super U>... args) {}",
-            "  static <U> void nullVarargs(WithBound<? super U> xs) {",
-            "    Test.<U>hasVararg(",
-            "        null,", // fine: target type is safe
-            "        // BUG: Diagnostic contains: Cast to wildcard type unsafe",
-            "        null,",
-            "        xs,",
-            "        // BUG: Diagnostic contains: Cast to wildcard type unsafe",
-            "        null);",
-            "    new Test<U>(",
-            "        null,",
-            "        // BUG: Diagnostic contains: Cast to wildcard type unsafe",
-            "        null,",
-            "        xs,",
-            "        // BUG: Diagnostic contains: Cast to wildcard type unsafe",
-            "        null);",
-            "  }",
-            "}")
+            """
+            class Test<T> {
+              static class WithBound<T extends Number> {}
+
+              Test(WithBound<Integer> xs, WithBound<? super T>... args) {}
+
+              static <U> void hasVararg(WithBound<Integer> xs, WithBound<? super U>... args) {}
+
+              static <U> void nullVarargs(WithBound<? super U> xs) {
+                Test.<U>hasVararg(
+                    null, // fine: target type is safe
+                    // BUG: Diagnostic contains: Cast to wildcard type unsafe
+                    null,
+                    xs,
+                    // BUG: Diagnostic contains: Cast to wildcard type unsafe
+                    null);
+                new Test<U>(
+                    null,
+                    // BUG: Diagnostic contains: Cast to wildcard type unsafe
+                    null,
+                    xs,
+                    // BUG: Diagnostic contains: Cast to wildcard type unsafe
+                    null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -524,20 +542,24 @@ public class UnsafeWildcardTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  class WithBound<T extends Number> {}",
-            // Generic array creation is a compilation error, and non-generic arrays are ok
-            "  Object[] simpleInitializer = { null };",
-            "  Object[][] nestedInitializer = { { null }, { null } };",
-            "  <U> void nulls() {",
-            "    String[][] stringMatrix = null;",
-            "    WithBound<? super Integer>[] implicitBound = null;",
-            "    // BUG: Diagnostic contains: Cast to wildcard type unsafe",
-            "    WithBound<? super U>[] simpleNull = null;",
-            "    // BUG: Diagnostic contains: Cast to wildcard type unsafe",
-            "    WithBound<? super U>[][] nestedNull = null;",
-            "  }",
-            "}")
+            """
+            class Test {
+              class WithBound<T extends Number> {}
+
+              // Generic array creation is a compilation error, and non-generic arrays are ok
+              Object[] simpleInitializer = {null};
+              Object[][] nestedInitializer = {{null}, {null}};
+
+              <U> void nulls() {
+                String[][] stringMatrix = null;
+                WithBound<? super Integer>[] implicitBound = null;
+                // BUG: Diagnostic contains: Cast to wildcard type unsafe
+                WithBound<? super U>[] simpleNull = null;
+                // BUG: Diagnostic contains: Cast to wildcard type unsafe
+                WithBound<? super U>[][] nestedNull = null;
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -584,18 +606,21 @@ public class UnsafeWildcardTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "class Test {",
-            "  class WithBound<T extends Number> {}",
-            "  <U> void problematic() {",
-            // The following implicitly create problematic types even absent null values (though
-            // problematic non-empty arrays containing all-null values can be created just as
-            // easily with [N] where N > 0). The compiler issues raw and unchecked warnings here,
-            // but we might want to flag assignments as well.
-            "    WithBound<? super U> raw = new WithBound();",
-            "    WithBound<? super U>[] array = new WithBound[0];",
-            "    WithBound<? super U>[][] nested = new WithBound[0][];",
-            "  }",
-            "}")
+            """
+            class Test {
+              class WithBound<T extends Number> {}
+
+              <U> void problematic() {
+                // The following implicitly create problematic types even absent null values (though
+                // problematic non-empty arrays containing all-null values can be created just as
+                // easily with [N] where N > 0). The compiler issues raw and unchecked warnings
+                // here, but we might want to flag assignments as well.
+                WithBound<? super U> raw = new WithBound();
+                WithBound<? super U>[] array = new WithBound[0];
+                WithBound<? super U>[][] nested = new WithBound[0][];
+              }
+            }
+            """)
         .doTest();
   }
 

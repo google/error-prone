@@ -246,6 +246,26 @@ public final class UnnecessaryOptionalGetTest {
   }
 
   @Test
+  public void genericOptionalVars_unnamedArgNoGet_noError() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Optional;
+
+            public class Test {
+              static void home() {
+                Optional<String> op1 = Optional.of("hello");
+                op1.ifPresent(_ -> System.out.println("No get here"));
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void genericOptionalVars_differentMethodGet_doesNothing() {
     refactoringTestHelper
         .addInputLines(

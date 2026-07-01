@@ -171,15 +171,18 @@ public class ParameterMissingNullableTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "class Foo {",
-            "  class Nested {",
-            "    Nested(Integer i) {}",
-            "  }",
-            "  void bar() {",
-            // TODO(cpovirk): Recognize this.
-            "    new Nested(null);",
-            "  }",
-            "}")
+            """
+            class Foo {
+              class Nested {
+                Nested(Integer i) {}
+              }
+
+              void bar() {
+                // TODO(cpovirk): Recognize this.
+                new Nested(null);
+              }
+            }
+            """)
         .doTest();
   }
 

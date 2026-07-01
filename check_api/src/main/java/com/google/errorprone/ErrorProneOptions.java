@@ -39,8 +39,8 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import org.safere.Pattern;
 
 /**
  * Processes command-line options specific to error-prone.
@@ -49,7 +49,7 @@ import java.util.stream.Stream;
  *
  * @author eaftan@google.com (Eddie Aftandilian)
  */
-public class ErrorProneOptions {
+public final class ErrorProneOptions {
 
   private static final String PREFIX = "-Xep";
   private static final String SEVERITY_PREFIX = "-Xep:";

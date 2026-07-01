@@ -47,28 +47,28 @@ jobs:
     continue-on-error: ${{ matrix.experimental }}
     steps:
       - name: Cancel previous
-        uses: styfle/cancel-workflow-action@0.12.0
+        uses: styfle/cancel-workflow-action@0.13.1
         with:
           access_token: ${{ github.token }}
       - name: 'Check out repository'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
       - name: 'Set up JDK 21'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 21
           distribution: 'zulu'
           cache: 'maven'
       - name: 'Set up JDK 25'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 25
           distribution: 'zulu'
           cache: 'maven'
-      - name: 'Set up JDK 27 from jdk.java.net'
+      - name: 'Set up JDK 28 from jdk.java.net'
         uses: oracle-actions/setup-java@v1
         with:
           website: jdk.java.net
-          release: 27
+          release: 28
           cache: 'maven'
       - name: 'Set up JDK ${{ matrix.java }} from jdk.java.net'
         if: ${{ matrix.java == 'EA' }}
@@ -79,7 +79,7 @@ jobs:
           cache: 'maven'
       - name: 'Set up JDK ${{ matrix.java }}'
         if: ${{ matrix.java != 'EA' }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: ${{ matrix.java }}
           distribution: 'zulu'
@@ -101,15 +101,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Check out repository'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: 'Set up JDK 25'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 25
           distribution: 'zulu'
           cache: 'maven'
       - name: 'Set up JDK 21'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 21
           distribution: 'zulu'
@@ -133,21 +133,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Check out repository'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: 'Set up JDK 25'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 25
           distribution: 'zulu'
           cache: 'maven'
       - name: 'Set up JDK 23'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 23
           distribution: 'zulu'
           cache: 'maven'
       - name: 'Set up JDK 21'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 21
           distribution: 'zulu'

@@ -66,8 +66,8 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import org.safere.Pattern;
 
 /**
  * Matches creation of new collections/proto builders which are modified but never used.
@@ -301,7 +301,7 @@ public class ModifiedButNotUsed extends BugChecker
         .orElse(false);
   }
 
-  private static class UnusedScanner extends TreePathScanner<Void, Void> {
+  private static final class UnusedScanner extends TreePathScanner<Void, Void> {
     private final Symbol symbol;
     private final VisitorState state;
     private final Matcher<IdentifierTree> matcher;

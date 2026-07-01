@@ -104,7 +104,7 @@ public abstract class GuardedByExpression {
   /** A simple 'this literal. */
   // Don't use AutoValue here, since sym and type need to be 'null'. (And since
   // it's a singleton we don't need to implement equals() or hashCode()).
-  public static class ThisLiteral extends GuardedByExpression {
+  public static final class ThisLiteral extends GuardedByExpression {
 
     static final ThisLiteral INSTANCE = new ThisLiteral();
 

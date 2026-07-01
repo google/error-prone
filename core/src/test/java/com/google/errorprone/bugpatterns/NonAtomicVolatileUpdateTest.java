@@ -172,4 +172,25 @@ public class NonAtomicVolatileUpdateTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void volatileUpdateInLambdaInsideSynchronizedMethod() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              volatile int x = 0;
+
+              synchronized void foo() {
+                Runnable r =
+                    () -> {
+                      // BUG: Diagnostic contains: NonAtomicVolatileUpdate
+                      x++;
+                    };
+              }
+            }
+            """)
+        .doTest();
+  }
 }

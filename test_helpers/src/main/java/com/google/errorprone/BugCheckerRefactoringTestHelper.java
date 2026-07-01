@@ -85,7 +85,7 @@ import javax.tools.JavaFileObject;
  * @author kurs@google.com (Jan Kurs)
  */
 @CheckReturnValue
-public class BugCheckerRefactoringTestHelper {
+public final class BugCheckerRefactoringTestHelper {
 
   /** Test mode for matching refactored source against expected source. */
   public enum TestMode {
@@ -451,7 +451,7 @@ public class BugCheckerRefactoringTestHelper {
   }
 
   /** To assert the proper {@code .addInput().addOutput()} chain. */
-  public class ExpectOutput {
+  public final class ExpectOutput {
     private final JavaFileObject input;
 
     private ExpectOutput(JavaFileObject input) {

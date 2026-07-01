@@ -125,4 +125,44 @@ public class AssertThrowsBlockToExpressionTest {
         .allowFormattingErrors()
         .doTest();
   }
+
+  @Test
+  public void variableDeclaration() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              int getAge() {
+                return 42;
+              }
+
+              void f() {
+                assertThrows(
+                    IllegalArgumentException.class,
+                    () -> {
+                      var unused = getAge();
+                    });
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            class Test {
+              int getAge() {
+                return 42;
+              }
+
+              void f() {
+                assertThrows(IllegalArgumentException.class, () -> getAge());
+              }
+            }
+            """)
+        .doTest();
+  }
 }

@@ -470,18 +470,95 @@ public class ArrayToStringTest {
   }
 
   @Test
-  public void joinerIterable_disabled() {
+  public void methodReference() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static java.util.stream.Collectors.joining;
+
+            import java.util.stream.Stream;
+
+            class Test {
+              void f(Stream<int[]> s) {
+                s.map(Object::toString).collect(joining(", "));
+              }
+
+              void g(Stream<int[][]> s) {
+                s.map(Object::toString).collect(joining(", "));
+              }
+
+              void h(Stream<int[]> s) {
+                s.map(String::valueOf).collect(joining(", "));
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static java.util.stream.Collectors.joining;
+
+            import java.util.Arrays;
+            import java.util.stream.Stream;
+
+            class Test {
+              void f(Stream<int[]> s) {
+                s.map(Arrays::toString).collect(joining(", "));
+              }
+
+              void g(Stream<int[][]> s) {
+                s.map(Arrays::deepToString).collect(joining(", "));
+              }
+
+              void h(Stream<int[]> s) {
+                s.map(Arrays::toString).collect(joining(", "));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void stringFormat_array() {
     compilationHelper
-        .setArgs("-XepOpt:AbstractToString:JoinerIterable=false")
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.base.Joiner;
-            import java.util.List;
-
             class Test {
-              String test(Joiner j, List<int[]> a) {
-                return j.join(a);
+              void f(int[] xs) {
+                // BUG: Diagnostic contains: Arrays.toString(xs)
+                String.format("%s", xs);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void varargsPassThrough() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(String format, Object... args) {
+                String.format(format, args);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void primitiveArray_varargs() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(int[] xs) {
+                // BUG: Diagnostic contains: Arrays.toString(xs)
+                String.format("%s", xs);
               }
             }
             """)

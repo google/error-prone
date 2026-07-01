@@ -135,16 +135,24 @@ public class FieldMissingNullableTest {
     createCompilationTestHelper()
         .addSourceLines(
             "com/google/errorprone/bugpatterns/nullness/NullableParameterTest.java",
-            "package com.google.errorprone.bugpatterns.nullness;",
-            "import javax.annotation.Nullable;",
-            "public class NullableParameterTest {",
-            "  private String message = \"hello\";",
-            "  public void setMessageIfPresent(java.util.Optional<String> message) {",
-            // Note this code is bogus: s is guaranteed non-null...
-            "    // BUG: Diagnostic contains: @Nullable",
-            "    message.ifPresent(s -> { this.message = s != null ? s : null; });",
-            "  }",
-            "}")
+            """
+            package com.google.errorprone.bugpatterns.nullness;
+
+            import javax.annotation.Nullable;
+
+            public class NullableParameterTest {
+              private String message = "hello";
+
+              public void setMessageIfPresent(java.util.Optional<String> message) {
+                // Note this code is bogus: s is guaranteed non-null...
+                message.ifPresent(
+                    s -> {
+                      // BUG: Diagnostic contains: @Nullable
+                      this.message = s != null ? s : null;
+                    });
+              }
+            }
+            """)
         .doTest();
   }
 

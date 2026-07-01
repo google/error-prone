@@ -590,4 +590,45 @@ public class JdkObsoleteTest {
         .setArgs("-XepOpt:JdkObsolete:AndroidMinSdkVersion=32")
         .doTest();
   }
+
+  @Test
+  public void matcherScanning() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.regex.Matcher;
+            import java.util.regex.Pattern;
+
+            class Test {
+              void test(Matcher m) {
+                // BUG: Diagnostic contains: mostly for implementing java.util.Scanner
+                m.hitEnd();
+                // BUG: Diagnostic contains: mostly for implementing java.util.Scanner
+                m.requireEnd();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_matcherScanning() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.regex.Matcher;
+            import java.util.regex.Pattern;
+
+            class Test {
+              void test(Matcher m) {
+                m.find();
+                m.matches();
+                m.group();
+              }
+            }
+            """)
+        .doTest();
+  }
 }

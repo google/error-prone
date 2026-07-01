@@ -659,6 +659,10 @@ public final class TimeUnitMismatch extends BugChecker
 
     ImmutableList<String> words = fixUnitCamelCase(splitToLowercaseTerms(name));
 
+    if (words.isEmpty()) {
+      return null;
+    }
+
     // People use variable names like "firstTimestamp" and "secondTimestamp."
     // This check is somewhat redundant with the "second" check above.
     if (words.get(0).equals("second")) {

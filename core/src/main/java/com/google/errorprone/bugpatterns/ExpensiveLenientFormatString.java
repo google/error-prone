@@ -32,7 +32,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /**
  * Error checker for calls to the Preconditions class in Guava which use 'expensive' methods of

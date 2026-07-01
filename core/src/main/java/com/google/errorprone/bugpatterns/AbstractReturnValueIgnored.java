@@ -69,6 +69,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.UnusedReturnValueMatcher;
+import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -337,18 +338,23 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
     if (parent instanceof ExpressionStatementTree
         && constantExpressions.constantExpression(invocationTree, state).isEmpty()
         && considerBlanketFixes) {
-      ImmutableSet<String> identifiersInScope =
-          findAllIdents(state).stream().map(v -> v.name.toString()).collect(toImmutableSet());
-      concat(Stream.of("unused"), range(2, 10).mapToObj(i -> "unused" + i))
-          // TODO(b/72928608): Handle even local variables declared *later* within this scope.
-          // TODO(b/250568455): Also check whether we have suggested this name before in this scope.
-          .filter(n -> !identifiersInScope.contains(n))
-          .findFirst()
-          .ifPresent(
-              n ->
-                  fixes.put(
-                      "Suppress error by assigning to a variable",
-                      prefixWith(parent, format("var %s = ", n))));
+      if (SourceVersion.supportsUnnamedVariablesAndPatterns(state.context)) {
+        fixes.put("Suppress error by assigning to a variable", prefixWith(parent, "var _ = "));
+      } else {
+        ImmutableSet<String> identifiersInScope =
+            findAllIdents(state).stream().map(v -> v.name.toString()).collect(toImmutableSet());
+        concat(Stream.of("unused"), range(2, 10).mapToObj(i -> "unused" + i))
+            // TODO(b/72928608): Handle even local variables declared *later* within this scope.
+            // TODO(b/250568455): Also check whether we have suggested this name before in this
+            // scope.
+            .filter(n -> !identifiersInScope.contains(n))
+            .findFirst()
+            .ifPresent(
+                n ->
+                    fixes.put(
+                        "Suppress error by assigning to a variable",
+                        prefixWith(parent, format("var %s = ", n))));
+      }
     }
     if (parent instanceof ExpressionStatementTree && considerBlanketFixes) {
       if (constantExpressions.constantExpression(invocationTree, state).isPresent()) {
@@ -424,7 +430,7 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
           lostType,
           state)) {
         return buildDescription(tree)
-            .setMessage(format("Method returns a nested type, %s", returnType))
+            .setMessage("Method returns a nested type, %s", returnType)
             .build();
       }
 

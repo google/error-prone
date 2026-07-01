@@ -16,6 +16,8 @@
 package com.google.errorprone.bugpatterns.time;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.common.collect.ImmutableList;
@@ -36,22 +38,25 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import java.util.Optional;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /**
  * Utility class to find calls "nearby" other calls.
  *
  * <p>TODO(glorioso): Coalesce this with ByteBufferBackingArray since they have similar aims?
  */
-public class NearbyCallers {
+public final class NearbyCallers {
   private NearbyCallers() {}
 
   // lifted from com.google.devtools.javatools.refactory.refaster.cleanups.proto.ProtoMatchers
   private static final Matcher<ExpressionTree> IS_IMMUTABLE_PROTO_GETTER =
-      instanceMethod()
-          .onDescendantOfAny(GeneratedMessage.class.getName(), GeneratedMessageLite.class.getName())
-          .withNameMatching(Pattern.compile("get(?!CachedSize$|SerializedSize$).+"))
-          .withNoParameters();
+      allOf(
+          instanceMethod()
+              .onDescendantOfAny(
+                  GeneratedMessage.class.getName(), GeneratedMessageLite.class.getName())
+              .withNameMatching(Pattern.compile("get.+"))
+              .withNoParameters(),
+          not(instanceMethod().anyClass().namedAnyOf("getCachedSize", "getSerializedSize")));
 
   /**
    * Returns whether or not there is a call matching {@code secondaryMethodMatcher} with the same

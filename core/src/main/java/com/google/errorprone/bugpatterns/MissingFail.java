@@ -78,8 +78,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
 import javax.lang.model.element.Name;
+import org.safere.Pattern;
 
 /**
  * @author schmitt@google.com (Peter Schmitt)
@@ -245,8 +245,7 @@ public class MissingFail extends BugChecker implements MethodTreeMatcher {
           StatementTree lastTryStatement = tryStatements.getLast();
 
           Optional<Fix> assertThrowsFix =
-              AssertThrowsUtils.tryFailToAssertThrows(
-                  tryTree, tryStatements, Optional.empty(), tryState, namer);
+              AssertThrowsUtils.tryFailToAssertThrows(tryTree, tryStatements, tryState, namer);
           Fix failFix = addFailCall(tryTree, lastTryStatement, tryState);
           state.reportMatch(
               buildDescription(lastTryStatement)
@@ -454,7 +453,7 @@ public class MissingFail extends BugChecker implements MethodTreeMatcher {
   }
 
   /**
-   * Matches any try-tree that is in a JUNit3 {@code setUp} or {@code tearDown} method, their JUnit4
+   * Matches any try-tree that is in a JUnit3 {@code setUp} or {@code tearDown} method, their JUnit4
    * equivalents, a JUnit {@code suite()} method or a {@code main} method.
    */
   private static class IgnoredEnclosingMethodMatcher implements Matcher<TryTree> {

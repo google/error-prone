@@ -517,8 +517,8 @@ public class UnnecessaryCheckNotNullTest extends CompilerBasedAbstractTest {
   }
 
   // TODO(mdempsky): Make this more reusable.
-  private static class TestScanner extends Scanner {
-    private static class Match {
+  private static final class TestScanner extends Scanner {
+    private static final class Match {
       private final ImmutableList<String> expected;
       private boolean found = false;
 

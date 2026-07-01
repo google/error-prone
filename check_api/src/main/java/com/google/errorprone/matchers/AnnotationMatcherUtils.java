@@ -26,7 +26,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author mwacker@google.com (Mike Wacker)
  */
-public class AnnotationMatcherUtils {
+public final class AnnotationMatcherUtils {
 
   /**
    * Gets the value for an argument, or null if the argument does not exist.

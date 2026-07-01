@@ -133,7 +133,7 @@ public final class HeldLockAnalyzer {
         .orElse(locks);
   }
 
-  private static class LockScanner extends TreePathScanner<Void, HeldLockSet> {
+  private static final class LockScanner extends TreePathScanner<Void, HeldLockSet> {
 
     private final VisitorState visitorState;
     private final LockEventListener listener;
@@ -306,7 +306,7 @@ public final class HeldLockAnalyzer {
           LockResource.create("com.google.common.util.concurrent.Monitor", "leave"),
           LockResource.create("java.util.concurrent.Semaphore", "release"));
 
-  private static class LockOperationFinder extends TreeScanner<Void, Void> {
+  private static final class LockOperationFinder extends TreeScanner<Void, Void> {
 
     static Collection<GuardedByExpression> find(
         Tree tree, VisitorState state, Matcher<ExpressionTree> lockOperationMatcher) {

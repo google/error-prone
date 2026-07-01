@@ -37,33 +37,20 @@ public class Contains implements Matcher<Tree> {
 
   @Override
   public boolean matches(Tree tree, VisitorState state) {
-    FirstMatchingScanner scanner = new FirstMatchingScanner(state);
-    Boolean matchFound = tree.accept(scanner, /* data= */ false);
-    return matchFound != null && matchFound;
-  }
+    var scanner =
+        new TreeScanner<Void, Void>() {
+          private boolean matchFound = false;
 
-  private class FirstMatchingScanner extends TreeScanner<Boolean, Boolean> {
-
-    private final VisitorState state;
-
-    FirstMatchingScanner(VisitorState state) {
-      this.state = state;
-    }
-
-    @Override
-    public Boolean scan(Tree tree, Boolean matchFound) {
-      if (matchFound) {
-        return true;
-      }
-      if (matcher.matches(tree, state)) {
-        return true;
-      }
-      return super.scan(tree, false);
-    }
-
-    @Override
-    public Boolean reduce(Boolean left, Boolean right) {
-      return (left != null && left) || (right != null && right);
-    }
+          @Override
+          public Void scan(Tree tree, Void unused) {
+            if (matchFound || matcher.matches(tree, state)) {
+              matchFound = true;
+              return null;
+            }
+            return super.scan(tree, null);
+          }
+        };
+    scanner.scan(tree, null);
+    return scanner.matchFound;
   }
 }

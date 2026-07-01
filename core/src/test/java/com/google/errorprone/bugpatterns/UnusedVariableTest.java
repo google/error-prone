@@ -977,6 +977,44 @@ public class UnusedVariableTest {
   }
 
   @Test
+  public void variableKeepingSideEffects_forCanIgnoreReturnValue() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            class Test {
+              @CanIgnoreReturnValue
+              int method() {
+                return 1;
+              }
+
+              void test() {
+                int u = method();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.CanIgnoreReturnValue;
+
+            class Test {
+              @CanIgnoreReturnValue
+              int method() {
+                return 1;
+              }
+
+              void test() {
+                method();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void exemptedFieldsByType() {
     helper
         .addSourceLines(

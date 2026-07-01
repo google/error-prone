@@ -31,8 +31,8 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import java.util.regex.Pattern;
 import javax.inject.Inject;
+import org.safere.Pattern;
 
 /** A BugPattern; see the summary. */
 @BugPattern(

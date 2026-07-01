@@ -47,6 +47,11 @@ import java.util.Optional;
  *
  * @author cushon@google.com (Liam Miller-Cushon)
  */
+/*
+ * TODO: cl/931296006 - Convert this to a CompilationUnitTreeMatcher so that ReferenceEquality
+ * doesn't need to override it into one? It might perform worse, though, for users who run the other
+ * subclasses during normal builds.
+ */
 public abstract class AbstractReferenceEquality extends BugChecker implements BinaryTreeMatcher {
 
   private static final Matcher<MethodInvocationTree> EQUALS_STATIC_METHODS =
@@ -57,7 +62,12 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
   protected abstract boolean matchArgument(ExpressionTree tree, VisitorState state);
 
   @Override
-  public final Description matchBinary(BinaryTree tree, VisitorState state) {
+  public Description matchBinary(BinaryTree tree, VisitorState state) {
+    return doMatchBinary(tree, state, this::matchArgument);
+  }
+
+  final Description doMatchBinary(
+      BinaryTree tree, VisitorState state, Matcher<ExpressionTree> argumentMatcher) {
     switch (tree.getKind()) {
       case EQUAL_TO, NOT_EQUAL_TO -> {}
       default -> {
@@ -65,11 +75,11 @@ public abstract class AbstractReferenceEquality extends BugChecker implements Bi
       }
     }
     if (tree.getLeftOperand().getKind() == Kind.NULL_LITERAL
-        || !matchArgument(tree.getLeftOperand(), state)) {
+        || !argumentMatcher.matches(tree.getLeftOperand(), state)) {
       return Description.NO_MATCH;
     }
     if (tree.getRightOperand().getKind() == Kind.NULL_LITERAL
-        || !matchArgument(tree.getRightOperand(), state)) {
+        || !argumentMatcher.matches(tree.getRightOperand(), state)) {
       return Description.NO_MATCH;
     }
 

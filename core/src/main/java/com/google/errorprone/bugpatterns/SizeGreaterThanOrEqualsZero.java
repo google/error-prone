@@ -46,7 +46,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /**
  * Finds instances where one uses {@code Collection#size() >= 0} or {@code T[].length > 0}. Those
@@ -175,7 +175,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
     // field named <something>_count, by checking for other methods on the repeated field.
     MethodSymbol methodCallSym = getSymbol((MethodInvocationTree) tree);
     Scope protoClassMembers = methodCallSym.owner.members();
-    java.util.regex.Matcher getCountRegexMatcher =
+    org.safere.Matcher getCountRegexMatcher =
         PROTO_COUNT_METHOD_PATTERN.matcher(methodCallSym.getSimpleName().toString());
     if (!getCountRegexMatcher.matches()) {
       return false;
@@ -236,7 +236,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
   private Description provideReplacementForProtoMethodInvocation(
       BinaryTree tree, MethodInvocationTree protoGetSize, VisitorState state) {
     String expSrc = state.getSourceForNode(protoGetSize);
-    java.util.regex.Matcher protoGetCountMatcher = PROTO_COUNT_METHOD_PATTERN.matcher(expSrc);
+    org.safere.Matcher protoGetCountMatcher = PROTO_COUNT_METHOD_PATTERN.matcher(expSrc);
     if (!protoGetCountMatcher.find()) {
       throw new AssertionError(
           state.getSourceForNode(protoGetSize)

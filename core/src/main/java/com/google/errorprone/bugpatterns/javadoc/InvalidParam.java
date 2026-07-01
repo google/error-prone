@@ -51,7 +51,7 @@ import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import com.sun.tools.javac.tree.DCTree.DCText;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
+import org.safere.Pattern;
 
 /**
  * Matches incorrect Javadoc {@literal @}param tags.

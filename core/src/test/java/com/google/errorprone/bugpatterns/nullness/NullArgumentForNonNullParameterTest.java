@@ -169,15 +169,18 @@ public class NullArgumentForNonNullParameterTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import com.google.common.collect.ImmutableSet;",
-            "class Foo {",
-            "  void foo(boolean b) {",
-            "    // BUG: Diagnostic contains: ",
             // We use a ternary to avoid:
             // "non-varargs call of varargs method with inexact argument type for last parameter"
-            "    ImmutableSet.builder().add(b ? 1 : null);",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableSet;
+
+            class Foo {
+              void foo(boolean b) {
+                // BUG: Diagnostic contains:
+                ImmutableSet.builder().add(b ? 1 : null);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -333,16 +336,20 @@ public class NullArgumentForNonNullParameterTest {
     conservativeHelper
         .addSourceLines(
             "Foo.java",
-            "import java.util.Optional;",
-            "class Foo {",
-            "  class Bar {",
-            "    Bar(int i) {}",
-            "  }",
-            "  void foo(Optional<Integer> o) {",
-            // It would be nice to catch this, but for now, at least, we don't.
-            "    new Bar(o.orElse(null));",
-            "  }",
-            "}")
+            """
+            import java.util.Optional;
+
+            class Foo {
+              class Bar {
+                Bar(int i) {}
+              }
+
+              void foo(Optional<Integer> o) {
+                // It would be nice to catch this, but for now, at least, we don't.
+                new Bar(o.orElse(null));
+              }
+            }
+            """)
         .doTest();
   }
 

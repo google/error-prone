@@ -69,7 +69,7 @@ public final class UnrecognisedJavadocTagTest {
             "Test.java",
             """
             /**
-             * // BUG: Diagnostic contains:
+             * // BUG: Diagnostic contains: '{@link Test)'
              * {@link Test)
              */
             class Test {}
@@ -107,8 +107,23 @@ public final class UnrecognisedJavadocTagTest {
         .addSourceLines(
             "Test.java",
             """
-            // BUG: Diagnostic contains:
+            // BUG: Diagnostic contains: '{@link bar)'
             /** {@code foo}{@link bar) */
+            class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedLink() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /**
+             * @deprecated use {@link Test with {@link Test}} instead.
+             */
+            @Deprecated
             class Test {}
             """)
         .doTest();

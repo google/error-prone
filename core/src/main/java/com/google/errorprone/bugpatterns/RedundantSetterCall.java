@@ -61,8 +61,8 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 import java.util.Map;
-import java.util.regex.Pattern;
 import org.jspecify.annotations.Nullable;
+import org.safere.Pattern;
 
 /** A BugPattern; see the summary. */
 @BugPattern(

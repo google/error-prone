@@ -49,7 +49,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /** A container of fixes that have been collected during a single compilation phase. */
-public class RefactoringCollection implements DescriptionListener.Factory {
+public final class RefactoringCollection implements DescriptionListener.Factory {
 
   private static final Logger logger = Logger.getLogger(RefactoringCollection.class.getName());
 

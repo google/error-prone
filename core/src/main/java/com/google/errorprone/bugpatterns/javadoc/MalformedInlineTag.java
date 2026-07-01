@@ -92,7 +92,7 @@ public final class MalformedInlineTag extends BugChecker
 
       state.reportMatch(
           buildDescription(getDiagnosticPosition(startPos, path.getTreePath().getLeaf()))
-              .setMessage(String.format("The correct syntax to open this inline tag is {@%s.", tag))
+              .setMessage("The correct syntax to open this inline tag is {@%s.", tag)
               .addFix(SuggestedFix.replace(startPos, endPos, "{@" + tag))
               .build());
     }

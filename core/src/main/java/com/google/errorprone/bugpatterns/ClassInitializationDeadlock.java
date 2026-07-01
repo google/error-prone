@@ -48,8 +48,8 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import java.util.regex.Pattern;
 import javax.lang.model.element.ElementKind;
+import org.safere.Pattern;
 
 /** See the summary. */
 @BugPattern(summary = "Possible class initialization deadlock", severity = WARNING)

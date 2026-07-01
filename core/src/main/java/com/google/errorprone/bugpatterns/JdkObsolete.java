@@ -30,6 +30,8 @@ import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.arrayOf;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingMethodPath;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -153,7 +155,7 @@ public class JdkObsolete extends BugChecker
                       + " use LinkedHashMap."),
               new Obsolete(
                   "java.util.Enumeration", "Enumeration is an ancient precursor to Iterator."),
-              new Obsolete("junit.framework.TestCase", "JUnit3 is obsolete; use JUnit4 instead."))
+              new Obsolete("junit.framework.TestCase", "JUnit3 is obsolete."))
           .stream()
           .collect(toImmutableMap(Obsolete::qualifiedName, x -> x));
 
@@ -335,7 +337,14 @@ public class JdkObsolete extends BugChecker
                       "java.lang.String",
                       "java.io.OutputStream",
                       "java.lang.String"),
-              "Use IOUtils.writeLines(Collection, String, OutputStream, Charset) instead."));
+              "Use IOUtils.writeLines(Collection, String, OutputStream, Charset) instead."),
+          new ObsoleteApi(
+              instanceMethod()
+                  .onExactClass("java.util.regex.Matcher")
+                  .namedAnyOf("hitEnd", "requireEnd"),
+              "The hitEnd() and requireEnd() methods are mostly for implementing java.util.Scanner"
+                  + " or similar streaming APIs. If you only want to know if a match extends to"
+                  + " the end of the input, compare matcher.end() to the input length instead."));
 
   private static final ImmutableList<ObsoleteApi> OBSOLETE_CONSTRUCTORS =
       ImmutableList.of(
@@ -626,7 +635,7 @@ public class JdkObsolete extends BugChecker
       return Optional.empty();
     }
     VarSymbol varSym = ASTHelpers.getSymbol(varTree);
-    TreePath methodPath = findEnclosingMethod(state);
+    TreePath methodPath = findEnclosingMethodPath(state.getPath());
     if (methodPath == null) {
       return Optional.empty();
     }
@@ -664,29 +673,8 @@ public class JdkObsolete extends BugChecker
     return Optional.of(fix.build());
   }
 
-  private static @Nullable TreePath findEnclosingMethod(VisitorState state) {
-    TreePath path = state.getPath();
-    while (path != null) {
-      switch (path.getLeaf().getKind()) {
-        case METHOD -> {
-          return path;
-        }
-        case CLASS, LAMBDA_EXPRESSION -> {
-          return null;
-        }
-        default -> {}
-      }
-      path = path.getParentPath();
-    }
-    return null;
-  }
-
   private boolean shouldSkip(VisitorState state, Type type) {
-    TreePath path = findEnclosingMethod(state);
-    if (path == null) {
-      return false;
-    }
-    MethodTree enclosingMethod = (MethodTree) path.getLeaf();
+    MethodTree enclosingMethod = findEnclosingMethod(state);
     if (enclosingMethod == null) {
       return false;
     }

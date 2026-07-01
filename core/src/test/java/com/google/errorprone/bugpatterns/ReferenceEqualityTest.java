@@ -54,35 +54,7 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_const() {
-    compilationHelper
-        .addSourceLines(
-            "Foo.java",
-            """
-            class Foo {}
-            """)
-        .addSourceLines(
-            "Test.java",
-            """
-            import com.google.common.base.Optional;
-
-            class Test {
-              public static final Foo CONST = new Foo();
-
-              boolean f(Foo a) {
-                return a == CONST;
-              }
-
-              boolean f(Object o, Foo a) {
-                return o == a;
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
-  public void negative_extends_equalsObject() {
+  public void extends_equalsObject() {
     compilationHelper
         .addSourceLines(
             "Sup.java",
@@ -96,10 +68,9 @@ public class ReferenceEqualityTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.base.Optional;
-
             class Test extends Sup {
               boolean f(Object a, Test b) {
+                // BUG: Diagnostic contains: a.equals(b)
                 return a == b;
               }
             }
@@ -120,8 +91,6 @@ public class ReferenceEqualityTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.base.Optional;
-
             abstract class Test extends Sup {
               boolean f(Test a, Test b) {
                 // BUG: Diagnostic contains: a.equals(b)
@@ -145,8 +114,6 @@ public class ReferenceEqualityTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.base.Optional;
-
             class Test implements Sup {
               boolean f(Test a, Test b) {
                 // BUG: Diagnostic contains: a.equals(b)
@@ -158,15 +125,14 @@ public class ReferenceEqualityTest {
   }
 
   @Test
-  public void negative_noEquals() {
+  public void positive_noEquals() {
     compilationHelper
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.base.Optional;
-
             class Test {
               boolean f(Test a, Test b) {
+                // BUG: Diagnostic contains: a.equals(b)
                 return a == b;
               }
             }
@@ -363,6 +329,7 @@ public class ReferenceEqualityTest {
 
             class Test implements Sup {
               boolean f(Object a, Test b) {
+                // BUG: Diagnostic contains: a.equals(b)
                 return a == b;
               }
             }
@@ -434,13 +401,17 @@ public class ReferenceEqualityTest {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import " + MayImplementEquals.class.getCanonicalName() + ";",
-            "abstract class Test {",
-            "  abstract MayImplementEquals getter();",
-            "  boolean f(MayImplementEquals b) {",
-            "    return getter() == b;",
-            "  }",
-            "}")
+            """
+            import %s;
+            abstract class Test {
+              abstract MayImplementEquals getter();
+              boolean f(MayImplementEquals b) {
+                // BUG: Diagnostic contains: getter().equals(b)
+                return getter() == b;
+              }
+            }
+            """
+                .formatted(MayImplementEquals.class.getCanonicalName()))
         .withClasspath(MayImplementEquals.class, ReferenceEqualityTest.class)
         .doTest();
   }
@@ -463,6 +434,7 @@ public class ReferenceEqualityTest {
               }
 
               boolean g(X x1, X x2) {
+                // BUG: Diagnostic contains:
                 return x1 == x2;
               }
             }
@@ -608,6 +580,271 @@ public class ReferenceEqualityTest {
   }
 
   @Test
+  public void arrayComparison() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(int[] a, int[] b) {
+                // BUG: Diagnostic contains: ReferenceEquality
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void finalClassWithoutEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            final class Test {
+              boolean f(Test a, Test b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void finalClassWithEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            final class Test {
+              public boolean equals(Object o) {
+                return true;
+              }
+
+              boolean f(Test a, Test b) {
+                // BUG: Diagnostic contains: a.equals(b)
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sealedClassWithoutEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Sealed.java",
+            """
+            sealed interface Sealed permits Final1, Final2 {}
+            """)
+        .addSourceLines(
+            "Final1.java",
+            """
+            final class Final1 implements Sealed {}
+            """)
+        .addSourceLines(
+            "Final2.java",
+            """
+            final class Final2 implements Sealed {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Sealed a, Sealed b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sealedClassWithEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Sealed.java",
+            """
+            sealed interface Sealed permits Final1, Final2 {}
+            """)
+        .addSourceLines(
+            "Final1.java",
+            """
+            final class Final1 implements Sealed {
+              public boolean equals(Object o) {
+                return true;
+              }
+            }
+            """)
+        .addSourceLines(
+            "Final2.java",
+            """
+            final class Final2 implements Sealed {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Sealed a, Sealed b) {
+                // BUG: Diagnostic contains: a.equals(b)
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sealedClassWithNonSealedSubclass() {
+    compilationHelper
+        .addSourceLines(
+            "Sealed.java",
+            """
+            sealed interface Sealed permits NonSealedSub {}
+            """)
+        .addSourceLines(
+            "NonSealedSub.java",
+            """
+            non-sealed class NonSealedSub implements Sealed {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Sealed a, Sealed b) {
+                // BUG: Diagnostic contains: a.equals(b)
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sealedClassWithEnumSubclass() {
+    compilationHelper
+        .addSourceLines(
+            "Sealed.java",
+            """
+            sealed interface Sealed permits MyEnum {}
+            """)
+        .addSourceLines(
+            "MyEnum.java",
+            """
+            enum MyEnum implements Sealed {
+              INSTANCE;
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Sealed a, Sealed b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void typeVariableBoundedByClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test<T extends Class<?>> {
+              boolean f(T a, T b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void typeVariableBoundedByFinalClassWithoutEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Final.java",
+            """
+            final class Final {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test<T extends Final> {
+              boolean f(T a, T b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void typeVariableBoundedByFinalClassWithEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Final.java",
+            """
+            final class Final {
+              public boolean equals(Object o) {
+                return true;
+              }
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test<T extends Final> {
+              boolean f(T a, T b) {
+                // BUG: Diagnostic contains: a.equals(b)
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void typeVariableBoundedByNonFinalClass() {
+    compilationHelper
+        .addSourceLines(
+            "NonFinal.java",
+            """
+            class NonFinal {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test<T extends NonFinal> {
+              boolean f(T a, T b) {
+                // BUG: Diagnostic contains: a.equals(b)
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void typeVariableWithTransitiveBound() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test<T extends Class<?>, U extends T> {
+              boolean f(U a, U b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void memorySegment() {
     assume().that(Runtime.version().feature()).isAtLeast(22);
     compilationHelper
@@ -621,6 +858,512 @@ public class ReferenceEqualityTest {
                 // BUG: Diagnostic contains: a.equals(MemorySegment.NULL)
                 return a == MemorySegment.NULL;
               }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void ambiguousImport() {
+    compilationHelper
+        .addSourceLines(
+            "Objects.java",
+            """
+            package test;
+
+            public class Objects {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.*;
+            import test.*;
+
+            class Test {
+              boolean f(String a, String b) {
+                // BUG: Diagnostic contains: java.util.Objects.equals(a, b)
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateConstructor_noSubclasses() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private Test() {}
+
+              boolean f(Test a, Test b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateConstructor_withSubclasses_allRefEq() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private Test() {}
+
+              static final class Sub1 extends Test {}
+
+              static final class Sub2 extends Test {
+                static final Test INSTANCE = new Test() {};
+              }
+
+              boolean f(Test a, Test b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateConstructor_withSubclasses_oneOverridesEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private Test() {}
+
+              static final class Sub1 extends Test {}
+
+              static final class Sub2 extends Test {
+                @Override
+                public boolean equals(Object o) {
+                  return true;
+                }
+              }
+
+              boolean f(Test a, Test b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void packagePrivateConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              Test() {}
+
+              boolean f(Test a, Test b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void implicitDefaultConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Test a, Test b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void anonymousClass() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Test t) {
+                return t == new Test() {};
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateConstructor_differentCompilationUnit() {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            """
+            public class Foo {
+              private Foo() {}
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Foo a, Foo b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateClass_nonPrivateConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static class PrivateClass {
+                public PrivateClass() {}
+              }
+
+              static final class Sub extends PrivateClass {}
+
+              boolean f(PrivateClass a, PrivateClass b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateClass_subclassOverridesEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static class PrivateClass {
+                public PrivateClass() {}
+              }
+
+              static class Sub extends PrivateClass {
+                @Override
+                public boolean equals(Object o) {
+                  return true;
+                }
+              }
+
+              boolean f(PrivateClass a, PrivateClass b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unionType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Throwable expected) {
+                try {
+                  doSomething();
+                } catch (RuntimeException | Error e) {
+                  // BUG: Diagnostic contains:
+                  return e == expected;
+                }
+                return false;
+              }
+
+              void doSomething() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void intersectionType() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              <T extends Foo & Bar> boolean f(T a, T b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+
+              interface Foo {}
+
+              interface Bar {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateConstructor_subclassInSuppressedClassOverridesEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private Test() {}
+
+              @SuppressWarnings("ReferenceEquality")
+              static class Suppressed {
+                static class Sub extends Test {
+                  @Override
+                  public boolean equals(Object o) {
+                    return true;
+                  }
+                }
+              }
+
+              boolean f(Test a, Test b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nonPrivateInterface() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              interface NonPrivateInterface {}
+
+              boolean f(NonPrivateInterface a, NonPrivateInterface b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateInterface_implOverridesEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private interface PrivateInterface {}
+
+              static class Impl implements PrivateInterface {
+                @Override
+                public boolean equals(Object o) {
+                  return true;
+                }
+              }
+
+              boolean f(PrivateInterface a, PrivateInterface b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateInterface_implDoesNotOverrideEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private interface PrivateInterface {}
+
+              static final class Impl implements PrivateInterface {}
+
+              boolean f(PrivateInterface a, PrivateInterface b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateClass_anonymousSubclassOverridesEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static class PrivateClass {}
+
+              PrivateClass instance =
+                  new PrivateClass() {
+                    @Override
+                    public boolean equals(Object o) {
+                      return true;
+                    }
+                  };
+
+              boolean f(PrivateClass a, PrivateClass b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void privateInterface_anonymousSubclassOverridesEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private interface PrivateInterface {}
+
+              PrivateInterface instance =
+                  new PrivateInterface() {
+                    @Override
+                    public boolean equals(Object o) {
+                      return true;
+                    }
+                  };
+
+              boolean f(PrivateInterface a, PrivateInterface b) {
+                // BUG: Diagnostic contains:
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sentinel_object_newClassNoEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final Object SENTINEL = new Object();
+
+              boolean f(Object o) {
+                return o == SENTINEL;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sentinel_object_newClassWithEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Foo.java",
+            """
+            class Foo {
+              @Override
+              public boolean equals(Object o) {
+                return true;
+              }
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final Object SENTINEL = new Foo();
+
+              boolean f(Object o) {
+                // BUG: Diagnostic contains:
+                return o == SENTINEL;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sentinel_enumConstant() {
+    compilationHelper
+        .addSourceLines(
+            "MyEnum.java",
+            """
+            enum MyEnum {
+              VAL;
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final MyEnum SENTINEL = MyEnum.VAL;
+
+              boolean f(Object o) {
+                return o == SENTINEL;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sentinel_string() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final String SENTINEL = "hello";
+
+              boolean f(String o) {
+                // BUG: Diagnostic contains:
+                return o == SENTINEL;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_thread() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean f(Thread a, Thread b) {
+                return a == b;
+              }
+
+              boolean g(MyThread a, MyThread b) {
+                return a == b;
+              }
+
+              static class MyThread extends Thread {}
             }
             """)
         .doTest();

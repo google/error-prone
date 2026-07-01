@@ -71,7 +71,7 @@ import org.jspecify.annotations.Nullable;
 /**
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class VisitorState {
+public final class VisitorState {
 
   private final SharedState sharedState;
   public final Context context;
@@ -606,7 +606,7 @@ public class VisitorState {
     return sharedState.timings.span(suppressible);
   }
 
-  private static class Cache<T> implements Supplier<T> {
+  private static final class Cache<T> implements Supplier<T> {
     private final Supplier<T> impl;
     /* Uses T instead of Optional<T> because we don't want to cache null results
     (b/138753468). These inline caches persist between compilation units, and a type that fails to

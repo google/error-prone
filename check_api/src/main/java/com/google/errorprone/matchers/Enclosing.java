@@ -30,7 +30,7 @@ import com.sun.source.util.TreePath;
  *
  * @author alexeagle@google.com (Alex Eagle)
  */
-public class Enclosing {
+public final class Enclosing {
   private Enclosing() {}
 
   private abstract static class EnclosingMatcher<T extends Tree, U extends Tree>

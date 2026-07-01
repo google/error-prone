@@ -43,7 +43,6 @@ import com.sun.tools.javac.code.Type;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.regex.Pattern;
 
 final class MethodMatcherImpl
     implements InstanceMethodMatcher,
@@ -215,8 +214,17 @@ final class MethodMatcherImpl
   }
 
   @Override
-  public MethodNameMatcher withNameMatching(Pattern pattern) {
-    return stringConstraint(s -> pattern.matcher(s).matches());
+  public MethodNameMatcher withNameMatching(org.safere.Pattern pattern) {
+    return withNameMatching(pattern.asMatchPredicate());
+  }
+
+  @Override
+  public MethodNameMatcher withNameMatching(java.util.regex.Pattern pattern) {
+    return withNameMatching(pattern.asMatchPredicate());
+  }
+
+  private MethodNameMatcher withNameMatching(Predicate<String> predicate) {
+    return stringConstraint(predicate);
   }
 
   @Override

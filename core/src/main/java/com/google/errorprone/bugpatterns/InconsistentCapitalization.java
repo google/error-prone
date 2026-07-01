@@ -142,7 +142,7 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
    * Matcher for all fields of the given class node that are either instance members or not all
    * upper case.
    */
-  private static class FieldScanner extends TreeScanner<Void, Void> {
+  private static final class FieldScanner extends TreeScanner<Void, Void> {
 
     static ImmutableSet<Symbol> findFields(ClassTree tree) {
       ImmutableSet.Builder<Symbol> fieldsBuilder = ImmutableSet.builder();
@@ -177,7 +177,7 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
    * Matcher for all parameters (methods, constructors, lambda expressions) that have the same name
    * as one of the provided fields but with different capitalization.
    */
-  private static class MatchingParametersScanner extends TreePathScanner<Void, Void> {
+  private static final class MatchingParametersScanner extends TreePathScanner<Void, Void> {
 
     static ImmutableMap<TreePath, Symbol> findMatchingParameters(
         ImmutableMap<String, Symbol> fieldNamesMap, TreePath path) {

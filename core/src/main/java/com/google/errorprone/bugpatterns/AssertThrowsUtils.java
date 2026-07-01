@@ -18,9 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.Iterables.getLast;
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.fixes.SuggestedFixes.renameVariableUsages;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
@@ -29,13 +29,18 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes.VariableNamer;
-import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreeScanner;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,23 +53,23 @@ public final class AssertThrowsUtils {
   /**
    * Transforms a try-catch block in the try-fail pattern into a call to JUnit's {@code
    * assertThrows}, inserting the behavior of the {@code try} block into a lambda parameter, and
-   * assigning the expected exception to a variable, if it is used within the {@code catch} block.
-   * For example:
+   * assigning the thrown exception to a variable, if it is used within the {@code catch} block. For
+   * example:
    *
    * <pre>
    * try {
    *   foo();
    *   fail();
-   * } catch (MyException expected) {
-   *   assertThat(expected).isEqualTo(other);
+   * } catch (MyException thrown) {
+   *   assertThat(thrown).isEqualTo(other);
    * }
    * </pre>
    *
    * becomes
    *
    * <pre>
-   * {@code MyException expected = assertThrows(MyException.class, () -> foo());}
-   * assertThat(expected).isEqualTo(other);
+   * {@code MyException thrown = assertThrows(MyException.class, () -> foo());}
+   * assertThat(thrown).isEqualTo(other);
    * </pre>
    *
    * @param tryTree the tree representing the try-catch block to be refactored.
@@ -78,7 +83,6 @@ public final class AssertThrowsUtils {
   public static Optional<Fix> tryFailToAssertThrows(
       TryTree tryTree,
       List<? extends StatementTree> throwingStatements,
-      Optional<Tree> failureMessage,
       VisitorState state,
       VariableNamer namer) {
     List<? extends CatchTree> catchTrees = tryTree.getCatches();
@@ -112,57 +116,76 @@ public final class AssertThrowsUtils {
           resources.stream().map(state::getSourceForNode).collect(joining("\n", "try (", ") {\n")));
       fixSuffix = "\n}";
     }
-    if (!catchStatements.isEmpty()) {
+    // Hoist all but the last statement out of the lambda to narrow the exception scope.
+    for (StatementTree statement : throwingStatements.subList(0, throwingStatements.size() - 1)) {
+      fixPrefix.append(state.getSourceForNode(statement)).append("\n");
+    }
+    if (isExceptionReferenced(catchTree)) {
       String name = catchTree.getParameter().getName().toString();
       String newName = namer.avoidShadowing(name);
       if (!name.equals(newName)) {
         fix.merge(renameVariableUsages(catchTree.getParameter(), newName, state));
       }
-      fixPrefix.append(
-          String.format(
-              "%s %s = ", state.getSourceForNode(catchTree.getParameter().getType()), newName));
+      fixPrefix.append(String.format("var %s = ", newName));
     }
     fixPrefix.append(
         String.format(
-            "assertThrows(%s%s.class, () -> ",
-            failureMessage
-                // Supplying a constant string adds little value, since a failure here always means
-                // the same thing: the method just called wasn't expected to complete normally, but
-                // it did.
-                .filter(t -> ASTHelpers.constValue(t, String.class) == null)
-                .map(t -> state.getSourceForNode(t) + ", ")
-                .orElse(""),
+            "assertThrows(%s.class, () -> ",
             state.getSourceForNode(catchTree.getParameter().getType())));
-    boolean useExpressionLambda =
-        throwingStatements.size() == 1
-            && getOnlyElement(throwingStatements) instanceof ExpressionStatementTree;
+    StatementTree lastStatement = getLast(throwingStatements);
+    Tree targetTree = lastStatement;
+    if (targetTree instanceof ExpressionStatementTree expressionStatement) {
+      targetTree = expressionStatement.getExpression();
+    }
+    if (targetTree instanceof AssignmentTree assignment) {
+      targetTree = assignment.getExpression();
+    }
+    if (targetTree instanceof VariableTree variableTree && variableTree.getInitializer() != null) {
+      targetTree = variableTree.getInitializer();
+    }
+
+    boolean useExpressionLambda = targetTree instanceof ExpressionTree;
     if (!useExpressionLambda) {
       fixPrefix.append("{");
     }
-    fix.replace(
-        getStartPosition(tryTree),
-        getStartPosition(throwingStatements.iterator().next()),
-        fixPrefix.toString());
+    fix.replace(getStartPosition(tryTree), getStartPosition(targetTree), fixPrefix.toString());
     if (useExpressionLambda) {
-      fix.postfixWith(
-          ((ExpressionStatementTree) throwingStatements.iterator().next()).getExpression(), ")");
+      fix.postfixWith(targetTree, ")");
     } else {
-      fix.postfixWith(getLast(throwingStatements), "});");
+      fix.postfixWith(targetTree, "});");
     }
     if (catchStatements.isEmpty()) {
-      fix.replace(
-          state.getEndPosition(getLast(throwingStatements)),
-          state.getEndPosition(tryTree),
-          fixSuffix);
+      fix.replace(state.getEndPosition(lastStatement), state.getEndPosition(tryTree), fixSuffix);
     } else {
       fix.replace(
-          /* startPos= */ state.getEndPosition(getLast(throwingStatements)),
+          /* startPos= */ state.getEndPosition(lastStatement),
           /* endPos= */ getStartPosition(catchStatements.getFirst()),
           "\n");
       fix.replace(
           state.getEndPosition(getLast(catchStatements)), state.getEndPosition(tryTree), fixSuffix);
     }
     return Optional.of(fix.build());
+  }
+
+  private static boolean isExceptionReferenced(CatchTree catchTree) {
+    VarSymbol exceptionSymbol = getSymbol(catchTree.getParameter());
+    var scanner =
+        new TreeScanner<Void, Void>() {
+          private boolean isReferenced = false;
+
+          @Override
+          public Void scan(Tree tree, Void unused) {
+            return isReferenced ? null : super.scan(tree, null);
+          }
+
+          @Override
+          public Void visitIdentifier(IdentifierTree node, Void unused) {
+            isReferenced = isReferenced || exceptionSymbol.equals(getSymbol(node));
+            return super.visitIdentifier(node, null);
+          }
+        };
+    scanner.scan(catchTree.getBlock(), null);
+    return scanner.isReferenced;
   }
 
   private AssertThrowsUtils() {}

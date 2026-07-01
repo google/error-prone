@@ -305,28 +305,35 @@ class Test implements Deprecated {
     compilationHelper
         .addSourceLines(
             "Test.java",
-            "import java.lang.annotation.Annotation;",
-            "import java.util.Objects;",
-            "import com.google.common.collect.ImmutableSet;",
-            "class Test {",
-            "  int x;", // Test is mutable
-            "  void f(int y) {",
-            "    new Deprecated() {",
-            "      void g() {",
-            "        System.err.println(y);", // capture a local (but not the enclosing instance)
-            "      }",
-            "      public Class<? extends Annotation> annotationType() {",
-            "        return Deprecated.class;",
-            "      }",
-            "      public boolean forRemoval() {",
-            "        return false;",
-            "      }",
-            "      public String since() {",
-            "        return \"\";",
-            "      }",
-            "    };",
-            "  }",
-            "}")
+            """
+            import com.google.common.collect.ImmutableSet;
+            import java.lang.annotation.Annotation;
+            import java.util.Objects;
+
+            class Test {
+              int x; // Test is mutable
+
+              void f(int y) {
+                new Deprecated() {
+                  void g() {
+                    System.err.println(y); // capture a local (but not the enclosing instance)
+                  }
+
+                  public Class<? extends Annotation> annotationType() {
+                    return Deprecated.class;
+                  }
+
+                  public boolean forRemoval() {
+                    return false;
+                  }
+
+                  public String since() {
+                    return "";
+                  }
+                };
+              }
+            }
+            """)
         .doTest();
   }
 

@@ -20,8 +20,8 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import org.safere.Pattern;
 
 /** Utility functions for dealing with Java naming conventions */
 public final class NamingConventions {

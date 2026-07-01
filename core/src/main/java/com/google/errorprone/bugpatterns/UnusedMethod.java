@@ -445,17 +445,20 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   }
 
   private static boolean hasNativeMethods(CompilationUnitTree tree) {
-    AtomicBoolean hasAnyNativeMethods = new AtomicBoolean(false);
-    new TreeScanner<Void, Void>() {
-      @Override
-      public Void visitMethod(MethodTree tree, Void unused) {
-        if (tree.getModifiers().getFlags().contains(Modifier.NATIVE)) {
-          hasAnyNativeMethods.set(true);
-        }
-        return null;
-      }
-    }.scan(tree, null);
-    return hasAnyNativeMethods.get();
+    var scanner =
+        new TreeScanner<Void, Void>() {
+          boolean hasAnyNativeMethods = false;
+
+          @Override
+          public Void visitMethod(MethodTree tree, Void unused) {
+            if (tree.getModifiers().getFlags().contains(Modifier.NATIVE)) {
+              hasAnyNativeMethods = true;
+            }
+            return null;
+          }
+        };
+    scanner.scan(tree, null);
+    return scanner.hasAnyNativeMethods;
   }
 
   private static boolean exemptedByName(Name name) {

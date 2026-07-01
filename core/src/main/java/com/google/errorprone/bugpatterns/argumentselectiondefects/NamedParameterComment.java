@@ -25,9 +25,9 @@ import com.google.errorprone.util.ErrorProneComment.ErrorProneCommentStyle;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import org.safere.Matcher;
+import org.safere.Pattern;
 
 /**
  * Helper methods for checking if a commented argument matches a formal parameter and for generating

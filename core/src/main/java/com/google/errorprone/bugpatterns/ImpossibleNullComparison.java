@@ -169,7 +169,7 @@ public final class ImpossibleNullComparison extends BugChecker
     return Description.NO_MATCH;
   }
 
-  private class NullComparisonScanner extends TreePathScanner<Void, Void> {
+  private final class NullComparisonScanner extends TreePathScanner<Void, Void> {
     private final Map<Symbol, ExpressionTree> effectivelyFinalValues = new HashMap<>();
     private final VisitorState state;
 

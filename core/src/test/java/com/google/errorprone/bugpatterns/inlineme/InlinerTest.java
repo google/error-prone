@@ -320,6 +320,115 @@ public class InlinerTest {
   }
 
   @Test
+  public void staticMethod_twoTypeParams_methodCallInlining() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(
+                  replacement = "Client.<V>after()",
+                  imports = {"com.google.foo.Client"})
+              public static <K, V> V before() {
+                return Client.<V>after();
+              }
+
+              public static <V> V after() {
+                return null;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            package com.google.foo;
+
+            public final class Caller {
+              public void doTest() {
+                String x = Client.before(); // TODO(b/166285406): Client.after();
+                String y = Client.<Integer, String>before(); // TODO(b/166285406): Client.<String>after();
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Caller.java",
+            """
+            package com.google.foo;
+
+            public final class Caller {
+              public void doTest() {
+                String x = Client.<V>after(); // TODO(b/166285406): Client.after();
+                String y = Client.<V>after(); // TODO(b/166285406): Client.<String>after();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void staticMethod_twoTypeParams_constructorInlining() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.ArrayList;
+            import java.util.List;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(
+                  replacement = "new ArrayList<V>()",
+                  imports = {"java.util.ArrayList"})
+              public static <K, V> List<V> create() {
+                return new ArrayList<V>();
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            package com.google.foo;
+
+            import java.util.List;
+
+            public final class Caller {
+              public void doTest() {
+                List<String> x = Client.create(); // TODO(b/166285406): new ArrayList<>();
+                var y = Client.<Integer, String>create(); // TODO(b/166285406): new ArrayList<String>();
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Caller.java",
+            """
+            package com.google.foo;
+
+            import java.util.ArrayList;
+            import java.util.List;
+
+            public final class Caller {
+              public void doTest() {
+                List<String> x = new ArrayList<V>(); // TODO(b/166285406): new ArrayList<>();
+                var y = new ArrayList<V>(); // TODO(b/166285406): new ArrayList<String>();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void instanceMethod_withConflictingImport() {
     refactoringTestHelper
         .addInputLines(

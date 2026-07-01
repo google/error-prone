@@ -31,11 +31,11 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
-import java.util.regex.Pattern;
 import javax.lang.model.element.ElementKind;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.safere.Pattern;
 
 @RunWith(JUnit4.class)
 public final class TargetTypeTest {

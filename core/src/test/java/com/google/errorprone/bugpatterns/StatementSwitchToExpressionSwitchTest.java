@@ -5160,6 +5160,48 @@ public final class StatementSwitchToExpressionSwitchTest {
         .doTest();
   }
 
+  @Test
+  public void switchWithReturnsSomeCases_b524970803() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public String foo(String[] strings) {
+                switch (strings.length) {
+                  case 0:
+                    return "0";
+                  case 1:
+                    return "1";
+                  default: // fall through
+                }
+                return "potato";
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public String foo(String[] strings) {
+                switch (strings.length) {
+                  case 0 -> {
+                    return "0";
+                  }
+                  case 1 -> {
+                    return "1";
+                  }
+                  default -> {}
+                }
+                return "potato";
+              }
+            }
+            """)
+        .setArgs("-XepOpt:StatementSwitchToExpressionSwitch:EnableDirectConversion")
+        .setFixChooser(StatementSwitchToExpressionSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
   /**
    * Asserts that there is exactly one suggested fix and returns it.
    *

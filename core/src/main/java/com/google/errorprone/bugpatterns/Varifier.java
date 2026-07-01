@@ -82,8 +82,8 @@ public final class Varifier extends BugChecker implements VariableTreeMatcher {
         || hasImplicitType(tree, state)) {
       return NO_MATCH;
     }
-    // Foo unused = ...;
-    if (symbol.getSimpleName().contentEquals("unused")) {
+    // Foo unused = ...; or Foo _ = ...;
+    if (symbol.getSimpleName().contentEquals("unused") || symbol.getSimpleName().isEmpty()) {
       return fix(tree);
     }
     // MyException exception = assertThrows(MyException.class, () -> ...);

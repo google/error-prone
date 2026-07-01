@@ -51,9 +51,9 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Formattable;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.safere.Pattern;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
