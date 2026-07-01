@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -418,6 +420,31 @@ class Test {
             }
             """)
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void varUnnamed() {
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void trim(String string) {
+                String _ = string.trim();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void trim(String string) {
+                var _ = string.trim();
+              }
+            }
+            """)
         .doTest();
   }
 }
