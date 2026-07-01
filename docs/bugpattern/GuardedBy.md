@@ -209,7 +209,7 @@ class Transaction {
 }
 ```
 
-The contract is trusted, not verified: annotating a parameter whose value is
+The contract is trusted but not verified: annotating a parameter whose value is
 actually deferred to another thread can hide real concurrency bugs.
 
 #### False negatives with aliasing

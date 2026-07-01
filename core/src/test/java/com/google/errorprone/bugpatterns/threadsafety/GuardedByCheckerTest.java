@@ -2485,6 +2485,35 @@ abstract class Test {
   }
 
   @Test
+  public void runsImmediately_lambda_synchronizedBlock() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.RunsImmediately;
+
+            class Test {
+              private final Object lock = new Object();
+
+              @GuardedBy("lock")
+              private int state = 0;
+
+              public void modifyState(int newState) {
+                synchronized (lock) {
+                  safeRun(() -> state = newState);
+                }
+              }
+
+              private void safeRun(@RunsImmediately Runnable runnable) {
+                runnable.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void runsImmediately_lambda_wrongGuard() {
     compilationHelper
         .addSourceLines(

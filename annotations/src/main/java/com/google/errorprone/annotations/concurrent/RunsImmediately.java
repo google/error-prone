@@ -25,8 +25,8 @@ import java.lang.annotation.Target;
  * Indicates that the annotated functional-interface parameter is run synchronously on the calling
  * thread before the method returns, and is not stored or passed to another thread.
  *
- * <p>The {@link GuardedBy} check relies on this to analyze a lambda or method reference passed as
- * the argument in the caller's lock scope.
+ * <p>The {@link GuardedBy} check relies on this: a lambda or method reference passed as this
+ * argument is analyzed as if the caller's locks are held.
  */
 @Target(PARAMETER)
 @Retention(CLASS)
