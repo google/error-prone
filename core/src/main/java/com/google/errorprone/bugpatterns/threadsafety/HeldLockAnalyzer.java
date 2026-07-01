@@ -67,7 +67,7 @@ import javax.lang.model.element.Modifier;
  */
 public final class HeldLockAnalyzer {
   /** Methods which invoke lambdas on the same thread. */
-  static final Matcher<ExpressionTree> INVOKES_LAMBDAS_IMMEDIATELY =
+  private static final Matcher<ExpressionTree> INVOKES_LAMBDAS_IMMEDIATELY =
       anyOf(
           instanceMethod()
               .onExactClass("java.util.Optional")
@@ -112,7 +112,6 @@ public final class HeldLockAnalyzer {
     if (index < 0 || params.isEmpty()) {
       return false;
     }
-    // varargs: a trailing argument maps to the last parameter
     VarSymbol param = index < params.size() ? params.get(index) : params.getLast();
     return ASTHelpers.hasAnnotation(param, RUNS_IMMEDIATELY, state);
   }

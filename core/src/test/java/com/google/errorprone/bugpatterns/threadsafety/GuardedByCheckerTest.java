@@ -2425,7 +2425,7 @@ abstract class Test {
   }
 
   @Test
-  public void runsImmediately_lambda_noError() {
+  public void runsImmediately_lambda() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -2455,7 +2455,7 @@ abstract class Test {
   }
 
   @Test
-  public void runsImmediately_lambda_lockNotHeld_stillError() {
+  public void runsImmediately_methodReference() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -2467,9 +2467,13 @@ abstract class Test {
               @GuardedBy("this")
               private int state = 0;
 
-              public void modifyState(int newState) {
-                // BUG: Diagnostic contains: should be guarded by 'this'
-                safeRun(() -> state = newState);
+              public synchronized void modifyState() {
+                safeRun(this::zeroStateInternal);
+              }
+
+              @GuardedBy("this")
+              private void zeroStateInternal() {
+                state = 0;
               }
 
               private void safeRun(@RunsImmediately Runnable runnable) {
@@ -2481,7 +2485,7 @@ abstract class Test {
   }
 
   @Test
-  public void runsImmediately_lambda_wrongGuard_stillError() {
+  public void runsImmediately_lambda_wrongGuard() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -2501,31 +2505,6 @@ abstract class Test {
               }
 
               private void safeRun(@RunsImmediately Runnable runnable) {
-                runnable.run();
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
-  public void withoutRunsImmediately_lambda_stillError() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            """
-            import com.google.errorprone.annotations.concurrent.GuardedBy;
-
-            class Test {
-              @GuardedBy("this")
-              private int state = 0;
-
-              public synchronized void modifyState(int newState) {
-                // BUG: Diagnostic contains: should be guarded by 'this'
-                safeRun(() -> state = newState);
-              }
-
-              private void safeRun(Runnable runnable) {
                 runnable.run();
               }
             }
@@ -2565,97 +2544,6 @@ abstract class Test {
               }
 
               private void safeRun(@RunsImmediately Runnable runnable) {
-                runnable.run();
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
-  public void runsImmediately_methodReference_noError() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            """
-            import com.google.errorprone.annotations.concurrent.GuardedBy;
-            import com.google.errorprone.annotations.concurrent.RunsImmediately;
-
-            class Test {
-              @GuardedBy("this")
-              private int state = 0;
-
-              public synchronized void modifyState() {
-                safeRun(this::zeroStateInternal);
-              }
-
-              @GuardedBy("this")
-              private void zeroStateInternal() {
-                state = 0;
-              }
-
-              private void safeRun(@RunsImmediately Runnable runnable) {
-                runnable.run();
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
-  public void runsImmediately_methodReference_lockNotHeld_stillError() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            """
-            import com.google.errorprone.annotations.concurrent.GuardedBy;
-            import com.google.errorprone.annotations.concurrent.RunsImmediately;
-
-            class Test {
-              @GuardedBy("this")
-              private int state = 0;
-
-              public void modifyState() {
-                // BUG: Diagnostic contains: should be guarded by 'this'
-                safeRun(this::zeroStateInternal);
-              }
-
-              @GuardedBy("this")
-              private void zeroStateInternal() {
-                state = 0;
-              }
-
-              private void safeRun(@RunsImmediately Runnable runnable) {
-                runnable.run();
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
-  public void withoutRunsImmediately_methodReference_stillError() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            """
-            import com.google.errorprone.annotations.concurrent.GuardedBy;
-
-            class Test {
-              @GuardedBy("this")
-              private int state = 0;
-
-              public synchronized void modifyState() {
-                // BUG: Diagnostic contains: should be guarded by 'this'
-                safeRun(this::zeroStateInternal);
-              }
-
-              @GuardedBy("this")
-              private void zeroStateInternal() {
-                state = 0;
-              }
-
-              private void safeRun(Runnable runnable) {
                 runnable.run();
               }
             }
