@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.INVOKES_LAMBDAS_IMMEDIATELY;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
@@ -79,7 +78,7 @@ public class GuardedByChecker extends BugChecker
   public Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
     var parent = state.getPath().getParentPath().getLeaf();
     if (parent instanceof MethodInvocationTree methodInvocationTree
-        && INVOKES_LAMBDAS_IMMEDIATELY.matches(methodInvocationTree, state)) {
+        && HeldLockAnalyzer.invokesArgumentImmediately(methodInvocationTree, tree, state)) {
       return NO_MATCH;
     }
     analyze(state.withPath(new TreePath(state.getPath(), tree.getBody())));
@@ -90,7 +89,7 @@ public class GuardedByChecker extends BugChecker
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
     var parent = state.getPath().getParentPath().getLeaf();
     if (parent instanceof MethodInvocationTree methodInvocationTree
-        && INVOKES_LAMBDAS_IMMEDIATELY.matches(methodInvocationTree, state)) {
+        && HeldLockAnalyzer.invokesArgumentImmediately(methodInvocationTree, tree, state)) {
       return NO_MATCH;
     }
     analyze(state);

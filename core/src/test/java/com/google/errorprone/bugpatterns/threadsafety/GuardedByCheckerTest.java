@@ -2425,6 +2425,245 @@ abstract class Test {
   }
 
   @Test
+  public void runsImmediately_lambda_noError() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.RunsImmediately;
+
+            class Test {
+              @GuardedBy("this")
+              private int state = 0;
+
+              public synchronized void modifyState(int newState) {
+                safeRun(() -> modifyStateInternal(newState));
+              }
+
+              @GuardedBy("this")
+              private void modifyStateInternal(int newState) {
+                state = newState;
+              }
+
+              private void safeRun(@RunsImmediately Runnable runnable) {
+                runnable.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void runsImmediately_lambda_lockNotHeld_stillError() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.RunsImmediately;
+
+            class Test {
+              @GuardedBy("this")
+              private int state = 0;
+
+              public void modifyState(int newState) {
+                // BUG: Diagnostic contains: should be guarded by 'this'
+                safeRun(() -> state = newState);
+              }
+
+              private void safeRun(@RunsImmediately Runnable runnable) {
+                runnable.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void runsImmediately_lambda_wrongGuard_stillError() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.RunsImmediately;
+
+            class Test {
+              private final Object lock = new Object();
+
+              @GuardedBy("lock")
+              private int state = 0;
+
+              public synchronized void modifyState(int newState) {
+                // BUG: Diagnostic contains: should be guarded by 'this.lock'
+                safeRun(() -> state = newState);
+              }
+
+              private void safeRun(@RunsImmediately Runnable runnable) {
+                runnable.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void withoutRunsImmediately_lambda_stillError() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+
+            class Test {
+              @GuardedBy("this")
+              private int state = 0;
+
+              public synchronized void modifyState(int newState) {
+                // BUG: Diagnostic contains: should be guarded by 'this'
+                safeRun(() -> state = newState);
+              }
+
+              private void safeRun(Runnable runnable) {
+                runnable.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void runsImmediately_lambda_multipleGuardedAccesses() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.RunsImmediately;
+
+            class Test {
+              @GuardedBy("this")
+              private int a = 0;
+
+              @GuardedBy("this")
+              private int b = 0;
+
+              private final Object other = new Object();
+
+              @GuardedBy("other")
+              private int c = 0;
+
+              public synchronized void modify() {
+                safeRun(
+                    () -> {
+                      a = 1;
+                      b = 2;
+                      // BUG: Diagnostic contains: should be guarded by 'this.other'
+                      c = 3;
+                    });
+              }
+
+              private void safeRun(@RunsImmediately Runnable runnable) {
+                runnable.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void runsImmediately_methodReference_noError() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.RunsImmediately;
+
+            class Test {
+              @GuardedBy("this")
+              private int state = 0;
+
+              public synchronized void modifyState() {
+                safeRun(this::zeroStateInternal);
+              }
+
+              @GuardedBy("this")
+              private void zeroStateInternal() {
+                state = 0;
+              }
+
+              private void safeRun(@RunsImmediately Runnable runnable) {
+                runnable.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void runsImmediately_methodReference_lockNotHeld_stillError() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import com.google.errorprone.annotations.concurrent.RunsImmediately;
+
+            class Test {
+              @GuardedBy("this")
+              private int state = 0;
+
+              public void modifyState() {
+                // BUG: Diagnostic contains: should be guarded by 'this'
+                safeRun(this::zeroStateInternal);
+              }
+
+              @GuardedBy("this")
+              private void zeroStateInternal() {
+                state = 0;
+              }
+
+              private void safeRun(@RunsImmediately Runnable runnable) {
+                runnable.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void withoutRunsImmediately_methodReference_stillError() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+
+            class Test {
+              @GuardedBy("this")
+              private int state = 0;
+
+              public synchronized void modifyState() {
+                // BUG: Diagnostic contains: should be guarded by 'this'
+                safeRun(this::zeroStateInternal);
+              }
+
+              @GuardedBy("this")
+              private void zeroStateInternal() {
+                state = 0;
+              }
+
+              private void safeRun(Runnable runnable) {
+                runnable.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void methodReferences_shouldBeFlagged() {
     compilationHelper
         .addSourceLines(

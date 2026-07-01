@@ -185,6 +185,33 @@ private void doSomething(Runnable r) {
 However, the check does special-case some method calls which are known to
 immediately call the provided lambda or method reference.
 
+For your own methods, you can opt in to the same behavior by annotating the
+functional-interface parameter with
+`com.google.errorprone.annotations.concurrent.RunsImmediately`. This documents
+that the argument, if it is invoked at all, is invoked synchronously on the
+calling thread before the method returns, so a lambda or method reference passed
+there is analyzed in the caller's lock scope:
+
+```java
+class Transaction {
+  @GuardedBy("this")
+  int x;
+
+  public synchronized void handle() {
+    doSomething(() -> {
+      x++;  // OK: 'doSomething' runs the lambda immediately, while 'this' is held.
+    });
+  }
+
+  private void doSomething(@RunsImmediately Runnable r) {
+    r.run();
+  }
+}
+```
+
+The contract is trusted, not verified: annotating a parameter whose value is
+actually deferred to another thread can hide real concurrency bugs.
+
 #### False negatives with aliasing
 
 ```java
