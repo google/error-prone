@@ -1,6 +1,6 @@
 ---
 title: MissingJavadoc
-summary: Public types and public/protected members must have Javadoc comments.
+summary: Public types must have Javadoc comments.
 layout: bugpattern
 tags: ''
 severity: WARNING

@@ -1684,7 +1684,7 @@ __[MissingDefault](bugpattern/MissingDefault)__<br>
 The Google Java Style Guide requires that each switch statement includes a default statement group (even if it contains no code) unless the switch statement covers all values of an enum.
 
 __[MissingJavadoc](bugpattern/MissingJavadoc)__<br>
-Public types and public/protected members must have Javadoc comments.
+Public types must have Javadoc comments.
 
 __[MockitoDoSetup](bugpattern/MockitoDoSetup)__<br>
 Prefer using when/thenReturn over doReturn/when for additional type safety.

@@ -66,8 +66,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)" tabindex="0">matchClass(ClassTree, VisitorState)</a></li>
-<li><a href="#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" tabindex="0">matchMethod(MethodTree, VisitorState)</a></li>
-<li><a href="#matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" tabindex="0">matchVariable(VariableTree, VisitorState)</a></li>
 </ol>
 </li>
 </ol>
@@ -85,13 +83,13 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a>, <a href="../BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a>, <a href="../BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a>, <a href="../../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
+<dd><code><a href="../BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a>, <a href="../../matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public final class </span><span class="element-name type-name-label">MissingJavadoc</span>
 <span class="extends-implements">extends <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a>
-implements <a href="../BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a>, <a href="../BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a>, <a href="../BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></span></div>
+implements <a href="../BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a></span></div>
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 <dl class="notes">
 <dt>See Also:</dt>
@@ -142,14 +140,6 @@ implements <a href="../BugChecker.ClassTreeMatcher.html" title="interface in com
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&nbsp;classTree,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;methodTree,
- <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">matchVariable</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;variableTree,
- <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -198,32 +188,6 @@ implements <a href="../BugChecker.ClassTreeMatcher.html" title="interface in com
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../BugChecker.ClassTreeMatcher.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)">matchClass</a></code>&nbsp;in interface&nbsp;<code><a href="../BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a></code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">
-<h3>matchMethod</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchMethod</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&nbsp;methodTree,
- <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="../BugChecker.MethodTreeMatcher.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)">matchMethod</a></code>&nbsp;in interface&nbsp;<code><a href="../BugChecker.MethodTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MethodTreeMatcher</a></code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)">
-<h3>matchVariable</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../matchers/Description.html" title="class in com.google.errorprone.matchers">Description</a></span>&nbsp;<span class="element-name">matchVariable</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;variableTree,
- <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="../BugChecker.VariableTreeMatcher.html#matchVariable(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)">matchVariable</a></code>&nbsp;in interface&nbsp;<code><a href="../BugChecker.VariableTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.VariableTreeMatcher</a></code></dd>
 </dl>
 </div>
 </section>
