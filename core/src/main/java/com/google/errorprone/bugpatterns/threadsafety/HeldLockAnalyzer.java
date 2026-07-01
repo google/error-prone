@@ -45,6 +45,8 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
@@ -65,7 +67,7 @@ import javax.lang.model.element.Modifier;
  */
 public final class HeldLockAnalyzer {
   /** Methods which invoke lambdas on the same thread. */
-  static final Matcher<ExpressionTree> INVOKES_LAMBDAS_IMMEDIATELY =
+  private static final Matcher<ExpressionTree> INVOKES_LAMBDAS_IMMEDIATELY =
       anyOf(
           instanceMethod()
               .onExactClass("java.util.Optional")
@@ -87,6 +89,32 @@ public final class HeldLockAnalyzer {
           staticMethod()
               .onClass("com.google.common.collect.Iterables")
               .namedAnyOf("tryFind", "any", "all", "indexOf"));
+
+  private static final String RUNS_IMMEDIATELY =
+      "com.google.errorprone.annotations.concurrent.RunsImmediately";
+
+  /**
+   * Returns true if {@code functionalArgument} (a lambda or method reference) passed to {@code
+   * invocation} is run on the same thread, i.e. the method is one of {@link
+   * #INVOKES_LAMBDAS_IMMEDIATELY} or the matching parameter is {@code @RunsImmediately}.
+   */
+  static boolean invokesArgumentImmediately(
+      MethodInvocationTree invocation, ExpressionTree functionalArgument, VisitorState state) {
+    if (INVOKES_LAMBDAS_IMMEDIATELY.matches(invocation, state)) {
+      return true;
+    }
+    MethodSymbol sym = ASTHelpers.getSymbol(invocation);
+    if (sym == null) {
+      return false;
+    }
+    List<VarSymbol> params = sym.getParameters();
+    int index = invocation.getArguments().indexOf(functionalArgument);
+    if (index < 0 || params.isEmpty()) {
+      return false;
+    }
+    VarSymbol param = index < params.size() ? params.get(index) : params.getLast();
+    return ASTHelpers.hasAnnotation(param, RUNS_IMMEDIATELY, state);
+  }
 
   /** Listener interface for accesses to guarded members. */
   public interface LockEventListener {
@@ -231,7 +259,7 @@ public final class HeldLockAnalyzer {
     public Void visitLambdaExpression(LambdaExpressionTree node, HeldLockSet heldLockSet) {
       var parent = getCurrentPath().getParentPath().getLeaf();
       if (parent instanceof MethodInvocationTree methodInvocationTree
-          && INVOKES_LAMBDAS_IMMEDIATELY.matches(methodInvocationTree, visitorState)) {
+          && invokesArgumentImmediately(methodInvocationTree, node, visitorState)) {
         return super.visitLambdaExpression(node, heldLockSet);
       }
       // Don't descend into lambdas; they will be analyzed separately.
