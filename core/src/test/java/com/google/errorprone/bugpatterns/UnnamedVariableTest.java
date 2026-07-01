@@ -450,9 +450,6 @@ public class UnnamedVariableTest {
   @Test
   public void lambdaParameter_mixedDeclaration() {
     refactoringHelper
-        // TODO(user): Remove allowBreakingChanges and allowFormattingErrors.
-        .allowBreakingChanges()
-        .allowFormattingErrors()
         .addInputLines(
             "Test.java",
             """
@@ -476,7 +473,7 @@ public class UnnamedVariableTest {
             class Test {
               void f() {
                 BiConsumer<String, String> c =
-                    (String toPrint, _) -> {
+                    (String toPrint, String _) -> {
                       System.out.println(toPrint);
                     };
                 c.accept("foo", "bar");
@@ -510,6 +507,38 @@ public class UnnamedVariableTest {
               void f() {
                 BiConsumer<String, String> c = (_, _) -> {};
                 c.accept("foo", "bar");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void lambdaParameter_annotated() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.function.Consumer;
+            import org.jspecify.annotations.Nullable;
+
+            class Test {
+              void f() {
+                Consumer<String> c = (@Nullable String unused) -> {};
+                c.accept("foo");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.function.Consumer;
+            import org.jspecify.annotations.Nullable;
+
+            class Test {
+              void f() {
+                Consumer<String> c = (_) -> {};
+                c.accept("foo");
               }
             }
             """)

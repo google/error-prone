@@ -45,6 +45,7 @@ import com.sun.tools.javac.code.Symbol;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
@@ -69,17 +70,24 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
     }
     VariableFinder finder = new VariableFinder(state);
     finder.scan(tree, null);
+    Set<Symbol> unusedSymbols = finder.unusedSymbols.keySet();
     finder.unusedSymbols.forEach(
         (symbol, path) -> {
           VariableTree varTree = (VariableTree) path.getLeaf();
-          state.reportMatch(describeMatch(varTree, buildFix(varTree, symbol, path, state)));
+          state.reportMatch(
+              describeMatch(varTree, buildFix(varTree, symbol, path, state, unusedSymbols)));
         });
     return NO_MATCH;
   }
 
   private static SuggestedFix buildFix(
-      VariableTree tree, Symbol symbol, TreePath path, VisitorState state) {
-    if (symbol.getKind() == ElementKind.PARAMETER && isLambdaInAssignmentOrInitializer(path)) {
+      VariableTree tree,
+      Symbol symbol,
+      TreePath path,
+      VisitorState state,
+      Set<Symbol> unusedSymbols) {
+    if (symbol.getKind() == ElementKind.PARAMETER
+        && canRemoveLambdaParameterType(path, unusedSymbols)) {
       // TODO(kak): we should also drop unnecessary parens. E.g.,
       // before:  `(String unused) -> 1`
       // after:   `(_) -> 1`
@@ -96,18 +104,31 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
   }
 
   /**
-   * Returns true if the lambda expression containing the variable at the given {@link TreePath} is
-   * used as an initializer in a {@link VariableTree} or as the expression in an {@link
-   * AssignmentTree}.
+   * Returns true if we can remove the declared type of the lambda parameter at the given {@link
+   * TreePath}.
    */
-  private static boolean isLambdaInAssignmentOrInitializer(TreePath path) {
+  private static boolean canRemoveLambdaParameterType(TreePath path, Set<Symbol> unusedSymbols) {
+    // We can only remove the declared type if variable is used as an initializer in a
+    // `VariableTree` or as the expression in an `AssignmentTree`, as these are contexts in which
+    // parameter types can be reliably inferred.
     TreePath parentPath = path.getParentPath();
-    return parentPath.getLeaf() instanceof LambdaExpressionTree lambda
-        && switch (parentPath.getParentPath().getLeaf()) {
+    if (!(parentPath.getLeaf() instanceof LambdaExpressionTree lambda)
+        || !switch (parentPath.getParentPath().getLeaf()) {
           case VariableTree varTree -> varTree.getInitializer() == lambda;
           case AssignmentTree assignmentTree -> assignmentTree.getExpression() == lambda;
           default -> false;
-        };
+        }) {
+      return false;
+    }
+    // Java does not allow mixing declared and inferred types for formal parameters in a lambda
+    // expression, so we can only strip the parameter type if all parameters in the lambda without
+    // an inferred type will be replaced with _.
+    for (VariableTree param : lambda.getParameters()) {
+      if (param.getType() != null && !unusedSymbols.contains(getSymbol(param))) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
