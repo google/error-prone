@@ -386,4 +386,133 @@ public class UnnamedVariableTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void lambdaParameter_declaredType() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.function.Consumer;
+
+            class Test {
+              void f() {
+                Consumer<String> c = (String unused) -> {};
+                c.accept("foo");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.function.Consumer;
+
+            class Test {
+              void f() {
+                Consumer<String> c = (_) -> {};
+                c.accept("foo");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void lambdaParameter_implicitType() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.function.Consumer;
+
+            class Test {
+              void f() {
+                Consumer<String> c = unused -> {};
+                c.accept("foo");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.function.Consumer;
+
+            class Test {
+              void f() {
+                Consumer<String> c = _ -> {};
+                c.accept("foo");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void lambdaParameter_mixedDeclaration() {
+    refactoringHelper
+        // TODO(user): Remove allowBreakingChanges and allowFormattingErrors.
+        .allowBreakingChanges()
+        .allowFormattingErrors()
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.function.BiConsumer;
+
+            class Test {
+              void f() {
+                BiConsumer<String, String> c =
+                    (String toPrint, String unused) -> {
+                      System.out.println(toPrint);
+                    };
+                c.accept("foo", "bar");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.function.BiConsumer;
+
+            class Test {
+              void f() {
+                BiConsumer<String, String> c =
+                    (String toPrint, _) -> {
+                      System.out.println(toPrint);
+                    };
+                c.accept("foo", "bar");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void lambdaParameter_multipleUnused() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.function.BiConsumer;
+
+            class Test {
+              void f() {
+                BiConsumer<String, String> c = (String unused1, String unused2) -> {};
+                c.accept("foo", "bar");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.function.BiConsumer;
+
+            class Test {
+              void f() {
+                BiConsumer<String, String> c = (_, _) -> {};
+                c.accept("foo", "bar");
+              }
+            }
+            """)
+        .doTest();
+  }
 }
