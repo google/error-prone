@@ -349,4 +349,48 @@ public final class UnescapedEntityTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void markdownJavadoc() {
+    assume().that(Runtime.version().feature()).isAtLeast(23); // Markdown Javadoc is JDK 23+
+    // TODO(b/530215233): This should be unchanged.
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /// A command-line flag that parses arguments into a byte size represented as a `Flag<Long>`.
+            interface Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// A command-line flag that parses arguments into a byte size represented as a `{@code Flag<Long>}`.
+            interface Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadocCodeBlock() {
+    assume().that(Runtime.version().feature()).isAtLeast(23); // Markdown Javadoc is JDK 23+
+    // TODO(b/530215233): This should be unchanged.
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /// ```java
+            /// List<String> list;
+            /// ```
+            interface Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// ```java
+            /// {@code List<String>} list;
+            /// ```
+            interface Test {}
+            """)
+        .doTest();
+  }
 }
