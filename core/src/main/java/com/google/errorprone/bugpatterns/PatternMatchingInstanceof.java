@@ -23,6 +23,7 @@ import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.google.errorprone.util.SourceVersion.supportsPatternMatchingInstanceof;
 import static com.google.errorprone.util.TargetType.targetType;
 import static java.lang.Boolean.TRUE;
@@ -278,7 +279,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
         new TreePathScanner<Void, Void>() {
           @Override
           public Void visitTypeCast(TypeCastTree node, Void unused) {
-            var castee = constantExpressions.constantExpression(node.getExpression(), state);
+            var castee = constantExpressions.constantExpression(stripParentheses(node.getExpression()), state);
             if (castee.isPresent()
                 && castee.get().equals(symbol)
                 && state.getTypes().isSameType(getType(node.getType()), targetType)) {

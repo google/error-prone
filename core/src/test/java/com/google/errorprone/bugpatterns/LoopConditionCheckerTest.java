@@ -176,6 +176,169 @@ public class LoopConditionCheckerTest {
   }
 
   @Test
+  public void negative_parenthesizedUpdate() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                for (int i = 0; i < 10; (i)++) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_doubleParenthesizedUpdate() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                for (int i = 0; i < 10; ((i))++) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_parenthesizedPrefixIncrement() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                for (int i = 0; i < 10; ++(i)) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_parenthesizedPrefixDecrement() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                for (int i = 9; i >= 0; --(i)) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_parenthesizedPostfixDecrement() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                for (int i = 9; i >= 0; (i)--) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_parenthesizedDoWhileBody() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int i = 0;
+                do {
+                  (i)++;
+                } while (i < 10);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_parenthesizedWhileBody() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int i = 0;
+                while (i < 10) {
+                  (i)++;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_multipleConditionVarsParenthesized() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int i, j;
+                for (i = 0, j = 0; i < 10 && j < 5; (i)++, (j)++) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_parenthesizedCompoundAssignmentInBody() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int i = 0;
+                while (i < 10) {
+                  (i) += 1;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_parenthesizedAssignmentInBody() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int i = 0;
+                while (i < 10) {
+                  (i) = i + 1;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negative_field() {
     compilationTestHelper
         .addSourceLines(
