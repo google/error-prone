@@ -19,6 +19,7 @@ package com.google.errorprone.matchers;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A matcher that recursively inspects a tree, applying the given matcher to all levels of each tree
@@ -42,8 +43,11 @@ public class Contains implements Matcher<Tree> {
           private boolean matchFound = false;
 
           @Override
-          public Void scan(Tree tree, Void unused) {
-            if (matchFound || matcher.matches(tree, state)) {
+          public Void scan(@Nullable Tree tree, Void unused) {
+            if (tree == null || matchFound) {
+              return null;
+            }
+            if (matcher.matches(tree, state)) {
               matchFound = true;
               return null;
             }
