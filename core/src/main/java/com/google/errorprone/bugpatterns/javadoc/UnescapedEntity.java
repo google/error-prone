@@ -36,6 +36,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ErrorProneComment.ErrorProneCommentStyle;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.doctree.EndElementTree;
 import com.sun.source.doctree.ErroneousTree;
@@ -109,9 +110,13 @@ public final class UnescapedEntity extends BugChecker
     if (path == null) {
       return NO_MATCH;
     }
+    Comment comment = ((DCDocComment) path.getDocComment()).comment;
+    // javac's markdown javadoc parser doesn't produce ErroneousTree for <, >, or &.
+    if (ErrorProneCommentStyle.from(comment.getStyle()) == ErrorProneCommentStyle.JAVADOC_LINE) {
+      return NO_MATCH;
+    }
     RangesFinder rangesFinder = new RangesFinder(state);
     rangesFinder.scan(path, null);
-    Comment comment = ((DCDocComment) path.getDocComment()).comment;
     Matcher matcher = GENERIC_PATTERN.matcher(comment.getText());
     RangeSet<Integer> generics = TreeRangeSet.create();
     while (matcher.find()) {
