@@ -1253,9 +1253,6 @@ Prefer calling overloads that accept a Charset over those that accept a String e
 __[PreferInstanceofOverGetKind](bugpattern/PreferInstanceofOverGetKind)__<br>
 Prefer instanceof over getKind() checks where possible, as these work well with pattern matching instanceofs
 
-__[PreferPreconditions](bugpattern/PreferPreconditions)__<br>
-Consider using Preconditions instead of explicit if-throw for parameter validation.
-
 __[PreferTestParameter](bugpattern/PreferTestParameter)__<br>
 When exhaustively testing all values of a single enum or boolean parameter, prefer @TestParameter over @TestParameters.
 
@@ -1703,6 +1700,9 @@ Static fields should almost always be final.
 
 __[PreferJavaTimeOverload](bugpattern/PreferJavaTimeOverload)__<br>
 Prefer using java.time-based APIs when available. Note that this checker does not and cannot guarantee that the overloads have equivalent semantics, but that is generally the case with overloaded methods.
+
+__[PreferPreconditions](bugpattern/PreferPreconditions)__<br>
+Consider using Preconditions instead of explicit if-throw for parameter validation.
 
 __[PreferredInterfaceType](bugpattern/PreferredInterfaceType)__<br>
 This type can be more specific.
