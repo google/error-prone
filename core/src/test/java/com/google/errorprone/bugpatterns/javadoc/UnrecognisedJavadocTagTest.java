@@ -128,4 +128,31 @@ public final class UnrecognisedJavadocTagTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void lombokGetterOnClass() {
+    helper
+        .addSourceLines(
+            "Lombok.java",
+            "import lombok.Getter;",
+            "@Getter",
+            "public class Reproducer {",
+            "  /** See {@link String} */",
+            "  private String str = \"\";",
+            "}")
+        .doTest();
+  }
+
+  @Test
+  public void lombokGetterOnField() {
+    helper
+        .addSourceLines(
+            "Lombok.java",
+            "import lombok.Getter;",
+            "public class Reproducer {",
+            "  /** See {@link String} */",
+            "  @Getter private String str = \"\";",
+            "}")
+        .doTest();
+  }
 }
