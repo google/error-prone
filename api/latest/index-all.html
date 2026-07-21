@@ -3938,7 +3938,7 @@ apply to it.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html#evaluate(S,C)" class="member-name-link">evaluate(S, C)</a> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.MethodRule</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html#evaluateMethod(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)" class="member-name-link">evaluateMethod(Symbol.MethodSymbol, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalCanIgnoreReturnValue</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalApiList.html#evaluateMethod(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)" class="member-name-link">evaluateMethod(Symbol.MethodSymbol, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalApiList.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalApiList</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html#evaluateMethod(M,C)" class="member-name-link">evaluateMethod(M, C)</a> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUseRule.MethodRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ResultUseRule.MethodRule</a></dt>
 <dd>
@@ -4068,13 +4068,17 @@ which is the leaf of <code>exprPath</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/ExtendsObject.html#%3Cinit%3E()" class="member-name-link">ExtendsObject()</a> - Constructor for class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/ExtendsObject.html" title="class in com.google.errorprone.bugpatterns.nullness">ExtendsObject</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalCanIgnoreReturnValue</a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalApiList.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalApiList</a> - Class in <a href="com/google/errorprone/bugpatterns/checkreturnvalue/package-summary.html">com.google.errorprone.bugpatterns.checkreturnvalue</a></dt>
 <dd>
-<div class="block">External source of information about @CanIgnoreReturnValue-equivalent API's.</div>
+<div class="block">External source of information about API return value ignorability.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html#externalIgnoreList()" class="member-name-link">externalIgnoreList()</a> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalCanIgnoreReturnValue</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalApiList.html#externalIgnorableList()" class="member-name-link">externalIgnorableList()</a> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalApiList.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalApiList</a></dt>
 <dd>
-<div class="block">Returns a rule using an external list of APIs to ignore.</div>
+<div class="block">Returns a rule using an external list of APIs to treat as @CanIgnoreReturnValue.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalApiList.html#externalUnspecifiedList()" class="member-name-link">externalUnspecifiedList()</a> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalApiList.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalApiList</a></dt>
+<dd>
+<div class="block">Returns a rule using an external list of APIs to treat as unspecified.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.TypeExtractor.html#extract(T,com.google.errorprone.VisitorState)" class="member-name-link">extract(T, VisitorState)</a> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a></dt>
 <dd>
@@ -6508,7 +6512,7 @@ guarded members.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/ICCProfileGetInstance.html#%3Cinit%3E()" class="member-name-link">ICCProfileGetInstance()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ICCProfileGetInstance.html" title="class in com.google.errorprone.bugpatterns">ICCProfileGetInstance</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html#id()" class="member-name-link">id()</a> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalCanIgnoreReturnValue</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalApiList.html#id()" class="member-name-link">id()</a> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalApiList.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalApiList</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/PackagesRule.html#id()" class="member-name-link">id()</a> - Method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/PackagesRule.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">PackagesRule</a></dt>
 <dd>&nbsp;</dd>
@@ -10712,7 +10716,7 @@ does <i>not</i> have a super-method (i.e., it is not an <code>@Override</code>).
 <dd>
 <div class="block">Creates an instance of a <code>MethodName</code> record class.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html#methodNameAndParams(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Types)" class="member-name-link">methodNameAndParams(Symbol.MethodSymbol, Types)</a> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalCanIgnoreReturnValue</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalApiList.html#methodNameAndParams(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.code.Types)" class="member-name-link">methodNameAndParams(Symbol.MethodSymbol, Types)</a> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalApiList.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalApiList</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#methodNameStartsWith(java.lang.String)" class="member-name-link">methodNameStartsWith(String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
@@ -13983,7 +13987,7 @@ it is safe.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/SuppressWarningsWithoutExplanation.html#%3Cinit%3E(boolean)" class="member-name-link">SuppressWarningsWithoutExplanation(boolean)</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SuppressWarningsWithoutExplanation.html" title="class in com.google.errorprone.bugpatterns">SuppressWarningsWithoutExplanation</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html#surroundingClass(com.sun.tools.javac.code.Symbol.MethodSymbol)" class="member-name-link">surroundingClass(Symbol.MethodSymbol)</a> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalCanIgnoreReturnValue.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalCanIgnoreReturnValue</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalApiList.html#surroundingClass(com.sun.tools.javac.code.Symbol.MethodSymbol)" class="member-name-link">surroundingClass(Symbol.MethodSymbol)</a> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/ExternalApiList.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">ExternalApiList</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#swap(com.sun.source.tree.Tree,com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">swap(Tree, Tree, VisitorState)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>&nbsp;</dd>
