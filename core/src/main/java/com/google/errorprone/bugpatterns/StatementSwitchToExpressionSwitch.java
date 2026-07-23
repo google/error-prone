@@ -131,7 +131,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
           false,
           DEFAULT_ASSIGNMENT_SWITCH_ANALYSIS_RESULT,
           ImmutableList.of(),
-          ImmutableBiMap.of());
+          ImmutableBiMap.of(),
+          /* mustSurroundWithBraces= */ false);
 
   private static final String EQUALS_STRING = "=";
   private static final Matcher<ExpressionTree> COMPILE_TIME_CONSTANT_MATCHER =
@@ -301,6 +302,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
             Optional.empty());
 
     boolean hasDefaultCase = false;
+    boolean mustSurroundWithBraces = false;
     // One-pass scan through each case in switch
     for (int caseIndex = 0; caseIndex < cases.size(); caseIndex++) {
       CaseTree caseTree = cases.get(caseIndex);
@@ -405,6 +407,21 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         return DEFAULT_ANALYSIS_RESULT;
       }
 
+      // The switch must be surrounded with braces if we hoist a variable that is redefined later in
+      // the same block. For example:
+      //
+      // switch (val) {
+      //   case 1:
+      //     int y = 0;
+      //     break;
+      //   case 2:
+      //     y = 1;
+      // }
+      // int y = 2; // Error if `int y;` is hoisted above the switch
+      mustSurroundWithBraces |=
+          newSymbolsToHoist.stream()
+              .anyMatch(symbol -> declaresVariableNamedAfterSwitch(symbol, switchTree, state));
+
       newSymbolsToHoist.forEach(
           symbol -> symbolsToHoist.put(symbol, symbolsDefinedInPreviousCases.get(symbol)));
 
@@ -481,7 +498,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
                 .assignmentTreeOptional()
                 .map(StatementSwitchToExpressionSwitch::renderJavaSourceOfAssignment)),
         ImmutableList.copyOf(groupedWithNextCase),
-        ImmutableBiMap.copyOf(symbolsToHoist));
+        ImmutableBiMap.copyOf(symbolsToHoist),
+        mustSurroundWithBraces);
   }
 
   private static Optional<VariableTree> findCombinableVariableTree(
@@ -543,6 +561,53 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         return Objects.equals(left, true) || Objects.equals(right, true);
       }
     }.scan(switchTree, null);
+  }
+
+  /**
+   * Determines whether any statements in the enclosing block after the switch statement declare a
+   * local variable with the same name as the supplied {@code symbol}.
+   */
+  private static boolean declaresVariableNamedAfterSwitch(
+      VarSymbol symbol, SwitchTree switchTree, VisitorState state) {
+    Tree parent = state.getPath().getParentPath().getLeaf();
+    if (parent instanceof BlockTree blockTree) {
+      boolean foundSwitch = false;
+      for (StatementTree stmt : blockTree.getStatements()) {
+        if (!foundSwitch) {
+          // Iterate until we find the switch statement itself.
+          if (stmt.equals(switchTree)) {
+            foundSwitch = true;
+          }
+        } else {
+          // For this statement *after* the switch statement (yet in the same block), scan it to see
+          // if it declares a variable named the same as {@code symbol}.
+          Boolean conflictInFollowingStatement =
+              new TreeScanner<Boolean, Void>() {
+                @Override
+                public Boolean visitVariable(VariableTree variableTree, Void unused) {
+                  if (variableTree.getName().contentEquals(symbol.name.toString())) {
+                    VarSymbol thisVarSymbol = ASTHelpers.getSymbol(variableTree);
+                    if (!thisVarSymbol.equals(symbol)) {
+                      return true;
+                    }
+                  }
+                  return super.visitVariable(variableTree, null);
+                }
+
+                @Override
+                public Boolean reduce(@Nullable Boolean left, @Nullable Boolean right) {
+                  return Objects.equals(left, true) || Objects.equals(right, true);
+                }
+              }.scan(stmt, null);
+
+          if (Objects.equals(conflictInFollowingStatement, true)) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
   }
 
   /**
@@ -840,7 +905,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       VisitorState state) {
 
     boolean wrapInBraces = false;
-    if (!analysisResult.symbolsToHoist().isEmpty()) {
+    if (analysisResult.mustSurroundWithBraces()) {
+      wrapInBraces = true;
+    } else if (!analysisResult.symbolsToHoist().isEmpty()) {
       // If the switch statement is part of a "LabeledStatement", we wrap the generated code in
       // braces to transform it into into a "Statement" (a "LocalVariableDeclarationStatement" is
       // not a "Statement"). See e.g. JLS 21 §14.4.2, 14.7.
@@ -1824,7 +1891,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       boolean canRemoveDefault,
       AssignmentSwitchAnalysisResult assignmentSwitchAnalysisResult,
       ImmutableList<Boolean> groupedWithNextCase,
-      ImmutableBiMap<VarSymbol, VariableTree> symbolsToHoist) {}
+      ImmutableBiMap<VarSymbol, VariableTree> symbolsToHoist,
+      boolean mustSurroundWithBraces) {}
 
   /**
    * @param canConvertToAssignmentSwitch Whether the statement switch can be converted to an
