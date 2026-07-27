@@ -82,7 +82,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author awturner@google.com (Andy Turner)
  */
-final class NullnessUtils {
+public final class NullnessUtils {
   private NullnessUtils() {}
 
   private static final Matcher<ExpressionTree> OPTIONAL_OR_NULL =
@@ -472,7 +472,7 @@ final class NullnessUtils {
     }
   }
 
-  static boolean hasDefinitelyNullBranch(
+  public static boolean hasDefinitelyNullBranch(
       ExpressionTree tree,
       Set<VarSymbol> definitelyNullVars,
       /*

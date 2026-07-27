@@ -17,8 +17,10 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -31,7 +33,6 @@ import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /**
@@ -53,7 +54,12 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
   @Override
   public Description matchReturn(ReturnTree returnTree, VisitorState state) {
     ExpressionTree returnExpression = returnTree.getExpression();
-    if (returnExpression == null || returnExpression.getKind() != Kind.NULL_LITERAL) {
+    if (returnExpression == null
+        || !hasDefinitelyNullBranch(
+            returnExpression,
+            /* definitelyNullVars= */ ImmutableSet.of(),
+            /* varsProvenNullByParentIf= */ ImmutableSet.of(),
+            state)) {
       return Description.NO_MATCH;
     }
 

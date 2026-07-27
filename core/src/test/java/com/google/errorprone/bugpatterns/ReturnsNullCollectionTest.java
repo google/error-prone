@@ -135,12 +135,12 @@ public class ReturnsNullCollectionTest {
 
             class Test {
               List<String> methodReturnsNullTernary(boolean foo, List<String> bar) {
-                // TODO(b/536946282): should be flagged by ReturnsNullCollection
+                // BUG: Diagnostic contains: ReturnsNullCollection
                 return foo ? bar : null;
               }
 
               List<String> methodReturnsNullTernaryReversed(boolean foo, List<String> bar) {
-                // TODO(b/536946282): should be flagged by ReturnsNullCollection
+                // BUG: Diagnostic contains: ReturnsNullCollection
                 return foo ? null : bar;
               }
             }
