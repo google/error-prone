@@ -496,4 +496,85 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void switchExpressionArgument_nestedSwitch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(int day, int mode) {
+                System.out.printf(
+                    "%d%n",
+                    switch (day) {
+                      case 1 -> switch (mode) {
+                        case 0 -> 1;
+                        default -> 2;
+                      };
+                      default -> 3;
+                    });
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switchExpressionArgument_blockYield() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(int day) {
+                System.out.printf(
+                    "%d%n",
+                    switch (day) {
+                      case 1 -> {
+                        yield 6;
+                      }
+                      default -> 9;
+                    });
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switchExpressionArgument_colonYield() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(int day) {
+                System.out.printf(
+                    "%d%n",
+                    switch (day) {
+                      case 1:
+                        yield 6;
+                      default:
+                        yield 9;
+                    });
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switchExpressionArgument_stringCases() {
+    testFormat(
+        "illegal format conversion: 'java.lang.String' cannot be formatted using '%d'",
+        "System.out.printf(\"%d\", switch (1) { case 1 -> \"a\"; default -> \"b\"; });");
+  }
+
+  @Test
+  public void switchExpressionArgument_mixedNumericCases() {
+    testFormat(
+        "cannot be formatted using '%d'",
+        "System.out.printf(\"%d\", switch (1) { case 1 -> 1; default -> 2.0; });");
+  }
 }

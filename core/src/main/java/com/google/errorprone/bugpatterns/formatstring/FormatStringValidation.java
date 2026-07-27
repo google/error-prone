@@ -197,11 +197,16 @@ public final class FormatStringValidation {
   private static @Nullable Type getSwitchCaseResultType(CaseTree caseTree, VisitorState state) {
     Tree body = caseTree.getBody();
     if (body == null) {
+      for (StatementTree statement : caseTree.getStatements()) {
+        if (statement instanceof YieldTree yieldTree) {
+          return getExpressionType(yieldTree.getValue(), state);
+        }
+      }
       return null;
     }
     body = ASTHelpers.stripParentheses(body);
     if (body instanceof ExpressionTree expressionTree) {
-      return ASTHelpers.getType(expressionTree);
+      return getExpressionType(expressionTree, state);
     }
     if (body instanceof BlockTree blockTree) {
       for (StatementTree statement : blockTree.getStatements()) {
@@ -210,7 +215,7 @@ public final class FormatStringValidation {
         }
       }
     }
-    return ASTHelpers.getType(body);
+    return getExpressionType(body, state);
   }
 
   private static @Nullable Object getInstance(Type type, VisitorState state) {
