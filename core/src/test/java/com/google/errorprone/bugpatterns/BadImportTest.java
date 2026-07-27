@@ -864,4 +864,34 @@ class BadImportPositiveCases {
             """)
         .doTest();
   }
+
+  @Test
+  public void primitiveIterator() {
+    refactoringTestHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.PrimitiveIterator.OfDouble;
+            import java.util.PrimitiveIterator.OfInt;
+            import java.util.PrimitiveIterator.OfLong;
+
+            class Test {
+              OfDouble doubleIterator;
+              OfInt intIterator;
+              OfLong longIterator;
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.PrimitiveIterator;
+
+            class Test {
+              PrimitiveIterator.OfDouble doubleIterator;
+              PrimitiveIterator.OfInt intIterator;
+              PrimitiveIterator.OfLong longIterator;
+            }
+            """)
+        .doTest();
+  }
 }
