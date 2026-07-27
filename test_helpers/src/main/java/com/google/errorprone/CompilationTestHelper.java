@@ -86,6 +86,7 @@ public final class CompilationTestHelper {
   private Optional<Result> expectedResult = Optional.empty();
   private LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic =
       LookForCheckNameInDiagnostic.YES;
+  private boolean testOnly = false;
 
   private boolean run = false;
 
@@ -138,10 +139,13 @@ public final class CompilationTestHelper {
    * the overridden classpath, if provided, and any extraArgs that were provided.
    */
   private static ImmutableList<String> buildArguments(
-      @Nullable List<Class<?>> overrideClasspath, List<String> extraArgs) {
+      @Nullable List<Class<?>> overrideClasspath, List<String> extraArgs, boolean testOnly) {
     ImmutableList.Builder<String> result = ImmutableList.<String>builder().addAll(DEFAULT_ARGS);
     getOverrideClasspath(overrideClasspath)
         .ifPresent((Path jar) -> result.add("-cp").add(jar.toString()));
+    if (testOnly && !extraArgs.contains("-XepCompilingTestOnlyCode")) {
+      result.add("-XepCompilingTestOnlyCode");
+    }
     return result.addAll(disableImplicitProcessing(extraArgs)).build();
   }
 
@@ -250,6 +254,13 @@ public final class CompilationTestHelper {
         extraArgs,
         args);
     this.extraArgs = ImmutableList.copyOf(args);
+    return this;
+  }
+
+  /** Configures the compilation to treat the code as test-only. Off by default. */
+  @CanIgnoreReturnValue
+  public CompilationTestHelper setTestOnly() {
+    this.testOnly = true;
     return this;
   }
 
@@ -371,7 +382,7 @@ public final class CompilationTestHelper {
   }
 
   private Result compile() {
-    List<String> processedArgs = buildArguments(overrideClasspath, extraArgs);
+    ImmutableList<String> processedArgs = buildArguments(overrideClasspath, extraArgs, testOnly);
     return compiler
             .getTask(
                 new PrintWriter(
@@ -379,7 +390,7 @@ public final class CompilationTestHelper {
                     /* autoFlush= */ true),
                 FileManagers.testFileManager(),
                 diagnosticHelper.collector,
-                /* options= */ ImmutableList.copyOf(processedArgs),
+                /* options= */ processedArgs,
                 /* classes= */ ImmutableList.of(),
                 sources)
             .call()

@@ -25,12 +25,14 @@ import static org.junit.Assert.assertThrows;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
@@ -570,5 +572,34 @@ public class CompilationTestHelperTest {
                 var x = 1 + 2;
             """);
     assertThat(e).hasMessageThat().contains("BugPattern: ReplaceVarTypes");
+  }
+
+  @BugPattern(summary = "Checks if isTestOnlyTarget is true", severity = ERROR)
+  public static class TestOnlyChecker extends BugChecker implements ClassTreeMatcher {
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      if (state.errorProneOptions().isTestOnlyTarget()) {
+        return describeMatch(tree);
+      }
+      return Description.NO_MATCH;
+    }
+  }
+
+  @Test
+  public void testOnly_falseByDefault() {
+    CompilationTestHelper.newInstance(TestOnlyChecker.class, getClass())
+        .addSourceLines("Test.java", "public class Test {}")
+        .doTest();
+  }
+
+  @Test
+  public void testOnly_enabled() {
+    CompilationTestHelper.newInstance(TestOnlyChecker.class, getClass())
+        .setTestOnly()
+        .addSourceLines(
+            "Test.java",
+            "// BUG: Diagnostic contains: Checks if isTestOnlyTarget is true",
+            "public class Test {}")
+        .doTest();
   }
 }

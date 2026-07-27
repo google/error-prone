@@ -453,4 +453,56 @@ public class BugCheckerRefactoringTestHelperTest {
         .hasMessageThat()
         .contains("Expected a class, package, or module declaration");
   }
+
+  @BugPattern(summary = "Replaces return values if test-only", severity = SUGGESTION)
+  public static class TestOnlyRefactoring extends BugChecker implements ReturnTreeMatcher {
+    @Override
+    public Description matchReturn(ReturnTree tree, VisitorState state) {
+      if (state.errorProneOptions().isTestOnlyTarget()) {
+        return describeMatch(tree, SuggestedFix.replace(tree.getExpression(), "null"));
+      }
+      return Description.NO_MATCH;
+    }
+  }
+
+  @Test
+  public void testOnly_falseByDefault() {
+    BugCheckerRefactoringTestHelper.newInstance(TestOnlyRefactoring.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              public Object foo() {
+                return "hello";
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void testOnly_enabled() {
+    BugCheckerRefactoringTestHelper.newInstance(TestOnlyRefactoring.class, getClass())
+        .setTestOnly()
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              public Object foo() {
+                return "hello";
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              public Object foo() {
+                return null;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
