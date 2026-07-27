@@ -66,6 +66,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#addModules(java.lang.String...)" tabindex="0">addModules(String...)</a></li>
 <li><a href="#setArgs(java.lang.String...)" tabindex="0">setArgs(String...)</a></li>
 <li><a href="#setArgs(java.util.List)" tabindex="0">setArgs(List)</a></li>
+<li><a href="#setTestOnly()" tabindex="0">setTestOnly()</a></li>
 <li><a href="#expectNoDiagnostics()" tabindex="0">expectNoDiagnostics()</a></li>
 <li><a href="#matchAllDiagnostics()" tabindex="0">matchAllDiagnostics()</a></li>
 <li><a href="#expectResult(com.sun.tools.javac.main.Main.Result)" tabindex="0">expectResult(Main.Result)</a></li>
@@ -173,8 +174,13 @@ tested.</div>
 <div class="block">Sets custom command-line arguments for the compilation.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#withClasspath(java.lang.Class...)" class="member-name-link">withClasspath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;...&nbsp;classes)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTestOnly()" class="member-name-link">setTestOnly</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Configures the compilation to treat the code as test-only.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#withClasspath(java.lang.Class...)" class="member-name-link">withClasspath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;...&nbsp;classes)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the classpath for the test compilation, overriding the default of using the runtime
 classpath of the test execution.</div>
 </div>
@@ -317,6 +323,16 @@ compilation arguments.</div>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="element-name">setArgs</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</span></div>
 <div class="block">Sets custom command-line arguments for the compilation. These will be appended to the default
 compilation arguments.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setTestOnly()">
+<h3>setTestOnly</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CompilationTestHelper.html" title="class in com.google.errorprone">CompilationTestHelper</a></span>&nbsp;<span class="element-name">setTestOnly</span>()</div>
+<div class="block">Configures the compilation to treat the code as test-only. Off by default.</div>
 </div>
 </section>
 </li>

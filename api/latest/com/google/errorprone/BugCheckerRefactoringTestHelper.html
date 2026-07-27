@@ -68,6 +68,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#addModules(java.lang.String...)" tabindex="0">addModules(String...)</a></li>
 <li><a href="#setArgs(com.google.common.collect.ImmutableList)" tabindex="0">setArgs(ImmutableList)</a></li>
 <li><a href="#setArgs(java.lang.String...)" tabindex="0">setArgs(String...)</a></li>
+<li><a href="#setTestOnly()" tabindex="0">setTestOnly()</a></li>
 <li><a href="#allowBreakingChanges()" tabindex="0">allowBreakingChanges()</a></li>
 <li><a href="#allowFormattingErrors()" tabindex="0">allowFormattingErrors()</a></li>
 <li><a href="#setImportOrder(java.lang.String)" tabindex="0">setImportOrder(String)</a></li>
@@ -212,6 +213,11 @@ test.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setImportOrder(java.lang.String)" class="member-name-link">setImportOrder</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;importOrder)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTestOnly()" class="member-name-link">setTestOnly</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Configures the compilation to treat the code as test-only.</div>
+</div>
 </div>
 </div>
 </div>
@@ -322,6 +328,16 @@ test.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></span>&nbsp;<span class="element-name">setArgs</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;args)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setTestOnly()">
+<h3>setTestOnly</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations"><a href="annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></span>&nbsp;<span class="element-name">setTestOnly</span>()</div>
+<div class="block">Configures the compilation to treat the code as test-only. Off by default.</div>
 </div>
 </section>
 </li>
