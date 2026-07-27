@@ -241,4 +241,29 @@ public class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void ternary_b536946282_shouldBeFlagged() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import dagger.Provides;
+
+            public class Test {
+              @Provides
+              public Object providesObject(boolean foo, Object bar) {
+                // TODO(b/536946282): should be flagged by ProvidesNull
+                return foo ? bar : null;
+              }
+
+              @Provides
+              public Object providesObjectReversed(boolean foo, Object bar) {
+                // TODO(b/536946282): should be flagged by ProvidesNull
+                return foo ? null : bar;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
