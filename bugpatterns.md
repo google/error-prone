@@ -1082,6 +1082,9 @@ Conversion from long to float may lose precision; use an explicit cast to float 
 __[LoopOverCharArray](bugpattern/LoopOverCharArray)__<br>
 toCharArray allocates a new array, using charAt is more efficient
 
+__[LoopToTestParameter](bugpattern/LoopToTestParameter)__<br>
+Migrate loops in tests to use github.com/google/TestParameterInjector. Test parameterization executes each input case in strict isolation, ensuring that a single failure doesn&#39;t halt the rest of your test case while providing clear, per-case reporting without the need for manual loops.
+
 __[MalformedInlineTag](bugpattern/MalformedInlineTag)__<br>
 This Javadoc tag is malformed. The correct syntax is {@tag and not @{tag.
 
