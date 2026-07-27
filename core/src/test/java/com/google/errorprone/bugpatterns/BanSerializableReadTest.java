@@ -46,7 +46,7 @@ public class BanSerializableReadTest {
     refactoringHelper
         .addInput("testdata/BanSerializableReadNegativeCases.java")
         .expectUnchanged()
-        .setArgs("-XepCompilingTestOnlyCode")
+        .setTestOnly()
         .doTest();
   }
 }

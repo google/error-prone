@@ -337,7 +337,7 @@ class Test {
   @Test
   public void booleanToTruthAssertion() {
     refactoringHelper
-        .setArgs("-XepCompilingTestOnlyCode")
+        .setTestOnly()
         .addInputLines(
             "Lib.java",
             """

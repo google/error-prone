@@ -27,7 +27,7 @@ public final class LoopToTestParameterTest {
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(LoopToTestParameter.class, getClass())
-          .setArgs("-XepCompilingTestOnlyCode");
+          .setTestOnly();
 
   @Test
   public void enumLoop_refactoring() {
