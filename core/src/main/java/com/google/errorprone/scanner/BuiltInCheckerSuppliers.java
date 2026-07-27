@@ -243,6 +243,7 @@ import com.google.errorprone.bugpatterns.LongFloatConversion;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.LoopConditionChecker;
 import com.google.errorprone.bugpatterns.LoopOverCharArray;
+import com.google.errorprone.bugpatterns.LoopToTestParameter;
 import com.google.errorprone.bugpatterns.LossyPrimitiveCompare;
 import com.google.errorprone.bugpatterns.MathAbsoluteNegative;
 import com.google.errorprone.bugpatterns.MathRoundIntLong;
@@ -1080,6 +1081,7 @@ public final class BuiltInCheckerSuppliers {
           LongDoubleConversion.class,
           LongFloatConversion.class,
           LoopOverCharArray.class,
+          LoopToTestParameter.class,
           MalformedInlineTag.class,
           MathAbsoluteNegative.class,
           MemoizeConstantVisitorStateLookups.class,
