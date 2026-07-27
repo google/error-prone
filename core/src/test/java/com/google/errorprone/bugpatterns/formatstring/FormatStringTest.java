@@ -466,4 +466,34 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void switchExpressionArgument() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static final int FRIDAY = 5;
+
+              void f() {
+                int day = FRIDAY;
+                var viaVar = switch (day) {
+                  case 1, 5, 7 -> 6;
+                  case 2 -> 7;
+                  default -> 9;
+                };
+                System.out.printf("via var: %d%n", viaVar);
+                System.out.printf(
+                    "inline: %d%n",
+                    switch (day) {
+                      case 1, 5, 7 -> 6;
+                      case 2 -> 7;
+                      default -> 9;
+                    });
+              }
+            }
+            """)
+        .doTest();
+  }
 }

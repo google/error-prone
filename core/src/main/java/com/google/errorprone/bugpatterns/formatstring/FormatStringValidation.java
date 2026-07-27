@@ -26,9 +26,14 @@ import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.YieldTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -150,12 +155,62 @@ public final class FormatStringValidation {
    * or {@link Integer}.
    */
   private static @Nullable Object getInstance(Tree tree, VisitorState state) {
+    tree = ASTHelpers.stripParentheses(tree);
     Object value = ASTHelpers.constValue(tree);
     if (value != null) {
       return value;
     }
-    Type type = ASTHelpers.getType(tree);
+    Type type = getExpressionType(tree, state);
     return getInstance(type, state);
+  }
+
+  private static @Nullable Type getExpressionType(Tree tree, VisitorState state) {
+    tree = ASTHelpers.stripParentheses(tree);
+    if (tree instanceof SwitchExpressionTree switchExpression) {
+      Type fromCases = switchExpressionResultType(switchExpression, state);
+      if (fromCases != null && fromCases.getKind() != TypeKind.ERROR) {
+        return fromCases;
+      }
+    }
+    return ASTHelpers.getType(tree);
+  }
+
+  private static @Nullable Type switchExpressionResultType(
+      SwitchExpressionTree switchExpression, VisitorState state) {
+    Types types = state.getTypes();
+    Type common = null;
+    for (CaseTree caseTree : switchExpression.getCases()) {
+      Type caseType = getSwitchCaseResultType(caseTree, state);
+      if (caseType == null || caseType.getKind() == TypeKind.ERROR) {
+        continue;
+      }
+      Type normalized = types.unboxedTypeOrType(types.erasure(caseType));
+      if (common == null) {
+        common = normalized;
+      } else if (!types.isSameType(common, normalized)) {
+        return null;
+      }
+    }
+    return common;
+  }
+
+  private static @Nullable Type getSwitchCaseResultType(CaseTree caseTree, VisitorState state) {
+    Tree body = caseTree.getBody();
+    if (body == null) {
+      return null;
+    }
+    body = ASTHelpers.stripParentheses(body);
+    if (body instanceof ExpressionTree expressionTree) {
+      return ASTHelpers.getType(expressionTree);
+    }
+    if (body instanceof BlockTree blockTree) {
+      for (StatementTree statement : blockTree.getStatements()) {
+        if (statement instanceof YieldTree yieldTree) {
+          return getExpressionType(yieldTree.getValue(), state);
+        }
+      }
+    }
+    return ASTHelpers.getType(body);
   }
 
   private static @Nullable Object getInstance(Type type, VisitorState state) {
