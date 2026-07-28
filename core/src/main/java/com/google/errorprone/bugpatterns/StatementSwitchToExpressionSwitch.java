@@ -435,6 +435,26 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       symbolsDefinedInPreviousCases.putAll(symbolsDefinedInThisCase);
     }
 
+    if (!symbolsToHoist.isEmpty()) {
+      // If the switch statement is part of a "LabeledStatement", we wrap the generated code in
+      // braces to transform it into a "Statement" (a "LocalVariableDeclarationStatement" is
+      // not a "Statement"). See e.g. JLS 21 §14.4.2, 14.7.
+
+      // Fetch the lowest ancestor LabelledStatementTree (if any)
+      TreePath pathToEnclosing = state.findPathToEnclosing(LabeledStatementTree.class);
+      if (pathToEnclosing != null) {
+        Tree enclosing = pathToEnclosing.getLeaf();
+        // This cast should always succeed
+        if (enclosing instanceof LabeledStatementTree lst) {
+          // We only need to wrap in braces where the SwitchTree is the immediate child of the
+          // LabelledStatementTree
+          if (lst.getStatement().equals(switchTree)) {
+            mustSurroundWithBraces = true;
+          }
+        }
+      }
+    }
+
     boolean exhaustive =
         isSwitchExhaustive(
             hasDefaultCase, handledEnumValues, ASTHelpers.getType(switchTree.getExpression()));
@@ -895,39 +915,11 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   /**
    * Renders the variable declarations that need to be hoisted above the switch statement. Each
    * variable declaration is rendered on its own line, with comments preserved where possible.
-   *
-   * @return true if the generated switch statement needs to be wrapped in braces
    */
-  private static boolean renderHoistedVariables(
-      StringBuilder renderTo,
-      AnalysisResult analysisResult,
-      SwitchTree switchTree,
-      VisitorState state) {
+  private static void renderHoistedVariables(
+      StringBuilder renderTo, AnalysisResult analysisResult, VisitorState state) {
 
-    boolean wrapInBraces = false;
     if (analysisResult.mustSurroundWithBraces()) {
-      wrapInBraces = true;
-    } else if (!analysisResult.symbolsToHoist().isEmpty()) {
-      // If the switch statement is part of a "LabeledStatement", we wrap the generated code in
-      // braces to transform it into into a "Statement" (a "LocalVariableDeclarationStatement" is
-      // not a "Statement"). See e.g. JLS 21 §14.4.2, 14.7.
-
-      // Fetch the lowest ancestor LabelledStatementTree (if any)
-      TreePath pathToEnclosing = state.findPathToEnclosing(LabeledStatementTree.class);
-      if (pathToEnclosing != null) {
-        Tree enclosing = pathToEnclosing.getLeaf();
-        // This cast should always succeed
-        if (enclosing instanceof LabeledStatementTree lst) {
-          // We only need to wrap in braces where the SwitchTree is the immediate child of the
-          // LabelledStatementTree
-          if (lst.getStatement().equals(switchTree)) {
-            wrapInBraces = true;
-          }
-        }
-      }
-    }
-
-    if (wrapInBraces) {
       renderTo.append("{\n");
     }
 
@@ -950,7 +942,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
       renderTo.append(sourceForType).append(" ").append(variableTree.getName()).append(";\n");
     }
-    return wrapInBraces;
   }
 
   /**
@@ -973,8 +964,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     StringBuilder replacementCodeBuilder = new StringBuilder();
 
     // Render the variable declarations that need to be hoisted above the switch statement
-    boolean insertClosingBrace =
-        renderHoistedVariables(replacementCodeBuilder, analysisResult, switchTree, state);
+    renderHoistedVariables(replacementCodeBuilder, analysisResult, state);
 
     // Render the switch statement
     replacementCodeBuilder
@@ -1094,7 +1084,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     replacementCodeBuilder.append("\n}");
 
     // Close the surrounding braces (if needed)
-    if (insertClosingBrace) {
+    if (analysisResult.mustSurroundWithBraces()) {
       replacementCodeBuilder.append("\n}");
     }
 
