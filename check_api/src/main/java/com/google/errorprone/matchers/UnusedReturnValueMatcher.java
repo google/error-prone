@@ -187,6 +187,7 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
           instanceMethod()
               .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
               .named("fail"),
+          staticMethod().onClass("org.junit.jupiter.api.Assertions").named("fail"),
           staticMethod().onClass("org.junit.Assert").named("fail"),
           staticMethod().onClass("junit.framework.Assert").named("fail"),
           staticMethod().onClass("junit.framework.TestCase").named("fail"));

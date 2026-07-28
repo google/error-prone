@@ -58,6 +58,7 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
           // parameters, unless it's a parameterized test --- which still are not directly
           // invoked!); see b/303486200
           "org.junit.Test",
+          "org.junit.jupiter.api.Test",
           // dagger provider / producers
           "dagger.Provides",
           "dagger.producers.Produces",

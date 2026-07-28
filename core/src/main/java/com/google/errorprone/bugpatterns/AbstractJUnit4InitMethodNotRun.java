@@ -16,8 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit5TestCases;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestClass;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.enclosingClass;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.hasAnnotationOnAnyOverriddenMethod;
@@ -27,6 +29,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
@@ -49,6 +52,7 @@ import org.jspecify.annotations.Nullable;
 abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements MethodTreeMatcher {
 
   private static final String JUNIT_TEST = "org.junit.Test";
+  private static final String JUNIT5_TEST = JUnitMatchers.JUNIT5_TEST_ANNOTATION;
 
   /**
    * Returns a matcher that selects which methods this matcher applies to (e.g. public void setUp()
@@ -63,17 +67,17 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
    * <p>If another annotation is on the method that has the same name, the import will be replaced
    * with the appropriate one (e.g.: com.example.Before becomes org.junit.Before)
    */
-  protected abstract String correctAnnotation();
+  protected abstract String correctAnnotation(VisitorState state);
 
   /**
    * Returns a collection of 'before-and-after' pairs of annotations that should be replaced on
    * these methods.
    *
    * <p>If this method matcher finds a method annotated with {@link
-   * AnnotationReplacements#badAnnotation}, instead of applying {@link #correctAnnotation()},
+   * AnnotationReplacements#badAnnotation}, instead of applying {@link #correctAnnotation},
    * instead replace it with {@link AnnotationReplacements#goodAnnotation}
    */
-  protected abstract List<AnnotationReplacements> annotationReplacements();
+  protected abstract List<AnnotationReplacements> annotationReplacements(VisitorState state);
 
   /**
    * Matches if all of the following conditions are true: 1) The method matches {@link
@@ -88,7 +92,8 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
         allOf(
                 methodMatcher(),
                 not(hasAnnotationOnAnyOverriddenMethod(JUNIT_TEST)),
-                enclosingClass(isJUnit4TestClass))
+                not(hasAnnotationOnAnyOverriddenMethod(JUNIT5_TEST)),
+                enclosingClass(anyOf(isJUnit4TestClass, hasJUnit5TestCases)))
             .matches(methodTree, state);
     if (!matches) {
       return Description.NO_MATCH;
@@ -97,7 +102,7 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
     // For each annotationReplacement, replace the first annotation that matches. If any of them
     // matches, don't try and do the rest of the work.
     Description description;
-    for (AnnotationReplacements replacement : annotationReplacements()) {
+    for (AnnotationReplacements replacement : annotationReplacements(state)) {
       description =
           tryToReplaceAnnotation(
               methodTree, state, replacement.badAnnotation, replacement.goodAnnotation);
@@ -108,7 +113,7 @@ abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements Meth
 
     // Search for another @Before annotation on the method and replace the import
     // if we find one
-    String correctAnnotation = correctAnnotation();
+    String correctAnnotation = correctAnnotation(state);
     String unqualifiedClassName = getUnqualifiedClassName(correctAnnotation);
     for (AnnotationTree annotationNode : methodTree.getModifiers().getAnnotations()) {
       Symbol annoSymbol = ASTHelpers.getSymbol(annotationNode);

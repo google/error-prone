@@ -62,7 +62,10 @@ public final class SelfAssertion extends BugChecker implements MethodInvocationT
           allOf(
               staticMethod()
                   .onClassAny(
-                      "org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")
+                      "org.junit.jupiter.api.Assertions",
+                      "org.junit.Assert",
+                      "junit.framework.Assert",
+                      "junit.framework.TestCase")
                   .namedAnyOf("assertEquals", "assertArrayEquals"),
               this::junitSameArguments));
 
@@ -74,7 +77,10 @@ public final class SelfAssertion extends BugChecker implements MethodInvocationT
           allOf(
               staticMethod()
                   .onClassAny(
-                      "org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")
+                      "org.junit.jupiter.api.Assertions",
+                      "org.junit.Assert",
+                      "junit.framework.Assert",
+                      "junit.framework.TestCase")
                   .namedAnyOf("assertNotEquals"),
               this::junitSameArguments));
 

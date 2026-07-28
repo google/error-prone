@@ -223,4 +223,44 @@ public final class JUnitIncompatibleTypeTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void assertEquals_mismatchedJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void test() {
+                // BUG: Diagnostic contains:
+                org.junit.jupiter.api.Assertions.assertEquals(new Test(), "");
+                // BUG: Diagnostic contains:
+                org.junit.jupiter.api.Assertions.assertEquals("msg", new Test(), "");
+                // BUG: Diagnostic contains:
+                org.junit.jupiter.api.Assertions.assertNotEquals(new Test(), "");
+                // BUG: Diagnostic contains:
+                org.junit.jupiter.api.Assertions.assertNotEquals("msg", new Test(), "");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void assertEquals_matchedJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void test() {
+                org.junit.jupiter.api.Assertions.assertEquals("a", "b");
+                org.junit.jupiter.api.Assertions.assertEquals("msg", "a", "b");
+                org.junit.jupiter.api.Assertions.assertNotEquals("a", "b");
+                org.junit.jupiter.api.Assertions.assertNotEquals("msg", "a", "b");
+              }
+            }
+            """)
+        .doTest();
+  }
 }

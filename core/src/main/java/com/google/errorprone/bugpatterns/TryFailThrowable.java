@@ -39,6 +39,7 @@ import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.BlockTree;
@@ -117,7 +118,8 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
         String className = sym.owner.getQualifiedName().toString();
         // TODO(cpovirk): Look for literal "throw new AssertionError()," etc.
         return (methodName.startsWith("assert") || methodName.startsWith("fail"))
-            && (className.equals("org.junit.Assert")
+            && (className.equals("org.junit.jupiter.api.Assertions")
+                || className.equals("org.junit.Assert")
                 || className.equals("junit.framework.Assert")
                 || className.equals("junit.framework.TestCase")
                 || className.endsWith("MoreAsserts"));
@@ -169,9 +171,9 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
     SuggestedFix.Builder builder = SuggestedFix.builder();
     builder.delete(failStatement);
     builder.replace(getOnlyCatch(tryTree).getBlock(), "{ return; }");
-    // TODO(cpovirk): Use the file's preferred assertion API.
     String messageSnippet = getMessageSnippet(failStatement, state, HasOtherParameters.FALSE);
     builder.postfixWith(tryTree, format("fail(%s);", messageSnippet));
+    builder.addStaticImport(getAssertionClass(failStatement, state) + ".fail");
     return builder.build();
   }
 
@@ -181,9 +183,9 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
     builder.delete(failStatement);
     builder.prefixWith(tryTree, "boolean threw = false;");
     builder.replace(getOnlyCatch(tryTree).getBlock(), "{ threw = true; }");
-    // TODO(cpovirk): Use the file's preferred assertion API.
     String messageSnippet = getMessageSnippet(failStatement, state, HasOtherParameters.TRUE);
     builder.postfixWith(tryTree, format("assertTrue(%sthrew);", messageSnippet));
+    builder.addStaticImport(getAssertionClass(failStatement, state) + ".assertTrue");
     return builder.build();
   }
 
@@ -197,6 +199,16 @@ public class TryFailThrowable extends BugChecker implements TryTreeMatcher {
         ? state.getSourceForNode(((MethodInvocationTree) expression).getArguments().getFirst())
             + tail
         : "";
+  }
+
+  private static String getAssertionClass(StatementTree failStatement, VisitorState state) {
+    ExpressionTree expression = ((ExpressionStatementTree) failStatement).getExpression();
+    Symbol sym = getSymbol(expression);
+    if (sym != null
+        && sym.owner.getQualifiedName().toString().equals(JUnitMatchers.JUNIT5_ASSERT_CLASS)) {
+      return JUnitMatchers.JUNIT5_ASSERT_CLASS;
+    }
+    return JUnitMatchers.JUNIT4_ASSERT_CLASS;
   }
 
   /**

@@ -400,4 +400,103 @@ public class TryFailThrowablePositiveCases {
             """)
         .doTest();
   }
+
+  @Test
+  public void positiveCasesJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "TryFailThrowablePositiveCasesJUnit5.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import static org.junit.jupiter.api.Assertions.assertTrue;
+
+            import org.junit.jupiter.api.Assertions;
+
+            public class TryFailThrowablePositiveCasesJUnit5 {
+
+              public static void emptyCatch_failNoMessage() {
+                try {
+                  dummyMethod();
+                  Assertions.fail();
+                  // BUG: Diagnostic contains: catch (Exception t)
+                } catch (Throwable t) {
+                }
+              }
+
+              public static void catchesError_lastStatement() {
+                try {
+                  dummyMethod();
+                  Assertions.fail();
+                  // BUG: Diagnostic contains: remove this line
+                } catch (Error e) {
+                }
+              }
+
+              public static void catchesError_notLastStatement() {
+                try {
+                  dummyMethod();
+                  Assertions.fail();
+                  // BUG: Diagnostic contains: boolean threw = false;
+                } catch (Error e) {
+                }
+
+                assertTrue(true);
+              }
+
+              private static void dummyMethod() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "TryFailThrowableNegativeCasesJUnit5.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import static org.junit.jupiter.api.Assertions.assertTrue;
+
+            import org.junit.jupiter.api.Assertions;
+
+            public class TryFailThrowableNegativeCasesJUnit5 {
+
+              public static void catchHasCode() {
+                try {
+                  dummyMethod();
+                  Assertions.fail();
+                } catch (Throwable t) {
+                  dummyRecover();
+                }
+              }
+
+              public static void catchException() {
+                try {
+                  dummyMethod();
+                  Assertions.fail();
+                } catch (Exception t) {
+                  dummyRecover();
+                }
+              }
+
+              public static void failNotLast() {
+                try {
+                  dummyMethod();
+                  Assertions.fail("Not last :(");
+                  dummyMethod();
+                } catch (Throwable t) {
+                  dummyRecover();
+                }
+              }
+
+              private static void dummyRecover() {}
+
+              private static void dummyMethod() {}
+            }
+            """)
+        .doTest();
+  }
 }

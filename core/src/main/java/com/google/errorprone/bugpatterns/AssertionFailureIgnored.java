@@ -34,6 +34,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.predicates.TypePredicates;
@@ -74,7 +75,11 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
 
   private static final Matcher<ExpressionTree> ASSERTION =
       staticMethod()
-          .onClassAny("org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")
+          .onClassAny(
+              "org.junit.jupiter.api.Assertions",
+              "org.junit.Assert",
+              "junit.framework.Assert",
+              "junit.framework.TestCase")
           .withNameMatching(Pattern.compile("fail|assert.*"));
 
   private static final Matcher<ExpressionTree> NEW_THROWABLE =
@@ -168,7 +173,7 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
       endPosition = getStartPosition(getLast(tryStatement.getBlock().getStatements()));
     }
     if (catchTree.getBlock().getStatements().isEmpty()) {
-      fix.addStaticImport("org.junit.Assert.assertThrows");
+      fix.addStaticImport(JUnitMatchers.getAssertionClassName(tree) + ".assertThrows");
       fix.replace(
               getStartPosition(tryStatement),
               startPosition,
@@ -177,7 +182,7 @@ public class AssertionFailureIgnored extends BugChecker implements MethodInvocat
                   state.getSourceForNode(catchTree.getParameter().getType())))
           .replace(endPosition, state.getEndPosition(catchTree), (expression ? "" : "}") + ");\n");
     } else {
-      fix.addStaticImport("org.junit.Assert.assertThrows")
+      fix.addStaticImport(JUnitMatchers.getAssertionClassName(tree) + ".assertThrows")
           .prefixWith(tryStatement, state.getSourceForNode(catchTree.getParameter()))
           .replace(
               getStartPosition(tryStatement),

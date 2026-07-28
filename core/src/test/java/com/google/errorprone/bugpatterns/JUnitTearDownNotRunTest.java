@@ -25,10 +25,10 @@ import org.junit.runners.JUnit4;
  * @author glorioso@google.com (Nick Glorioso)
  */
 @RunWith(JUnit4.class)
-public class JUnit4TearDownNotRunTest {
+public class JUnitTearDownNotRunTest {
 
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(JUnit4TearDownNotRun.class, getClass());
+      CompilationTestHelper.newInstance(JUnitTearDownNotRun.class, getClass());
 
   @Test
   public void positiveCases() {
@@ -229,6 +229,54 @@ public class JUnit4TearDownNotRunTest {
             class J4TearDownInheritsFromAnnotatedMethod2 extends TearDownAnnotatedBaseClass {
               @After
               public void tearDown() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveCasesJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "JUnit5TearDownNotRunPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.jupiter.api.Test;
+
+            /** Basic class with an untagged tearDown method in JUnit 5 test */
+            class JUnit5TearDownNotRunPositiveCases {
+              @Test
+              public void test() {}
+
+              // BUG: Diagnostic contains: @AfterEach
+              public void tearDown() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeCasesJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "JUnit5TearDownNotRunNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.jupiter.api.AfterEach;
+            import org.junit.jupiter.api.AfterAll;
+            import org.junit.jupiter.api.Test;
+
+            class JUnit5TearDownNotRunNegativeCases {
+              @AfterEach
+              public void tearDown() {}
+
+              @AfterAll
+              public static void tearDownClass() {}
+
+              @Test
+              public void test() {}
             }
             """)
         .doTest();

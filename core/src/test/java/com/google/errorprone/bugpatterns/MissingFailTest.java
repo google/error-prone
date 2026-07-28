@@ -1219,4 +1219,32 @@ public class MissingFailNegativeCases extends TestCase {
             """)
         .doTest();
   }
+
+  @Test
+  public void positiveCasesJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "MissingFailPositiveCasesJUnit5.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.jupiter.api.Assertions;
+            import org.junit.jupiter.api.Test;
+
+            public class MissingFailPositiveCasesJUnit5 {
+
+              @Test
+              public void expectedException_emptyCatch() {
+                try {
+                  // BUG: Diagnostic contains: fail()
+                  dummyMethod();
+                } catch (Exception expected) {
+                }
+              }
+
+              private void dummyMethod() {}
+            }
+            """)
+        .doTest();
+  }
 }

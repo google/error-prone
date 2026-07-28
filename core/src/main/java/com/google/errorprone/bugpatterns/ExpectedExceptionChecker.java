@@ -46,6 +46,7 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
@@ -264,7 +265,7 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
       return baseFix;
     }
     SuggestedFix.Builder fix = baseFix.toBuilder();
-    fix.addStaticImport("org.junit.Assert.assertThrows");
+    fix.addStaticImport(JUnitMatchers.getAssertionClassName(state) + ".assertThrows");
     StringBuilder fixPrefix = new StringBuilder();
     String exceptionTypeName = SuggestedFixes.qualifyType(state, fix, exceptionType);
     if (!newAsserts.isEmpty()) {

@@ -27,13 +27,13 @@ import org.junit.runners.JUnit4;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 @RunWith(JUnit4.class)
-public class JUnit4TestNotRunTest {
+public class JUnitTestNotRunTest {
 
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(JUnit4TestNotRun.class, getClass());
+      CompilationTestHelper.newInstance(JUnitTestNotRun.class, getClass());
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(JUnit4TestNotRun.class, getClass());
+      BugCheckerRefactoringTestHelper.newInstance(JUnitTestNotRun.class, getClass());
 
   @Test
   public void positiveCase1() {
@@ -998,6 +998,83 @@ public class JUnit4TestNotRunNegativeCase5 extends JUnit4TestNotRunBaseClass {
               }
 
               private void verify() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveCaseJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "JUnit5TestNotRunPositiveCase.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.jupiter.api.Test;
+
+            class JUnit5TestNotRunPositiveCase {
+              @Test
+              public void alreadyTest() {}
+
+              // BUG: Diagnostic contains: @Test
+              public void testThisIsATest() {}
+
+              // BUG: Diagnostic contains: @Test
+              public static void testThisIsAStaticTest() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeCaseJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "JUnit5TestNotRunNegativeCase.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.jupiter.api.Test;
+
+            class JUnit5TestNotRunNegativeCase {
+              @Test
+              public void testThisIsATest() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void refactoringJUnit5() {
+    refactoringHelper
+        .addInputLines(
+            "in/Foo.java",
+            """
+            package pkg;
+
+            import org.junit.jupiter.api.Test;
+
+            class Foo {
+              @Test
+              public void alreadyTest() {}
+
+              public void testThisIsATest() {}
+            }
+            """)
+        .addOutputLines(
+            "out/Foo.java",
+            """
+            package pkg;
+
+            import org.junit.jupiter.api.Test;
+
+            class Foo {
+              @Test
+              public void alreadyTest() {}
+
+              @Test
+              public void testThisIsATest() {}
             }
             """)
         .doTest();

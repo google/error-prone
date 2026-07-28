@@ -117,7 +117,8 @@ public class InputStreamSlowMultibyteRead extends BugChecker implements ClassTre
     while (enclosingPath != null) {
       ClassTree klazz = (ClassTree) enclosingPath.getLeaf();
       if (JUnitMatchers.isTestCaseDescendant.matches(klazz, state)
-          || hasAnnotation(JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION).matches(klazz, state)) {
+          || hasAnnotation(JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION).matches(klazz, state)
+          || JUnitMatchers.hasJUnit5TestCases.matches(klazz, state)) {
         return Description.NO_MATCH;
       }
       enclosingPath =

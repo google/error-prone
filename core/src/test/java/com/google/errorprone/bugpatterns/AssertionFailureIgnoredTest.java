@@ -285,4 +285,70 @@ public class AssertionFailureIgnoredTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void refactoringJUnit5() {
+    BugCheckerRefactoringTestHelper.newInstance(AssertionFailureIgnored.class, getClass())
+        .addInputLines(
+            "in/Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.junit.jupiter.api.Assertions.assertThrows;
+
+            import java.io.IOException;
+            import org.junit.jupiter.api.Assertions;
+
+            class Test {
+              void f() {
+                AssertionError t = assertThrows(AssertionError.class, () -> System.err.println());
+                assertThat(t).isInstanceOf(AssertionError.class);
+                assertThrows(AssertionError.class, () -> System.err.println());
+
+                try {
+                  if (true) throw new IOException();
+                  Assertions.fail();
+                } catch (AssertionError e) {
+                } catch (Exception e) {
+                }
+                try {
+                  if (true) throw new NoSuchFieldException();
+                  if (true) throw new NoSuchMethodException();
+                  Assertions.fail();
+                } catch (AssertionError | NoSuchFieldException | NoSuchMethodException e) {
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Test.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.junit.jupiter.api.Assertions.assertThrows;
+
+            import java.io.IOException;
+            import org.junit.jupiter.api.Assertions;
+
+            class Test {
+              void f() {
+                AssertionError t = assertThrows(AssertionError.class, () -> System.err.println());
+                assertThat(t).isInstanceOf(AssertionError.class);
+                assertThrows(AssertionError.class, () -> System.err.println());
+
+                try {
+                  if (true) throw new IOException();
+                  Assertions.fail();
+                } catch (AssertionError e) {
+                } catch (Exception e) {
+                }
+                try {
+                  if (true) throw new NoSuchFieldException();
+                  if (true) throw new NoSuchMethodException();
+                  Assertions.fail();
+                } catch (AssertionError | NoSuchFieldException | NoSuchMethodException e) {
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }

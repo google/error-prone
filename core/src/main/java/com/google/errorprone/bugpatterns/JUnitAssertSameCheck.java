@@ -43,6 +43,8 @@ public class JUnitAssertSameCheck extends BugChecker implements MethodInvocation
    * Cases:
    *
    * <ol>
+   *   <li>org.junit.jupiter.api.Assertions.assertSame(a, a);
+   *   <li>org.junit.jupiter.api.Assertions.assertSame(a, a, "message");
    *   <li>org.junit.Assert.assertSame(a, a);
    *   <li>org.junit.Assert.assertSame("message", a, a);
    *   <li>junit.framework.Assert.assertSame(a, a);
@@ -50,7 +52,10 @@ public class JUnitAssertSameCheck extends BugChecker implements MethodInvocation
    * </ol>
    */
   private static final Matcher<ExpressionTree> ASSERT_SAME_MATCHER =
-      staticMethod().onClassAny("org.junit.Assert", "junit.framework.Assert").named("assertSame");
+      staticMethod()
+          .onClassAny(
+              "org.junit.jupiter.api.Assertions", "org.junit.Assert", "junit.framework.Assert")
+          .named("assertSame");
 
   @Override
   public Description matchMethodInvocation(
@@ -65,9 +70,15 @@ public class JUnitAssertSameCheck extends BugChecker implements MethodInvocation
       return describeMatch(methodInvocationTree);
     }
 
-    // cases: assertSame("message", a, a);
-    if (args.size() == 3 && ASTHelpers.sameVariable(args.get(1), args.get(2))) {
-      return describeMatch(methodInvocationTree);
+    if (args.size() == 3) {
+      // JUnit 4: assertSame("message", a, a) - message first
+      if (ASTHelpers.sameVariable(args.get(1), args.get(2))) {
+        return describeMatch(methodInvocationTree);
+      }
+      // JUnit 5: assertSame(a, a, "message") - message last
+      if (ASTHelpers.sameVariable(args.get(0), args.get(1))) {
+        return describeMatch(methodInvocationTree);
+      }
     }
     return Description.NO_MATCH;
   }

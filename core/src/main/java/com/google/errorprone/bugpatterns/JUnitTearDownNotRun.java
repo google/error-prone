@@ -21,7 +21,14 @@ import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_ANNOTATIO
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_CLASS_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_CLASS_ANNOTATION;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT5_AFTER_EACH_ANNOTATION;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT5_AFTER_ALL_ANNOTATION;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT5_BEFORE_EACH_ANNOTATION;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT5_BEFORE_ALL_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4AfterAnnotations;
+import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit5AfterAll;
+import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit5AfterEach;
+import static com.google.errorprone.matchers.JUnitMatchers.isJUnit5TestClass;
 import static com.google.errorprone.matchers.JUnitMatchers.looksLikeJUnit3TearDown;
 import static com.google.errorprone.matchers.JUnitMatchers.looksLikeJUnit4After;
 import static com.google.errorprone.matchers.Matchers.allOf;
@@ -29,34 +36,45 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.not;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodTree;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * Checks for the existence of a JUnit3 style tearDown() method in a JUnit4 test class or methods
- * annotated with a non-JUnit4 @After annotation.
+ * Checks for the existence of a tearDown() method in a JUnit test class that will not be run;
+ * suggests adding the appropriate lifecycle annotation.
  *
  * @author glorioso@google.com (Nick Glorioso)
  */
 @BugPattern(
-    summary = "tearDown() method will not be run; please add JUnit's @After annotation",
-    severity = ERROR)
-public class JUnit4TearDownNotRun extends AbstractJUnit4InitMethodNotRun {
+    summary =
+        "tearDown() method will not be run; please add JUnit's @After or @AfterEach annotation",
+    severity = ERROR,
+    altNames = {"JUnit4TearDownNotRun"})
+public class JUnitTearDownNotRun extends AbstractJUnit4InitMethodNotRun {
   @Override
   protected Matcher<MethodTree> methodMatcher() {
     return allOf(
-        anyOf(looksLikeJUnit3TearDown, looksLikeJUnit4After), not(hasJUnit4AfterAnnotations));
+        anyOf(looksLikeJUnit3TearDown, looksLikeJUnit4After),
+        not(hasJUnit4AfterAnnotations),
+        not(hasJUnit5AfterEach),
+        not(hasJUnit5AfterAll));
   }
 
   @Override
-  protected String correctAnnotation() {
-    return JUNIT_AFTER_ANNOTATION;
+  protected String correctAnnotation(VisitorState state) {
+    return isJUnit5TestClass(state) ? JUNIT5_AFTER_EACH_ANNOTATION : JUNIT_AFTER_ANNOTATION;
   }
 
   @Override
-  protected List<AnnotationReplacements> annotationReplacements() {
+  protected List<AnnotationReplacements> annotationReplacements(VisitorState state) {
+    if (isJUnit5TestClass(state)) {
+      return Arrays.asList(
+          new AnnotationReplacements(JUNIT5_BEFORE_EACH_ANNOTATION, JUNIT5_AFTER_EACH_ANNOTATION),
+          new AnnotationReplacements(JUNIT5_BEFORE_ALL_ANNOTATION, JUNIT5_AFTER_ALL_ANNOTATION));
+    }
     return Arrays.asList(
         new AnnotationReplacements(JUNIT_BEFORE_ANNOTATION, JUNIT_AFTER_ANNOTATION),
         new AnnotationReplacements(JUNIT_BEFORE_CLASS_ANNOTATION, JUNIT_AFTER_CLASS_ANNOTATION));

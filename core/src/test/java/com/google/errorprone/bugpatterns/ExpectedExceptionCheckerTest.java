@@ -553,4 +553,60 @@ class ExceptionTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void expectRefactoring() {
+    BugCheckerRefactoringTestHelper.newInstance(ExpectedExceptionChecker.class, getClass())
+        .addInputLines(
+            "in/ExceptionTest.java",
+            """
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule public ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void test() throws Exception {
+                thrown.expect(IOException.class);
+                thrown.expectMessage("NOSUCH");
+                Path p = Paths.get("NOSUCH");
+                Files.readAllBytes(p);
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/ExceptionTest.java",
+            """
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.junit.Assert.assertThrows;
+
+            import java.io.IOException;
+            import java.nio.file.*;
+            import org.junit.Rule;
+            import org.junit.Test;
+            import org.junit.rules.ExpectedException;
+
+            class ExceptionTest {
+              @Rule public ExpectedException thrown = ExpectedException.none();
+
+              @Test
+              public void test() throws Exception {
+
+                IOException thrown =
+                    assertThrows(
+                        IOException.class,
+                        () -> {
+                          Path p = Paths.get("NOSUCH");
+                          Files.readAllBytes(p);
+                        });
+                assertThat(thrown).hasMessageThat().contains("NOSUCH");
+              }
+            }
+            """)
+        .doTest();
+  }
 }

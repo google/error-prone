@@ -63,7 +63,8 @@ public class DeadException extends BugChecker implements NewClassTreeMatcher {
               anyOf(
                   enclosingClass(JUnitMatchers.isJUnit3TestClass),
                   enclosingClass(JUnitMatchers.isAmbiguousJUnitVersion),
-                  enclosingClass(JUnitMatchers.isJUnit4TestClass))));
+                  enclosingClass(JUnitMatchers.isJUnit4TestClass),
+                  enclosingClass(JUnitMatchers.hasJUnit5TestCases))));
 
   @Override
   public Description matchNewClass(NewClassTree newClassTree, VisitorState state) {

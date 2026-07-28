@@ -70,7 +70,9 @@ public final class Varifier extends BugChecker implements VariableTreeMatcher {
           });
 
   private static final Matcher<ExpressionTree> ASSERT_THROWS =
-      staticMethod().onClass("org.junit.Assert").named("assertThrows");
+      anyOf(
+          staticMethod().onClass("org.junit.jupiter.api.Assertions").named("assertThrows"),
+          staticMethod().onClass("org.junit.Assert").named("assertThrows"));
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {

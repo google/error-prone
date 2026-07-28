@@ -72,6 +72,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
   private static final Matcher<StatementTree> FAIL_METHOD =
       expressionStatement(
           anyOf(
+              staticMethod().onClass("org.junit.jupiter.api.Assertions").named("fail"),
               staticMethod().onClass("org.junit.Assert").named("fail"),
               staticMethod().onClass("junit.framework.Assert").named("fail"),
               staticMethod().onClass("junit.framework.TestCase").named("fail")));

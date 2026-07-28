@@ -96,8 +96,9 @@ public final class ImpossibleNullComparison extends BugChecker
 
   private static final Matcher<ExpressionTree> ASSERT_NOT_NULL =
       anyOf(
-          staticMethod().onClass("junit.framework.Assert").named("assertNotNull"),
-          staticMethod().onClass("org.junit.Assert").named("assertNotNull"));
+          staticMethod().onClass("org.junit.jupiter.api.Assertions").named("assertNotNull"),
+          staticMethod().onClass("org.junit.Assert").named("assertNotNull"),
+          staticMethod().onClass("junit.framework.Assert").named("assertNotNull"));
 
   private static final Matcher<MethodInvocationTree> TRUTH_NOT_NULL =
       allOf(

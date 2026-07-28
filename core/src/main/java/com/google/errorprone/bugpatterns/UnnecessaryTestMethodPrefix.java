@@ -20,6 +20,8 @@ import static com.google.common.base.Ascii.toLowerCase;
 import static com.google.errorprone.fixes.SuggestedFixes.renameMethod;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_TEST_ANNOTATION;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT5_TEST_ANNOTATION;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
 import com.google.errorprone.BugPattern;
@@ -72,5 +74,6 @@ public final class UnnecessaryTestMethodPrefix extends BugChecker
     return NO_MATCH;
   }
 
-  private static final Matcher<Tree> TEST = hasAnnotation(JUNIT4_TEST_ANNOTATION);
+  private static final Matcher<Tree> TEST =
+      anyOf(hasAnnotation(JUNIT4_TEST_ANNOTATION), hasAnnotation(JUNIT5_TEST_ANNOTATION));
 }

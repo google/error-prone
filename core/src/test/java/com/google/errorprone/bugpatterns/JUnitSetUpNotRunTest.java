@@ -29,12 +29,12 @@ import org.junit.runners.ParentRunner;
  * @author glorioso@google.com (Nick Glorioso)
  */
 @RunWith(JUnit4.class)
-public class JUnit4SetUpNotRunTest {
+public class JUnitSetUpNotRunTest {
 
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(JUnit4SetUpNotRun.class, getClass());
+      CompilationTestHelper.newInstance(JUnitSetUpNotRun.class, getClass());
   private final BugCheckerRefactoringTestHelper refactoringTestHelper =
-      BugCheckerRefactoringTestHelper.newInstance(JUnit4SetUpNotRun.class, getClass());
+      BugCheckerRefactoringTestHelper.newInstance(JUnitSetUpNotRun.class, getClass());
 
   @Test
   public void positiveCases() {
@@ -318,6 +318,54 @@ class J4SetUpExtendsAnnotatedMethod extends SetUpAnnotatedBaseClass {
             ParentRunner.class,
             SuperTest.class,
             SuperTest.class.getEnclosingClass())
+        .doTest();
+  }
+
+  @Test
+  public void positiveCasesJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "JUnit5SetUpNotRunPositiveCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.jupiter.api.Test;
+
+            /** Basic class with an untagged setUp method in JUnit 5 test */
+            class JUnit5SetUpNotRunPositiveCases {
+              @Test
+              public void test() {}
+
+              // BUG: Diagnostic contains: @BeforeEach
+              public void setUp() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeCasesJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "JUnit5SetUpNotRunNegativeCases.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import org.junit.jupiter.api.BeforeEach;
+            import org.junit.jupiter.api.BeforeAll;
+            import org.junit.jupiter.api.Test;
+
+            class JUnit5SetUpNotRunNegativeCases {
+              @BeforeEach
+              public void setUp() {}
+
+              @BeforeAll
+              public static void setUpClass() {}
+
+              @Test
+              public void test() {}
+            }
+            """)
         .doTest();
   }
 }

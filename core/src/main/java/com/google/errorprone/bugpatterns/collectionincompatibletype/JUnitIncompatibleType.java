@@ -47,7 +47,11 @@ public final class JUnitIncompatibleType extends BugChecker implements MethodInv
   private static final Matcher<ExpressionTree> ASSERT_EQUALS =
       allOf(
           staticMethod()
-              .onClassAny("org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")
+              .onClassAny(
+                  "org.junit.jupiter.api.Assertions",
+                  "org.junit.Assert",
+                  "junit.framework.Assert",
+                  "junit.framework.TestCase")
               .namedAnyOf("assertEquals", "assertNotEquals"),
           anyOf(
               staticMethod()
@@ -57,11 +61,19 @@ public final class JUnitIncompatibleType extends BugChecker implements MethodInv
               staticMethod()
                   .anyClass()
                   .withAnyName()
-                  .withParameters("java.lang.String", "java.lang.Object", "java.lang.Object")));
+                  .withParameters("java.lang.String", "java.lang.Object", "java.lang.Object"),
+              staticMethod()
+                  .anyClass()
+                  .withAnyName()
+                  .withParameters("java.lang.Object", "java.lang.Object", "java.lang.String")));
 
   private static final Matcher<ExpressionTree> ASSERT_ARRAY_EQUALS =
       staticMethod()
-          .onClassAny("org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")
+          .onClassAny(
+              "org.junit.jupiter.api.Assertions",
+              "org.junit.Assert",
+              "junit.framework.Assert",
+              "junit.framework.TestCase")
           .namedAnyOf("assertArrayEquals");
 
   private final TypeCompatibility typeCompatibility;

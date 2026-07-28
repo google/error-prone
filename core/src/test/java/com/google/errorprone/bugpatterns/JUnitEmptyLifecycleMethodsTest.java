@@ -21,12 +21,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link JUnit4EmptyMethods}. */
+/** Tests for {@link JUnitEmptyLifecycleMethods}. */
 @RunWith(JUnit4.class)
-public class JUnit4EmptyMethodsTest {
+public class JUnitEmptyLifecycleMethodsTest {
 
   private final BugCheckerRefactoringTestHelper refactoringHelper =
-      BugCheckerRefactoringTestHelper.newInstance(JUnit4EmptyMethods.class, getClass());
+      BugCheckerRefactoringTestHelper.newInstance(JUnitEmptyLifecycleMethods.class, getClass());
 
   @Test
   public void emptyMethods() {
@@ -222,6 +222,57 @@ public class JUnit4EmptyMethodsTest {
             }
             """)
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void emptyMethodsJUnit5() {
+    refactoringHelper
+        .addInputLines(
+            "FooTest.java",
+            """
+            import org.junit.jupiter.api.AfterAll;
+            import org.junit.jupiter.api.AfterEach;
+            import org.junit.jupiter.api.BeforeAll;
+            import org.junit.jupiter.api.BeforeEach;
+            import org.junit.jupiter.api.Test;
+
+            class FooTest {
+              @BeforeEach
+              void setUp() {}
+
+              @BeforeAll
+              static void setUpClass() {}
+
+              @AfterEach
+              void after() {}
+
+              @AfterAll
+              static void afterClass() {}
+
+              @Test
+              public void nonEmptyTest() {
+                System.out.println("test");
+              }
+            }
+            """)
+        .addOutputLines(
+            "FooTest.java",
+            """
+            import org.junit.jupiter.api.AfterAll;
+            import org.junit.jupiter.api.AfterEach;
+            import org.junit.jupiter.api.BeforeAll;
+            import org.junit.jupiter.api.BeforeEach;
+            import org.junit.jupiter.api.Test;
+
+            class FooTest {
+
+              @Test
+              public void nonEmptyTest() {
+                System.out.println("test");
+              }
+            }
+            """)
         .doTest();
   }
 }

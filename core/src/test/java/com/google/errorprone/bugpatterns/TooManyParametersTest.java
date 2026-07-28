@@ -253,4 +253,52 @@ public class ExampleWithTestParametersTest {
 """)
         .doTest();
   }
+
+  @Test
+  public void testJUnit5TestMethod() {
+    compilationHelper
+        .addSourceLines(
+            "ExampleWithJUnit5Test.java",
+            """
+            import org.junit.jupiter.api.Test;
+
+            public class ExampleWithJUnit5Test {
+              @Test
+              public void myTest(
+                  String a,
+                  String b,
+                  String c,
+                  String d,
+                  String e,
+                  String f,
+                  String g,
+                  String h,
+                  String i,
+                  String j,
+                  String k,
+                  String l)
+                  throws Exception {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void testJUnit5TestMethodNegative() {
+    compilationHelper
+        .addSourceLines(
+            "ExampleWithJUnit5TestNegative.java",
+            """
+            import org.junit.jupiter.api.Test;
+
+            public class ExampleWithJUnit5TestNegative {
+              @Test
+              public void myTest() throws Exception {}
+
+              @Test
+              public void myTestWithFewParams(String a, String b) throws Exception {}
+            }
+            """)
+        .doTest();
+  }
 }

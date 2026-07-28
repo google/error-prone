@@ -338,4 +338,84 @@ public class CatchFailTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void positiveJUnit5() {
+    testHelper
+        .addInputLines(
+            "in/Foo.java",
+            """
+            import org.junit.jupiter.api.Test;
+
+            class Foo {
+              @Test
+              public void f() {
+                try {
+                  System.err.println();
+                } catch (Exception expected) {
+                  org.junit.jupiter.api.Assertions.fail();
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Foo.java",
+            """
+            import org.junit.jupiter.api.Test;
+
+            class Foo {
+              @Test
+              public void f() throws Exception {
+                System.err.println();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeJUnit5() {
+    testHelper
+        .addInputLines(
+            "in/Foo.java",
+            """
+            import org.junit.jupiter.api.Test;
+
+            class Foo {
+              public void f() {
+                try {
+                  System.err.println();
+                } catch (Exception expected) {
+                  // BUG: Diagnostic contains:
+                  org.junit.jupiter.api.Assertions.fail();
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void useExceptionJUnit5() {
+    testHelper
+        .addInputLines(
+            "in/Foo.java",
+            """
+            import org.junit.jupiter.api.Test;
+
+            class Foo {
+              @Test
+              public void f() {
+                try {
+                  System.err.println();
+                } catch (Exception expected) {
+                  org.junit.jupiter.api.Assertions.fail("oh no " + expected);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }

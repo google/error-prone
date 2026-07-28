@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestClass;
+import static com.google.errorprone.matchers.JUnitMatchers.isJUnit5TestClass;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
@@ -66,10 +67,11 @@ import javax.lang.model.element.Modifier;
  */
 @BugPattern(
     summary =
-        "This looks like a test method but is not run; please add @Test and @Ignore, or, if this"
-            + " is a helper method, reduce its visibility.",
-    severity = ERROR)
-public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
+        "This looks like a test method but is not run; please add @Test and @Ignore or @Disabled,"
+            + " or, if this is a helper method, reduce its visibility.",
+    severity = ERROR,
+    altNames = {"JUnit4TestNotRun"})
+public class JUnitTestNotRun extends BugChecker implements ClassTreeMatcher {
   private static final Matcher<MethodTree> POSSIBLE_TEST_METHOD =
       allOf(
           hasModifier(PUBLIC),
@@ -117,11 +119,11 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
   private static final Matcher<Tree> NOT_STATIC = not(hasModifier(STATIC));
 
   @Inject
-  JUnit4TestNotRun() {}
+  JUnitTestNotRun() {}
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (!isJUnit4TestClass.matches(tree, state)) {
+    if (!anyOf(isJUnit4TestClass, JUnitMatchers.hasJUnit5TestCases).matches(tree, state)) {
       return NO_MATCH;
     }
     Map<MethodSymbol, MethodTree> suspiciousMethods = new HashMap<>();
@@ -218,27 +220,33 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
    *
    * <ol>
    *   <li>Add @Test, remove static modifier if present.
-   *   <li>Add @Test and @Ignore, remove static modifier if present.
+   *   <li>Add @Test and @Ignore/@Disabled, remove static modifier if present.
    *   <li>Change visibility to private (for local helper methods).
    * </ol>
    */
   private Description describeFixes(MethodTree methodTree, VisitorState state) {
+    boolean isJUnit5 = isJUnit5TestClass(state);
     Optional<SuggestedFix> removeStatic =
         SuggestedFixes.removeModifiers(methodTree, state, Modifier.STATIC);
+
+    String testAnnotation = isJUnit5 ? "org.junit.jupiter.api.Test" : "org.junit.Test";
+    String disableAnnotation =
+        isJUnit5 ? "org.junit.jupiter.api.Disabled" : "org.junit.Ignore";
+
     SuggestedFix testFix =
         removeStatic.orElse(emptyFix()).toBuilder()
-            .addImport("org.junit.Test")
+            .addImport(testAnnotation)
             .prefixWith(methodTree, "@Test ")
             .build();
     SuggestedFix ignoreFix =
         testFix.toBuilder()
-            .addImport("org.junit.Ignore")
-            .prefixWith(methodTree, "@Ignore ")
+            .addImport(disableAnnotation)
+            .prefixWith(methodTree, "@" + disableAnnotation.substring(disableAnnotation.lastIndexOf('.') + 1) + " ")
             .build();
 
     SuggestedFix visibilityFix = SuggestedFixes.Visibility.PRIVATE.refactor(methodTree, state);
 
-    // Suggest @Ignore first if test method is named like a purposely disabled test.
+    // Suggest @Ignore/@Disabled first if test method is named like a purposely disabled test.
     String methodName = methodTree.getName().toString();
     if (methodName.startsWith("disabl") || methodName.startsWith("ignor")) {
       return buildDescription(methodTree)
