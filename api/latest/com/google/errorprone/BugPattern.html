@@ -71,7 +71,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#disableable()" tabindex="0">disableable</a></li>
 <li><a href="#suppressionAnnotations()" tabindex="0">suppressionAnnotations</a></li>
 <li><a href="#documentSuppression()" tabindex="0">documentSuppression</a></li>
-<li><a href="#generateExamplesFromTestCases()" tabindex="0">generateExamplesFromTestCases</a></li>
 </ol>
 </li>
 </ol>
@@ -172,36 +171,29 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">A longer explanation of the problem that this checker detects.</div>
 </div>
-<div class="col-first even-row-color"><code>boolean</code></div>
-<div class="col-second even-row-color"><code><a href="#generateExamplesFromTestCases()" class="member-name-link">generateExamplesFromTestCases</a></code></div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#link()" class="member-name-link">link</a></code></div>
 <div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">this is a no-op that will be removed in the future</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#link()" class="member-name-link">link</a></code></div>
-<div class="col-last odd-row-color">
 <div class="block">The link URL to use if linkType() is LinkType.CUSTOM.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="BugPattern.LinkType.html" title="enum class in com.google.errorprone">BugPattern.LinkType</a></code></div>
-<div class="col-second even-row-color"><code><a href="#linkType()" class="member-name-link">linkType</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code><a href="BugPattern.LinkType.html" title="enum class in com.google.errorprone">BugPattern.LinkType</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#linkType()" class="member-name-link">linkType</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">The type of link to generate in the compiler error message.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#name()" class="member-name-link">name</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#name()" class="member-name-link">name</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">A unique identifier for this bug, used for @SuppressWarnings and in the compiler error message.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</code></div>
-<div class="col-second even-row-color"><code><a href="#suppressionAnnotations()" class="member-name-link">suppressionAnnotations</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#suppressionAnnotations()" class="member-name-link">suppressionAnnotations</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">A set of annotation types that can be used to suppress the check.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
-<div class="col-second odd-row-color"><code><a href="#tags()" class="member-name-link">tags</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
+<div class="col-second even-row-color"><code><a href="#tags()" class="member-name-link">tags</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">A list of Stringly-typed tags to apply to this check.</div>
 </div>
 </div>
@@ -369,22 +361,6 @@ unsuppressible checks may still be disabled using command line flags (see <a hre
 <p>This should only be disabled if the check has a non-standard suppression mechanism that
 requires additional explanation. For example, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/SuppressWarnings.html" title="class or interface in java.lang" class="external-link"><code>SuppressWarnings</code></a> cannot be applied to
 packages, so checks that operate at the package level need special treatment.</div>
-<dl class="notes">
-<dt>Default:</dt>
-<dd><code>true</code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="generateExamplesFromTestCases()">
-<h3>generateExamplesFromTestCases</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="return-type">boolean</span>&nbsp;<span class="element-name">generateExamplesFromTestCases</span></div>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">this is a no-op that will be removed in the future</div>
-</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>true</code></dd>
