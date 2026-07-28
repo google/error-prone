@@ -107,7 +107,10 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
                    * and b/130658266 (which makes MethodMatchers look at the Tree again to extract
                    * the receiver type, which sidesteps the getSymbol fix).
                    */
-                  .onDescendantOfAny("org.junit.Assert", "junit.framework.Assert")
+                  .onDescendantOfAny(
+                      "org.junit.jupiter.api.Assertions",
+                      "org.junit.Assert",
+                      "junit.framework.Assert")
                   .named("fail"),
               instanceMethod().onDescendantOf("java.lang.Runtime").namedAnyOf("exit", "halt"),
               staticMethod().onClass("java.lang.System").named("exit")));

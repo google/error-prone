@@ -21,12 +21,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit test of {@link JUnit4ClassAnnotationNonStatic} */
+/** Unit test of {@link JUnitClassAnnotationNonStatic} */
 @RunWith(JUnit4.class)
-public class JUnit4ClassAnnotationNonStaticTest {
+public class JUnitClassAnnotationNonStaticTest {
 
   private final CompilationTestHelper compilationHelper =
-      CompilationTestHelper.newInstance(JUnit4ClassAnnotationNonStatic.class, getClass());
+      CompilationTestHelper.newInstance(JUnitClassAnnotationNonStatic.class, getClass());
 
   @Test
   public void positive() {
@@ -76,6 +76,56 @@ public class JUnit4ClassAnnotationNonStaticTest {
 
               @AfterClass
               public static void shouldDoSomethingElse() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "TestJ5.java",
+            """
+            import org.junit.jupiter.api.AfterAll;
+            import org.junit.jupiter.api.BeforeAll;
+            import org.junit.jupiter.api.Test;
+
+            class TestJ5 {
+              @BeforeAll
+              // BUG: Diagnostic contains: BeforeAll can only be applied to static methods.
+              public void shouldDoSomething() {}
+
+              @AfterAll
+              // BUG: Diagnostic contains: AfterAll can only be applied to static methods.
+              public void shouldDoSomethingElse() {}
+
+              @Test
+              public void test() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "TestJ5.java",
+            """
+            import org.junit.jupiter.api.AfterAll;
+            import org.junit.jupiter.api.BeforeAll;
+            import org.junit.jupiter.api.Test;
+
+            class TestJ5 {
+              @BeforeAll
+              public static void shouldDoSomething() {}
+
+              @AfterAll
+              public static void shouldDoSomethingElse() {}
+
+              @Test
+              public void test() {}
             }
             """)
         .doTest();

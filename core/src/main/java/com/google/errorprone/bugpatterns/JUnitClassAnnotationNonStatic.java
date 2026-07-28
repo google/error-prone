@@ -20,6 +20,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_CLASS_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_CLASS_ANNOTATION;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT5_AFTER_ALL_ANNOTATION;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT5_BEFORE_ALL_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isStatic;
@@ -41,14 +43,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.lang.model.element.Modifier;
 
-/** {@code @BeforeClass} or {@code @AfterClass} should be applied to static methods. */
-@BugPattern(summary = "This method should be static", severity = ERROR)
-public class JUnit4ClassAnnotationNonStatic extends BugChecker implements MethodTreeMatcher {
+/**
+ * {@code @BeforeClass}, {@code @AfterClass}, {@code @BeforeAll}, or {@code @AfterAll} should be
+ * applied to static methods.
+ */
+@BugPattern(
+    summary = "This method should be static",
+    severity = ERROR,
+    altNames = {"JUnit4ClassAnnotationNonStatic"})
+public class JUnitClassAnnotationNonStatic extends BugChecker implements MethodTreeMatcher {
 
   private static final MultiMatcher<MethodTree, AnnotationTree> CLASS_INIT_ANNOTATION =
       annotations(
           AT_LEAST_ONE,
-          anyOf(isType(JUNIT_AFTER_CLASS_ANNOTATION), isType(JUNIT_BEFORE_CLASS_ANNOTATION)));
+          anyOf(
+              isType(JUNIT_AFTER_CLASS_ANNOTATION),
+              isType(JUNIT_BEFORE_CLASS_ANNOTATION),
+              isType(JUNIT5_BEFORE_ALL_ANNOTATION),
+              isType(JUNIT5_AFTER_ALL_ANNOTATION)));
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -66,8 +78,6 @@ public class JUnit4ClassAnnotationNonStatic extends BugChecker implements Method
         .build();
   }
 
-  // Might be a bit overkill just in case people add @BeforeClass and @AfterClass to the same
-  // method.
   private static String messageForAnnos(List<AnnotationTree> annotationTrees) {
     String annoNames =
         annotationTrees.stream()

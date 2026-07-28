@@ -1509,7 +1509,11 @@ public final class Matchers {
 
   private static final Matcher<ExpressionTree> ASSERT_EQUALS =
       staticMethod()
-          .onClassAny("org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")
+          .onClassAny(
+              "org.junit.jupiter.api.Assertions",
+              "org.junit.Assert",
+              "junit.framework.Assert",
+              "junit.framework.TestCase")
           .named("assertEquals");
 
   /**
@@ -1522,7 +1526,11 @@ public final class Matchers {
 
   private static final Matcher<ExpressionTree> ASSERT_NOT_EQUALS =
       staticMethod()
-          .onClassAny("org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")
+          .onClassAny(
+              "org.junit.jupiter.api.Assertions",
+              "org.junit.Assert",
+              "junit.framework.Assert",
+              "junit.framework.TestCase")
           .named("assertNotEquals");
 
   /**

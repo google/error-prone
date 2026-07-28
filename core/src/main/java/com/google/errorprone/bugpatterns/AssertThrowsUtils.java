@@ -29,6 +29,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes.VariableNamer;
+import com.google.errorprone.matchers.JUnitMatchers;
 import com.google.errorprone.util.ErrorProneComment;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CatchTree;
@@ -109,7 +110,11 @@ public final class AssertThrowsUtils {
       return Optional.empty();
     }
     List<? extends StatementTree> catchStatements = catchTree.getBlock().getStatements();
-    fix.addStaticImport("org.junit.Assert.assertThrows");
+    String assertThrowsClass =
+        JUnitMatchers.findFailCallInTry(tryTree)
+            .map(JUnitMatchers::getAssertionClassName)
+            .orElse(JUnitMatchers.JUNIT4_ASSERT_CLASS);
+    fix.addStaticImport(assertThrowsClass + ".assertThrows");
     List<? extends Tree> resources = tryTree.getResources();
     if (!resources.isEmpty()) {
       fixPrefix.append(

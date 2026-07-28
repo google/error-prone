@@ -78,7 +78,9 @@ import org.jspecify.annotations.Nullable;
 public class AssertThrowsMinimizer extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<ExpressionTree> MATCHER =
-      anyOf(staticMethod().onClass("org.junit.Assert").named("assertThrows"));
+      anyOf(
+          staticMethod().onClass("org.junit.jupiter.api.Assertions").named("assertThrows"),
+          staticMethod().onClass("org.junit.Assert").named("assertThrows"));
 
   private final ConstantExpressions constantExpressions;
   private final boolean useVarType;

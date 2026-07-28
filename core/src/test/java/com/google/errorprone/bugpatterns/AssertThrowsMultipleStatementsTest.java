@@ -147,4 +147,61 @@ public class AssertThrowsMultipleStatementsTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void complexSingleStatementLambdasJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                org.junit.jupiter.api.Assertions.assertThrows(
+                    IllegalStateException.class, () -> {});
+                org.junit.jupiter.api.Assertions.assertThrows(
+                    IllegalStateException.class,
+                    () -> {
+                      System.err.println();
+                    });
+                org.junit.jupiter.api.Assertions.assertThrows(
+                    IllegalStateException.class,
+                    () -> {
+                      int x = 1;
+                    });
+                org.junit.jupiter.api.Assertions.assertThrows(
+                    IllegalStateException.class,
+                    () -> {
+                      // BUG: Diagnostic contains:
+                      if (true) {
+                        System.err.println();
+                      }
+                    });
+                org.junit.jupiter.api.Assertions.assertThrows(
+                    IllegalStateException.class,
+                    () -> {
+                      // BUG: Diagnostic contains:
+                      try {
+                        System.err.println();
+                      } catch (Exception e) {
+                      }
+                    });
+                org.junit.jupiter.api.Assertions.assertThrows(
+                    IllegalStateException.class,
+                    () -> {
+                      // BUG: Diagnostic contains:
+                      {
+                        System.err.println();
+                      }
+                    });
+                org.junit.jupiter.api.Assertions.assertThrows(
+                    IllegalStateException.class,
+                    () -> {
+                      // BUG: Diagnostic contains:
+                      return;
+                    });
+              }
+            }
+            """)
+        .doTest();
+  }
 }

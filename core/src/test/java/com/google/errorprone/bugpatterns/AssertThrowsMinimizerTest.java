@@ -1193,4 +1193,56 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void refactorJUnit5() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                org.junit.jupiter.api.Assertions.assertThrows(
+                    IllegalStateException.class,
+                    () -> {
+                      Foo.builder().setBar(new Bar());
+                    });
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                Foo.Builder builder = Foo.builder();
+                Bar bar = new Bar();
+                org.junit.jupiter.api.Assertions.assertThrows(
+                    IllegalStateException.class, () -> builder.setBar(bar));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeJUnit5() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+
+            class Test {
+              void f() {
+                ImmutableList.Builder<Integer> builder =
+                    ImmutableList.<Integer>builder().add(1).add(Integer.valueOf(2));
+                org.junit.jupiter.api.Assertions.assertThrows(
+                    IllegalStateException.class, () -> builder.add(2));
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }

@@ -94,7 +94,7 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
     if (statements.isEmpty()) {
       return fix.build();
     }
-    fix.addStaticImport("org.junit.Assert.assertThrows");
+    fix.addStaticImport(JUnitMatchers.getAssertionClassName(state) + ".assertThrows");
     StringBuilder prefix = new StringBuilder();
     prefix.append(
         String.format("assertThrows(%s, () -> ", state.getSourceForNode(expectedException)));

@@ -45,7 +45,11 @@ public final class AssertSameIncompatible extends BugChecker
     implements MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> JUNIT_MATCHER =
       staticMethod()
-          .onClassAny("org.junit.Assert", "junit.framework.Assert", "junit.framework.TestCase")
+          .onClassAny(
+              "org.junit.jupiter.api.Assertions",
+              "org.junit.Assert",
+              "junit.framework.Assert",
+              "junit.framework.TestCase")
           .namedAnyOf("assertSame", "assertNotSame");
 
   private static final Matcher<ExpressionTree> TRUTH_MATCHER =

@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static java.util.Locale.ROOT;
@@ -36,6 +37,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import java.util.Optional;
@@ -144,15 +146,25 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
                       .namedAnyOf("isWithin", "isNotWithin")
                       .withParameters(typeName)));
       junitWithoutMessage =
-          staticMethod()
-              .onClass("org.junit.Assert")
-              .named("assertEquals")
-              .withParameters(typeName, typeName, typeName);
+          anyOf(
+              staticMethod()
+                  .onClass("org.junit.jupiter.api.Assertions")
+                  .named("assertEquals")
+                  .withParameters(typeName, typeName, typeName),
+              staticMethod()
+                  .onClass("org.junit.Assert")
+                  .named("assertEquals")
+                  .withParameters(typeName, typeName, typeName));
       junitWithMessage =
-          staticMethod()
-              .onClass("org.junit.Assert")
-              .named("assertEquals")
-              .withParameters("java.lang.String", typeName, typeName, typeName);
+          anyOf(
+              staticMethod()
+                  .onClass("org.junit.jupiter.api.Assertions")
+                  .named("assertEquals")
+                  .withParameters(typeName, typeName, typeName, "java.lang.String"),
+              staticMethod()
+                  .onClass("org.junit.Assert")
+                  .named("assertEquals")
+                  .withParameters("java.lang.String", typeName, typeName, typeName));
     }
 
     abstract Number nextNumber(Number actual);
@@ -167,13 +179,25 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
         return check(tree.getArguments().get(2), tree.getArguments().get(0))
             .map(
                 tolerance ->
-                    suggestJunitFix(bugChecker, tree).setMessage(description(tolerance)).build());
+                    suggestJunitFix(bugChecker, tree, 2)
+                        .setMessage(description(tolerance))
+                        .build());
       }
       if (junitWithMessage.matches(tree, state)) {
-        return check(tree.getArguments().get(3), tree.getArguments().get(1))
+        // JUnit 4: assertEquals(message, expected, actual, delta) - delta at index 3
+        // JUnit 5: assertEquals(expected, actual, delta, message) - delta at index 2
+        Symbol sym = ASTHelpers.getSymbol(tree);
+        boolean isJUnit5 =
+            sym != null
+                && sym.owner.getQualifiedName().toString().equals("org.junit.jupiter.api.Assertions");
+        int deltaIndex = isJUnit5 ? 2 : 3;
+        int expectedIndex = isJUnit5 ? 0 : 1;
+        return check(tree.getArguments().get(deltaIndex), tree.getArguments().get(expectedIndex))
             .map(
                 tolerance ->
-                    suggestJunitFix(bugChecker, tree).setMessage(description(tolerance)).build());
+                    suggestJunitFix(bugChecker, tree, deltaIndex)
+                        .setMessage(description(tolerance))
+                        .build());
       }
       if (truthOfCall.matches(tree, state)) {
         return check(getReceiverArgument(tree), getOnlyElement(tree.getArguments()))
@@ -219,8 +243,8 @@ public final class FloatingPointAssertionWithinEpsilon extends BugChecker
 
     /** Suggest replacing the tolerance with {@code 0} for JUnit assertions. */
     private static Description.Builder suggestJunitFix(
-        BugChecker bugChecker, MethodInvocationTree tree) {
-      SuggestedFix fix = SuggestedFix.replace(getLast(tree.getArguments()), "0");
+        BugChecker bugChecker, MethodInvocationTree tree, int deltaIndex) {
+      SuggestedFix fix = SuggestedFix.replace(tree.getArguments().get(deltaIndex), "0");
       return bugChecker.buildDescription(tree).addFix(fix);
     }
 

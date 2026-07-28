@@ -359,6 +359,24 @@ class Test {
   }
 
   @Test
+  public void assertEqualJUnit5() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo() {
+                // BUG: Diagnostic contains: DoNotCall
+                org.junit.jupiter.api.Assertions.assertEquals(2.0, 2.0);
+                // These are OK since they pass a tolerance
+                org.junit.jupiter.api.Assertions.assertEquals(2.0, 2.0, 0.01);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void javaSqlDate_toInstant() {
     assertThrows(UnsupportedOperationException.class, () -> new Date(1234567890L).toInstant());
     testHelper

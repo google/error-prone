@@ -215,17 +215,17 @@ import com.google.errorprone.bugpatterns.IterableAndIterator;
 import com.google.errorprone.bugpatterns.IterablePathParameter;
 import com.google.errorprone.bugpatterns.JUnit3FloatingPointComparisonWithoutDelta;
 import com.google.errorprone.bugpatterns.JUnit3TestNotRun;
-import com.google.errorprone.bugpatterns.JUnit4ClassAnnotationNonStatic;
 import com.google.errorprone.bugpatterns.JUnit4ClassUsedInJUnit3;
-import com.google.errorprone.bugpatterns.JUnit4EmptyMethods;
-import com.google.errorprone.bugpatterns.JUnit4SetUpNotRun;
-import com.google.errorprone.bugpatterns.JUnit4TearDownNotRun;
-import com.google.errorprone.bugpatterns.JUnit4TestNotRun;
 import com.google.errorprone.bugpatterns.JUnit4TestsNotRunWithinEnclosed;
 import com.google.errorprone.bugpatterns.JUnitAmbiguousTestClass;
 import com.google.errorprone.bugpatterns.JUnitAssertSameCheck;
+import com.google.errorprone.bugpatterns.JUnitClassAnnotationNonStatic;
+import com.google.errorprone.bugpatterns.JUnitEmptyLifecycleMethods;
 import com.google.errorprone.bugpatterns.JUnitMethodInvoked;
 import com.google.errorprone.bugpatterns.JUnitParameterMethodNotFound;
+import com.google.errorprone.bugpatterns.JUnitSetUpNotRun;
+import com.google.errorprone.bugpatterns.JUnitTearDownNotRun;
+import com.google.errorprone.bugpatterns.JUnitTestNotRun;
 import com.google.errorprone.bugpatterns.JavaUtilDateChecker;
 import com.google.errorprone.bugpatterns.JdkObsolete;
 import com.google.errorprone.bugpatterns.LabelledBreakTarget;
@@ -806,13 +806,13 @@ public final class BuiltInCheckerSuppliers {
           IsInstanceOfClass.class,
           IsLoggableTagLength.class,
           JUnit3TestNotRun.class,
-          JUnit4ClassAnnotationNonStatic.class,
-          JUnit4SetUpNotRun.class,
-          JUnit4TearDownNotRun.class,
-          JUnit4TestNotRun.class,
           JUnit4TestsNotRunWithinEnclosed.class,
           JUnitAssertSameCheck.class,
+          JUnitClassAnnotationNonStatic.class,
           JUnitParameterMethodNotFound.class,
+          JUnitSetUpNotRun.class,
+          JUnitTearDownNotRun.class,
+          JUnitTestNotRun.class,
           JavaxInjectOnAbstractMethod.class,
           JodaToSelf.class,
           LabelledBreakTarget.class,
@@ -1048,8 +1048,8 @@ public final class BuiltInCheckerSuppliers {
           IterableAndIterator.class,
           JUnit3FloatingPointComparisonWithoutDelta.class,
           JUnit4ClassUsedInJUnit3.class,
-          JUnit4EmptyMethods.class,
           JUnitAmbiguousTestClass.class,
+          JUnitEmptyLifecycleMethods.class,
           JUnitIncompatibleType.class,
           JUnitMethodInvoked.class,
           JavaDurationGetSecondsGetNano.class,

@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static java.util.stream.Collectors.joining;
@@ -50,7 +51,9 @@ public class AssertThrowsBlockToExpression extends BugChecker
     implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> MATCHER =
-      staticMethod().onClass("org.junit.Assert").named("assertThrows");
+      anyOf(
+          staticMethod().onClass("org.junit.jupiter.api.Assertions").named("assertThrows"),
+          staticMethod().onClass("org.junit.Assert").named("assertThrows"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

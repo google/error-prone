@@ -165,4 +165,39 @@ public class AssertThrowsBlockToExpressionTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void refactoringJUnit5() {
+    compilationHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.jupiter.api.Assertions.assertThrows;
+
+            class Test {
+              void f() {
+                assertThrows(
+                    IllegalStateException.class,
+                    () -> {
+                      System.err.println();
+                    });
+                assertThrows(IllegalStateException.class, () -> System.err.println());
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static org.junit.jupiter.api.Assertions.assertThrows;
+
+            class Test {
+              void f() {
+                assertThrows(IllegalStateException.class, () -> System.err.println());
+                assertThrows(IllegalStateException.class, () -> System.err.println());
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .doTest();
+  }
 }

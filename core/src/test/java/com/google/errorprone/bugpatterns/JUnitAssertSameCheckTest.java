@@ -89,4 +89,45 @@ public class JUnitAssertSameCheckPositiveCase {
             """)
         .doTest();
   }
+
+  @Test
+  public void positiveCaseJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "JUnitAssertSameCheckPositiveCaseJUnit5.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            public class JUnitAssertSameCheckPositiveCaseJUnit5 {
+
+              public void test(Object obj) {
+                // BUG: Diagnostic contains: An object is tested for reference equality to itself using JUnit
+                org.junit.jupiter.api.Assertions.assertSame(obj, obj);
+
+                // BUG: Diagnostic contains: An object is tested for reference equality to itself using JUnit
+                org.junit.jupiter.api.Assertions.assertSame(obj, obj, "message");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeCaseJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "JUnitAssertSameCheckNegativeCaseJUnit5.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            public class JUnitAssertSameCheckNegativeCaseJUnit5 {
+
+              public void test(Object obj1, Object obj2) {
+                org.junit.jupiter.api.Assertions.assertSame(obj1, obj2);
+                org.junit.jupiter.api.Assertions.assertSame(obj1, obj2, "message");
+              }
+            }
+            """)
+        .doTest();
+  }
 }

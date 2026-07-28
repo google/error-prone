@@ -256,4 +256,58 @@ public class SelfAssertionTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void junit5PositiveAssertion() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            abstract class Test {
+              void test(int x) {
+                // BUG: Diagnostic contains: pass
+                org.junit.jupiter.api.Assertions.assertEquals(x, x);
+                // BUG: Diagnostic contains: pass
+                org.junit.jupiter.api.Assertions.assertEquals(x, x, "foo");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void junit5NegativeAssertion() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            abstract class Test {
+              void test(int x) {
+                // BUG: Diagnostic contains: fail
+                org.junit.jupiter.api.Assertions.assertNotEquals(x, x);
+                // BUG: Diagnostic contains: fail
+                org.junit.jupiter.api.Assertions.assertNotEquals(x, x, "foo");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void junit5NegativeAssertionDifferentValues() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            abstract class Test {
+              void test(int x, int y) {
+                org.junit.jupiter.api.Assertions.assertEquals(x, y);
+                org.junit.jupiter.api.Assertions.assertEquals(x, y, "foo");
+                org.junit.jupiter.api.Assertions.assertNotEquals(x, y);
+                org.junit.jupiter.api.Assertions.assertNotEquals(x, y, "foo");
+              }
+            }
+            """)
+        .doTest();
+  }
 }

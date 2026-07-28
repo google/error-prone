@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_AFTER_ANNOTATIO
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT_BEFORE_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4TestCases;
 import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4TestRunner;
+import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit5TestCases;
 import static com.google.errorprone.matchers.JUnitMatchers.isTestCaseDescendant;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.assertStatement;
@@ -116,11 +117,13 @@ public class MissingFail extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<ExpressionTree> ASSERT_TRUE =
       Matchers.anyOf(
+          staticMethod().onClass("org.junit.jupiter.api.Assertions").named("assertTrue"),
           staticMethod().onClass("org.junit.Assert").named("assertTrue"),
           staticMethod().onClass("junit.framework.Assert").named("assertTrue"),
           staticMethod().onClass("junit.framework.TestCase").named("assertTrue"));
   private static final Matcher<ExpressionTree> ASSERT_FALSE =
       Matchers.anyOf(
+          staticMethod().onClass("org.junit.jupiter.api.Assertions").named("assertFalse"),
           staticMethod().onClass("org.junit.Assert").named("assertFalse"),
           staticMethod().onClass("junit.framework.Assert").named("assertFalse"),
           staticMethod().onClass("junit.framework.TestCase").named("assertFalse"));
@@ -224,7 +227,7 @@ public class MissingFail extends BugChecker implements MethodTreeMatcher {
 
   // Subtly different from JUnitMatchers: We want to match test base classes too.
   private static final Matcher<ClassTree> TEST_CLASS =
-      Matchers.anyOf(isTestCaseDescendant, hasJUnit4TestRunner, hasJUnit4TestCases);
+      Matchers.anyOf(isTestCaseDescendant, hasJUnit4TestRunner, hasJUnit4TestCases, hasJUnit5TestCases);
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -267,7 +270,14 @@ public class MissingFail extends BugChecker implements MethodTreeMatcher {
     // Make sure that when the fail import is added it doesn't conflict with existing ones.
     fixBuilder.removeStaticImport("junit.framework.Assert.fail");
     fixBuilder.removeStaticImport("junit.framework.TestCase.fail");
-    fixBuilder.addStaticImport("org.junit.Assert.fail");
+    String failClass = JUnitMatchers.getAssertionClassName(state);
+    // Remove the opposite assertion class's fail import to prevent conflicts
+    String oppositeClass =
+        failClass.equals(JUnitMatchers.JUNIT5_ASSERT_CLASS)
+            ? "org.junit.Assert"
+            : JUnitMatchers.JUNIT5_ASSERT_CLASS;
+    fixBuilder.removeStaticImport(oppositeClass + ".fail");
+    fixBuilder.addStaticImport(failClass + ".fail");
 
     return fixBuilder.build();
   }
@@ -473,7 +483,9 @@ public class MissingFail extends BugChecker implements MethodTreeMatcher {
           // TODO(schmitt): Move to JUnitMatchers?
           || name.contentEquals("suite")
           || Matchers.hasAnnotation(JUNIT_BEFORE_ANNOTATION).matches(enclosingMethodTree, state)
-          || Matchers.hasAnnotation(JUNIT_AFTER_ANNOTATION).matches(enclosingMethodTree, state);
+          || Matchers.hasAnnotation(JUNIT_AFTER_ANNOTATION).matches(enclosingMethodTree, state)
+          || JUnitMatchers.hasJUnit5BeforeAnnotations.matches(enclosingMethodTree, state)
+          || JUnitMatchers.hasJUnit5AfterAnnotations.matches(enclosingMethodTree, state);
     }
   }
 

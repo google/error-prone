@@ -257,4 +257,58 @@ public class EqualsNullTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void negativeJUnit5TestClass() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import org.junit.jupiter.api.Test;
+
+            class TestJ5 {
+              @Test
+              void test() {}
+              boolean m(Object x) {
+                return x.equals(null);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeEnclosedByJUnit5Assert() {
+    compilationTestHelper
+        .addSourceLines(
+            "TestHelper.java",
+            """
+            import static org.junit.jupiter.api.Assertions.assertFalse;
+
+            class TestHelper {
+              public static void myAssert(Object x) {
+                assertFalse(x.equals(null));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveJUnit5ProductionCode() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import org.junit.jupiter.api.Assertions;
+
+            class TestJ5 {
+              boolean m(Object x) {
+                // BUG: Diagnostic contains: x.equals(null) should return false
+                return x.equals(null);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

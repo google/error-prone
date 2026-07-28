@@ -56,7 +56,11 @@ public final class EqualsNull extends BugChecker implements MethodInvocationTree
       allOf(instanceEqualsInvocation(), argument(0, kindIs(Kind.NULL_LITERAL)));
 
   private static final Matcher<Tree> INSIDE_ASSERT_CLASS =
-      enclosingClass(anyOf(isSubtypeOf("org.junit.Assert"), isSubtypeOf("junit.framework.Assert")));
+      enclosingClass(
+          anyOf(
+              isSubtypeOf("org.junit.jupiter.api.Assertions"),
+              isSubtypeOf("org.junit.Assert"),
+              isSubtypeOf("junit.framework.Assert")));
 
   private static final Matcher<Tree> ENCLOSED_BY_ASSERT =
       enclosingNode(
@@ -66,6 +70,7 @@ public final class EqualsNull extends BugChecker implements MethodInvocationTree
                   .onClassAny(
                       "com.google.common.truth.Truth",
                       "com.google.common.truth.Truth8",
+                      "org.junit.jupiter.api.Assertions",
                       "junit.framework.Assert",
                       "org.junit.Assert")));
 

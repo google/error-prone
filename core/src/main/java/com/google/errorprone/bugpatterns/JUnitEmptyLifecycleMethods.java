@@ -34,17 +34,18 @@ import com.sun.tools.javac.code.Type;
 import java.util.List;
 
 /**
- * Deletes empty JUnit4 {@code @Before}, {@code @After}, {@code @BeforeClass}, and
- * {@code @AfterClass} methods.
+ * Deletes empty JUnit lifecycle methods ({@code @Before}, {@code @After}, {@code @BeforeClass},
+ * {@code @AfterClass}, {@code @BeforeEach}, {@code @AfterEach}, {@code @BeforeAll}, {@code
+ * @AfterAll}).
  *
  * @author kak@google.com (Kurt Alfred Kluever)
  */
 @BugPattern(
     summary =
-        "Empty JUnit4 @Before, @After, @BeforeClass, and @AfterClass methods are unnecessary and"
-            + " should be deleted.",
-    severity = WARNING)
-public final class JUnit4EmptyMethods extends BugChecker implements MethodTreeMatcher {
+        "Empty JUnit lifecycle methods are unnecessary and should be deleted.",
+    severity = WARNING,
+    altNames = {"JUnit4EmptyMethods"})
+public final class JUnitEmptyLifecycleMethods extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<MethodTree> JUNIT_METHODS =
       anyOf(
@@ -53,7 +54,11 @@ public final class JUnit4EmptyMethods extends BugChecker implements MethodTreeMa
           hasAnnotation(JUnitMatchers.JUNIT_BEFORE_CLASS_ANNOTATION),
           hasAnnotation(JUnitMatchers.JUNIT_AFTER_CLASS_ANNOTATION),
           hasAnnotation(JUnitMatchers.JUNIT_BEFORE_ANNOTATION),
-          hasAnnotation(JUnitMatchers.JUNIT_AFTER_ANNOTATION));
+          hasAnnotation(JUnitMatchers.JUNIT_AFTER_ANNOTATION),
+          hasAnnotation(JUnitMatchers.JUNIT5_BEFORE_EACH_ANNOTATION),
+          hasAnnotation(JUnitMatchers.JUNIT5_AFTER_EACH_ANNOTATION),
+          hasAnnotation(JUnitMatchers.JUNIT5_BEFORE_ALL_ANNOTATION),
+          hasAnnotation(JUnitMatchers.JUNIT5_AFTER_ALL_ANNOTATION));
 
   @Override
   public Description matchMethod(MethodTree method, VisitorState state) {

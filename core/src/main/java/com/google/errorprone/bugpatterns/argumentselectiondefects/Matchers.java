@@ -108,9 +108,10 @@ final class Matchers {
       allOf(
           staticMethod()
               .onClassAny(
+                  "org.junit.jupiter.api.Assertions",
                   "org.junit.Assert",
-                  "junit.framework.TestCase",
                   "junit.framework.Assert",
+                  "junit.framework.TestCase",
                   /* this final case is to allow testing without using the junit classes. we need to
                   do this because the junit dependency might not have been compiled with parameters
                   information which would cause the tests to fail.*/

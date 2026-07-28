@@ -234,4 +234,111 @@ public final class FloatingPointAssertionWithinEpsilonTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void positiveCaseJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "FloatingPointAssertionWithinEpsilonPositiveCasesJUnit5.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            final class FloatingPointAssertionWithinEpsilonPositiveCasesJUnit5 {
+
+              private static final float TOLERANCE = 1e-10f;
+              private static final double TOLERANCE2 = 1e-20f;
+
+              public void testFloat() {
+                // BUG: Diagnostic contains: 6.0e-08
+                org.junit.jupiter.api.Assertions.assertEquals(1f, 1f, TOLERANCE);
+                // BUG: Diagnostic contains: 6.0e-08
+                org.junit.jupiter.api.Assertions.assertEquals(1f, 1f, TOLERANCE, "equal!");
+              }
+
+              public void testDouble() {
+                // BUG: Diagnostic contains: 1.1e-16
+                org.junit.jupiter.api.Assertions.assertEquals(1.0, 1.0, TOLERANCE2);
+                // BUG: Diagnostic contains: 1.1e-16
+                org.junit.jupiter.api.Assertions.assertEquals(1.0, 1.0, TOLERANCE2, "equal!");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void fixesJUnit5() {
+    BugCheckerRefactoringTestHelper.newInstance(
+            FloatingPointAssertionWithinEpsilon.class, getClass())
+        .addInputLines(
+            "FloatingPointAssertionWithinEpsilonPositiveCasesJUnit5.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            final class FloatingPointAssertionWithinEpsilonPositiveCasesJUnit5 {
+
+              private static final float TOLERANCE = 1e-10f;
+              private static final double TOLERANCE2 = 1e-20f;
+
+              public void testFloat() {
+                org.junit.jupiter.api.Assertions.assertEquals(1f, 1f, TOLERANCE);
+                org.junit.jupiter.api.Assertions.assertEquals(1f, 1f, TOLERANCE, "equal!");
+              }
+
+              public void testDouble() {
+                org.junit.jupiter.api.Assertions.assertEquals(1.0, 1.0, TOLERANCE2);
+                org.junit.jupiter.api.Assertions.assertEquals(1.0, 1.0, TOLERANCE2, "equal!");
+              }
+            }
+            """)
+        .addOutputLines(
+            "FloatingPointAssertionWithinEpsilonPositiveCasesJUnit5.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            final class FloatingPointAssertionWithinEpsilonPositiveCasesJUnit5 {
+
+              private static final float TOLERANCE = 1e-10f;
+              private static final double TOLERANCE2 = 1e-20f;
+
+              public void testFloat() {
+                org.junit.jupiter.api.Assertions.assertEquals(1f, 1f, 0);
+                org.junit.jupiter.api.Assertions.assertEquals(1f, 1f, 0, "equal!");
+              }
+
+              public void testDouble() {
+                org.junit.jupiter.api.Assertions.assertEquals(1.0, 1.0, 0);
+                org.junit.jupiter.api.Assertions.assertEquals(1.0, 1.0, 0, "equal!");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeCaseJUnit5() {
+    compilationHelper
+        .addSourceLines(
+            "FloatingPointAssertionWithinEpsilonNegativeCasesJUnit5.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            final class FloatingPointAssertionWithinEpsilonNegativeCasesJUnit5 {
+
+              private static final float TOLERANCE = 1e-5f;
+              private static final double TOLERANCE2 = 1e-10f;
+
+              public void testFloat() {
+                org.junit.jupiter.api.Assertions.assertEquals(1f, 1f, TOLERANCE);
+                org.junit.jupiter.api.Assertions.assertEquals(1f, 1f, TOLERANCE, "equal!");
+              }
+
+              public void testDouble() {
+                org.junit.jupiter.api.Assertions.assertEquals(1.0, 1.0, TOLERANCE2);
+                org.junit.jupiter.api.Assertions.assertEquals(1.0, 1.0, TOLERANCE2, "equal!");
+              }
+            }
+            """)
+        .doTest();
+  }
 }

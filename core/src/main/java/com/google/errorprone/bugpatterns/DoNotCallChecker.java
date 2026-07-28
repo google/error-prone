@@ -92,11 +92,25 @@ public class DoNotCallChecker extends BugChecker
                   + " instead. Or, if you are passing `null`, use `isNull()`.")
           .put(
               staticMethod()
+                  .onClass("org.junit.jupiter.api.Assertions")
+                  .named("assertEquals")
+                  .withParameters("double", "double"),
+              "This method always throws java.lang.AssertionError. Use assertEquals("
+                  + "expected, actual, delta) to compare floating-point numbers")
+          .put(
+              staticMethod()
                   .onClass("org.junit.Assert")
                   .named("assertEquals")
                   .withParameters("double", "double"),
               "This method always throws java.lang.AssertionError. Use assertEquals("
                   + "expected, actual, delta) to compare floating-point numbers")
+          .put(
+              staticMethod()
+                  .onClass("org.junit.jupiter.api.Assertions")
+                  .named("assertEquals")
+                  .withParameters("double", "double", "java.lang.String"),
+              "This method always throws java.lang.AssertionError. Use assertEquals("
+                  + "expected, actual, delta, String) to compare floating-point numbers")
           .put(
               staticMethod()
                   .onClass("org.junit.Assert")
