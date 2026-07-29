@@ -119,7 +119,6 @@ public class DoNotCallCheckerTest {
             "ImmutableCollection.java",
             """
             import com.google.errorprone.annotations.DoNotCall;
-            import java.util.List;
 
             abstract class ImmutableCollection<T> implements java.util.Collection<T> {
               @DoNotCall
@@ -132,7 +131,6 @@ public class DoNotCallCheckerTest {
         .addSourceLines(
             "ImmutableList.java",
             """
-            import com.google.errorprone.annotations.DoNotCall;
             import java.util.List;
 
             abstract class ImmutableList<T> extends ImmutableCollection<T> implements List<T> {
@@ -650,8 +648,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
-
             class Test<T extends java.util.Collection<Object>> {
               @Override
               public boolean equals(Object o) {

@@ -97,9 +97,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Preconditions;
 
-/**
- * Test for methodIs call involving String.format() and %s
- */
+/** Test for methodIs call involving String.format() and %s */
 public class Test {
   public void error() {
     int foo = 42;
@@ -122,9 +120,7 @@ package com.google.errorprone.bugpatterns.testdata;
 
 import com.google.common.base.Preconditions;
 
-/**
- * Preconditions calls which shouldn't be picked up for expensive string operations
- */
+/** Preconditions calls which shouldn't be picked up for expensive string operations */
 public class Test {
   public void error() {
     int foo = 42;

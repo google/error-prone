@@ -273,9 +273,6 @@ public class FromTemporalAccessorTest {
               """
               package java.time;
 
-              import java.time.LocalDate;
-              import java.time.LocalDateTime;
-
               public class TestClass {
                 void from(LocalDate localDate) {
                   LocalDateTime.from(localDate);

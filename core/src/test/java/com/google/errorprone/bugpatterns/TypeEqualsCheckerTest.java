@@ -41,7 +41,6 @@ public class TypeEqualsCheckerTest {
             import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
             import com.google.errorprone.matchers.Description;
             import com.sun.source.tree.ClassTree;
-            import com.sun.tools.javac.code.Types;
 
             @BugPattern(name = "Example", summary = "", severity = SeverityLevel.ERROR)
             public class ExampleChecker extends BugChecker implements ClassTreeMatcher {
@@ -68,7 +67,6 @@ public class TypeEqualsCheckerTest {
             import com.google.errorprone.VisitorState;
             import com.google.errorprone.bugpatterns.BugChecker;
             import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
-            import com.google.errorprone.fixes.SuggestedFix;
             import com.google.errorprone.matchers.Description;
             import com.sun.source.tree.ClassTree;
             import com.sun.tools.javac.code.Symbol;

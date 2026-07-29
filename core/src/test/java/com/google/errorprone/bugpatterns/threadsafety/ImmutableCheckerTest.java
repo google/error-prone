@@ -155,7 +155,6 @@ public class ImmutableCheckerTest {
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import javax.lang.model.element.ElementKind;
 
             @Immutable
             class Test {
@@ -422,8 +421,6 @@ public class ImmutableCheckerTest {
         .addSourceLines(
             "SuperMost.java",
             """
-            import com.google.errorprone.annotations.Immutable;
-
             public class SuperMost<B> {
               public final B x = null;
             }
@@ -432,7 +429,6 @@ public class ImmutableCheckerTest {
             "Super.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import java.util.List;
 
             @Immutable(containerOf = {"A"})
             public class Super<A, B> extends SuperMost<A> {
@@ -576,8 +572,6 @@ class A {
         .addSourceLines(
             "Holder.java",
             """
-            import com.google.errorprone.annotations.Immutable;
-
             public class Holder<T> {
               public final T t = null;
             }
@@ -602,8 +596,6 @@ class A {
         .addSourceLines(
             "Holder.java",
             """
-            import com.google.errorprone.annotations.Immutable;
-
             public class Holder<T> {
               public final T t = null;
             }
@@ -734,7 +726,6 @@ class A {
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import java.util.List;
 
             @Immutable
             class Test<T> {
@@ -799,7 +790,6 @@ class A {
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import java.util.List;
 
             @Immutable
             class Test {
@@ -851,7 +841,6 @@ class A {
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import java.util.List;
 
             @Immutable
             class Test {
@@ -878,7 +867,6 @@ class A {
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import java.util.List;
 
             @Immutable
             class Test {
@@ -907,7 +895,6 @@ class A {
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import java.util.List;
 
             @Immutable
             class Test {
@@ -936,7 +923,6 @@ class A {
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import java.util.List;
 
             @Immutable
             class Test {
@@ -964,7 +950,6 @@ class A {
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import java.util.List;
 
             @Immutable
             class Test {
@@ -1180,8 +1165,6 @@ class A {
             """
             package threadsafety;
 
-            import com.google.errorprone.annotations.Immutable;
-
             class Test {
               {
                 new Super() {
@@ -1215,8 +1198,6 @@ class A {
             "threadsafety/Test.java",
             """
             package threadsafety;
-
-            import com.google.errorprone.annotations.Immutable;
 
             class Test {
               {
@@ -1254,8 +1235,6 @@ class A {
             """
             package threadsafety;
 
-            import com.google.errorprone.annotations.Immutable;
-
             class Test {
               static <T> Super<T> get() {
                 return new Super<T>() {};
@@ -1281,8 +1260,6 @@ class A {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.annotations.Immutable;
-
             public class Test {
               private final MyList<Integer> l = null;
             }
@@ -1509,8 +1486,6 @@ class Test extends Super {
             """
             package threadsafety;
 
-            import com.google.errorprone.annotations.Immutable;
-
             class Test {
               {
                 new Super<Object>() {};
@@ -1638,8 +1613,6 @@ class Test extends Super {
             """
             package threadsafety;
 
-            import com.google.errorprone.annotations.Immutable;
-
             class Test {
               {
                 new Super<String>() {};
@@ -1666,8 +1639,6 @@ class Test extends Super {
             "threadsafety/Test.java",
             """
             package threadsafety;
-
-            import com.google.errorprone.annotations.Immutable;
 
             class Test {
               {
@@ -1869,8 +1840,6 @@ class Test extends Super {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.annotations.Immutable;
-
             enum Test {
               ;
               // BUG: Diagnostic contains: @Immutable class has mutable field
@@ -1887,8 +1856,6 @@ class Test extends Super {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.annotations.Immutable;
-
             enum Test {
               ONE {
                 // BUG: Diagnostic contains: @Immutable class has mutable field
@@ -2073,7 +2040,6 @@ class Test extends Super {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
 
@@ -2091,7 +2057,6 @@ class Test extends Super {
         .addSourceLines(
             "A.java",
             """
-            import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
 
@@ -2118,7 +2083,6 @@ class Test extends Super {
         .addSourceLines(
             "A.java",
             """
-            import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
 
@@ -2145,7 +2109,6 @@ class Test<T> {
         .addSourceLines(
             "A.java",
             """
-            import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
 
@@ -2171,7 +2134,6 @@ class Test {
         .addSourceLines(
             "A.java",
             """
-            import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
 
@@ -2198,7 +2160,6 @@ class Test {
         .addSourceLines(
             "A.java",
             """
-            import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
 
@@ -2224,7 +2185,6 @@ class Test {
         .addSourceLines(
             "A.java",
             """
-            import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
 
@@ -2251,14 +2211,11 @@ class Test {
         .addSourceLines(
             "MyMutableType.java",
             """
-            import com.google.errorprone.annotations.Immutable;
-
             class MyMutableType {}
             """)
         .addSourceLines(
             "A.java",
             """
-            import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
 
@@ -2292,7 +2249,6 @@ class Test {
         .addSourceLines(
             "A.java",
             """
-            import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
 
@@ -2317,7 +2273,6 @@ class Test {
         .addSourceLines(
             "A.java",
             """
-            import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
 
@@ -2343,7 +2298,6 @@ class Test {
         .addSourceLines(
             "A.java",
             """
-            import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
 
@@ -2411,7 +2365,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
             import java.util.function.Function;
 
@@ -2441,7 +2394,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
             import java.util.function.Function;
 
@@ -2708,8 +2660,6 @@ class Test {
         .addSourceLines(
             "MutableImpl.java",
             """
-            import com.google.errorprone.annotations.Immutable;
-
             @SuppressWarnings("Immutable")
             class MutableImpl implements ImmutableInterface {
               int mutableField;
@@ -2759,7 +2709,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.collect.ImmutableList;
             import com.google.errorprone.annotations.Immutable;
             import com.google.errorprone.annotations.ImmutableTypeParameter;
 
@@ -3003,8 +2952,6 @@ class T<@ImmutableTypeParameter X> extends S {}
         .addSourceLines(
             "Test.class",
             """
-            import com.google.errorprone.annotations.ImmutableTypeParameter;
-
             class Test<T> {
               public GenericWithImmutableParam<T> method() {
                 return null;
@@ -3020,8 +2967,6 @@ class T<@ImmutableTypeParameter X> extends S {}
         .addSourceLines(
             "Test.class",
             """
-            import com.google.errorprone.annotations.ImmutableTypeParameter;
-
             class Test<T> {
               public Test(GenericWithImmutableParam<T> param) {}
             }
@@ -3285,8 +3230,6 @@ class Invoker {
         .addSourceLines(
             "Clazz.java",
             """
-            import com.google.errorprone.annotations.ImmutableTypeParameter;
-
             class Clazz {
               private static final GenericWithImmutableParam<String> value =
                   new GenericWithImmutableParam<String>() {};
@@ -3301,8 +3244,6 @@ class Invoker {
         .addSourceLines(
             "Clazz.java",
 """
-import com.google.errorprone.annotations.ImmutableTypeParameter;
-
 class Clazz {
   private static final GenericWithImmutableParam<MutableClass> value =
       // BUG: Diagnostic contains: instantiation of 'T' is mutable, the declaration of type
@@ -3463,8 +3404,6 @@ class ChildGenericWithImmutableParam<T> implements GenericWithImmutableParamIfac
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import java.util.ArrayList;
-            import java.util.List;
 
             class Test {
               @Immutable
@@ -3490,8 +3429,6 @@ class ChildGenericWithImmutableParam<T> implements GenericWithImmutableParamIfac
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import java.util.ArrayList;
-            import java.util.List;
 
             class Test {
               @Immutable
@@ -3517,8 +3454,6 @@ class ChildGenericWithImmutableParam<T> implements GenericWithImmutableParamIfac
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import java.util.ArrayList;
-            import java.util.List;
 
             class Test {
               @Immutable
@@ -3799,8 +3734,6 @@ abstract class Test {
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import java.util.HashMap;
-            import java.util.Map;
 
             abstract class Test {
               @Immutable
@@ -4065,8 +3998,6 @@ abstract class Test {
             "Test.java",
             """
             import com.google.errorprone.annotations.Immutable;
-            import java.util.ArrayList;
-            import java.util.List;
 
             class Test {
               interface Function<A, B> {
@@ -4131,8 +4062,6 @@ abstract class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.function.Supplier;
-
             class Test {
               String test(String mode) {
                 return switch (mode) {

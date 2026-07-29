@@ -59,7 +59,6 @@ public class JavaInstantGetSecondsGetNanoTest {
             """
             package test;
 
-            import com.google.common.collect.ImmutableMap;
             import java.time.Instant;
 
             public class TestCase {

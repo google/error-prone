@@ -39,7 +39,6 @@ public final class IfChainToSwitchTest {
         CLUB
       };
       """;
-
   private static final String ENABLE_MAIN = "-XepOpt:IfChainToSwitch:EnableMain";
   private static final String DISABLE_SAFE = "-XepOpt:IfChainToSwitch:EnableSafe=false";
   private static final String ENABLE_SAFE = "-XepOpt:IfChainToSwitch:EnableSafe";
@@ -60,8 +59,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -84,8 +81,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   private Object suit;
 
@@ -119,8 +114,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -152,8 +145,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -178,8 +169,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   private Object suit;
 
@@ -209,8 +198,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -236,8 +223,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   private Object suit;
 
@@ -269,8 +254,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Boolean b = s == null;
@@ -295,8 +278,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 long l = s == null ? 1 : 2;
@@ -321,8 +302,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 long l = s == null ? 1 : 2;
@@ -347,8 +326,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 int i = s == null ? 1 : 2;
@@ -367,8 +344,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 int i = s == null ? 1 : 2;
@@ -393,8 +368,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -416,8 +389,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -444,8 +415,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -467,8 +436,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -496,8 +463,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -526,8 +491,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -552,8 +515,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   private Object suit;
 
@@ -583,8 +544,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -607,8 +566,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   private Object suit;
 
@@ -637,8 +594,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -661,8 +616,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   private Object suit;
 
@@ -692,8 +645,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -712,8 +663,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -739,8 +688,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -759,8 +706,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -786,8 +731,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -808,8 +751,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -836,8 +777,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -858,8 +797,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -974,8 +911,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -996,8 +931,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -1024,8 +957,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 1 : 2;
@@ -1044,8 +975,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 1 : 2;
@@ -1071,8 +1000,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -1092,8 +1019,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -1298,8 +1223,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit suit) {
                 String s = suit == null ? "null" : "nonnull";
@@ -1327,8 +1250,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 if (s == Suit.DIAMOND) {
@@ -1347,8 +1268,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     switch (s) {
@@ -1372,8 +1291,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 if (s == Suit.DIAMOND) {
@@ -1399,8 +1316,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object o = s;
@@ -1432,8 +1347,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object o = s;
@@ -1518,8 +1431,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 if (s == Suit.DIAMOND) {
@@ -1545,8 +1456,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 while (true) {
@@ -1575,8 +1484,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 int q =
@@ -1675,8 +1582,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 while (true) {
@@ -1706,8 +1611,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 while (true) {
@@ -1736,8 +1639,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 a:
@@ -1892,8 +1793,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 1 : 2;
@@ -1920,8 +1819,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
 
               record Person(String name, int age) {}
@@ -1950,8 +1847,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -1976,8 +1871,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2001,9 +1894,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Integer;
-            import java.lang.Long;
-            import java.lang.Number;
             import java.math.BigDecimal;
             import java.time.Duration;
             import java.time.Instant;
@@ -2059,15 +1949,11 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-                import java.lang.Integer;
-                import java.lang.Long;
                 import java.math.BigDecimal;
                 import java.time.Duration;
                 import java.time.Instant;
                 import java.util.Date;
                 import java.util.Optional;
-
 
                 class Test {
                   public void foo(Suit s) {
@@ -2118,8 +2004,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2141,8 +2025,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2167,8 +2049,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2190,8 +2070,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2217,8 +2095,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2249,8 +2125,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2306,8 +2180,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2338,8 +2210,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2396,8 +2266,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2419,8 +2287,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2457,8 +2323,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2479,8 +2343,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2515,8 +2377,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2537,8 +2397,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2573,8 +2431,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2603,8 +2459,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 int nonEffectivelyFinal = 0;
@@ -2636,8 +2490,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 String nonEffectivelyFinal = "hello";
@@ -2668,8 +2520,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2691,8 +2541,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2728,8 +2576,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 {
@@ -2753,8 +2599,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 {
@@ -2788,8 +2632,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 {
@@ -2815,8 +2657,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 {
@@ -2853,8 +2693,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2879,8 +2717,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2908,8 +2744,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2934,8 +2768,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2963,8 +2795,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2985,8 +2815,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -3076,7 +2904,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
             import java.util.ArrayList;
             import java.util.List;
 
@@ -3103,7 +2930,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
 """
-import java.lang.Number;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -3137,7 +2963,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
             import java.util.ArrayList;
             import java.util.List;
 
@@ -3164,7 +2989,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
 """
-import java.lang.Number;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -3197,7 +3021,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
             import java.util.HashMap;
             import java.util.Map;
 
@@ -3224,7 +3047,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
 """
-import java.lang.Number;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -3258,7 +3080,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
             import java.util.HashMap;
             import java.util.Map;
 
@@ -3285,7 +3106,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
 """
-import java.lang.Number;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -3318,8 +3138,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 0 : 1;
@@ -3344,8 +3162,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -3374,8 +3190,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -3398,8 +3212,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -3426,8 +3238,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 0 : 1;
@@ -3449,8 +3259,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
 """
-import java.lang.Number;
-
 class Test {
   public void foo(Suit s) {
     Integer i = s == null ? 0 : 1;
@@ -3476,8 +3284,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 0 : 1;
@@ -3508,8 +3314,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 0 : 1;
@@ -3534,8 +3338,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 0 : 1;
@@ -3562,8 +3364,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 0 : 1;
@@ -3585,8 +3385,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
 """
-import java.lang.Number;
-
 class Test {
   public void foo(Suit s) {
     Integer i = s == null ? 0 : 1;
@@ -3819,8 +3617,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Object obj) {
                 if (obj instanceof Object) {
@@ -3837,8 +3633,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Object obj) {
                     switch (obj) {

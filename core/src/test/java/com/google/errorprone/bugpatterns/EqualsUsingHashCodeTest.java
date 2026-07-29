@@ -37,8 +37,6 @@ public final class EqualsUsingHashCodeTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.base.Objects;
-
             class Test {
               private int a;
 

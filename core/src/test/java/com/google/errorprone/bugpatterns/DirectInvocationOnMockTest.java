@@ -79,7 +79,6 @@ public final class DirectInvocationOnMockTest {
             "Test.java",
             """
             import static org.mockito.Mockito.mock;
-            import static org.mockito.Mockito.verify;
 
             class Test {
               public void test() {

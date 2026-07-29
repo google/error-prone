@@ -446,8 +446,6 @@ public class FieldCanBeFinalTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.annotations.VisibleForTesting;
-
             class Test {
               protected int x;
 
@@ -465,8 +463,6 @@ public class FieldCanBeFinalTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.annotations.VisibleForTesting;
-
             class Test {
               public int x;
               int y;

@@ -173,8 +173,6 @@ public class MathRoundIntLongTest {
         .addInputLines(
             "Test.java",
             """
-            import com.google.common.primitives.Ints;
-
             class Test {
               void f() {
                 long l = 3L;

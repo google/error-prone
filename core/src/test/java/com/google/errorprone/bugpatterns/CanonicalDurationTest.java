@@ -128,8 +128,6 @@ public class CanonicalDurationTest {
 
             import static java.time.Duration.ofSeconds;
 
-            import java.time.Duration;
-
             public class A {
               {
                 ofSeconds(86400);
@@ -143,8 +141,6 @@ public class CanonicalDurationTest {
 
             import static java.time.Duration.ofDays;
             import static java.time.Duration.ofSeconds;
-
-            import java.time.Duration;
 
             public class A {
               {

@@ -144,7 +144,6 @@ public final class MockNotUsedInProductionTest {
         .addSourceLines(
             "Test.java",
             """
-            import static org.mockito.Mockito.mock;
             import static org.mockito.Mockito.when;
 
             import com.google.inject.testing.fieldbinder.Bind;
@@ -168,7 +167,6 @@ public final class MockNotUsedInProductionTest {
         .addSourceLines(
             "Test.java",
             """
-            import static org.mockito.Mockito.mock;
             import static org.mockito.Mockito.when;
 
             import org.mockito.Mock;
@@ -191,9 +189,6 @@ public final class MockNotUsedInProductionTest {
         .addSourceLines(
             "Test.java",
             """
-            import static org.mockito.Mockito.mock;
-            import static org.mockito.Mockito.when;
-
             import org.mockito.Mock;
 
             class Test {
@@ -213,7 +208,6 @@ public final class MockNotUsedInProductionTest {
         .addSourceLines(
             "Test.java",
             """
-            import static org.mockito.Mockito.mock;
             import static org.mockito.Mockito.when;
 
             import org.mockito.Mock;
@@ -237,7 +231,6 @@ public final class MockNotUsedInProductionTest {
         .addSourceLines(
             "Test.java",
             """
-            import static org.mockito.Mockito.mock;
             import static org.mockito.Mockito.when;
 
             import org.mockito.InjectMocks;
@@ -262,7 +255,6 @@ public final class MockNotUsedInProductionTest {
         .addSourceLines(
             "Test.java",
             """
-            import static org.mockito.Mockito.mock;
             import static org.mockito.Mockito.when;
 
             import org.mockito.Mock;
@@ -287,7 +279,6 @@ public final class MockNotUsedInProductionTest {
         .addInputLines(
             "Test.java",
             """
-            import static org.mockito.Mockito.mock;
             import static org.mockito.Mockito.when;
 
             import org.mockito.Mock;
@@ -304,7 +295,6 @@ public final class MockNotUsedInProductionTest {
         .addOutputLines(
             "Test.java",
             """
-            import static org.mockito.Mockito.mock;
             import static org.mockito.Mockito.when;
 
             import org.mockito.Mock;
@@ -327,7 +317,6 @@ public final class MockNotUsedInProductionTest {
             "Test.java",
             """
             import static org.mockito.Mockito.doAnswer;
-            import static org.mockito.Mockito.mock;
             import static org.mockito.Mockito.when;
 
             import org.mockito.Mock;
@@ -351,7 +340,6 @@ public final class MockNotUsedInProductionTest {
             "Test.java",
             """
             import static org.mockito.Mockito.doAnswer;
-            import static org.mockito.Mockito.mock;
             import static org.mockito.Mockito.when;
 
             import org.mockito.Mock;

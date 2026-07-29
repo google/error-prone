@@ -82,7 +82,6 @@ public class IdentityHashMapBoxingTest {
             "Test.java",
             """
             import com.google.common.collect.Maps;
-            import java.util.IdentityHashMap;
             import java.util.Map;
 
             class Test {
@@ -108,7 +107,6 @@ public class IdentityHashMapBoxingTest {
             "Test.java",
             """
             import com.google.common.collect.Maps;
-            import java.util.IdentityHashMap;
             import java.util.Map;
 
             class Test {

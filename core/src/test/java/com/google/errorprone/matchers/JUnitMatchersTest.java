@@ -196,7 +196,6 @@ public final class JUnitMatchersTest {
             "AmbiguousRunWith.java",
             """
             import junit.framework.TestCase;
-            import org.junit.Test;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
 
@@ -211,8 +210,6 @@ public final class JUnitMatchersTest {
             """
             import junit.framework.TestCase;
             import org.junit.Test;
-            import org.junit.runner.RunWith;
-            import org.junit.runners.JUnit4;
 
             // BUG: Diagnostic contains: Version:Both
             public class AmbiguousTest extends TestCase {

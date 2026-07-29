@@ -32,7 +32,6 @@ public class RuleNotRunTest {
         .addSourceLines(
             "TestTest.java",
             """
-            import org.junit.Test;
             import org.junit.rules.TemporaryFolder;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
@@ -53,7 +52,6 @@ public class RuleNotRunTest {
             "TestTest.java",
             """
             import org.junit.Rule;
-            import org.junit.Test;
             import org.junit.rules.TemporaryFolder;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
@@ -73,7 +71,6 @@ public class RuleNotRunTest {
             "TestTest.java",
             """
             import org.junit.Rule;
-            import org.junit.Test;
             import org.junit.rules.RuleChain;
             import org.junit.rules.TemporaryFolder;
             import org.junit.runner.RunWith;
@@ -95,8 +92,6 @@ public class RuleNotRunTest {
             "TestTest.java",
             """
             import javax.inject.Inject;
-            import org.junit.Rule;
-            import org.junit.Test;
             import org.junit.rules.TemporaryFolder;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
@@ -115,8 +110,6 @@ public class RuleNotRunTest {
         .addSourceLines(
             "TestTest.java",
             """
-            import org.junit.Rule;
-            import org.junit.Test;
             import org.junit.rules.TemporaryFolder;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;

@@ -325,8 +325,6 @@ public class ReferenceEqualityTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.common.base.Optional;
-
             class Test implements Sup {
               boolean f(Object a, Test b) {
                 // BUG: Diagnostic contains: a.equals(b)

@@ -191,7 +191,6 @@ public class ThreadSafeCheckerTest {
             "Test.java",
             """
             import com.google.errorprone.annotations.ThreadSafe;
-            import javax.lang.model.element.ElementKind;
 
             @ThreadSafe
             class Test {
@@ -467,7 +466,6 @@ class Test {
             "Test.java",
             """
             import com.google.errorprone.annotations.ThreadSafe;
-            import javax.annotation.concurrent.GuardedBy;
 
             @ThreadSafe
             class Test {
@@ -609,8 +607,6 @@ class Test {
         .addSourceLines(
             "Holder.java",
             """
-            import com.google.errorprone.annotations.ThreadSafe;
-
             public class Holder<T> {
               public final T t = null;
             }
@@ -635,8 +631,6 @@ class Test {
         .addSourceLines(
             "Holder.java",
             """
-            import com.google.errorprone.annotations.ThreadSafe;
-
             public class Holder<T> {
               public final T t = null;
             }
@@ -662,7 +656,6 @@ class Test {
             "Test.java",
             """
             import com.google.errorprone.annotations.ThreadSafe;
-            import java.util.List;
 
             @ThreadSafe
             class Test<T> {
@@ -715,7 +708,6 @@ class Test {
             "Test.java",
             """
             import com.google.errorprone.annotations.ThreadSafe;
-            import java.util.List;
 
             @ThreadSafe
             class Test {
@@ -742,7 +734,6 @@ class Test {
             "Test.java",
             """
             import com.google.errorprone.annotations.ThreadSafe;
-            import java.util.List;
 
             @ThreadSafe
             class Test {
@@ -820,8 +811,6 @@ class Test {
             """
             package threadsafety;
 
-            import com.google.errorprone.annotations.ThreadSafe;
-
             class Test {
               {
                 new Super() {
@@ -855,8 +844,6 @@ class Test {
             "threadsafety/Test.java",
             """
             package threadsafety;
-
-            import com.google.errorprone.annotations.ThreadSafe;
 
             class Test {
               {
@@ -983,8 +970,6 @@ class Test {
             "threadsafety/Test.java",
             """
             package threadsafety;
-
-            import com.google.errorprone.annotations.ThreadSafe;
 
             class Test {
               {

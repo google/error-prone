@@ -366,8 +366,6 @@ public class InconsistentCapitalizationNegativeCases {
         .addInputLines(
             "in/Test.java",
             """
-            import java.util.function.Function;
-
             class Test {
               Object aa;
               Object ab;
@@ -386,8 +384,6 @@ public class InconsistentCapitalizationNegativeCases {
         .addOutputLines(
             "out/Test.java",
             """
-            import java.util.function.Function;
-
             class Test {
               Object aa;
               Object ab;
@@ -412,8 +408,6 @@ public class InconsistentCapitalizationNegativeCases {
         .addInputLines(
             "in/Test.java",
             """
-            import java.util.function.Function;
-
             class Test {
               static class A {
                 Object aa;
@@ -431,8 +425,6 @@ public class InconsistentCapitalizationNegativeCases {
         .addOutputLines(
             "out/Test.java",
             """
-            import java.util.function.Function;
-
             class Test {
               static class A {
                 Object aa;

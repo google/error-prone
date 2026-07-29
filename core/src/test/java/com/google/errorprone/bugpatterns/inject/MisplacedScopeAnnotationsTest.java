@@ -37,7 +37,6 @@ public class MisplacedScopeAnnotationsTest {
             "Foo.java",
             """
             import javax.inject.Inject;
-            import javax.inject.Named;
             import javax.inject.Singleton;
 
             class Foo {
@@ -120,7 +119,6 @@ public class MisplacedScopeAnnotationsTest {
             "in/Foo.java",
             """
             import javax.inject.Inject;
-            import javax.inject.Named;
             import javax.inject.Singleton;
 
             class Foo {
@@ -132,7 +130,6 @@ public class MisplacedScopeAnnotationsTest {
             "out/Foo.java",
             """
             import javax.inject.Inject;
-            import javax.inject.Named;
             import javax.inject.Singleton;
 
             class Foo {
@@ -150,7 +147,6 @@ public class MisplacedScopeAnnotationsTest {
             "in/Foo.java",
             """
             import javax.inject.Inject;
-            import javax.inject.Named;
             import javax.inject.Singleton;
 
             class Foo {
@@ -161,7 +157,6 @@ public class MisplacedScopeAnnotationsTest {
             "out/Foo.java",
             """
             import javax.inject.Inject;
-            import javax.inject.Named;
             import javax.inject.Singleton;
 
             class Foo {
@@ -179,7 +174,6 @@ public class MisplacedScopeAnnotationsTest {
             """
             import dagger.Module;
             import dagger.Provides;
-            import javax.inject.Inject;
             import javax.inject.Named;
             import javax.inject.Singleton;
 
@@ -206,8 +200,6 @@ public class MisplacedScopeAnnotationsTest {
             import dagger.Provides;
             import java.lang.annotation.Retention;
             import java.lang.annotation.RetentionPolicy;
-            import javax.inject.Inject;
-            import javax.inject.Named;
             import javax.inject.Qualifier;
             import javax.inject.Scope;
 

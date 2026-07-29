@@ -374,8 +374,6 @@ public class ObjectsHashCodePrimitiveTest {
         .addInputLines(
             "Test.java",
             """
-            import java.util.Objects;
-
             class Test {
               Integer x = Integer.valueOf(3);
 

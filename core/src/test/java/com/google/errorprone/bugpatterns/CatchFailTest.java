@@ -185,8 +185,6 @@ public class CatchFailTest {
         .addInputLines(
             "in/Foo.java",
             """
-            import org.junit.Test;
-
             class Foo {
               public void f() {
                 try {

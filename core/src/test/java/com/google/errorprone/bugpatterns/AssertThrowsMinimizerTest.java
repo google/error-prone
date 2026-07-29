@@ -864,8 +864,6 @@ class Test {
             """
             import static org.junit.Assert.assertThrows;
 
-            import java.util.ArrayList;
-            import java.util.List;
             import java.util.function.Supplier;
 
             class Test {
@@ -935,8 +933,6 @@ class Test {
             """
             import static org.junit.Assert.assertThrows;
 
-            import java.util.ArrayList;
-            import java.util.List;
             import java.util.function.Supplier;
 
             class Test {
@@ -1053,10 +1049,6 @@ class Test {
             """
             import static org.junit.Assert.assertThrows;
 
-            import java.util.ArrayList;
-            import java.util.List;
-            import java.util.function.Supplier;
-
             abstract class Test {
               void f() {
                 assertThrows(IllegalStateException.class, () -> doSomething(getString(), getString()));
@@ -1071,10 +1063,6 @@ class Test {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
-
-            import java.util.ArrayList;
-            import java.util.List;
-            import java.util.function.Supplier;
 
             abstract class Test {
               void f() {
@@ -1099,10 +1087,6 @@ class Test {
             """
             import static org.junit.Assert.assertThrows;
 
-            import java.util.ArrayList;
-            import java.util.List;
-            import java.util.function.Supplier;
-
             abstract class Test {
               void f(String s, Object o) {
                 assertThrows(IllegalStateException.class, () -> doSomething((String) getString()));
@@ -1126,10 +1110,6 @@ class Test {
             "Test.java",
             """
             import static org.junit.Assert.assertThrows;
-
-            import java.util.ArrayList;
-            import java.util.List;
-            import java.util.function.Supplier;
 
             abstract class Test {
               void f(String s, Object o) {
@@ -1170,7 +1150,9 @@ class Test {
               }
 
               abstract void doSomething(int i);
+
               abstract void doSomething(String s);
+
               abstract String getString();
             }
             """)
@@ -1187,7 +1169,9 @@ class Test {
               }
 
               abstract void doSomething(int i);
+
               abstract void doSomething(String s);
+
               abstract String getString();
             }
             """)

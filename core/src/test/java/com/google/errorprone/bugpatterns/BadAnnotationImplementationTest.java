@@ -289,8 +289,6 @@ public class BadAnnotationImplementationTest {
         .addSourceLines(
             "MyAnnotation.java",
             """
-            import java.lang.annotation.Annotation;
-
             public class MyAnnotation extends BaseAnnotation {}
             """)
         .doTest();

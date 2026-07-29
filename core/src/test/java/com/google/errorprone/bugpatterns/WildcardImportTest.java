@@ -605,6 +605,7 @@ public class WildcardImportTest {
             package test;
 
             import static java.util.Arrays.*;
+
             import java.util.*;
 
             public class Test {

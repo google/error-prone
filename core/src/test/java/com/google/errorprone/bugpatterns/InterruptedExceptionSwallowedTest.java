@@ -34,7 +34,6 @@ public final class InterruptedExceptionSwallowedTest {
                 public void close() throws InterruptedException {}
               }
               """);
-
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(InterruptedExceptionSwallowed.class, getClass());
 
@@ -115,8 +114,6 @@ public final class InterruptedExceptionSwallowedTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.concurrent.Future;
-
             class Test {
               // BUG: Diagnostic contains:
               void test() throws Exception {
@@ -133,8 +130,6 @@ public final class InterruptedExceptionSwallowedTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.concurrent.Future;
-
             class Test {
               void test() {
                 try {
@@ -154,8 +149,6 @@ public final class InterruptedExceptionSwallowedTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.concurrent.Future;
-
             class Test {
               class Mischief implements AutoCloseable {
                 public int close = 1;
@@ -177,8 +170,6 @@ public final class InterruptedExceptionSwallowedTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.concurrent.Future;
-
             class Test {
               void test() throws InterruptedException, Exception {
                 try {
@@ -198,8 +189,6 @@ public final class InterruptedExceptionSwallowedTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.concurrent.Future;
-
             class Test {
               class ThrowingParent implements AutoCloseable {
                 public void close() throws InterruptedException {}
@@ -222,8 +211,6 @@ public final class InterruptedExceptionSwallowedTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.concurrent.Future;
-
             class Test {
               void test() {
                 try (Thrower t = new Thrower()) {
@@ -440,7 +427,6 @@ public final class InterruptedExceptionSwallowedTest {
         .addInputLines(
             "Test.java",
             """
-            import java.util.concurrent.ExecutionException;
             import java.util.concurrent.Future;
 
             class Test {
@@ -474,7 +460,6 @@ public final class InterruptedExceptionSwallowedTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.concurrent.ExecutionException;
             import java.util.concurrent.Future;
 
             class Test {
@@ -495,7 +480,6 @@ public final class InterruptedExceptionSwallowedTest {
             """
             import java.io.FileNotFoundException;
             import java.io.IOException;
-            import java.util.concurrent.ExecutionException;
             import java.util.concurrent.Future;
 
             class Test {
@@ -519,10 +503,7 @@ public final class InterruptedExceptionSwallowedTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.io.IOException;
-            import java.util.concurrent.ExecutionException;
             import java.util.concurrent.Future;
-            import java.util.concurrent.TimeoutException;
 
             class Test {
               void test(Future<?> future) throws Exception {
@@ -599,7 +580,6 @@ public final class InterruptedExceptionSwallowedTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.concurrent.ExecutionException;
             import java.util.concurrent.Future;
 
             public class Test {

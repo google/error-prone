@@ -235,7 +235,6 @@ public class SuggestedFixesTest {
             "Test.java",
             """
             import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
-            import javax.annotation.Nullable;
 
             @EditModifiers(value = "non-sealed", kind = EditModifiers.EditKind.ADD)
             sealed interface Test {
@@ -275,7 +274,6 @@ public class SuggestedFixesTest {
             "Test.java",
             """
             import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
-            import javax.annotation.Nullable;
 
             @EditModifiers(value = "non-sealed", kind = EditModifiers.EditKind.REMOVE)
             sealed interface Test {
@@ -293,7 +291,6 @@ public class SuggestedFixesTest {
             "Test.java",
             """
             import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
-            import javax.annotation.Nullable;
 
             @EditModifiers(value = "final", kind = EditModifiers.EditKind.ADD)
             class Test {
@@ -313,7 +310,6 @@ public class SuggestedFixesTest {
             "Test.java",
             """
             import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
-            import javax.annotation.Nullable;
 
             @EditModifiers(value = "public", kind = EditModifiers.EditKind.ADD)
             class Test {
@@ -355,7 +351,6 @@ public class SuggestedFixesTest {
             "Test.java",
             """
             import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
-            import javax.annotation.Nullable;
 
             @EditModifiers(
                 value = {"final", "static"},
@@ -2518,7 +2513,6 @@ public class Test {
           java.util.List list;
         }
         """;
-
     // This compilation will succeed because we only consider the compilation errors in the first
     // class.
     CompilationTestHelper.newInstance(

@@ -143,8 +143,6 @@ public class MatchersTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
-
             public class Test {
               {
                 System.out.println();
@@ -160,8 +158,6 @@ public class MatchersTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
-
             public class Test {
               {
                 int count = 0;

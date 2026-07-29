@@ -818,7 +818,6 @@ public class Test {
             """
             import java.util.function.Function;
             import java.util.function.Predicate;
-            import java.util.stream.Stream;
 
             class Test {
               boolean test(Function<Long, Predicate<Integer>> fn) {

@@ -33,7 +33,6 @@ public class MultipleNullnessAnnotationsTest {
             "Test.java",
             """
             import java.util.List;
-            import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
             import org.checkerframework.checker.nullness.compatqual.NullableDecl;
             import org.checkerframework.checker.nullness.qual.NonNull;
             import org.checkerframework.checker.nullness.qual.Nullable;
@@ -63,7 +62,6 @@ public class MultipleNullnessAnnotationsTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
             import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
             import org.checkerframework.checker.nullness.compatqual.NullableDecl;
             import org.checkerframework.checker.nullness.qual.NonNull;
@@ -83,7 +81,6 @@ public class MultipleNullnessAnnotationsTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
             import org.checkerframework.checker.nullness.qual.Nullable;
 
             abstract class Test {

@@ -179,10 +179,6 @@ enum Enum {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Arrays;
-            import java.util.HashSet;
-            import java.util.Set;
-
             enum Enum {
               ONE(new Foo()),
               TWO(new Foo());
@@ -204,8 +200,6 @@ enum Enum {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.annotations.Immutable;
-
             enum Test {
               ONE;
 

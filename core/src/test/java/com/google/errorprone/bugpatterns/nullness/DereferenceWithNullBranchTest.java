@@ -51,8 +51,6 @@ public class DereferenceWithNullBranchTest {
         .addSourceLines(
             "Foo.java",
             """
-            import java.util.Optional;
-
             class Foo {
               int foo(String s) {
                 // BUG: Diagnostic contains:

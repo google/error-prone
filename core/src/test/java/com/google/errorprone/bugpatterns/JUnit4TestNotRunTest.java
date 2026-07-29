@@ -338,7 +338,6 @@ public class JUnit4TestNotRunTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Collections;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
 
@@ -944,7 +943,6 @@ public class JUnit4TestNotRunNegativeCase5 extends JUnit4TestNotRunBaseClass {
         .addSourceLines(
             "T.java",
             """
-            import org.junit.Test;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
 

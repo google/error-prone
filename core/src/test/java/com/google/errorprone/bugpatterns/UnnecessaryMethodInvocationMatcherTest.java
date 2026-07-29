@@ -37,6 +37,7 @@ public class UnnecessaryMethodInvocationMatcherTest {
             "Test.java",
             """
             import static com.google.errorprone.matchers.Matchers.*;
+
             import com.google.errorprone.matchers.Matcher;
             import com.sun.source.tree.ExpressionTree;
 
@@ -49,6 +50,7 @@ public class UnnecessaryMethodInvocationMatcherTest {
             "Test.java",
             """
             import static com.google.errorprone.matchers.Matchers.*;
+
             import com.google.errorprone.matchers.Matcher;
             import com.sun.source.tree.ExpressionTree;
 
@@ -67,6 +69,7 @@ public class UnnecessaryMethodInvocationMatcherTest {
             "Test.java",
 """
 import static com.google.errorprone.matchers.Matchers.*;
+
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 
@@ -79,6 +82,7 @@ public class Test {
             "Test.java",
             """
             import static com.google.errorprone.matchers.Matchers.*;
+
             import com.google.errorprone.matchers.Matcher;
             import com.sun.source.tree.ExpressionTree;
 
@@ -97,6 +101,7 @@ public class Test {
             "Test.java",
             """
             import static com.google.errorprone.matchers.Matchers.*;
+
             import com.google.errorprone.matchers.Matcher;
             import com.sun.source.tree.ExpressionTree;
 
@@ -120,6 +125,7 @@ public class Test {
 """
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.ALL;
 import static com.google.errorprone.matchers.Matchers.*;
+
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.ExpressionTree;
 
@@ -139,6 +145,7 @@ public class Test {
             "Test.java",
 """
 import static com.google.errorprone.matchers.Matchers.*;
+
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.StatementTree;
 
@@ -153,6 +160,7 @@ public class Test {
             "Test.java",
             """
             import static com.google.errorprone.matchers.Matchers.*;
+
             import com.google.errorprone.matchers.Matcher;
             import com.sun.source.tree.StatementTree;
 

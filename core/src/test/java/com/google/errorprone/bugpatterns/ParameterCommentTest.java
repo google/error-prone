@@ -310,8 +310,6 @@ public class ParameterCommentTest {
         .addSourceLines(
             "Test.java",
             """
-            import static com.google.common.truth.Truth.assertThat;
-
             class Test {
               public void f(int x) {}
 

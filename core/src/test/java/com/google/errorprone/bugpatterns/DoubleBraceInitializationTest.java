@@ -451,7 +451,6 @@ class Test {
             """
             import java.util.Collections;
             import java.util.HashMap;
-            import java.util.Map;
 
             class Test {
               private void test() {
@@ -469,7 +468,6 @@ class Test {
             import com.google.common.collect.ImmutableMap;
             import java.util.Collections;
             import java.util.HashMap;
-            import java.util.Map;
 
             class Test {
               private void test() {

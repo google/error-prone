@@ -49,8 +49,7 @@ public final class ThrowableEqualsHashCodeTest {
         .addOutputLines(
             "TestException.java",
             """
-            public class TestException extends Exception {
-            }
+            public class TestException extends Exception {}
             """)
         .doTest();
   }
@@ -71,8 +70,7 @@ public final class ThrowableEqualsHashCodeTest {
         .addOutputLines(
             "TestException.java",
             """
-            public class TestException extends Exception {
-            }
+            public class TestException extends Exception {}
             """)
         .doTest();
   }
@@ -93,8 +91,7 @@ public final class ThrowableEqualsHashCodeTest {
         .addOutputLines(
             "TestException.java",
             """
-            public class TestException extends Exception {
-            }
+            public class TestException extends Exception {}
             """)
         .doTest();
   }
@@ -133,8 +130,7 @@ public final class ThrowableEqualsHashCodeTest {
         .addInputLines(
             "TestException.java",
             """
-            public class TestException extends Exception {
-            }
+            public class TestException extends Exception {}
             """)
         .expectUnchanged()
         .doTest();

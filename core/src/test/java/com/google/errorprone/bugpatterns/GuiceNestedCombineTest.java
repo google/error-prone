@@ -213,7 +213,6 @@ public final class GuiceNestedCombineTest {
         .addInputLines(
             "Test.java",
             """
-            import com.google.inject.AbstractModule;
             import com.google.inject.Module;
             import com.google.inject.util.Modules;
 
@@ -316,7 +315,6 @@ public final class GuiceNestedCombineTest {
             """
             import com.google.inject.AbstractModule;
             import com.google.inject.Guice;
-            import com.google.inject.util.Modules;
 
             class Test {
               private class ModuleA extends AbstractModule {}

@@ -181,7 +181,6 @@ public class NullablePrimitiveTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
             import org.checkerframework.checker.nullness.qual.NonNull;
 
             class Test {

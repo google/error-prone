@@ -87,7 +87,6 @@ public final class SetUnrecognizedTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Enum;
             import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;
 
             class Test {

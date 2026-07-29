@@ -147,7 +147,6 @@ public class UnusedNestedClassTest {
             "Test.java",
             """
             import java.util.function.Function;
-            import java.util.stream.Stream;
 
             class A {
               void test() {

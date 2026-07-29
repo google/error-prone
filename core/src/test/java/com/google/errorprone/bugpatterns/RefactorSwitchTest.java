@@ -968,8 +968,6 @@ public final class RefactorSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.function.Supplier;
-
             class Test {
               public String foo(Suit s) {
                 Integer i = s == null ? 1 : 2;
@@ -996,8 +994,6 @@ public final class RefactorSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.function.Supplier;
-
             class Test {
               public String foo(Suit s) {
                 Integer i = s == null ? 1 : 2;

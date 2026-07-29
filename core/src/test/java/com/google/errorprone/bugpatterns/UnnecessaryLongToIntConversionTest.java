@@ -435,8 +435,6 @@ public class UnnecessaryLongToIntConversionNegativeCases {
         .addInputLines(
             "in/A.java",
             """
-            import java.lang.Math;
-
             public class A {
               void acceptsLong(long value) {}
 
@@ -450,7 +448,6 @@ public class UnnecessaryLongToIntConversionNegativeCases {
             "out/A.java",
             """
             import com.google.common.primitives.Longs;
-            import java.lang.Math;
 
             public class A {
               void acceptsLong(long value) {}

@@ -514,7 +514,6 @@ public class CompileTimeConstantCheckerTest {
             package test;
 
             import com.google.errorprone.annotations.CompileTimeConstant;
-            import java.util.function.Consumer;
 
             public class CompileTimeConstantTestCase {
               interface ConstantFn {
@@ -540,7 +539,6 @@ public class CompileTimeConstantCheckerTest {
             package test;
 
             import com.google.errorprone.annotations.CompileTimeConstant;
-            import java.util.function.Consumer;
 
             public class CompileTimeConstantTestCase {
               interface ConstantFn {
@@ -585,7 +583,6 @@ public class CompileTimeConstantCheckerTest {
             package test;
 
             import com.google.errorprone.annotations.CompileTimeConstant;
-            import java.util.function.Consumer;
 
             public class CompileTimeConstantTestCase {
               interface ConstantFn {
@@ -612,7 +609,6 @@ public class CompileTimeConstantCheckerTest {
             package test;
 
             import com.google.errorprone.annotations.CompileTimeConstant;
-            import java.util.function.Consumer;
 
             public class CompileTimeConstantTestCase {
               interface ConstantFn {

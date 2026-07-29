@@ -132,7 +132,6 @@ public class BundleDeserializationCastTest {
             """
             import android.os.Bundle;
             import com.google.errorprone.bugpatterns.android.testdata.CustomParcelableList;
-            import java.util.List;
 
             public class Test {
               void test() {
@@ -169,7 +168,6 @@ public class BundleDeserializationCastTest {
             "Test.java",
             """
             import android.os.Bundle;
-            import java.lang.Integer;
 
             public class Test {
               void test() {

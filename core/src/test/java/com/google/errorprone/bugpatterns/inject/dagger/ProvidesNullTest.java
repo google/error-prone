@@ -156,7 +156,6 @@ public class Test {
             "Test.java",
 """
 import dagger.Provides;
-import java.io.IOException;
 
 public class Test {
   @Provides
@@ -202,8 +201,6 @@ public class Test {
         .addSourceLines(
             "Test.java",
             """
-            import dagger.Provides;
-
             public class Test {
               public void doNothing() {
                 return;

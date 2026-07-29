@@ -348,8 +348,6 @@ public class UnusedVariableTest {
             """
             package unusedvars;
 
-            import java.io.IOException;
-            import java.io.ObjectStreamException;
             import java.util.List;
             import javax.inject.Inject;
 
@@ -1716,21 +1714,21 @@ public class UnusedVariableTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-"""
-import static java.util.stream.Collectors.toList;
+            """
+            import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+            import java.util.ArrayList;
+            import java.util.Collection;
+            import java.util.List;
 
-public class Test {
-  public void f(List<List<String>> lists) {
-    List<String> result =
-        lists.stream().collect(ArrayList::new, Collection::addAll, Collection::addAll);
-    result = lists.stream().collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
-  }
-}
-""")
+            public class Test {
+              public void f(List<List<String>> lists) {
+                List<String> result =
+                    lists.stream().collect(ArrayList::new, Collection::addAll, Collection::addAll);
+                result = lists.stream().collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
             """
@@ -1753,26 +1751,22 @@ public class Test {
     refactoringHelper
         .addInputLines(
             "Test.java",
-"""
-import static java.util.stream.Collectors.toList;
+            """
+            import java.util.ArrayList;
+            import java.util.Collection;
+            import java.util.List;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-public class Test {
-  public void f(List<List<String>> lists) {
-    List<String> result =
-        lists.stream().collect(ArrayList::new, Collection::addAll, Collection::addAll);
-    result = lists.stream().collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
-  }
-}
-""")
+            public class Test {
+              public void f(List<List<String>> lists) {
+                List<String> result =
+                    lists.stream().collect(ArrayList::new, Collection::addAll, Collection::addAll);
+                result = lists.stream().collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
             """
-            import static java.util.stream.Collectors.toList;
-
             import java.util.ArrayList;
             import java.util.Collection;
             import java.util.List;
@@ -2060,8 +2054,6 @@ public class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Collections;
-            import java.util.Comparator;
             import java.util.List;
 
             class Test {

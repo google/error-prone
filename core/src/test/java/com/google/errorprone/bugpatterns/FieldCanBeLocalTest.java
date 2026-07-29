@@ -596,7 +596,6 @@ public final class FieldCanBeLocalTest {
             "Test.java",
 """
 import java.util.Collections;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 class Test {
@@ -650,7 +649,6 @@ class Test {
             import java.lang.annotation.Retention;
             import java.lang.annotation.RetentionPolicy;
             import java.lang.annotation.Target;
-            import javax.inject.Inject;
 
             public class Test {
               @Keep private int a;

@@ -62,8 +62,6 @@ public final class IntLongMathTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.function.Function;
-
             class Test {
               interface F {
                 long f(int i);

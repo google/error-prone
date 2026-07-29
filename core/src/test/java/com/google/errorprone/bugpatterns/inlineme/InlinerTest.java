@@ -148,8 +148,6 @@ public class InlinerTest {
         .addInputLines(
             "Caller.java",
             """
-            import java.time.Duration;
-
             public final class Caller {
               public void doTest() {
                 Client client = new Client();
@@ -162,8 +160,6 @@ public class InlinerTest {
         .addOutputLines(
             "out/Caller.java",
             """
-            import java.time.Duration;
-
             public final class Caller {
               public void doTest() {
                 Client client = new Client();
@@ -1238,7 +1234,6 @@ public final class Caller {
             "Client.java",
             """
             import com.google.errorprone.annotations.InlineMe;
-            import java.time.Duration;
 
             public final class Client {
               @Deprecated

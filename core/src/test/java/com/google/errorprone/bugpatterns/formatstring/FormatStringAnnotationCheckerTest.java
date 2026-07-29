@@ -324,7 +324,6 @@ public class FormatStringAnnotationCheckerTest {
             package test;
 
             import com.google.errorprone.annotations.FormatMethod;
-            import com.google.errorprone.annotations.FormatString;
 
             public class FormatStringTestCase {
               @FormatMethod

@@ -201,7 +201,6 @@ public class AssertionFailureIgnoredTest {
             """
             import static com.google.common.truth.Truth.assertThat;
 
-            import java.io.IOException;
             import org.junit.Assert;
 
             class Test {
@@ -233,7 +232,6 @@ public class AssertionFailureIgnoredTest {
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.assertThrows;
 
-            import java.io.IOException;
             import org.junit.Assert;
 
             class Test {

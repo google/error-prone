@@ -82,8 +82,6 @@ public final class UnescapedEntityTest {
             "Test.java",
             """
             /**
-             *
-             *
              * <pre>Foo</pre>
              *
              * <pre>Use an ImmutableMap<String,Object> please</pre>
@@ -96,8 +94,6 @@ public final class UnescapedEntityTest {
             "Test.java",
             """
             /**
-             *
-             *
              * <pre>Foo</pre>
              *
              * <pre>{@code Use an ImmutableMap<String,Object> please}</pre>
@@ -115,21 +111,13 @@ public final class UnescapedEntityTest {
         .addInputLines(
             "Test.java",
             """
-            /**
-             *
-             *
-             * <pre>n < 3</pre>
-             */
+            /** <pre>n < 3</pre> */
             interface Test {}
             """)
         .addOutputLines(
             "Test.java",
             """
-            /**
-             *
-             *
-             * <pre>{@code n < 3}</pre>
-             */
+            /** <pre>{@code n < 3}</pre> */
             interface Test {}
             """)
         .doTest();
@@ -144,21 +132,13 @@ public final class UnescapedEntityTest {
         .addInputLines(
             "Test.java",
             """
-            /**
-             *
-             *
-             * <pre>Use an ImmutableMap<String, Object> not a Map&lt;String, Object&gt;</pre>
-             */
+            /** <pre>Use an ImmutableMap<String, Object> not a Map&lt;String, Object&gt;</pre> */
             interface Test {}
             """)
         .addOutputLines(
             "Test.java",
             """
-            /**
-             *
-             *
-             * <pre>Use an ImmutableMap&lt;String, Object&gt; not a Map&lt;String, Object&gt;</pre>
-             */
+            /** <pre>Use an ImmutableMap&lt;String, Object&gt; not a Map&lt;String, Object&gt;</pre> */
             interface Test {}
             """)
         .doTest();
@@ -309,8 +289,6 @@ public final class UnescapedEntityTest {
             "Test.java",
             """
             /**
-             *
-             *
              * <pre>Foo List<Foo> bar</pre>
              *
              * </pre>
@@ -321,8 +299,6 @@ public final class UnescapedEntityTest {
             "Test.java",
             """
             /**
-             *
-             *
              * <pre>{@code Foo List<Foo> bar}</pre>
              *
              * </pre>

@@ -266,8 +266,6 @@ public final class SameNameButDifferentTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.function.Supplier;
-
             class Test {
               class One {
                 class Clash {}

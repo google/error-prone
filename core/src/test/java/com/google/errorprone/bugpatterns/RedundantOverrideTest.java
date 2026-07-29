@@ -235,8 +235,6 @@ public final class RedundantOverrideTest {
         .addSourceLines(
             "B.java",
             """
-            import javax.annotation.Nullable;
-
             class B extends A {
               @Override
               Object swap(int a, int b) {

@@ -61,7 +61,6 @@ public class ProtoTimestampGetSecondsGetNanoTest {
             """
             package test;
 
-            import com.google.common.collect.ImmutableMap;
             import com.google.protobuf.Timestamp;
 
             public class TestCase {

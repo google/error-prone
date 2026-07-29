@@ -21,7 +21,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
-import static com.google.errorprone.util.ErrorProneTokens.getTokens;
 import static com.google.errorprone.util.SourceVersion.supportsTextBlocks;
 import static java.util.stream.Collectors.joining;
 
@@ -38,11 +37,11 @@ import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import com.google.googlejavaformat.java.ImportOrderer;
 import com.google.googlejavaformat.java.JavaFormatterOptions.Style;
+import com.google.googlejavaformat.java.RemoveUnusedImports;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.parser.Tokens.TokenKind;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,53 +88,62 @@ public final class MisformattedTestData extends BugChecker implements Compilatio
     if (tree.getArguments().size() != 2) {
       return;
     }
-    var sourceTree = tree.getArguments().get(1);
-    if (!(sourceTree instanceof LiteralTree literalTree)) {
-      return;
-    }
-    var sourceValue = literalTree.getValue();
-    if (!(sourceValue instanceof String string)) {
-      return;
-    }
+    List<LiteralTree> literalTrees = new ArrayList<>();
+    new com.sun.source.util.TreeScanner<Void, Void>() {
+      @Override
+      public Void visitLiteral(LiteralTree node, Void unused) {
+        if (node.getValue() instanceof String) {
+          literalTrees.add(node);
+        }
+        return super.visitLiteral(node, null);
+      }
+    }.scan(tree.getArguments().get(1), null);
 
-    Formatter formatter = new Formatter();
-    String formattedSource;
-    try {
-      formattedSource = ImportOrderer.reorderImports(formatter.formatSource(string), Style.GOOGLE);
-    } catch (FormatterException exception) {
-      return;
+    for (var literalTree : literalTrees) {
+      var sourceValue = literalTree.getValue();
+      if (!(sourceValue instanceof String string)) {
+        continue;
+      }
+
+      Formatter formatter = new Formatter();
+      String formattedSource;
+      try {
+        formattedSource = formatter.formatSource(string);
+        // Do not remove unused imports from addOutputLines arguments. Bugcheckers under test (and
+        // BugCheckerRefactoringTestHelper) do not remove unused imports from refactored code during
+        // test assertions, so stripping them from addOutputLines would cause test mismatches.
+        if (!ADD_OUTPUT_LINES.matches(tree, state)) {
+          formattedSource = RemoveUnusedImports.removeUnusedImports(formattedSource);
+        }
+        formattedSource = ImportOrderer.reorderImports(formattedSource, Style.GOOGLE);
+      } catch (FormatterException exception) {
+        continue;
+      }
+      if (formattedSource.trim().equals(string.trim())) {
+        continue;
+      }
+
+      int literalStart = getStartPosition(literalTree);
+      CharSequence sourceCode = state.getSourceCode();
+      int lineStart = literalStart;
+      while (lineStart > 0 && sourceCode.charAt(lineStart - 1) != '\n') {
+        lineStart--;
+      }
+      String linePrefix = sourceCode.subSequence(lineStart, literalStart).toString();
+      String spaces =
+          linePrefix.substring(0, linePrefix.length() - linePrefix.stripLeading().length());
+
+      String replacement =
+          "\"\"\"\n"
+              + LINE_SPLITTER
+                  .splitToStream(escape(formattedSource))
+                  .map(line -> line.isEmpty() ? "" : spaces + line)
+                  .collect(joining("\n"))
+              + spaces
+              + "\"\"\"";
+      fixBuilder.replace(literalTree, replacement);
+      sourceTrees.add(literalTree);
     }
-    if (formattedSource.trim().equals(string.trim())) {
-      return;
-    }
-    // This is a bit crude: but tokenize between the comma and the 2nd argument in order to work out
-    // an appropriate indent level for the text block. This is assuming that the source has already
-    // been formatted so that the arguments are nicely indented.
-    int startPos = state.getEndPosition(tree.getArguments().get(0));
-    int endPos = getStartPosition(tree.getArguments().get(1));
-    var tokens =
-        getTokens(state.getSourceCode(startPos, endPos).toString(), startPos, state.context);
-    var afterCommaPos =
-        tokens.reverse().stream()
-            .filter(t -> t.kind().equals(TokenKind.COMMA))
-            .findFirst()
-            .orElseThrow()
-            .endPos();
-    var betweenArguments = state.getSourceCode(afterCommaPos, endPos).toString();
-    var spaces =
-        betweenArguments.contains("\n")
-            ? betweenArguments.substring(betweenArguments.indexOf('\n') + 1)
-            : "";
-    String replacement =
-        "\"\"\"\n"
-            + LINE_SPLITTER
-                .splitToStream(escape(formattedSource))
-                .map(line -> line.isEmpty() ? "" : spaces + line)
-                .collect(joining("\n"))
-            + spaces
-            + "\"\"\"";
-    fixBuilder.replace(literalTree, replacement);
-    sourceTrees.add(literalTree);
   }
 
   // TODO(ghm): Consider generalising this via an annotation.
@@ -150,6 +158,11 @@ public final class MisformattedTestData extends BugChecker implements Compilatio
           instanceMethod()
               .onExactClass("com.google.errorprone.BugCheckerRefactoringTestHelper.ExpectOutput")
               .named("addOutputLines"));
+
+  private static final Matcher<ExpressionTree> ADD_OUTPUT_LINES =
+      instanceMethod()
+          .onExactClass("com.google.errorprone.BugCheckerRefactoringTestHelper.ExpectOutput")
+          .named("addOutputLines");
 
   private static final Splitter LINE_SPLITTER = Splitter.on('\n');
 

@@ -264,8 +264,6 @@ public final class UnnecessaryQualifierTest {
         .addSourceLines(
             "Test.java",
             """
-            import javax.inject.Inject;
-
             // BUG: Diagnostic contains:
             record Test(@Qual int x) {
               Test {}

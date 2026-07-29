@@ -1465,8 +1465,6 @@ public class ReturnMissingNullableTest {
             """
             package com.google.errorprone.bugpatterns.nullness;
 
-            import javax.annotation.Nullable;
-
             public class MissingNullableReturnTest {
               public static final java.util.function.Function<String, String> IDENTITY =
                   (s -> {
@@ -1485,8 +1483,6 @@ public class ReturnMissingNullableTest {
             """
             package com.google.errorprone.bugpatterns.nullness;
 
-            import javax.annotation.Nullable;
-
             public class MissingNullableReturnTest {
               public static java.util.function.Function<String, String> identity() {
                 return s -> s;
@@ -1503,8 +1499,6 @@ public class ReturnMissingNullableTest {
             "com/google/errorprone/bugpatterns/nullness/MissingNullableReturnTest.java",
             """
             package com.google.errorprone.bugpatterns.nullness;
-
-            import javax.annotation.Nullable;
 
             public class MissingNullableReturnTest {
               public static java.util.function.Function<String, String> identity() {
@@ -1551,7 +1545,6 @@ public class ReturnMissingNullableTest {
             """
             package com.google.errorprone.bugpatterns.nullness;
 
-            import java.util.Optional;
             import javax.annotation.Nullable;
 
             public class MissingNullableReturnTest {
@@ -1576,7 +1569,6 @@ public class ReturnMissingNullableTest {
             package com.google.errorprone.bugpatterns.nullness;
 
             import java.util.concurrent.Callable;
-            import javax.annotation.Nullable;
 
             public class MissingNullableReturnTest {
               public Callable<?> get() {
@@ -1761,8 +1753,6 @@ public class ReturnMissingNullableTest {
             "com/google/errorprone/bugpatterns/nullness/LiteralNullReturnTest.java",
             """
             package com.google.errorprone.bugpatterns.nullness;
-
-            import static org.junit.Assert.fail;
 
             class LiteralNullReturnTest {
               void throwRuntimeException() {}

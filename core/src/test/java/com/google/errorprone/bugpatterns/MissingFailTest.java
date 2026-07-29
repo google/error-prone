@@ -795,6 +795,7 @@ public class MissingFailNegativeCases extends TestCase {
             package test;
 
             import static org.junit.Assert.fail;
+
             import junit.framework.TestCase;
 
             public class A extends TestCase {
@@ -836,6 +837,7 @@ public class MissingFailNegativeCases extends TestCase {
             package test;
 
             import static org.junit.Assert.fail;
+
             import junit.framework.TestCase;
 
             public class A extends TestCase {
@@ -908,6 +910,7 @@ public class MissingFailNegativeCases extends TestCase {
             "in/ExceptionTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -940,6 +943,7 @@ public class MissingFailNegativeCases extends TestCase {
             """
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.assertThrows;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -990,6 +994,7 @@ public class MissingFailNegativeCases extends TestCase {
             "out/ExceptionTest.java",
             """
             import static org.junit.Assert.assertThrows;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -1012,7 +1017,6 @@ public class MissingFailNegativeCases extends TestCase {
         .addInputLines(
             "in/ExceptionTest.java",
             """
-            import java.io.IOException;
             import org.junit.Test;
 
             abstract class ExceptionTest {
@@ -1036,8 +1040,6 @@ public class MissingFailNegativeCases extends TestCase {
         .addInputLines(
             "in/ExceptionTest.java",
             """
-            import java.io.IOException;
-            import org.junit.Test;
             import org.junit.runner.RunWith;
             import org.junit.runners.JUnit4;
 
@@ -1121,8 +1123,6 @@ public class MissingFailNegativeCases extends TestCase {
         .addInputLines(
             "in/ExceptionTest.java",
             """
-            import static com.google.common.truth.Truth.assertThat;
-
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -1145,7 +1145,6 @@ public class MissingFailNegativeCases extends TestCase {
         .addOutputLines(
             "out/ExceptionTest.java",
             """
-            import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.assertThrows;
 
             import java.io.IOException;
@@ -1174,8 +1173,6 @@ public class MissingFailNegativeCases extends TestCase {
         .addInputLines(
             "in/ExceptionTest.java",
             """
-            import static com.google.common.truth.Truth.assertThat;
-
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Test;
@@ -1198,7 +1195,6 @@ public class MissingFailNegativeCases extends TestCase {
         .addOutputLines(
             "out/ExceptionTest.java",
             """
-            import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.assertThrows;
 
             import java.io.IOException;

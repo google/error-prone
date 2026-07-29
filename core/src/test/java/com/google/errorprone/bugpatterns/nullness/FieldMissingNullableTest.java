@@ -120,8 +120,6 @@ public class FieldMissingNullableTest {
             """
             package com.google.errorprone.bugpatterns.nullness;
 
-            import javax.annotation.Nullable;
-
             public class NullableParameterTest {
               // BUG: Diagnostic contains: @Nullable
               public static final String MESSAGE = null;
@@ -137,8 +135,6 @@ public class FieldMissingNullableTest {
             "com/google/errorprone/bugpatterns/nullness/NullableParameterTest.java",
             """
             package com.google.errorprone.bugpatterns.nullness;
-
-            import javax.annotation.Nullable;
 
             public class NullableParameterTest {
               private String message = "hello";
@@ -528,8 +524,6 @@ public class FieldMissingNullableTest {
             "com/google/errorprone/bugpatterns/nullness/NullableParameterTest.java",
             """
             package com.google.errorprone.bugpatterns.nullness;
-
-            import javax.annotation.Nullable;
 
             public class NullableParameterTest {
               private String message = "hello";

@@ -72,11 +72,7 @@ public final class EscapedEntityTest {
         .addSourceLines(
             "Test.java",
             """
-            /**
-             *
-             *
-             * <pre> &#064;Override </pre>
-             */
+            /** <pre> &#064;Override </pre> */
             interface Test {}
             """)
         .doTest();

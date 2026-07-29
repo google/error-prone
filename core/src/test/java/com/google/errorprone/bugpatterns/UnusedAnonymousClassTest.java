@@ -167,7 +167,6 @@ public class UnusedAnonymousClassTest {
             """
             package a;
 
-            import java.util.ArrayList;
             import java.util.concurrent.Callable;
 
             public class One {

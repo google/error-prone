@@ -39,15 +39,10 @@ public class RemoveUnusedImportsTest {
             "in/Test.java",
             """
             import static com.google.common.base.Preconditions.checkNotNull;
-            import static java.util.Collections.emptyList;
             import static java.util.Collections.emptySet;
 
-            import java.util.ArrayList;
             import java.util.Collection;
-            import java.util.Collections;
             import java.util.HashSet;
-            import java.util.List;
-            import java.util.Map;
             import java.util.Set;
             import java.util.UUID;
 
@@ -102,7 +97,6 @@ public class RemoveUnusedImportsTest {
             "in/Test.java",
             """
             import java.util.Map;
-            import java.util.Map.Entry;
 
             public class Test {
               Map.Entry<String, String> e;
@@ -263,9 +257,7 @@ public class RemoveUnusedImportsTest {
         .addInputLines(
             "in/Test.java",
             """
-            import java.util.List;
             import java.util.Map;
-            import java.util.Map.Entry;
 
             /** {@link java.util.List} {@link Map.Entry} */
             public class Test {}
@@ -366,7 +358,7 @@ public class RemoveUnusedImportsTest {
             """
             package com.example;
 
-            import java.util.Map;
+
             """)
         .addOutputLines(
             "out/com/example/package-info.java",
@@ -504,7 +496,6 @@ public class RemoveUnusedImportsTest {
             package p;
 
             import a.One;
-            import a.Two;
 
             public record Test(int z, @One int x, int y) {}
             """)

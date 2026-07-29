@@ -77,7 +77,6 @@ public class GuardedByCheckerTest {
             package threadsafety;
 
             import com.google.errorprone.annotations.concurrent.GuardedBy;
-            import java.util.concurrent.locks.Lock;
 
             class Test {
               @GuardedBy("Test.class")
@@ -426,7 +425,6 @@ public class GuardedByCheckerTest {
             package threadsafety;
 
             import com.google.errorprone.annotations.concurrent.GuardedBy;
-            import java.util.List;
 
             class Itself {
               @GuardedBy("this")
@@ -1492,8 +1490,6 @@ class WrongInnerClassInstance {
 
             import com.google.common.util.concurrent.Monitor;
             import com.google.errorprone.annotations.concurrent.GuardedBy;
-            import java.util.ArrayList;
-            import java.util.List;
 
             class Test {
               final Monitor monitor = new Monitor();
@@ -1559,8 +1555,8 @@ class WrongInnerClassInstance {
             package threadsafety;
 
             import com.google.errorprone.annotations.concurrent.GuardedBy;
+
             // do not remove, regression test for a bug when RWL is on the classpath
-            import java.util.concurrent.locks.ReadWriteLock;
 
             class Test {
               Object lock() {
@@ -1917,8 +1913,6 @@ class WrongInnerClassInstance {
             "threadsafety/Test.java",
 """
 package threadsafety;
-
-import com.google.errorprone.annotations.concurrent.GuardedBy;
 
 public class Test {
   void f() {
@@ -2433,7 +2427,6 @@ abstract class Test {
             import com.google.errorprone.annotations.concurrent.GuardedBy;
             import java.util.ArrayList;
             import java.util.List;
-            import java.util.Optional;
             import java.util.function.Predicate;
 
             class Test {

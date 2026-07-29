@@ -35,11 +35,12 @@ public class ExpectedExceptionCheckerTest {
             "in/ExceptionTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.io.IOException;
             import java.nio.file.*;
-            import org.junit.Test;
-            import org.junit.Rule;
             import org.hamcrest.CoreMatchers;
+            import org.junit.Rule;
+            import org.junit.Test;
             import org.junit.rules.ExpectedException;
 
             class ExceptionTest {
@@ -102,6 +103,7 @@ class ExceptionTest {
             "in/ExceptionTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.hamcrest.CoreMatchers;
@@ -163,6 +165,7 @@ class ExceptionTest {
             "in/ExceptionTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.hamcrest.CoreMatchers;
@@ -218,6 +221,7 @@ class ExceptionTest {
             "in/ExceptionTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.io.IOException;
             import java.nio.file.*;
             import org.junit.Rule;
@@ -275,11 +279,12 @@ class ExceptionTest {
             "in/ExceptionTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.io.IOException;
             import java.nio.file.*;
-            import org.junit.Test;
-            import org.junit.Rule;
             import org.hamcrest.CoreMatchers;
+            import org.junit.Rule;
+            import org.junit.Test;
             import org.junit.rules.ExpectedException;
 
             class ExceptionTest {
@@ -333,11 +338,12 @@ class ExceptionTest {
             "in/ExceptionTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.io.IOException;
             import java.nio.file.*;
-            import org.junit.Test;
-            import org.junit.Rule;
             import org.hamcrest.Matcher;
+            import org.junit.Rule;
+            import org.junit.Test;
             import org.junit.rules.ExpectedException;
 
             class ExceptionTest {
@@ -391,6 +397,7 @@ class ExceptionTest {
             "in/ExceptionTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import org.junit.Rule;
             import org.junit.Test;
             import org.junit.rules.ExpectedException;
@@ -410,6 +417,7 @@ class ExceptionTest {
             "out/ExceptionTest.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import org.junit.Rule;
             import org.junit.Test;
             import org.junit.rules.ExpectedException;
@@ -436,10 +444,11 @@ class ExceptionTest {
             """
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.fail;
+
             import java.io.IOException;
             import java.nio.file.*;
-            import org.junit.Test;
             import org.junit.Rule;
+            import org.junit.Test;
             import org.junit.rules.ExpectedException;
 
             class ExceptionTest {

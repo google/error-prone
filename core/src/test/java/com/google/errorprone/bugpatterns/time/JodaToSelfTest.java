@@ -80,8 +80,6 @@ public class JodaToSelfTest {
         .addSourceLines(
             "TestClass.java",
             """
-            import org.joda.time.Duration;
-
             public class TestClass {
               private static final org.joda.time.Duration DURATION =
                   // BUG: Diagnostic contains: org.joda.time.Duration.ZERO;

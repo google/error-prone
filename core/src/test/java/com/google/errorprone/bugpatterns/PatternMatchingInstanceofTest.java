@@ -857,8 +857,6 @@ public final class PatternMatchingInstanceofTest {
         .addInputLines(
             "Test.java",
             """
-            import com.google.common.collect.ImmutableList;
-
             class Test {
               String f(Object o) {
                 o = o.toString();

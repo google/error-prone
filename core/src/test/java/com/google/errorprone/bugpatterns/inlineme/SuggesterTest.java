@@ -1254,8 +1254,6 @@ public class Client {
 
             import static java.nio.charset.StandardCharsets.US_ASCII;
 
-            import com.google.errorprone.annotations.InlineMe;
-
             public final class KeymasterEncrypter {
               @Deprecated
               public final byte[] encryptASCII(String plaintext) {

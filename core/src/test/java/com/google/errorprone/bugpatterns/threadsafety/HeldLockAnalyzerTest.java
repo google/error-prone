@@ -112,7 +112,6 @@ public class HeldLockAnalyzerTest {
             package threadsafety;
 
             import com.google.errorprone.annotations.concurrent.GuardedBy;
-            import java.util.concurrent.locks.Lock;
 
             class Test {
               @GuardedBy("this")
@@ -136,7 +135,6 @@ public class HeldLockAnalyzerTest {
             package threadsafety;
 
             import com.google.errorprone.annotations.concurrent.GuardedBy;
-            import java.util.concurrent.locks.Lock;
 
             class Test {
               @GuardedBy("this")

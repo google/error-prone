@@ -520,8 +520,6 @@ public final class AlreadyCheckedTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.auto.value.AutoValue;
-
             class Test {
               private final String a = "foo";
 
@@ -542,8 +540,6 @@ public final class AlreadyCheckedTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.auto.value.AutoValue;
-
             class Test {
               void test(boolean a) {
                 if (a) {
@@ -585,8 +581,6 @@ public final class AlreadyCheckedTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
-
             class Test {
               void test(boolean a, boolean b) {
                 if (a && b) return;

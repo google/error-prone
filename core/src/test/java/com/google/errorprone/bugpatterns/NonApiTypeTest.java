@@ -375,7 +375,6 @@ public final class NonApiTypeTest {
             "Record.java",
             """
             import java.util.ArrayList;
-            import java.util.List;
 
             public record Record(String a) {
               public Record(ArrayList<String> a) {
@@ -414,7 +413,6 @@ public final class NonApiTypeTest {
             "Test.java",
             """
             import com.google.inject.AbstractModule;
-            import com.google.inject.Module;
 
             public class Test extends AbstractModule {
               // BUG: Diagnostic contains: NonApiType

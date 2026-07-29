@@ -67,8 +67,6 @@ public final class StringFormatWithLiteralTest {
         .addSourceLines(
             "ExampleClass.java",
             """
-            import java.lang.String;
-
             public class ExampleClass {
               String test() {
                 String formatString = "Formatting this string: %s";
@@ -101,8 +99,6 @@ public final class StringFormatWithLiteralTest {
         .addSourceLines(
             "ExampleClass.java",
             """
-            import java.lang.String;
-
             public class ExampleClass {
               String test() {
                 return String.format("%n");
@@ -118,8 +114,6 @@ public final class StringFormatWithLiteralTest {
         .addSourceLines(
             "ExampleClass.java",
             """
-            import java.lang.String;
-
             public class ExampleClass {
               String test() {
                 String data = "data";
@@ -136,8 +130,6 @@ public final class StringFormatWithLiteralTest {
         .addSourceLines(
             "ExampleClass.java",
             """
-            import java.lang.String;
-
             public class ExampleClass {
               String test() {
                 Integer data = 3;
@@ -154,8 +146,6 @@ public final class StringFormatWithLiteralTest {
         .addSourceLines(
             "ExampleClass.java",
 """
-import java.lang.String;
-
 public class ExampleClass {
   String test() {
     Integer data = 3;
@@ -190,8 +180,6 @@ public class ExampleClass {
         .addSourceLines(
             "ExampleClass.java",
             """
-            import java.lang.String;
-
             public class ExampleClass {
               String test() {
                 return String.valueOf(true);

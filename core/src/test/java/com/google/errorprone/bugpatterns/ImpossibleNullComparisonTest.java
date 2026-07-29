@@ -66,8 +66,8 @@ public final class ImpossibleNullComparisonTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
             class Test {
               void test() {
@@ -93,8 +93,8 @@ public final class ImpossibleNullComparisonTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import java.util.List;
 
             class Test {
@@ -160,8 +160,8 @@ public final class ImpossibleNullComparisonTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.protobuf.Descriptors.FieldDescriptor;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+            import com.google.protobuf.Descriptors.FieldDescriptor;
 
             public class Test {
               public boolean doIt(TestProtoMessage mob, FieldDescriptor f) {
@@ -179,8 +179,8 @@ public final class ImpossibleNullComparisonTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.protobuf.Descriptors.FieldDescriptor;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+            import com.google.protobuf.Descriptors.FieldDescriptor;
 
             public class Test {
               public boolean doIt(TestProtoMessage mob, FieldDescriptor f) {
@@ -200,8 +200,9 @@ public final class ImpossibleNullComparisonTest {
             "Test.java",
             """
             import static org.junit.Assert.assertNotNull;
-            import com.google.protobuf.ExtensionLite;
+
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+            import com.google.protobuf.ExtensionLite;
 
             public class Test {
               public void test(TestProtoMessage e, ExtensionLite extensionLite) {
@@ -221,8 +222,8 @@ public final class ImpossibleNullComparisonTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.protobuf.Descriptors.FieldDescriptor;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+            import com.google.protobuf.Descriptors.FieldDescriptor;
 
             public class Test {
               public void doIt(TestProtoMessage mob, FieldDescriptor f) {
@@ -240,8 +241,8 @@ public final class ImpossibleNullComparisonTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.protobuf.ExtensionLite;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+            import com.google.protobuf.ExtensionLite;
 
             public class Test {
               public void test(TestProtoMessage e, ExtensionLite extensionLite) {
@@ -259,9 +260,9 @@ public final class ImpossibleNullComparisonTest {
         .addSourceLines(
             "Test.java",
 """
-import com.google.protobuf.ExtensionLite;
-import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
+import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+import com.google.protobuf.ExtensionLite;
 import java.util.List;
 
 public class Test {
@@ -281,11 +282,11 @@ public class Test {
         .addSourceLines(
             "Test.java",
             """
+            import com.google.common.collect.ImmutableList;
             import com.google.protobuf.Extension.MessageType;
             import com.google.protobuf.ExtensionLite;
             import com.google.protobuf.GeneratedMessage;
             import com.sun.tools.javac.code.Type;
-            import com.google.common.collect.ImmutableList;
             import java.util.List;
 
             public class Test {
@@ -319,9 +320,9 @@ public class Test {
             import static com.google.common.base.Preconditions.checkNotNull;
             import static com.google.common.base.Verify.verifyNotNull;
             import static java.util.Objects.requireNonNull;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
-            import java.util.List;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
             class Test {
               void test() {
@@ -375,10 +376,10 @@ public class Test {
             """
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.assertNotNull;
+
             import com.google.common.truth.extensions.proto.ProtoTruth;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
-            import java.util.List;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
             class Test {
               void test() {
@@ -404,9 +405,9 @@ public class Test {
             """
             import static com.google.common.truth.Truth.assertThat;
             import static org.junit.Assert.assertNotNull;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
+
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
-            import java.util.List;
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
             class Test {
               void test() {
@@ -635,6 +636,7 @@ public class Test {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
+
             import java.util.concurrent.TimeUnit;
 
             public class Test {

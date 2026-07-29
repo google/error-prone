@@ -31,7 +31,6 @@ public class AvoidValueSetterTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.bugpatterns.proto.Proto3Test;
             import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;
 
             class Test {
@@ -71,7 +70,6 @@ public class AvoidValueSetterTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.bugpatterns.proto.Proto3Test;
             import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;
 
             class Test {
@@ -90,7 +88,6 @@ public class AvoidValueSetterTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.bugpatterns.proto.Proto3Test;
             import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;
 
             class Test {
@@ -108,7 +105,6 @@ public class AvoidValueSetterTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.bugpatterns.proto.Proto3Test;
             import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;
 
             class Test {
@@ -127,7 +123,6 @@ public class AvoidValueSetterTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.bugpatterns.proto.Proto3Test;
             import com.google.errorprone.bugpatterns.proto.Proto3Test.TestProto3Message;
 
             class Test {
