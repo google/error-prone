@@ -2528,6 +2528,51 @@ public class ReturnMissingNullableTest {
         .doTest();
   }
 
+  @Test
+  public void switchCaseReassignment() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              String test(String x, int z) {
+                if (x == null) {
+                  switch (z) {
+                    case 1:
+                      x = "not null";
+                      return x;
+                    default:
+                      return "";
+                  }
+                }
+                return x;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void loopReassignment() {
+    createCompilationTestHelper()
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              String test(String x) {
+                if (x == null) {
+                  while (true) {
+                    x = "not null";
+                    return x;
+                  }
+                }
+                return x;
+              }
+            }
+            """)
+        .doTest();
+  }
+
   private CompilationTestHelper createCompilationTestHelper() {
     return CompilationTestHelper.newInstance(ReturnMissingNullable.class, getClass());
   }
