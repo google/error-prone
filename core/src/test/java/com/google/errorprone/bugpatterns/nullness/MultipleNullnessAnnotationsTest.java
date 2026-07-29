@@ -163,4 +163,34 @@ public class MultipleNullnessAnnotationsTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void nestedTypeWithFieldNotNullAndInnerNullable() {
+    testHelper
+        .addSourceLines(
+            "NotNull.java",
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.TYPE_USE})
+            public @interface NotNull {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class Outer {
+              class Inner {}
+            }
+
+            class Test {
+              // TODO(user): this shouldn't be flagged
+              // BUG: Diagnostic contains: MultipleNullnessAnnotations
+              @NotNull Outer.@Nullable Inner f;
+            }
+            """)
+        .doTest();
+  }
 }
