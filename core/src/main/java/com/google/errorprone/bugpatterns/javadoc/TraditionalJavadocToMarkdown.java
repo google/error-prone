@@ -85,6 +85,7 @@ import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
 /// An experimental tool that converts traditional Javadoc comments to Markdown Javadoc comments.
@@ -234,7 +235,7 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
   private static final class MarkdownConverterScanner
       extends DocTreePathScanner<Void, StringBuilder> {
     private final int minHeadingLevel;
-    private final Deque<String> hrefStack = new ArrayDeque<>();
+    private final Deque<Optional<String>> aTagStack = new ArrayDeque<>();
     private boolean inPre = false;
     private boolean inSee = false;
 
@@ -390,18 +391,15 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
           inPre = true;
         }
         case "a" -> {
-          String href = "";
-          for (DocTree attr : node.getAttributes()) {
-            if (attr instanceof AttributeTree attribute
-                && attribute.getName().toString().equalsIgnoreCase("href")) {
-              StringBuilder value = new StringBuilder();
-              scan(attribute.getValue(), value);
-              href = value.toString();
-              break;
-            }
+          Optional<String> href = findAttributeValue(node.getAttributes(), "href");
+          if (node.isSelfClosing()) {
+            reconstructTag(node, sb);
+          } else {
+            aTagStack.push(href);
+            href.ifPresentOrElse(
+                unused -> sb.append('['), //
+                () -> reconstructTag(node, sb));
           }
-          hrefStack.push(href);
-          sb.append("[");
         }
         default -> {
           reconstructTag(node, sb);
@@ -438,7 +436,12 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
           sb.append("```\n");
           inPre = false;
         }
-        case "a" -> sb.append("](").append(hrefStack.isEmpty() ? "" : hrefStack.pop()).append(')');
+        case "a" -> {
+          Optional<String> href = aTagStack.isEmpty() ? Optional.empty() : aTagStack.pop();
+          href.ifPresentOrElse(
+              url -> sb.append("](").append(url).append(')'), //
+              () -> sb.append("</a>"));
+        }
         case "p", "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6" -> {}
         default -> sb.append("</").append(node.getName()).append(">");
       }
@@ -571,17 +574,13 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
         return null;
       }
 
-      String lang = "";
-      for (DocTree attr : node.getAttributes()) {
-        if (attr instanceof AttributeTree attribute
-            && attribute.getName().toString().equalsIgnoreCase("lang")) {
-          StringBuilder value = new StringBuilder();
-          scan(attribute.getValue(), value);
-          lang = value.toString();
-        } else {
+      for (DocTree docTree : node.getAttributes()) {
+        if (!(docTree instanceof AttributeTree attribute
+            && Ascii.equalsIgnoreCase(attribute.getName(), "lang"))) {
           return null;
         }
       }
+      String lang = findAttributeValue(node.getAttributes(), "lang").orElse("");
       return new CodeBlock(lang, body.getBody());
     }
 
@@ -744,6 +743,19 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
       sb.append('@').append(tagName).append(' ');
       scan(content, sb);
       return null;
+    }
+
+    private Optional<String> findAttributeValue(
+        Iterable<? extends DocTree> attributes, String name) {
+      for (DocTree docTree : attributes) {
+        if (docTree instanceof AttributeTree attribute
+            && Ascii.equalsIgnoreCase(attribute.getName(), name)) {
+          StringBuilder value = new StringBuilder();
+          scan(attribute.getValue(), value);
+          return Optional.of(value.toString());
+        }
+      }
+      return Optional.empty();
     }
   }
 

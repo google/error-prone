@@ -2011,16 +2011,67 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
-        // TODO(b/540010882): <a id="..."> and <a name="..."> tags without an href attribute should
-        // not be converted to empty markdown links []()
         .addOutputLines(
             "Test.java",
             """
             /// This is the first paragraph.
             ///
-            /// []()This is the second paragraph.
+            /// <a id="anchor-id"></a>This is the second paragraph.
             ///
-            /// []()This is the third paragraph.
+            /// <a name="anchor-name"></a>This is the third paragraph.
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void anchorTagsWithNamesAndIds_selfClosing() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * This is the first paragraph.
+             *
+             * <p><a id="anchor-id"/>This is the second paragraph.
+             *
+             * <p><a name="anchor-name"/>This is the third paragraph.
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// This is the first paragraph.
+            ///
+            /// <a id="anchor-id"/>This is the second paragraph.
+            ///
+            /// <a name="anchor-name"/>This is the third paragraph.
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void anchorTagsWithHref_selfClosing() {
+    // it's a bit odd to have a self-closing tag _with_ an href, but...
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * This is the first paragraph.
+             *
+             * <p><a href="http://google.com"/>This is the second paragraph.
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// This is the first paragraph.
+            ///
+            /// <a href="http://google.com"/>This is the second paragraph.
             public class Test {}
             """)
         .doTest();
