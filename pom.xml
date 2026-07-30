@@ -44,7 +44,7 @@
     <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
     <protobuf.version>4.35.1</protobuf.version>
     <grpc.version>1.43.3</grpc.version>
-    <jspecify.version>1.0.0</jspecify.version>
+    <jspecify.version>1.0.1</jspecify.version>
     <google-java-format.version>1.35.0</google-java-format.version>
   </properties>
 
