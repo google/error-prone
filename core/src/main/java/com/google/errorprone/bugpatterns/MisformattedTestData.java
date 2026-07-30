@@ -35,9 +35,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
-import com.google.googlejavaformat.java.ImportOrderer;
-import com.google.googlejavaformat.java.JavaFormatterOptions.Style;
-import com.google.googlejavaformat.java.RemoveUnusedImports;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
@@ -108,14 +105,7 @@ public final class MisformattedTestData extends BugChecker implements Compilatio
       Formatter formatter = new Formatter();
       String formattedSource;
       try {
-        formattedSource = formatter.formatSource(string);
-        // Do not remove unused imports from addOutputLines arguments. Bugcheckers under test (and
-        // BugCheckerRefactoringTestHelper) do not remove unused imports from refactored code during
-        // test assertions, so stripping them from addOutputLines would cause test mismatches.
-        if (!ADD_OUTPUT_LINES.matches(tree, state)) {
-          formattedSource = RemoveUnusedImports.removeUnusedImports(formattedSource);
-        }
-        formattedSource = ImportOrderer.reorderImports(formattedSource, Style.GOOGLE);
+        formattedSource = formatter.formatSourceAndFixImports(string);
       } catch (FormatterException exception) {
         continue;
       }

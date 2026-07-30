@@ -50,9 +50,6 @@ import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
-import com.google.googlejavaformat.java.ImportOrderer;
-import com.google.googlejavaformat.java.JavaFormatterOptions.Style;
-import com.google.googlejavaformat.java.StringWrapper;
 import com.google.testing.compile.JavaFileObjects;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.TreePath;
@@ -108,10 +105,7 @@ public final class BugCheckerRefactoringTestHelper {
       private String maybeFormat(String input, boolean allowFormattingErrors) {
         try {
           Formatter formatter = new Formatter();
-          String formatted = formatter.formatSource(input);
-          formatted = StringWrapper.wrap(formatted, formatter);
-          formatted = ImportOrderer.reorderImports(formatted, Style.GOOGLE);
-          return formatted;
+          return formatter.formatSourceAndFixImports(input);
         } catch (FormatterException e) {
           if (allowFormattingErrors) {
             return input;

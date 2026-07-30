@@ -24,14 +24,12 @@ import static org.junit.Assert.fail;
 
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
-import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
@@ -225,8 +223,6 @@ public class BugCheckerRefactoringTestHelperTest {
         .addOutputLines(
             "out/foo/Bar.java",
             """
-            import bar.Foo;
-
             public class Bar {}
             """)
         .doTest();
@@ -277,38 +273,50 @@ public class BugCheckerRefactoringTestHelperTest {
 
   @Test
   public void staticLastImportOrder() {
-    BugCheckerRefactoringTestHelper.newInstance(ImportArrayList.class, getClass())
+    BugCheckerRefactoringTestHelper.newInstance(SimplifyArrayList.class, getClass())
         .setImportOrder("static-last")
         .addInputLines(
             "pkg/A.java",
             """
             import static java.lang.Math.min;
 
-            class A {}
+            class A {
+              java.util.ArrayList list;
+              int x = min(1, 2);
+            }
             """)
         .addOutputLines(
             "out/pkg/A.java",
             """
-            import static java.lang.Math.min;
-
             import java.util.ArrayList;
 
-            class A {}
+            import static java.lang.Math.min;
+
+            class A {
+              ArrayList list;
+              int x = min(1, 2);
+            }
             """)
         .doTest();
   }
 
   /** Mock {@link BugChecker} for testing only. */
   @BugPattern(
-      summary = "Mock refactoring that imports an ArrayList",
+      summary = "Mock refactoring that replaces java.util.ArrayList with ArrayList",
       explanation = "For test purposes only.",
       severity = SUGGESTION)
-  public static class ImportArrayList extends BugChecker implements CompilationUnitTreeMatcher {
-
+  public static class SimplifyArrayList extends BugChecker implements VariableTreeMatcher {
     @Override
-    public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
-      SuggestedFix fix = SuggestedFix.builder().addImport("java.util.ArrayList").build();
-      return describeMatch(tree, fix);
+    public Description matchVariable(VariableTree tree, VisitorState state) {
+      if (state.getSourceForNode(tree.getType()).equals("java.util.ArrayList")) {
+        SuggestedFix fix =
+            SuggestedFix.builder()
+                .replace(tree.getType(), "ArrayList")
+                .addImport("java.util.ArrayList")
+                .build();
+        return describeMatch(tree.getType(), fix);
+      }
+      return Description.NO_MATCH;
     }
   }
 

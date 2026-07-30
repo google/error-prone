@@ -444,7 +444,7 @@ public final class MisformattedTestDataTest {
   }
 
   @Test
-  public void addOutputLines_preservesUnusedImports() {
+  public void addOutputLines_removesUnusedImports() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -496,7 +496,6 @@ public final class MisformattedTestDataTest {
                         \"""
                         package foo;
 
-                        import java.util.ArrayList;
                         import java.util.List;
 
                         class Test {
@@ -527,7 +526,6 @@ public final class MisformattedTestDataTest {
                         wrapper(
                             \"""
                             import java.util.List;
-                            import java.util.ArrayList;
 
                             class Test {
                               int method(List<Integer> xs) {
@@ -554,7 +552,6 @@ public final class MisformattedTestDataTest {
                         "Test.java",
                         wrapper(
                             \"""
-                            import java.util.ArrayList;
                             import java.util.List;
 
                             class Test {
@@ -567,6 +564,59 @@ public final class MisformattedTestDataTest {
 
               String wrapper(String s) {
                 return s;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void removeUnusedImports() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    package foo;
+
+                    import java.util.ArrayList;
+                    import java.util.List;
+
+                    class Test {
+                      int method(List<Integer> xs) {
+                        return xs.size();
+                      }
+                    }
+                    \""");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    package foo;
+
+                    import java.util.List;
+
+                    class Test {
+                      int method(List<Integer> xs) {
+                        return xs.size();
+                      }
+                    }
+                    \""");
               }
             }
             """)
