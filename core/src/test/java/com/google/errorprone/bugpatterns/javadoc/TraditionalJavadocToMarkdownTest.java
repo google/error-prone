@@ -2076,4 +2076,97 @@ public final class TraditionalJavadocToMarkdownTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void nestedPreTags() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <pre>
+             * outer code
+             * <pre>
+             * inner code
+             * </pre>
+             * outer code again
+             * </pre>
+             */
+            public class Test {}
+            """)
+        // TODO(kak): should be a single code block
+        .addOutputLines(
+            "Test.java",
+            """
+            /// ```
+            /// outer code
+            ///
+            /// ```
+            ///
+            /// inner code
+            ///
+            /// ```
+            ///
+            /// outer code again
+            /// ```
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedListIndentation() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <ul>
+             *   <li>Item 1
+             *     <ul>
+             *       <li>Subitem A</li>
+             *       <li>Subitem B</li>
+             *     </ul>
+             *   </li>
+             *   <li>Item 2</li>
+             * </ul>
+             */
+            public class Test {}
+            """)
+        // TODO(kak): should be a Item 1 with 2 subitems, then Item 2
+        .addOutputLines(
+            "Test.java",
+            """
+            /// - Item 1
+            ///
+            /// - Subitem A
+            /// - Subitem B
+            ///
+            /// - Item 2
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedFormattingTags() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <b>outer <b>inner</b> outer</b>
+             * <code>outer <code>inner</code> outer</code>
+             */
+            public class Test {}
+            """)
+        // TODO(kak): should be: **outer inner outer** `outer inner outer`
+        .addOutputLines(
+            "Test.java",
+            """
+            /// **outer **inner** outer** `outer `inner` outer`
+            public class Test {}
+            """)
+        .doTest();
+  }
 }
