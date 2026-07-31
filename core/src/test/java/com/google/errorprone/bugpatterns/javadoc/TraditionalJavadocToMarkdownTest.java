@@ -2094,18 +2094,13 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
-        // TODO(kak): should be a single code block
         .addOutputLines(
             "Test.java",
             """
             /// ```
             /// outer code
             ///
-            /// ```
-            ///
             /// inner code
-            ///
-            /// ```
             ///
             /// outer code again
             /// ```
@@ -2133,14 +2128,13 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
-        // TODO(kak): should be a Item 1 with 2 subitems, then Item 2
         .addOutputLines(
             "Test.java",
             """
             /// - Item 1
             ///
-            /// - Subitem A
-            /// - Subitem B
+            ///   - Subitem A
+            ///   - Subitem B
             ///
             /// - Item 2
             public class Test {}
@@ -2160,11 +2154,124 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
-        // TODO(kak): should be: **outer inner outer** `outer inner outer`
         .addOutputLines(
             "Test.java",
             """
-            /// **outer **inner** outer** `outer `inner` outer`
+            /// **outer inner outer** `outer inner outer`
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedListsWithOlAndUl() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <ol>
+             *   <li>First item
+             *     <ul>
+             *       <li>Sub bullet 1</li>
+             *       <li>Sub bullet 2</li>
+             *     </ul>
+             *   </li>
+             * </ol>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// - First item
+            ///
+            ///   - Sub bullet 1
+            ///   - Sub bullet 2
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void htmlTagInsideSeeDoesNotPopOuterScopeTag() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <b>outer start
+             * @see Foo <b>inner tag</b>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// **outer start
+            ///
+            /// @see Foo <b>inner tag</b>
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unmatchedClosingTag() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <b>bold text</div>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// **bold text</div>
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedItalicFormattingTags() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <i>outer <i>inner</i> outer</i>
+             * <em>outer <em>inner</em> outer</em>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// *outer inner outer* *outer inner outer*
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void seeTagWithLink() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * @see <a href="http://google.com">{@link Integer#signum}</a>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// @see <a href="http://google.com">[Integer#signum]</a>
             public class Test {}
             """)
         .doTest();
