@@ -7,6 +7,8 @@ on:
         description: "version number for this release."
         required: true
 
+permissions: {}
+
 jobs:
   build-maven-jars:
     runs-on: ubuntu-latest

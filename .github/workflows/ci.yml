@@ -97,6 +97,9 @@ jobs:
         run: mvn -P '!examples' javadoc:javadoc
 
   publish_snapshot:
+    permissions:
+      contents: read #  to fetch code (actions/checkout)
+
     name: 'Publish snapshot'
     needs: test
     if: github.event_name == 'push' && github.repository == 'google/error-prone' && github.ref == 'refs/heads/master'
