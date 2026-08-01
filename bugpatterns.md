@@ -1928,6 +1928,9 @@ Element#toString shouldn&#39;t be used for comparison as it is expensive and fra
 __[ThrowsUncheckedException](bugpattern/ThrowsUncheckedException)__<br>
 Unchecked exceptions do not need to be declared in the method signature.
 
+__[TraditionalJavadocToMarkdown](bugpattern/TraditionalJavadocToMarkdown)__<br>
+Converts traditional Javadoc comments into Markdown Javadoc comments
+
 __[TryFailRefactoring](bugpattern/TryFailRefactoring)__<br>
 Prefer assertThrows to try/fail
 
