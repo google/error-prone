@@ -267,7 +267,9 @@ public class HeldLockAnalyzerTest {
       ErrorProneFlags flags =
           ErrorProneFlags.builder().putFlag("GuardedBy:KnownImmediateMethods", value).build();
       assertThrows(
-          IllegalArgumentException.class, () -> HeldLockAnalyzer.invokesLambdasImmediately(flags));
+          "GuardedBy:KnownImmediateMethods=\"" + value + "\"",
+          IllegalArgumentException.class,
+          () -> HeldLockAnalyzer.invokesLambdasImmediately(flags));
     }
   }
 

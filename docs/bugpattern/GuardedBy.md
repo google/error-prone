@@ -199,7 +199,7 @@ class Transaction {
 
   public synchronized void handle() {
     doSomething(() -> {
-      x++;  // OK: 'doSomething' is configured to run the lambda immediately.
+      ++x;  // OK: 'doSomething' is configured to run the lambda immediately.
     });
   }
 
@@ -209,7 +209,7 @@ class Transaction {
 }
 ```
 
-Methods declared on subtypes of the listed class are matched too, and both
+Methods declared on subtypes of the listed class are matched, too, and both
 static and instance methods are supported.
 
 The contract is trusted but not verified: listing a method that actually defers

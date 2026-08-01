@@ -2426,62 +2426,26 @@ abstract class Test {
 
   @Test
   public void knownImmediateMethods_lambda() {
-    CompilationTestHelper.newInstance(GuardedByChecker.class, getClass())
-        .setArgs("-XepOpt:GuardedBy:KnownImmediateMethods=threadsafety.Test#safeRun")
+    compilationHelperWithKnownImmediateMethods("threadsafety.Test#runNow")
         .addSourceLines(
             "threadsafety/Test.java",
             """
             package threadsafety;
 
             import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
               @GuardedBy("this")
-              private int state = 0;
+              private final List<String> xs = new ArrayList<>();
 
-              public synchronized void modifyState(int newState) {
-                safeRun(() -> modifyStateInternal(newState));
+              public synchronized void f() {
+                runNow(() -> xs.clear());
               }
 
-              @GuardedBy("this")
-              private void modifyStateInternal(int newState) {
-                state = newState;
-              }
-
-              private void safeRun(Runnable runnable) {
-                runnable.run();
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
-  public void knownImmediateMethods_flagNotSet_isFlagged() {
-    compilationHelper
-        .addSourceLines(
-            "threadsafety/Test.java",
-            """
-            package threadsafety;
-
-            import com.google.errorprone.annotations.concurrent.GuardedBy;
-
-            class Test {
-              @GuardedBy("this")
-              private int state = 0;
-
-              public synchronized void modifyState(int newState) {
-                // BUG: Diagnostic contains: should be guarded by 'this'
-                safeRun(() -> modifyStateInternal(newState));
-              }
-
-              @GuardedBy("this")
-              private void modifyStateInternal(int newState) {
-                state = newState;
-              }
-
-              private void safeRun(Runnable runnable) {
-                runnable.run();
+              private void runNow(Runnable r) {
+                r.run();
               }
             }
             """)
@@ -2490,30 +2454,26 @@ abstract class Test {
 
   @Test
   public void knownImmediateMethods_methodReference() {
-    CompilationTestHelper.newInstance(GuardedByChecker.class, getClass())
-        .setArgs("-XepOpt:GuardedBy:KnownImmediateMethods=threadsafety.Test#safeRun")
+    compilationHelperWithKnownImmediateMethods("threadsafety.Test#runNow")
         .addSourceLines(
             "threadsafety/Test.java",
             """
             package threadsafety;
 
             import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
               @GuardedBy("this")
-              private int state = 0;
+              private final List<String> xs = new ArrayList<>();
 
-              public synchronized void modifyState() {
-                safeRun(this::zeroStateInternal);
+              public synchronized void f() {
+                runNow(xs::clear);
               }
 
-              @GuardedBy("this")
-              private void zeroStateInternal() {
-                state = 0;
-              }
-
-              private void safeRun(Runnable runnable) {
-                runnable.run();
+              private void runNow(Runnable r) {
+                r.run();
               }
             }
             """)
@@ -2521,30 +2481,30 @@ abstract class Test {
   }
 
   @Test
-  public void knownImmediateMethods_lambda_synchronizedBlock() {
-    CompilationTestHelper.newInstance(GuardedByChecker.class, getClass())
-        .setArgs("-XepOpt:GuardedBy:KnownImmediateMethods=threadsafety.Test#safeRun")
+  public void knownImmediateMethods_flagNotSet_shouldBeFlagged() {
+    compilationHelper
         .addSourceLines(
             "threadsafety/Test.java",
             """
             package threadsafety;
 
             import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
-              private final Object lock = new Object();
+              @GuardedBy("this")
+              private final List<String> xs = new ArrayList<>();
 
-              @GuardedBy("lock")
-              private int state = 0;
-
-              public void modifyState(int newState) {
-                synchronized (lock) {
-                  safeRun(() -> state = newState);
-                }
+              public synchronized void f() {
+                // BUG: Diagnostic contains: should be guarded by 'this'
+                runNow(() -> xs.clear());
+                // BUG: Diagnostic contains: should be guarded by 'this'
+                runNow(xs::clear);
               }
 
-              private void safeRun(Runnable runnable) {
-                runnable.run();
+              private void runNow(Runnable r) {
+                r.run();
               }
             }
             """)
@@ -2552,29 +2512,30 @@ abstract class Test {
   }
 
   @Test
-  public void knownImmediateMethods_lambda_wrongGuard() {
-    CompilationTestHelper.newInstance(GuardedByChecker.class, getClass())
-        .setArgs("-XepOpt:GuardedBy:KnownImmediateMethods=threadsafety.Test#safeRun")
+  public void knownImmediateMethods_wrongGuard_shouldBeFlagged() {
+    compilationHelperWithKnownImmediateMethods("threadsafety.Test#runNow")
         .addSourceLines(
             "threadsafety/Test.java",
             """
             package threadsafety;
 
             import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.ArrayList;
+            import java.util.List;
 
             class Test {
-              private final Object lock = new Object();
+              final Object mu = new Object();
 
-              @GuardedBy("lock")
-              private int state = 0;
+              @GuardedBy("mu")
+              private final List<String> xs = new ArrayList<>();
 
-              public synchronized void modifyState(int newState) {
-                // BUG: Diagnostic contains: should be guarded by 'this.lock'
-                safeRun(() -> state = newState);
+              public synchronized void f() {
+                // BUG: Diagnostic contains: should be guarded by 'this.mu'
+                runNow(() -> xs.clear());
               }
 
-              private void safeRun(Runnable runnable) {
-                runnable.run();
+              private void runNow(Runnable r) {
+                r.run();
               }
             }
             """)
@@ -2582,9 +2543,8 @@ abstract class Test {
   }
 
   @Test
-  public void knownImmediateMethods_lambda_multipleGuardedAccesses() {
-    CompilationTestHelper.newInstance(GuardedByChecker.class, getClass())
-        .setArgs("-XepOpt:GuardedBy:KnownImmediateMethods=threadsafety.Test#safeRun")
+  public void knownImmediateMethods_multipleAccessesInLambdaBody() {
+    compilationHelperWithKnownImmediateMethods("threadsafety.Test#runNow")
         .addSourceLines(
             "threadsafety/Test.java",
             """
@@ -2593,29 +2553,25 @@ abstract class Test {
             import com.google.errorprone.annotations.concurrent.GuardedBy;
 
             class Test {
-              @GuardedBy("this")
-              private int a = 0;
+              final Object mu = new Object();
 
               @GuardedBy("this")
-              private int b = 0;
+              int x;
 
-              private final Object other = new Object();
+              @GuardedBy("mu")
+              int y;
 
-              @GuardedBy("other")
-              private int c = 0;
-
-              public synchronized void modify() {
-                safeRun(
+              public synchronized void f() {
+                runNow(
                     () -> {
-                      a = 1;
-                      b = 2;
-                      // BUG: Diagnostic contains: should be guarded by 'this.other'
-                      c = 3;
+                      x++;
+                      // BUG: Diagnostic contains: should be guarded by 'this.mu'
+                      y++;
                     });
               }
 
-              private void safeRun(Runnable runnable) {
-                runnable.run();
+              private void runNow(Runnable r) {
+                r.run();
               }
             }
             """)
@@ -2623,13 +2579,41 @@ abstract class Test {
   }
 
   @Test
+  public void knownImmediateMethods_synchronizedBlock() {
+    compilationHelperWithKnownImmediateMethods("threadsafety.Test#runNow")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            """
+            package threadsafety;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+
+            class Test {
+              final Object mu = new Object();
+
+              @GuardedBy("mu")
+              int x;
+
+              public void f() {
+                synchronized (mu) {
+                  runNow(() -> x++);
+                }
+              }
+
+              private void runNow(Runnable r) {
+                r.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /** Entries are comma-separated, and surrounding whitespace is ignored. */
+  @Test
   public void knownImmediateMethods_multipleEntries() {
-    CompilationTestHelper.newInstance(GuardedByChecker.class, getClass())
-        // Entries are comma-separated and trimmed, and an entry naming a class which isn't on the
-        // compilation classpath is simply never matched.
-        .setArgs(
-            "-XepOpt:GuardedBy:KnownImmediateMethods=com.example.NotOnClasspath#run,"
-                + " threadsafety.Test#safeRun")
+    // The first entry names a class which isn't on the compilation classpath; it never matches.
+    compilationHelperWithKnownImmediateMethods(
+            "com.example.NotOnClasspath#run, threadsafety.Test#runNow")
         .addSourceLines(
             "threadsafety/Test.java",
             """
@@ -2639,24 +2623,24 @@ abstract class Test {
 
             class Test {
               @GuardedBy("this")
-              private int state = 0;
+              int x;
 
-              public synchronized void modifyState(int newState) {
-                safeRun(() -> state = newState);
+              public synchronized void f() {
+                runNow(() -> x++);
               }
 
-              private void safeRun(Runnable runnable) {
-                runnable.run();
+              private void runNow(Runnable r) {
+                r.run();
               }
             }
             """)
         .doTest();
   }
 
+  /** Methods declared on subtypes of the listed class are matched too. */
   @Test
-  public void knownImmediateMethods_matchesDescendantsOfListedClass() {
-    CompilationTestHelper.newInstance(GuardedByChecker.class, getClass())
-        .setArgs("-XepOpt:GuardedBy:KnownImmediateMethods=threadsafety.Runner#runNow")
+  public void knownImmediateMethods_descendantOfListedClass() {
+    compilationHelperWithKnownImmediateMethods("threadsafety.Runner#runNow")
         .addSourceLines(
             "threadsafety/Runner.java",
             """
@@ -2686,14 +2670,14 @@ abstract class Test {
             import com.google.errorprone.annotations.concurrent.GuardedBy;
 
             class Test {
-              // The flag names the supertype, but the receiver's static type is the subtype.
+              // The flag names Runner, but the receiver's static type is the subtype.
               private final DirectRunner runner = new DirectRunner();
 
               @GuardedBy("this")
-              private int state = 0;
+              int x;
 
-              public synchronized void modifyState(int newState) {
-                runner.runNow(() -> state = newState);
+              public synchronized void f() {
+                runner.runNow(() -> x++);
               }
             }
             """)
@@ -2821,5 +2805,10 @@ abstract class Test {
             }
             """)
         .doTest();
+  }
+
+  private CompilationTestHelper compilationHelperWithKnownImmediateMethods(String methods) {
+    return CompilationTestHelper.newInstance(GuardedByChecker.class, getClass())
+        .setArgs("-XepOpt:GuardedBy:KnownImmediateMethods=" + methods);
   }
 }
