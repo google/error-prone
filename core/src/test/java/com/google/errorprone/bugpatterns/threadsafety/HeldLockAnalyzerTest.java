@@ -17,9 +17,12 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static org.junit.Assert.assertThrows;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.Tree;
@@ -251,11 +254,30 @@ public class HeldLockAnalyzerTest {
         .doTest();
   }
 
+  @Test
+  public void knownImmediateMethodsFlag_malformed_throws() {
+    for (String value :
+        ImmutableList.of(
+            "com.example.Foo", // no method name
+            "#bar", // no class name
+            "com.example.Foo#", // empty method name
+            "a#b#c", // too many separators
+            "", // empty entry, e.g. from a trailing comma
+            "com.example.Foo#run,")) {
+      ErrorProneFlags flags =
+          ErrorProneFlags.builder().putFlag("GuardedBy:KnownImmediateMethods", value).build();
+      assertThrows(
+          IllegalArgumentException.class, () -> HeldLockAnalyzer.invokesLambdasImmediately(flags));
+    }
+  }
+
   /** A customized {@link GuardedByChecker} that prints more test-friendly diagnostics. */
   @BugPattern(name = "GuardedByLockSet", summary = "", explanation = "", severity = ERROR)
   public static class GuardedByLockSetAnalyzer extends GuardedByChecker {
     @Inject
-    GuardedByLockSetAnalyzer() {}
+    GuardedByLockSetAnalyzer(ErrorProneFlags flags) {
+      super(flags);
+    }
 
     @Override
     protected Description checkGuardedAccess(

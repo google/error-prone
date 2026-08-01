@@ -16,12 +16,16 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.anyMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
@@ -45,8 +49,6 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCNewClass;
@@ -66,8 +68,14 @@ import javax.lang.model.element.Modifier;
  * @author cushon@google.com (Liam Miller-Cushon)
  */
 public final class HeldLockAnalyzer {
+  /**
+   * The flag used to extend {@link #WELL_KNOWN_IMMEDIATE_METHODS} with additional methods, e.g.
+   * {@code -XepOpt:GuardedBy:KnownImmediateMethods=com.example.Transaction#doSomething}.
+   */
+  private static final String KNOWN_IMMEDIATE_METHODS_FLAG = "GuardedBy:KnownImmediateMethods";
+
   /** Methods which invoke lambdas on the same thread. */
-  private static final Matcher<ExpressionTree> INVOKES_LAMBDAS_IMMEDIATELY =
+  private static final Matcher<ExpressionTree> WELL_KNOWN_IMMEDIATE_METHODS =
       anyOf(
           instanceMethod()
               .onExactClass("java.util.Optional")
@@ -90,30 +98,34 @@ public final class HeldLockAnalyzer {
               .onClass("com.google.common.collect.Iterables")
               .namedAnyOf("tryFind", "any", "all", "indexOf"));
 
-  private static final String RUNS_IMMEDIATELY =
-      "com.google.errorprone.annotations.concurrent.RunsImmediately";
+  private static final Splitter HASH_SPLITTER = Splitter.on('#');
 
   /**
-   * Returns true if {@code functionalArgument} (a lambda or method reference) passed to {@code
-   * invocation} is run on the same thread, i.e. the method is one of {@link
-   * #INVOKES_LAMBDAS_IMMEDIATELY} or the matching parameter is {@code @RunsImmediately}.
+   * Returns a matcher for invocations of methods which invoke their functional interface arguments
+   * on the calling thread before returning: the well known JDK and Guava methods above, plus any
+   * methods listed in {@code -XepOpt:GuardedBy:KnownImmediateMethods}.
    */
-  static boolean invokesArgumentImmediately(
-      MethodInvocationTree invocation, ExpressionTree functionalArgument, VisitorState state) {
-    if (INVOKES_LAMBDAS_IMMEDIATELY.matches(invocation, state)) {
-      return true;
+  public static Matcher<ExpressionTree> invokesLambdasImmediately(ErrorProneFlags flags) {
+    ImmutableList<String> configured = flags.getListOrEmpty(KNOWN_IMMEDIATE_METHODS_FLAG);
+    if (configured.isEmpty()) {
+      return WELL_KNOWN_IMMEDIATE_METHODS;
     }
-    MethodSymbol sym = ASTHelpers.getSymbol(invocation);
-    if (sym == null) {
-      return false;
-    }
-    List<VarSymbol> params = sym.getParameters();
-    int index = invocation.getArguments().indexOf(functionalArgument);
-    if (index < 0 || params.isEmpty()) {
-      return false;
-    }
-    VarSymbol param = index < params.size() ? params.get(index) : params.getLast();
-    return ASTHelpers.hasAnnotation(param, RUNS_IMMEDIATELY, state);
+    return anyOf(
+        ImmutableList.<Matcher<ExpressionTree>>builder()
+            .add(WELL_KNOWN_IMMEDIATE_METHODS)
+            .addAll(configured.stream().map(HeldLockAnalyzer::parseKnownImmediateMethod).iterator())
+            .build());
+  }
+
+  /** Parses a single {@code fully.qualified.ClassName#methodName} entry into a matcher. */
+  private static Matcher<ExpressionTree> parseKnownImmediateMethod(String spec) {
+    List<String> parts = HASH_SPLITTER.splitToList(spec.trim());
+    checkArgument(
+        parts.size() == 2 && !parts.get(0).isEmpty() && !parts.get(1).isEmpty(),
+        "Malformed value \"%s\" for -XepOpt:%s; expected <fully.qualified.ClassName>#<methodName>",
+        spec,
+        KNOWN_IMMEDIATE_METHODS_FLAG);
+    return anyMethod().onDescendantOf(parts.get(0)).named(parts.get(1));
   }
 
   /** Listener interface for accesses to guarded members. */
@@ -134,10 +146,14 @@ public final class HeldLockAnalyzer {
    * members.
    */
   public static void analyze(
-      VisitorState state, LockEventListener listener, Predicate<Tree> isSuppressed) {
+      VisitorState state,
+      LockEventListener listener,
+      Predicate<Tree> isSuppressed,
+      Matcher<ExpressionTree> invokesLambdasImmediately) {
     HeldLockSet locks = HeldLockSet.empty();
     locks = handleMonitorGuards(state, locks);
-    new LockScanner(state, listener, isSuppressed).scan(state.getPath(), locks);
+    new LockScanner(state, listener, isSuppressed, invokesLambdasImmediately)
+        .scan(state.getPath(), locks);
   }
 
   // Don't use Class#getName() for inner classes, we don't want `Monitor$Guard`
@@ -166,14 +182,19 @@ public final class HeldLockAnalyzer {
     private final VisitorState visitorState;
     private final LockEventListener listener;
     private final Predicate<Tree> isSuppressed;
+    private final Matcher<ExpressionTree> invokesLambdasImmediately;
 
     private static final GuardedByExpression.Factory F = new GuardedByExpression.Factory();
 
     private LockScanner(
-        VisitorState visitorState, LockEventListener listener, Predicate<Tree> isSuppressed) {
+        VisitorState visitorState,
+        LockEventListener listener,
+        Predicate<Tree> isSuppressed,
+        Matcher<ExpressionTree> invokesLambdasImmediately) {
       this.visitorState = visitorState;
       this.listener = listener;
       this.isSuppressed = isSuppressed;
+      this.invokesLambdasImmediately = invokesLambdasImmediately;
     }
 
     @Override
@@ -259,7 +280,7 @@ public final class HeldLockAnalyzer {
     public Void visitLambdaExpression(LambdaExpressionTree node, HeldLockSet heldLockSet) {
       var parent = getCurrentPath().getParentPath().getLeaf();
       if (parent instanceof MethodInvocationTree methodInvocationTree
-          && invokesArgumentImmediately(methodInvocationTree, node, visitorState)) {
+          && invokesLambdasImmediately.matches(methodInvocationTree, visitorState)) {
         return super.visitLambdaExpression(node, heldLockSet);
       }
       // Don't descend into lambdas; they will be analyzed separately.

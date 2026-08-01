@@ -185,12 +185,12 @@ private void doSomething(Runnable r) {
 However, the check does special-case some method calls which are known to
 immediately call the provided lambda or method reference.
 
-For your own methods, you can opt in to the same behavior by annotating the
-functional-interface parameter with
-`com.google.errorprone.annotations.concurrent.RunsImmediately`. This documents
-that the argument, if it is invoked at all, is invoked synchronously on the
-calling thread before the method returns, so a lambda or method reference passed
-there is analyzed in the caller's lock scope:
+For your own methods, you can extend that list with the
+`GuardedBy:KnownImmediateMethods` flag, which takes a comma-separated list of
+methods in `fully.qualified.ClassName#methodName` form. For example,
+`-XepOpt:GuardedBy:KnownImmediateMethods=com.example.Transaction#doSomething`
+makes the check analyze lambdas and method references passed to
+`Transaction.doSomething` in the caller's lock scope:
 
 ```java
 class Transaction {
@@ -199,18 +199,23 @@ class Transaction {
 
   public synchronized void handle() {
     doSomething(() -> {
-      x++;  // OK: 'doSomething' runs the lambda immediately, while 'this' is held.
+      x++;  // OK: 'doSomething' is configured to run the lambda immediately.
     });
   }
 
-  private void doSomething(@RunsImmediately Runnable r) {
+  private void doSomething(Runnable r) {
     r.run();
   }
 }
 ```
 
-The contract is trusted but not verified: annotating a parameter whose value is
-actually deferred to another thread can hide real concurrency bugs.
+Methods declared on subtypes of the listed class are matched too, and both
+static and instance methods are supported.
+
+The contract is trusted but not verified: listing a method that actually defers
+its argument to another thread can hide real concurrency bugs. Note also that
+the flag applies to the method as a whole — every functional interface argument
+passed to a listed method is treated as invoked immediately.
 
 #### False negatives with aliasing
 
