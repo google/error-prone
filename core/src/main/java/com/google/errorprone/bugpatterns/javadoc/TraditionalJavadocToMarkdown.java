@@ -259,23 +259,25 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
       this.minHeadingLevel = minHeadingLevel;
     }
 
+    /// Returns the name of the innermost matching tag from the scope stack, if any.
+    private Optional<String> firstOf(String... names) {
+      List<String> nameList = Arrays.asList(names);
+      return scopeStack.stream().map(TagFrame::name).filter(nameList::contains).findFirst();
+    }
+
     private boolean inSee() {
-      for (TagFrame frame : scopeStack) {
-        // An inline {@link} takes precedence over a surrounding @see block because inline links
-        // should not be treated as reference signatures (which would escape brackets).
-        //
-        // Note: It is actually possible (though rare and likely unintended) to have a {@link}
-        // nested inside an HTML anchor tag, which in turn might be inside an @see block, e.g.:
-        //   @see <a href="http://google.com">{@link Integer#signum}</a>
-        // This generates nested <a> tags in traditional Javadoc HTML output.
-        if (frame.name().equals("link")) {
-          return false;
-        }
-        if (frame.name().equals("see")) {
-          return true;
-        }
-      }
-      return false;
+      // An inline {@link} takes precedence over a surrounding @see block because inline links
+      // should not be treated as reference signatures (which would escape brackets).
+      //
+      // Note: It is actually possible (though rare and likely unintended) to have a {@link}
+      // nested inside an HTML anchor tag, which in turn might be inside an @see block, e.g.:
+      //   @see <a href="http://google.com">{@link Integer#signum}</a>
+      // This generates nested <a> tags in traditional Javadoc HTML output.
+      return firstOf("link", "see").filter("see"::equals).isPresent();
+    }
+
+    private boolean innermostListIsOrdered() {
+      return firstOf("ol", "ul").filter("ol"::equals).isPresent();
     }
 
     private int countOf(String... names) {
@@ -445,11 +447,8 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
           ensureNewline(sb);
           int listDepth = countOf("ul", "ol");
           int indent = Math.max(0, (listDepth - 1) * 2);
-          // TODO(kak): This uses `-` for both `<ul>` and `<ol>`. Since the stack now tracks whether
-          //   we are in a `ul` or `ol`, we could potentially use `1.` for ordered lists.
-          //   This requires no state mutation on `TagFrame` — we would only need to check if the
-          //   innermost list tag on `scopeStack` is `ol`.
-          sb.repeat(" ", indent).append("- ");
+          String bullet = innermostListIsOrdered() ? "1. " : "- ";
+          sb.repeat(" ", indent).append(bullet);
         }
         case "h1", "h2", "h3", "h4", "h5", "h6" -> {
           ensureBlankLine(sb);

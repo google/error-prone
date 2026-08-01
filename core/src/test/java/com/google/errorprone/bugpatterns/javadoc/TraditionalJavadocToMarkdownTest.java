@@ -2189,36 +2189,6 @@ public final class TraditionalJavadocToMarkdownTest {
   }
 
   @Test
-  public void nestedListsWithOlAndUl() {
-    helper
-        .addInputLines(
-            "Test.java",
-            """
-            /**
-             * <ol>
-             *   <li>First item
-             *     <ul>
-             *       <li>Sub bullet 1</li>
-             *       <li>Sub bullet 2</li>
-             *     </ul>
-             *   </li>
-             * </ol>
-             */
-            public class Test {}
-            """)
-        .addOutputLines(
-            "Test.java",
-            """
-            /// - First item
-            ///
-            ///   - Sub bullet 1
-            ///   - Sub bullet 2
-            public class Test {}
-            """)
-        .doTest();
-  }
-
-  @Test
   public void htmlTagInsideSeeDoesNotPopOuterScopeTag() {
     helper
         .addInputLines(
@@ -2297,6 +2267,62 @@ public final class TraditionalJavadocToMarkdownTest {
             "Test.java",
             """
             /// @see <a href="http://google.com">[Integer#signum]</a>
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void orderedListMultipleItems() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <ol>
+             *   <li>First item</li>
+             *   <li>Second item</li>
+             *   <li>Third item</li>
+             * </ol>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// 1. First item
+            /// 1. Second item
+            /// 1. Third item
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedListsOlInsideUl() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <ul>
+             *   <li>Bullet item
+             *     <ol>
+             *       <li>Numbered 1</li>
+             *       <li>Numbered 2</li>
+             *     </ol>
+             *   </li>
+             * </ul>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// - Bullet item
+            ///
+            ///   1. Numbered 1
+            ///   1. Numbered 2
             public class Test {}
             """)
         .doTest();
