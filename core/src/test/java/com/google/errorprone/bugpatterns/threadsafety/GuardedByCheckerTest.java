@@ -2608,10 +2608,44 @@ abstract class Test {
         .doTest();
   }
 
-  /** Entries are comma-separated, and surrounding whitespace is ignored. */
+  @Test
+  public void knownImmediateMethods_explicitLock() {
+    compilationHelperWithKnownImmediateMethods("threadsafety.Test#runNow")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            """
+            package threadsafety;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.concurrent.locks.Lock;
+
+            class Test {
+              final Lock lock = null;
+
+              @GuardedBy("lock")
+              int x;
+
+              public void f() {
+                lock.lock();
+                try {
+                  runNow(() -> x++);
+                } finally {
+                  lock.unlock();
+                }
+                // BUG: Diagnostic contains: should be guarded by 'this.lock'
+                runNow(() -> x++);
+              }
+
+              private void runNow(Runnable r) {
+                r.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
   @Test
   public void knownImmediateMethods_multipleEntries() {
-    // The first entry names a class which isn't on the compilation classpath; it never matches.
     compilationHelperWithKnownImmediateMethods(
             "com.example.NotOnClasspath#run, threadsafety.Test#runNow")
         .addSourceLines(
@@ -2637,7 +2671,6 @@ abstract class Test {
         .doTest();
   }
 
-  /** Methods declared on subtypes of the listed class are matched too. */
   @Test
   public void knownImmediateMethods_descendantOfListedClass() {
     compilationHelperWithKnownImmediateMethods("threadsafety.Runner#runNow")
@@ -2670,7 +2703,6 @@ abstract class Test {
             import com.google.errorprone.annotations.concurrent.GuardedBy;
 
             class Test {
-              // The flag names Runner, but the receiver's static type is the subtype.
               private final DirectRunner runner = new DirectRunner();
 
               @GuardedBy("this")
