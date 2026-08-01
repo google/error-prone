@@ -88,16 +88,57 @@ public class DistinctVarargsCheckerTest {
         .addSourceLines(
             "Test.java",
             """
+            import static com.google.common.truth.Truth.assertThat;
+            import static com.google.errorprone.matchers.Matchers.anyOf;
+            import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+
+            import com.google.common.base.MoreObjects;
+            import com.google.common.base.Predicate;
+            import com.google.common.base.Predicates;
+            import com.google.common.collect.ImmutableBiMap;
             import com.google.common.collect.ImmutableSet;
             import com.google.common.collect.ImmutableSortedMap;
             import com.google.common.collect.ImmutableSortedSet;
+            import com.google.common.collect.Iterables;
+            import com.google.common.collect.Maps;
             import com.google.common.collect.Ordering;
+            import com.google.common.collect.Sets;
+            import com.google.common.primitives.Ints;
+            import com.google.errorprone.matchers.Matcher;
+            import com.google.protobuf.FieldMask;
+            import com.google.protobuf.util.FieldMaskUtil;
+            import com.sun.source.tree.ExpressionTree;
+            import java.nio.file.Files;
+            import java.nio.file.Path;
+            import java.nio.file.StandardCopyOption;
+            import java.util.Collections;
+            import java.util.EnumSet;
+            import java.util.List;
             import java.util.Map;
+            import java.util.Objects;
             import java.util.Set;
+            import java.util.concurrent.CompletableFuture;
+            import java.util.stream.IntStream;
+            import java.util.stream.Stream;
+            import org.mockito.Mockito;
 
             public class Test {
-              void testFunction() {
+              enum TestEnum { A, B }
+
+              void testFunction() throws Exception {
                 int first = 1, second = 2;
+                CompletableFuture f1 = null, f2 = null;
+                Predicate p1 = null, p2 = null;
+                Path path1 = null, path2 = null;
+                Set set1 = null, set2 = null;
+                Stream str1 = null, str2 = null;
+                IntStream istr1 = null, istr2 = null;
+                List list1 = null, list2 = null;
+                Map map1 = null, map2 = null;
+                FieldMask mask1 = null, mask2 = null;
+                Matcher<ExpressionTree> m1 = null, m2 = null;
+                String s1 = "a", s2 = "b";
+
                 // BUG: Diagnostic contains: DistinctVarargsChecker
                 Ordering.explicit(first, first);
                 // BUG: Diagnostic contains: DistinctVarargsChecker
@@ -116,6 +157,88 @@ public class DistinctVarargsCheckerTest {
                 ImmutableSortedSet.of(first, first);
                 // BUG: Diagnostic contains: DistinctVarargsChecker
                 ImmutableSortedSet.of(first, first, second);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Objects.hash(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Objects.hash(first, second, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                MoreObjects.firstNonNull(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Objects.requireNonNullElse(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                com.google.common.base.Objects.hashCode(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                CompletableFuture.allOf(f1, f1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                CompletableFuture.anyOf(f1, f1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Mockito.verifyNoInteractions(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Mockito.verifyNoMoreInteractions(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Mockito.inOrder(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Mockito.ignoreStubs(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                assertThat(map1).containsExactly(first, second, first, second);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                EnumSet.of(TestEnum.A, TestEnum.A);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Predicates.and(p1, p1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Predicates.or(p1, p1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Files.copy(path1, path1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Files.copy(path1, path2, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.REPLACE_EXISTING);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Sets.intersection(set1, set1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Sets.union(set1, set1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Sets.difference(set1, set1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Sets.symmetricDifference(set1, set1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Stream.concat(str1, str1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                IntStream.concat(istr1, istr1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Iterables.concat(list1, list1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Math.max(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Math.min(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                StrictMath.max(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Integer.max(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Ints.max(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Maps.difference(map1, map1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                Collections.disjoint(list1, list1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                FieldMaskUtil.union(mask1, mask1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                FieldMaskUtil.intersection(mask1, mask1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                FieldMaskUtil.subtract(mask1, mask1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                assertThat(first).isAnyOf(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                assertThat(first).isNoneOf(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                assertThat(list1).containsAnyOf(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                assertThat(list1).containsAtLeast(first, first);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                anyOf(m1, m1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                staticMethod().onClass("Foo").namedAnyOf(s1, s1);
+                // BUG: Diagnostic contains: DistinctVarargsChecker
+                staticMethod().onClassAny(s1, s1);
               }
             }
             """)
@@ -128,17 +251,57 @@ public class DistinctVarargsCheckerTest {
         .addSourceLines(
             "Test.java",
             """
+            import static com.google.common.truth.Truth.assertThat;
+            import static com.google.errorprone.matchers.Matchers.anyOf;
+            import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+
+            import com.google.common.base.MoreObjects;
+            import com.google.common.base.Predicate;
+            import com.google.common.base.Predicates;
             import com.google.common.collect.ImmutableBiMap;
             import com.google.common.collect.ImmutableSet;
             import com.google.common.collect.ImmutableSortedMap;
             import com.google.common.collect.ImmutableSortedSet;
+            import com.google.common.collect.Iterables;
+            import com.google.common.collect.Maps;
             import com.google.common.collect.Ordering;
+            import com.google.common.collect.Sets;
+            import com.google.common.primitives.Ints;
+            import com.google.errorprone.matchers.Matcher;
+            import com.google.protobuf.FieldMask;
+            import com.google.protobuf.util.FieldMaskUtil;
+            import com.sun.source.tree.ExpressionTree;
+            import java.nio.file.Files;
+            import java.nio.file.Path;
+            import java.nio.file.StandardCopyOption;
+            import java.util.Collections;
+            import java.util.EnumSet;
+            import java.util.List;
             import java.util.Map;
+            import java.util.Objects;
             import java.util.Set;
+            import java.util.concurrent.CompletableFuture;
+            import java.util.stream.IntStream;
+            import java.util.stream.Stream;
+            import org.mockito.Mockito;
 
             public class Test {
-              void testFunction() {
+              enum TestEnum { A, B }
+
+              void testFunction() throws Exception {
                 int first = 1, second = 2, third = 3, fourth = 4;
+                CompletableFuture f1 = null, f2 = null;
+                Predicate p1 = null, p2 = null;
+                Path path1 = null, path2 = null;
+                Set set1 = null, set2 = null;
+                Stream str1 = null, str2 = null;
+                IntStream istr1 = null, istr2 = null;
+                List list1 = null, list2 = null;
+                Map map1 = null, map2 = null;
+                FieldMask mask1 = null, mask2 = null;
+                Matcher<ExpressionTree> m1 = null, m2 = null;
+                String s1 = "a", s2 = "b";
+
                 Ordering.explicit(first);
                 Ordering.explicit(first, second);
                 Map.of(first, second);
@@ -149,6 +312,46 @@ public class DistinctVarargsCheckerTest {
                 ImmutableSet.of(first, second);
                 ImmutableSortedSet.of(first);
                 ImmutableSortedSet.of(first, second);
+                Objects.hash(first, second);
+                MoreObjects.firstNonNull(first, second);
+                Objects.requireNonNullElse(first, second);
+                com.google.common.base.Objects.hashCode(first, second);
+                CompletableFuture.allOf(f1, f2);
+                CompletableFuture.anyOf(f1, f2);
+                Mockito.verifyNoInteractions(first, second);
+                Mockito.verifyNoMoreInteractions(first, second);
+                Mockito.inOrder(first, second);
+                Mockito.ignoreStubs(first, second);
+                assertThat(map1).containsExactly(first, second, third, fourth);
+                EnumSet.of(TestEnum.A, TestEnum.B);
+                Predicates.and(p1, p2);
+                Predicates.or(p1, p2);
+                Files.copy(path1, path2);
+                Files.copy(path1, path2, StandardCopyOption.REPLACE_EXISTING);
+                Sets.intersection(set1, set2);
+                Sets.union(set1, set2);
+                Sets.difference(set1, set2);
+                Sets.symmetricDifference(set1, set2);
+                Stream.concat(str1, str2);
+                IntStream.concat(istr1, istr2);
+                Iterables.concat(list1, list2);
+                Math.max(first, second);
+                Math.min(first, second);
+                StrictMath.max(first, second);
+                Integer.max(first, second);
+                Ints.max(first, second);
+                Maps.difference(map1, map2);
+                Collections.disjoint(list1, list2);
+                FieldMaskUtil.union(mask1, mask2);
+                FieldMaskUtil.intersection(mask1, mask2);
+                FieldMaskUtil.subtract(mask1, mask2);
+                assertThat(first).isAnyOf(first, second);
+                assertThat(first).isNoneOf(first, second);
+                assertThat(list1).containsAnyOf(first, second);
+                assertThat(list1).containsAtLeast(first, second);
+                anyOf(m1, m2);
+                staticMethod().onClass("Foo").namedAnyOf(s1, s2);
+                staticMethod().onClassAny(s1, s2);
               }
             }
             """)

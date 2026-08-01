@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE_ARRAY;
@@ -53,20 +54,100 @@ public final class DistinctVarargsChecker extends BugChecker
           staticMethod().onClass("com.google.common.collect.ImmutableSortedSet").named("of"));
   private static final Matcher<ExpressionTree> ALL_DISTINCT_ARG_MATCHER =
       anyOf(
+          // JDK Utilities
+          staticMethod().onClass("java.lang.Math").namedAnyOf("max", "min"),
+          staticMethod().onClass("java.lang.StrictMath").namedAnyOf("max", "min"),
+          staticMethod()
+              .onClassAny(
+                  "java.lang.Integer", "java.lang.Long", "java.lang.Double", "java.lang.Float")
+              .namedAnyOf("max", "min"),
+          staticMethod()
+              .onClass("java.nio.file.Files")
+              .namedAnyOf("copy", "move", "isSameFile", "mismatch", "write", "writeString"),
+          staticMethod().onClass("java.util.Collections").named("disjoint"),
+          staticMethod().onClass("java.util.EnumSet").named("of"),
+          staticMethod().onClass("java.util.Objects").namedAnyOf("hash", "requireNonNullElse"),
+          staticMethod()
+              .onClass("java.util.concurrent.CompletableFuture")
+              .namedAnyOf("allOf", "anyOf"),
+          staticMethod()
+              .onClassAny(
+                  "java.util.stream.Stream",
+                  "java.util.stream.IntStream",
+                  "java.util.stream.LongStream",
+                  "java.util.stream.DoubleStream")
+              .named("concat"),
+
+          // Guava Utilities
+          staticMethod().onClass("com.google.common.base.MoreObjects").named("firstNonNull"),
+          staticMethod().onClass("com.google.common.base.Objects").named("hashCode"),
+          staticMethod().onClass("com.google.common.base.Predicates").namedAnyOf("and", "or"),
+          staticMethod().onClass("com.google.common.collect.Comparators").namedAnyOf("min", "max"),
+          staticMethod().onClass("com.google.common.collect.Iterables").named("concat"),
+          staticMethod().onClass("com.google.common.collect.Maps").named("difference"),
+          staticMethod()
+              .onClass("com.google.common.collect.Ordering")
+              .named("explicit")
+              .withParametersOfType(OBJECT_TYPE, OBJECT_TYPE_ARRAY),
+          staticMethod()
+              .onClass("com.google.common.collect.Sets")
+              .namedAnyOf("intersection", "union", "difference", "symmetricDifference"),
           staticMethod()
               .onClass("com.google.common.util.concurrent.Futures")
               .namedAnyOf("whenAllSucceed", "whenAllComplete")
               .withParametersOfType(
                   arrayOf(typeFromString("com.google.common.util.concurrent.ListenableFuture"))),
           staticMethod()
-              .onClass("com.google.common.collect.Ordering")
-              .named("explicit")
-              .withParametersOfType(OBJECT_TYPE, OBJECT_TYPE_ARRAY));
+              .onClassAny(
+                  "com.google.common.primitives.Ints",
+                  "com.google.common.primitives.Longs",
+                  "com.google.common.primitives.Doubles",
+                  "com.google.common.primitives.Floats",
+                  "com.google.common.primitives.Shorts",
+                  "com.google.common.primitives.Chars",
+                  "com.google.common.primitives.SignedBytes",
+                  "com.google.common.primitives.UnsignedBytes")
+              .namedAnyOf("max", "min"),
+
+          // Protobuf Utilities
+          staticMethod()
+              .onClass("com.google.protobuf.util.FieldMaskUtil")
+              .namedAnyOf("union", "intersection", "subtract"),
+
+          // ErrorProne Matchers
+          staticMethod()
+              .onClass("com.google.errorprone.matchers.Matchers")
+              .namedAnyOf("anyOf", "allOf"),
+          instanceMethod()
+              .onDescendantOf(
+                  "com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher")
+              .named("namedAnyOf"),
+          instanceMethod()
+              .onDescendantOfAny(
+                  "com.google.errorprone.matchers.method.MethodMatchers.StaticMethodMatcher",
+                  "com.google.errorprone.matchers.method.MethodMatchers.InstanceMethodMatcher",
+                  "com.google.errorprone.matchers.method.MethodMatchers.AnyMethodMatcher")
+              .namedAnyOf("onClassAny", "onExactClassAny", "onDescendantOfAny"),
+
+          // Testing Frameworks
+          staticMethod()
+              .onClass("org.mockito.Mockito")
+              .namedAnyOf(
+                  "verifyNoInteractions", "verifyNoMoreInteractions", "inOrder", "ignoreStubs"),
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.Subject")
+              .namedAnyOf("isAnyOf", "isNoneOf"),
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.IterableSubject")
+              .namedAnyOf("containsAnyOf", "containsAtLeast"));
   private static final Matcher<ExpressionTree> EVEN_PARITY_DISTINCT_ARG_MATCHER =
       anyOf(
           // ImmutableMap.of is covered by AlwaysThrows.
           staticMethod().onClass("com.google.common.collect.ImmutableSortedMap").named("of"),
-          staticMethod().onClass("java.util.Map").named("of"));
+          staticMethod().onClass("java.util.Map").named("of"),
+          instanceMethod()
+              .onDescendantOf("com.google.common.truth.MapSubject")
+              .named("containsExactly"));
   private static final Matcher<ExpressionTree> EVEN_AND_ODD_PARITY_DISTINCT_ARG_MATCHER =
       staticMethod().onClass("com.google.common.collect.ImmutableBiMap").named("of");
 
