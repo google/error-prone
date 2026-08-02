@@ -139,7 +139,7 @@ public final class DistinctVarargsChecker extends BugChecker
               .namedAnyOf("isAnyOf", "isNoneOf"),
           instanceMethod()
               .onDescendantOf("com.google.common.truth.IterableSubject")
-              .namedAnyOf("containsAnyOf", "containsAtLeast"));
+              .named("containsAnyOf"));
   private static final Matcher<ExpressionTree> EVEN_PARITY_DISTINCT_ARG_MATCHER =
       anyOf(
           // ImmutableMap.of is covered by AlwaysThrows.

@@ -232,8 +232,6 @@ public class DistinctVarargsCheckerTest {
                 // BUG: Diagnostic contains: DistinctVarargsChecker
                 assertThat(list1).containsAnyOf(first, first);
                 // BUG: Diagnostic contains: DistinctVarargsChecker
-                assertThat(list1).containsAtLeast(first, first);
-                // BUG: Diagnostic contains: DistinctVarargsChecker
                 anyOf(m1, m1);
                 // BUG: Diagnostic contains: DistinctVarargsChecker
                 staticMethod().onClass("Foo").namedAnyOf(s1, s1);
@@ -348,7 +346,7 @@ public class DistinctVarargsCheckerTest {
                 assertThat(first).isAnyOf(first, second);
                 assertThat(first).isNoneOf(first, second);
                 assertThat(list1).containsAnyOf(first, second);
-                assertThat(list1).containsAtLeast(first, second);
+                assertThat(list1).containsAtLeast(first, first);
                 anyOf(m1, m2);
                 staticMethod().onClass("Foo").namedAnyOf(s1, s2);
                 staticMethod().onClassAny(s1, s2);
