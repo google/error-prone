@@ -28,6 +28,7 @@ import org.junit.runners.JUnit4;
 @RunWith(JUnit4.class)
 public final class TraditionalJavadocToMarkdownTest {
   private static final boolean MARKDOWN_JAVADOC_SUPPORTED = Runtime.version().feature() >= 23;
+  private static final boolean EXTRA_MARKDOWN_SPACE_GONE = Runtime.version().feature() >= 25;
   private final BugCheckerRefactoringTestHelper helper =
       BugCheckerRefactoringTestHelper.newInstance(TraditionalJavadocToMarkdown.class, getClass());
 
@@ -181,6 +182,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void preWithNestedCode() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -205,6 +207,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void preWithNestedCode_mockitoExample() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -518,6 +521,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void headingsNormalized_inLinkDoesNotAffectMinLevel() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -547,6 +551,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void headingsNormalized_inCodeDoesNotAffectMinLevel() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -676,6 +681,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void complexMethodJavadoc() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -744,6 +750,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void snippetTag() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -794,6 +801,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void snippetTag_withLangAttribute() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -818,6 +826,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void snippetTag_withOtherAttributes() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -842,6 +851,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void snippetTag_withLangAndOtherAttributes() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -886,6 +896,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void preCodeTag() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -916,6 +927,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void preWithHtmlAndEscapedGenerics() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     // Note: Within a <pre> block, newlines are significant and text is rendered with a code font.
     // Within a ``` block, both of those things are true, but also Markdown and HTML constructs
     // are not recognized. This is difficult to fix though, but hopefully fairly uncommon.
@@ -945,6 +957,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void preWithLink() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     // Note: In traditional Javadoc <pre>, <a> tags render as clickable links.
     // In Markdown Javadoc ``` blocks, HTML tags and Markdown links are rendered as literal text.
     // Ideally, links inside <pre> should either be preserved as clickable (if it's not actually
@@ -973,6 +986,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void preWithLineBreak() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     // Note: In traditional Javadoc <pre>, <br> tags render as newlines.
     // Ideally, these should be converted to actual newlines in the Markdown output.
     helper
@@ -999,6 +1013,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void preWithBareEntities() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     // Note: In traditional Javadoc <pre>, &lt; renders as <.
     // In Markdown Javadoc ``` blocks, HTML entities are rendered literally (as &lt;).
     // Ideally, HTML entities should be decoded (e.g., to <) when placed inside a Markdown code
@@ -1059,6 +1074,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void anchorTag() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -1081,6 +1097,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void listAndParagraphs() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -1129,6 +1146,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void methodJavadocWithParagraphAndThrows() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -1171,6 +1189,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void splitLinkTag() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -1212,6 +1231,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void hundredColumnBug() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     // This line is exactly 100 characters long (including indentation).
     // It ends with "{@link" at column 100.
     helper
@@ -1654,6 +1674,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void escapeSequences() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -1805,6 +1826,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void summaryTag() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -1879,6 +1901,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void lineBreakInCodeTag() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -1926,6 +1949,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void tableTag() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -2079,6 +2103,7 @@ public final class TraditionalJavadocToMarkdownTest {
 
   @Test
   public void nestedPreTags() {
+    assume().that(EXTRA_MARKDOWN_SPACE_GONE).isTrue();
     helper
         .addInputLines(
             "Test.java",
@@ -2094,18 +2119,13 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
-        // TODO(kak): should be a single code block
         .addOutputLines(
             "Test.java",
             """
             /// ```
             /// outer code
             ///
-            /// ```
-            ///
             /// inner code
-            ///
-            /// ```
             ///
             /// outer code again
             /// ```
@@ -2133,14 +2153,13 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
-        // TODO(kak): should be a Item 1 with 2 subitems, then Item 2
         .addOutputLines(
             "Test.java",
             """
             /// - Item 1
             ///
-            /// - Subitem A
-            /// - Subitem B
+            ///   - Subitem A
+            ///   - Subitem B
             ///
             /// - Item 2
             public class Test {}
@@ -2160,11 +2179,150 @@ public final class TraditionalJavadocToMarkdownTest {
              */
             public class Test {}
             """)
-        // TODO(kak): should be: **outer inner outer** `outer inner outer`
         .addOutputLines(
             "Test.java",
             """
-            /// **outer **inner** outer** `outer `inner` outer`
+            /// **outer inner outer** `outer inner outer`
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void htmlTagInsideSeeDoesNotPopOuterScopeTag() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <b>outer start
+             * @see Foo <b>inner tag</b>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// **outer start
+            ///
+            /// @see Foo <b>inner tag</b>
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unmatchedClosingTag() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <b>bold text</div>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// **bold text</div>
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedItalicFormattingTags() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <i>outer <i>inner</i> outer</i>
+             * <em>outer <em>inner</em> outer</em>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// *outer inner outer* *outer inner outer*
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void seeTagWithLink() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * @see <a href="http://google.com">{@link Integer#signum}</a>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// @see <a href="http://google.com">[Integer#signum]</a>
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void orderedListMultipleItems() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <ol>
+             *   <li>First item</li>
+             *   <li>Second item</li>
+             *   <li>Third item</li>
+             * </ol>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// 1. First item
+            /// 1. Second item
+            /// 1. Third item
+            public class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedListsOlInsideUl() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * <ul>
+             *   <li>Bullet item
+             *     <ol>
+             *       <li>Numbered 1</li>
+             *       <li>Numbered 2</li>
+             *     </ol>
+             *   </li>
+             * </ul>
+             */
+            public class Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /// - Bullet item
+            ///
+            ///   1. Numbered 1
+            ///   1. Numbered 2
             public class Test {}
             """)
         .doTest();

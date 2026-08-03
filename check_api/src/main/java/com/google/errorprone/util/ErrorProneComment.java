@@ -76,9 +76,13 @@ public final class ErrorProneComment {
    * (which add {@code JAVADOC_LINE} and rename {@code JAVADOC} to {@code JAVADOC_BLOCK}).
    */
   public enum ErrorProneCommentStyle {
+    /** An inline implementation comment that starts with {@code //}. */
     LINE,
+    /** An inline block comment that starts with {@code /*}. */
     BLOCK,
+    /** A markdown javadoc comment that starts with {@code ///}. */
     JAVADOC_LINE,
+    /** A traditional javadoc comment that starts with {@code /**}. */
     JAVADOC_BLOCK;
 
     /** Returns the {@link ErrorProneCommentStyle} for the given {@link CommentStyle}. */
