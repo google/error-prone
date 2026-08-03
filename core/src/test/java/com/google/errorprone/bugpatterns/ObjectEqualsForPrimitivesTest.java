@@ -131,15 +131,15 @@ public class ObjectEqualsForPrimitivesTest {
 
             public class Test {
               private static boolean testBooleans(boolean a, boolean b) {
-                return (a == b);
+                return a == b;
               }
 
               private static boolean testInts(int a, int b) {
-                return (a == b);
+                return a == b;
               }
 
               private static boolean testLongs(long a, long b) {
-                return (a == b);
+                return a == b;
               }
             }
             """)
@@ -175,15 +175,121 @@ public class ObjectEqualsForPrimitivesTest {
 
             public class Test {
               private static boolean testBooleans(boolean a, boolean b) {
-                return !(a == b);
+                return a != b;
               }
 
               private static boolean testInts(int a, int b) {
-                return !(a == b);
+                return a != b;
               }
 
               private static boolean testLongs(long a, long b) {
-                return !(a == b);
+                return a != b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void primitivesNegatedWithParentheses() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            public class Test {
+              private static boolean testBooleans(boolean a, boolean b) {
+                return !(Objects.equals(a, b));
+              }
+
+              private static boolean testInts(int a, int b) {
+                return !((Objects.equals(a, b)));
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            public class Test {
+              private static boolean testBooleans(boolean a, boolean b) {
+                return a != b;
+              }
+
+              private static boolean testInts(int a, int b) {
+                return a != b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void requiresParenthesesContexts() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            public class Test {
+              private static String concat(int a, int b) {
+                return "res: " + Objects.equals(a, b);
+              }
+
+              private static String concatNegated(int a, int b) {
+                return "res: " + !Objects.equals(a, b);
+              }
+
+              private static Object cast(int a, int b) {
+                return (Object) Objects.equals(a, b);
+              }
+
+              private static boolean bitwise(int a, int b, boolean c) {
+                return Objects.equals(a, b) & c;
+              }
+
+              private static boolean logical(int a, int b, boolean c) {
+                return Objects.equals(a, b) && c;
+              }
+
+              private static void ifCondition(int a, int b) {
+                if (Objects.equals(a, b)) {}
+                if (!Objects.equals(a, b)) {}
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            public class Test {
+              private static String concat(int a, int b) {
+                return "res: " + (a == b);
+              }
+
+              private static String concatNegated(int a, int b) {
+                return "res: " + (a != b);
+              }
+
+              private static Object cast(int a, int b) {
+                return (Object) (a == b);
+              }
+
+              private static boolean bitwise(int a, int b, boolean c) {
+                return (a == b) & c;
+              }
+
+              private static boolean logical(int a, int b, boolean c) {
+                return a == b && c;
+              }
+
+              private static void ifCondition(int a, int b) {
+                if (a == b) {}
+                if (a != b) {}
               }
             }
             """)
@@ -211,7 +317,7 @@ public class ObjectEqualsForPrimitivesTest {
 
             public class Test {
               private static boolean doTest(int a, long b) {
-                return (a == b);
+                return a == b;
               }
             }
             """)
