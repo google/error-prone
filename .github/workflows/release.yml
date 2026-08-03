@@ -21,21 +21,21 @@ jobs:
           persist-credentials: false
 
       - name: 'Set up JDK 25'
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           java-version: 25
           distribution: 'zulu'
           cache: 'maven'
 
       - name: 'Set up JDK 23'
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           java-version: 23
           distribution: 'zulu'
           cache: 'maven'
 
       - name: Set up JDK
-        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
         with:
           java-version: 21
           distribution: 'zulu'
@@ -74,7 +74,7 @@ jobs:
           GITHUB_EVENT_INPUTS_VERSION: ${{ github.event.inputs.version }}
           
       - name: Draft Release Entry
-        uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3.0.1
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
         with:
           draft: true
           name: Error Prone ${{ github.event.input.version }} 
