@@ -21,8 +21,10 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 
 import com.google.common.base.Ascii;
+import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -83,6 +85,7 @@ import com.sun.source.util.DocTreePathScanner;
 import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.tree.DCTree.DCDocComment;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
@@ -235,12 +238,67 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
   private static final class MarkdownConverterScanner
       extends DocTreePathScanner<Void, StringBuilder> {
     private final int minHeadingLevel;
-    private final Deque<Optional<String>> aTagStack = new ArrayDeque<>();
-    private boolean inPre = false;
-    private boolean inSee = false;
+    private final Deque<TagFrame> scopeStack = new ArrayDeque<>();
+
+    /// Represents an active HTML element or inline tag frame on the scope stack.
+    private record TagFrame(String name, ImmutableMap<String, String> attributes) {
+      TagFrame {
+        name = Ascii.toLowerCase(name);
+      }
+
+      TagFrame(String name) {
+        this(name, ImmutableMap.of());
+      }
+
+      Optional<String> getAttribute(String key) {
+        return Optional.ofNullable(attributes.get(Ascii.toLowerCase(key)));
+      }
+    }
 
     MarkdownConverterScanner(int minHeadingLevel) {
       this.minHeadingLevel = minHeadingLevel;
+    }
+
+    /// Returns the name of the innermost matching tag from the scope stack, if any.
+    private Optional<String> firstOf(String... names) {
+      List<String> nameList = Arrays.asList(names);
+      return scopeStack.stream().map(TagFrame::name).filter(nameList::contains).findFirst();
+    }
+
+    private boolean inSee() {
+      // An inline {@link} takes precedence over a surrounding @see block because inline links
+      // should not be treated as reference signatures (which would escape brackets).
+      //
+      // Note: It is actually possible (though rare and likely unintended) to have a {@link}
+      // nested inside an HTML anchor tag, which in turn might be inside an @see block, e.g.:
+      //   @see <a href="http://google.com">{@link Integer#signum}</a>
+      // This generates nested <a> tags in traditional Javadoc HTML output.
+      return firstOf("link", "see").filter("see"::equals).isPresent();
+    }
+
+    private boolean innermostListIsOrdered() {
+      return firstOf("ol", "ul").filter("ol"::equals).isPresent();
+    }
+
+    private int countOf(String... names) {
+      List<String> nameList = Arrays.asList(names);
+      return (int) scopeStack.stream().filter(frame -> nameList.contains(frame.name())).count();
+    }
+
+    private boolean notIn(String... names) {
+      return countOf(names) == 0;
+    }
+
+    private boolean notInPre() {
+      return notIn("pre");
+    }
+
+    /// Pops the top-most matching frame with the given lowercased name from the scope stack.
+    @CanIgnoreReturnValue
+    private @Nullable TagFrame popMatchingFrame(String name) {
+      var match = scopeStack.stream().filter(frame -> frame.name().equals(name)).findFirst();
+      match.ifPresent(scopeStack::remove);
+      return match.orElse(null);
     }
 
     @Override
@@ -277,6 +335,7 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
     @Override
     public Void visitText(TextTree node, StringBuilder sb) {
       String text = node.getBody();
+      boolean inPre = countOf("pre") > 0;
       // Remove the newline after leading ``` if present.
       int offset = (inPre && isAtFence(sb) && text.startsWith("\n")) ? 1 : 0;
       sb.append(text, offset, text.length());
@@ -294,7 +353,7 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
     public Void visitReference(ReferenceTree node, StringBuilder sb) {
       String sig = node.getSignature();
       if (sig != null) {
-        if (inSee) {
+        if (inSee()) {
           sb.append(sig);
         } else {
           sb.append(sig.replace("[", "\\[").replace("]", "\\]"));
@@ -306,11 +365,11 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
     @Override
     public Void visitLiteral(LiteralTree node, StringBuilder sb) {
       if (node.getKind() == DocTree.Kind.CODE) {
-        if (inPre) {
+        if (notInPre()) {
+          sb.append("`").append(node.getBody().getBody()).append("`");
+        } else {
           // handle the common <pre>{@code...}</pre> idiom
           sb.append(node.getBody().getBody());
-        } else {
-          sb.append("`").append(node.getBody().getBody()).append("`");
         }
       } else {
         // Preserve {@literal}, which is usually used to quote characters that would otherwise be
@@ -323,8 +382,7 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
     @Override
     public Void visitLink(LinkTree node, StringBuilder sb) {
       boolean plain = node.getKind() == DocTree.Kind.LINK_PLAIN;
-      boolean oldInSee = inSee;
-      inSee = false;
+      scopeStack.push(new TagFrame("link"));
       StringBuilder refBuilder = new StringBuilder();
       String reference;
       String label;
@@ -339,7 +397,7 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
           label = "";
         }
       } finally {
-        inSee = oldInSee;
+        popMatchingFrame("link");
       }
       if (label.isEmpty()) {
         sb.append("[").append(reference).append("]");
@@ -361,23 +419,36 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
 
     @Override
     public Void visitStartElement(StartElementTree node, StringBuilder sb) {
-      if (inSee) {
+      if (inSee()) {
         reconstructTag(node, sb);
         return null;
       }
       String name = Ascii.toLowerCase(node.getName().toString());
+      ImmutableMap<String, String> attributes = ImmutableMap.of();
+
       switch (name) {
-        case "b", "strong" -> sb.append("**");
-        case "i", "em" -> sb.append("*");
+        case "b", "strong" -> {
+          if (notIn("b", "strong")) {
+            sb.append("**");
+          }
+        }
+        case "i", "em" -> {
+          if (notIn("i", "em")) {
+            sb.append("*");
+          }
+        }
         case "code" -> {
-          if (!inPre) {
+          if (notIn("code") && notInPre()) {
             sb.append("`");
           }
         }
         case "p", "ul", "ol" -> ensureBlankLine(sb);
         case "li" -> {
           ensureNewline(sb);
-          sb.append("- ");
+          int listDepth = countOf("ul", "ol");
+          int indent = Math.max(0, (listDepth - 1) * 2);
+          String bullet = innermostListIsOrdered() ? "1. " : "- ";
+          sb.repeat(" ", indent).append(bullet);
         }
         case "h1", "h2", "h3", "h4", "h5", "h6" -> {
           ensureBlankLine(sb);
@@ -386,24 +457,29 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
           sb.repeat("#", Math.max(1, hashCount)).append(" ");
         }
         case "pre" -> {
-          ensureBlankLine(sb);
-          sb.append("```\n");
-          inPre = true;
-        }
-        case "a" -> {
-          Optional<String> href = findAttributeValue(node.getAttributes(), "href");
-          if (node.isSelfClosing()) {
-            reconstructTag(node, sb);
-          } else {
-            aTagStack.push(href);
-            href.ifPresentOrElse(
-                unused -> sb.append('['), //
-                () -> reconstructTag(node, sb));
+          if (notInPre()) {
+            ensureBlankLine(sb);
+            sb.append("```\n");
           }
         }
-        default -> {
-          reconstructTag(node, sb);
+        case "a" -> {
+          if (node.isSelfClosing()) {
+            reconstructTag(node, sb);
+            return null;
+          }
+          Optional<String> href = findAttributeValue(node.getAttributes(), "href");
+          if (href.isPresent()) {
+            sb.append("[");
+            attributes = ImmutableMap.of("href", href.get());
+          } else {
+            reconstructTag(node, sb);
+          }
         }
+        default -> reconstructTag(node, sb);
+      }
+
+      if (!node.isSelfClosing()) {
+        scopeStack.push(new TagFrame(name, attributes));
       }
       return null;
     }
@@ -419,28 +495,44 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
 
     @Override
     public Void visitEndElement(EndElementTree node, StringBuilder sb) {
-      if (inSee) {
+      String name = Ascii.toLowerCase(node.getName().toString());
+      // Inside a @see block, HTML tags are reconstructed as raw text and were not pushed to
+      // scopeStack.
+      if (inSee()) {
         sb.append("</").append(node.getName()).append(">");
         return null;
       }
-      switch (Ascii.toLowerCase(node.getName().toString())) {
-        case "b", "strong" -> sb.append("**");
-        case "i", "em" -> sb.append('*');
+
+      TagFrame poppedFrame = popMatchingFrame(name);
+
+      switch (name) {
+        case "b", "strong" -> {
+          if (notIn("b", "strong")) {
+            sb.append("**");
+          }
+        }
+        case "i", "em" -> {
+          if (notIn("i", "em")) {
+            sb.append('*');
+          }
+        }
         case "code" -> {
-          if (!inPre) {
+          if (notIn("code") && notInPre()) {
             sb.append('`');
           }
         }
         case "pre" -> {
-          ensureNewline(sb);
-          sb.append("```\n");
-          inPre = false;
+          if (notInPre()) {
+            ensureNewline(sb);
+            sb.append("```\n");
+          }
         }
         case "a" -> {
-          Optional<String> href = aTagStack.isEmpty() ? Optional.empty() : aTagStack.pop();
-          href.ifPresentOrElse(
-              url -> sb.append("](").append(url).append(')'), //
-              () -> sb.append("</a>"));
+          if (poppedFrame != null && poppedFrame.getAttribute("href").isPresent()) {
+            sb.append("](").append(poppedFrame.getAttribute("href").get()).append(')');
+          } else {
+            sb.append("</a>");
+          }
         }
         case "p", "ul", "ol", "li", "h1", "h2", "h3", "h4", "h5", "h6" -> {}
         default -> sb.append("</").append(node.getName()).append(">");
@@ -477,7 +569,7 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
 
     @Override
     public Void visitSee(SeeTree node, StringBuilder sb) {
-      inSee = true;
+      scopeStack.push(new TagFrame("see"));
       try {
         List<? extends DocTree> ref = node.getReference();
         if (!ref.isEmpty() && ref.get(0).getKind() == DocTree.Kind.REFERENCE && ref.size() > 1) {
@@ -490,7 +582,7 @@ public final class TraditionalJavadocToMarkdown extends BugChecker
         }
         return visitBlockTag("see", ref, sb);
       } finally {
-        inSee = false;
+        popMatchingFrame("see");
       }
     }
 
