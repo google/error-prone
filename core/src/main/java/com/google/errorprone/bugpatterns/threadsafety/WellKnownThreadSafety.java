@@ -67,6 +67,7 @@ public final class WellKnownThreadSafety implements ThreadSafetyKnownTypes {
         .add(java.lang.Thread.class)
         .add(java.time.InstantSource.class)
         .add(java.time.Clock.class)
+        .add(java.util.Properties.class)
         .add(java.util.Random.class)
         .add(java.util.concurrent.atomic.AtomicBoolean.class)
         .add(java.util.concurrent.atomic.AtomicInteger.class)
