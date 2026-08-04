@@ -2266,4 +2266,110 @@ public class UnusedVariableTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void refasterBeforeTemplate_unusedLocalVariable_noFinding() {
+    helper
+        .addSourceLines(
+            "BeforeTemplate.java",
+            """
+            package com.google.errorprone.refaster.annotation;
+
+            public @interface BeforeTemplate {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.refaster.annotation.BeforeTemplate;
+
+            class Test {
+              @BeforeTemplate
+              void before(String s) {
+                String local = s.trim();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void refasterAfterTemplate_unusedLocalVariable_noFinding() {
+    helper
+        .addSourceLines(
+            "AfterTemplate.java",
+            """
+            package com.google.errorprone.refaster.annotation;
+
+            public @interface AfterTemplate {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.refaster.annotation.AfterTemplate;
+
+            class Test {
+              @AfterTemplate
+              void after(String s) {
+                String local = s.trim();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void refasterTemplate_unusedParameter_flagged() {
+    helper
+        .addSourceLines(
+            "BeforeTemplate.java",
+            """
+            package com.google.errorprone.refaster.annotation;
+
+            public @interface BeforeTemplate {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.refaster.annotation.BeforeTemplate;
+
+            class Test {
+              @BeforeTemplate
+              // BUG: Diagnostic contains: The parameter 'bar' is never read
+              void before(String foo, String bar) {
+                System.out.println(foo);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void refasterTemplate_regularMethod_unusedLocalVariable_flagged() {
+    helper
+        .addSourceLines(
+            "BeforeTemplate.java",
+            """
+            package com.google.errorprone.refaster.annotation;
+
+            public @interface BeforeTemplate {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.refaster.annotation.BeforeTemplate;
+
+            class Test {
+              @BeforeTemplate
+              void before(String s) {
+                String local = s.trim();
+              }
+
+              void regularMethod(String s) {
+                // BUG: Diagnostic contains: The local variable 'local' is never read
+                String local = s.trim();
+              }
+            }
+            """)
+        .doTest();
+  }
 }

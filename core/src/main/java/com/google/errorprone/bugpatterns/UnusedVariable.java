@@ -35,6 +35,8 @@ import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isAbstract;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.AnnotationNames.AFTER_TEMPLATE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.BEFORE_TEMPLATE_ANNOTATION;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 import static com.sun.source.tree.Tree.Kind.POSTFIX_DECREMENT;
 import static com.sun.source.tree.Tree.Kind.POSTFIX_INCREMENT;
@@ -139,8 +141,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           .addAll(InjectMatchers.PROVIDES_ANNOTATIONS)
           .addAll(InjectMatchers.MULTIBINDINGS_ANNOTATIONS)
           .add(
-              "com.google.errorprone.refaster.annotation.AfterTemplate",
-              "com.google.errorprone.refaster.annotation.BeforeTemplate",
+              AFTER_TEMPLATE_ANNOTATION,
+              BEFORE_TEMPLATE_ANNOTATION,
               // Parameters on test methods imply the test is parameterised, and those parameters
               // should be used or removed.
               "org.junit.Test")
@@ -711,10 +713,16 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           }
         }
         case LOCAL_VARIABLE -> {
+          if (isInsideRefasterTemplate(getCurrentPath())) {
+            return;
+          }
           unusedElements.put(symbol, getCurrentPath());
           usageSites.put(symbol, getCurrentPath());
         }
         case BINDING_VARIABLE -> {
+          if (isInsideRefasterTemplate(getCurrentPath())) {
+            return;
+          }
           if (parent instanceof BindingPatternTree
               && getCurrentPath().getParentPath().getParentPath().getLeaf()
                   instanceof InstanceOfTree) {
@@ -741,6 +749,18 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         }
         default -> {}
       }
+    }
+
+    private boolean isInsideRefasterTemplate(TreePath path) {
+      for (Tree node : path) {
+        if (node instanceof MethodTree methodTree) {
+          if (hasAnnotation(methodTree, BEFORE_TEMPLATE_ANNOTATION, state)
+              || hasAnnotation(methodTree, AFTER_TEMPLATE_ANNOTATION, state)) {
+            return true;
+          }
+        }
+      }
+      return false;
     }
 
     private boolean exemptedFieldBySuperType(Type type, VisitorState state) {
