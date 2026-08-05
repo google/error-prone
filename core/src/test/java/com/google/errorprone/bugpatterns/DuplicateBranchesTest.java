@@ -54,6 +54,131 @@ public class DuplicateBranchesTest {
   }
 
   @Test
+  public void positive_parenthesizedBranch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              int f() {
+                // BUG: Diagnostic contains:
+                return true ? 1 * 5 : (1 * 5);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positive_parenthesizedThenBranch() {
+    BugCheckerRefactoringTestHelper.newInstance(DuplicateBranches.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              int x;
+
+              void m() {
+                x = true ? (1 * 5) : 1 * 5;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              int x;
+
+              void m() {
+                x = 1 * 5;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positive_bothBranchesParenthesized() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              int x;
+
+              void m() {
+                // BUG: Diagnostic contains:
+                x = true ? (1 * 5) : (1 * 5);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positive_parenthesizedStringBranch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              String f(boolean a) {
+                // BUG: Diagnostic contains:
+                return a ? "hello" : ("hello");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positive_parenthesizedVariableBranch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              String f(boolean a, String x) {
+                // BUG: Diagnostic contains:
+                return a ? x : (x);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positive_parenthesizedMethodCallBranch() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              String f(boolean a) {
+                // BUG: Diagnostic contains:
+                return a ? toString() : (toString());
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_differentContentAfterStripping() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              int f(boolean a, int x) {
+                return a ? (x + 1) : (x - 1);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     compilationHelper
         .addSourceLines(

@@ -33,6 +33,7 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 
 /** A BugPattern; see the summary. */
@@ -55,18 +56,23 @@ public final class AssignmentExpression extends BugChecker implements Assignment
     if (parent instanceof LambdaExpressionTree) {
       return Description.NO_MATCH;
     }
+    // Walk through any enclosing parentheses to find the effective parent context.
+    TreePath effectiveParentPath = state.getPath().getParentPath();
+    while (effectiveParentPath.getLeaf() instanceof ParenthesizedTree) {
+      effectiveParentPath = effectiveParentPath.getParentPath();
+    }
+    Tree effectiveParent = effectiveParentPath.getLeaf();
     // Exempt the C-ism of (foo = getFoo()) != null, etc.
-    if (parent instanceof ParenthesizedTree
-        && state.getPath().getParentPath().getParentPath().getLeaf() instanceof BinaryTree) {
+    if (effectiveParent instanceof BinaryTree) {
       return Description.NO_MATCH;
     }
     // Detect duplicate assignments: a = a = foo() so that we can generate a fix.
-    if (isDuplicateAssignment(tree, parent)) {
+    if (isDuplicateAssignment(tree, effectiveParent)) {
       return describeMatch(
           tree, SuggestedFix.replace(tree, state.getSourceForNode(tree.getExpression())));
     }
     // If we got here it's something like x = y = 0, which is odd but not disallowed.
-    if (parent instanceof AssignmentTree) {
+    if (effectiveParent instanceof AssignmentTree) {
       return Description.NO_MATCH;
     }
     return describeMatch(tree);
