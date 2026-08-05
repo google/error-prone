@@ -250,13 +250,13 @@ public class Test {
             public class Test {
               @Provides
               public Object providesObject(boolean foo, Object bar) {
-                // TODO(b/536946282): should be flagged by ProvidesNull
+                // BUG: Diagnostic contains: Did you mean '@Nullable' or 'throw new RuntimeException();'
                 return foo ? bar : null;
               }
 
               @Provides
               public Object providesObjectReversed(boolean foo, Object bar) {
-                // TODO(b/536946282): should be flagged by ProvidesNull
+                // BUG: Diagnostic contains: Did you mean '@Nullable' or 'throw new RuntimeException();'
                 return foo ? null : bar;
               }
             }
