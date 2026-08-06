@@ -40,6 +40,7 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
@@ -233,21 +234,35 @@ public class DoubleCheckedLocking extends BugChecker implements IfTreeMatcher {
 
   /**
    * Matches comparisons to null (e.g. {@code foo == null}) and returns the expression being tested.
+   *
+   * <p>Also matches the logically equivalent form {@code !(foo != null)}, including with
+   * parentheses around either the whole condition or the negated comparison.
    */
   private static @Nullable ExpressionTree getNullCheckedExpression(ExpressionTree condition) {
     condition = stripParentheses(condition);
+    // !(x != null) is equivalent to x == null
+    if (condition.getKind() == Kind.LOGICAL_COMPLEMENT) {
+      condition = stripParentheses(((UnaryTree) condition).getExpression());
+      if (!(condition instanceof BinaryTree bin) || bin.getKind() != Kind.NOT_EQUAL_TO) {
+        return null;
+      }
+      return expressionComparedToNull(bin);
+    }
     if (!(condition instanceof BinaryTree bin)) {
       return null;
     }
-    ExpressionTree other;
+    return expressionComparedToNull(bin);
+  }
+
+  /** Returns the non-null operand of a comparison against {@code null}, or null if none. */
+  private static @Nullable ExpressionTree expressionComparedToNull(BinaryTree bin) {
     if (bin.getLeftOperand().getKind() == Kind.NULL_LITERAL) {
-      other = bin.getRightOperand();
-    } else if (bin.getRightOperand().getKind() == Kind.NULL_LITERAL) {
-      other = bin.getLeftOperand();
-    } else {
-      return null;
+      return bin.getRightOperand();
     }
-    return other;
+    if (bin.getRightOperand().getKind() == Kind.NULL_LITERAL) {
+      return bin.getLeftOperand();
+    }
+    return null;
   }
 
   /**
