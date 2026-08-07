@@ -185,6 +185,38 @@ private void doSomething(Runnable r) {
 However, the check does special-case some method calls which are known to
 immediately call the provided lambda or method reference.
 
+For your own methods, you can extend that list with the
+`GuardedBy:KnownImmediateMethods` flag, which takes a comma-separated list of
+methods in `fully.qualified.ClassName#methodName` form. For example,
+`-XepOpt:GuardedBy:KnownImmediateMethods=com.example.Transaction#doSomething`
+makes the check analyze lambdas and method references passed to
+`Transaction.doSomething` in the caller's lock scope:
+
+```java
+class Transaction {
+  @GuardedBy("this")
+  int x;
+
+  public synchronized void handle() {
+    doSomething(() -> {
+      ++x;  // OK: 'doSomething' is configured to run the lambda immediately.
+    });
+  }
+
+  private void doSomething(Runnable r) {
+    r.run();
+  }
+}
+```
+
+Methods declared on subtypes of the listed class are matched, too, and both
+static and instance methods are supported.
+
+The contract is trusted but not verified: listing a method that actually defers
+its argument to another thread can hide real concurrency bugs. Note also that
+the flag applies to the method as a whole — every functional interface argument
+passed to a listed method is treated as invoked immediately.
+
 #### False negatives with aliasing
 
 ```java

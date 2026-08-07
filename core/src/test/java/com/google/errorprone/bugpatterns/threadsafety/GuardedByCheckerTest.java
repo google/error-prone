@@ -2419,6 +2419,298 @@ abstract class Test {
   }
 
   @Test
+  public void knownImmediateMethods_lambda() {
+    compilationHelperWithKnownImmediateMethods("threadsafety.Test#runNow")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            """
+            package threadsafety;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              @GuardedBy("this")
+              private final List<String> xs = new ArrayList<>();
+
+              public synchronized void f() {
+                runNow(() -> xs.clear());
+              }
+
+              private void runNow(Runnable r) {
+                r.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void knownImmediateMethods_methodReference() {
+    compilationHelperWithKnownImmediateMethods("threadsafety.Test#runNow")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            """
+            package threadsafety;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              @GuardedBy("this")
+              private final List<String> xs = new ArrayList<>();
+
+              public synchronized void f() {
+                runNow(xs::clear);
+              }
+
+              private void runNow(Runnable r) {
+                r.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void knownImmediateMethods_flagNotSet_shouldBeFlagged() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            """
+            package threadsafety;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              @GuardedBy("this")
+              private final List<String> xs = new ArrayList<>();
+
+              public synchronized void f() {
+                // BUG: Diagnostic contains: should be guarded by 'this'
+                runNow(() -> xs.clear());
+                // BUG: Diagnostic contains: should be guarded by 'this'
+                runNow(xs::clear);
+              }
+
+              private void runNow(Runnable r) {
+                r.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void knownImmediateMethods_wrongGuard_shouldBeFlagged() {
+    compilationHelperWithKnownImmediateMethods("threadsafety.Test#runNow")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            """
+            package threadsafety;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.ArrayList;
+            import java.util.List;
+
+            class Test {
+              final Object mu = new Object();
+
+              @GuardedBy("mu")
+              private final List<String> xs = new ArrayList<>();
+
+              public synchronized void f() {
+                // BUG: Diagnostic contains: should be guarded by 'this.mu'
+                runNow(() -> xs.clear());
+              }
+
+              private void runNow(Runnable r) {
+                r.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void knownImmediateMethods_multipleAccessesInLambdaBody() {
+    compilationHelperWithKnownImmediateMethods("threadsafety.Test#runNow")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            """
+            package threadsafety;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+
+            class Test {
+              final Object mu = new Object();
+
+              @GuardedBy("this")
+              int x;
+
+              @GuardedBy("mu")
+              int y;
+
+              public synchronized void f() {
+                runNow(
+                    () -> {
+                      x++;
+                      // BUG: Diagnostic contains: should be guarded by 'this.mu'
+                      y++;
+                    });
+              }
+
+              private void runNow(Runnable r) {
+                r.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void knownImmediateMethods_synchronizedBlock() {
+    compilationHelperWithKnownImmediateMethods("threadsafety.Test#runNow")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            """
+            package threadsafety;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+
+            class Test {
+              final Object mu = new Object();
+
+              @GuardedBy("mu")
+              int x;
+
+              public void f() {
+                synchronized (mu) {
+                  runNow(() -> x++);
+                }
+              }
+
+              private void runNow(Runnable r) {
+                r.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void knownImmediateMethods_explicitLock() {
+    compilationHelperWithKnownImmediateMethods("threadsafety.Test#runNow")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            """
+            package threadsafety;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+            import java.util.concurrent.locks.Lock;
+
+            class Test {
+              final Lock lock = null;
+
+              @GuardedBy("lock")
+              int x;
+
+              public void f() {
+                lock.lock();
+                try {
+                  runNow(() -> x++);
+                } finally {
+                  lock.unlock();
+                }
+                // BUG: Diagnostic contains: should be guarded by 'this.lock'
+                runNow(() -> x++);
+              }
+
+              private void runNow(Runnable r) {
+                r.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void knownImmediateMethods_multipleEntries() {
+    compilationHelperWithKnownImmediateMethods(
+            "com.example.NotOnClasspath#run, threadsafety.Test#runNow")
+        .addSourceLines(
+            "threadsafety/Test.java",
+            """
+            package threadsafety;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+
+            class Test {
+              @GuardedBy("this")
+              int x;
+
+              public synchronized void f() {
+                runNow(() -> x++);
+              }
+
+              private void runNow(Runnable r) {
+                r.run();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void knownImmediateMethods_descendantOfListedClass() {
+    compilationHelperWithKnownImmediateMethods("threadsafety.Runner#runNow")
+        .addSourceLines(
+            "threadsafety/Runner.java",
+            """
+            package threadsafety;
+
+            interface Runner {
+              void runNow(Runnable r);
+            }
+            """)
+        .addSourceLines(
+            "threadsafety/DirectRunner.java",
+            """
+            package threadsafety;
+
+            class DirectRunner implements Runner {
+              @Override
+              public void runNow(Runnable r) {
+                r.run();
+              }
+            }
+            """)
+        .addSourceLines(
+            "threadsafety/Test.java",
+            """
+            package threadsafety;
+
+            import com.google.errorprone.annotations.concurrent.GuardedBy;
+
+            class Test {
+              private final DirectRunner runner = new DirectRunner();
+
+              @GuardedBy("this")
+              int x;
+
+              public synchronized void f() {
+                runner.runNow(() -> x++);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void methodReferences_shouldBeFlagged() {
     compilationHelper
         .addSourceLines(
@@ -2538,5 +2830,10 @@ abstract class Test {
             }
             """)
         .doTest();
+  }
+
+  private CompilationTestHelper compilationHelperWithKnownImmediateMethods(String methods) {
+    return CompilationTestHelper.newInstance(GuardedByChecker.class, getClass())
+        .setArgs("-XepOpt:GuardedBy:KnownImmediateMethods=" + methods);
   }
 }
