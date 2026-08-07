@@ -467,6 +467,7 @@ import com.google.errorprone.bugpatterns.UnnecessarySemicolon;
 import com.google.errorprone.bugpatterns.UnnecessarySetDefault;
 import com.google.errorprone.bugpatterns.UnnecessaryStaticImport;
 import com.google.errorprone.bugpatterns.UnnecessaryStringBuilder;
+import com.google.errorprone.bugpatterns.UnnecessarySubstring;
 import com.google.errorprone.bugpatterns.UnnecessaryTestMethodPrefix;
 import com.google.errorprone.bugpatterns.UnnecessaryTypeArgument;
 import com.google.errorprone.bugpatterns.UnsafeFinalization;
@@ -1213,6 +1214,7 @@ public final class BuiltInCheckerSuppliers {
           UnnecessaryParentheses.class,
           UnnecessaryQualifier.class,
           UnnecessaryStringBuilder.class,
+          UnnecessarySubstring.class,
           UnrecognisedJavadocTag.class,
           UnsafeFinalization.class,
           UnsafeReflectiveConstructionCast.class,
