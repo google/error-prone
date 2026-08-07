@@ -51,7 +51,7 @@ import javax.lang.model.element.ElementKind;
 
 /** A bug pattern that suggests renaming unused variables to {@code var _}. */
 @BugPattern(
-    summary = "Consider renaming unused variables and lambda parameters to _",
+    summary = "Consider renaming unused variables and lambda parameters to `_`",
     severity = WARNING)
 public final class UnnamedVariable extends BugChecker implements CompilationUnitTreeMatcher {
 
