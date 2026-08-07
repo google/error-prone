@@ -1,6 +1,6 @@
 ---
 title: UnnamedVariable
-summary: Consider renaming unused variables and lambda parameters to _
+summary: Consider renaming unused variables and lambda parameters to `_`
 layout: bugpattern
 tags: ''
 severity: WARNING
@@ -12,6 +12,9 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 -->
 
 
+## The problem
+Prefer using an unnamed variable (`_`) to denote variables and patterns that are
+intentionally unused.
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("UnnamedVariable")` to the enclosing element.
