@@ -43,6 +43,7 @@ import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.IfTree;
@@ -120,13 +121,16 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     for (TreePath cast : allCasts) {
       VariableTree variableTree = isVariableAssignedFromCast(cast, instanceOfTree, state);
       if (variableTree != null) {
-        if (!isReassigned(variableTree, impliedStatements) && variableToDelete == null) {
+        String candidateName = variableTree.getName().toString();
+        if (variableToDelete == null
+            && !isReassigned(variableTree, impliedStatements)
+            && !isNameDeclared(candidateName, impliedStatements, variableTree)) {
           // Use this variable's name and delete its declaration.
           variableToDelete = variableTree;
-          name = variableTree.getName().toString();
+          name = candidateName;
         } else {
-          // The variable is reassigned (so we can't delete it or reuse its name as the pattern
-          // variable), or we already selected another variable to delete.
+          // The variable is reassigned or its name is declared later (so we can't delete it or
+          // reuse its name as the pattern variable), or we already selected another variable.
           castsToReplace.add(cast);
         }
       } else {
@@ -146,7 +150,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
         fix.delete(variableToDelete);
       }
       if (name == null) {
-        name = generateVariableName(targetType, state);
+        name = generateVariableName(targetType, state, impliedStatements);
       }
       if (typeArgCount != 0 && !(instanceOfTree.getType() instanceof ParameterizedTypeTree)) {
         fix.postfixWith(
@@ -186,17 +190,19 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     return variableTree;
   }
 
-  private static String generateVariableName(Type targetType, VisitorState state) {
+  private static String generateVariableName(
+      Type targetType, VisitorState state, Iterable<Tree> impliedStatements) {
     Type unboxed = state.getTypes().unboxedType(targetType);
     String simpleName = IdentifierNames.fixInitialisms(targetType.tsym.getSimpleName().toString());
     String lowerFirstLetter = toLowerCase(String.valueOf(simpleName.charAt(0)));
     String camelCased = lowerFirstLetter + simpleName.substring(1);
-    SuggestedFixes.VariableNamer variableNamer = SuggestedFixes.variableNamer(state);
-    if (SourceVersion.isKeyword(camelCased)
-        || (unboxed != null && unboxed.getTag() != TypeTag.NONE)) {
-      return variableNamer.avoidShadowing(lowerFirstLetter);
-    }
-    return variableNamer.avoidShadowing(camelCased);
+    SuggestedFixes.VariableNamer variableNamer =
+        SuggestedFixes.variableNamer(state, impliedStatements);
+    boolean isReservedOrPrimitive =
+        SourceVersion.isKeyword(camelCased)
+            || (unboxed != null && unboxed.getTag() != TypeTag.NONE);
+    String baseName = isReservedOrPrimitive ? lowerFirstLetter : camelCased;
+    return variableNamer.avoidShadowing(baseName);
   }
 
   /** Finds trees which are implied by the {@code instanceOfTree}. */
@@ -320,6 +326,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
   private static boolean isReassigned(VariableTree variableTree, List<Tree> trees) {
     VarSymbol varSymbol = getSymbol(variableTree);
 
+    // TODO(kak): consider using the local field trick instead of the Boolean type param
     var scanner =
         new TreeScanner<Boolean, Void>() {
           @Override
@@ -351,5 +358,42 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
           }
         };
     return scanner.scan(trees, null);
+  }
+
+  /**
+   * Returns true if a variable with the given name is declared in the given trees, excluding the
+   * {@code excludedVariable}.
+   */
+  private static boolean isNameDeclared(
+      String name, Iterable<Tree> trees, @Nullable VariableTree excludedVariable) {
+    var scanner =
+        new TreeScanner<Void, Void>() {
+          private boolean declared = false;
+
+          @Override
+          public Void scan(Tree tree, Void unused) {
+            return declared ? null : super.scan(tree, null);
+          }
+
+          @Override
+          public Void visitVariable(VariableTree node, Void unused) {
+            if (node != excludedVariable && node.getName().contentEquals(name)) {
+              declared = true;
+            }
+            return super.visitVariable(node, null);
+          }
+
+          @Override
+          public Void visitClass(ClassTree node, Void unused) {
+            if (node.getSimpleName().contentEquals(name)) {
+              declared = true;
+            }
+            // Names declared inside a local class do not clash with local variables in the
+            // enclosing scope.
+            return null;
+          }
+        };
+    scanner.scan(trees, null);
+    return scanner.declared;
   }
 }

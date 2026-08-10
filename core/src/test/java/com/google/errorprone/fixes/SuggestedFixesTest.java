@@ -2869,8 +2869,8 @@ public class Test {
       if (tree.getBody() == null || tree.getBody().getStatements().isEmpty()) {
         return NO_MATCH;
       }
-      // TODO(kak): add `tree.getBody().getStatements()` to the scope.
-      SuggestedFixes.VariableNamer namer = SuggestedFixes.variableNamer(state);
+      SuggestedFixes.VariableNamer namer =
+          SuggestedFixes.variableNamer(state, tree.getBody().getStatements());
       String name = namer.avoidShadowing("x");
       return describeMatch(
           tree,
@@ -2882,8 +2882,6 @@ public class Test {
   @Test
   public void variableNamerWithExtraScope() {
     BugCheckerRefactoringTestHelper.newInstance(VariableNamerChecker.class, getClass())
-        // TODO(kak): remove this and update the expected output below
-        .allowBreakingChanges()
         .addInputLines(
             "Test.java",
             """
@@ -2902,7 +2900,7 @@ public class Test {
             """
             class Test {
               void f() {
-                int x = 0;
+                int x2 = 0;
                 int a = 1;
                 int x = 2;
                 class Local {
@@ -2917,8 +2915,6 @@ public class Test {
   @Test
   public void variableNamerWithExtraScope_localClassClash() {
     BugCheckerRefactoringTestHelper.newInstance(VariableNamerChecker.class, getClass())
-        // TODO(kak): remove this and update the expected output below
-        .allowBreakingChanges()
         .addInputLines(
             "Test.java",
             """
@@ -2935,7 +2931,7 @@ public class Test {
             """
             class Test {
               void f() {
-                int x = 0;
+                int x3 = 0;
                 int a = 1;
                 int x = 2;
                 class x2 {}
