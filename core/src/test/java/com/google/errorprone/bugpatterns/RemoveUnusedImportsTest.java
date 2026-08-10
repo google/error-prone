@@ -512,6 +512,46 @@ public class RemoveUnusedImportsTest {
   }
 
   @Test
+  public void recordComponentAnnotation_enumConstant() {
+    testHelper
+        .addInputLines(
+            "p/Test.java",
+            """
+            package p;
+
+            import static java.lang.annotation.ElementType.FIELD;
+
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            public record Test(@Tag(FIELD) int x) {
+              @Target(ElementType.RECORD_COMPONENT)
+              @interface Tag {
+                ElementType value();
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/p/Test.java",
+            """
+            package p;
+
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            public record Test(@Tag(FIELD) int x) {
+              @Target(ElementType.RECORD_COMPONENT)
+              @interface Tag {
+                ElementType value();
+              }
+            }
+            """)
+        // TODO(b/544015068): this should be expectUnchanged() and allowBreakingChanges() removed
+        .allowBreakingChanges()
+        .doTest();
+  }
+
+  @Test
   public void shadowed_apparentUsageReported() {
     compilationTestHelper
         .addSourceLines(
