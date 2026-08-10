@@ -205,12 +205,20 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     return variableNamer.avoidShadowing(baseName);
   }
 
-  /** Finds trees which are implied by the {@code instanceOfTree}. */
+  /**
+   * Finds trees which are implied by the {@code instanceOfTree}. That is, trees representing code
+   * that can only be reached if the {@code instanceOfTree} expression is true, and where we could
+   * consider introducing a pattern variable like {@code foo instanceof Bar bar}.
+   */
   private static ImmutableList<Tree> findImpliedStatements(
       InstanceOfTree tree, VisitorState state) {
+    // We are going to work from the InstanceOfTree to the root of the AST. As we go, `last` is the
+    // last node we visited, which is the child of `parentPath` that would lead us back to the
+    // InstanceOfTree.
     Tree last = tree;
     boolean negated = false;
     var impliedStatements = ImmutableList.<Tree>builder();
+    loop:
     for (TreePath parentPath = state.getPath().getParentPath();
         parentPath != null;
         parentPath = parentPath.getParentPath()) {
@@ -218,55 +226,66 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
       switch (parent.getKind()) {
         case CONDITIONAL_AND -> {
           if (negated) {
-            return impliedStatements.build();
+            // `!(x instanceof Foo) && bar()` or `bar() && !(x instanceof Foo)`. There is no further
+            // code to be found that is executed only when the instanceof is true.
+            break loop;
           }
           if (((BinaryTree) parent).getLeftOperand() == last) {
             impliedStatements.add(((BinaryTree) parent).getRightOperand());
           }
         }
         case CONDITIONAL_OR -> {
+          // `!(x instanceof Foo) || bar((Foo) x)` -> `!(x instanceof Foo foo) || bar(foo)`
+          // The RHS is only executed if the LHS is false, meaning that x is indeed a Foo.
           if (!negated) {
-            return impliedStatements.build();
+            break loop;
           }
           if (((BinaryTree) parent).getLeftOperand() == last) {
             impliedStatements.add(((BinaryTree) parent).getRightOperand());
           }
         }
         case PARENTHESIZED -> {}
-        case LOGICAL_COMPLEMENT -> {
-          negated = !negated;
-        }
+        case LOGICAL_COMPLEMENT -> negated = !negated;
         case IF -> {
           var ifTree = (IfTree) parent;
           if (ifTree.getCondition() != last) {
-            return impliedStatements.build();
+            break loop;
           }
           StatementTree positiveBranch =
               negated ? ifTree.getElseStatement() : ifTree.getThenStatement();
           if (positiveBranch != null) {
+            // `if (x instanceof Foo) bar((Foo) x) -> `if (x instanceof Foo foo) bar(foo)`
+            // or
+            // `if (!(x instanceof Foo)) ... else bar((Foo) x)` ->
+            //     `if (!(x instanceof Foo foo)) ... else bar(foo)`
             impliedStatements.add(positiveBranch);
           }
           StatementTree negativeBranch =
               negated ? ifTree.getThenStatement() : ifTree.getElseStatement();
           if (negativeBranch != null && !Reachability.canCompleteNormally(negativeBranch)) {
+            // In something like `if (!(x instanceof Foo)) return;`, the statement after the if
+            // doesn't complete normally, which means that we know that `x instanceof Foo` is true
+            // in the code that comes after the if in the same block.
             if (parentPath.getParentPath().getLeaf() instanceof BlockTree blockTree) {
               var index = blockTree.getStatements().indexOf(ifTree);
               impliedStatements.addAll(
                   blockTree.getStatements().subList(index + 1, blockTree.getStatements().size()));
             }
           }
-          return impliedStatements.build();
+          break loop;
         }
         case CONDITIONAL_EXPRESSION -> {
+          // `(x instanceof Foo) ? bar((Foo) x) : baz()` ->
+          //     `(x instanceof Foo foo) ? bar(foo) : baz()`
           var conditionalExpression = (ConditionalExpressionTree) parent;
           impliedStatements.add(
               negated
                   ? conditionalExpression.getFalseExpression()
                   : conditionalExpression.getTrueExpression());
-          return impliedStatements.build();
+          break loop;
         }
         default -> {
-          return impliedStatements.build();
+          break loop;
         }
       }
       last = parent;
