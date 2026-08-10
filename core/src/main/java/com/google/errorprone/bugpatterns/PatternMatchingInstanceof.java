@@ -25,12 +25,12 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.SourceVersion.supportsPatternMatchingInstanceof;
 import static com.google.errorprone.util.TargetType.targetType;
-import static java.lang.Boolean.TRUE;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.InstanceOfTreeMatcher;
@@ -345,38 +345,49 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
   private static boolean isReassigned(VariableTree variableTree, List<Tree> trees) {
     VarSymbol varSymbol = getSymbol(variableTree);
 
-    // TODO(kak): consider using the local field trick instead of the Boolean type param
     var scanner =
-        new TreeScanner<Boolean, Void>() {
+        new TreeScanner<Void, Void>() {
+          private boolean reassigned = false;
+
           @Override
-          public Boolean visitAssignment(AssignmentTree node, Void unused) {
-            return varSymbol.equals(getSymbol(node.getVariable()))
-                || super.visitAssignment(node, null);
+          public Void scan(Tree tree, Void unused) {
+            return reassigned ? null : super.scan(tree, null);
           }
 
           @Override
-          public Boolean visitCompoundAssignment(CompoundAssignmentTree node, Void unused) {
-            return varSymbol.equals(getSymbol(node.getVariable()))
-                || super.visitCompoundAssignment(node, null);
+          public Void visitAssignment(AssignmentTree node, Void unused) {
+            if (varSymbol.equals(getSymbol(node.getVariable()))) {
+              reassigned = true;
+            }
+            return super.visitAssignment(node, null);
           }
 
           @Override
-          public Boolean visitUnary(UnaryTree node, Void unused) {
-            return (switch (node.getKind()) {
-                  case POSTFIX_INCREMENT, POSTFIX_DECREMENT, PREFIX_INCREMENT, PREFIX_DECREMENT ->
-                      varSymbol.equals(getSymbol(node.getExpression()));
-                  default -> false;
-                })
-                || super.visitUnary(node, null);
+          public Void visitCompoundAssignment(CompoundAssignmentTree node, Void unused) {
+            if (varSymbol.equals(getSymbol(node.getVariable()))) {
+              reassigned = true;
+            }
+            return super.visitCompoundAssignment(node, null);
           }
 
+          private static final ImmutableSet<Kind> INCREMENT_DECREMENT =
+              Sets.immutableEnumSet(
+                  Kind.POSTFIX_INCREMENT,
+                  Kind.POSTFIX_DECREMENT,
+                  Kind.PREFIX_INCREMENT,
+                  Kind.PREFIX_DECREMENT);
+
           @Override
-          public Boolean reduce(Boolean left, Boolean right) {
-            // be careful because the parameters can be null!
-            return TRUE.equals(left) || TRUE.equals(right);
+          public Void visitUnary(UnaryTree node, Void unused) {
+            if (INCREMENT_DECREMENT.contains(node.getKind())
+                && varSymbol.equals(getSymbol(node.getExpression()))) {
+              reassigned = true;
+            }
+            return super.visitUnary(node, null);
           }
         };
-    return scanner.scan(trees, null);
+    scanner.scan(trees, null);
+    return scanner.reassigned;
   }
 
   /**
