@@ -15817,7 +15817,16 @@ the order they are declared.</div>
 <div class="block">Whether the variable is (or should be regarded as) static final.</div>
 </dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFixes.html#variableNamer(com.google.errorprone.VisitorState)" class="member-name-link">variableNamer(VisitorState)</a> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Returns a <a href="com/google/errorprone/fixes/SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes"><code>SuggestedFixes.VariableNamer</code></a> that avoids shadowing any variables or identifiers in scope at
+the current <code>state</code> location.</div>
+</dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFixes.html#variableNamer(com.google.errorprone.VisitorState,java.lang.Iterable)" class="member-name-link">variableNamer(VisitorState, Iterable)</a> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
+<dd>
+<div class="block">Returns a <a href="com/google/errorprone/fixes/SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes"><code>SuggestedFixes.VariableNamer</code></a> that avoids shadowing any variables or identifiers in scope at
+the current <code>state</code> location, as well as declarations within the given <code>extraScope</code>
+trees.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/VariableNameSameAsType.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">VariableNameSameAsType</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Check for variables and types with the same name</div>

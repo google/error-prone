@@ -102,7 +102,18 @@ assigning the thrown exception to a variable, if it is used within the <code>cat
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static <a href="../SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#variableNamer(com.google.errorprone.VisitorState)" class="member-name-link">variableNamer</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Returns a <a href="../SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes"><code>SuggestedFixes.VariableNamer</code></a> that avoids shadowing any variables or identifiers in scope at
+the current <code>state</code> location.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#variableNamer(com.google.errorprone.VisitorState,java.lang.Iterable)" class="member-name-link">variableNamer</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;extraScope)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Returns a <a href="../SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes"><code>SuggestedFixes.VariableNamer</code></a> that avoids shadowing any variables or identifiers in scope at
+the current <code>state</code> location, as well as declarations within the given <code>extraScope</code>
+trees.</div>
+</div>
 </div>
 </section>
 </li>

@@ -100,6 +100,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#castTree(com.sun.source.tree.ExpressionTree,java.lang.String,com.google.errorprone.VisitorState)" tabindex="0">castTree(ExpressionTree, String, VisitorState)</a></li>
 <li><a href="#replaceVariableType(com.sun.source.tree.VariableTree,java.lang.String,com.google.errorprone.VisitorState)" tabindex="0">replaceVariableType(VariableTree, String, VisitorState)</a></li>
 <li><a href="#variableNamer(com.google.errorprone.VisitorState)" tabindex="0">variableNamer(VisitorState)</a></li>
+<li><a href="#variableNamer(com.google.errorprone.VisitorState,java.lang.Iterable)" tabindex="0">variableNamer(VisitorState, Iterable)</a></li>
 </ol>
 </li>
 </ol>
@@ -484,7 +485,18 @@ annotation</code>, regardless of whether there is already an argument.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#variableNamer(com.google.errorprone.VisitorState)" class="member-name-link">variableNamer</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a <a href="SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes"><code>SuggestedFixes.VariableNamer</code></a> that avoids shadowing any variables or identifiers in scope at
+the current <code>state</code> location.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#variableNamer(com.google.errorprone.VisitorState,java.lang.Iterable)" class="member-name-link">variableNamer</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;extraScope)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns a <a href="SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes"><code>SuggestedFixes.VariableNamer</code></a> that avoids shadowing any variables or identifiers in scope at
+the current <code>state</code> location, as well as declarations within the given <code>extraScope</code>
+trees.</div>
+</div>
 </div>
 </div>
 </div>
@@ -1085,6 +1097,20 @@ node.</div>
 <h3>variableNamer</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a></span>&nbsp;<span class="element-name">variableNamer</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Returns a <a href="SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes"><code>SuggestedFixes.VariableNamer</code></a> that avoids shadowing any variables or identifiers in scope at
+the current <code>state</code> location.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="variableNamer(com.google.errorprone.VisitorState,java.lang.Iterable)">
+<h3>variableNamer</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes">SuggestedFixes.VariableNamer</a></span>&nbsp;<span class="element-name">variableNamer</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;&nbsp;extraScope)</span></div>
+<div class="block">Returns a <a href="SuggestedFixes.VariableNamer.html" title="class in com.google.errorprone.fixes"><code>SuggestedFixes.VariableNamer</code></a> that avoids shadowing any variables or identifiers in scope at
+the current <code>state</code> location, as well as declarations within the given <code>extraScope</code>
+trees.</div>
 </div>
 </section>
 </li>
