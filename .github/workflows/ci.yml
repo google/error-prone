@@ -11,12 +11,13 @@ on:
 permissions:
   contents: read #  to fetch code (actions/checkout)
 
+# Cancel in-progress runs for pull requests, but not for master branch pushes
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   test:
-    permissions:
-      actions: write #  to cancel/stop running workflows (styfle/cancel-workflow-action)
-      contents: read #  to fetch code (actions/checkout)
-
     name: "JDK ${{ matrix.java }} on ${{ matrix.os }}"
     strategy:
       fail-fast: false
@@ -46,10 +47,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     continue-on-error: ${{ matrix.experimental }}
     steps:
-      - name: Cancel previous
-        uses: styfle/cancel-workflow-action@d07a454dad7609a92316b57b23c9ccfd4f59af66 # 0.13.1
-        with:
-          access_token: ${{ github.token }}
       - name: 'Check out repository'
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
