@@ -25,6 +25,7 @@ import org.junit.runners.JUnit4;
  * @author gak@google.com (Gregory Kick)
  */
 @RunWith(JUnit4.class)
+@SuppressWarnings("MisformattedTestData") // some intentional unused imports in input data!
 public class RemoveUnusedImportsTest {
   private final BugCheckerRefactoringTestHelper testHelper =
       BugCheckerRefactoringTestHelper.newInstance(RemoveUnusedImports.class, getClass());
@@ -513,13 +514,15 @@ public class RemoveUnusedImportsTest {
 
   @Test
   public void recordComponentAnnotation_enumConstant() {
-    testHelper
-        .addInputLines(
+    compilationTestHelper
+        .addSourceLines(
             "p/Test.java",
             """
             package p;
 
             import static java.lang.annotation.ElementType.FIELD;
+            // BUG: Diagnostic contains:
+            import static java.lang.annotation.ElementType.METHOD;
 
             import java.lang.annotation.ElementType;
             import java.lang.annotation.Target;
@@ -531,23 +534,6 @@ public class RemoveUnusedImportsTest {
               }
             }
             """)
-        .addOutputLines(
-            "out/p/Test.java",
-            """
-            package p;
-
-            import java.lang.annotation.ElementType;
-            import java.lang.annotation.Target;
-
-            public record Test(@Tag(FIELD) int x) {
-              @Target(ElementType.RECORD_COMPONENT)
-              @interface Tag {
-                ElementType value();
-              }
-            }
-            """)
-        // TODO(b/544015068): this should be expectUnchanged() and allowBreakingChanges() removed
-        .allowBreakingChanges()
         .doTest();
   }
 
