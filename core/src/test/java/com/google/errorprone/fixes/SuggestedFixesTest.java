@@ -533,6 +533,8 @@ public class SuggestedFixesTest {
         .doTest();
   }
 
+  private static final Supplier<Type> SOMEANNOTATION = typeFromString("some.pkg.SomeAnnotation");
+
   /** A test check that adds an annotation to all return types. */
   @BugPattern(summary = "Add an annotation", severity = ERROR)
   public static class AddAnnotation extends BugChecker implements BugChecker.MethodTreeMatcher {
@@ -2859,5 +2861,87 @@ public class Test {
         .doTest();
   }
 
-  private static final Supplier<Type> SOMEANNOTATION = typeFromString("some.pkg.SomeAnnotation");
+  /** A test check that tests variableNamer with extraScope. */
+  @BugPattern(summary = "Test variable namer with extra scope", severity = ERROR)
+  public static class VariableNamerChecker extends BugChecker implements MethodTreeMatcher {
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      if (tree.getBody() == null || tree.getBody().getStatements().isEmpty()) {
+        return NO_MATCH;
+      }
+      // TODO(kak): add `tree.getBody().getStatements()` to the scope.
+      SuggestedFixes.VariableNamer namer = SuggestedFixes.variableNamer(state);
+      String name = namer.avoidShadowing("x");
+      return describeMatch(
+          tree,
+          SuggestedFix.prefixWith(
+              tree.getBody().getStatements().get(0), "int " + name + " = 0;\n"));
+    }
+  }
+
+  @Test
+  public void variableNamerWithExtraScope() {
+    BugCheckerRefactoringTestHelper.newInstance(VariableNamerChecker.class, getClass())
+        // TODO(kak): remove this and update the expected output below
+        .allowBreakingChanges()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int a = 1;
+                int x = 2;
+                class Local {
+                  int x1 = 3;
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int x = 0;
+                int a = 1;
+                int x = 2;
+                class Local {
+                  int x1 = 3;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void variableNamerWithExtraScope_localClassClash() {
+    BugCheckerRefactoringTestHelper.newInstance(VariableNamerChecker.class, getClass())
+        // TODO(kak): remove this and update the expected output below
+        .allowBreakingChanges()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int a = 1;
+                int x = 2;
+                class x2 {}
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int x = 0;
+                int a = 1;
+                int x = 2;
+                class x2 {}
+              }
+            }
+            """)
+        .doTest();
+  }
 }
