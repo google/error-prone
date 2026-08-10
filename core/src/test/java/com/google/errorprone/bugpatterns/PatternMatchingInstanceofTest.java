@@ -1387,4 +1387,105 @@ public final class PatternMatchingInstanceofTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void nestedInstanceof_sameType_brokenRefactoring() {
+    // TODO(b/385114559): This refactoring is broken because both instanceof checks generate the
+    // same pattern variable name ('string'), causing a duplicate variable compiler error and
+    // incorrectly shadowing the outer variable.
+    helper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o1, Object o2) {
+                if (o1 instanceof String) {
+                  if (o2 instanceof String) {
+                    System.out.println(((String) o1).length());
+                    System.out.println(((String) o2).length());
+                  }
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o1, Object o2) {
+                if (o1 instanceof String string) {
+                  if (o2 instanceof String string) {
+                    System.out.println(string.length());
+                    System.out.println(string.length());
+                  }
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void compoundCondition_sameType_brokenRefactoring() {
+    // TODO(b/385114559): This refactoring is broken because both instanceof checks generate the
+    // same pattern variable name ('string'), causing a duplicate variable compiler error.
+    // See also https://github.com/google/error-prone/issues/4922
+    helper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o1, Object o2) {
+                if (o1 instanceof String && o2 instanceof String) {
+                  System.out.println(((String) o1).length());
+                  System.out.println(((String) o2).length());
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o1, Object o2) {
+                if (o1 instanceof String string && o2 instanceof String string) {
+                  System.out.println(string.length());
+                  System.out.println(string.length());
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void variableInitializer_ternary_sameName_brokenRefactoring() {
+    // TODO(b/395603588): This refactoring is broken because the pattern variable name ('i') clashes
+    // with the variable being initialized ('Integer i'). It should generate a unique name ('i2') or
+    // expectUnchanged().
+    // See also https://github.com/google/error-prone/issues/4922
+    helper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                Integer i = o instanceof Integer ? (Integer) o : 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                Integer i = o instanceof Integer i ? i : 0;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
