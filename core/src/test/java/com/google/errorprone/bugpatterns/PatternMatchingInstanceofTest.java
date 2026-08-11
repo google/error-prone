@@ -1488,4 +1488,284 @@ public final class PatternMatchingInstanceofTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void whileLoop_variableDeclaration() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String s) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void whileLoop_castExpression() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String) {
+                  System.out.println(((String) o).length());
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String string) {
+                  System.out.println(string.length());
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void whileLoop_compoundCondition() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String && ((String) o).length() > 0) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String s && s.length() > 0) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void whileLoop_negated() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (!(o instanceof String)) {
+                  System.out.println(o);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void whileLoop_disjunction() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String || o == null) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void forLoop_variableDeclaration() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String; ) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String s; ) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void forLoop_castInUpdateAndBody() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (int i = 0; o instanceof String; i += ((String) o).length()) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (int i = 0; o instanceof String s; i += s.length()) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void forLoop_castExpression() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String; ) {
+                  System.out.println(((String) o).length());
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String string; ) {
+                  System.out.println(string.length());
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void forLoop_compoundCondition() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String && ((String) o).length() > 0; ) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String s && s.length() > 0; ) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void forLoop_negated() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; !(o instanceof String); ) {
+                  System.out.println(o);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void forLoop_disjunction() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String || o != null; ) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }
