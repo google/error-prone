@@ -435,14 +435,6 @@
                   <include>org.safere:safere</include>
                 </includes>
               </artifactSet>
-              <filters>
-                <filter>
-                  <artifact>org.jspecify:jspecify</artifact>
-                  <excludes>
-                    <exclude>META-INF/versions/9/OSGI-INF/MANIFEST.MF</exclude>
-                  </excludes>
-                </filter>
-              </filters>
             </configuration>
           </execution>
         </executions>
