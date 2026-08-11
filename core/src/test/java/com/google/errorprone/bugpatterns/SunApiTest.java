@@ -36,6 +36,12 @@ public class SunApiTest {
             class Test {
               // BUG: Diagnostic contains: sun.misc.Unsafe
               sun.misc.Unsafe u;
+
+              Object u2 =
+                  // BUG: Diagnostic contains: sun.misc.Unsafe
+                  sun.misc.Unsafe
+                  // But there is no additional diagnostic here!
+                      .class;
             }
             """)
         .doTest();
@@ -50,6 +56,12 @@ public class SunApiTest {
             class Test {
               // BUG: Diagnostic contains: sun.misc.Unsafe
               sun.misc.Unsafe u;
+
+              Object u2 =
+                  // BUG: Diagnostic contains: sun.misc.Unsafe
+                  sun.misc.Unsafe
+                  // But there is no additional diagnostic here!
+                      .class;
             }
             """)
         .setArgs("-source", "8", "-target", "8")
