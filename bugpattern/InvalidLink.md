@@ -22,9 +22,8 @@ explanation of how to correctly format the contents of this tag.
 ### Linking to generic types
 
 Use the erased type of method parameters in `@link` tags. For example, write
-`{@link #foo(List)}` instead of `{@link #foo(List<Bah>)}`. Javadoc does yet not
-support generics in `@link` tags, due to a bug:
-[JDK-5096551](https://bugs.openjdk.java.net/browse/JDK-5096551).
+`{@link #foo(List)}` instead of `{@link #foo(List<Bah>)}` and
+`{@link #add(Object)}` instead of `{@link #add(E)}`.
 
 ### Limitations
 
