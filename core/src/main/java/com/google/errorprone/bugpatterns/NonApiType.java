@@ -38,9 +38,11 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.predicates.TypePredicate;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 
 /** Flags instances of non-API types from being accepted or returned in APIs. */
 @BugPattern(
@@ -239,8 +241,11 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
         methodIsPublicAndNotAnOverride(symbol, state)
             && state.errorProneOptions().isPubliclyVisibleTarget();
 
-    for (Tree parameter : tree.getParameters()) {
-      checkType(parameter, ApiElementType.PARAMETER, isPublicApi, enclosingType, state);
+    List<? extends VariableTree> parameters = tree.getParameters();
+    // Avoid flagging primitive var-args parameters (e.g., int... rest) as array types.
+    int paramsToCheck = symbol.isVarArgs() ? parameters.size() - 1 : parameters.size();
+    for (int i = 0; i < paramsToCheck; i++) {
+      checkType(parameters.get(i), ApiElementType.PARAMETER, isPublicApi, enclosingType, state);
     }
     checkType(tree.getReturnType(), ApiElementType.RETURN_TYPE, isPublicApi, enclosingType, state);
 

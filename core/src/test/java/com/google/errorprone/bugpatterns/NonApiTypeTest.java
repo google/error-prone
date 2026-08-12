@@ -249,11 +249,20 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.Timestamp;",
-            "public class Test {",
-            // TODO(kak): we should _probably_ flag this too
-            "  public void test(Timestamp... timestamps) {}",
-            "}")
+            """
+            import com.google.protobuf.Timestamp;
+
+            public class Test {
+              // TODO(kak): we should _probably_ flag this too?
+              public void testTimestamps(Timestamp... timestamps) {}
+
+              public void withSuccessExitCodes(int first, int... rest) {}
+
+              public void testDoubles(double... values) {}
+
+              public void testLongs(Long... values) {}
+            }
+            """)
         .doTest();
   }
 
