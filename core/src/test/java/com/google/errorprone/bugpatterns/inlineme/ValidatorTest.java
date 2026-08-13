@@ -1038,9 +1038,6 @@ public class ValidatorTest {
 
   @Test
   public void unqualifiedStaticField_valid() {
-    // TODO(b/202145711): This should be:
-    //   replacement = "Client.STR.length()"
-    //   imports = "com.google.frobber.Client"
     helper
         .addSourceLines(
             "Client.java",
@@ -1052,7 +1049,9 @@ public class ValidatorTest {
             public final class Client {
               public static final String STR = "kurt";
 
-              @InlineMe(replacement = "STR.length()")
+              @InlineMe(
+                  replacement = "Client.STR.length()",
+                  imports = "com.google.frobber.Client")
               @Deprecated
               public int stringLength() {
                 return STR.length();
@@ -1064,8 +1063,6 @@ public class ValidatorTest {
 
   @Test
   public void unqualifiedStaticField_missingQualification_fails() {
-    // TODO(b/202145711): should be:
-    //   BUG: Diagnostic contains: InferredFromBody: Client.STR.length()
     helper
         .addSourceLines(
             "Client.java",
@@ -1079,6 +1076,7 @@ public class ValidatorTest {
 
               @InlineMe(replacement = "STR.length()")
               @Deprecated
+              // BUG: Diagnostic contains: InferredFromBody: Client.STR.length()
               public int stringLength() {
                 return STR.length();
               }
