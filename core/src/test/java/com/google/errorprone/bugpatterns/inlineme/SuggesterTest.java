@@ -1394,4 +1394,55 @@ public class Client {
             """)
         .doTest();
   }
+
+  @Test
+  public void anonymousClassOverride() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.frobber;
+
+            public final class Client {
+              interface Handler {
+                String handle();
+              }
+
+              void toto() {
+                new Handler() {
+                  @Deprecated
+                  public String handle() {
+                    return "handled";
+                  }
+                }.handle();
+              }
+            }
+            """)
+        // TODO(user): this is a bug; should
+        // expectUnchanged()
+        .addOutputLines(
+            "Client.java",
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              interface Handler {
+                String handle();
+              }
+
+              void toto() {
+                new Handler() {
+                  @InlineMe(replacement = "\\"handled\\"")
+                  @Deprecated
+                  public String handle() {
+                    return "handled";
+                  }
+                }.handle();
+              }
+            }
+            """)
+        .doTest();
+  }
 }
