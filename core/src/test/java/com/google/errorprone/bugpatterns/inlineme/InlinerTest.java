@@ -425,6 +425,154 @@ public class InlinerTest {
   }
 
   @Test
+  public void staticMethod_typeParam_castInlining() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "(T) o")
+              public static <T> T cast(Object o) {
+                return (T) o;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            package com.google.foo;
+
+            public final class Caller {
+              public void doTest(Object obj) {
+                String str = Client.<String>cast(obj); // TODO(b/166285406): (String) obj;
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Caller.java",
+            """
+            package com.google.foo;
+
+            public final class Caller {
+              public void doTest(Object obj) {
+                String str = (T) obj; // TODO(b/166285406): (String) obj;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void instanceMethod_explicitTypeParam() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.<T>after()")
+              public <T> T before() {
+                return this.<T>after();
+              }
+
+              public <T> T after() {
+                return null;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            package com.google.foo;
+
+            public final class Caller {
+              public void doTest(Client client) {
+                String str = client.<String>before(); // TODO(b/166285406): client.<String>after();
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Caller.java",
+            """
+            package com.google.foo;
+
+            public final class Caller {
+              public void doTest(Client client) {
+                String str = client.<T>after(); // TODO(b/166285406): client.<String>after();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void staticMethod_twoTypeParams_bothInReplacement() {
+    refactoringTestHelper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.HashMap;
+            import java.util.Map;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(
+                  replacement = "new HashMap<K, V>()",
+                  imports = {"java.util.HashMap"})
+              public static <K, V> Map<K, V> createMap() {
+                return new HashMap<K, V>();
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            package com.google.foo;
+
+            import java.util.Map;
+
+            public final class Caller {
+              public void doTest() {
+                Map<String, Integer> map = Client.<String, Integer>createMap(); // TODO(b/166285406): new HashMap<String, Integer>();
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Caller.java",
+            """
+            package com.google.foo;
+
+            import java.util.HashMap;
+            import java.util.Map;
+
+            public final class Caller {
+              public void doTest() {
+                Map<String, Integer> map = new HashMap<K, V>(); // TODO(b/166285406): new HashMap<String, Integer>();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void instanceMethod_withConflictingImport() {
     refactoringTestHelper
         .addInputLines(
