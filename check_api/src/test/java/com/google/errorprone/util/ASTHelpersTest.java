@@ -99,6 +99,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.TypeKind;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -2183,6 +2184,92 @@ class Test {
             return super.visitVariable(tree, state);
           }
         };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void boxingAndUnboxingHelpers() {
+    writeFile(
+        "A.java",
+        """
+        class A {
+          int primInt;
+          Integer boxedInt;
+          Boolean boxedBool;
+          String refString;
+        }
+        """);
+
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitVariable(VariableTree tree, VisitorState state) {
+            Type type = ASTHelpers.getType(tree);
+            String name = tree.getName().toString();
+            switch (name) {
+              case "primInt" -> {
+                assertThat(ASTHelpers.isBoxedPrimitiveType(type, state)).isFalse();
+                assertThat(ASTHelpers.isBoxedPrimitiveType(tree, state)).isFalse();
+                assertThat(ASTHelpers.unboxedType(type, state)).isEmpty();
+                assertThat(ASTHelpers.unboxedTypeOrType(type, state)).isEqualTo(type);
+                assertThat(ASTHelpers.boxedType(type, state)).isPresent();
+                assertThat(
+                        ASTHelpers.boxedType(type, state).get().tsym.getQualifiedName().toString())
+                    .isEqualTo("java.lang.Integer");
+                assertThat(
+                        ASTHelpers.boxedTypeOrType(type, state).tsym.getQualifiedName().toString())
+                    .isEqualTo("java.lang.Integer");
+                assertThat(ASTHelpers.boxedClass(type, state).getQualifiedName().toString())
+                    .isEqualTo("java.lang.Integer");
+              }
+              case "boxedInt" -> {
+                assertThat(ASTHelpers.isBoxedPrimitiveType(type, state)).isTrue();
+                assertThat(ASTHelpers.isBoxedPrimitiveType(tree, state)).isTrue();
+                assertThat(ASTHelpers.unboxedType(type, state)).isPresent();
+                assertThat(ASTHelpers.unboxedType(type, state).get().getKind())
+                    .isEqualTo(TypeKind.INT);
+                assertThat(ASTHelpers.unboxedTypeOrType(type, state).getKind())
+                    .isEqualTo(TypeKind.INT);
+                assertThat(ASTHelpers.boxedType(type, state)).isEmpty();
+                assertThat(ASTHelpers.boxedTypeOrType(type, state)).isEqualTo(type);
+                assertThat(ASTHelpers.boxedClass(type, state)).isNull();
+              }
+              case "boxedBool" -> {
+                assertThat(ASTHelpers.isBoxedPrimitiveType(type, state)).isTrue();
+                assertThat(ASTHelpers.isBoxedPrimitiveType(tree, state)).isTrue();
+                assertThat(ASTHelpers.unboxedType(type, state)).isPresent();
+                assertThat(ASTHelpers.unboxedType(type, state).get().getKind())
+                    .isEqualTo(TypeKind.BOOLEAN);
+                assertThat(ASTHelpers.unboxedTypeOrType(type, state).getKind())
+                    .isEqualTo(TypeKind.BOOLEAN);
+                assertThat(ASTHelpers.boxedType(type, state)).isEmpty();
+                assertThat(ASTHelpers.boxedTypeOrType(type, state)).isEqualTo(type);
+                assertThat(ASTHelpers.boxedClass(type, state)).isNull();
+              }
+              case "refString" -> {
+                assertThat(ASTHelpers.isBoxedPrimitiveType(type, state)).isFalse();
+                assertThat(ASTHelpers.isBoxedPrimitiveType(tree, state)).isFalse();
+                assertThat(ASTHelpers.unboxedType(type, state)).isEmpty();
+                assertThat(ASTHelpers.unboxedTypeOrType(type, state)).isEqualTo(type);
+                assertThat(ASTHelpers.boxedType(type, state)).isEmpty();
+                assertThat(ASTHelpers.boxedTypeOrType(type, state)).isEqualTo(type);
+                assertThat(ASTHelpers.boxedClass(type, state)).isNull();
+
+                assertThat(ASTHelpers.isBoxedPrimitiveType((Type) null, state)).isFalse();
+                assertThat(ASTHelpers.isBoxedPrimitiveType((Tree) null, state)).isFalse();
+                assertThat(ASTHelpers.unboxedType(null, state)).isEmpty();
+                assertThat(ASTHelpers.unboxedTypeOrType(null, state)).isNull();
+                assertThat(ASTHelpers.boxedType(null, state)).isEmpty();
+                assertThat(ASTHelpers.boxedTypeOrType(null, state)).isNull();
+                assertThat(ASTHelpers.boxedClass(null, state)).isNull();
+              }
+              default -> {}
+            }
+            return super.visitVariable(tree, state);
+          }
+        };
+    scanner.setAssertionsComplete();
     tests.add(scanner);
     assertCompiles(scanner);
   }

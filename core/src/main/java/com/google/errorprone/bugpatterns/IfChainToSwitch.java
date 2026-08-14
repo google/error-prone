@@ -33,6 +33,7 @@ import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.sameVariable;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
+import static com.google.errorprone.util.ASTHelpers.unboxedType;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.THROW;
 import static java.lang.Math.max;
@@ -76,7 +77,6 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -1600,25 +1600,6 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
-   * Unboxes the given type, if it is a reference type which can be unboxed. Returns {@code
-   * Optional.empty()} if cannot be unboxed.
-   */
-  private static Optional<Type> unboxed(Tree tree, VisitorState state) {
-    Type type = ASTHelpers.getType(tree);
-    if (type == null || !type.isReference()) {
-      return Optional.empty();
-    }
-    Type unboxed = state.getTypes().unboxedType(type);
-    if (unboxed == null
-        || unboxed.getTag() == TypeTag.NONE
-        // Don't match java.lang.Void.
-        || unboxed.getTag() == TypeTag.VOID) {
-      return Optional.empty();
-    }
-    return Optional.of(unboxed);
-  }
-
-  /**
    * Finds the intersection of two types, or {@code null} if there is no such intersection. This is
    * not quite the same thing as the "Intersection Types" defined JLS 21 § 4.9 (it is not a distinct
    * type; there is no {@code IntersectionTypeTree}) although they are similar in that the
@@ -1908,7 +1889,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
           }
           if (lhs.instanceOfOptional().isPresent()) {
             for (InstanceOfIr instanceOfIr : lhs.instanceOfOptional().get()) {
-              Optional<Type> unboxedInstanceOfType = unboxed(instanceOfIr.type(), state);
+              Optional<Type> unboxedInstanceOfType =
+                  unboxedType(getType(instanceOfIr.type()), state);
               if (unboxedInstanceOfType.isPresent()) {
                 if (isSubtype(getType(constantExpression), unboxedInstanceOfType.get(), state)) {
                   // RHS constant can be assigned to LHS unboxed instanceof's type

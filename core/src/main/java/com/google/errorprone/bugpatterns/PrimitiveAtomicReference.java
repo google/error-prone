@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isBoxedPrimitiveType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -31,7 +32,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
-import javax.lang.model.type.TypeKind;
 
 /** Discourages inadvertently using reference equality on boxed primitives in AtomicReference. */
 @BugPattern(
@@ -65,9 +65,9 @@ public final class PrimitiveAtomicReference extends BugChecker
       return NO_MATCH;
     }
     Type typeArgument = receiverType.getTypeArguments().getFirst();
-    if (state.getTypes().unboxedType(typeArgument).getKind() == TypeKind.NONE) {
-      return NO_MATCH;
+    if (isBoxedPrimitiveType(typeArgument, state)) {
+      return describeMatch(tree);
     }
-    return describeMatch(tree);
+    return NO_MATCH;
   }
 }

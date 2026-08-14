@@ -18,6 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.unboxedTypeOrType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -35,7 +38,6 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.TypeTag;
 
 /**
  * Finds and fixes unnecessarily boxed return expressions.
@@ -48,7 +50,7 @@ import com.sun.tools.javac.code.TypeTag;
 public class UnnecessaryBoxedAssignment extends BugChecker
     implements AssignmentTreeMatcher, ReturnTreeMatcher, VariableTreeMatcher {
   private static final Matcher<ExpressionTree> VALUE_OF_MATCHER =
-      staticMethod().onClass(UnnecessaryBoxedAssignment::isBoxableType).named("valueOf");
+      staticMethod().onClass(ASTHelpers::isBoxedPrimitiveType).named("valueOf");
 
   @Override
   public Description matchReturn(ReturnTree tree, VisitorState state) {
@@ -74,23 +76,16 @@ public class UnnecessaryBoxedAssignment extends BugChecker
       return Description.NO_MATCH;
     }
     ExpressionTree arg = getOnlyElement(methodInvocationTree.getArguments());
-    Type argType = ASTHelpers.getType(arg);
-    if (ASTHelpers.isSameType(argType, state.getSymtab().stringType, state)) {
+    Type argType = getType(arg);
+    if (isSameType(argType, state.getSymtab().stringType, state)) {
       return Description.NO_MATCH;
     }
     // Don't fix if there is an implicit primitive widening. This would need a cast, and that's not
     // clearly better than using valueOf.
-    if (!ASTHelpers.isSameType(
-        state.getTypes().unboxedTypeOrType(argType),
-        state.getTypes().unboxedType(ASTHelpers.getType(expression)),
-        state)) {
+    if (!isSameType(
+        unboxedTypeOrType(argType, state), unboxedTypeOrType(getType(expression), state), state)) {
       return Description.NO_MATCH;
     }
     return describeMatch(expression, SuggestedFix.replace(expression, state.getSourceForNode(arg)));
-  }
-
-  private static boolean isBoxableType(Type type, VisitorState state) {
-    Type unboxedType = state.getTypes().unboxedType(type);
-    return unboxedType != null && unboxedType.getTag() != TypeTag.NONE;
   }
 }

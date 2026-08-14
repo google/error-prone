@@ -17,12 +17,11 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isBoxedPrimitiveType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.tools.javac.code.Type;
 import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -39,11 +38,6 @@ public final class BoxedPrimitiveEquality extends AbstractReferenceEquality {
 
   @Override
   protected boolean matchArgument(ExpressionTree tree, VisitorState state) {
-    var type = getType(tree);
-    return type != null && isRelevantType(type, state);
-  }
-
-  private boolean isRelevantType(Type type, VisitorState state) {
-    return !type.isPrimitive() && state.getTypes().unboxedType(type).isPrimitive();
+    return isBoxedPrimitiveType(tree, state);
   }
 }

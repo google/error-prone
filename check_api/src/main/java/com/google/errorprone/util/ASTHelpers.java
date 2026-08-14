@@ -1418,6 +1418,69 @@ public final class ASTHelpers {
     return types.isSameType(types.erasure(s), types.erasure(t));
   }
 
+  /**
+   * Returns true if {@code type} is one of the 8 boxed primitive wrapper types (Boolean, Byte,
+   * Character, Short, Integer, Long, Float, Double).
+   */
+  public static boolean isBoxedPrimitiveType(@Nullable Type type, VisitorState state) {
+    if (type == null || type.isPrimitive()) {
+      return false;
+    }
+    return state.getTypes().unboxedType(type).isPrimitive();
+  }
+
+  /** Returns true if the given {@code tree} has a boxed primitive wrapper type. */
+  public static boolean isBoxedPrimitiveType(@Nullable Tree tree, VisitorState state) {
+    return isBoxedPrimitiveType(getType(tree), state);
+  }
+
+  /**
+   * Returns the unboxed primitive type if {@code type} is a boxed primitive, or {@link
+   * Optional#empty()} if it cannot be unboxed.
+   */
+  public static Optional<Type> unboxedType(@Nullable Type type, VisitorState state) {
+    if (type == null || type.isPrimitive()) {
+      return Optional.empty();
+    }
+    Type unboxed = state.getTypes().unboxedType(type);
+    return unboxed.isPrimitive() ? Optional.of(unboxed) : Optional.empty();
+  }
+
+  /**
+   * Returns the unboxed primitive type if {@code type} is a boxed primitive, {@code null} if {@code
+   * type} is null, or {@code type} itself if it cannot be unboxed.
+   */
+  public static @Nullable Type unboxedTypeOrType(@Nullable Type type, VisitorState state) {
+    return type != null ? state.getTypes().unboxedTypeOrType(type) : null;
+  }
+
+  /**
+   * Returns the boxed wrapper type if {@code type} is a primitive type, or {@link Optional#empty()}
+   * if it is not a primitive type.
+   */
+  public static Optional<Type> boxedType(@Nullable Type type, VisitorState state) {
+    if (type == null || !type.isPrimitive()) {
+      return Optional.empty();
+    }
+    return Optional.of(state.getTypes().boxedTypeOrType(type));
+  }
+
+  /**
+   * Returns the boxed wrapper type if {@code type} is a primitive type, {@code null} if {@code
+   * type} is null, or {@code type} itself if it is already a reference type.
+   */
+  public static @Nullable Type boxedTypeOrType(@Nullable Type type, VisitorState state) {
+    return type != null ? state.getTypes().boxedTypeOrType(type) : null;
+  }
+
+  /**
+   * Returns the {@link ClassSymbol} of the boxed wrapper class for a primitive {@code type}, or
+   * {@code null} if {@code type} is null or not a primitive type.
+   */
+  public static @Nullable ClassSymbol boxedClass(@Nullable Type type, VisitorState state) {
+    return type != null && type.isPrimitive() ? state.getTypes().boxedClass(type) : null;
+  }
+
   /** Returns the modifiers tree of the given class, method, or variable declaration. */
   public static @Nullable ModifiersTree getModifiers(Tree tree) {
     if (tree instanceof ClassTree classTree) {

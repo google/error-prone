@@ -35,6 +35,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
+import static com.google.errorprone.util.ASTHelpers.unboxedTypeOrType;
 import static java.util.Objects.requireNonNull;
 import static javax.lang.model.element.Modifier.STATIC;
 
@@ -479,15 +480,12 @@ public final class Matchers {
    * Matches an AST node if its type is a primitive type, or a boxed version of a primitive type.
    */
   public static <T extends Tree> Matcher<T> isPrimitiveOrBoxedPrimitiveType() {
-    return typePredicateMatcher(
-        (type, state) -> state.getTypes().unboxedTypeOrType(type).isPrimitive());
+    return typePredicateMatcher((type, state) -> unboxedTypeOrType(type, state).isPrimitive());
   }
 
   /** Matches an AST node if its type is a boxed primitive type. */
   public static Matcher<ExpressionTree> isBoxedPrimitiveType() {
-    return typePredicateMatcher(
-        (type, state) ->
-            !state.getTypes().isSameType(state.getTypes().unboxedType(type), Type.noType));
+    return typePredicateMatcher(ASTHelpers::isBoxedPrimitiveType);
   }
 
   /** Matches an AST node which is enclosed by a block node that matches the given matcher. */

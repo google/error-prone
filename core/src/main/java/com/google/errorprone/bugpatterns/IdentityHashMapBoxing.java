@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.util.ASTHelpers.isBoxedPrimitiveType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -67,12 +68,11 @@ public class IdentityHashMapBoxing extends BugChecker
   private Description checkTypes(ExpressionTree tree, VisitorState state) {
     List<Type> argumentTypes = ASTHelpers.getResultType(tree).getTypeArguments();
     if (argumentTypes.size() != 2) {
-      return Description.NO_MATCH;
+      return NO_MATCH;
     }
-    Type type = state.getTypes().unboxedType(argumentTypes.getFirst());
-    return switch (type.getKind()) {
-      case DOUBLE, LONG, INT, FLOAT -> describeMatch(tree);
-      default -> Description.NO_MATCH;
-    };
+    if (isBoxedPrimitiveType(argumentTypes.getFirst(), state)) {
+      return describeMatch(tree);
+    }
+    return NO_MATCH;
   }
 }

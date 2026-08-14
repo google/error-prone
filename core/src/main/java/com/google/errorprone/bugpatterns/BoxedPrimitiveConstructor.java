@@ -20,9 +20,12 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.boxedClass;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isBoxedPrimitiveType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.unboxedTypeOrType;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
@@ -40,8 +43,6 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import org.jspecify.annotations.Nullable;
@@ -68,21 +69,8 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
-    Symbol sym = ASTHelpers.getSymbol(tree.getIdentifier());
-    if (sym == null) {
-      return NO_MATCH;
-    }
-    Types types = state.getTypes();
-    Symtab symtab = state.getSymtab();
     // TODO(cushon): consider handling String also
-    if (sym.equals(types.boxedClass(symtab.byteType))
-        || sym.equals(types.boxedClass(symtab.charType))
-        || sym.equals(types.boxedClass(symtab.shortType))
-        || sym.equals(types.boxedClass(symtab.intType))
-        || sym.equals(types.boxedClass(symtab.longType))
-        || sym.equals(types.boxedClass(symtab.doubleType))
-        || sym.equals(types.boxedClass(symtab.floatType))
-        || sym.equals(types.boxedClass(symtab.booleanType))) {
+    if (isBoxedPrimitiveType(getType(tree), state)) {
       return describeMatch(tree, buildFix(tree, state));
     }
     return NO_MATCH;
@@ -91,7 +79,7 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
   private static Fix buildFix(NewClassTree tree, VisitorState state) {
     boolean autoboxFix = shouldAutoboxFix(state);
     Types types = state.getTypes();
-    Type type = types.unboxedTypeOrType(getType(tree));
+    Type type = unboxedTypeOrType(getType(tree), state);
     if (types.isSameType(type, state.getSymtab().booleanType)) {
       Object value = literalValue(tree.getArguments().iterator().next());
       if (value instanceof Boolean) {
@@ -227,7 +215,7 @@ public class BoxedPrimitiveConstructor extends BugChecker implements NewClassTre
     if (!types.isSameType(receiverType, state.getSymtab().floatType)) {
       return DoubleAndFloatStatus.NONE;
     }
-    if (types.isSameType(argType, types.boxedClass(state.getSymtab().doubleType).type)) {
+    if (types.isSameType(argType, boxedClass(state.getSymtab().doubleType, state).type)) {
       return DoubleAndFloatStatus.BOXED_DOUBLE_INTO_FLOAT;
     }
     if (types.isSameType(argType, state.getSymtab().doubleType)) {
