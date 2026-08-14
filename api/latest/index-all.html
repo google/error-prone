@@ -1413,6 +1413,11 @@ the given value.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#BOTTOM" class="member-name-link">BOTTOM</a> - Enum constant in enum class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#boxedClass(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">boxedClass(Type, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns the <code>Symbol.ClassSymbol</code> of the boxed wrapper class for a primitive <code>type</code>, or
+<code>null</code> if <code>type</code> is null or not a primitive type.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/BoxedPrimitiveConstructor.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">BoxedPrimitiveConstructor</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
@@ -1422,6 +1427,16 @@ the given value.</div>
 <dt><a href="com/google/errorprone/bugpatterns/BoxedPrimitiveEquality.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">BoxedPrimitiveEquality</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#boxedType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">boxedType(Type, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a>
+if it is not a primitive type.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#boxedTypeOrType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">boxedTypeOrType(Type, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns the boxed wrapper type if <code>type</code> is a primitive type, <code>null</code> if <code>
+type</code> is null, or <code>type</code> itself if it is already a reference type.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/BoxingComparator.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">BoxingComparator</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -7252,6 +7267,15 @@ its context.</div>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#isBoxedPrimitiveType()" class="member-name-link">isBoxedPrimitiveType()</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches an AST node if its type is a boxed primitive type.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#isBoxedPrimitiveType(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isBoxedPrimitiveType(Tree, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns true if the given <code>tree</code> has a boxed primitive wrapper type.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#isBoxedPrimitiveType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isBoxedPrimitiveType(Type, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns true if <code>type</code> is one of the 8 boxed primitive wrapper types (Boolean, Byte,
+Character, Short, Integer, Long, Float, Double).</div>
 </dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#isBugCheckerCode(com.google.errorprone.VisitorState)" class="member-name-link">isBugCheckerCode(VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
@@ -14985,6 +15009,15 @@ Guide's rules for Type Parameters.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/OperatorPrecedence.html#UNARY" class="member-name-link">UNARY</a> - Enum constant in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#unboxedType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">unboxedType(Type, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a> if it cannot be unboxed.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#unboxedTypeOrType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">unboxedTypeOrType(Type, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns the unboxed primitive type if <code>type</code> is a boxed primitive, <code>null</code> if <code>
+type</code> is null, or <code>type</code> itself if it cannot be unboxed.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TypeParameterNaming.TypeParameterNamingClassification.html#UNCLASSIFIED" class="member-name-link">UNCLASSIFIED</a> - Enum constant in enum class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeParameterNaming.TypeParameterNamingClassification.html" title="enum class in com.google.errorprone.bugpatterns">TypeParameterNaming.TypeParameterNamingClassification</a></dt>
 <dd>
 <div class="block">Anything else.</div>
