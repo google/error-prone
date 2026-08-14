@@ -201,6 +201,35 @@ public class ValueClassIdentityTest {
   }
 
   @Test
+  public void chronoValueClassesPositiveWithOlderRelease() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.time.chrono.HijrahDate;
+            import java.time.chrono.JapaneseDate;
+            import java.time.chrono.MinguoDate;
+            import java.time.chrono.ThaiBuddhistDate;
+            import java.util.IdentityHashMap;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: ValueClassIdentity
+                new IdentityHashMap<HijrahDate, String>();
+                // BUG: Diagnostic contains: ValueClassIdentity
+                new IdentityHashMap<JapaneseDate, String>();
+                // BUG: Diagnostic contains: ValueClassIdentity
+                new IdentityHashMap<MinguoDate, String>();
+                // BUG: Diagnostic contains: ValueClassIdentity
+                new IdentityHashMap<ThaiBuddhistDate, String>();
+              }
+            }
+            """)
+        .setArgs("--release", "15")
+        .doTest();
+  }
+
+  @Test
   public void identityHashMapNegative() {
     compilationHelper
         .addSourceLines(
