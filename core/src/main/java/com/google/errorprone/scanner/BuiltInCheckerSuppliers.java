@@ -483,6 +483,7 @@ import com.google.errorprone.bugpatterns.UnusedTypeParameter;
 import com.google.errorprone.bugpatterns.UnusedVariable;
 import com.google.errorprone.bugpatterns.UseCorrectAssertInTests;
 import com.google.errorprone.bugpatterns.UseEnumSwitch;
+import com.google.errorprone.bugpatterns.ValueClassIdentity;
 import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.VarTypeName;
 import com.google.errorprone.bugpatterns.VarWithPrimitive;
@@ -1377,6 +1378,7 @@ public final class BuiltInCheckerSuppliers {
           UseCorrectAssertInTests.class,
           UseEnumSwitch.class,
           UsingJsr305CheckReturnValue.class,
+          ValueClassIdentity.class,
           VarChecker.class,
           VarWithPrimitive.class,
           Varifier.class,
