@@ -1582,6 +1582,9 @@ Type declaration annotated with @ThreadSafe is not thread safe
 __[UseCorrectAssertInTests](bugpattern/UseCorrectAssertInTests)__<br>
 Java assert is used in testing code. For testing purposes, prefer using Truth-based assertions.
 
+__[ValueClassIdentity](bugpattern/ValueClassIdentity)__<br>
+Value-based classes do not have identity; relying on identity semantics (such as WeakReference, IdentityHashMap, synchronization, or identity-based caches) is unsafe and will fail in a future version of Java.
+
 ## Experimental : WARNING
 
 __[AnnotationPosition](bugpattern/AnnotationPosition)__<br>
