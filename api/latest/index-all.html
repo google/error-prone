@@ -6191,6 +6191,13 @@ value which matches the given matcher.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/CompileTimeConstantExpressionMatcher.html#hasCompileTimeConstantAnnotation(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Symbol)" class="member-name-link">hasCompileTimeConstantAnnotation(VisitorState, Symbol)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/CompileTimeConstantExpressionMatcher.html" title="class in com.google.errorprone.matchers">CompileTimeConstantExpressionMatcher</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/nullness/NullnessUtils.html#hasDefinitelyNullBranch(com.sun.source.tree.ExpressionTree,java.util.Set,com.google.common.collect.ImmutableSet,com.google.errorprone.VisitorState)" class="member-name-link">hasDefinitelyNullBranch(ExpressionTree, Set, ImmutableSet, VisitorState)</a> - Static method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/NullnessUtils.html" title="class in com.google.errorprone.bugpatterns.nullness">NullnessUtils</a></dt>
+<dd>
+<div class="block">Returns <code>true</code> if the given expression can definitely evaluate to <code>null</code> along at
+least one execution branch (for example, explicit <code>null</code> literals, conditional/ternary
+branches returning <code>null</code>, known-null variables, or calls to methods like <code>
+Optional.orNull()</code>).</div>
+</dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#hasDirectAnnotation(com.sun.tools.javac.code.Symbol.MethodSymbol,java.lang.String)" class="member-name-link">hasDirectAnnotation(Symbol.MethodSymbol, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Check for the presence of an annotation with the given qualified name directly on this symbol
@@ -11558,6 +11565,10 @@ annotated parameter.</div>
 <div class="block">Eagerly traverse one <code>MethodTree</code> at a time and accumulate constraints between nullness
 qualifiers.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/nullness/NullnessUtils.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.nullness">NullnessUtils</a> - Class in <a href="com/google/errorprone/bugpatterns/nullness/package-summary.html">com.google.errorprone.bugpatterns.nullness</a></dt>
+<dd>
+<div class="block">Static utility methods for common functionality in the nullable checkers.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/NullOptional.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NullOptional</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Flags passing literal null to <code>Optional</code>-accepting APIs.</div>
@@ -12442,8 +12453,6 @@ proto.</div>
 <div class="block">Bug checker for null-returning methods annotated with <code>@Provides</code> but not
 <code>@Nullable</code>.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/inject/dagger/ProvidesNull.html#%3Cinit%3E()" class="member-name-link">ProvidesNull()</a> - Constructor for class com.google.errorprone.bugpatterns.inject.dagger.<a href="com/google/errorprone/bugpatterns/inject/dagger/ProvidesNull.html" title="class in com.google.errorprone.bugpatterns.inject.dagger">ProvidesNull</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/scanner/ErrorProneInjector.ProvisionException.html#%3Cinit%3E(java.lang.String)" class="member-name-link">ProvisionException(String)</a> - Constructor for exception class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneInjector.ProvisionException.html" title="class in com.google.errorprone.scanner">ErrorProneInjector.ProvisionException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/scanner/ErrorProneInjector.ProvisionException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable)" class="member-name-link">ProvisionException(String, Throwable)</a> - Constructor for exception class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneInjector.ProvisionException.html" title="class in com.google.errorprone.scanner">ErrorProneInjector.ProvisionException</a></dt>
@@ -15888,6 +15897,10 @@ trees.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/Varifier.html#%3Cinit%3E()" class="member-name-link">Varifier()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/Varifier.html" title="class in com.google.errorprone.bugpatterns">Varifier</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/nullness/NullnessUtils.html#varsProvenNullByParentTernary(com.sun.source.util.TreePath)" class="member-name-link">varsProvenNullByParentTernary(TreePath)</a> - Static method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/NullnessUtils.html" title="class in com.google.errorprone.bugpatterns.nullness">NullnessUtils</a></dt>
+<dd>
+<div class="block">Returns x if the path's leaf is inside <code>(x == null) ? ... : ...</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/VarTypeName.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">VarTypeName</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
