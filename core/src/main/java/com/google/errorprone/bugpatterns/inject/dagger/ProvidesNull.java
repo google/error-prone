@@ -17,9 +17,12 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -33,6 +36,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import javax.inject.Inject;
 
 /**
  * Bug checker for null-returning methods annotated with {@code @Provides} but not
@@ -44,6 +48,15 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
     severity = ERROR)
 public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
 
+  // TODO(b/536946282): Remove flag after rollout.
+  private final boolean checkDefinitelyNullBranch;
+
+  @Inject
+  ProvidesNull(ErrorProneFlags flags) {
+    this.checkDefinitelyNullBranch =
+        flags.getBoolean("ProvidesNull:CheckDefinitelyNullBranch").orElse(true);
+  }
+
   /**
    * Matches explicit "return null" statements in methods annotated with {@code @Provides} but not
    * {@code @Nullable}. Suggests either annotating the method with {@code @Nullable} or throwing a
@@ -53,7 +66,18 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
   @Override
   public Description matchReturn(ReturnTree returnTree, VisitorState state) {
     ExpressionTree returnExpression = returnTree.getExpression();
-    if (returnExpression == null || returnExpression.getKind() != Kind.NULL_LITERAL) {
+    if (returnExpression == null) {
+      return Description.NO_MATCH;
+    }
+    if (checkDefinitelyNullBranch) {
+      if (!hasDefinitelyNullBranch(
+          returnExpression,
+          /* definitelyNullVars= */ ImmutableSet.of(),
+          /* varsProvenNullByParentIf= */ ImmutableSet.of(),
+          state)) {
+        return Description.NO_MATCH;
+      }
+    } else if (returnExpression.getKind() != Kind.NULL_LITERAL) {
       return Description.NO_MATCH;
     }
 

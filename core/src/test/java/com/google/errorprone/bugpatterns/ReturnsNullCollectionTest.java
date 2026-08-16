@@ -135,13 +135,34 @@ public class ReturnsNullCollectionTest {
 
             class Test {
               List<String> methodReturnsNullTernary(boolean foo, List<String> bar) {
-                // TODO(b/536946282): should be flagged by ReturnsNullCollection
+                // BUG: Diagnostic contains: ReturnsNullCollection
                 return foo ? bar : null;
               }
 
               List<String> methodReturnsNullTernaryReversed(boolean foo, List<String> bar) {
-                // TODO(b/536946282): should be flagged by ReturnsNullCollection
+                // BUG: Diagnostic contains: ReturnsNullCollection
                 return foo ? null : bar;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void enclosingIfNull_b536946282_shouldBeFlagged() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            class Test {
+              List<String> method(List<String> bar) {
+                if (bar == null) {
+                  // TODO(b/536946282): should be flagged by ReturnsNullCollection
+                  return bar;
+                }
+                return bar;
               }
             }
             """)

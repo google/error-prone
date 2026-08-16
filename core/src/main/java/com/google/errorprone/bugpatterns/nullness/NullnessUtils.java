@@ -82,7 +82,7 @@ import org.jspecify.annotations.Nullable;
  *
  * @author awturner@google.com (Andy Turner)
  */
-final class NullnessUtils {
+public final class NullnessUtils {
   private NullnessUtils() {}
 
   private static final Matcher<ExpressionTree> OPTIONAL_OR_NULL =
@@ -472,7 +472,13 @@ final class NullnessUtils {
     }
   }
 
-  static boolean hasDefinitelyNullBranch(
+  /**
+   * Returns {@code true} if the given expression can definitely evaluate to {@code null} along at
+   * least one execution branch (for example, explicit {@code null} literals, conditional/ternary
+   * branches returning {@code null}, known-null variables, or calls to methods like {@code
+   * Optional.orNull()}).
+   */
+  public static boolean hasDefinitelyNullBranch(
       ExpressionTree tree,
       Set<VarSymbol> definitelyNullVars,
       /*

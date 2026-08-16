@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -24,8 +25,8 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -62,7 +63,14 @@ public class ReturnsNullCollection extends BugChecker implements ReturnTreeMatch
 
   @Override
   public final Description matchReturn(ReturnTree tree, VisitorState state) {
-    if (tree.getExpression() == null || tree.getExpression().getKind() != NULL_LITERAL) {
+    if (tree.getExpression() == null) {
+      return NO_MATCH;
+    }
+    if (!hasDefinitelyNullBranch(
+        tree.getExpression(),
+        /* definitelyNullVars= */ ImmutableSet.of(),
+        /* varsProvenNullByParentIf= */ ImmutableSet.of(),
+        state)) {
       return NO_MATCH;
     }
     MethodTree methodTree = findEnclosingMethod(state);
