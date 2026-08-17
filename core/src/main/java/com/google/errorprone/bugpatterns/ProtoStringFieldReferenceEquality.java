@@ -38,13 +38,11 @@ import com.sun.source.tree.Tree.Kind;
     summary = "Comparing protobuf fields of type String using reference equality")
 public class ProtoStringFieldReferenceEquality extends BugChecker implements BinaryTreeMatcher {
 
-  private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
-
-  private static final String LITE_PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessageLite";
+  private static final String LITE_PROTO_INTERFACE = "com.google.protobuf.MessageLite";
 
   private static final Matcher<ExpressionTree> PROTO_STRING_METHOD =
       allOf(
-          instanceMethod().onDescendantOfAny(PROTO_SUPER_CLASS, LITE_PROTO_SUPER_CLASS),
+          instanceMethod().onDescendantOf(LITE_PROTO_INTERFACE),
           isSameType(Suppliers.STRING_TYPE));
 
   @Override
