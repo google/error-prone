@@ -267,7 +267,6 @@ public class InlinerTest {
   @Test
   public void staticMethod_explicitTypeParam_specifiedInReplacement() {
     refactoringTestHelper
-        .allowBreakingChanges()
         .addInputLines(
             "Client.java",
             """
@@ -308,7 +307,7 @@ public class InlinerTest {
 
             public final class Caller {
               public void doTest() {
-                String str = Client.<T>after();
+                String str = Client.<String>after();
               }
             }
             """)
@@ -318,7 +317,6 @@ public class InlinerTest {
   @Test
   public void staticMethod_twoTypeParams_methodCallInlining() {
     refactoringTestHelper
-        .allowBreakingChanges()
         .addInputLines(
             "Client.java",
             """
@@ -348,8 +346,8 @@ public class InlinerTest {
 
             public final class Caller {
               public void doTest() {
-                String x = Client.before(); // TODO(b/166285406): Client.after();
-                String y = Client.<Integer, String>before(); // TODO(b/166285406): Client.<String>after();
+                String x = Client.before();
+                String y = Client.<Integer, String>before();
               }
             }
             """)
@@ -360,8 +358,8 @@ public class InlinerTest {
 
             public final class Caller {
               public void doTest() {
-                String x = Client.<V>after(); // TODO(b/166285406): Client.after();
-                String y = Client.<V>after(); // TODO(b/166285406): Client.<String>after();
+                String x = Client.after();
+                String y = Client.<String>after();
               }
             }
             """)
@@ -371,7 +369,6 @@ public class InlinerTest {
   @Test
   public void staticMethod_twoTypeParams_constructorInlining() {
     refactoringTestHelper
-        .allowBreakingChanges()
         .addInputLines(
             "Client.java",
             """
@@ -401,8 +398,8 @@ public class InlinerTest {
 
             public final class Caller {
               public void doTest() {
-                List<String> x = Client.create(); // TODO(b/166285406): new ArrayList<>();
-                var y = Client.<Integer, String>create(); // TODO(b/166285406): new ArrayList<String>();
+                List<String> x = Client.create();
+                var y = Client.<Integer, String>create();
               }
             }
             """)
@@ -416,8 +413,8 @@ public class InlinerTest {
 
             public final class Caller {
               public void doTest() {
-                List<String> x = new ArrayList<V>(); // TODO(b/166285406): new ArrayList<>();
-                var y = new ArrayList<V>(); // TODO(b/166285406): new ArrayList<String>();
+                List<String> x = new ArrayList<>();
+                var y = new ArrayList<String>();
               }
             }
             """)
@@ -427,7 +424,6 @@ public class InlinerTest {
   @Test
   public void staticMethod_typeParam_castInlining() {
     refactoringTestHelper
-        .allowBreakingChanges()
         .addInputLines(
             "Client.java",
             """
@@ -450,8 +446,10 @@ public class InlinerTest {
             package com.google.foo;
 
             public final class Caller {
-              public void doTest(Object obj) {
-                String str = Client.<String>cast(obj); // TODO(b/166285406): (String) obj;
+              public void doTest(Object obj, String strObj) {
+                Object o1 = Client.cast(obj);
+                String s1 = Client.<String>cast(obj);
+                String s2 = Client.cast(strObj);
               }
             }
             """)
@@ -461,8 +459,10 @@ public class InlinerTest {
             package com.google.foo;
 
             public final class Caller {
-              public void doTest(Object obj) {
-                String str = (T) obj; // TODO(b/166285406): (String) obj;
+              public void doTest(Object obj, String strObj) {
+                Object o1 = obj;
+                String s1 = (String) obj;
+                String s2 = strObj;
               }
             }
             """)
@@ -472,7 +472,6 @@ public class InlinerTest {
   @Test
   public void instanceMethod_explicitTypeParam() {
     refactoringTestHelper
-        .allowBreakingChanges()
         .addInputLines(
             "Client.java",
             """
@@ -499,8 +498,11 @@ public class InlinerTest {
             package com.google.foo;
 
             public final class Caller {
-              public void doTest(Client client) {
-                String str = client.<String>before(); // TODO(b/166285406): client.<String>after();
+              public void doTest(Client client, Object obj) {
+                String str1 = client.<String>before();
+                String str2 = client.before();
+                String str3 = ((Client) obj).<String>before();
+                String str4 = ((Client) obj).before();
               }
             }
             """)
@@ -510,8 +512,11 @@ public class InlinerTest {
             package com.google.foo;
 
             public final class Caller {
-              public void doTest(Client client) {
-                String str = client.<T>after(); // TODO(b/166285406): client.<String>after();
+              public void doTest(Client client, Object obj) {
+                String str1 = client.<String>after();
+                String str2 = client.after();
+                String str3 = ((Client) obj).<String>after();
+                String str4 = ((Client) obj).after();
               }
             }
             """)
@@ -521,7 +526,6 @@ public class InlinerTest {
   @Test
   public void staticMethod_twoTypeParams_bothInReplacement() {
     refactoringTestHelper
-        .allowBreakingChanges()
         .addInputLines(
             "Client.java",
             """
@@ -551,7 +555,7 @@ public class InlinerTest {
 
             public final class Caller {
               public void doTest() {
-                Map<String, Integer> map = Client.<String, Integer>createMap(); // TODO(b/166285406): new HashMap<String, Integer>();
+                Map<String, Integer> map = Client.<String, Integer>createMap();
               }
             }
             """)
@@ -565,7 +569,7 @@ public class InlinerTest {
 
             public final class Caller {
               public void doTest() {
-                Map<String, Integer> map = new HashMap<K, V>(); // TODO(b/166285406): new HashMap<String, Integer>();
+                Map<String, Integer> map = new HashMap<String, Integer>();
               }
             }
             """)

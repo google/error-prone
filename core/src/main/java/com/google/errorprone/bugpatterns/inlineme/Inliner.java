@@ -17,6 +17,8 @@
 package com.google.errorprone.bugpatterns.inlineme;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableMap.toImmutableMap;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
@@ -35,6 +37,7 @@ import static java.util.stream.Collectors.joining;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -60,7 +63,9 @@ import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
@@ -74,6 +79,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import javax.inject.Inject;
 
@@ -359,6 +365,9 @@ public final class Inliner extends BugChecker
           });
     }
 
+    substituteTypeArguments(
+        tree, symbol, replacementExpression, replacement, parser, replacementFixes, state);
+
     String fixedReplacement =
         AppliedFix.applyReplacements(replacement, asEndPosTable(parser), replacementFixes.build());
 
@@ -387,6 +396,157 @@ public final class Inliner extends BugChecker
       case NewClassTree nct -> nct.getArguments();
       default -> ImmutableList.of();
     };
+  }
+
+  private static List<? extends Tree> getTypeArguments(Tree tree) {
+    return switch (tree) {
+      case MethodInvocationTree mit -> mit.getTypeArguments();
+      case NewClassTree nct -> nct.getTypeArguments();
+      default -> ImmutableList.of();
+    };
+  }
+
+  /**
+   * Substitutes type arguments from the call-site into type parameters present in the {@code
+   * replacementExpression}.
+   *
+   * <ul>
+   *   <li>If the caller explicitly provides type arguments (e.g. {@code Client.<String>before()}),
+   *       any occurrences of {@code T} in {@code replacementExpression} (such as {@code
+   *       Client.<T>after()} or {@code (T) obj}) are substituted with {@code String}.
+   *   <li>If the caller omits type arguments (e.g. {@code Client.before()}), unsubstituted type
+   *       parameters in the replacement are simplified so the inlined code compiles cleanly:
+   *       <ul>
+   *         <li>{@code Client.<T>after()} becomes {@code Client.after()} (allowing compiler type
+   *             inference).
+   *         <li>{@code new ArrayList<T>()} becomes {@code new ArrayList<>()} (using diamond
+   *             syntax).
+   *         <li>{@code (T) obj} becomes {@code obj} (allowing type inference if the cast is
+   *             unnecessary; checked by {@code maybeCheckFixCompiles}).
+   *       </ul>
+   * </ul>
+   */
+  private static void substituteTypeArguments(
+      ExpressionTree tree,
+      MethodSymbol symbol,
+      ExpressionTree replacementExpression,
+      String replacement,
+      JavacParser parser,
+      SuggestedFix.Builder replacementFixes,
+      VisitorState state) {
+    ImmutableSet<String> typeParamNames =
+        symbol.getTypeParameters().stream()
+            .map(typeParam -> typeParam.getSimpleName().toString())
+            .collect(toImmutableSet());
+    if (typeParamNames.isEmpty()) {
+      return;
+    }
+
+    List<? extends Tree> callingTypeArgs = getTypeArguments(tree);
+    if (callingTypeArgs.size() == typeParamNames.size()) {
+      substituteExplicitTypeArguments(
+          symbol, callingTypeArgs, replacementExpression, replacementFixes, state);
+    } else if (callingTypeArgs.isEmpty()) {
+      stripUnsubstitutedTypeParameters(
+          typeParamNames, replacementExpression, replacement, parser, replacementFixes);
+    }
+  }
+
+  private static void substituteExplicitTypeArguments(
+      MethodSymbol symbol,
+      List<? extends Tree> callingTypeArgs,
+      ExpressionTree replacementExpression,
+      SuggestedFix.Builder replacementFixes,
+      VisitorState state) {
+    // Map each declared type parameter name to its corresponding concrete type argument string from
+    // the call-site.
+    ImmutableMap<String, String> typeMap =
+        IntStream.range(0, symbol.getTypeParameters().size())
+            .boxed()
+            .collect(
+                toImmutableMap(
+                    i -> symbol.getTypeParameters().get(i).getSimpleName().toString(),
+                    i -> state.getSourceForNode(callingTypeArgs.get(i))));
+
+    // In a single AST pass over the replacement expression, substitute any matching type variable
+    // identifiers.
+    visitIdentifiers(
+        replacementExpression,
+        (node, unused) -> {
+          String typeArgString = typeMap.get(node.getName().toString());
+          if (typeArgString != null) {
+            replacementFixes.replace(node, typeArgString);
+          }
+        });
+  }
+
+  /**
+   * When type arguments are omitted at the call-site, type variables cannot be directly substituted
+   * with concrete types. This method cleans up unresolvable type variables within the replacement
+   * expression to allow standard compiler type inference to resolve the types instead.
+   */
+  private static void stripUnsubstitutedTypeParameters(
+      ImmutableSet<String> typeParamNames,
+      ExpressionTree replacementExpression,
+      String replacement,
+      JavacParser parser,
+      SuggestedFix.Builder replacementFixes) {
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
+        if (isSimpleTypeParameterList(node.getTypeArguments(), typeParamNames)) {
+          // Client.<T>after() -> Client.after()
+          ExpressionTree receiver = getReceiver(node);
+          // Bound the '<' search to start after the receiver so we don't accidentally match
+          // type arguments within receiver expressions (e.g., ((List<String>) x).<T>after()).
+          int searchStart =
+              (receiver != null) ? parser.getEndPos((JCTree) receiver) : getStartPosition(node);
+          int leftAngle = replacement.indexOf('<', searchStart);
+          int lastEnd = parser.getEndPos((JCTree) Iterables.getLast(node.getTypeArguments()));
+          int rightAngle = replacement.indexOf('>', lastEnd - 1);
+          if (leftAngle != -1 && rightAngle != -1) {
+            replacementFixes.replace(leftAngle, rightAngle + 1, "");
+          }
+        }
+        return super.visitMethodInvocation(node, null);
+      }
+
+      @Override
+      public Void visitNewClass(NewClassTree node, Void unused) {
+        if (node.getIdentifier() instanceof ParameterizedTypeTree ptt
+            && isSimpleTypeParameterList(ptt.getTypeArguments(), typeParamNames)) {
+          // Replacing the type arguments span with "" turns `new ArrayList<T>()` into diamond `new
+          // ArrayList<>()`
+          int firstStart = getStartPosition(ptt.getTypeArguments().get(0));
+          int lastEnd = parser.getEndPos((JCTree) Iterables.getLast(ptt.getTypeArguments()));
+          replacementFixes.replace(firstStart, lastEnd, "");
+        }
+        return super.visitNewClass(node, null);
+      }
+
+      @Override
+      public Void visitTypeCast(TypeCastTree node, Void unused) {
+        if (node.getType() instanceof IdentifierTree it
+            && typeParamNames.contains(it.getName().toString())) {
+          // Strip unresolvable type variable casts `(T) obj` -> `obj`.
+          // `maybeCheckFixCompiles` will ensure the fix is rejected if the cast was strictly
+          // necessary.
+          int castEnd = getStartPosition(node.getExpression());
+          replacementFixes.replace(getStartPosition(node), castEnd, "");
+        }
+        return super.visitTypeCast(node, null);
+      }
+    }.scan(replacementExpression, null);
+  }
+
+  private static boolean isSimpleTypeParameterList(
+      List<? extends Tree> typeArguments, ImmutableSet<String> typeParamNames) {
+    return !typeArguments.isEmpty()
+        && typeArguments.stream()
+            .allMatch(
+                arg ->
+                    arg instanceof IdentifierTree it
+                        && typeParamNames.contains(it.getName().toString()));
   }
 
   /**
