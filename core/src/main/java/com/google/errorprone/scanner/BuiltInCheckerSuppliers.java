@@ -171,6 +171,7 @@ import com.google.errorprone.bugpatterns.GetClassOnAnnotation;
 import com.google.errorprone.bugpatterns.GetClassOnClass;
 import com.google.errorprone.bugpatterns.GetClassOnEnum;
 import com.google.errorprone.bugpatterns.GuiceNestedCombine;
+import com.google.errorprone.bugpatterns.HashCodeInObjectsHash;
 import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.HidingField;
 import com.google.errorprone.bugpatterns.ICCProfileGetInstance;
@@ -1015,6 +1016,7 @@ public final class BuiltInCheckerSuppliers {
           FutureTransformAsync.class,
           GetClassOnEnum.class,
           GuiceNestedCombine.class,
+          HashCodeInObjectsHash.class,
           HidingField.class,
           ICCProfileGetInstance.class,
           IdentityHashMapUsage.class,
