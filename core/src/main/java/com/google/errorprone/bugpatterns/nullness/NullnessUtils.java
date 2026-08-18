@@ -210,7 +210,7 @@ public final class NullnessUtils {
     if (typeTree instanceof ParameterizedTypeTree ptt) {
       typeTree = ptt.getType();
     }
-    switch (typeTree.getKind()) {
+    return switch (typeTree.getKind()) {
       case ARRAY_TYPE -> {
         Tree beforeBrackets = typeTree;
         while (true) {
@@ -225,8 +225,7 @@ public final class NullnessUtils {
           }
         }
         // For an explanation of "int @Foo [][] f," etc., see JLS 4.11.
-        return nullableAnnotationToUse.fixPostfixingOnto(
-            beforeBrackets, state, suppressionToRemove);
+        yield nullableAnnotationToUse.fixPostfixingOnto(beforeBrackets, state, suppressionToRemove);
       }
       case MEMBER_SELECT -> {
         int lastDot =
@@ -235,19 +234,19 @@ public final class NullnessUtils {
                 .findFirst()
                 .get()
                 .pos();
-        return nullableAnnotationToUse.fixPostfixingOnto(lastDot, state, suppressionToRemove);
+        yield nullableAnnotationToUse.fixPostfixingOnto(lastDot, state, suppressionToRemove);
       }
-      case ANNOTATED_TYPE -> {
-        return nullableAnnotationToUse.fixPrefixingOnto(
-            ((AnnotatedTypeTree) typeTree).getAnnotations().getFirst(), state, suppressionToRemove);
-      }
-      case IDENTIFIER -> {
-        return nullableAnnotationToUse.fixPrefixingOnto(typeTree, state, suppressionToRemove);
-      }
+      case ANNOTATED_TYPE ->
+          nullableAnnotationToUse.fixPrefixingOnto(
+              ((AnnotatedTypeTree) typeTree).getAnnotations().getFirst(),
+              state,
+              suppressionToRemove);
+      case IDENTIFIER ->
+          nullableAnnotationToUse.fixPrefixingOnto(typeTree, state, suppressionToRemove);
       default ->
           throw new AssertionError(
               "unexpected kind for type tree: " + typeTree.getKind() + " for " + typeTree);
-    }
+    };
     // TODO(cpovirk): Remove any @NonNull, etc. annotation that is present?
   }
 

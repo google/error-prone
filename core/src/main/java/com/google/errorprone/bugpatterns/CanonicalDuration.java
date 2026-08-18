@@ -232,7 +232,7 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
 
   private Description handleAllZeros(
       VisitorState state, Api api, List<MethodInvocationTree> allInvocationsInParentExpression) {
-    switch (api) {
+    return switch (api) {
       case JODA -> {
         for (MethodInvocationTree tree : allInvocationsInParentExpression) {
           ExpressionTree receiver = getReceiver(tree);
@@ -255,14 +255,12 @@ public class CanonicalDuration extends BugChecker implements MethodInvocationTre
                   .addFix(fix)
                   .build());
         }
-        return NO_MATCH;
+        yield NO_MATCH;
       }
-      case JAVA -> {
-        // don't rewrite e.g. `ofMillis(0)` to `ofDays(0)`
-        return NO_MATCH;
-      }
-    }
-    throw new AssertionError(api);
+      case JAVA ->
+          // don't rewrite e.g. `ofMillis(0)` to `ofDays(0)`
+          NO_MATCH;
+    };
   }
 
   private static List<MethodInvocationTree> getAllInvocationsInParentExpression(

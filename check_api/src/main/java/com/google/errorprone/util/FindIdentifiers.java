@@ -464,7 +464,7 @@ public final class FindIdentifiers {
   }
 
   private static boolean isVisible(VarSymbol var, TreePath path) {
-    switch (var.getKind()) {
+    return switch (var.getKind()) {
       case ENUM_CONSTANT, FIELD -> {
         ImmutableList<ClassSymbol> enclosingClasses =
             StreamSupport.stream(path.spliterator(), false)
@@ -476,7 +476,7 @@ public final class FindIdentifiers {
         if (!var.isStatic()) {
           // Instance fields are not visible if we are in a static context...
           if (inStaticContext(path)) {
-            return false;
+            yield false;
           }
 
           // ... or if we're in a static nested class and the instance fields are declared outside
@@ -489,14 +489,14 @@ public final class FindIdentifiers {
               },
               (curr, unused) ->
                   curr instanceof ClassTree && ASTHelpers.getSymbol(curr).equals(var.owner))) {
-            return false;
+            yield false;
           }
         }
 
         // If we're lexically enclosed by the same class that defined var, we can access private
         // fields (JLS 6.6.1).
         if (enclosingClasses.contains(ASTHelpers.enclosingClass(var))) {
-          return true;
+          yield true;
         }
 
         PackageSymbol enclosingPackage = ((JCCompilationUnit) path.getCompilationUnit()).packge;
@@ -504,13 +504,13 @@ public final class FindIdentifiers {
         // If we're in the same package where var was defined, we can access package-private fields
         // (JLS 6.6.1).
         if (Objects.equals(enclosingPackage, ASTHelpers.enclosingPackage(var).orElse(null))) {
-          return !modifiers.contains(Modifier.PRIVATE);
+          yield !modifiers.contains(Modifier.PRIVATE);
         }
 
         // Otherwise we can only access public and protected fields (JLS 6.6.1, plus the fact
         // that the only enum constants and fields usable by simple name are either defined
         // in the enclosing class or a superclass).
-        return modifiers.contains(Modifier.PUBLIC) || modifiers.contains(Modifier.PROTECTED);
+        yield modifiers.contains(Modifier.PUBLIC) || modifiers.contains(Modifier.PROTECTED);
       }
       case PARAMETER, LOCAL_VARIABLE, BINDING_VARIABLE -> {
         // If we are in an anonymous inner class, lambda, or local class, any local variable or
@@ -525,16 +525,14 @@ public final class FindIdentifiers {
                     || (curr.getKind() == Kind.CLASS && parent instanceof BlockTree),
             (curr, unused) -> Objects.equals(var.owner, ASTHelpers.getSymbol(curr)))) {
           if (!isConsideredFinal(var)) {
-            return false;
+            yield false;
           }
         }
-        return true;
+        yield true;
       }
-      case EXCEPTION_PARAMETER, RESOURCE_VARIABLE -> {
-        return true;
-      }
+      case EXCEPTION_PARAMETER, RESOURCE_VARIABLE -> true;
       default -> throw new IllegalArgumentException("Unexpected variable type: " + var.getKind());
-    }
+    };
   }
 
   /** Returns true iff the leaf node of the {@code path} occurs in a JLS 8.3.1 static context. */
