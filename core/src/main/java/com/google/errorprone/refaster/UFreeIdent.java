@@ -17,6 +17,7 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
+import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.IdentifierTree;
@@ -47,6 +48,7 @@ public abstract class UFreeIdent extends UIdent {
   @Override
   public abstract StringName getName();
 
+  @Memoized
   public Key key() {
     return new Key(getName());
   }

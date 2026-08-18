@@ -17,6 +17,7 @@
 package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
+import com.google.auto.value.extension.memoized.Memoized;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.tools.javac.tree.JCTree.JCIdent;
@@ -44,7 +45,8 @@ abstract class ULocalVarIdent extends UIdent {
   @Override
   public abstract StringName getName();
 
-  private Key key() {
+  @Memoized
+  Key key() {
     return new Key(getName());
   }
 
