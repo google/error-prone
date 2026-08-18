@@ -163,7 +163,7 @@ catch unexpected enum types at compile-time instead of runtime.
 
 If the switch statement cannot [complete normally], the default should be
 deleted and its statements moved after the switch statement. The UNRECOGNIZED
-case should be added with a break.
+case should be added.
 
 If it can complete normally, the default should be merged with an added
 UNRECOGNIZED case.
