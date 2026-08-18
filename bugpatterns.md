@@ -872,6 +872,9 @@ Calling getClass() on an enum may return a subclass of the enum type
 __[GuiceNestedCombine](bugpattern/GuiceNestedCombine)__<br>
 Nesting Modules.combine() here is unnecessary.
 
+__[HashCodeInObjectsHash](bugpattern/HashCodeInObjectsHash)__<br>
+Calling hashCode() or Objects.hash() inside Objects.hash() is redundant; use Objects.hashCode() for single-argument calls.
+
 __[HidingField](bugpattern/HidingField)__<br>
 Hiding fields of superclasses may cause confusion and errors
 
