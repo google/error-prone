@@ -18,6 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Iterables.isEmpty;
+import static com.google.errorprone.matchers.ProtobufMatchers.DYNAMIC_MESSAGE_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.findMatchingMethods;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
@@ -247,13 +250,13 @@ public final class TypeCompatibility {
     // proto2-immutable: p.GeneratedMessage < p.AbstractMessage < p.Message
 
     // DynamicMessage is comparable to all other proto types.
-    Type dynamicMessage = COM_GOOGLE_PROTOBUF_DYNAMICMESSAGE.get(state);
+    Type dynamicMessage = DYNAMIC_MESSAGE_TYPE.get(state);
     if (isSameType(leftType, dynamicMessage, state)
         || isSameType(rightType, dynamicMessage, state)) {
       return false;
     }
 
-    Type protoBase = COM_GOOGLE_PROTOBUF_MESSAGE.get(state);
+    Type protoBase = MESSAGE_TYPE.get(state);
     if (isSameType(nearestCommonSupertype, protoBase, state)
         && !isSameType(leftType, protoBase, state)
         && !isSameType(rightType, protoBase, state)) {
@@ -276,7 +279,7 @@ public final class TypeCompatibility {
 
     // Otherwise, if these two types are *concrete* proto classes, but not the same message, then
     // consider them incompatible with each other.
-    Type messageLite = COM_GOOGLE_PROTOBUF_MESSAGELITE.get(state);
+    Type messageLite = MESSAGE_LITE_TYPE.get(state);
     return isSubtype(nearestCommonSupertype, messageLite, state)
         && isConcrete(leftType, state.getTypes())
         && isConcrete(rightType, state.getTypes());
@@ -391,15 +394,6 @@ public final class TypeCompatibility {
 
   private static final Supplier<Name> EQUALS =
       VisitorState.memoize(state -> state.getName("equals"));
-
-  private static final Supplier<Type> COM_GOOGLE_PROTOBUF_DYNAMICMESSAGE =
-      typeFromString("com.google.protobuf.DynamicMessage");
-
-  private static final Supplier<Type> COM_GOOGLE_PROTOBUF_MESSAGE =
-      typeFromString("com.google.protobuf.Message");
-
-  private static final Supplier<Type> COM_GOOGLE_PROTOBUF_MESSAGELITE =
-      typeFromString("com.google.protobuf.MessageLite");
 
   private static final Supplier<Type> JAVA_UTIL_COLLECTION = typeFromString("java.util.Collection");
 }

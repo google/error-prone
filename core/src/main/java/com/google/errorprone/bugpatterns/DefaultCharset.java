@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.toType;
+import static com.google.errorprone.matchers.ProtobufMatchers.BYTE_STRING_CLASS;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -152,7 +153,7 @@ public class DefaultCharset extends BugChecker
               .withParametersOfType(Suppliers.typeFromClass(InputStream.class)));
 
   private static final Matcher<ExpressionTree> BYTESTRING_COPY_FROM =
-      staticMethod().onClass("com.google.protobuf.ByteString").named("copyFrom");
+      staticMethod().onClass(BYTE_STRING_CLASS).named("copyFrom");
 
   private static final Matcher<ExpressionTree> STRING_GET_BYTES =
       instanceMethod().onExactClass(String.class.getName()).named("getBytes").withNoParameters();

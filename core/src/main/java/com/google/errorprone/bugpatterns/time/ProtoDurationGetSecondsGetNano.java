@@ -17,7 +17,8 @@ package com.google.errorprone.bugpatterns.time;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.time.NearbyCallers.containsCallToSameReceiverNearby;
-import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_DURATION_CLASS;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -44,16 +45,16 @@ import com.sun.source.tree.MethodInvocationTree;
 public final class ProtoDurationGetSecondsGetNano extends BugChecker
     implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> GET_SECONDS =
-      instanceMethod().onExactClass("com.google.protobuf.Duration").named("getSeconds");
-  private static final Matcher<ExpressionTree> GET_NANOS =
-      instanceMethod().onExactClass("com.google.protobuf.Duration").named("getNanos");
+  private static final Matcher<ExpressionTree> PROTO_DURATION_GET_SECONDS =
+      instanceMethod().onExactClass(PROTO_DURATION_CLASS).named("getSeconds");
+  private static final Matcher<ExpressionTree> PROTO_DURATION_GET_NANOS =
+      instanceMethod().onExactClass(PROTO_DURATION_CLASS).named("getNanos");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (GET_NANOS.matches(tree, state)) {
+    if (PROTO_DURATION_GET_NANOS.matches(tree, state)) {
       if (!containsCallToSameReceiverNearby(
-          tree, GET_SECONDS, state, /* checkProtoChains= */ true)) {
+          tree, PROTO_DURATION_GET_SECONDS, state, /* checkProtoChains= */ true)) {
         return describeMatch(tree);
       }
     }

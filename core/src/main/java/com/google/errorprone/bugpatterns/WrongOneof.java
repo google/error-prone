@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
+import static com.google.errorprone.matchers.ProtobufMatchers.IS_ONEOF_ENUM;
 import static com.google.errorprone.util.ASTHelpers.enumValues;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -37,7 +37,6 @@ import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions.ConstantExpression;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.predicates.TypePredicate;
 import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -56,8 +55,6 @@ import javax.inject.Inject;
     summary = "This field is guaranteed not to be set given it's within a switch over a one_of.")
 public final class WrongOneof extends BugChecker
     implements SwitchTreeMatcher, SwitchExpressionTreeMatcher {
-  private static final TypePredicate ONE_OF_ENUM =
-      isDescendantOf("com.google.protobuf.AbstractMessageLite.InternalOneOfEnum");
 
   private final ConstantExpressions constantExpressions;
 
@@ -77,10 +74,10 @@ public final class WrongOneof extends BugChecker
   }
 
   private Description handle(ExpressionTree e, List<? extends CaseTree> cases, VisitorState state) {
-    if (!ONE_OF_ENUM.apply(getType(e), state)) {
+    ExpressionTree expression = stripParentheses(e);
+    if (!IS_ONEOF_ENUM.apply(getType(expression), state)) {
       return NO_MATCH;
     }
-    ExpressionTree expression = stripParentheses(e);
     if (!(expression instanceof MethodInvocationTree)) {
       return NO_MATCH;
     }

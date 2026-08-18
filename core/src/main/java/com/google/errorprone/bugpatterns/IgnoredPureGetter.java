@@ -17,7 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MUTABLE_MESSAGE_LITE_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -32,14 +33,12 @@ import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 import javax.inject.Inject;
 
@@ -51,12 +50,6 @@ import javax.inject.Inject;
             + " is no point in calling them if the return value is ignored. While there are no"
             + " side effects from the getter, the receiver may have side effects.")
 public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
-
-  private static final Supplier<Type> MESSAGE_LITE =
-      typeFromString("com.google.protobuf.MessageLite");
-
-  private static final Supplier<Type> MUTABLE_MESSAGE_LITE =
-      typeFromString("com.google.protobuf.MutableMessageLite");
 
   @Inject
   IgnoredPureGetter(ConstantExpressions constantExpressions) {
@@ -128,8 +121,8 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
     }
 
     try {
-      if (isSubtype(owner.type, MESSAGE_LITE.get(state), state)
-          && !isSubtype(owner.type, MUTABLE_MESSAGE_LITE.get(state), state)) {
+      if (isSubtype(owner.type, MESSAGE_LITE_TYPE.get(state), state)
+          && !isSubtype(owner.type, MUTABLE_MESSAGE_LITE_TYPE.get(state), state)) {
         return Optional.of(PureGetterKind.PROTO);
       }
     } catch (Symbol.CompletionFailure ignore) {

@@ -20,7 +20,7 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_BUILDER_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getReturnType;
@@ -43,7 +43,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.WellKnownKeep;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ExpressionTree;
@@ -96,9 +95,6 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
           "dagger.producers.ProductionSubcomponent.Builder"
           // keep-sorted end
           );
-
-  private static final Supplier<Type> PROTO_BUILDER =
-      typeFromString("com.google.protobuf.MessageLite.Builder");
 
   private static final ImmutableSet<String> BANNED_METHOD_PREFIXES =
       ImmutableSet.of("get", "is", "has", "new", "clone", "copy");
@@ -222,7 +218,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   }
 
   private static boolean isMethodHandledByCrvLogic(MethodSymbol methodSymbol, VisitorState state) {
-    if (isSubtype(methodSymbol.owner.type, PROTO_BUILDER.get(state), state)) {
+    if (isSubtype(methodSymbol.owner.type, MESSAGE_LITE_BUILDER_TYPE.get(state), state)) {
       return true;
     }
 

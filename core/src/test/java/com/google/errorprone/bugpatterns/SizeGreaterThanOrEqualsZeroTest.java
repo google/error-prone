@@ -270,4 +270,44 @@ public class SizeGreaterThanOrEqualsZeroNegativeCases {
 """)
         .doTest();
   }
+
+  @Test
+  public void protoOrBuilderCount_flagEnabled() {
+    compilationHelper
+        .addSourceLines(
+            "TestProtoOrBuilder.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessageOrBuilder;
+
+            public class TestProtoOrBuilder {
+              public boolean test(TestProtoMessageOrBuilder orBld) {
+                // BUG: Diagnostic contains: !orBld.getMultiFieldList().isEmpty()
+                return orBld.getMultiFieldCount() >= 0;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void protoOrBuilderCount_flagDisabled() {
+    compilationHelper
+        .setArgs("-XepOpt:SizeGreaterThanOrEqualsZero:CheckLiteProtos=false")
+        .addSourceLines(
+            "TestProtoOrBuilder.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessageOrBuilder;
+
+            public class TestProtoOrBuilder {
+              public boolean test(TestProtoMessageOrBuilder orBld) {
+                return orBld.getMultiFieldCount() >= 0;
+              }
+            }
+            """)
+        .doTest();
+  }
 }

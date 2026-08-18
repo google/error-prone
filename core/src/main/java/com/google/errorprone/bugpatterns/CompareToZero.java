@@ -19,6 +19,8 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_DURATIONS_UTIL_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIMESTAMPS_UTIL_CLASS;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
@@ -88,8 +90,8 @@ public final class CompareToZero extends BugChecker implements MethodInvocationT
                   "com.google.common.primitives.UnsignedBytes",
                   "com.google.common.primitives.UnsignedInts",
                   "com.google.common.primitives.UnsignedLongs",
-                  "com.google.protobuf.util.Durations",
-                  "com.google.protobuf.util.Timestamps",
+                  PROTO_DURATIONS_UTIL_CLASS,
+                  PROTO_TIMESTAMPS_UTIL_CLASS,
                   "java.lang.Boolean",
                   "java.lang.Byte",
                   "java.lang.Character",

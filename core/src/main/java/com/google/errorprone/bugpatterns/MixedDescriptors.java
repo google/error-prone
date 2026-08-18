@@ -18,6 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.ProtobufMatchers.DESCRIPTOR_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_TYPE;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
@@ -30,8 +33,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
@@ -39,7 +40,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
-import com.sun.tools.javac.code.Type;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,15 +57,10 @@ import java.util.Optional;
 public final class MixedDescriptors extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> GET_DESCRIPTOR =
-      staticMethod().onDescendantOf("com.google.protobuf.Message").named("getDescriptor");
+      staticMethod().onDescendantOf(MESSAGE_CLASS).named("getDescriptor");
 
   private static final Matcher<ExpressionTree> FIND_FIELD =
-      instanceMethod()
-          .onDescendantOf("com.google.protobuf.Descriptors.Descriptor")
-          .named("findFieldByNumber");
-
-  private static final Supplier<Type> MESSAGE =
-      Suppliers.typeFromString("com.google.protobuf.Message");
+      instanceMethod().onDescendantOf(DESCRIPTOR_CLASS).named("findFieldByNumber");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -108,7 +103,7 @@ public final class MixedDescriptors extends BugChecker implements MethodInvocati
     Symbol symbol = getSymbol(tree);
     if (symbol != null
         && symbol.owner instanceof ClassSymbol
-        && isSubtype(symbol.owner.type, MESSAGE.get(state), state)) {
+        && isSubtype(symbol.owner.type, MESSAGE_TYPE.get(state), state)) {
       return Optional.of(symbol.owner.type.tsym);
     }
     return Optional.empty();

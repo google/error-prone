@@ -650,4 +650,43 @@ public class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void protoOrBuilder_flagEnabled() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessageOrBuilder;
+
+            public class Test {
+              public void test(TestProtoMessageOrBuilder orBld) {
+                // BUG: Diagnostic contains: orBld.hasMessage()
+                if (orBld.getMessage() != null) {}
+                // BUG: Diagnostic contains: !orBld.getMultiFieldList().isEmpty()
+                if (orBld.getMultiFieldList() != null) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void protoOrBuilder_flagDisabled() {
+    compilationHelper
+        .setArgs("-XepOpt:ImpossibleNullComparison:CheckOrBuilder=false")
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessageOrBuilder;
+
+            public class Test {
+              public void test(TestProtoMessageOrBuilder orBld) {
+                if (orBld.getMessage() != null) {}
+                if (orBld.getMultiFieldList() != null) {}
+              }
+            }
+            """)
+        .doTest();
+  }
 }

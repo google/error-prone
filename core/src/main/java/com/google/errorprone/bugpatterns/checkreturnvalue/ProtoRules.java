@@ -17,6 +17,8 @@
 package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_BUILDER_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.MUTABLE_MESSAGE_LITE_CLASS;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOfAny;
 
 import com.google.common.collect.ImmutableSet;
@@ -40,8 +42,7 @@ public final class ProtoRules {
    */
   public static ResultUseRule<VisitorState, Symbol> protoBuilders() {
     return new ProtoRule(
-        isDescendantOfAny(ImmutableSet.of("com.google.protobuf.MessageLite.Builder")),
-        "PROTO_BUILDER");
+        isDescendantOfAny(ImmutableSet.of(MESSAGE_LITE_BUILDER_CLASS)), "PROTO_BUILDER");
   }
 
   /**
@@ -50,8 +51,7 @@ public final class ProtoRules {
    */
   public static ResultUseRule<VisitorState, Symbol> mutableProtos() {
     return new ProtoRule(
-        isDescendantOfAny(ImmutableSet.of("com.google.protobuf.MutableMessageLite")),
-        "MUTABLE_PROTO");
+        isDescendantOfAny(ImmutableSet.of(MUTABLE_MESSAGE_LITE_CLASS)), "MUTABLE_PROTO");
   }
 
   // TODO(cgdecker): Move proto rules from IgnoredPureGetter and ReturnValueIgnored here
