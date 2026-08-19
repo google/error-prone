@@ -77,20 +77,26 @@ public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
     }
   }
 
+  private static final int DEFAULT_EXPECTED_SIZE = 4;
+
   private final Map<Key<?>, Object> contents;
 
   public static Bindings create() {
-    return new Bindings();
+    return createWithExpectedSize(DEFAULT_EXPECTED_SIZE);
+  }
+
+  public static Bindings createWithExpectedSize(int expectedSize) {
+    return new Bindings(expectedSize);
   }
 
   public static <V> Bindings create(Key<V> key, V value) {
-    Bindings result = create();
+    Bindings result = createWithExpectedSize(1);
     result.putBinding(key, value);
     return result;
   }
 
   public static <V1, V2> Bindings create(Key<V1> key1, V1 value1, Key<V2> key2, V2 value2) {
-    Bindings result = create();
+    Bindings result = createWithExpectedSize(2);
     result.putBinding(key1, value1);
     result.putBinding(key2, value2);
     return result;
@@ -101,11 +107,18 @@ public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
   }
 
   private Bindings() {
-    this(new HashMap<>());
+    this(DEFAULT_EXPECTED_SIZE);
+  }
+
+  private Bindings(int expectedSize) {
+    this(Maps.newHashMapWithExpectedSize(expectedSize));
   }
 
   Bindings(Bindings bindings) {
-    this(Maps.newHashMap(bindings.contents));
+    this(
+        bindings.contents.isEmpty()
+            ? Maps.newHashMapWithExpectedSize(DEFAULT_EXPECTED_SIZE)
+            : new HashMap<>(bindings.contents));
   }
 
   private Bindings(Map<Key<?>, Object> contents) {
