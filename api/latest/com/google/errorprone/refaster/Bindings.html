@@ -60,16 +60,17 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#create()" tabindex="0">create()</a></li>
-<li><a href="#createWithExpectedSize(int)" tabindex="0">createWithExpectedSize(int)</a></li>
-<li><a href="#create(com.google.errorprone.refaster.Bindings.Key,V)" tabindex="0">create(Bindings.Key, V)</a></li>
-<li><a href="#create(com.google.errorprone.refaster.Bindings.Key,V1,com.google.errorprone.refaster.Bindings.Key,V2)" tabindex="0">create(Bindings.Key, V1, Bindings.Key, V2)</a></li>
 <li><a href="#create(com.google.errorprone.refaster.Bindings)" tabindex="0">create(Bindings)</a></li>
-<li><a href="#delegate()" tabindex="0">delegate()</a></li>
+<li><a href="#isEmpty()" tabindex="0">isEmpty()</a></li>
+<li><a href="#containsKey(com.google.errorprone.refaster.Bindings.Key)" tabindex="0">containsKey(Bindings.Key)</a></li>
 <li><a href="#getBinding(com.google.errorprone.refaster.Bindings.Key)" tabindex="0">getBinding(Bindings.Key)</a></li>
 <li><a href="#putBinding(com.google.errorprone.refaster.Bindings.Key,V)" tabindex="0">putBinding(Bindings.Key, V)</a></li>
-<li><a href="#put(com.google.errorprone.refaster.Bindings.Key,java.lang.Object)" tabindex="0">put(Bindings.Key, Object)</a></li>
-<li><a href="#putAll(java.util.Map)" tabindex="0">putAll(Map)</a></li>
-<li><a href="#unmodifiable()" tabindex="0">unmodifiable()</a></li>
+<li><a href="#clearBinding(com.google.errorprone.refaster.Bindings.Key)" tabindex="0">clearBinding(Bindings.Key)</a></li>
+<li><a href="#forEach(java.util.function.BiConsumer)" tabindex="0">forEach(BiConsumer)</a></li>
+<li><a href="#hasBindingForLocalVar(com.sun.tools.javac.code.Symbol)" tabindex="0">hasBindingForLocalVar(Symbol)</a></li>
+<li><a href="#hasFreeIdentMatching(java.util.function.Predicate)" tabindex="0">hasFreeIdentMatching(Predicate)</a></li>
+<li><a href="#asMap()" tabindex="0">asMap()</a></li>
+<li><a href="#toString()" tabindex="0">toString()</a></li>
 </ol>
 </li>
 </ol>
@@ -80,23 +81,18 @@ loadScripts(document, 'script');</script>
 <h1 title="Class Bindings" class="title">Class Bindings</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance">com.google.common.collect.ForwardingObject
-<div class="inheritance">com.google.common.collect.ForwardingMap&lt;<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;
 <div class="inheritance">com.google.errorprone.refaster.Bindings</div>
 </div>
-</div>
-</div>
 <section class="class-description" id="class-description">
-<dl class="notes">
-<dt>All Implemented Interfaces:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></dd>
-</dl>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Bindings</span>
-<span class="extends-implements">extends com.google.common.collect.ForwardingMap&lt;<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span></div>
-<div class="block">A type-safe map from objects of type <code>Bindings.Key&lt;V&gt;</code>, which consist of a <code>String</code>
-key and a <code>Bindings.Key</code> subclass, to values of type <code>V</code>.</div>
+<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">A type-safe binding environment mapping <code>Bindings.Key&lt;V&gt;</code> keys to values of type <code>V</code>.
+
+<p>Bindings are represented as a persistent linked chain. Adding a binding creates a new <code>Bindings.Node</code> pointing to the current head as its parent, and lookups traverse parent references towards
+the root, naturally shadowing earlier bindings for the same key. Forking a <code>Bindings</code>
+instance shares the underlying node chain with zero entry copying.</div>
 <dl class="notes">
 <dt>Author:</dt>
 <dd>Louis Wasserman</dd>
@@ -120,12 +116,6 @@ key and a <code>Bindings.Key</code> subclass, to values of type <code>V</code>.<
 <div class="block">A key type for a <code>Binding</code>.</div>
 </div>
 </div>
-<div class="inherited-list">
-<h3 id="nested-classes-inherited-from-class-com.google.common.collect.ForwardingMap">Nested classes/interfaces inherited from class&nbsp;com.google.common.collect.ForwardingMap</h3>
-<code>com.google.common.collect.ForwardingMap.StandardEntrySet, com.google.common.collect.ForwardingMap.StandardKeySet, com.google.common.collect.ForwardingMap.StandardValues</code></div>
-<div class="inherited-list">
-<h3 id="nested-classes-inherited-from-class-java.util.Map">Nested classes/interfaces inherited from interface&nbsp;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#nested-class-summary" title="class or interface in java.util" class="external-link">Map</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.Entry.html" title="class or interface in java.util" class="external-link">Map.Entry</a>&lt;K,<wbr>V&gt;</code></div>
 </section>
 </li>
 <!-- ========== METHOD SUMMARY =========== -->
@@ -139,60 +129,49 @@ key and a <code>Bindings.Key</code> subclass, to values of type <code>V</code>.<
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#create(com.google.errorprone.refaster.Bindings)" class="member-name-link">create</a><wbr>(<a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a>&nbsp;bindings)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;V&gt;&nbsp;<a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#create(com.google.errorprone.refaster.Bindings.Key,V)" class="member-name-link">create</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key,
- V&nbsp;value)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;V1,<wbr>V2&gt;&nbsp;<a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#create(com.google.errorprone.refaster.Bindings.Key,V1,com.google.errorprone.refaster.Bindings.Key,V2)" class="member-name-link">create</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V1&gt;&nbsp;key1,
- V1&nbsp;value1,
- <a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V2&gt;&nbsp;key2,
- V2&nbsp;value2)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createWithExpectedSize(int)" class="member-name-link">createWithExpectedSize</a><wbr>(int&nbsp;expectedSize)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#delegate()" class="member-name-link">delegate</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableMap<wbr>&lt;<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#asMap()" class="member-name-link">asMap</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearBinding(com.google.errorprone.refaster.Bindings.Key)" class="member-name-link">clearBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;&nbsp;key)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;V</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#containsKey(com.google.errorprone.refaster.Bindings.Key)" class="member-name-link">containsKey</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;&nbsp;key)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#create(com.google.errorprone.refaster.Bindings)" class="member-name-link">create</a><wbr>(<a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a>&nbsp;bindings)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#forEach(java.util.function.BiConsumer)" class="member-name-link">forEach</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/BiConsumer.html" title="class or interface in java.util.function" class="external-link">BiConsumer</a>&lt;? super <a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;action)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;@Nullable V</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBinding(com.google.errorprone.refaster.Bindings.Key)" class="member-name-link">getBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#put(com.google.errorprone.refaster.Bindings.Key,java.lang.Object)" class="member-name-link">put</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;&nbsp;key,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasBindingForLocalVar(com.sun.tools.javac.code.Symbol)" class="member-name-link">hasBindingForLocalVar</a><wbr>(@Nullable com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#putAll(java.util.Map)" class="member-name-link">putAll</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;? extends <a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, ? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;map)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasFreeIdentMatching(java.util.function.Predicate)" class="member-name-link">hasFreeIdentMatching</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;com.sun.tools.javac.tree.JCTree.JCExpression&gt;&nbsp;predicate)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;V</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#putBinding(com.google.errorprone.refaster.Bindings.Key,V)" class="member-name-link">putBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEmpty()" class="member-name-link">isEmpty</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;V</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#putBinding(com.google.errorprone.refaster.Bindings.Key,V)" class="member-name-link">putBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key,
  V&nbsp;value)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unmodifiable()" class="member-name-link">unmodifiable</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.google.common.collect.ForwardingMap">Methods inherited from class&nbsp;com.google.common.collect.ForwardingMap</h3>
-<code>clear, containsKey, containsValue, entrySet, equals, get, hashCode, isEmpty, keySet, remove, size, standardClear, standardContainsKey, standardContainsValue, standardEquals, standardHashCode, standardIsEmpty, standardPutAll, standardRemove, standardToString, values</code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.google.common.collect.ForwardingObject">Methods inherited from class&nbsp;com.google.common.collect.ForwardingObject</h3>
-<code>toString</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
-<div class="inherited-list">
-<h3 id="methods-inherited-from-class-java.util.Map">Methods inherited from interface&nbsp;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#method-summary" title="class or interface in java.util" class="external-link">Map</a></h3>
-<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#compute(K,java.util.function.BiFunction)" title="class or interface in java.util" class="external-link">compute</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#computeIfAbsent(K,java.util.function.Function)" title="class or interface in java.util" class="external-link">computeIfAbsent</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#computeIfPresent(K,java.util.function.BiFunction)" title="class or interface in java.util" class="external-link">computeIfPresent</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#forEach(java.util.function.BiConsumer)" title="class or interface in java.util" class="external-link">forEach</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#getOrDefault(java.lang.Object,V)" title="class or interface in java.util" class="external-link">getOrDefault</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#merge(K,V,java.util.function.BiFunction)" title="class or interface in java.util" class="external-link">merge</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#putIfAbsent(K,V)" title="class or interface in java.util" class="external-link">putIfAbsent</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#remove(java.lang.Object,java.lang.Object)" title="class or interface in java.util" class="external-link">remove</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#replace(K,V)" title="class or interface in java.util" class="external-link">replace</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#replace(K,V,V)" title="class or interface in java.util" class="external-link">replace</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#replaceAll(java.util.function.BiFunction)" title="class or interface in java.util" class="external-link">replaceAll</a></code></div>
+<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
 </li>
 </ul>
@@ -213,34 +192,6 @@ key and a <code>Bindings.Key</code> subclass, to values of type <code>V</code>.<
 </section>
 </li>
 <li>
-<section class="detail" id="createWithExpectedSize(int)">
-<h3>createWithExpectedSize</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></span>&nbsp;<span class="element-name">createWithExpectedSize</span><wbr><span class="parameters">(int&nbsp;expectedSize)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="create(com.google.errorprone.refaster.Bindings.Key,V)">
-<h3 id="create(com.google.errorprone.refaster.Bindings.Key,java.lang.Object)">create</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;V&gt;</span>&nbsp;<span class="return-type"><a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></span>&nbsp;<span class="element-name">create</span><wbr><span class="parameters">(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key,
- V&nbsp;value)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="create(com.google.errorprone.refaster.Bindings.Key,V1,com.google.errorprone.refaster.Bindings.Key,V2)">
-<h3 id="create(com.google.errorprone.refaster.Bindings.Key,java.lang.Object,com.google.errorprone.refaster.Bindings.Key,java.lang.Object)">create</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;V1,<wbr>V2&gt;</span>&nbsp;<span class="return-type"><a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></span>&nbsp;<span class="element-name">create</span><wbr><span class="parameters">(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V1&gt;&nbsp;key1,
- V1&nbsp;value1,
- <a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V2&gt;&nbsp;key2,
- V2&nbsp;value2)</span></div>
-</div>
-</section>
-</li>
-<li>
 <section class="detail" id="create(com.google.errorprone.refaster.Bindings)">
 <h3>create</h3>
 <div class="horizontal-scroll">
@@ -249,14 +200,18 @@ key and a <code>Bindings.Key</code> subclass, to values of type <code>V</code>.<
 </section>
 </li>
 <li>
-<section class="detail" id="delegate()">
-<h3>delegate</h3>
+<section class="detail" id="isEmpty()">
+<h3>isEmpty</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span>&nbsp;<span class="element-name">delegate</span>()</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>delegate</code>&nbsp;in class&nbsp;<code>com.google.common.collect.ForwardingMap&lt;<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></dd>
-</dl>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isEmpty</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="containsKey(com.google.errorprone.refaster.Bindings.Key)">
+<h3>containsKey</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">containsKey</span><wbr><span class="parameters">(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;&nbsp;key)</span></div>
 </div>
 </section>
 </li>
@@ -264,7 +219,7 @@ key and a <code>Bindings.Key</code> subclass, to values of type <code>V</code>.<
 <section class="detail" id="getBinding(com.google.errorprone.refaster.Bindings.Key)">
 <h3>getBinding</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;V&gt;</span>&nbsp;<span class="return-type">V</span>&nbsp;<span class="element-name">getBinding</span><wbr><span class="parameters">(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;V&gt;</span>&nbsp;<span class="return-type">@Nullable V</span>&nbsp;<span class="element-name">getBinding</span><wbr><span class="parameters">(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key)</span></div>
 </div>
 </section>
 </li>
@@ -279,40 +234,54 @@ key and a <code>Bindings.Key</code> subclass, to values of type <code>V</code>.<
 </section>
 </li>
 <li>
-<section class="detail" id="put(com.google.errorprone.refaster.Bindings.Key,java.lang.Object)">
-<h3>put</h3>
+<section class="detail" id="clearBinding(com.google.errorprone.refaster.Bindings.Key)">
+<h3>clearBinding</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="annotations"><a href="../annotations/CanIgnoreReturnValue.html" title="annotation interface in com.google.errorprone.annotations">@CanIgnoreReturnValue</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">put</span><wbr><span class="parameters">(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;&nbsp;key,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#put(K,V)" title="class or interface in java.util" class="external-link">put</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></dd>
-<dt>Overrides:</dt>
-<dd><code>put</code>&nbsp;in class&nbsp;<code>com.google.common.collect.ForwardingMap&lt;<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></dd>
-</dl>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearBinding</span><wbr><span class="parameters">(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;&nbsp;key)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="putAll(java.util.Map)">
-<h3>putAll</h3>
+<section class="detail" id="forEach(java.util.function.BiConsumer)">
+<h3>forEach</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">putAll</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;? extends <a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, ? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;map)</span></div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html#putAll(java.util.Map)" title="class or interface in java.util" class="external-link">putAll</a></code>&nbsp;in interface&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></dd>
-<dt>Overrides:</dt>
-<dd><code>putAll</code>&nbsp;in class&nbsp;<code>com.google.common.collect.ForwardingMap&lt;<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></dd>
-</dl>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">forEach</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/BiConsumer.html" title="class or interface in java.util.function" class="external-link">BiConsumer</a>&lt;? super <a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&nbsp;action)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="unmodifiable()">
-<h3>unmodifiable</h3>
+<section class="detail" id="hasBindingForLocalVar(com.sun.tools.javac.code.Symbol)">
+<h3>hasBindingForLocalVar</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></span>&nbsp;<span class="element-name">unmodifiable</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasBindingForLocalVar</span><wbr><span class="parameters">(@Nullable com.sun.tools.javac.code.Symbol&nbsp;symbol)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="hasFreeIdentMatching(java.util.function.Predicate)">
+<h3>hasFreeIdentMatching</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasFreeIdentMatching</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;com.sun.tools.javac.tree.JCTree.JCExpression&gt;&nbsp;predicate)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="asMap()">
+<h3>asMap</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableMap&lt;<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span>&nbsp;<span class="element-name">asMap</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="toString()">
+<h3>toString</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toString</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a></code>&nbsp;in class&nbsp;<code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></dd>
+</dl>
 </div>
 </section>
 </li>

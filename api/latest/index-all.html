@@ -988,6 +988,8 @@ groups.</div>
 <dd>
 <div class="block">Converts the given attribute to an integer value.</div>
 </dd>
+<dt><a href="com/google/errorprone/refaster/Bindings.html#asMap()" class="member-name-link">asMap()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Inliner.html#asName(java.lang.CharSequence)" class="member-name-link">asName(CharSequence)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/argumentselectiondefects/AssertEqualsArgumentOrderChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">AssertEqualsArgumentOrderChecker</a> - Class in <a href="com/google/errorprone/bugpatterns/argumentselectiondefects/package-summary.html">com.google.errorprone.bugpatterns.argumentselectiondefects</a></dt>
@@ -1361,8 +1363,7 @@ Optional.empty()</code> if the AST node doesn't correspond to a 'simple' lock ex
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Bindings.html" class="type-name-link" title="class in com.google.errorprone.refaster">Bindings</a> - Class in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
 <dd>
-<div class="block">A type-safe map from objects of type <code>Bindings.Key&lt;V&gt;</code>, which consist of a <code>String</code>
-key and a <code>Bindings.Key</code> subclass, to values of type <code>V</code>.</div>
+<div class="block">A type-safe binding environment mapping <code>Bindings.Key&lt;V&gt;</code> keys to values of type <code>V</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/refaster/Bindings.Key.html" class="type-name-link" title="class in com.google.errorprone.refaster">Bindings.Key&lt;V&gt;</a> - Class in <a href="com/google/errorprone/refaster/package-summary.html">com.google.errorprone.refaster</a></dt>
 <dd>
@@ -2114,6 +2115,8 @@ strictly.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.MemberDiff.Builder.html#clear()" class="member-name-link">clear()</a> - Method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.MemberDiff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.MemberDiff.Builder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/refaster/Bindings.html#clearBinding(com.google.errorprone.refaster.Bindings.Key)" class="member-name-link">clearBinding(Bindings.Key)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Unifier.html#clearBinding(com.google.errorprone.refaster.Bindings.Key)" class="member-name-link">clearBinding(Bindings.Key)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.Diff.Builder.html#clearClassDiff()" class="member-name-link">clearClassDiff()</a> - Method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.Diff.Builder.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.Diff.Builder</a></dt>
@@ -2625,6 +2628,8 @@ and returning <code>true</code> if any match is found.</div>
 <dd>
 <div class="block">Returns whether the given <code>tree</code> contains any comments in its source.</div>
 </dd>
+<dt><a href="com/google/errorprone/refaster/Bindings.html#containsKey(com.google.errorprone.refaster.Bindings.Key)" class="member-name-link">containsKey(Bindings.Key)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/argumentselectiondefects/NamedParameterComment.html#containsSyntheticParameterName(com.sun.tools.javac.code.Symbol.MethodSymbol)" class="member-name-link">containsSyntheticParameterName(Symbol.MethodSymbol)</a> - Static method in class com.google.errorprone.bugpatterns.argumentselectiondefects.<a href="com/google/errorprone/bugpatterns/argumentselectiondefects/NamedParameterComment.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">NamedParameterComment</a></dt>
 <dd>
 <div class="block">Returns true if the method has synthetic parameter names, indicating the real names are not
@@ -2713,10 +2718,6 @@ inlined as an identifier.</div>
 <dt><a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.Token.Kind.html#create(com.google.errorprone.matchers.method.MethodInvocationMatcher.MethodKind)" class="member-name-link">create(MethodInvocationMatcher.MethodKind)</a> - Static method in record class com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/MethodInvocationMatcher.Token.Kind.html" title="class in com.google.errorprone.matchers.method">MethodInvocationMatcher.Token.Kind</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Bindings.html#create(com.google.errorprone.refaster.Bindings)" class="member-name-link">create(Bindings)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/refaster/Bindings.html#create(com.google.errorprone.refaster.Bindings.Key,V)" class="member-name-link">create(Bindings.Key, V)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/refaster/Bindings.html#create(com.google.errorprone.refaster.Bindings.Key,V1,com.google.errorprone.refaster.Bindings.Key,V2)" class="member-name-link">create(Bindings.Key, V1, Bindings.Key, V2)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UMethodIdent.html#create(com.google.errorprone.refaster.UClassIdent,java.lang.CharSequence,com.google.errorprone.refaster.UType)" class="member-name-link">create(UClassIdent, CharSequence, UType)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UMethodIdent.html" title="class in com.google.errorprone.refaster">UMethodIdent</a></dt>
 <dd>&nbsp;</dd>
@@ -2874,8 +2875,6 @@ empty result for <a href="com/google/errorprone/StatisticsCollector.html#counter
 <dd>
 <div class="block">Returns a template based on a method.</div>
 </dd>
-<dt><a href="com/google/errorprone/refaster/Bindings.html#createWithExpectedSize(int)" class="member-name-link">createWithExpectedSize(int)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/BugPattern.LinkType.html#CUSTOM" class="member-name-link">CUSTOM</a> - Enum constant in enum class com.google.errorprone.<a href="com/google/errorprone/BugPattern.LinkType.html" title="enum class in com.google.errorprone">BugPattern.LinkType</a></dt>
 <dd>
 <div class="block">Custom string.</div>
@@ -3014,8 +3013,6 @@ expression is not equal to another expression with this <code>Nullness</code>.</
 <dd>
 <div class="block">Creates an instance of a <code>DefinedIn</code> record class.</div>
 </dd>
-<dt><a href="com/google/errorprone/refaster/Bindings.html#delegate()" class="member-name-link">delegate()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#delete(com.google.errorprone.fixes.ErrorPronePosition)" class="member-name-link">delete(ErrorPronePosition)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.html#delete(com.google.errorprone.fixes.ErrorPronePosition)" class="member-name-link">delete(ErrorPronePosition)</a> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
@@ -4537,6 +4534,8 @@ checks for Annotations of type <code>T</code>.</div>
 <dd>
 <div class="block">Generates the <a href="com/google/errorprone/SuppressionInfo.html" title="class in com.google.errorprone"><code>SuppressionInfo</code></a> for a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a>.</div>
 </dd>
+<dt><a href="com/google/errorprone/refaster/Bindings.html#forEach(java.util.function.BiConsumer)" class="member-name-link">forEach(BiConsumer)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ForEachIterable.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ForEachIterable</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
@@ -6239,6 +6238,8 @@ constructors.</div>
 <div class="block">Matches an Annotation AST node if the argument to the annotation with the given name has a
 value which matches the given matcher.</div>
 </dd>
+<dt><a href="com/google/errorprone/refaster/Bindings.html#hasBindingForLocalVar(com.sun.tools.javac.code.Symbol)" class="member-name-link">hasBindingForLocalVar(Symbol)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/CompileTimeConstantExpressionMatcher.html#hasCompileTimeConstantAnnotation(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Symbol)" class="member-name-link">hasCompileTimeConstantAnnotation(VisitorState, Symbol)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/CompileTimeConstantExpressionMatcher.html" title="class in com.google.errorprone.matchers">CompileTimeConstantExpressionMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/NullnessUtils.html#hasDefinitelyNullBranch(com.sun.source.tree.ExpressionTree,java.util.Set,com.google.common.collect.ImmutableSet,com.google.errorprone.VisitorState)" class="member-name-link">hasDefinitelyNullBranch(ExpressionTree, Set, ImmutableSet, VisitorState)</a> - Static method in class com.google.errorprone.bugpatterns.nullness.<a href="com/google/errorprone/bugpatterns/nullness/NullnessUtils.html" title="class in com.google.errorprone.bugpatterns.nullness">NullnessUtils</a></dt>
@@ -6282,6 +6283,8 @@ its type.</div>
 <dd>
 <div class="block">Returns whether the given tree has an explicit source code representation.</div>
 </dd>
+<dt><a href="com/google/errorprone/refaster/Bindings.html#hasFreeIdentMatching(java.util.function.Predicate)" class="member-name-link">hasFreeIdentMatching(Predicate)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/BugCheckerInfo.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.Reason.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.Reason.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker.Reason</a></dt>
@@ -7443,6 +7446,8 @@ return value should be used or not.</div>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#isEmpty()" class="member-name-link">isEmpty()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.html#isEmpty()" class="member-name-link">isEmpty()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.html" title="class in com.google.errorprone.fixes">SuggestedFix</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/refaster/Bindings.html#isEmpty()" class="member-name-link">isEmpty()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/ErrorProneOptions.html#isEnableAllChecksAsWarnings()" class="member-name-link">isEnableAllChecksAsWarnings()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></dt>
 <dd>&nbsp;</dd>
@@ -12627,8 +12632,6 @@ proto.</div>
 <dd>
 <div class="block">See <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Purpose.html" title="enum class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Purpose</code></a>.</div>
 </dd>
-<dt><a href="com/google/errorprone/refaster/Bindings.html#put(com.google.errorprone.refaster.Bindings.Key,java.lang.Object)" class="member-name-link">put(Bindings.Key, Object)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/SubContext.html#put(com.sun.tools.javac.util.Context.Key,com.sun.tools.javac.util.Context.Factory)" class="member-name-link">put(Context.Key, Context.Factory)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/SubContext.html" title="class in com.google.errorprone">SubContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/SubContext.html#put(com.sun.tools.javac.util.Context.Key,T)" class="member-name-link">put(Context.Key, T)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/SubContext.html" title="class in com.google.errorprone">SubContext</a></dt>
@@ -12636,8 +12639,6 @@ proto.</div>
 <dt><a href="com/google/errorprone/SubContext.html#put(java.lang.Class,com.sun.tools.javac.util.Context.Factory)" class="member-name-link">put(Class, Context.Factory)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/SubContext.html" title="class in com.google.errorprone">SubContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/SubContext.html#put(java.lang.Class,T)" class="member-name-link">put(Class, T)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/SubContext.html" title="class in com.google.errorprone">SubContext</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/refaster/Bindings.html#putAll(java.util.Map)" class="member-name-link">putAll(Map)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Bindings.html#putBinding(com.google.errorprone.refaster.Bindings.Key,V)" class="member-name-link">putBinding(Bindings.Key, V)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
 <dd>&nbsp;</dd>
@@ -14761,6 +14762,8 @@ thrownMatcher</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/refaster/Bindings.Key.html#toString()" class="member-name-link">toString()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/refaster/Bindings.html#toString()" class="member-name-link">toString()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Choice.html#toString()" class="member-name-link">toString()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/LocalVarBinding.html#toString()" class="member-name-link">toString()</a> - Method in record class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/LocalVarBinding.html" title="class in com.google.errorprone.refaster">LocalVarBinding</a></dt>
@@ -15282,8 +15285,6 @@ specified lists, allowing varargs if and only if <code>allowVarargs</code> is tr
 <dd>
 <div class="block">Returns the value of the <a href="./com/google/errorprone/bugpatterns/AbstractMockChecker.Reason.html#param-unmockableClass"><code>unmockableClass</code></a> record component.</div>
 </dd>
-<dt><a href="com/google/errorprone/refaster/Bindings.html#unmodifiable()" class="member-name-link">unmodifiable()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/UnnamedVariable.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">UnnamedVariable</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A bug pattern that suggests renaming unused variables to <code>var _</code>.</div>
