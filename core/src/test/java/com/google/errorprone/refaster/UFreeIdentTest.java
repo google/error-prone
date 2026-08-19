@@ -44,7 +44,7 @@ public class UFreeIdentTest extends AbstractUTreeTest {
     JCExpression expr = parseExpression("\"abcdefg\".charAt(x + 1)");
     UFreeIdent ident = UFreeIdent.create("foo");
     assertThat(ident.unify(expr, unifier)).isNotNull();
-    assertThat(unifier.getBindings()).containsExactly(new UFreeIdent.Key("foo"), expr);
+    assertThat(unifier.getBindings().asMap()).containsExactly(new UFreeIdent.Key("foo"), expr);
   }
 
   @Test

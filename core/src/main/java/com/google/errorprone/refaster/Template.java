@@ -142,7 +142,8 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     for (PlaceholderExpressionKey key :
         Ordering.natural()
             .immutableSortedCopy(
-                Iterables.filter(inliner.bindings.keySet(), PlaceholderExpressionKey.class))) {
+                Iterables.filter(
+                    inliner.bindings.asMap().keySet(), PlaceholderExpressionKey.class))) {
       Type type = key.method.returnType().inline(inliner);
       // Skip void placeholder expressions, because
       // a) if the expected type is void, any actual type is acceptable
@@ -187,7 +188,8 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     for (PlaceholderExpressionKey key :
         Ordering.natural()
             .immutableSortedCopy(
-                Iterables.filter(inliner.bindings.keySet(), PlaceholderExpressionKey.class))) {
+                Iterables.filter(
+                    inliner.bindings.asMap().keySet(), PlaceholderExpressionKey.class))) {
       Type keyType = key.method.returnType().inline(inliner);
       // See comment in `expectedTypes` for why we skip void placeholder keys.
       if (!keyType.getTag().equals(TypeTag.VOID)) {

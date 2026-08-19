@@ -18,7 +18,6 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.Tree;
@@ -75,27 +74,20 @@ final class PlaceholderVerificationVisitor extends TreeScanner<Boolean, Unifier>
         return true;
       }
     }
-    if (node instanceof JCExpression expr) {
-      for (UFreeIdent.Key key :
-          Iterables.filter(unifier.getBindings().keySet(), UFreeIdent.Key.class)) {
-        JCExpression keyBinding = unifier.getBinding(key);
-        if (PlaceholderUnificationVisitor.equivalentExprs(unifier, expr, keyBinding)) {
-          return false;
-        }
-      }
+    if (node instanceof JCExpression expr
+        && unifier
+            .getBindings()
+            .hasFreeIdentMatching(
+                keyBinding ->
+                    PlaceholderUnificationVisitor.equivalentExprs(unifier, expr, keyBinding))) {
+      return false;
     }
     return firstNonNull(super.scan(node, unifier), true);
   }
 
   @Override
   public Boolean visitIdentifier(IdentifierTree node, Unifier unifier) {
-    for (LocalVarBinding localBinding :
-        Iterables.filter(unifier.getBindings().values(), LocalVarBinding.class)) {
-      if (localBinding.symbol().equals(ASTHelpers.getSymbol(node))) {
-        return false;
-      }
-    }
-    return true;
+    return !unifier.getBindings().hasBindingForLocalVar(ASTHelpers.getSymbol(node));
   }
 
   @Override

@@ -20,22 +20,31 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
-import com.google.common.collect.ForwardingMap;
-import com.google.common.collect.Maps;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.tree.JCTree.JCExpression;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import org.jspecify.annotations.Nullable;
 
 /**
- * A type-safe map from objects of type {@code Bindings.Key<V>}, which consist of a {@code String}
- * key and a {@code Bindings.Key} subclass, to values of type {@code V}.
+ * A type-safe binding environment mapping {@code Bindings.Key<V>} keys to values of type {@code V}.
+ *
+ * <p>Bindings are represented as a persistent linked chain. Adding a binding creates a new {@link
+ * Node} pointing to the current head as its parent, and lookups traverse parent references towards
+ * the root, naturally shadowing earlier bindings for the same key. Forking a {@code Bindings}
+ * instance shares the underlying node chain with zero entry copying.
  *
  * @author Louis Wasserman
  */
-public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
+public class Bindings {
   /**
    * A key type for a {@code Binding}. Users must subclass {@code Key} with a specific literal
    * {@code V} type.
@@ -77,86 +86,124 @@ public class Bindings extends ForwardingMap<Bindings.Key<?>, Object> {
     }
   }
 
-  private static final int DEFAULT_EXPECTED_SIZE = 4;
+  private static final class Node {
+    final Key<?> key;
+    final Object value;
+    final @Nullable Node parent;
 
-  private final Map<Key<?>, Object> contents;
+    Node(Key<?> key, Object value, @Nullable Node parent) {
+      this.key = key;
+      this.value = value;
+      this.parent = parent;
+    }
+  }
+
+  private @Nullable Node head;
 
   public static Bindings create() {
-    return createWithExpectedSize(DEFAULT_EXPECTED_SIZE);
-  }
-
-  public static Bindings createWithExpectedSize(int expectedSize) {
-    return new Bindings(expectedSize);
-  }
-
-  public static <V> Bindings create(Key<V> key, V value) {
-    Bindings result = createWithExpectedSize(1);
-    result.putBinding(key, value);
-    return result;
-  }
-
-  public static <V1, V2> Bindings create(Key<V1> key1, V1 value1, Key<V2> key2, V2 value2) {
-    Bindings result = createWithExpectedSize(2);
-    result.putBinding(key1, value1);
-    result.putBinding(key2, value2);
-    return result;
+    return new Bindings(null);
   }
 
   public static Bindings create(Bindings bindings) {
-    return new Bindings(bindings);
+    return new Bindings(bindings.head);
   }
 
-  private Bindings() {
-    this(DEFAULT_EXPECTED_SIZE);
+  private Bindings(@Nullable Node head) {
+    this.head = head;
   }
 
-  private Bindings(int expectedSize) {
-    this(Maps.newHashMapWithExpectedSize(expectedSize));
+  public boolean isEmpty() {
+    return head == null;
   }
 
-  Bindings(Bindings bindings) {
-    this(
-        bindings.contents.isEmpty()
-            ? Maps.newHashMapWithExpectedSize(DEFAULT_EXPECTED_SIZE)
-            : new HashMap<>(bindings.contents));
-  }
-
-  private Bindings(Map<Key<?>, Object> contents) {
-    this.contents = contents;
-  }
-
-  @Override
-  protected Map<Key<?>, Object> delegate() {
-    return contents;
-  }
-
-  @SuppressWarnings("unchecked")
-  public <V> V getBinding(Key<V> key) {
+  public boolean containsKey(Key<?> key) {
     checkNotNull(key);
-    return (V) super.get(key);
+    for (Node curr = head; curr != null; curr = curr.parent) {
+      if (key.equals(curr.key)) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("unchecked") // safe by runtime check in putBinding
+  public <V> @Nullable V getBinding(Key<V> key) {
+    checkNotNull(key);
+    for (Node curr = head; curr != null; curr = curr.parent) {
+      if (key.equals(curr.key)) {
+        return (V) curr.value;
+      }
+    }
+    return null;
+  }
+
   @CanIgnoreReturnValue
   public <V> V putBinding(Key<V> key, V value) {
-    checkNotNull(value);
-    return (V) super.put(key, value);
-  }
-
-  @CanIgnoreReturnValue
-  @Override
-  public @Nullable Object put(Key<?> key, Object value) {
     checkNotNull(key, "key");
     checkNotNull(value, "value");
-    return super.put(key, key.getValueType().getRawType().cast(value));
+    Object castValue = key.getValueType().getRawType().cast(value);
+    head = new Node(key, castValue, head);
+    return value;
+  }
+
+  public void clearBinding(Key<?> key) {
+    checkNotNull(key);
+    List<Node> surviving = new ArrayList<>();
+    Set<Key<?>> seenKeys = new HashSet<>();
+    for (Node curr = head; curr != null; curr = curr.parent) {
+      if (!curr.key.equals(key) && seenKeys.add(curr.key)) {
+        surviving.add(curr);
+      }
+    }
+    Node newHead = null;
+    for (Node node : Lists.reverse(surviving)) {
+      newHead = new Node(node.key, node.value, newHead);
+    }
+    this.head = newHead;
+  }
+
+  public void forEach(BiConsumer<? super Key<?>, Object> action) {
+    checkNotNull(action);
+    Set<Key<?>> seenKeys = new HashSet<>();
+    for (Node curr = head; curr != null; curr = curr.parent) {
+      if (seenKeys.add(curr.key)) {
+        action.accept(curr.key, curr.value);
+      }
+    }
+  }
+
+  public boolean hasBindingForLocalVar(@Nullable Symbol symbol) {
+    if (symbol == null) {
+      return false;
+    }
+    for (Node curr = head; curr != null; curr = curr.parent) {
+      if (curr.value instanceof LocalVarBinding binding && symbol.equals(binding.symbol())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public boolean hasFreeIdentMatching(Predicate<JCExpression> predicate) {
+    checkNotNull(predicate);
+    for (Node curr = head; curr != null; curr = curr.parent) {
+      if (curr.key instanceof UFreeIdent.Key && curr.value instanceof JCExpression expr) {
+        if (predicate.test(expr)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  public ImmutableMap<Key<?>, Object> asMap() {
+    ImmutableMap.Builder<Key<?>, Object> builder = ImmutableMap.builder();
+    forEach(builder::put);
+    return builder.buildOrThrow();
   }
 
   @Override
-  public void putAll(Map<? extends Key<?>, ? extends Object> map) {
-    standardPutAll(map);
-  }
-
-  public Bindings unmodifiable() {
-    return new Bindings(Collections.unmodifiableMap(contents));
+  public String toString() {
+    return asMap().toString();
   }
 }

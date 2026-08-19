@@ -18,12 +18,10 @@ package com.google.errorprone.refaster;
 
 import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
-import com.google.common.collect.Iterables;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Names;
 import org.jspecify.annotations.Nullable;
@@ -87,14 +85,7 @@ public abstract class UFreeIdent extends UIdent {
 
                 @Override
                 public Boolean visitIdentifier(IdentifierTree ident, Void v) {
-                  Symbol identSym = ASTHelpers.getSymbol(ident);
-                  for (ULocalVarIdent.Key key :
-                      Iterables.filter(unifier.getBindings().keySet(), ULocalVarIdent.Key.class)) {
-                    if (identSym == unifier.getBinding(key).symbol()) {
-                      return false;
-                    }
-                  }
-                  return true;
+                  return !unifier.getBindings().hasBindingForLocalVar(ASTHelpers.getSymbol(ident));
                 }
               }.scan(expression, null));
       if (!isGood) {

@@ -63,7 +63,7 @@ public final class Inliner {
 
   public Inliner(Context context, Bindings bindings) {
     this.context = new SubContext(context);
-    this.bindings = new Bindings(bindings).unmodifiable();
+    this.bindings = Bindings.create(bindings);
     this.importsToAdd = Sets.newHashSet();
     this.staticImportsToAdd = Sets.newHashSet();
     this.typeVarCache = Maps.newHashMap();
