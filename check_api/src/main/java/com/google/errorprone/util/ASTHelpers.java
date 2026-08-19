@@ -1544,6 +1544,40 @@ public final class ASTHelpers {
   }
 
   /**
+   * Extracts the appropriate type argument from a specific supertype of the given {@code type}.
+   * This handles the case when a subtype has different type arguments than the expected type. For
+   * example, {@code ClassToInstanceMap<T>} implements {@code Map<Class<? extends T>, T>}.
+   *
+   * @param type the (sub)type from which to extract the type argument
+   * @param superTypeSym the symbol of the supertype on which the type parameter is defined
+   * @param typeArgIndex the index of the type argument to extract from the supertype
+   * @param types the {@link Types} utility class
+   * @return the type argument, if defined, or {@code null} otherwise
+   */
+  public static @Nullable Type extractTypeArgAsMemberOfSupertype(
+      @Nullable Type type, @Nullable Symbol superTypeSym, int typeArgIndex, Types types) {
+    if (type == null || superTypeSym == null || typeArgIndex < 0) {
+      return null;
+    }
+    Type superType = types.asSuper(types.capture(type), superTypeSym);
+    if (superType == null) {
+      return null;
+    }
+    com.sun.tools.javac.util.List<Type> tyargs = superType.getTypeArguments();
+    return typeArgIndex < tyargs.size() ? tyargs.get(typeArgIndex) : null;
+  }
+
+  /**
+   * Extracts the appropriate type argument from a specific supertype of the given {@code type}.
+   *
+   * @see #extractTypeArgAsMemberOfSupertype(Type, Symbol, int, Types)
+   */
+  public static @Nullable Type extractTypeArgAsMemberOfSupertype(
+      @Nullable Type type, @Nullable Symbol superTypeSym, int typeArgIndex, VisitorState state) {
+    return extractTypeArgAsMemberOfSupertype(type, superTypeSym, typeArgIndex, state.getTypes());
+  }
+
+  /**
    * Returns true if the leaf node in the {@link TreePath} from {@code state} sits somewhere
    * underneath a class or method that is marked as JUnit 3 or 4 test code.
    */

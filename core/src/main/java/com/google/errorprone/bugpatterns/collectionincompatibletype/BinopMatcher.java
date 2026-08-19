@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
+import static com.google.errorprone.util.ASTHelpers.extractTypeArgAsMemberOfSupertype;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.VisitorState;

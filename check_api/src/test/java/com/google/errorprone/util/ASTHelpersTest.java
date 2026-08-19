@@ -58,6 +58,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.scanner.Scanner;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.TargetType.TargetTypeVisitor;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
@@ -114,6 +115,9 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   // hermetic and do not depend on the platform on which they are run.
   private static final Joiner UNIX_LINE_JOINER = Joiner.on("\n");
   private static final Joiner WINDOWS_LINE_JOINER = Joiner.on("\r\n");
+
+  private static final Supplier<Symbol> MAP_SYMBOL =
+      VisitorState.memoize(state -> state.getSymbolFromString("java.util.Map"));
 
   final List<TestScanner> tests = new ArrayList<>();
 
@@ -2263,6 +2267,91 @@ class Test {
                 assertThat(ASTHelpers.boxedType(null, state)).isEmpty();
                 assertThat(ASTHelpers.boxedTypeOrType(null, state)).isNull();
                 assertThat(ASTHelpers.boxedClass(null, state)).isNull();
+              }
+              default -> {}
+            }
+            return super.visitVariable(tree, state);
+          }
+        };
+    scanner.setAssertionsComplete();
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void extractTypeArgAsMemberOfSupertype() {
+    writeFile(
+        "A.java",
+        """
+        import java.util.List;
+        import java.util.Map;
+
+        class A {
+          List<String> stringList;
+          Map<String, Integer> stringIntegerMap;
+          List rawList;
+          List<? extends Number> wildcardList;
+          String notCollection;
+        }
+        """);
+
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitVariable(VariableTree tree, VisitorState state) {
+            Type type = ASTHelpers.getType(tree);
+            var symtab = state.getSymtab();
+            var iterableSym = symtab.iterableType.tsym;
+            var mapSym = MAP_SYMBOL.get(state);
+
+            switch (tree.getName().toString()) {
+              case "stringList" -> {
+                Type elem =
+                    ASTHelpers.extractTypeArgAsMemberOfSupertype(type, iterableSym, 0, state);
+                assertThat(elem).isNotNull();
+                assertThat(elem.tsym.getQualifiedName().toString()).isEqualTo("java.lang.String");
+                assertThat(
+                        ASTHelpers.extractTypeArgAsMemberOfSupertype(type, iterableSym, 1, state))
+                    .isNull();
+                assertThat(
+                        ASTHelpers.extractTypeArgAsMemberOfSupertype(type, iterableSym, -1, state))
+                    .isNull();
+              }
+              case "stringIntegerMap" -> {
+                Type key = ASTHelpers.extractTypeArgAsMemberOfSupertype(type, mapSym, 0, state);
+                Type val = ASTHelpers.extractTypeArgAsMemberOfSupertype(type, mapSym, 1, state);
+                assertThat(key).isNotNull();
+                assertThat(key.tsym.getQualifiedName().toString()).isEqualTo("java.lang.String");
+                assertThat(val).isNotNull();
+                assertThat(val.tsym.getQualifiedName().toString()).isEqualTo("java.lang.Integer");
+                assertThat(ASTHelpers.extractTypeArgAsMemberOfSupertype(type, mapSym, 2, state))
+                    .isNull();
+              }
+              case "rawList" -> {
+                assertThat(
+                        ASTHelpers.extractTypeArgAsMemberOfSupertype(type, iterableSym, 0, state))
+                    .isNull();
+              }
+              case "wildcardList" -> {
+                Type elem =
+                    ASTHelpers.extractTypeArgAsMemberOfSupertype(type, iterableSym, 0, state);
+                assertThat(elem).isNotNull();
+                assertThat(
+                        ASTHelpers.getUpperBound(elem, state.getTypes())
+                            .tsym
+                            .getQualifiedName()
+                            .toString())
+                    .isEqualTo("java.lang.Number");
+              }
+              case "notCollection" -> {
+                assertThat(
+                        ASTHelpers.extractTypeArgAsMemberOfSupertype(type, iterableSym, 0, state))
+                    .isNull();
+                assertThat(
+                        ASTHelpers.extractTypeArgAsMemberOfSupertype(null, iterableSym, 0, state))
+                    .isNull();
+                assertThat(ASTHelpers.extractTypeArgAsMemberOfSupertype(type, null, 0, state))
+                    .isNull();
               }
               default -> {}
             }

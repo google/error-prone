@@ -17,8 +17,8 @@
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.collectionincompatibletype.AbstractCollectionIncompatibleTypeMatcher.extractTypeArgAsMemberOfSupertype;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
+import static com.google.errorprone.util.ASTHelpers.extractTypeArgAsMemberOfSupertype;
 
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.errorprone.BugPattern;

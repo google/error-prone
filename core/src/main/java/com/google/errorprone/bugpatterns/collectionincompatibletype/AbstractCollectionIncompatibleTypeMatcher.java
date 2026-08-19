@@ -23,9 +23,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.SimpleTreeVisitor;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -154,32 +152,6 @@ public abstract class AbstractCollectionIncompatibleTypeMatcher {
     }
 
     return MatchResult.create(sourceTree, sourceType, targetType, this);
-  }
-
-  /**
-   * Extracts the appropriate type argument from a specific supertype of the given {@code type}.
-   * This handles the case when a subtype has different type arguments than the expected type. For
-   * example, {@code ClassToInstanceMap<T>} implements {@code Map<Class<? extends T>, T>}.
-   *
-   * @param type the (sub)type from which to extract the type argument
-   * @param superTypeSym the symbol of the supertype on which the type parameter is defined
-   * @param typeArgIndex the index of the type argument to extract from the supertype
-   * @param types the {@link Types} utility class from the {@link VisitorState}
-   * @return the type argument, if defined, or null otherwise
-   */
-  protected static @Nullable Type extractTypeArgAsMemberOfSupertype(
-      Type type, Symbol superTypeSym, int typeArgIndex, Types types) {
-    Type collectionType = types.asSuper(types.capture(type), superTypeSym);
-    if (collectionType == null) {
-      return null;
-    }
-    com.sun.tools.javac.util.List<Type> tyargs = collectionType.getTypeArguments();
-    if (tyargs.size() <= typeArgIndex) {
-      // Collection is raw, nothing we can do.
-      return null;
-    }
-
-    return tyargs.get(typeArgIndex);
   }
 
   Optional<Fix> buildFix(MatchResult result) {
