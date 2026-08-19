@@ -149,6 +149,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#getModifiers(com.sun.source.tree.Tree)" tabindex="0">getModifiers(Tree)</a></li>
 <li><a href="#getAnnotations(com.sun.source.tree.Tree)" tabindex="0">getAnnotations(Tree)</a></li>
 <li><a href="#getUpperBound(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Types)" tabindex="0">getUpperBound(Type, Types)</a></li>
+<li><a href="#extractTypeArgAsMemberOfSupertype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol,int,com.sun.tools.javac.code.Types)" tabindex="0">extractTypeArgAsMemberOfSupertype(Type, Symbol, int, Types)</a></li>
+<li><a href="#extractTypeArgAsMemberOfSupertype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol,int,com.google.errorprone.VisitorState)" tabindex="0">extractTypeArgAsMemberOfSupertype(Type, Symbol, int, VisitorState)</a></li>
 <li><a href="#isJUnitTestCode(com.google.errorprone.VisitorState)" tabindex="0">isJUnitTestCode(VisitorState)</a></li>
 <li><a href="#isTestNgTestCode(com.google.errorprone.VisitorState)" tabindex="0">isTestNgTestCode(VisitorState)</a></li>
 <li><a href="#getAnnotationWithSimpleName(java.util.List,java.lang.String)" tabindex="0">getAnnotationWithSimpleName(List, String)</a></li>
@@ -344,6 +346,22 @@ type</code> is null, or <code>type</code> itself if it is already a reference ty
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/LinkedHashSet.html" title="class or interface in java.util" class="external-link">LinkedHashSet</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#enumValues(com.sun.tools.javac.code.Symbol.TypeSymbol)" class="member-name-link">enumValues</a><wbr>(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;enumType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable com.sun.tools.javac.code.Type</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractTypeArgAsMemberOfSupertype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol,int,com.google.errorprone.VisitorState)" class="member-name-link">extractTypeArgAsMemberOfSupertype</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
+ @Nullable com.sun.tools.javac.code.Symbol&nbsp;superTypeSym,
+ int&nbsp;typeArgIndex,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Extracts the appropriate type argument from a specific supertype of the given <code>type</code>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable com.sun.tools.javac.code.Type</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#extractTypeArgAsMemberOfSupertype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol,int,com.sun.tools.javac.code.Types)" class="member-name-link">extractTypeArgAsMemberOfSupertype</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
+ @Nullable com.sun.tools.javac.code.Symbol&nbsp;superTypeSym,
+ int&nbsp;typeArgIndex,
+ com.sun.tools.javac.code.Types&nbsp;types)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Extracts the appropriate type argument from a specific supertype of the given <code>type</code>.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findClass(com.sun.tools.javac.code.Symbol.ClassSymbol,com.google.errorprone.VisitorState)" class="member-name-link">findClass</a><wbr>(com.sun.tools.javac.code.Symbol.ClassSymbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
@@ -2020,6 +2038,49 @@ type</code> is null, or <code>type</code> itself if it is already a reference ty
  com.sun.tools.javac.code.Types&nbsp;types)</span></div>
 <div class="block">Returns the upper bound of a type if it has one, or the type itself if not. Correctly handles
 wildcards and capture variables.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="extractTypeArgAsMemberOfSupertype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol,int,com.sun.tools.javac.code.Types)">
+<h3>extractTypeArgAsMemberOfSupertype</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">extractTypeArgAsMemberOfSupertype</span><wbr><span class="parameters">(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
+ @Nullable com.sun.tools.javac.code.Symbol&nbsp;superTypeSym,
+ int&nbsp;typeArgIndex,
+ com.sun.tools.javac.code.Types&nbsp;types)</span></div>
+<div class="block">Extracts the appropriate type argument from a specific supertype of the given <code>type</code>.
+This handles the case when a subtype has different type arguments than the expected type. For
+example, <code>ClassToInstanceMap&lt;T&gt;</code> implements <code>Map&lt;Class&lt;? extends T&gt;, T&gt;</code>.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>type</code> - the (sub)type from which to extract the type argument</dd>
+<dd><code>superTypeSym</code> - the symbol of the supertype on which the type parameter is defined</dd>
+<dd><code>typeArgIndex</code> - the index of the type argument to extract from the supertype</dd>
+<dd><code>types</code> - the <code>Types</code> utility class</dd>
+<dt>Returns:</dt>
+<dd>the type argument, if defined, or <code>null</code> otherwise</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="extractTypeArgAsMemberOfSupertype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol,int,com.google.errorprone.VisitorState)">
+<h3>extractTypeArgAsMemberOfSupertype</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">extractTypeArgAsMemberOfSupertype</span><wbr><span class="parameters">(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
+ @Nullable com.sun.tools.javac.code.Symbol&nbsp;superTypeSym,
+ int&nbsp;typeArgIndex,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Extracts the appropriate type argument from a specific supertype of the given <code>type</code>.</div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list-long">
+<li><a href="#extractTypeArgAsMemberOfSupertype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol,int,com.sun.tools.javac.code.Types)"><code>extractTypeArgAsMemberOfSupertype(Type, Symbol, int, Types)</code></a></li>
+</ul>
+</dd>
+</dl>
 </div>
 </section>
 </li>
