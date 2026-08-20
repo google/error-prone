@@ -1,6 +1,6 @@
 ---
 title: UnnamedVariable
-summary: Consider renaming unused variables and lambda parameters to `_`
+summary: Use the unnamed variable syntax (`_`) for unused variables and lambda parameters.
 layout: bugpattern
 tags: ''
 severity: WARNING
