@@ -19,6 +19,7 @@ package com.google.errorprone.refaster;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth.assert_;
 import static com.google.testing.compile.JavaFileObjects.forResource;
+import static com.google.testing.compile.JavaFileObjects.forSourceString;
 import static com.google.testing.compile.JavaSourceSubjectFactory.javaSource;
 import static org.junit.Assert.assertThrows;
 
@@ -375,5 +376,68 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   @Test
   public void unqualifiedMethod() throws IOException {
     runTest("UnqualifiedMethodTemplate");
+  }
+
+  @Test
+  public void placeholderWithMatchesReceivesType() throws IOException {
+    CodeTransformer transformer =
+        extractRefasterRule(
+            forSourceString(
+                "PlaceholderWithMatchesTemplate",
+                """
+                import com.google.errorprone.refaster.IsIntMatcher;
+                import com.google.errorprone.refaster.annotation.AfterTemplate;
+                import com.google.errorprone.refaster.annotation.BeforeTemplate;
+                import com.google.errorprone.refaster.annotation.Matches;
+                import com.google.errorprone.refaster.annotation.Placeholder;
+
+                abstract class PlaceholderWithMatchesTemplate<T> {
+                  @Placeholder
+                  @Matches(IsIntMatcher.class)
+                  abstract int getInt(T t);
+
+                  @BeforeTemplate
+                  int before(T t) {
+                    return getInt(t) * 1;
+                  }
+
+                  @AfterTemplate
+                  int after(T t) {
+                    return getInt(t);
+                  }
+                }
+                """));
+
+    JavaFileObject input =
+        forSourceString(
+            "Example",
+            """
+            class Example {
+              int intField;
+              double doubleField;
+
+              void test(Example ex) {
+                int a = ex.intField * 1;
+                double b = ex.doubleField * 1;
+              }
+            }
+            """);
+
+    JavaFileObject expectedOutput =
+        forSourceString(
+            "Example",
+            """
+            class Example {
+              int intField;
+              double doubleField;
+
+              void test(Example ex) {
+                int a = ex.intField;
+                double b = ex.doubleField * 1;
+              }
+            }
+            """);
+
+    expectTransforms(transformer, input, expectedOutput);
   }
 }
