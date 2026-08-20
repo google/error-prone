@@ -127,8 +127,6 @@ public class ObjectEqualsForPrimitivesTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.util.Objects;
-
             public class Test {
               private static boolean testBooleans(boolean a, boolean b) {
                 return (a == b);
@@ -171,8 +169,6 @@ public class ObjectEqualsForPrimitivesTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.util.Objects;
-
             public class Test {
               private static boolean testBooleans(boolean a, boolean b) {
                 return !(a == b);
@@ -184,6 +180,148 @@ public class ObjectEqualsForPrimitivesTest {
 
               private static boolean testLongs(long a, long b) {
                 return !(a == b);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void primitivesNegatedWithParentheses() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            public class Test {
+              private static boolean testBooleans(boolean a, boolean b) {
+                return !(Objects.equals(a, b));
+              }
+
+              private static boolean testInts(int a, int b) {
+                return !((Objects.equals(a, b)));
+              }
+            }
+            """)
+        // TODO(kak): we should probably remove the extra parentheses
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              private static boolean testBooleans(boolean a, boolean b) {
+                return !((a == b));
+              }
+
+              private static boolean testInts(int a, int b) {
+                return !(((a == b)));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void requiresParenthesesContexts() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Objects;
+
+            public class Test {
+              private static String concat(int a, int b) {
+                return "res: " + Objects.equals(a, b);
+              }
+
+              private static String concatNegated(int a, int b) {
+                return "res: " + !Objects.equals(a, b);
+              }
+
+              private static Object cast(int a, int b) {
+                return (Object) Objects.equals(a, b);
+              }
+
+              private static boolean bitwise(int a, int b, boolean c) {
+                return Objects.equals(a, b) & c;
+              }
+
+              private static boolean logical(int a, int b, boolean c) {
+                return Objects.equals(a, b) && c;
+              }
+
+              private static void ifCondition(int a, int b) {
+                if (Objects.equals(a, b)) {}
+                if (!Objects.equals(a, b)) {}
+              }
+
+              private static void statements(int a, int b) {
+                boolean x = Objects.equals(a, b);
+                boolean y;
+                y = Objects.equals(a, b);
+                assert Objects.equals(a, b);
+                assert !Objects.equals(a, b);
+              }
+
+              private static void methodCall(int a, int b) {
+                consume(Objects.equals(a, b));
+                consume(!Objects.equals(a, b));
+              }
+
+              private static void consume(boolean b) {}
+
+              private static int ternary(int a, int b) {
+                return Objects.equals(a, b) ? 1 : 0;
+              }
+            }
+            """)
+        // TODO(kak): we should probably change !(a == b) to (a != b)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              private static String concat(int a, int b) {
+                return "res: " + (a == b);
+              }
+
+              private static String concatNegated(int a, int b) {
+                return "res: " + !(a == b);
+              }
+
+              private static Object cast(int a, int b) {
+                return (Object) (a == b);
+              }
+
+              private static boolean bitwise(int a, int b, boolean c) {
+                return (a == b) & c;
+              }
+
+              private static boolean logical(int a, int b, boolean c) {
+                return (a == b) && c;
+              }
+
+              private static void ifCondition(int a, int b) {
+                if ((a == b)) {}
+                if (!(a == b)) {}
+              }
+
+              private static void statements(int a, int b) {
+                boolean x = (a == b);
+                boolean y;
+                y = (a == b);
+                assert (a == b);
+                assert !(a == b);
+              }
+
+              private static void methodCall(int a, int b) {
+                consume((a == b));
+                consume(!(a == b));
+              }
+
+              private static void consume(boolean b) {}
+
+              private static int ternary(int a, int b) {
+                return (a == b) ? 1 : 0;
               }
             }
             """)
@@ -207,8 +345,6 @@ public class ObjectEqualsForPrimitivesTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.util.Objects;
-
             public class Test {
               private static boolean doTest(int a, long b) {
                 return (a == b);
