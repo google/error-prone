@@ -16,7 +16,7 @@
 
 package com.google.errorprone.refaster;
 
-import static org.junit.Assert.assertThrows;
+import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 
 import com.google.common.testing.EqualsTester;
@@ -82,7 +82,6 @@ public class UMemberSelectTest extends AbstractUTreeTest {
         Symtab.instance(context).enterModule(Names.instance(context).fromString("somemodule"));
     JCIdent moduleIdentifier = TreeMaker.instance(context).Ident(module);
 
-    // TODO: https://github.com/google/error-prone/pull/6055 - this should not throw an NPE
-    assertThrows(NullPointerException.class, () -> memberSelect.unify(moduleIdentifier, unifier));
+    assertThat(memberSelect.unify(moduleIdentifier, unifier).findFirst()).isEmpty();
   }
 }
