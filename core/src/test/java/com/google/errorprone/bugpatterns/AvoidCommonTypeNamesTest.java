@@ -114,4 +114,48 @@ public class AvoidCommonTypeNamesTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void negative_nestedJavaLangTypeUnderRelease() {
+    testHelper
+        .addSourceLines(
+            "Info.java",
+            """
+            class Info {}
+            """)
+        .addSourceLines(
+            "UnicodeScript.java",
+            """
+            class UnicodeScript {}
+            """)
+        .setArgs("--release", Integer.toString(Runtime.version().feature()))
+        .doTest();
+  }
+
+  @Test
+  public void negative_nestedJavaLangTypeUnderOlderRelease() {
+    testHelper
+        .addSourceLines(
+            "UnicodeScript.java",
+            """
+            class UnicodeScript {}
+            """)
+        .setArgs("--release", "8")
+        .doTest();
+  }
+
+  @Test
+  public void positive_topLevelStillFlaggedUnderRelease() {
+    testHelper
+        .addSourceLines(
+            "foo/String.java",
+            """
+            package foo;
+
+            // BUG: Diagnostic contains: foo.String clashes with java.lang.String
+            public class String {}
+            """)
+        .setArgs("--release", Integer.toString(Runtime.version().feature()))
+        .doTest();
+  }
 }

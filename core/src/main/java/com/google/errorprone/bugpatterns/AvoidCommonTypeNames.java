@@ -83,7 +83,12 @@ public class AvoidCommonTypeNames extends BugChecker
                             s ->
                                 s instanceof ClassSymbol
                                     && s.getModifiers().contains(PUBLIC)
-                                    && !IGNORED.contains(s.getSimpleName().toString())))
+                                    && !IGNORED.contains(s.getSimpleName().toString())
+                                    // Nested types (ProcessHandle.Info, Character.UnicodeScript,
+                                    // ...) are not auto-imported by simple name. --release can
+                                    // still surface them through PackageSymbol#members.
+                                    && s.getQualifiedName()
+                                        .contentEquals("java.lang." + s.getSimpleName())))
                 .collect(toImmutableMap(s -> s.getSimpleName().toString(), s -> (ClassSymbol) s));
           });
 
