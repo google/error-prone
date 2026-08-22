@@ -25,6 +25,7 @@ import static com.google.errorprone.predicates.TypePredicates.allOf;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.predicates.TypePredicates.isExactType;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static javax.lang.model.element.ElementKind.ENUM;
 
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
@@ -126,7 +127,10 @@ public final class ProtobufMatchers {
           TypePredicates.not(isDescendantOf(INTERNAL_ONE_OF_ENUM_CLASS)));
 
   /** Matches a oneof enum (AbstractMessageLite.InternalOneOfEnum). */
-  public static final TypePredicate IS_ONEOF_ENUM = isDescendantOf(INTERNAL_ONE_OF_ENUM_CLASS);
+  public static final TypePredicate IS_ONEOF_ENUM =
+      allOf(
+          isDescendantOf(INTERNAL_ONE_OF_ENUM_CLASS),
+          (type, state) -> type != null && type.tsym != null && type.tsym.getKind() == ENUM);
 
   /** Matches builder {@code build()} or {@code buildPartial()} invocations. */
   public static final Matcher<ExpressionTree> PROTO_BUILD_METHOD =

@@ -84,6 +84,22 @@ public final class ProtobufMatchersTest {
   }
 
   @Test
+  public void testInternalOneOfEnumInterfaceNotMatched() {
+    typeCompilationHelper
+        .addSourceLines(
+            "com/google/protobuf/TestOneOfInterface.java",
+            """
+            package com.google.protobuf;
+
+            class TestOneOfInterface {
+              // BUG: Diagnostic contains: []
+              AbstractMessageLite.InternalOneOfEnum oneOfEnumInterface;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void testProtoLifecycleMethodMatchers() {
     methodCompilationHelper
         .addSourceLines(
