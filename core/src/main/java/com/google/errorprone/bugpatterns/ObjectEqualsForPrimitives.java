@@ -30,9 +30,18 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.OperatorPrecedence;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
+import java.util.Objects;
 import javax.lang.model.type.TypeKind;
 
 /**
@@ -71,9 +80,70 @@ public class ObjectEqualsForPrimitives extends BugChecker implements MethodInvoc
     String arg1 = state.getSourceForNode(expression1);
     String arg2 = state.getSourceForNode(expression2);
 
-    // TODO: Rewrite to a != b if the original code has a negation (e.g. !Object.equals)
-    Fix fix = SuggestedFix.builder().replace(tree, "(" + arg1 + " == " + arg2 + ")").build();
+    TreePath parentPath = state.getPath().getParentPath();
+    while (parentPath != null && parentPath.getLeaf() instanceof ParenthesizedTree) {
+      parentPath = parentPath.getParentPath();
+    }
+    if (parentPath != null && parentPath.getLeaf().getKind() == Kind.LOGICAL_COMPLEMENT) {
+      Tree target = parentPath.getLeaf();
+      String replacement =
+          String.format(requiresParentheses(parentPath) ? "(%s != %s)" : "%s != %s", arg1, arg2);
+      Fix fix = SuggestedFix.builder().replace(target, replacement).build();
+      return describeMatch(target, fix);
+    }
+
+    String replacement =
+        String.format(requiresParentheses(state.getPath()) ? "(%s == %s)" : "%s == %s", arg1, arg2);
+    Fix fix = SuggestedFix.builder().replace(tree, replacement).build();
     return describeMatch(tree, fix);
+  }
+
+  private static boolean requiresParentheses(TreePath path) {
+    TreePath parentPath = path.getParentPath();
+    if (parentPath == null) {
+      return false;
+    }
+    Tree parent = parentPath.getLeaf();
+    switch (parent.getKind()) {
+      case PARENTHESIZED,
+          RETURN,
+          EXPRESSION_STATEMENT,
+          ARRAY_ACCESS,
+          ASSERT,
+          LAMBDA_EXPRESSION,
+          CONDITIONAL_EXPRESSION -> {
+        return false;
+      }
+      case VARIABLE -> {
+        if (Objects.equals(((VariableTree) parent).getInitializer(), path.getLeaf())) {
+          return false;
+        }
+      }
+      case ASSIGNMENT -> {
+        if (Objects.equals(((AssignmentTree) parent).getExpression(), path.getLeaf())) {
+          return false;
+        }
+      }
+      case METHOD_INVOCATION -> {
+        if (((MethodInvocationTree) parent).getArguments().contains(path.getLeaf())) {
+          return false;
+        }
+      }
+      case NEW_CLASS -> {
+        if (((NewClassTree) parent).getArguments().contains(path.getLeaf())) {
+          return false;
+        }
+      }
+      case AND, XOR, OR, EQUAL_TO, NOT_EQUAL_TO -> {
+        return true;
+      }
+      default -> {
+        return OperatorPrecedence.optionallyFrom(parent.getKind())
+            .map(p -> p.isHigher(OperatorPrecedence.EQUALITY))
+            .orElse(false);
+      }
+    }
+    return true;
   }
 
   private static boolean isFloatingPoint(ExpressionTree expression) {
