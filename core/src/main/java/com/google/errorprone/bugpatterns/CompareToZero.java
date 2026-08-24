@@ -16,7 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_DURATIONS_UTIL_CLASS;
@@ -49,7 +49,7 @@ import com.sun.source.util.TreePath;
         "The result of #compareTo or #compare should only be compared to 0. It is an "
             + "implementation detail whether a given type returns strictly the values {-1, 0, +1} "
             + "or others.",
-    severity = WARNING)
+    severity = ERROR)
 public final class CompareToZero extends BugChecker implements MethodInvocationTreeMatcher {
   private static final String SUGGEST_IMPROVEMENT =
       "It is generally more robust (and readable) to compare the result of #compareTo/#compare to "
