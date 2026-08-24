@@ -81,6 +81,9 @@ The type of the array parameter of Collection.toArray needs to be compatible wit
 __[ComparableType](bugpattern/ComparableType)__<br>
 Implementing &#39;Comparable&lt;T&gt;&#39; where T is not the same as the implementing class is incorrect, since it violates the symmetry contract of compareTo.
 
+__[CompareToZero](bugpattern/CompareToZero)__<br>
+The result of #compareTo or #compare should only be compared to 0. It is an implementation detail whether a given type returns strictly the values {-1, 0, +1} or others.
+
 __[ComparingThisWithNull](bugpattern/ComparingThisWithNull)__<br>
 this &#61;&#61; null is always false, this !&#61; null is always true
 
@@ -721,9 +724,6 @@ Collector.of() should not use state
 
 __[ComparableAndComparator](bugpattern/ComparableAndComparator)__<br>
 Class should not implement both &#96;Comparable&#96; and &#96;Comparator&#96;
-
-__[CompareToZero](bugpattern/CompareToZero)__<br>
-The result of #compareTo or #compare should only be compared to 0. It is an implementation detail whether a given type returns strictly the values {-1, 0, +1} or others.
 
 __[ComplexBooleanConstant](bugpattern/ComplexBooleanConstant)__<br>
 Non-trivial compile time constant boolean expressions shouldn&#39;t be used.

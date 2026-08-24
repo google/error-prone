@@ -5,7 +5,7 @@ summary: 'The result of #compareTo or #compare should only be compared to 0. It 
   +1} or others.'
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: ERROR
 ---
 
 <!--
