@@ -171,15 +171,15 @@ public class ObjectEqualsForPrimitivesTest {
             """
             public class Test {
               private static boolean testBooleans(boolean a, boolean b) {
-                return !(a == b);
+                return (a != b);
               }
 
               private static boolean testInts(int a, int b) {
-                return !(a == b);
+                return (a != b);
               }
 
               private static boolean testLongs(long a, long b) {
-                return !(a == b);
+                return (a != b);
               }
             }
             """)
@@ -204,17 +204,17 @@ public class ObjectEqualsForPrimitivesTest {
               }
             }
             """)
-        // TODO(kak): we should probably remove the extra parentheses
+        // TODO(kak): we _could_ remove the extra parentheses here if we really wanted
         .addOutputLines(
             "Test.java",
             """
             public class Test {
               private static boolean testBooleans(boolean a, boolean b) {
-                return !((a == b));
+                return !(a == b);
               }
 
               private static boolean testInts(int a, int b) {
-                return !(((a == b)));
+                return !((a == b));
               }
             }
             """)
@@ -275,7 +275,6 @@ public class ObjectEqualsForPrimitivesTest {
               }
             }
             """)
-        // TODO(kak): we should probably change !(a == b) to (a != b)
         .addOutputLines(
             "Test.java",
             """
@@ -285,7 +284,7 @@ public class ObjectEqualsForPrimitivesTest {
               }
 
               private static String concatNegated(int a, int b) {
-                return "res: " + !(a == b);
+                return "res: " + (a != b);
               }
 
               private static Object cast(int a, int b) {
@@ -301,8 +300,8 @@ public class ObjectEqualsForPrimitivesTest {
               }
 
               private static void ifCondition(int a, int b) {
-                if ((a == b)) {}
-                if (!(a == b)) {}
+                if (a == b) {}
+                if (a != b) {}
               }
 
               private static void statements(int a, int b) {
@@ -310,12 +309,12 @@ public class ObjectEqualsForPrimitivesTest {
                 boolean y;
                 y = (a == b);
                 assert (a == b);
-                assert !(a == b);
+                assert (a != b);
               }
 
               private static void methodCall(int a, int b) {
-                consume((a == b));
-                consume(!(a == b));
+                consume(a == b);
+                consume(a != b);
               }
 
               private static void consume(boolean b) {}
