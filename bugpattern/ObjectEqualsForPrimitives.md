@@ -1,6 +1,6 @@
 ---
 title: ObjectEqualsForPrimitives
-summary: Avoid unnecessary boxing by using plain == for primitive types.
+summary: Avoid unnecessary boxing by using == (or !=) when comparing primitive types.
 layout: bugpattern
 tags: Performance
 severity: WARNING

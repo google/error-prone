@@ -1209,7 +1209,7 @@ __[NullableWildcard](bugpattern/NullableWildcard)__<br>
 Nullness annotations directly on wildcard types are interpreted differently by different tools
 
 __[ObjectEqualsForPrimitives](bugpattern/ObjectEqualsForPrimitives)__<br>
-Avoid unnecessary boxing by using plain &#61;&#61; for primitive types.
+Avoid unnecessary boxing by using &#61;&#61; (or !&#61;) when comparing primitive types.
 
 __[ObjectToString](bugpattern/ObjectToString)__<br>
 Calling toString on Objects that don&#39;t override toString() doesn&#39;t provide useful information
