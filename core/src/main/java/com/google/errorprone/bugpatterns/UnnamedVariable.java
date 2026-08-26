@@ -68,6 +68,11 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
     if (!SourceVersion.supportsUnnamedVariablesAndPatterns(state.context)) {
       return NO_MATCH;
     }
+    // Temporarily disable this check for Android code, as some Android code doesn't yet support
+    // the unnamed variable syntax.
+    if (state.isAndroidCompatible()) {
+      return NO_MATCH;
+    }
     VariableFinder finder = new VariableFinder(state);
     finder.scan(tree, null);
     Set<Symbol> unusedSymbols = finder.unusedSymbols.keySet();
