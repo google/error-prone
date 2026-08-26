@@ -1256,21 +1256,23 @@ public final class ASTHelpers {
    * determined.
    */
   public static @Nullable Type getType(@Nullable Tree tree) {
-    return tree instanceof JCTree jCTree ? jCTree.type : null;
+    return tree == null ? null : ((JCTree) tree).type;
   }
 
   /**
-   * Returns the {@code ClassType} for the given type {@code ClassTree} or {@code null} if the type
-   * could not be determined.
+   * Returns the {@code ClassType} for the given type {@code ClassTree} or {@code null} if {@code
+   * tree} was {@code null}.
    */
   public static @Nullable ClassType getType(@Nullable ClassTree tree) {
-    Type type = getType((Tree) tree);
-    return type instanceof ClassType classType ? classType : null;
+    if (tree == null) {
+      return null;
+    }
+    ClassType result = (ClassType) getType((Tree) tree);
+    return checkNotNull(result, "%s had a null type", tree);
   }
 
-  public static @Nullable String getAnnotationName(AnnotationTree tree) {
-    Symbol sym = getSymbol(tree);
-    return sym == null ? null : sym.name.toString();
+  public static String getAnnotationName(AnnotationTree tree) {
+    return getSymbol(tree).name.toString();
   }
 
   /** Returns the erasure of the given type tree, i.e. {@code List} for {@code List<Foo>}. */
