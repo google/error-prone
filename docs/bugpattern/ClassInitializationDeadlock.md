@@ -105,10 +105,11 @@ There is a separate Error Prone check, https://errorprone.info/bugpattern/AutoVa
 prevent `AutoValue_` classes from being accessed outside the file containing the
 corresponding `@AutoValue` base class.
 
-## Private member classes
+## Private member classes are *often* safe
 
 The check ignores references that cross from a `private` inner class (or any
-class inside it) to its immediately enclosing class, e.g.
+class inside it) to its immediately enclosing class, since these are more often
+safe. For example, the following is safe in normal usage:
 
 ```java
 public class A {
@@ -119,15 +120,28 @@ public class A {
 }
 ```
 
-There is a cycle `A` -> `A.B.C` -> `A`, but (without reflection) it's not
+There is a cycle `A` -> `A.B.C` -> `A`, but the public APIs do not make it
 possible to access `A.B.C` in a way that causes initialization until after A is
 initialized.
 
-There are situations where deadlocks involving `private` classes can still
-occur, but the heuristic of ignoring paths cycles from `private` members is good
-enough for most real-world examples of deadlocks that have been observed.
+That cycle can still cause problems if users access the private class by using
+reflection. Fortunately, in practice, most reflective initialization of classes
+seem to be performed in a warmup phase during which multithreaded usage is less
+likely. As a result, the danger from reflection seems to come more from cases in
+which
+[one class needs to be initialized before another even in a single-threaded environment](https://github.com/google/guava/pull/8634).
+(And some of the deadlocks detected by ClassInitializationDeadlock will
+additionally be cases in which one class needs to be initialized before
+another.)
 
-In the following, `A.C` can trigger initialization of `B`, despite `B` being
+Reflection aside, cycles involving `private` classes sometimes still *can* allow
+users to trigger deadlocks through the public API. So, while
+ClassInitializationDeadlock ignores `private` classes as a heuristic that is
+good enough for most real-world examples of deadlocks that have been observed,
+`private` alone does not actually guarantee safety.
+
+Here is an example of a cycle involving a `private` class that can trigger a
+deadlock. In it, `A.C` can trigger initialization of `B`, despite `B` being
 private.
 
 ```java
