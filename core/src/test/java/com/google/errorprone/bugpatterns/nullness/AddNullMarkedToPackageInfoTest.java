@@ -53,6 +53,45 @@ public class AddNullMarkedToPackageInfoTest {
   }
 
   @Test
+  public void annotationInserted_noTrailingNewline() {
+    refactoringTestHelper
+        .addInputLines(
+            "in/package-info.java",
+            """
+            package com.google.apps.bigtop.sync.client.api.gmailcards;\
+            """)
+        .addOutputLines(
+            "out/package-info.java",
+            """
+            @NullMarked
+            package com.google.apps.bigtop.sync.client.api.gmailcards;
+
+            import org.jspecify.annotations.NullMarked;
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void annotationInserted_commentInsidePackageTreeAndNoImports() {
+    // No one should write this in the first place, of course.
+    refactoringTestHelper
+        .addInputLines(
+            "in/package-info.java",
+            """
+            package com.google.apps.bigtop.sync.client.api.gmailcards /*hi, there!*/;
+            """)
+        .addOutputLines(
+            "out/package-info.java",
+            """
+            @NullMarked
+            package com.google.apps.bigtop.sync.client.api.gmailcards /*hi, there!*/;
+
+            import org.jspecify.annotations.NullMarked;
+            """)
+        .doTest();
+  }
+
+  @Test
   public void annotationNotInserted_alreadyPresent() {
     refactoringTestHelper
         .addInputLines(
