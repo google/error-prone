@@ -164,7 +164,7 @@ public final class WellKnownMutability implements ThreadSafetyKnownTypes {
         .add(java.net.Inet6Address.class)
         .add(java.net.InetAddress.class)
         .add(java.net.URI.class)
-        .add(java.net.http.HttpClient.class)
+        .add("java.net.http.HttpClient")
         .add(java.nio.ByteOrder.class)
         .add(java.nio.charset.Charset.class)
         .add(java.nio.file.Path.class)
