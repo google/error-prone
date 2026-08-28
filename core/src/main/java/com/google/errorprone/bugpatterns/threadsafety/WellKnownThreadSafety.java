@@ -163,7 +163,9 @@ public final class WellKnownThreadSafety implements ThreadSafetyKnownTypes {
         .add("kotlinx.coroutines.Dispatchers")
         .add("kotlinx.coroutines.ExecutorCoroutineDispatcher")
         .add("kotlinx.coroutines.Job")
-        .add("kotlinx.coroutines.channels.Channel") // TODO(chaorenl): fix existing users and add E
+        // Channels are communication primitives where elements are transferred point-to-point and
+        // received at most once, rather than persistent containers.
+        .add("kotlinx.coroutines.channels.Channel")
         .add("kotlinx.coroutines.channels.ProducerScope", "E")
         .add("kotlinx.coroutines.channels.ReceiveChannel")
         .add("kotlinx.coroutines.channels.SendChannel")
