@@ -86,7 +86,7 @@ public final class StringCaseLocaleUsage extends BugChecker implements MethodInv
     var fix =
         SuggestedFix.builder()
             .setShortDescription(
-                "Replace with Ascii.toLower/UpperCase; this changes behaviour for non-ASCII"
+                "Replace with Guava's Ascii.toLower/UpperCase; this changes behaviour for non-ASCII"
                     + " Strings");
     String ascii = SuggestedFixes.qualifyType(state, fix, "com.google.common.base.Ascii");
     fix.replace(
