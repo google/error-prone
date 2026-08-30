@@ -327,7 +327,7 @@
       <!-- Apache 2.0 -->
       <groupId>org.easymock</groupId>
       <artifactId>easymock</artifactId>
-      <version>5.6.0</version>
+      <version>5.7.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
