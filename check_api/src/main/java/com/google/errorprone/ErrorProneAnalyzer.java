@@ -19,9 +19,11 @@ package com.google.errorprone;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Throwables.getStackTraceAsString;
 import static com.google.common.base.Verify.verify;
+import static java.util.Comparator.comparing;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneOptions.Severity;
@@ -45,7 +47,10 @@ import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Log.WriterKind;
 import com.sun.tools.javac.util.PropagatedException;
 import java.io.PrintWriter;
+import java.time.Duration;
 import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import javax.tools.JavaFileObject;
 import org.safere.Pattern;
@@ -190,8 +195,39 @@ public final class ErrorProneAnalyzer implements TaskListener {
 
   private int errorProneErrors = 0;
 
+  /** Prints how long each check ran, slowest first. */
+  private void printTimings() {
+    ErrorProneTimings timings = ErrorProneTimings.instance(context);
+    ImmutableMap<String, Duration> checks = timings.timings();
+    Duration total = checks.values().stream().reduce(Duration.ZERO, Duration::plus);
+    PrintWriter out = Log.instance(context).getWriter(WriterKind.NOTICE);
+    out.printf(
+        Locale.ROOT,
+        "Error Prone ran %d checks in %d ms, and spent %d ms initializing%n",
+        checks.size(),
+        total.toMillis(),
+        timings.initializationTime().toMillis());
+    checks.entrySet().stream()
+        .sorted(comparing((Map.Entry<String, Duration> e) -> e.getValue()).reversed())
+        .forEach(
+            e ->
+                out.printf(
+                    Locale.ROOT,
+                    "  %8d ms  %5.1f%%  %s%n",
+                    e.getValue().toMillis(),
+                    total.isZero() ? 0.0 : 100.0 * e.getValue().toNanos() / total.toNanos(),
+                    e.getKey()));
+    out.flush();
+  }
+
   @Override
   public void finished(TaskEvent taskEvent) {
+    if (taskEvent.getKind() == Kind.COMPILATION) {
+      if (errorProneOptions.printTimings()) {
+        printTimings();
+      }
+      return;
+    }
     if (taskEvent.getKind() != Kind.ANALYZE) {
       return;
     }

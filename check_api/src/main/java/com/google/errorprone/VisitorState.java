@@ -601,8 +601,16 @@ public final class VisitorState {
     return Options.instance(context).getBoolean("androidCompatible");
   }
 
-  /** Returns a timing span for the given {@link Suppressible}. */
+  private static final AutoCloseable NO_TIMING_SPAN = () -> {};
+
+  /**
+   * Returns a timing span for the given {@link Suppressible}, or a span that records nothing unless
+   * {@link ErrorProneOptions#printTimings} asked for the timings.
+   */
   public AutoCloseable timingSpan(Suppressible suppressible) {
+    if (!sharedState.recordTimings) {
+      return NO_TIMING_SPAN;
+    }
     return sharedState.timings.span(suppressible);
   }
 
@@ -675,6 +683,7 @@ public final class VisitorState {
     private final Names names;
     private final Symtab symtab;
     private final ErrorProneTimings timings;
+    private final boolean recordTimings;
     private final Types types;
     private final TreeMaker treeMaker;
     private final JavacInvocationInstance javacInvocationInstance;
@@ -699,6 +708,7 @@ public final class VisitorState {
       this.names = Names.instance(context);
       this.symtab = Symtab.instance(context);
       this.timings = ErrorProneTimings.instance(context);
+      this.recordTimings = errorProneOptions.printTimings();
       this.types = Types.instance(context);
       this.treeMaker = TreeMaker.instance(context);
       this.javacInvocationInstance = JavacInvocationInstance.instance(context);
