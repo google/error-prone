@@ -172,6 +172,9 @@ public final class VisitorState {
   }
 
   private VisitorState withNoPathForMemoization() {
+    if (path == null) {
+      return this;
+    }
     return new VisitorState(context, null, suppressedState, sharedState);
   }
 
@@ -624,18 +627,12 @@ public final class VisitorState {
 
     @Override
     public synchronized T get(VisitorState state) {
-      /*
-       * Don't let callers rely on the TreePath: The Cache is shared across the whole compilation,
-       * not just the current VisitorState's TreePath's CompilationUnit.
-       */
-      state = state.withNoPathForMemoization();
-
       /* javac is single-threaded, so in principle we don't really need to lock.
       But in practice it's cheap enough to be worth getting peace of mind that this is
       always correct. */
       T value = cache.get();
       if (value == null) {
-        value = impl.get(state);
+        value = compute(state);
         if (value != null) {
           cache = new SoftReference<>(value);
           provenance = state.sharedState.javacInvocationInstance;
@@ -643,12 +640,20 @@ public final class VisitorState {
       } else {
         JavacInvocationInstance current = state.sharedState.javacInvocationInstance;
         if (provenance != current) {
-          value = impl.get(state);
+          value = compute(state);
           cache = new SoftReference<>(value);
           provenance = current;
         }
       }
       return value;
+    }
+
+    private T compute(VisitorState state) {
+      /*
+       * Don't let callers rely on the TreePath: The Cache is shared across the whole compilation,
+       * not just the current VisitorState's TreePath's CompilationUnit.
+       */
+      return impl.get(state.withNoPathForMemoization());
     }
   }
 
