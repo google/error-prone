@@ -195,10 +195,12 @@ public final class ErrorProneAnalyzer implements TaskListener {
 
   private int errorProneErrors = 0;
 
-  /** Prints how long each check ran, slowest first. */
+  /** Prints how long each check ran and how often, slowest first. */
   private void printTimings() {
     ErrorProneTimings timings = ErrorProneTimings.instance(context);
     ImmutableMap<String, Duration> checks = timings.timings();
+    ImmutableMap<String, Long> counts = timings.counts();
+    ImmutableMap<String, Long> maxNanos = timings.maxNanos();
     Duration total = checks.values().stream().reduce(Duration.ZERO, Duration::plus);
     PrintWriter out = Log.instance(context).getWriter(WriterKind.NOTICE);
     out.printf(
@@ -213,9 +215,11 @@ public final class ErrorProneAnalyzer implements TaskListener {
             e ->
                 out.printf(
                     Locale.ROOT,
-                    "  %8d ms  %5.1f%%  %s%n",
+                    "  %8d ms  %5.1f%%  %12d calls  max %9d ns  %s%n",
                     e.getValue().toMillis(),
                     total.isZero() ? 0.0 : 100.0 * e.getValue().toNanos() / total.toNanos(),
+                    counts.getOrDefault(e.getKey(), 0L),
+                    maxNanos.getOrDefault(e.getKey(), 0L),
                     e.getKey()));
     out.flush();
   }

@@ -139,7 +139,7 @@ public class ErrorProneJavaCompilerTest {
             Collections.<Class<? extends BugChecker>>emptyList());
     // A header alone would pass with nothing recorded, because it is printed before the rows.
     assertThat(result.output).containsMatch("Error Prone ran [1-9]\\d* checks");
-    assertThat(result.output).containsMatch("\\d+ ms\\s+[\\d.]+%");
+    assertThat(result.output).containsMatch("\\d+ ms\\s+[\\d.]+%\\s+\\d+ calls");
   }
 
   @Test

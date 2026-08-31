@@ -247,7 +247,7 @@ public final class ErrorProneOptions {
   }
 
   /**
-   * Returns true if Error Prone records how long each check runs, and prints the totals once the
+   * Returns whether Error Prone records how long each check runs and prints the totals when the
    * compilation finishes.
    */
   public boolean printTimings() {
