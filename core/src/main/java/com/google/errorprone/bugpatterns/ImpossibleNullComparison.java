@@ -122,32 +122,11 @@ public final class ImpossibleNullComparison extends BugChecker
   private static final ImmutableSet<Kind> COMPARISON_OPERATORS =
       Sets.immutableEnumSet(Kind.EQUAL_TO, Kind.NOT_EQUAL_TO);
 
-  private static final Matcher<ExpressionTree> EXTENSION_METHODS_WITH_FIX_LEGACY =
-      instanceMethod()
-          .onDescendantOf(EXTENDABLE_MESSAGE_CLASS)
-          .named("getExtension")
-          .withParameters(EXTENSION_LITE_CLASS);
-
   private static final Matcher<ExpressionTree> EXTENSION_METHODS_WITH_FIX =
       instanceMethod()
           .onDescendantOfAny(EXTENDABLE_MESSAGE_CLASS, EXTENDABLE_MESSAGE_LITE_CLASS)
           .named("getExtension")
           .withParameters(EXTENSION_LITE_CLASS);
-
-  private static final Matcher<ExpressionTree> EXTENSION_METHODS_WITH_NO_FIX_LEGACY =
-      anyOf(
-          instanceMethod()
-              .onDescendantOf(MESSAGE_OR_BUILDER_CLASS)
-              .named("getRepeatedField")
-              .withParameters(FIELD_DESCRIPTOR_CLASS, "int"),
-          instanceMethod()
-              .onDescendantOf(EXTENDABLE_MESSAGE_CLASS)
-              .named("getExtension")
-              .withParameters(EXTENSION_LITE_CLASS, "int"),
-          instanceMethod()
-              .onDescendantOf(MESSAGE_OR_BUILDER_CLASS)
-              .named("getField")
-              .withParameters(FIELD_DESCRIPTOR_CLASS));
 
   private static final Matcher<ExpressionTree> EXTENSION_METHODS_WITH_NO_FIX =
       anyOf(
@@ -593,12 +572,10 @@ public final class ImpossibleNullComparison extends BugChecker
         if (!protoReceiver(checkOrBuilder).matches(tree, state)) {
           return null;
         }
-        if ((checkOrBuilder ? EXTENSION_METHODS_WITH_NO_FIX : EXTENSION_METHODS_WITH_NO_FIX_LEGACY)
-            .matches(tree, state)) {
+        if (EXTENSION_METHODS_WITH_NO_FIX.matches(tree, state)) {
           return GetterTypes::emptyFix;
         }
-        if ((checkOrBuilder ? EXTENSION_METHODS_WITH_FIX : EXTENSION_METHODS_WITH_FIX_LEGACY)
-            .matches(tree, state)) {
+        if (EXTENSION_METHODS_WITH_FIX.matches(tree, state)) {
           // If the extension represents a repeated field (i.e.: it's an ExtensionLite<T, List<R>>),
           // the suggested fix from get->has isn't appropriate,so we shouldn't suggest a replacement
 

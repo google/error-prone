@@ -689,48 +689,4 @@ public class Test {
             """)
         .doTest();
   }
-
-  @Test
-  public void liteExtendableMessage_flagEnabled() {
-    compilationHelper
-        .addSourceLines(
-            "Test.java",
-            """
-            import com.google.protobuf.ExtensionLite;
-            import com.google.protobuf.GeneratedMessageLite;
-
-            public class Test {
-              public static <MessageType extends GeneratedMessageLite.ExtendableMessage<MessageType, ?>, Type>
-                  void test(
-                      GeneratedMessageLite.ExtendableMessage<MessageType, ?> msg,
-                      ExtensionLite<MessageType, Type> extension) {
-                // BUG: Diagnostic contains: msg.hasExtension(extension)
-                if (msg.getExtension(extension) != null) {}
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
-  public void liteExtendableMessage_flagDisabled() {
-    compilationHelper
-        .setArgs("-XepOpt:ImpossibleNullComparison:CheckOrBuilder=false")
-        .addSourceLines(
-            "Test.java",
-            """
-            import com.google.protobuf.ExtensionLite;
-            import com.google.protobuf.GeneratedMessageLite;
-
-            public class Test {
-              public static <MessageType extends GeneratedMessageLite.ExtendableMessage<MessageType, ?>, Type>
-                  void test(
-                      GeneratedMessageLite.ExtendableMessage<MessageType, ?> msg,
-                      ExtensionLite<MessageType, Type> extension) {
-                if (msg.getExtension(extension) != null) {}
-              }
-            }
-            """)
-        .doTest();
-  }
 }
