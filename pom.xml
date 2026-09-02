@@ -29,7 +29,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <guava.version>33.6.0-jre</guava.version>
+    <guava.version>33.7.1-jre</guava.version>
     <truth.version>1.4.5</truth.version>
     <autoservice.version>1.1.1</autoservice.version>
     <autovalue.version>1.11.1</autovalue.version>
@@ -42,10 +42,10 @@
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
     <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
-    <protobuf.version>4.35.1</protobuf.version>
+    <protobuf.version>4.36.0</protobuf.version>
     <grpc.version>1.43.3</grpc.version>
-    <jspecify.version>1.0.0</jspecify.version>
-    <google-java-format.version>1.35.0</google-java-format.version>
+    <jspecify.version>1.0.1</jspecify.version>
+    <google-java-format.version>1.36.1</google-java-format.version>
   </properties>
 
   <organization>
@@ -138,7 +138,7 @@
       <plugin>
         <groupId>biz.aQute.bnd</groupId>
         <artifactId>bnd-maven-plugin</artifactId>
-        <version>7.3.0</version>
+        <version>7.4.0</version>
         <executions>
           <execution>
             <id>generate-OSGi-manifest</id>
@@ -160,7 +160,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>3.5.1</version>
         <configuration>
           <archive>
             <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
@@ -299,7 +299,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-toolchains-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.0</version>
         <configuration>
           <toolchains>
             <jdk>

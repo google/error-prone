@@ -88,11 +88,11 @@ public final class Unifier {
   }
 
   public void clearBinding(Bindings.Key<?> key) {
-    bindings.remove(key);
+    bindings.clearBinding(key);
   }
 
   public Bindings getBindings() {
-    return bindings.unmodifiable();
+    return bindings;
   }
 
   public Context getContext() {

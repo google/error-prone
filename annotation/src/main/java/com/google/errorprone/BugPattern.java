@@ -179,10 +179,4 @@ public @interface BugPattern {
    * packages, so checks that operate at the package level need special treatment.
    */
   boolean documentSuppression() default true;
-
-  /**
-   * @deprecated this is a no-op that will be removed in the future
-   */
-  @Deprecated
-  boolean generateExamplesFromTestCases() default true;
 }

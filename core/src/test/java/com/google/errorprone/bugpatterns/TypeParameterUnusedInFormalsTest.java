@@ -183,8 +183,6 @@ public class TypeParameterUnusedInFormalsTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
-
             class Test {
               static <T> T noop(T t) {
                 return t;
@@ -200,8 +198,6 @@ public class TypeParameterUnusedInFormalsTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
-
             class Test<T> {
               T noop(T t) {
                 return t;

@@ -304,11 +304,9 @@ public class IdentityTest {
 """
 package com.google.errorprone.dataflow.nullnesspropagation;
 
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class ReturnTest {
   List<@NonNull Object> return_tests(Object o1, Object o2) {
@@ -383,7 +381,6 @@ abstract class List<T> {
 package com.google.errorprone.dataflow.nullnesspropagation;
 
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
-import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredGenerics;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -662,7 +659,6 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessInferenceTest.inspectInferredExpression;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class AnnotatedMethodTypeParamsTest {
   public void test() {

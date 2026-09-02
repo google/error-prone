@@ -509,7 +509,7 @@ class Test {
               }
             }
             """)
-        .setArgs("-XepCompilingTestOnlyCode")
+        .setTestOnly()
         .doTest();
   }
 

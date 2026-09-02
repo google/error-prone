@@ -38,8 +38,6 @@ public final class UseCorrectAssertInTestsTest {
   private static final String INPUT = "in/FooTest.java";
   private static final String OUTPUT = "out/FooTest.java";
 
-  private static final String TEST_ONLY = "-XepCompilingTestOnlyCode";
-
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(UseCorrectAssertInTests.class, getClass());
   private final CompilationTestHelper compilationHelper =
@@ -129,7 +127,7 @@ public final class UseCorrectAssertInTestsTest {
             "    assertThat(true).isTrue();",
             "  }",
             "}")
-        .setArgs(TEST_ONLY)
+        .setTestOnly()
         .doTest();
   }
 

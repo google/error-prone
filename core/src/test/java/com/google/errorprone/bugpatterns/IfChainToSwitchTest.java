@@ -39,7 +39,6 @@ public final class IfChainToSwitchTest {
         CLUB
       };
       """;
-
   private static final String ENABLE_MAIN = "-XepOpt:IfChainToSwitch:EnableMain";
   private static final String DISABLE_SAFE = "-XepOpt:IfChainToSwitch:EnableSafe=false";
   private static final String ENABLE_SAFE = "-XepOpt:IfChainToSwitch:EnableSafe";
@@ -60,8 +59,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -84,8 +81,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   private Object suit;
 
@@ -107,7 +102,7 @@ public final class IfChainToSwitchTest {
                 }
                 """))
         .allowFormattingErrors()
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -119,8 +114,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -141,7 +134,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -152,8 +145,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -178,8 +169,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   private Object suit;
 
@@ -197,7 +186,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -209,8 +198,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -236,8 +223,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   private Object suit;
 
@@ -257,7 +242,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -269,8 +254,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Boolean b = s == null;
@@ -284,7 +267,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -295,8 +278,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 long l = s == null ? 1 : 2;
@@ -310,7 +291,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -321,8 +302,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 long l = s == null ? 1 : 2;
@@ -347,8 +326,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 int i = s == null ? 1 : 2;
@@ -367,8 +344,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 int i = s == null ? 1 : 2;
@@ -381,7 +356,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -393,8 +368,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -416,8 +389,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -432,7 +403,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -444,8 +415,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -467,8 +436,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -496,8 +463,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -515,7 +480,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -526,8 +491,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -552,8 +515,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   private Object suit;
 
@@ -571,7 +532,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -583,8 +544,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -607,8 +566,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   private Object suit;
 
@@ -625,7 +582,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -637,8 +594,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               private Object suit;
 
@@ -661,8 +616,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   private Object suit;
 
@@ -692,8 +645,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -712,8 +663,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -727,7 +676,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -739,8 +688,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -759,8 +706,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -786,8 +731,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -808,8 +751,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -824,7 +765,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -836,8 +777,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -858,8 +797,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -918,7 +855,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -974,8 +911,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -996,8 +931,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -1012,7 +945,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1024,8 +957,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 1 : 2;
@@ -1044,8 +975,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 1 : 2;
@@ -1059,7 +988,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1071,8 +1000,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -1092,8 +1019,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -1109,7 +1034,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1161,7 +1086,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1204,7 +1129,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1246,7 +1171,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1287,7 +1212,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1298,8 +1223,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit suit) {
                 String s = suit == null ? "null" : "nonnull";
@@ -1315,7 +1238,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1327,8 +1250,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 if (s == Suit.DIAMOND) {
@@ -1347,8 +1268,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     switch (s) {
@@ -1360,7 +1279,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1372,8 +1291,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 if (s == Suit.DIAMOND) {
@@ -1399,8 +1316,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object o = s;
@@ -1420,7 +1335,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1432,8 +1347,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object o = s;
@@ -1455,7 +1368,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1506,7 +1419,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1518,8 +1431,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 if (s == Suit.DIAMOND) {
@@ -1534,7 +1445,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1545,8 +1456,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 while (true) {
@@ -1564,7 +1473,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1575,8 +1484,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 int q =
@@ -1598,7 +1505,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1664,7 +1571,7 @@ public final class IfChainToSwitchTest {
             }
             """)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1675,8 +1582,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 while (true) {
@@ -1695,7 +1600,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1706,8 +1611,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 while (true) {
@@ -1725,7 +1628,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1736,8 +1639,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 a:
@@ -1757,7 +1658,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1813,7 +1714,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1880,7 +1781,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -1892,8 +1793,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 1 : 2;
@@ -1909,7 +1808,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1920,8 +1819,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
 
               record Person(String name, int age) {}
@@ -1939,7 +1836,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1950,8 +1847,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -1965,7 +1860,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -1976,8 +1871,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -1990,7 +1883,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -2001,9 +1894,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Integer;
-            import java.lang.Long;
-            import java.lang.Number;
             import java.math.BigDecimal;
             import java.time.Duration;
             import java.time.Instant;
@@ -2059,15 +1949,11 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-                import java.lang.Integer;
-                import java.lang.Long;
                 import java.math.BigDecimal;
                 import java.time.Duration;
                 import java.time.Instant;
                 import java.util.Date;
                 import java.util.Optional;
-
 
                 class Test {
                   public void foo(Suit s) {
@@ -2107,7 +1993,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2118,8 +2004,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2141,8 +2025,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2156,7 +2038,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2167,8 +2049,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2190,8 +2070,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2217,8 +2095,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2249,8 +2125,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2295,7 +2169,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2306,8 +2180,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2338,8 +2210,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2396,8 +2266,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2419,8 +2287,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2445,7 +2311,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2457,8 +2323,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2479,8 +2343,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2515,8 +2377,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2537,8 +2397,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2573,8 +2431,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2603,8 +2459,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 int nonEffectivelyFinal = 0;
@@ -2636,8 +2490,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 String nonEffectivelyFinal = "hello";
@@ -2668,8 +2520,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2691,8 +2541,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2728,8 +2576,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 {
@@ -2753,8 +2599,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 {
@@ -2777,7 +2621,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2788,8 +2632,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 {
@@ -2815,8 +2657,6 @@ public final class IfChainToSwitchTest {
         .addOutputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 {
@@ -2842,7 +2682,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2853,8 +2693,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2879,8 +2717,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2908,8 +2744,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2934,8 +2768,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -2952,7 +2784,7 @@ public final class IfChainToSwitchTest {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -2963,8 +2795,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -2975,7 +2805,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -2985,8 +2815,6 @@ public final class IfChainToSwitchTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -3002,7 +2830,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3040,7 +2868,7 @@ public final class IfChainToSwitchTest {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3076,7 +2904,6 @@ public final class IfChainToSwitchTest {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
             import java.util.ArrayList;
             import java.util.List;
 
@@ -3103,7 +2930,6 @@ public final class IfChainToSwitchTest {
             "Test.java",
             maybeChangeToUnnamedVariable(
 """
-import java.lang.Number;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -3137,7 +2963,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
             import java.util.ArrayList;
             import java.util.List;
 
@@ -3164,7 +2989,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
 """
-import java.lang.Number;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -3185,7 +3009,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3197,7 +3021,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
             import java.util.HashMap;
             import java.util.Map;
 
@@ -3224,7 +3047,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
 """
-import java.lang.Number;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -3258,7 +3080,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
             import java.util.HashMap;
             import java.util.Map;
 
@@ -3285,7 +3106,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
 """
-import java.lang.Number;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -3306,7 +3126,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3318,8 +3138,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 0 : 1;
@@ -3333,7 +3151,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3344,8 +3162,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -3374,8 +3190,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Object suit = s;
@@ -3398,8 +3212,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Suit s) {
                     Object suit = s;
@@ -3415,7 +3227,7 @@ class Test {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3426,8 +3238,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 0 : 1;
@@ -3449,8 +3259,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
 """
-import java.lang.Number;
-
 class Test {
   public void foo(Suit s) {
     Integer i = s == null ? 0 : 1;
@@ -3464,7 +3272,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3476,8 +3284,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 0 : 1;
@@ -3497,7 +3303,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3508,8 +3314,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 0 : 1;
@@ -3523,7 +3327,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3534,8 +3338,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 0 : 1;
@@ -3551,7 +3353,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3562,8 +3364,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Suit s) {
                 Integer i = s == null ? 0 : 1;
@@ -3585,8 +3385,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
 """
-import java.lang.Number;
-
 class Test {
   public void foo(Suit s) {
     Integer i = s == null ? 0 : 1;
@@ -3600,7 +3398,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3655,7 +3453,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3709,7 +3507,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3766,6 +3564,7 @@ class Test {
 """))
         .setArgs(
             ENABLE_MAIN,
+            DISABLE_SAFE,
             MIN_CHAIN_LENGTH_3,
             "--enable-preview",
             "--release",
@@ -3806,7 +3605,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3818,8 +3617,6 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import java.lang.Number;
-
             class Test {
               public void foo(Object obj) {
                 if (obj instanceof Object) {
@@ -3836,8 +3633,6 @@ class Test {
             "Test.java",
             maybeChangeToUnnamedVariable(
                 """
-                import java.lang.Number;
-
                 class Test {
                   public void foo(Object obj) {
                     switch (obj) {
@@ -3848,7 +3643,7 @@ class Test {
                   }
                 }
                 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3898,7 +3693,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -3931,7 +3726,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -3972,7 +3767,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4005,7 +3800,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4046,7 +3841,7 @@ class Test {
   }
 }
 """))
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4105,7 +3900,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4173,7 +3968,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4261,7 +4056,7 @@ class Test {
   }
 }
 """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4314,7 +4109,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4392,7 +4187,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4434,7 +4229,7 @@ class Test {
   }
 }
 """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
@@ -4462,7 +4257,7 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
@@ -4511,6 +4306,33 @@ class Test {
             """)
         .expectUnchanged()
         .setArgs(ENABLE_MAIN, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_stringConstantOnObjectSubject_noError() {
+    // String constants are not allowed on Object switch expressions, and more generally, non-null
+    // constants are only allowed with a limited set of types for the switch expression.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof String) {
+                  System.out.println("string");
+                } else if (o == "a") {
+                  System.out.println("a");
+                } else if (o instanceof Integer) {
+                  System.out.println("integer");
+                } else {
+                  System.out.println("default");
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 

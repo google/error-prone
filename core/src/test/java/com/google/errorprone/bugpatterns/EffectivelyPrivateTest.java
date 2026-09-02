@@ -73,4 +73,75 @@ public class EffectivelyPrivateTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void negative_madeVisibleBySubclass() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class T {
+              private class A {
+                public void foo() {}
+              }
+
+              public class B extends A {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positive_subclassAlsoPrivate() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class T {
+              private class A {
+                // BUG: Diagnostic contains:
+                public void foo() {}
+              }
+
+              private class B extends A {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_chainOfPrivateClasses() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class T {
+              private class A {
+                public void foo() {}
+              }
+
+              private class B extends A {}
+
+              public class C extends B {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_recordInPrivateInterface() {
+    testHelper
+        .addSourceLines(
+            "MyClass.java",
+            """
+            public class MyClass {
+              private interface MyInterface {
+                record MyRecord() {
+                  public MyRecord {}
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }

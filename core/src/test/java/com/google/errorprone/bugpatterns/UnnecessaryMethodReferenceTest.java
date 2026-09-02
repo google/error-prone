@@ -131,9 +131,6 @@ public final class UnnecessaryMethodReferenceTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.function.Function;
-            import java.util.stream.Stream;
-
             abstract class Test {
               void test(A a) {
                 // BUG: Diagnostic contains:
@@ -162,7 +159,6 @@ public final class UnnecessaryMethodReferenceTest {
             "Test.java",
             """
             import com.google.common.base.Predicate;
-            import java.util.function.Function;
             import java.util.stream.Stream;
 
             class Test {
@@ -285,7 +281,6 @@ public final class UnnecessaryMethodReferenceTest {
             """
             import com.google.common.base.Predicate;
             import com.google.common.collect.Range;
-            import java.util.stream.Stream;
 
             abstract class T {
               void g(Range<Long> range) {

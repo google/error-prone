@@ -48,6 +48,9 @@ public class SunApi extends BugChecker implements MemberSelectTreeMatcher, Ident
 
   @Override
   public Description matchMemberSelect(MemberSelectTree tree, VisitorState state) {
+    if (tree.getIdentifier().equals(state.getNames()._class)) {
+      return NO_MATCH;
+    }
     return match(tree, state);
   }
 

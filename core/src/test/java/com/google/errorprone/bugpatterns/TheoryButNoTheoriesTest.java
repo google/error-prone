@@ -72,7 +72,6 @@ public final class TheoryButNoTheoriesTest {
             import org.junit.experimental.theories.Theories;
             import org.junit.experimental.theories.Theory;
             import org.junit.runner.RunWith;
-            import org.junit.runners.JUnit4;
 
             @RunWith(Theories.class)
             public class Test {

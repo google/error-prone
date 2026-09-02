@@ -268,6 +268,7 @@ public final class VarWithPrimitiveTest {
             import java.util.Map;
             import java.util.stream.Collectors;
             import java.util.stream.IntStream;
+
             class Test {
               void foo() {
                 byte[] bar = new byte[6];
@@ -277,8 +278,7 @@ public final class VarWithPrimitiveTest {
                         .collect(
                             Collectors.groupingBy(
                                 n -> bar[n],
-                                Collectors.mapping(
-                                    n -> (byte) n.intValue(), Collectors.toList())));
+                                Collectors.mapping(n -> (byte) n.intValue(), Collectors.toList())));
               }
             }
             """)
@@ -293,6 +293,7 @@ public final class VarWithPrimitiveTest {
             "Test.java",
             """
             import java.util.function.IntUnaryOperator;
+
             class Test {
               void t() {
                 IntUnaryOperator op = (var n) -> n * 2;
@@ -303,6 +304,7 @@ public final class VarWithPrimitiveTest {
             "Test.java",
             """
             import java.util.function.IntUnaryOperator;
+
             class Test {
               void t() {
                 IntUnaryOperator op = (int n) -> n * 2;
@@ -315,15 +317,24 @@ public final class VarWithPrimitiveTest {
   @Test
   public void annotatedVarLambdaParam() {
     refactoringHelper
-        .addInputLines("A.java", "@interface A { int var() default 0; }")
+        .addInputLines(
+            "A.java",
+"""
+@interface A {
+  int var() default 0;
+}
+""")
         .expectUnchanged()
         .addInputLines(
             "Test.java",
             """
             import java.util.function.IntUnaryOperator;
+
             class Test {
               void t() {
-                IntUnaryOperator op = (@A(var = 0) var n) -> n * 2;
+                IntUnaryOperator op =
+                    (@A(var = 0)
+                        var n) -> n * 2;
               }
             }
             """)
@@ -331,9 +342,12 @@ public final class VarWithPrimitiveTest {
             "Test.java",
             """
             import java.util.function.IntUnaryOperator;
+
             class Test {
               void t() {
-                IntUnaryOperator op = (@A(var = 0) int n) -> n * 2;
+                IntUnaryOperator op =
+                    (@A(var = 0)
+                        int n) -> n * 2;
               }
             }
             """)
@@ -346,14 +360,21 @@ public final class VarWithPrimitiveTest {
     // tokens (@A(var=0) attribute + type keyword) and safely returns no fix.
     assume().that(Runtime.version().feature()).isLessThan(26);
     refactoringHelper
-        .addInputLines("A.java", "@interface A { int var() default 0; }")
+        .addInputLines(
+            "A.java",
+"""
+@interface A {
+  int var() default 0;
+}
+""")
         .expectUnchanged()
         .addInputLines(
             "Test.java",
             """
             class Test {
               void t() {
-                @A(var = 0) var n = 5;
+                @A(var = 0)
+                var n = 5;
               }
             }
             """)
@@ -368,14 +389,21 @@ public final class VarWithPrimitiveTest {
     // annotation.
     assume().that(Runtime.version().feature()).isAtLeast(26);
     refactoringHelper
-        .addInputLines("A.java", "@interface A { int var() default 0; }")
+        .addInputLines(
+            "A.java",
+"""
+@interface A {
+  int var() default 0;
+}
+""")
         .expectUnchanged()
         .addInputLines(
             "Test.java",
             """
             class Test {
               void t() {
-                @A(var = 0) var n = 5;
+                @A(var = 0)
+                var n = 5;
               }
             }
             """)
@@ -384,7 +412,8 @@ public final class VarWithPrimitiveTest {
             """
             class Test {
               void t() {
-                @A(var = 0) int n = 5;
+                @A(var = 0)
+                int n = 5;
               }
             }
             """)
@@ -398,6 +427,7 @@ public final class VarWithPrimitiveTest {
             "Test.java",
             """
             import java.util.function.IntBinaryOperator;
+
             class Test {
               void t() {
                 IntBinaryOperator op = (a, b) -> a + b;
@@ -414,6 +444,7 @@ public final class VarWithPrimitiveTest {
             "Test.java",
             """
             import java.util.function.IntUnaryOperator;
+
             class Test {
               void t() {
                 IntUnaryOperator op = (int n) -> n * 2;

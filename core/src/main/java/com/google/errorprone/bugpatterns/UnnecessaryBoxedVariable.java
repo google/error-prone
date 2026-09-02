@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.unboxedType;
 
 import com.google.common.base.Ascii;
 import com.google.common.collect.ArrayListMultimap;
@@ -62,7 +63,6 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.TypeTag;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -84,7 +84,7 @@ import javax.lang.model.element.ElementKind;
     severity = SeverityLevel.SUGGESTION)
 public class UnnecessaryBoxedVariable extends BugChecker implements CompilationUnitTreeMatcher {
   private static final Matcher<ExpressionTree> VALUE_OF_MATCHER =
-      staticMethod().onClass(UnnecessaryBoxedVariable::isBoxableType).named("valueOf");
+      staticMethod().onClass(ASTHelpers::isBoxedPrimitiveType).named("valueOf");
 
   private final WellKnownKeep wellKnownKeep;
 
@@ -102,7 +102,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
       @Override
       public Void visitVariable(VariableTree tree, Void unused) {
         VisitorState innerState = state.withPath(getCurrentPath());
-        unboxed(tree, innerState)
+        unboxedType(getType(tree), innerState)
             .flatMap(u -> handleVariable(u, usages, tree, innerState))
             .ifPresent(state::reportMatch);
         return super.visitVariable(tree, null);
@@ -193,21 +193,6 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
         buildDescription(tree).setMessage(message).addFix(fixBuilder.build()).build());
   }
 
-  private static Optional<Type> unboxed(Tree tree, VisitorState state) {
-    Type type = ASTHelpers.getType(tree);
-    if (type == null || !type.isReference()) {
-      return Optional.empty();
-    }
-    Type unboxed = state.getTypes().unboxedType(type);
-    if (unboxed == null
-        || unboxed.getTag() == TypeTag.NONE
-        // Don't match java.lang.Void.
-        || unboxed.getTag() == TypeTag.VOID) {
-      return Optional.empty();
-    }
-    return Optional.of(unboxed);
-  }
-
   private static void fixNullCheckInvocations(
       List<TreePath> nullCheckInvocations, SuggestedFix.Builder fixBuilder, VisitorState state) {
     for (TreePath pathForTree : nullCheckInvocations) {
@@ -288,11 +273,11 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
   private static void fixAssignment(
       ExpressionTree expressionTree, SuggestedFix.Builder fixBuilder, VisitorState state) {
     Type boxedType = getType(expressionTree);
-    Type unboxedType = state.getTypes().unboxedType(boxedType);
-    if (unboxedType.hasTag(TypeTag.NONE)) {
+    Optional<Type> unboxedType = unboxedType(boxedType, state);
+    if (unboxedType.isEmpty()) {
       return;
     }
-    String name = unboxedType.tsym.getSimpleName().toString();
+    String name = unboxedType.get().tsym.getSimpleName().toString();
     String parseName = "parse" + Ascii.toUpperCase(name.charAt(0)) + name.substring(1);
     switch (expressionTree) {
       case MethodInvocationTree methodInvocation -> {
@@ -303,7 +288,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
             fixBuilder.merge(
                 SuggestedFixes.renameMethodInvocation(
                     (MethodInvocationTree) expressionTree, parseName, state));
-          } else if (isSameType(argumentType, unboxedType, state)) {
+          } else if (isSameType(argumentType, unboxedType.get(), state)) {
             fixBuilder.replace(expressionTree, state.getSourceForNode(argument));
           }
         }
@@ -319,7 +304,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
                   SuggestedFixes.qualifyType(state, fixBuilder, boxedType),
                   parseName,
                   state.getSourceForNode(argument)));
-        } else if (isSameType(argumentType, unboxedType, state)) {
+        } else if (isSameType(argumentType, unboxedType.get(), state)) {
           fixBuilder.replace(expressionTree, state.getSourceForNode(argument));
         }
       }
@@ -364,11 +349,6 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
     return VALUE_OF_MATCHER.matches(expression, state);
   }
 
-  private static boolean isBoxableType(Type type, VisitorState state) {
-    Type unboxedType = state.getTypes().unboxedType(type);
-    return unboxedType != null && unboxedType.getTag() != TypeTag.NONE;
-  }
-
   private static boolean canChangeMethodSignature(VisitorState state, MethodSymbol methodSymbol) {
     return !ASTHelpers.methodCanBeOverridden(methodSymbol)
         && ASTHelpers.findSuperMethods(methodSymbol, state.getTypes()).isEmpty()
@@ -383,7 +363,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
     // Method invocations like V.intValue() can be replaced with (int) v.
     private static final Matcher<ExpressionTree> CAST_METHOD_MATCH =
         instanceMethod()
-            .onClass(UnnecessaryBoxedVariable::isBoxableType)
+            .onClass(ASTHelpers::isBoxedPrimitiveType)
             .namedAnyOf(
                 "byteValue",
                 "shortValue",

@@ -160,7 +160,6 @@ class Test {
             "Test.java",
             """
             import com.google.errorprone.VisitorState;
-            import com.sun.tools.javac.code.Type;
             import com.sun.tools.javac.util.Name;
 
             class Test {
@@ -200,7 +199,6 @@ class Test {
             "Test.java",
             """
             import com.google.errorprone.VisitorState;
-            import com.sun.tools.javac.code.Type;
             import com.sun.tools.javac.util.Name;
 
             class Test {

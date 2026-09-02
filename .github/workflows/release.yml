@@ -7,6 +7,8 @@ on:
         description: "version number for this release."
         required: true
 
+permissions: {}
+
 jobs:
   build-maven-jars:
     runs-on: ubuntu-latest
@@ -14,24 +16,26 @@ jobs:
       contents: write
     steps:          
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: 'Set up JDK 25'
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
         with:
           java-version: 25
           distribution: 'zulu'
           cache: 'maven'
 
       - name: 'Set up JDK 23'
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
         with:
           java-version: 23
           distribution: 'zulu'
           cache: 'maven'
 
       - name: Set up JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
         with:
           java-version: 21
           distribution: 'zulu'
@@ -70,7 +74,7 @@ jobs:
           GITHUB_EVENT_INPUTS_VERSION: ${{ github.event.inputs.version }}
           
       - name: Draft Release Entry
-        uses: softprops/action-gh-release@v3.0.1
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3.0.2
         with:
           draft: true
           name: Error Prone ${{ github.event.input.version }} 

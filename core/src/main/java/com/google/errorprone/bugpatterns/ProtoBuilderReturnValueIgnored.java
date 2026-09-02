@@ -19,9 +19,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_BUILD_METHOD;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_NEW_BUILDER_METHOD;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TO_BUILDER_METHOD;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.streamReceivers;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
@@ -49,26 +49,15 @@ import javax.inject.Inject;
     severity = ERROR)
 public final class ProtoBuilderReturnValueIgnored extends AbstractReturnValueIgnored {
 
-  private static final Matcher<ExpressionTree> BUILDER =
-      instanceMethod()
-          .onDescendantOf("com.google.protobuf.MessageLite.Builder")
-          .namedAnyOf("build", "buildPartial");
-
   public static final Matcher<ExpressionTree> MATCHER =
       allOf(
-          BUILDER,
+          PROTO_BUILD_METHOD,
           // Don't match expressions beginning with a newBuilder call; these should be covered by
           // ModifiedButNotUsed.
           ProtoBuilderReturnValueIgnored::doesNotTerminateInNewBuilder);
 
   private static final Matcher<ExpressionTree> ROOT_INVOCATIONS_TO_IGNORE =
-      anyOf(
-          staticMethod()
-              .onClass(isDescendantOf("com.google.protobuf.MessageLite"))
-              .namedAnyOf("newBuilder"),
-          instanceMethod()
-              .onDescendantOf("com.google.protobuf.MessageLite")
-              .namedAnyOf("toBuilder"));
+      anyOf(PROTO_NEW_BUILDER_METHOD, PROTO_TO_BUILDER_METHOD);
 
   @Inject
   ProtoBuilderReturnValueIgnored(ConstantExpressions constantExpressions) {

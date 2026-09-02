@@ -738,6 +738,7 @@ public final class PreferPreconditionsTest {
                   throw createNpe();
                 }
               }
+
               NullPointerException createNpe() {
                 return new NullPointerException();
               }

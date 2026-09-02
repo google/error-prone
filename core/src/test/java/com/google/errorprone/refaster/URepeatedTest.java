@@ -34,7 +34,7 @@ public class URepeatedTest extends AbstractUTreeTest {
     JCExpression expr = parseExpression("\"abcdefg\".charAt(x + 1)");
     URepeated ident = URepeated.create("foo", UFreeIdent.create("foo"));
     assertThat(ident.unify(expr, unifier)).isNotNull();
-    assertThat(unifier.getBindings()).containsExactly(new UFreeIdent.Key("foo"), expr);
+    assertThat(unifier.getBindings().asMap()).containsExactly(new UFreeIdent.Key("foo"), expr);
   }
 
   @Test

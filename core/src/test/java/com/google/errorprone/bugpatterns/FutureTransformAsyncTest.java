@@ -366,7 +366,6 @@ class Test {
             import static com.google.common.util.concurrent.Futures.immediateFuture;
             import static com.google.common.util.concurrent.Futures.transformAsync;
 
-            import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
 
@@ -391,7 +390,6 @@ import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.Futures.transform;
 import static com.google.common.util.concurrent.Futures.transformAsync;
 
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.concurrent.Executor;
 
@@ -813,7 +811,6 @@ class Test {
             import static com.google.common.util.concurrent.Futures.immediateFuture;
             import static com.google.common.util.concurrent.Futures.submitAsync;
 
-            import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
 
@@ -832,7 +829,6 @@ class Test {
             import static com.google.common.util.concurrent.Futures.submit;
             import static com.google.common.util.concurrent.Futures.submitAsync;
 
-            import com.google.common.util.concurrent.Futures;
             import com.google.common.util.concurrent.ListenableFuture;
             import java.util.concurrent.Executor;
 

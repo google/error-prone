@@ -387,7 +387,6 @@ public final class ModifiedButNotUsedTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
             class Test {
@@ -406,7 +405,6 @@ public final class ModifiedButNotUsedTest {
         .addSourceLines(
             "Test.java",
             """
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
 
             class Test {

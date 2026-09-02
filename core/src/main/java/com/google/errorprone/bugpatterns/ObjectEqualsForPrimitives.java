@@ -25,13 +25,16 @@ import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
-import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.type.TypeKind;
 
@@ -41,7 +44,7 @@ import javax.lang.model.type.TypeKind;
  * @author vlk@google.com (Volodymyr Kachurovskyi)
  */
 @BugPattern(
-    summary = "Avoid unnecessary boxing by using plain == for primitive types.",
+    summary = "Avoid unnecessary boxing by using == (or !=) when comparing primitive types.",
     tags = StandardTags.PERFORMANCE,
     severity = WARNING)
 public class ObjectEqualsForPrimitives extends BugChecker implements MethodInvocationTreeMatcher {
@@ -52,13 +55,13 @@ public class ObjectEqualsForPrimitives extends BugChecker implements MethodInvoc
           staticEqualsInvocation(), argument(0, isPrimitiveType()), argument(1, isPrimitiveType()));
 
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!MATCHER.matches(tree, state)) {
+  public Description matchMethodInvocation(MethodInvocationTree call, VisitorState state) {
+    if (!MATCHER.matches(call, state)) {
       return NO_MATCH;
     }
 
-    ExpressionTree expression1 = tree.getArguments().get(0);
-    ExpressionTree expression2 = tree.getArguments().get(1);
+    ExpressionTree expression1 = call.getArguments().get(0);
+    ExpressionTree expression2 = call.getArguments().get(1);
     if (isFloatingPoint(expression1) || isFloatingPoint(expression2)) {
       // Objects.equal(a_double, another_double) compares NaN as equal, but a_double ==
       // another_double does not.
@@ -71,9 +74,31 @@ public class ObjectEqualsForPrimitives extends BugChecker implements MethodInvoc
     String arg1 = state.getSourceForNode(expression1);
     String arg2 = state.getSourceForNode(expression2);
 
-    // TODO: Rewrite to a != b if the original code has a negation (e.g. !Object.equals)
-    Fix fix = SuggestedFix.builder().replace(tree, "(" + arg1 + " == " + arg2 + ")").build();
-    return describeMatch(tree, fix);
+    TreePath maybeNegation = state.getPath().getParentPath();
+
+    boolean isNegated = maybeNegation.getLeaf().getKind() == Kind.LOGICAL_COMPLEMENT;
+    String operator = isNegated ? "!=" : "==";
+
+    TreePath targetPath = isNegated ? maybeNegation : state.getPath();
+
+    String replacement =
+        String.format(
+            binaryOperatorReplacementRequiresParentheses(targetPath) ? "(%s %s %s)" : "%s %s %s",
+            arg1,
+            operator,
+            arg2);
+    Tree target = isNegated ? maybeNegation.getLeaf() : call;
+    return describeMatch(target, SuggestedFix.replace(target, replacement));
+  }
+
+  // TODO(kak): there's many other places we could remove the parentheses, but these 2 seem the most
+  // common and most important.
+  private static boolean binaryOperatorReplacementRequiresParentheses(TreePath path) {
+    return switch (path.getParentPath().getLeaf()) {
+      case ParenthesizedTree pt -> false;
+      case MethodInvocationTree mit -> !mit.getArguments().contains(path.getLeaf());
+      default -> true;
+    };
   }
 
   private static boolean isFloatingPoint(ExpressionTree expression) {

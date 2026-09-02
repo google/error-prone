@@ -129,8 +129,6 @@ public class PrivateSecurityContractProtoAccessPositiveCases {
             """
             package com.google.common.html.types;
 
-            import com.google.common.html.types.SafeHtmlProto;
-
             class Test {
               SafeHtmlProto buildProto() {
                 return SafeHtmlProto.newBuilder()

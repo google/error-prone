@@ -19,7 +19,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.fixes.SuggestedFixes.renameMethodInvocation;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_BUILDER_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTOCOL_MESSAGE_ENUM_TYPE;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -32,7 +33,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
@@ -52,7 +52,7 @@ public final class AvoidValueSetter extends BugChecker implements MethodInvocati
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     var symbol = getSymbol(tree);
     String name = symbol.getSimpleName().toString();
-    if (!isSubtype(symbol.owner.type, MESSAGE_BUILDER.get(state), state)
+    if (!isSubtype(symbol.owner.type, MESSAGE_BUILDER_TYPE.get(state), state)
         || !name.endsWith("Value")) {
       return NO_MATCH;
     }
@@ -100,7 +100,9 @@ public final class AvoidValueSetter extends BugChecker implements MethodInvocati
           && method.name.contentEquals(enumSetterName)
           && method.getParameters().size() == tree.getArguments().size()
           && isSubtype(
-              method.getParameters().get(argIndex).type, PROTOCOL_MESSAGE_ENUM.get(state), state)) {
+              method.getParameters().get(argIndex).type,
+              PROTOCOL_MESSAGE_ENUM_TYPE.get(state),
+              state)) {
         return fix(
             tree,
             arg,
@@ -146,10 +148,4 @@ public final class AvoidValueSetter extends BugChecker implements MethodInvocati
   }
 
   private static final Pattern PREFIX = Pattern.compile("^(set|add|put)(.+)$");
-
-  private static final Supplier<Type> MESSAGE_BUILDER =
-      typeFromString("com.google.protobuf.Message.Builder");
-
-  private static final Supplier<Type> PROTOCOL_MESSAGE_ENUM =
-      typeFromString("com.google.protobuf.ProtocolMessageEnum");
 }

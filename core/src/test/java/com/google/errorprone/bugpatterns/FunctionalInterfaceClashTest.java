@@ -210,7 +210,6 @@ public class FunctionalInterfaceClashTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.SuppressWarnings;
             import java.util.function.Consumer;
             import java.util.function.Function;
 
@@ -329,7 +328,6 @@ public class FunctionalInterfaceClashTest {
             package pkg2;
 
             import java.util.function.Consumer;
-            import java.util.function.Function;
 
             public abstract class BaseClass {
               abstract void bar(Consumer<String> c);
@@ -341,7 +339,6 @@ public class FunctionalInterfaceClashTest {
             package pkg2;
 
             import java.util.function.Consumer;
-            import java.util.function.Function;
 
             public class DerivedClass extends BaseClass {
               @Override
@@ -360,7 +357,6 @@ public class FunctionalInterfaceClashTest {
             package pkg2;
 
             import java.util.function.Consumer;
-            import java.util.function.Function;
 
             public class BaseClass {
               void conduct(Consumer<String> c) {}
@@ -394,7 +390,6 @@ public class FunctionalInterfaceClashTest {
             package pkg2;
 
             import java.util.function.Consumer;
-            import java.util.function.Function;
 
             public class BaseClass {
               void conduct(Consumer<String> c) {}
@@ -406,7 +401,6 @@ public class FunctionalInterfaceClashTest {
             package pkg2;
 
             import java.util.function.Consumer;
-            import java.util.function.Function;
 
             public class ConductClass extends BaseClass {
               @Override

@@ -35,8 +35,6 @@ public class JdkObsoleteTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.nio.file.Path;
-
             class Test {
               {
                 // BUG: Diagnostic contains:
@@ -99,8 +97,6 @@ public class JdkObsoleteTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.nio.file.Path;
-
             class Test {
               // BUG: Diagnostic contains:
               abstract class A implements java.util.Enumeration<Object> {}
@@ -390,9 +386,7 @@ public class JdkObsoleteTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Map;
             import java.util.NavigableMap;
-            import java.util.Set;
 
             class Test {
               void f(NavigableMap<String, Integer> m) {
@@ -546,7 +540,6 @@ public class JdkObsoleteTest {
             import java.io.*;
             import java.net.*;
             import java.nio.channels.*;
-            import java.nio.file.Path;
             import java.util.*;
 
             class Test {
@@ -598,7 +591,6 @@ public class JdkObsoleteTest {
             "Test.java",
             """
             import java.util.regex.Matcher;
-            import java.util.regex.Pattern;
 
             class Test {
               void test(Matcher m) {
@@ -619,7 +611,6 @@ public class JdkObsoleteTest {
             "Test.java",
             """
             import java.util.regex.Matcher;
-            import java.util.regex.Pattern;
 
             class Test {
               void test(Matcher m) {

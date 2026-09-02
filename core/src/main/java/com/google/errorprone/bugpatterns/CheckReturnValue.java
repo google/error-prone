@@ -30,9 +30,10 @@ import static com.google.errorprone.bugpatterns.checkreturnvalue.ErrorMessages.a
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ErrorMessages.conflictingAnnotations;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ErrorMessages.invocationResultIgnored;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ErrorMessages.methodReferenceIgnoresResult;
-import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.externalIgnoreList;
-import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.methodNameAndParams;
-import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalCanIgnoreReturnValue.surroundingClass;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalApiList.externalIgnorableList;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalApiList.externalUnspecifiedList;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalApiList.methodNameAndParams;
+import static com.google.errorprone.bugpatterns.checkreturnvalue.ExternalApiList.surroundingClass;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ProtoRules.mutableProtos;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ProtoRules.protoBuilders;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.ResultUsePolicy.EXPECTED;
@@ -179,7 +180,8 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
                 productionSubcomponentBuilders(),
 
                 // This is conceptually lower precedence than the above rules.
-                externalIgnoreList());
+                externalIgnorableList(),
+                externalUnspecifiedList());
     var crvPackages = flags.getListOrEmpty(CRV_PACKAGES);
     if (!crvPackages.isEmpty()) {
       builder.addRule(PackagesRule.fromPatterns(crvPackages));

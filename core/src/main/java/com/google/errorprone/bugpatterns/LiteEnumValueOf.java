@@ -18,9 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.google.errorprone.predicates.TypePredicates.allOf;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
-import static com.google.errorprone.predicates.TypePredicates.not;
+import static com.google.errorprone.matchers.ProtobufMatchers.IS_LITE_PROTO_ENUM;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -45,11 +43,7 @@ public class LiteEnumValueOf extends BugChecker implements MethodInvocationTreeM
 
   private static final Matcher<ExpressionTree> PROTO_MSG_VALUE_OF_MATCHER =
       staticMethod()
-          .onClass(
-              allOf(
-                  isDescendantOf("com.google.protobuf.Internal.EnumLite"),
-                  not(isDescendantOf("com.google.protobuf.ProtocolMessageEnum")),
-                  not(isDescendantOf("com.google.protobuf.AbstractMessageLite.InternalOneOfEnum"))))
+          .onClass(IS_LITE_PROTO_ENUM)
           .named("valueOf")
           .withParameters("java.lang.String");
 

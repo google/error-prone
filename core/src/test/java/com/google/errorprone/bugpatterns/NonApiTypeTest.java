@@ -249,11 +249,20 @@ public final class NonApiTypeTest {
     helper
         .addSourceLines(
             "Test.java",
-            "import com.google.protobuf.Timestamp;",
-            "public class Test {",
-            // TODO(kak): we should _probably_ flag this too
-            "  public void test(Timestamp... timestamps) {}",
-            "}")
+            """
+            import com.google.protobuf.Timestamp;
+
+            public class Test {
+              // TODO(kak): we should _probably_ flag this too?
+              public void testTimestamps(Timestamp... timestamps) {}
+
+              public void withSuccessExitCodes(int first, int... rest) {}
+
+              public void testDoubles(double... values) {}
+
+              public void testLongs(Long... values) {}
+            }
+            """)
         .doTest();
   }
 
@@ -375,7 +384,6 @@ public final class NonApiTypeTest {
             "Record.java",
             """
             import java.util.ArrayList;
-            import java.util.List;
 
             public record Record(String a) {
               public Record(ArrayList<String> a) {
@@ -414,7 +422,6 @@ public final class NonApiTypeTest {
             "Test.java",
             """
             import com.google.inject.AbstractModule;
-            import com.google.inject.Module;
 
             public class Test extends AbstractModule {
               // BUG: Diagnostic contains: NonApiType

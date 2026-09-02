@@ -70,8 +70,6 @@ public final class NonCanonicalTypeTest {
 """
 package bar;
 
-import bar.A;
-
 public interface D {
   // BUG: Diagnostic contains: The type `foo.A.B` was referred to by the non-canonical name
   // `bar.A.B`

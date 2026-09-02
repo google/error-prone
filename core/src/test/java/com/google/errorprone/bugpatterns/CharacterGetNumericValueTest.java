@@ -77,8 +77,6 @@ public class CharacterGetNumericValueTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Character;
-
             class Test {
               void f() {
                 // BUG: Diagnostic contains: CharacterGetNumericValue
@@ -95,8 +93,6 @@ public class CharacterGetNumericValueTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Character;
-
             class Test {
               void f() {
                 // BUG: Diagnostic contains: CharacterGetNumericValue

@@ -22,11 +22,8 @@ import static com.google.common.base.Preconditions.checkState;
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Ascii;
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.errorprone.CodeTransformer;
 import com.google.errorprone.DescriptionListener;
@@ -39,7 +36,6 @@ import com.sun.tools.javac.util.Context;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import javax.tools.JavaFileManager;
 
@@ -113,6 +109,7 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
     RefasterRule<?, ?> result =
         new AutoValue_RefasterRule(
             qualifiedTemplateClass,
+            fromSecondLevel(qualifiedTemplateClass),
             ImmutableList.copyOf(typeVariables),
             ImmutableList.copyOf(beforeTemplates),
             ImmutableList.copyOf(afterTemplates),
@@ -123,6 +120,8 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
   RefasterRule() {}
 
   public abstract String qualifiedTemplateClass();
+
+  abstract String simpleTemplateName();
 
   abstract ImmutableList<UTypeVar> typeVariables();
 
@@ -159,17 +158,15 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
 
   @VisibleForTesting
   static String fromSecondLevel(String qualifiedTemplateClass) {
-    List<String> path = Splitter.on('.').splitToList(qualifiedTemplateClass);
-    for (int topLevel = 0; topLevel < path.size() - 1; topLevel++) {
-      if (Ascii.isUpperCase(path.get(topLevel).charAt(0))) {
-        return Joiner.on('_').join(path.subList(topLevel + 1, path.size()));
+    int start = 0;
+    int dot;
+    while ((dot = qualifiedTemplateClass.indexOf('.', start)) != -1) {
+      if (Ascii.isUpperCase(qualifiedTemplateClass.charAt(start))) {
+        return qualifiedTemplateClass.substring(dot + 1).replace('.', '_');
       }
+      start = dot + 1;
     }
-    return Iterables.getLast(path);
-  }
-
-  String simpleTemplateName() {
-    return fromSecondLevel(qualifiedTemplateClass());
+    return qualifiedTemplateClass.substring(start);
   }
 
   @Override

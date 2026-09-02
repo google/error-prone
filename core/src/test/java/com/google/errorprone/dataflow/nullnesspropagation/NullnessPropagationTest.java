@@ -2299,7 +2299,6 @@ package com.google.errorprone.dataflow.nullnesspropagation;
 import static com.google.errorprone.dataflow.nullnesspropagation.NullnessPropagationTest.triggerNullnessChecker;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 public class AnnotatedMethodTypeParamsTest {
   public void test() {

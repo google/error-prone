@@ -201,7 +201,6 @@ public class UnsafeWildcardTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
             import java.util.function.Function;
 
             class Test {
@@ -274,8 +273,6 @@ public class UnsafeWildcardTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
-
             class Test<S> {
               static class WithBound<U extends Number> {}
 

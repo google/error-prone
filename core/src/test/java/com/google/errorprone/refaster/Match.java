@@ -30,9 +30,13 @@ import java.util.Map;
 public abstract class Match {
   public static Match create(TemplateMatch match) {
     ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
-    for (Map.Entry<Bindings.Key<?>, Object> entry : match.getUnifier().getBindings().entrySet()) {
-      builder.put(entry.getKey().getIdentifier(), entry.getValue().toString());
-    }
+    match
+        .getUnifier()
+        .getBindings()
+        .forEach(
+            (key, value) -> {
+              builder.put(key.getIdentifier(), value.toString());
+            });
     return create(builder.buildOrThrow());
   }
 

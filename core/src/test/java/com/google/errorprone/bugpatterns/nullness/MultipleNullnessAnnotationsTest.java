@@ -33,7 +33,6 @@ public class MultipleNullnessAnnotationsTest {
             "Test.java",
             """
             import java.util.List;
-            import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
             import org.checkerframework.checker.nullness.compatqual.NullableDecl;
             import org.checkerframework.checker.nullness.qual.NonNull;
             import org.checkerframework.checker.nullness.qual.Nullable;
@@ -63,7 +62,6 @@ public class MultipleNullnessAnnotationsTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
             import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
             import org.checkerframework.checker.nullness.compatqual.NullableDecl;
             import org.checkerframework.checker.nullness.qual.NonNull;
@@ -83,7 +81,6 @@ public class MultipleNullnessAnnotationsTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
             import org.checkerframework.checker.nullness.qual.Nullable;
 
             abstract class Test {
@@ -162,6 +159,36 @@ public class MultipleNullnessAnnotationsTest {
             class T {
               // BUG: Diagnostic contains:
               @CheckForNull Object @NonNull [] f;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedTypeWithFieldNotNullAndInnerNullable() {
+    testHelper
+        .addSourceLines(
+            "NotNull.java",
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.TYPE_USE})
+            public @interface NotNull {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import org.checkerframework.checker.nullness.qual.Nullable;
+
+            class Outer {
+              class Inner {}
+            }
+
+            class Test {
+              // TODO(user): this shouldn't be flagged
+              // BUG: Diagnostic contains: MultipleNullnessAnnotations
+              @NotNull Outer.@Nullable Inner f;
             }
             """)
         .doTest();

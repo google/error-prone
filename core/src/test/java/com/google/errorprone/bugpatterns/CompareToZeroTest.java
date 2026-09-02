@@ -104,7 +104,7 @@ public final class CompareToZeroTest {
             """
             class Test {
               int test(Integer i) {
-                // BUG: Diagnostic contains:
+                // BUG: Diagnostic contains: unsafe to perform arithmetic operations
                 return i.compareTo(2) + i.compareTo(3);
               }
             }
@@ -113,13 +113,70 @@ public final class CompareToZeroTest {
   }
 
   @Test
-  public void stringConcat_ignored() {
+  public void positiveArithmetic() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Integer i) {
+                // BUG: Diagnostic contains: unsafe to perform arithmetic operations
+                int a = i.compareTo(2) * 2;
+                // BUG: Diagnostic contains: unsafe to perform arithmetic operations
+                int c = i.compareTo(2) / 2;
+                // BUG: Diagnostic contains: unsafe to perform arithmetic or logical operations
+                int b = i.compareTo(2) % -1;
+                // BUG: Diagnostic contains: unsafe to perform arithmetic operations
+                int d = i.compareTo(2) - 1;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveUnaryOperators() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Integer i) {
+                // BUG: Diagnostic contains: unsafe to negate the result
+                int a = -i.compareTo(2);
+                // BUG: Diagnostic contains: unsafe to perform arithmetic or logical operations
+                int c = ~i.compareTo(2);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveBitwise() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              int test(Integer i) {
+                // BUG: Diagnostic contains: unsafe to perform arithmetic or logical operations
+                return i.compareTo(2) & 1;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void stringConcat() {
     compilationHelper
         .addSourceLines(
             "Test.java",
             """
             class Test {
               String test(Integer i) {
+                // BUG: Diagnostic contains: unsafe to perform arithmetic or logical operations
                 return "" + i.compareTo(3);
               }
             }
@@ -176,6 +233,7 @@ public final class CompareToZeroTest {
                 boolean b1 = i.compareTo(2) < 0;
                 boolean b2 = i.compareTo(2) > 0;
                 boolean b3 = i.compareTo(2) == 0;
+                int b4 = +i.compareTo(2);
               }
             }
             """)

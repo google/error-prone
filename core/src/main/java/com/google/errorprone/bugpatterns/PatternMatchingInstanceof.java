@@ -25,12 +25,12 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.SourceVersion.supportsPatternMatchingInstanceof;
 import static com.google.errorprone.util.TargetType.targetType;
-import static java.lang.Boolean.TRUE;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.InstanceOfTreeMatcher;
@@ -43,8 +43,10 @@ import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.ParameterizedTypeTree;
@@ -55,6 +57,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
@@ -102,6 +105,9 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
 
     var allCasts = findAllCasts(constant, impliedStatements, targetType, state);
     int typeArgCount = getType(instanceOfTree.getType()).tsym.getTypeParameters().size();
+    // If the target type is generic, pattern matching instanceof only supports unbounded wildcards
+    // (e.g. Foo<?>). If any cast uses specific type arguments (e.g. Foo<String>), we cannot safely
+    // refactor to a pattern variable without losing type specificity or causing unchecked warnings.
     if (typeArgCount != 0
         && allCasts.stream()
             .flatMap(c -> Stream.ofNullable(targetType(state.withPath(c))))
@@ -111,7 +117,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
 
     // Find if we can delete at least one variable, and collect casts to replace.
     // We prefer to delete a variable that holds the cast result and reuse its name,
-    // but we can only do so if it is not reassigned (since pattern variables are final).
+    // but we can only do so if it is not reassigned (since pattern variables are implicitly final).
     Set<TreePath> castsToReplace = new HashSet<>();
     boolean hasCastsInExpressions = false;
     VariableTree variableToDelete = null;
@@ -120,13 +126,16 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     for (TreePath cast : allCasts) {
       VariableTree variableTree = isVariableAssignedFromCast(cast, instanceOfTree, state);
       if (variableTree != null) {
-        if (!isReassigned(variableTree, impliedStatements) && variableToDelete == null) {
+        String candidateName = variableTree.getName().toString();
+        if (variableToDelete == null
+            && !isReassigned(variableTree, impliedStatements)
+            && !isNameDeclared(candidateName, impliedStatements, variableTree)) {
           // Use this variable's name and delete its declaration.
           variableToDelete = variableTree;
-          name = variableTree.getName().toString();
+          name = candidateName;
         } else {
-          // The variable is reassigned (so we can't delete it or reuse its name as the pattern
-          // variable), or we already selected another variable to delete.
+          // The variable is reassigned or its name is declared later (so we can't delete it or
+          // reuse its name as the pattern variable), or we already selected another variable.
           castsToReplace.add(cast);
         }
       } else {
@@ -146,8 +155,10 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
         fix.delete(variableToDelete);
       }
       if (name == null) {
-        name = generateVariableName(targetType, state);
+        name = generateVariableName(targetType, state, impliedStatements);
       }
+      // For generic types without type arguments in the instanceof check, add unbounded wildcards
+      // e.g. `instanceof List` -> `instanceof List<?> list` per Java pattern matching rules.
       if (typeArgCount != 0 && !(instanceOfTree.getType() instanceof ParameterizedTypeTree)) {
         fix.postfixWith(
             instanceOfTree.getType(),
@@ -186,25 +197,35 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     return variableTree;
   }
 
-  private static String generateVariableName(Type targetType, VisitorState state) {
+  private static String generateVariableName(
+      Type targetType, VisitorState state, Iterable<Tree> impliedStatements) {
     Type unboxed = state.getTypes().unboxedType(targetType);
     String simpleName = IdentifierNames.fixInitialisms(targetType.tsym.getSimpleName().toString());
     String lowerFirstLetter = toLowerCase(String.valueOf(simpleName.charAt(0)));
     String camelCased = lowerFirstLetter + simpleName.substring(1);
-    SuggestedFixes.VariableNamer variableNamer = SuggestedFixes.variableNamer(state);
-    if (SourceVersion.isKeyword(camelCased)
-        || (unboxed != null && unboxed.getTag() != TypeTag.NONE)) {
-      return variableNamer.avoidShadowing(lowerFirstLetter);
-    }
-    return variableNamer.avoidShadowing(camelCased);
+    SuggestedFixes.VariableNamer variableNamer =
+        SuggestedFixes.variableNamer(state, impliedStatements);
+    boolean isReservedOrPrimitive =
+        SourceVersion.isKeyword(camelCased)
+            || (unboxed != null && unboxed.getTag() != TypeTag.NONE);
+    String baseName = isReservedOrPrimitive ? lowerFirstLetter : camelCased;
+    return variableNamer.avoidShadowing(baseName);
   }
 
-  /** Finds trees which are implied by the {@code instanceOfTree}. */
+  /**
+   * Finds trees which are implied by the {@code instanceOfTree}. That is, trees representing code
+   * that can only be reached if the {@code instanceOfTree} expression is true, and where we could
+   * consider introducing a pattern variable like {@code foo instanceof Bar bar}.
+   */
   private static ImmutableList<Tree> findImpliedStatements(
       InstanceOfTree tree, VisitorState state) {
+    // We are going to work from the InstanceOfTree to the root of the AST. As we go, `last` is the
+    // last node we visited, which is the child of `parentPath` that would lead us back to the
+    // InstanceOfTree.
     Tree last = tree;
     boolean negated = false;
     var impliedStatements = ImmutableList.<Tree>builder();
+    loop:
     for (TreePath parentPath = state.getPath().getParentPath();
         parentPath != null;
         parentPath = parentPath.getParentPath()) {
@@ -212,36 +233,45 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
       switch (parent.getKind()) {
         case CONDITIONAL_AND -> {
           if (negated) {
-            return impliedStatements.build();
+            // `!(x instanceof Foo) && bar()` or `bar() && !(x instanceof Foo)`. There is no further
+            // code to be found that is executed only when the instanceof is true.
+            break loop;
           }
+          // In `A && B`, when `A` is true, `B` is guaranteed to be evaluated.
           if (((BinaryTree) parent).getLeftOperand() == last) {
             impliedStatements.add(((BinaryTree) parent).getRightOperand());
           }
         }
         case CONDITIONAL_OR -> {
+          // `!(x instanceof Foo) || bar((Foo) x)` -> `!(x instanceof Foo foo) || bar(foo)`
+          // The RHS is only executed if the LHS is false, meaning that x is indeed a Foo.
           if (!negated) {
-            return impliedStatements.build();
+            break loop;
           }
           if (((BinaryTree) parent).getLeftOperand() == last) {
             impliedStatements.add(((BinaryTree) parent).getRightOperand());
           }
         }
         case PARENTHESIZED -> {}
-        case LOGICAL_COMPLEMENT -> {
-          negated = !negated;
-        }
+        case LOGICAL_COMPLEMENT -> negated = !negated;
         case IF -> {
           var ifTree = (IfTree) parent;
           if (ifTree.getCondition() != last) {
-            return impliedStatements.build();
+            break loop;
           }
           StatementTree positiveBranch =
               negated ? ifTree.getElseStatement() : ifTree.getThenStatement();
           if (positiveBranch != null) {
+            // `if (x instanceof Foo) bar((Foo) x) -> `if (x instanceof Foo foo) bar(foo)`
+            // or
+            // `if (!(x instanceof Foo)) ... else bar((Foo) x)` ->
+            //     `if (!(x instanceof Foo foo)) ... else bar(foo)`
             impliedStatements.add(positiveBranch);
           }
           StatementTree negativeBranch =
               negated ? ifTree.getThenStatement() : ifTree.getElseStatement();
+          // If the negative branch terminates control flow (throw/return), all remaining statements
+          // in the enclosing block are guaranteed to have passed this instanceof check.
           if (negativeBranch != null && !Reachability.canCompleteNormally(negativeBranch)) {
             if (parentPath.getParentPath().getLeaf() instanceof BlockTree blockTree) {
               var index = blockTree.getStatements().indexOf(ifTree);
@@ -249,18 +279,46 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
                   blockTree.getStatements().subList(index + 1, blockTree.getStatements().size()));
             }
           }
-          return impliedStatements.build();
+          break loop;
         }
         case CONDITIONAL_EXPRESSION -> {
+          // `(x instanceof Foo) ? bar((Foo) x) : baz()` ->
+          //     `(x instanceof Foo foo) ? bar(foo) : baz()`
           var conditionalExpression = (ConditionalExpressionTree) parent;
           impliedStatements.add(
               negated
                   ? conditionalExpression.getFalseExpression()
                   : conditionalExpression.getTrueExpression());
-          return impliedStatements.build();
+          break loop;
+        }
+        case WHILE_LOOP -> {
+          var whileLoopTree = (WhileLoopTree) parent;
+          if (whileLoopTree.getCondition() != last || negated) {
+            break loop;
+          }
+          // The while loop body only executes when the loop condition evaluates to true.
+          StatementTree statement = whileLoopTree.getStatement();
+          if (statement != null) {
+            impliedStatements.add(statement);
+          }
+          break loop;
+        }
+        case FOR_LOOP -> {
+          var forLoopTree = (ForLoopTree) parent;
+          if (forLoopTree.getCondition() != last || negated) {
+            break loop;
+          }
+          // Both the for loop body and update expressions only execute when the loop condition is
+          // true (JLS §6.3.1).
+          StatementTree statement = forLoopTree.getStatement();
+          if (statement != null) {
+            impliedStatements.add(statement);
+          }
+          impliedStatements.addAll(forLoopTree.getUpdate());
+          break loop;
         }
         default -> {
-          return impliedStatements.build();
+          break loop;
         }
       }
       last = parent;
@@ -293,6 +351,11 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     return usages.build();
   }
 
+  /**
+   * Expands the usage path to include enclosing parentheses if replacing the cast expression with a
+   * simple variable name would make those parentheses redundant (e.g. `((Foo) x).bar()` ->
+   * `x.bar()`).
+   */
   private static TreePath getUsage(TreePath currentPath) {
     TreePath parentPath = currentPath.getParentPath();
     return parentPath.getLeaf() instanceof ParenthesizedTree && !requiresParentheses(parentPath)
@@ -316,40 +379,95 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     };
   }
 
-  /** Returns true if the given variable is reassigned anywhere in the given trees. */
+  /**
+   * Returns true if the given variable is reassigned anywhere in the given trees.
+   *
+   * <p>Pattern variables are implicitly final in Java, so a local variable cannot be replaced with
+   * a pattern variable if it is ever mutated (assigned, compound-assigned, or
+   * incremented/decremented).
+   */
   private static boolean isReassigned(VariableTree variableTree, List<Tree> trees) {
     VarSymbol varSymbol = getSymbol(variableTree);
 
     var scanner =
-        new TreeScanner<Boolean, Void>() {
+        new TreeScanner<Void, Void>() {
+          private boolean reassigned = false;
+
           @Override
-          public Boolean visitAssignment(AssignmentTree node, Void unused) {
-            return varSymbol.equals(getSymbol(node.getVariable()))
-                || super.visitAssignment(node, null);
+          public Void scan(Tree tree, Void unused) {
+            return reassigned ? null : super.scan(tree, null);
           }
 
           @Override
-          public Boolean visitCompoundAssignment(CompoundAssignmentTree node, Void unused) {
-            return varSymbol.equals(getSymbol(node.getVariable()))
-                || super.visitCompoundAssignment(node, null);
+          public Void visitAssignment(AssignmentTree node, Void unused) {
+            if (varSymbol.equals(getSymbol(node.getVariable()))) {
+              reassigned = true;
+            }
+            return super.visitAssignment(node, null);
           }
 
           @Override
-          public Boolean visitUnary(UnaryTree node, Void unused) {
-            return (switch (node.getKind()) {
-                  case POSTFIX_INCREMENT, POSTFIX_DECREMENT, PREFIX_INCREMENT, PREFIX_DECREMENT ->
-                      varSymbol.equals(getSymbol(node.getExpression()));
-                  default -> false;
-                })
-                || super.visitUnary(node, null);
+          public Void visitCompoundAssignment(CompoundAssignmentTree node, Void unused) {
+            if (varSymbol.equals(getSymbol(node.getVariable()))) {
+              reassigned = true;
+            }
+            return super.visitCompoundAssignment(node, null);
           }
 
+          private static final ImmutableSet<Kind> INCREMENT_DECREMENT =
+              Sets.immutableEnumSet(
+                  Kind.POSTFIX_INCREMENT,
+                  Kind.POSTFIX_DECREMENT,
+                  Kind.PREFIX_INCREMENT,
+                  Kind.PREFIX_DECREMENT);
+
           @Override
-          public Boolean reduce(Boolean left, Boolean right) {
-            // be careful because the parameters can be null!
-            return TRUE.equals(left) || TRUE.equals(right);
+          public Void visitUnary(UnaryTree node, Void unused) {
+            if (INCREMENT_DECREMENT.contains(node.getKind())
+                && varSymbol.equals(getSymbol(node.getExpression()))) {
+              reassigned = true;
+            }
+            return super.visitUnary(node, null);
           }
         };
-    return scanner.scan(trees, null);
+    scanner.scan(trees, null);
+    return scanner.reassigned;
+  }
+
+  /**
+   * Returns true if a variable with the given name is declared in the given trees, excluding the
+   * {@code excludedVariable}.
+   */
+  private static boolean isNameDeclared(
+      String name, Iterable<Tree> trees, @Nullable VariableTree excludedVariable) {
+    var scanner =
+        new TreeScanner<Void, Void>() {
+          private boolean declared = false;
+
+          @Override
+          public Void scan(Tree tree, Void unused) {
+            return declared ? null : super.scan(tree, null);
+          }
+
+          @Override
+          public Void visitVariable(VariableTree node, Void unused) {
+            if (node != excludedVariable && node.getName().contentEquals(name)) {
+              declared = true;
+            }
+            return super.visitVariable(node, null);
+          }
+
+          @Override
+          public Void visitClass(ClassTree node, Void unused) {
+            if (node.getSimpleName().contentEquals(name)) {
+              declared = true;
+            }
+            // Names declared inside a local class do not clash with local variables in the
+            // enclosing scope.
+            return null;
+          }
+        };
+    scanner.scan(trees, null);
+    return scanner.declared;
   }
 }

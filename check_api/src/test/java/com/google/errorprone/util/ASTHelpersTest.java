@@ -26,6 +26,7 @@ import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isCanonicalRecordConstructor;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
 import static java.lang.annotation.ElementType.METHOD;
@@ -57,6 +58,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.scanner.Scanner;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.TargetType.TargetTypeVisitor;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
@@ -81,6 +83,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.TypeVar;
@@ -97,6 +100,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.TypeKind;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -111,6 +115,9 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
   // hermetic and do not depend on the platform on which they are run.
   private static final Joiner UNIX_LINE_JOINER = Joiner.on("\n");
   private static final Joiner WINDOWS_LINE_JOINER = Joiner.on("\r\n");
+
+  private static final Supplier<Symbol> MAP_SYMBOL =
+      VisitorState.memoize(state -> state.getSymbolFromString("java.util.Map"));
 
   final List<TestScanner> tests = new ArrayList<>();
 
@@ -2065,9 +2072,12 @@ class Test {
       implements MethodTreeMatcher {
     @Override
     public Description matchMethod(MethodTree tree, VisitorState state) {
-      return canonicalConstructor((ClassSymbol) getSymbol(tree).owner, state) == getSymbol(tree)
-          ? describeMatch(tree)
-          : Description.NO_MATCH;
+      MethodSymbol symbol = getSymbol(tree);
+      boolean isCanonical = isCanonicalRecordConstructor(symbol, state);
+      boolean isReturnedByCanonicalConstructorMethod =
+          symbol.equals(canonicalConstructor((ClassSymbol) symbol.owner, state));
+      assertThat(isCanonical).isEqualTo(isReturnedByCanonicalConstructorMethod);
+      return isCanonical ? describeMatch(tree) : Description.NO_MATCH;
     }
   }
 
@@ -2178,6 +2188,177 @@ class Test {
             return super.visitVariable(tree, state);
           }
         };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void boxingAndUnboxingHelpers() {
+    writeFile(
+        "A.java",
+        """
+        class A {
+          int primInt;
+          Integer boxedInt;
+          Boolean boxedBool;
+          String refString;
+        }
+        """);
+
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitVariable(VariableTree tree, VisitorState state) {
+            Type type = ASTHelpers.getType(tree);
+            String name = tree.getName().toString();
+            switch (name) {
+              case "primInt" -> {
+                assertThat(ASTHelpers.isBoxedPrimitiveType(type, state)).isFalse();
+                assertThat(ASTHelpers.isBoxedPrimitiveType(tree, state)).isFalse();
+                assertThat(ASTHelpers.unboxedType(type, state)).isEmpty();
+                assertThat(ASTHelpers.unboxedTypeOrType(type, state)).isEqualTo(type);
+                assertThat(ASTHelpers.boxedType(type, state)).isPresent();
+                assertThat(
+                        ASTHelpers.boxedType(type, state).get().tsym.getQualifiedName().toString())
+                    .isEqualTo("java.lang.Integer");
+                assertThat(
+                        ASTHelpers.boxedTypeOrType(type, state).tsym.getQualifiedName().toString())
+                    .isEqualTo("java.lang.Integer");
+                assertThat(ASTHelpers.boxedClass(type, state).getQualifiedName().toString())
+                    .isEqualTo("java.lang.Integer");
+              }
+              case "boxedInt" -> {
+                assertThat(ASTHelpers.isBoxedPrimitiveType(type, state)).isTrue();
+                assertThat(ASTHelpers.isBoxedPrimitiveType(tree, state)).isTrue();
+                assertThat(ASTHelpers.unboxedType(type, state)).isPresent();
+                assertThat(ASTHelpers.unboxedType(type, state).get().getKind())
+                    .isEqualTo(TypeKind.INT);
+                assertThat(ASTHelpers.unboxedTypeOrType(type, state).getKind())
+                    .isEqualTo(TypeKind.INT);
+                assertThat(ASTHelpers.boxedType(type, state)).isEmpty();
+                assertThat(ASTHelpers.boxedTypeOrType(type, state)).isEqualTo(type);
+                assertThat(ASTHelpers.boxedClass(type, state)).isNull();
+              }
+              case "boxedBool" -> {
+                assertThat(ASTHelpers.isBoxedPrimitiveType(type, state)).isTrue();
+                assertThat(ASTHelpers.isBoxedPrimitiveType(tree, state)).isTrue();
+                assertThat(ASTHelpers.unboxedType(type, state)).isPresent();
+                assertThat(ASTHelpers.unboxedType(type, state).get().getKind())
+                    .isEqualTo(TypeKind.BOOLEAN);
+                assertThat(ASTHelpers.unboxedTypeOrType(type, state).getKind())
+                    .isEqualTo(TypeKind.BOOLEAN);
+                assertThat(ASTHelpers.boxedType(type, state)).isEmpty();
+                assertThat(ASTHelpers.boxedTypeOrType(type, state)).isEqualTo(type);
+                assertThat(ASTHelpers.boxedClass(type, state)).isNull();
+              }
+              case "refString" -> {
+                assertThat(ASTHelpers.isBoxedPrimitiveType(type, state)).isFalse();
+                assertThat(ASTHelpers.isBoxedPrimitiveType(tree, state)).isFalse();
+                assertThat(ASTHelpers.unboxedType(type, state)).isEmpty();
+                assertThat(ASTHelpers.unboxedTypeOrType(type, state)).isEqualTo(type);
+                assertThat(ASTHelpers.boxedType(type, state)).isEmpty();
+                assertThat(ASTHelpers.boxedTypeOrType(type, state)).isEqualTo(type);
+                assertThat(ASTHelpers.boxedClass(type, state)).isNull();
+
+                assertThat(ASTHelpers.isBoxedPrimitiveType((Type) null, state)).isFalse();
+                assertThat(ASTHelpers.isBoxedPrimitiveType((Tree) null, state)).isFalse();
+                assertThat(ASTHelpers.unboxedType(null, state)).isEmpty();
+                assertThat(ASTHelpers.unboxedTypeOrType(null, state)).isNull();
+                assertThat(ASTHelpers.boxedType(null, state)).isEmpty();
+                assertThat(ASTHelpers.boxedTypeOrType(null, state)).isNull();
+                assertThat(ASTHelpers.boxedClass(null, state)).isNull();
+              }
+              default -> {}
+            }
+            return super.visitVariable(tree, state);
+          }
+        };
+    scanner.setAssertionsComplete();
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
+  @Test
+  public void extractTypeArgAsMemberOfSupertype() {
+    writeFile(
+        "A.java",
+        """
+        import java.util.List;
+        import java.util.Map;
+
+        class A {
+          List<String> stringList;
+          Map<String, Integer> stringIntegerMap;
+          List rawList;
+          List<? extends Number> wildcardList;
+          String notCollection;
+        }
+        """);
+
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitVariable(VariableTree tree, VisitorState state) {
+            Type type = ASTHelpers.getType(tree);
+            var symtab = state.getSymtab();
+            var iterableSym = symtab.iterableType.tsym;
+            var mapSym = MAP_SYMBOL.get(state);
+
+            switch (tree.getName().toString()) {
+              case "stringList" -> {
+                Type elem =
+                    ASTHelpers.extractTypeArgAsMemberOfSupertype(type, iterableSym, 0, state);
+                assertThat(elem).isNotNull();
+                assertThat(elem.tsym.getQualifiedName().toString()).isEqualTo("java.lang.String");
+                assertThat(
+                        ASTHelpers.extractTypeArgAsMemberOfSupertype(type, iterableSym, 1, state))
+                    .isNull();
+                assertThat(
+                        ASTHelpers.extractTypeArgAsMemberOfSupertype(type, iterableSym, -1, state))
+                    .isNull();
+              }
+              case "stringIntegerMap" -> {
+                Type key = ASTHelpers.extractTypeArgAsMemberOfSupertype(type, mapSym, 0, state);
+                Type val = ASTHelpers.extractTypeArgAsMemberOfSupertype(type, mapSym, 1, state);
+                assertThat(key).isNotNull();
+                assertThat(key.tsym.getQualifiedName().toString()).isEqualTo("java.lang.String");
+                assertThat(val).isNotNull();
+                assertThat(val.tsym.getQualifiedName().toString()).isEqualTo("java.lang.Integer");
+                assertThat(ASTHelpers.extractTypeArgAsMemberOfSupertype(type, mapSym, 2, state))
+                    .isNull();
+              }
+              case "rawList" -> {
+                assertThat(
+                        ASTHelpers.extractTypeArgAsMemberOfSupertype(type, iterableSym, 0, state))
+                    .isNull();
+              }
+              case "wildcardList" -> {
+                Type elem =
+                    ASTHelpers.extractTypeArgAsMemberOfSupertype(type, iterableSym, 0, state);
+                assertThat(elem).isNotNull();
+                assertThat(
+                        ASTHelpers.getUpperBound(elem, state.getTypes())
+                            .tsym
+                            .getQualifiedName()
+                            .toString())
+                    .isEqualTo("java.lang.Number");
+              }
+              case "notCollection" -> {
+                assertThat(
+                        ASTHelpers.extractTypeArgAsMemberOfSupertype(type, iterableSym, 0, state))
+                    .isNull();
+                assertThat(
+                        ASTHelpers.extractTypeArgAsMemberOfSupertype(null, iterableSym, 0, state))
+                    .isNull();
+                assertThat(ASTHelpers.extractTypeArgAsMemberOfSupertype(type, null, 0, state))
+                    .isNull();
+              }
+              default -> {}
+            }
+            return super.visitVariable(tree, state);
+          }
+        };
+    scanner.setAssertionsComplete();
     tests.add(scanner);
     assertCompiles(scanner);
   }

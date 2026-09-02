@@ -18,6 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTOCOL_STRING_LIST_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_DURATION_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIMESTAMP_CLASS;
 import static com.google.errorprone.predicates.TypePredicates.anyOf;
 import static com.google.errorprone.predicates.TypePredicates.anything;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
@@ -38,9 +41,11 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.predicates.TypePredicate;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 
 /** Flags instances of non-API types from being accepted or returned in APIs. */
 @BugPattern(
@@ -167,11 +172,11 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
 
           // ProtoTime
           withPublicVisibility(
-              isExactType("com.google.protobuf.Duration"),
+              isExactType(PROTO_DURATION_CLASS),
               "Prefer a java.time.Duration instead. " + PROTO_TIME_SERIALIZATION_LINK,
               ApiElementType.ANY),
           withPublicVisibility(
-              isExactType("com.google.protobuf.Timestamp"),
+              isExactType(PROTO_TIMESTAMP_CLASS),
               "Prefer a java.time.Instant instead. " + PROTO_TIME_SERIALIZATION_LINK,
               ApiElementType.ANY),
           withPublicVisibility(
@@ -203,7 +208,7 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
           // ProtocolStringList subtypes (see b/408025632)
           // Ideally, we also would flag local variables, but NonApiType is a method-level check.
           withAnyVisibility(
-              anyOf(isDescendantOf("com.google.protobuf.ProtocolStringList")),
+              anyOf(isDescendantOf(PROTOCOL_STRING_LIST_CLASS)),
               "Unless you need methods declared on the subtypes, prefer a java.util.List<String>"
                   + " instead. "
                   + INTERFACES_NOT_IMPLS_LINK,
@@ -239,8 +244,11 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
         methodIsPublicAndNotAnOverride(symbol, state)
             && state.errorProneOptions().isPubliclyVisibleTarget();
 
-    for (Tree parameter : tree.getParameters()) {
-      checkType(parameter, ApiElementType.PARAMETER, isPublicApi, enclosingType, state);
+    List<? extends VariableTree> parameters = tree.getParameters();
+    // Avoid flagging primitive var-args parameters (e.g., int... rest) as array types.
+    int paramsToCheck = symbol.isVarArgs() ? parameters.size() - 1 : parameters.size();
+    for (int i = 0; i < paramsToCheck; i++) {
+      checkType(parameters.get(i), ApiElementType.PARAMETER, isPublicApi, enclosingType, state);
     }
     checkType(tree.getReturnType(), ApiElementType.RETURN_TYPE, isPublicApi, enclosingType, state);
 

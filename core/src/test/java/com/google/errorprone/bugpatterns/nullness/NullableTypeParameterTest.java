@@ -34,7 +34,6 @@ public class NullableTypeParameterTest {
         .addInputLines(
             "T.java",
             """
-            import java.util.List;
             import org.checkerframework.checker.nullness.qual.NonNull;
             import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -53,7 +52,6 @@ public class NullableTypeParameterTest {
         .addOutputLines(
             "T.java",
             """
-            import java.util.List;
             import org.checkerframework.checker.nullness.qual.NonNull;
             import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -78,7 +76,6 @@ public class NullableTypeParameterTest {
         .addInputLines(
             "T.java",
             """
-            import java.util.List;
             import org.checkerframework.checker.nullness.qual.NonNull;
             import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -104,7 +101,6 @@ public class NullableTypeParameterTest {
         .addSourceLines(
             "T.java",
             """
-            import java.util.List;
             import org.checkerframework.checker.nullness.qual.NonNull;
             import org.checkerframework.checker.nullness.qual.Nullable;
 

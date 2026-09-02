@@ -442,7 +442,6 @@ public class NullArgumentForNonNullParameterTest {
         .addSourceLines(
             "Foo.java",
             """
-            import java.io.Serializable;
             import org.jspecify.annotations.NonNull;
 
             class Foo<V extends @NonNull Object, T extends V> {

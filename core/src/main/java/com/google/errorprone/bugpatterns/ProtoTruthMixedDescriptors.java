@@ -19,6 +19,8 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_TYPE;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -32,8 +34,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
@@ -68,11 +68,6 @@ public final class ProtoTruthMixedDescriptors extends BugChecker
           .onClass("com.google.common.truth.extensions.proto.ProtoTruth")
           .named("assertThat");
 
-  private static final Supplier<Type> MESSAGE =
-      Suppliers.typeFromString("com.google.protobuf.Message");
-  private static final Supplier<Type> GENERATED_MESSAGE =
-      Suppliers.typeFromString("com.google.protobuf.GeneratedMessage");
-
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (!IGNORING.matches(tree, state)) {
@@ -103,7 +98,7 @@ public final class ProtoTruthMixedDescriptors extends BugChecker
     Symbol symbol = getSymbol(tree);
     if (symbol != null
         && symbol.owner != null
-        && isSubtype(symbol.owner.type, MESSAGE.get(state), state)) {
+        && isSubtype(symbol.owner.type, MESSAGE_TYPE.get(state), state)) {
       return Optional.of(symbol.owner.type.tsym);
     }
     return Optional.empty();
@@ -130,7 +125,7 @@ public final class ProtoTruthMixedDescriptors extends BugChecker
 
     return subjectType == null
             || subjectType.tsym.equals(type)
-            || !isSubtype(subjectType, GENERATED_MESSAGE.get(state), state)
+            || !isSubtype(subjectType, GENERATED_MESSAGE_TYPE.get(state), state)
         ? Description.NO_MATCH
         : describeMatch(tree);
   }

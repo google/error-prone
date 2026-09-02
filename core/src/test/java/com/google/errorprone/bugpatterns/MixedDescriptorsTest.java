@@ -38,7 +38,6 @@ public final class MixedDescriptorsTest {
             "Test.java",
             """
             import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
-            import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
             import com.google.protobuf.Descriptors.Descriptor;
 
             final class Test {

@@ -35,6 +35,7 @@ import com.google.errorprone.bugpatterns.threadsafety.ConstantExpressions;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionTree;
@@ -55,6 +56,7 @@ import com.sun.tools.javac.code.TypeTag;
 import java.util.List;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.TypeElement;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -66,6 +68,10 @@ import org.jspecify.annotations.Nullable;
     severity = WARNING)
 public final class PreferPreconditions extends BugChecker implements IfTreeMatcher {
 
+  private static final Supplier<@Nullable TypeElement> PRECONDITIONS =
+      VisitorState.memoize(
+          state -> state.getElements().getTypeElement("com.google.common.base.Preconditions"));
+
   private final ConstantExpressions constantExpressions;
 
   @Inject
@@ -75,6 +81,10 @@ public final class PreferPreconditions extends BugChecker implements IfTreeMatch
 
   @Override
   public Description matchIf(IfTree tree, VisitorState state) {
+    if (PRECONDITIONS.get(state) == null) {
+      // Only emit findings if Preconditions is already on the classpath
+      return NO_MATCH;
+    }
     if (tree.getElseStatement() != null) {
       return NO_MATCH;
     }

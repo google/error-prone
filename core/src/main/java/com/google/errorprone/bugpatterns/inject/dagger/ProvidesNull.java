@@ -17,8 +17,12 @@
 package com.google.errorprone.bugpatterns.inject.dagger;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
@@ -28,12 +32,11 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import javax.inject.Inject;
 
 /**
  * Bug checker for null-returning methods annotated with {@code @Provides} but not
@@ -45,6 +48,15 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
     severity = ERROR)
 public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
 
+  // TODO(b/536946282): Remove flag after rollout.
+  private final boolean checkDefinitelyNullBranch;
+
+  @Inject
+  ProvidesNull(ErrorProneFlags flags) {
+    this.checkDefinitelyNullBranch =
+        flags.getBoolean("ProvidesNull:CheckDefinitelyNullBranch").orElse(true);
+  }
+
   /**
    * Matches explicit "return null" statements in methods annotated with {@code @Provides} but not
    * {@code @Nullable}. Suggests either annotating the method with {@code @Nullable} or throwing a
@@ -54,21 +66,24 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
   @Override
   public Description matchReturn(ReturnTree returnTree, VisitorState state) {
     ExpressionTree returnExpression = returnTree.getExpression();
-    if (returnExpression == null || returnExpression.getKind() != Kind.NULL_LITERAL) {
+    if (returnExpression == null) {
+      return Description.NO_MATCH;
+    }
+    if (checkDefinitelyNullBranch) {
+      if (!hasDefinitelyNullBranch(
+          returnExpression,
+          /* definitelyNullVars= */ ImmutableSet.of(),
+          /* varsProvenNullByParentIf= */ ImmutableSet.of(),
+          state)) {
+        return Description.NO_MATCH;
+      }
+    } else if (returnExpression.getKind() != Kind.NULL_LITERAL) {
       return Description.NO_MATCH;
     }
 
-    TreePath path = state.getPath();
-    MethodTree enclosingMethod = null;
-    while (true) {
-      if (path == null || path.getLeaf() instanceof LambdaExpressionTree) {
-        return Description.NO_MATCH;
-      } else if (path.getLeaf() instanceof MethodTree) {
-        enclosingMethod = (MethodTree) path.getLeaf();
-        break;
-      } else {
-        path = path.getParentPath();
-      }
+    MethodTree enclosingMethod = findEnclosingMethod(state);
+    if (enclosingMethod == null) {
+      return Description.NO_MATCH;
     }
     MethodSymbol enclosingMethodSym = ASTHelpers.getSymbol(enclosingMethod);
 
@@ -80,9 +95,18 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
     if (ASTHelpers.hasDirectAnnotationWithSimpleName(enclosingMethodSym, "Nullable")) {
       return Description.NO_MATCH;
     }
-    // Type-use annotations do *NOT* work with Dagger. See b/117251022
-    // You must use *any* non-type-use Nullable annotation.
 
+    /*
+     * Dagger has support for type-use annotations only under newer compilers with a flag enabled:
+     * https://github.com/google/dagger/releases/tag/dagger-2.60.
+     *
+     * To be safe, we suggest a fix that uses javax.annotations.Nullable.
+     *
+     * TODO: b/117251022 - Once javac and Dagger support type-use annotations more widely, generate
+     * a fix by using fixByAddingNullableAnnotationToReturnType, which uses whichever Nullable the
+     * user is already using and which supports JSpecify (and which might universally prefer it by
+     * default by then) and other type-use annotations.
+     */
     Fix addNullableFix =
         SuggestedFix.builder()
             .prefixWith(enclosingMethod, "@Nullable\n")

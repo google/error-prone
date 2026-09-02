@@ -20,6 +20,8 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.isCanonicalRecordConstructor;
 import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PROTECTED;
@@ -38,6 +40,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
 /**
  * Flags protected members in final classes.
@@ -57,6 +60,15 @@ public class ProtectedMembersInFinalClass extends BugChecker implements ClassTre
         .isEmpty();
   }
 
+  private static boolean isConstructorOfProtectedRecord(Tree tree, VisitorState state) {
+    if (!(tree instanceof MethodTree methodTree)) {
+      return false;
+    }
+    MethodSymbol symbol = getSymbol(methodTree);
+    return symbol.enclClass().getModifiers().contains(PROTECTED)
+        && isCanonicalRecordConstructor(symbol, state);
+  }
+
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     if (!HAS_FINAL.matches(tree, state)) {
@@ -71,6 +83,7 @@ public class ProtectedMembersInFinalClass extends BugChecker implements ClassTre
                 m ->
                     !(m instanceof MethodTree methodTree)
                         || methodHasNoParentMethod(methodTree, state))
+            .filter(m -> !isConstructorOfProtectedRecord(m, state))
             .filter(m -> !isSuppressed(m, state))
             .collect(toImmutableList());
     if (relevantMembers.isEmpty()) {

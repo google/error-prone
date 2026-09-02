@@ -71,7 +71,6 @@ public final class JUnitMatchers {
   public static final String JUNIT4_ASSERT_CLASS = "org.junit.Assert";
   public static final String JUNIT3_TEST_CASE_CLASS = "junit.framework.TestCase";
   public static final String JUNIT4_IGNORE_ANNOTATION = "org.junit.Ignore";
-  public static final String JUNIT3_SUPPRESS_ANNOTATION = "com.google.testing.testsize.Suppress";
   public static final String JUNIT4_RUNNER_CLASS = "org.junit.runners.JUnit4";
   public static final String JUNIT3_ASSERT_CLASS = "junit.framework.Assert";
 

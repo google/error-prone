@@ -189,8 +189,6 @@ public class UnnecessaryAnonymousClassTest {
         .addInputLines(
             "Test.java",
             """
-            import java.util.function.Function;
-
             class Test {
               interface Foo {
                 int foo(int a);
@@ -226,7 +224,6 @@ public class UnnecessaryAnonymousClassTest {
         .addInputLines(
             "Test.java",
             """
-            import java.util.function.Function;
             import org.mockito.Spy;
 
             class Test {

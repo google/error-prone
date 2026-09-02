@@ -362,7 +362,6 @@ public final class ImmutableMemberCollectionTest {
         .addInputLines(
             "Test.java",
             """
-            import com.google.common.collect.ImmutableSet;
             import java.util.HashSet;
             import java.util.Set;
 

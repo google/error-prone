@@ -24,9 +24,9 @@ import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.matchers.ProtobufMatchers.IS_ONEOF_ENUM;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_BUILDER_MUTATOR;
 import static com.google.errorprone.util.ASTHelpers.enumValues;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -50,8 +50,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.predicates.TypePredicate;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -62,7 +60,6 @@ import com.sun.tools.javac.code.Type;
 import java.util.Collection;
 import java.util.Map;
 import org.jspecify.annotations.Nullable;
-import org.safere.Pattern;
 
 /** A BugPattern; see the summary. */
 @BugPattern(
@@ -75,11 +72,7 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
   /** Matches a fluent setter method. */
   private static final Matcher<ExpressionTree> FLUENT_SETTER =
       anyOf(
-          instanceMethod()
-              .onDescendantOfAny(
-                  "com.google.protobuf.GeneratedMessage.Builder",
-                  "com.google.protobuf.GeneratedMessageLite.Builder")
-              .withNameMatching(Pattern.compile("^(set|add|clear|put).+")),
+          PROTO_BUILDER_MUTATOR,
           (tree, state) -> {
             if (!(tree instanceof MethodInvocationTree methodInvocationTree)) {
               return false;
@@ -89,9 +82,6 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
                 && isWithinAutoValueBuilder(symbol, state)
                 && isSameType(symbol.owner.type, symbol.getReturnType(), state);
           });
-
-  private static final TypePredicate ONE_OF_ENUM =
-      isDescendantOf("com.google.protobuf.AbstractMessageLite.InternalOneOfEnum");
 
   /**
    * Matches a terminal setter. That is, a fluent builder method which is either not followed by
@@ -113,7 +103,7 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     }
 
     var owner = getUpperBound(getType(tree), state.getTypes()).tsym.owner;
-    boolean isProto = owner != null && isSubtype(owner.type, MESSAGE_LITE.get(state), state);
+    boolean isProto = owner != null && isSubtype(owner.type, MESSAGE_LITE_TYPE.get(state), state);
 
     ListMultimap<Field, FieldWithValue> setters = ArrayListMultimap.create();
     ImmutableMap<String, OneOfField> oneOfSetters =
@@ -177,7 +167,7 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
   private ImmutableMap<String, OneOfField> scanForOneOfSetters(Symbol proto, VisitorState state) {
     var builder = ImmutableMap.<String, OneOfField>builder();
     for (Symbol element : getEnclosedElements(proto)) {
-      if (!ONE_OF_ENUM.apply(element.type, state)) {
+      if (!IS_ONEOF_ENUM.apply(element.type, state)) {
         continue;
       }
       var oneOfField = new OneOfField(element.getSimpleName().toString().replaceFirst("Case$", ""));
@@ -205,9 +195,6 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
         .map(name -> toUpperCase(name.replaceFirst("_FIELD_NUMBER$", "").replace("_", "")))
         .collect(toImmutableSet());
   }
-
-  private static final Supplier<Type> MESSAGE_LITE =
-      typeFromString("com.google.protobuf.MessageLite");
 
   private Description describe(
       Field field, Collection<FieldWithValue> locations, VisitorState state) {

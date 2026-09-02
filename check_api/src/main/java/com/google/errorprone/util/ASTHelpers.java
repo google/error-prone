@@ -22,7 +22,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.common.collect.Streams.stream;
-import static com.google.common.collect.Streams.zip;
 import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
@@ -96,6 +95,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
+import com.sun.tools.javac.code.Symbol.RecordComponent;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Symtab;
@@ -829,19 +829,39 @@ public final class ASTHelpers {
 
   /** Finds the canonical constructor on a record. */
   public static MethodSymbol canonicalConstructor(ClassSymbol record, VisitorState state) {
-    var fieldTypes =
-        record.getRecordComponents().stream().map(rc -> rc.type).collect(toImmutableList());
+    var recordComponents = record.getRecordComponents();
     return stream(record.members().getSymbols(s -> s.isConstructor()))
         .map(c -> (MethodSymbol) c)
-        .filter(
-            c ->
-                c.getParameters().size() == fieldTypes.size()
-                    && zip(
-                            c.getParameters().stream(),
-                            fieldTypes.stream(),
-                            (a, b) -> isSameType(a.type, b, state))
-                        .allMatch(x -> x))
+        .filter(c -> parametersMatchRecordComponents(c, recordComponents, state))
         .collect(onlyElement());
+  }
+
+  /** Returns whether the given method is a record's canonical constructor. */
+  public static boolean isCanonicalRecordConstructor(MethodSymbol symbol, VisitorState state) {
+    if (!symbol.isConstructor()) {
+      return false;
+    }
+    ClassSymbol enclosingClass = symbol.enclClass();
+    if (enclosingClass == null || enclosingClass.getKind() != ElementKind.RECORD) {
+      return false;
+    }
+    return parametersMatchRecordComponents(symbol, enclosingClass.getRecordComponents(), state);
+  }
+
+  private static boolean parametersMatchRecordComponents(
+      MethodSymbol constructor,
+      List<? extends RecordComponent> recordComponents,
+      VisitorState state) {
+    if (constructor.getParameters().size() != recordComponents.size()) {
+      return false;
+    }
+    for (int i = 0; i < recordComponents.size(); i++) {
+      if (!isSameType(
+          constructor.getParameters().get(i).type, recordComponents.get(i).type, state)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -1236,21 +1256,23 @@ public final class ASTHelpers {
    * determined.
    */
   public static @Nullable Type getType(@Nullable Tree tree) {
-    return tree instanceof JCTree jCTree ? jCTree.type : null;
+    return tree == null ? null : ((JCTree) tree).type;
   }
 
   /**
-   * Returns the {@code ClassType} for the given type {@code ClassTree} or {@code null} if the type
-   * could not be determined.
+   * Returns the {@code ClassType} for the given type {@code ClassTree} or {@code null} if {@code
+   * tree} was {@code null}.
    */
   public static @Nullable ClassType getType(@Nullable ClassTree tree) {
-    Type type = getType((Tree) tree);
-    return type instanceof ClassType classType ? classType : null;
+    if (tree == null) {
+      return null;
+    }
+    ClassType result = (ClassType) getType((Tree) tree);
+    return checkNotNull(result, "%s had a null type", tree);
   }
 
-  public static @Nullable String getAnnotationName(AnnotationTree tree) {
-    Symbol sym = getSymbol(tree);
-    return sym == null ? null : sym.name.toString();
+  public static String getAnnotationName(AnnotationTree tree) {
+    return getSymbol(tree).name.toString();
   }
 
   /** Returns the erasure of the given type tree, i.e. {@code List} for {@code List<Foo>}. */
@@ -1398,6 +1420,69 @@ public final class ASTHelpers {
     return types.isSameType(types.erasure(s), types.erasure(t));
   }
 
+  /**
+   * Returns true if {@code type} is one of the 8 boxed primitive wrapper types (Boolean, Byte,
+   * Character, Short, Integer, Long, Float, Double).
+   */
+  public static boolean isBoxedPrimitiveType(@Nullable Type type, VisitorState state) {
+    if (type == null || type.isPrimitive()) {
+      return false;
+    }
+    return state.getTypes().unboxedType(type).isPrimitive();
+  }
+
+  /** Returns true if the given {@code tree} has a boxed primitive wrapper type. */
+  public static boolean isBoxedPrimitiveType(@Nullable Tree tree, VisitorState state) {
+    return isBoxedPrimitiveType(getType(tree), state);
+  }
+
+  /**
+   * Returns the unboxed primitive type if {@code type} is a boxed primitive, or {@link
+   * Optional#empty()} if it cannot be unboxed.
+   */
+  public static Optional<Type> unboxedType(@Nullable Type type, VisitorState state) {
+    if (type == null || type.isPrimitive()) {
+      return Optional.empty();
+    }
+    Type unboxed = state.getTypes().unboxedType(type);
+    return unboxed.isPrimitive() ? Optional.of(unboxed) : Optional.empty();
+  }
+
+  /**
+   * Returns the unboxed primitive type if {@code type} is a boxed primitive, {@code null} if {@code
+   * type} is null, or {@code type} itself if it cannot be unboxed.
+   */
+  public static @Nullable Type unboxedTypeOrType(@Nullable Type type, VisitorState state) {
+    return type != null ? state.getTypes().unboxedTypeOrType(type) : null;
+  }
+
+  /**
+   * Returns the boxed wrapper type if {@code type} is a primitive type, or {@link Optional#empty()}
+   * if it is not a primitive type.
+   */
+  public static Optional<Type> boxedType(@Nullable Type type, VisitorState state) {
+    if (type == null || !type.isPrimitive()) {
+      return Optional.empty();
+    }
+    return Optional.of(state.getTypes().boxedTypeOrType(type));
+  }
+
+  /**
+   * Returns the boxed wrapper type if {@code type} is a primitive type, {@code null} if {@code
+   * type} is null, or {@code type} itself if it is already a reference type.
+   */
+  public static @Nullable Type boxedTypeOrType(@Nullable Type type, VisitorState state) {
+    return type != null ? state.getTypes().boxedTypeOrType(type) : null;
+  }
+
+  /**
+   * Returns the {@link ClassSymbol} of the boxed wrapper class for a primitive {@code type}, or
+   * {@code null} if {@code type} is null or not a primitive type.
+   */
+  public static @Nullable ClassSymbol boxedClass(@Nullable Type type, VisitorState state) {
+    return type != null && type.isPrimitive() ? state.getTypes().boxedClass(type) : null;
+  }
+
   /** Returns the modifiers tree of the given class, method, or variable declaration. */
   public static @Nullable ModifiersTree getModifiers(Tree tree) {
     if (tree instanceof ClassTree classTree) {
@@ -1458,6 +1543,40 @@ public final class ASTHelpers {
 
     // concrete type, e.g. java.lang.String, or a case we haven't considered
     return type;
+  }
+
+  /**
+   * Extracts the appropriate type argument from a specific supertype of the given {@code type}.
+   * This handles the case when a subtype has different type arguments than the expected type. For
+   * example, {@code ClassToInstanceMap<T>} implements {@code Map<Class<? extends T>, T>}.
+   *
+   * @param type the (sub)type from which to extract the type argument
+   * @param superTypeSym the symbol of the supertype on which the type parameter is defined
+   * @param typeArgIndex the index of the type argument to extract from the supertype
+   * @param types the {@link Types} utility class
+   * @return the type argument, if defined, or {@code null} otherwise
+   */
+  public static @Nullable Type extractTypeArgAsMemberOfSupertype(
+      @Nullable Type type, @Nullable Symbol superTypeSym, int typeArgIndex, Types types) {
+    if (type == null || superTypeSym == null || typeArgIndex < 0) {
+      return null;
+    }
+    Type superType = types.asSuper(types.capture(type), superTypeSym);
+    if (superType == null) {
+      return null;
+    }
+    com.sun.tools.javac.util.List<Type> tyargs = superType.getTypeArguments();
+    return typeArgIndex < tyargs.size() ? tyargs.get(typeArgIndex) : null;
+  }
+
+  /**
+   * Extracts the appropriate type argument from a specific supertype of the given {@code type}.
+   *
+   * @see #extractTypeArgAsMemberOfSupertype(Type, Symbol, int, Types)
+   */
+  public static @Nullable Type extractTypeArgAsMemberOfSupertype(
+      @Nullable Type type, @Nullable Symbol superTypeSym, int typeArgIndex, VisitorState state) {
+    return extractTypeArgAsMemberOfSupertype(type, superTypeSym, typeArgIndex, state.getTypes());
   }
 
   /**
@@ -1941,7 +2060,10 @@ public final class ASTHelpers {
     }
   }
 
-  /** Returns the start position of the node. */
+  /**
+   * Returns the start position of the node. To get the end position of a node, use {@link
+   * VisitorState#getEndPosition}.
+   */
   public static int getStartPosition(Tree tree) {
     return ((JCTree) tree).getStartPosition();
   }

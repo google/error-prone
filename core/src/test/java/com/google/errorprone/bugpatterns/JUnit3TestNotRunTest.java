@@ -78,7 +78,6 @@ public class JUnit3TestNotRunTest {
             "in/PositiveCases.java",
             """
             import junit.framework.TestCase;
-            import org.junit.Test;
 
             public class PositiveCases extends TestCase {
               public void tesName1() {}
@@ -108,7 +107,6 @@ public class JUnit3TestNotRunTest {
             "out/PositiveCases.java",
             """
             import junit.framework.TestCase;
-            import org.junit.Test;
 
             public class PositiveCases extends TestCase {
               public void testName1() {}
@@ -144,7 +142,6 @@ public class JUnit3TestNotRunTest {
             "in/PositiveCases.java",
             """
             import junit.framework.TestCase;
-            import org.junit.Test;
 
             public class PositiveCases extends TestCase {
               public void tesBasic() {}
@@ -158,7 +155,6 @@ public class JUnit3TestNotRunTest {
             "out/PositiveCases.java",
             """
             import junit.framework.TestCase;
-            import org.junit.Test;
 
             public class PositiveCases extends TestCase {
               public void testBasic() {}
@@ -226,7 +222,6 @@ public class JUnit3TestNotRunTest {
             "in/DoesStuffTest.java",
             """
             import junit.framework.TestCase;
-            import org.junit.Test;
 
             public class DoesStuffTest extends TestCase {
               private static void tsetDoesStuff() throws Exception {}
@@ -236,7 +231,6 @@ public class JUnit3TestNotRunTest {
             "out/DoesStuffTest.java",
             """
             import junit.framework.TestCase;
-            import org.junit.Test;
 
             public class DoesStuffTest extends TestCase {
               public void testDoesStuff() throws Exception {}
@@ -340,7 +334,6 @@ public class JUnit3TestNotRunTest {
             "in/DoesStuffTest.java",
             """
             import junit.framework.TestCase;
-            import org.junit.Test;
 
             public class DoesStuffTest extends TestCase {
               void tsetDoesStuff() {}
@@ -350,7 +343,6 @@ public class JUnit3TestNotRunTest {
             "out/DoesStuffTest.java",
             """
             import junit.framework.TestCase;
-            import org.junit.Test;
 
             public class DoesStuffTest extends TestCase {
               public void testDoesStuff() {}

@@ -348,8 +348,6 @@ public class UnusedVariableTest {
             """
             package unusedvars;
 
-            import java.io.IOException;
-            import java.io.ObjectStreamException;
             import java.util.List;
             import javax.inject.Inject;
 
@@ -1716,21 +1714,21 @@ public class UnusedVariableTest {
     refactoringHelper
         .addInputLines(
             "Test.java",
-"""
-import static java.util.stream.Collectors.toList;
+            """
+            import static java.util.stream.Collectors.toList;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+            import java.util.ArrayList;
+            import java.util.Collection;
+            import java.util.List;
 
-public class Test {
-  public void f(List<List<String>> lists) {
-    List<String> result =
-        lists.stream().collect(ArrayList::new, Collection::addAll, Collection::addAll);
-    result = lists.stream().collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
-  }
-}
-""")
+            public class Test {
+              public void f(List<List<String>> lists) {
+                List<String> result =
+                    lists.stream().collect(ArrayList::new, Collection::addAll, Collection::addAll);
+                result = lists.stream().collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
             """
@@ -1753,26 +1751,22 @@ public class Test {
     refactoringHelper
         .addInputLines(
             "Test.java",
-"""
-import static java.util.stream.Collectors.toList;
+            """
+            import java.util.ArrayList;
+            import java.util.Collection;
+            import java.util.List;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-public class Test {
-  public void f(List<List<String>> lists) {
-    List<String> result =
-        lists.stream().collect(ArrayList::new, Collection::addAll, Collection::addAll);
-    result = lists.stream().collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
-  }
-}
-""")
+            public class Test {
+              public void f(List<List<String>> lists) {
+                List<String> result =
+                    lists.stream().collect(ArrayList::new, Collection::addAll, Collection::addAll);
+                result = lists.stream().collect(ArrayList::new, ArrayList::addAll, ArrayList::addAll);
+              }
+            }
+            """)
         .addOutputLines(
             "Test.java",
             """
-            import static java.util.stream.Collectors.toList;
-
             import java.util.ArrayList;
             import java.util.Collection;
             import java.util.List;
@@ -2060,8 +2054,6 @@ public class Test {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.Collections;
-            import java.util.Comparator;
             import java.util.List;
 
             class Test {
@@ -2272,6 +2264,112 @@ public class Test {
             }
             """)
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void refasterBeforeTemplate_unusedLocalVariable_noFinding() {
+    helper
+        .addSourceLines(
+            "BeforeTemplate.java",
+            """
+            package com.google.errorprone.refaster.annotation;
+
+            public @interface BeforeTemplate {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.refaster.annotation.BeforeTemplate;
+
+            class Test {
+              @BeforeTemplate
+              void before(String s) {
+                String local = s.trim();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void refasterAfterTemplate_unusedLocalVariable_noFinding() {
+    helper
+        .addSourceLines(
+            "AfterTemplate.java",
+            """
+            package com.google.errorprone.refaster.annotation;
+
+            public @interface AfterTemplate {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.refaster.annotation.AfterTemplate;
+
+            class Test {
+              @AfterTemplate
+              void after(String s) {
+                String local = s.trim();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void refasterTemplate_unusedParameter_flagged() {
+    helper
+        .addSourceLines(
+            "BeforeTemplate.java",
+            """
+            package com.google.errorprone.refaster.annotation;
+
+            public @interface BeforeTemplate {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.refaster.annotation.BeforeTemplate;
+
+            class Test {
+              @BeforeTemplate
+              // BUG: Diagnostic contains: The parameter 'bar' is never read
+              void before(String foo, String bar) {
+                System.out.println(foo);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void refasterTemplate_regularMethod_unusedLocalVariable_flagged() {
+    helper
+        .addSourceLines(
+            "BeforeTemplate.java",
+            """
+            package com.google.errorprone.refaster.annotation;
+
+            public @interface BeforeTemplate {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.refaster.annotation.BeforeTemplate;
+
+            class Test {
+              @BeforeTemplate
+              void before(String s) {
+                String local = s.trim();
+              }
+
+              void regularMethod(String s) {
+                // BUG: Diagnostic contains: The local variable 'local' is never read
+                String local = s.trim();
+              }
+            }
+            """)
         .doTest();
   }
 }

@@ -179,7 +179,7 @@ public final class CheckedExceptionNotThrownTest {
             }
             """)
         .expectUnchanged()
-        .setArgs("-XepCompilingTestOnlyCode")
+        .setTestOnly()
         .doTest();
   }
 

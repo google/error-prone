@@ -66,8 +66,6 @@ public final class StreamToIterableTest {
         .addInputLines(
             "Test.java",
             """
-            import static com.google.common.collect.ImmutableList.toImmutableList;
-
             import java.util.List;
             import java.util.stream.Stream;
 

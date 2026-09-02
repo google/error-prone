@@ -34,9 +34,6 @@ public class LiteByteStringUtf8Test {
         .addSourceLines(
             "Foo.java",
             """
-            import com.google.protobuf.ByteString;
-            import com.google.protobuf.MessageLite;
-
             class Foo {
               void main(com.google.protobuf.MessageLite m) {
                 // BUG: Diagnostic contains: ByteString

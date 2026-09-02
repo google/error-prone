@@ -24,7 +24,9 @@ import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isBoxedPrimitiveType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.unboxedTypeOrType;
 import static java.beans.Introspector.decapitalize;
 
 import com.google.auto.value.AutoValue;
@@ -45,7 +47,6 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.TypeTag;
 import java.util.List;
 import java.util.Optional;
 import javax.lang.model.element.Modifier;
@@ -123,7 +124,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     if (!isSuppressed(method, state)
         && !hasNullableAnnotation(method)
         && !isOverride(method, state)
-        && isBoxedPrimitive(state, type)) {
+        && isBoxedPrimitiveType(type, state)) {
       suggestRemoveUnnecessaryBoxing(method.getReturnType(), state, type, getter.fix());
     }
     return getter;
@@ -173,7 +174,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     if (fixedGetter.isPresent()) {
       var parameter = methodTree.getParameters().getFirst();
       Type type = getType(parameter);
-      if (isBoxedPrimitive(state, type) && !hasNullableAnnotation(parameter)) {
+      if (isBoxedPrimitiveType(type, state) && !hasNullableAnnotation(parameter)) {
         suggestRemoveUnnecessaryBoxing(parameter.getType(), state, type, fixedGetter.get().fix());
       }
     }
@@ -234,7 +235,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
       if (!getter.fix().isEmpty()) {
         var parameter = trivialFactoryMethod.get().getParameters().get(idx);
         Type type = getType(parameter);
-        if (isBoxedPrimitive(state, type) && !hasNullableAnnotation(parameter)) {
+        if (isBoxedPrimitiveType(type, state) && !hasNullableAnnotation(parameter)) {
           suggestRemoveUnnecessaryBoxing(parameter.getType(), state, type, getter.fix());
         }
       }
@@ -249,20 +250,6 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
   /** Returns true if the method overrides another method. */
   private static boolean isOverride(MethodTree methodTree, VisitorState state) {
     return !findSuperMethods(getSymbol(methodTree), state.getTypes()).isEmpty();
-  }
-
-  /** Returns the primitive type corresponding to a boxed type. */
-  private static Type unbox(VisitorState state, Type type) {
-    return state.getTypes().unboxedType(type);
-  }
-
-  /** Returns true if the value of {@link Type} is a boxed primitive. */
-  private static boolean isBoxedPrimitive(VisitorState state, Type type) {
-    if (type.isPrimitive()) {
-      return false;
-    }
-    Type unboxed = unbox(state, type);
-    return unboxed != null && unboxed.getTag() != TypeTag.NONE && unboxed.getTag() != TypeTag.VOID;
   }
 
   private static Optional<ClassTree> findBuilderClass(ClassTree tree, VisitorState state) {
@@ -361,7 +348,7 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
    */
   private static void suggestRemoveUnnecessaryBoxing(
       Tree tree, VisitorState state, Type type, SuggestedFix.Builder fix) {
-    fix.replace(tree, unbox(state, type).tsym.getSimpleName().toString());
+    fix.replace(tree, unboxedTypeOrType(type, state).tsym.getSimpleName().toString());
   }
 
   private record Getter(MethodTree method, SuggestedFix.Builder fix) {

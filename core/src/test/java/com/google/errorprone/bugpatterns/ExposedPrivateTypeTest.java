@@ -40,7 +40,8 @@ public final class ExposedPrivateTypeTest {
             class Outer {
               private static class PrivateInner {}
 
-              // BUG: Diagnostic contains: non-private member 'field' should not reference private classes: PrivateInner
+              // BUG: Diagnostic contains: non-private member 'field' should not reference private classes:
+              // PrivateInner
               public PrivateInner field;
             }
             """)

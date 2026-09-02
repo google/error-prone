@@ -21,8 +21,12 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isSameType;
+import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE_LITE_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_OR_BUILDER_CLASS;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -32,19 +36,37 @@ import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree.Kind;
+import javax.inject.Inject;
 
 @BugPattern(
     severity = ERROR,
     summary = "Comparing protobuf fields of type String using reference equality")
 public class ProtoStringFieldReferenceEquality extends BugChecker implements BinaryTreeMatcher {
 
-  private static final String PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessage";
+  private final boolean checkOrBuilder;
 
-  private static final String LITE_PROTO_SUPER_CLASS = "com.google.protobuf.GeneratedMessageLite";
+  @Inject
+  public ProtoStringFieldReferenceEquality(ErrorProneFlags flags) {
+    this.checkOrBuilder =
+        flags.getBoolean("ProtoStringFieldReferenceEquality:CheckOrBuilder").orElse(true);
+  }
 
-  private static final Matcher<ExpressionTree> PROTO_STRING_METHOD =
+  public ProtoStringFieldReferenceEquality() {
+    this(ErrorProneFlags.empty());
+  }
+
+  private static final Matcher<ExpressionTree> PROTO_STRING_METHOD_LEGACY =
       allOf(
-          instanceMethod().onDescendantOfAny(PROTO_SUPER_CLASS, LITE_PROTO_SUPER_CLASS),
+          instanceMethod().onDescendantOfAny(GENERATED_MESSAGE_CLASS, GENERATED_MESSAGE_LITE_CLASS),
+          isSameType(Suppliers.STRING_TYPE));
+
+  private static final Matcher<ExpressionTree> PROTO_STRING_METHOD_OR_BUILDER =
+      allOf(
+          instanceMethod()
+              .onDescendantOfAny(
+                  MESSAGE_LITE_OR_BUILDER_CLASS,
+                  GENERATED_MESSAGE_CLASS,
+                  GENERATED_MESSAGE_LITE_CLASS),
           isSameType(Suppliers.STRING_TYPE));
 
   @Override
@@ -68,7 +90,9 @@ public class ProtoStringFieldReferenceEquality extends BugChecker implements Bin
     return NO_MATCH;
   }
 
-  private static boolean match(ExpressionTree a, ExpressionTree b, VisitorState state) {
-    return PROTO_STRING_METHOD.matches(a, state) && b.getKind() != Kind.NULL_LITERAL;
+  private boolean match(ExpressionTree a, ExpressionTree b, VisitorState state) {
+    Matcher<ExpressionTree> matcher =
+        checkOrBuilder ? PROTO_STRING_METHOD_OR_BUILDER : PROTO_STRING_METHOD_LEGACY;
+    return matcher.matches(a, state) && b.getKind() != Kind.NULL_LITERAL;
   }
 }

@@ -33,11 +33,7 @@ public final class InvalidSnippetTest {
         .addSourceLines(
             "Test.java",
             """
-            /**
-             *
-             *
-             * {@snippet file="foo.java"}
-             */
+            /** {@snippet file="foo.java"} */
             interface Test {}
             """)
         .doTest();
@@ -50,8 +46,6 @@ public final class InvalidSnippetTest {
             "Test.java",
             """
             /**
-             *
-             *
              * {@snippet :
              *    I have a colon
              *  }

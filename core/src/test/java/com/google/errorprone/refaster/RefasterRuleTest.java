@@ -39,5 +39,9 @@ public final class RefasterRuleTest {
             RefasterRule.fromSecondLevel(
                 "com.google.devtools.javatools.refactory.refaster.cleanups.PrimitiveComparisons.Compare.Ints"))
         .isEqualTo("Compare_Ints");
+    assertThat(RefasterRule.fromSecondLevel("MergeNestedIf")).isEqualTo("MergeNestedIf");
+    assertThat(RefasterRule.fromSecondLevel("Outer.Inner")).isEqualTo("Inner");
+    assertThat(RefasterRule.fromSecondLevel("Outer.Inner1.Inner2")).isEqualTo("Inner1_Inner2");
+    assertThat(RefasterRule.fromSecondLevel("pkg.Outer.Inner")).isEqualTo("Inner");
   }
 }

@@ -69,14 +69,13 @@ public final class MissingJavadocTest {
   }
 
   @Test
-  public void publicMethodWithoutJavadoc_warns() {
+  public void publicMethodWithoutJavadoc_passes() {
     compilationHelper
         .addSourceLines(
             "Test.java",
             """
             /** This is class doc. */
             public class Test {
-              // BUG: Diagnostic contains: MissingJavadoc
               public void foo() {}
             }
             """)
@@ -181,6 +180,35 @@ public final class MissingJavadocTest {
             /** This is class doc. */
             public class Test {
               public Test() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void publicInnerClassWithoutJavadoc_warns() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            /** This is class doc. */
+            public class Test {
+              // BUG: Diagnostic contains: MissingJavadoc
+              public class Inner {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void packagePrivateInnerClassWithoutJavadoc_passes() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            /** This is class doc. */
+            public class Test {
+              class Inner {}
             }
             """)
         .doTest();

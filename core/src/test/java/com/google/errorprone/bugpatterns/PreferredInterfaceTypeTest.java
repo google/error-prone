@@ -40,7 +40,6 @@ public final class PreferredInterfaceTypeTest {
             import com.google.common.graph.GraphBuilder;
             import com.google.common.graph.ImmutableGraph;
             import java.util.ArrayList;
-            import java.util.List;
 
             class Test {
               private static final Iterable<Integer> FOO = new ArrayList<>();
@@ -97,7 +96,6 @@ public final class PreferredInterfaceTypeTest {
             "Test.java",
             """
             import java.util.Collection;
-            import java.util.HashSet;
 
             class Test {
               Collection<Integer> test() {
@@ -134,7 +132,6 @@ public final class PreferredInterfaceTypeTest {
             "Test.java",
             """
             import java.util.ArrayList;
-            import java.util.List;
 
             class Test {
               void test(Iterable<Object> xs) {
@@ -151,7 +148,6 @@ public final class PreferredInterfaceTypeTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.ArrayList;
             import java.util.List;
 
             class Test {
@@ -171,7 +167,6 @@ public final class PreferredInterfaceTypeTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.ArrayList;
             import java.util.List;
 
             class Test {
@@ -192,7 +187,6 @@ public final class PreferredInterfaceTypeTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.ArrayList;
             import java.util.List;
 
             class Test {
@@ -436,7 +430,6 @@ public final class PreferredInterfaceTypeTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import java.util.List;
 
             class Test {
               final ImmutableList<String> foo() {
@@ -455,7 +448,6 @@ public final class PreferredInterfaceTypeTest {
             """
             import com.google.common.collect.ImmutableCollection;
             import com.google.common.collect.ImmutableList;
-            import java.util.List;
 
             class Test {
               // BUG: Diagnostic contains: convey more information
@@ -674,8 +666,8 @@ public final class PreferredInterfaceTypeTest {
         .addSourceLines(
             "ApplyInterface.java",
             """
-            import java.util.function.Function;
             import java.util.List;
+            import java.util.function.Function;
 
             public interface ApplyInterface {
               int applyAndGetSize(Function<String, List<String>> fun);
@@ -684,9 +676,8 @@ public final class PreferredInterfaceTypeTest {
         .addSourceLines(
             "ApplyImpl.java",
             """
-            import com.google.common.collect.ImmutableList;
-            import java.util.function.Function;
             import java.util.List;
+            import java.util.function.Function;
 
             public class ApplyImpl implements ApplyInterface {
               public int applyAndGetSize(Function<String, List<String>> fun) {
@@ -699,8 +690,6 @@ public final class PreferredInterfaceTypeTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import java.util.function.Function;
-            import java.util.List;
 
             class Test {
               private static final ApplyInterface APPLY = new ApplyImpl();
@@ -790,10 +779,10 @@ public final class PreferredInterfaceTypeTest {
             """
             import com.google.common.collect.ArrayListMultimap;
             import com.google.common.collect.HashMultimap;
-            import com.google.common.collect.Multimap;
             import com.google.common.collect.ImmutableListMultimap;
             import com.google.common.collect.ImmutableMultimap;
             import com.google.common.collect.ImmutableSetMultimap;
+            import com.google.common.collect.Multimap;
 
             class Test {
               // BUG: Diagnostic contains: convey more information
@@ -1027,7 +1016,6 @@ public final class PreferredInterfaceTypeTest {
             "Test.java",
             """
             import com.google.common.collect.ImmutableSet;
-            import java.util.Set;
 
             class Test {
               static final ImmutableSet<String> nonCapitalCase = ImmutableSet.of();
@@ -1043,7 +1031,6 @@ public final class PreferredInterfaceTypeTest {
             "Test.java",
             """
             import java.util.ArrayList;
-            import java.util.List;
 
             class Test {
               static Iterable<String> mutable = new ArrayList<>();

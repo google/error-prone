@@ -230,7 +230,7 @@ class BanJNDIPositiveCases {
 }
 """)
         .expectUnchanged()
-        .setArgs("-XepCompilingTestOnlyCode")
+        .setTestOnly()
         .doTest();
   }
 }

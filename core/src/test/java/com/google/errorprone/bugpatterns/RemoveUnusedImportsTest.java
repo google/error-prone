@@ -25,6 +25,7 @@ import org.junit.runners.JUnit4;
  * @author gak@google.com (Gregory Kick)
  */
 @RunWith(JUnit4.class)
+@SuppressWarnings("MisformattedTestData") // some intentional unused imports in input data!
 public class RemoveUnusedImportsTest {
   private final BugCheckerRefactoringTestHelper testHelper =
       BugCheckerRefactoringTestHelper.newInstance(RemoveUnusedImports.class, getClass());
@@ -39,15 +40,10 @@ public class RemoveUnusedImportsTest {
             "in/Test.java",
             """
             import static com.google.common.base.Preconditions.checkNotNull;
-            import static java.util.Collections.emptyList;
             import static java.util.Collections.emptySet;
 
-            import java.util.ArrayList;
             import java.util.Collection;
-            import java.util.Collections;
             import java.util.HashSet;
-            import java.util.List;
-            import java.util.Map;
             import java.util.Set;
             import java.util.UUID;
 
@@ -102,7 +98,6 @@ public class RemoveUnusedImportsTest {
             "in/Test.java",
             """
             import java.util.Map;
-            import java.util.Map.Entry;
 
             public class Test {
               Map.Entry<String, String> e;
@@ -263,9 +258,7 @@ public class RemoveUnusedImportsTest {
         .addInputLines(
             "in/Test.java",
             """
-            import java.util.List;
             import java.util.Map;
-            import java.util.Map.Entry;
 
             /** {@link java.util.List} {@link Map.Entry} */
             public class Test {}
@@ -366,7 +359,7 @@ public class RemoveUnusedImportsTest {
             """
             package com.example;
 
-            import java.util.Map;
+
             """)
         .addOutputLines(
             "out/com/example/package-info.java",
@@ -504,7 +497,6 @@ public class RemoveUnusedImportsTest {
             package p;
 
             import a.One;
-            import a.Two;
 
             public record Test(int z, @One int x, int y) {}
             """)
@@ -516,6 +508,31 @@ public class RemoveUnusedImportsTest {
             import a.One;
 
             public record Test(int z, @One int x, int y) {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void recordComponentAnnotation_enumConstant() {
+    compilationTestHelper
+        .addSourceLines(
+            "p/Test.java",
+            """
+            package p;
+
+            import static java.lang.annotation.ElementType.FIELD;
+            // BUG: Diagnostic contains:
+            import static java.lang.annotation.ElementType.METHOD;
+
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            public record Test(@Tag(FIELD) int x) {
+              @Target(ElementType.RECORD_COMPONENT)
+              @interface Tag {
+                ElementType value();
+              }
+            }
             """)
         .doTest();
   }

@@ -132,7 +132,6 @@ public class ValidatorTest {
             "Client.java",
             """
             import com.google.errorprone.annotations.InlineMe;
-            import java.util.function.Supplier;
 
             public final class Client {
               @InlineMe(replacement = "this.after(string)")
@@ -143,7 +142,6 @@ public class ValidatorTest {
 
               public void after(String string) {}
             }
-
             """)
         .doTest();
   }
@@ -155,7 +153,6 @@ public class ValidatorTest {
             "Client.java",
             """
             import com.google.errorprone.annotations.InlineMe;
-            import java.util.function.Supplier;
 
             public final class Client {
               @InlineMe(replacement = "this.after(/* name= */ name)")
@@ -166,7 +163,6 @@ public class ValidatorTest {
 
               public void after(String name) {}
             }
-
             """)
         .doTest();
   }
@@ -178,7 +174,6 @@ public class ValidatorTest {
             "Client.java",
             """
             import com.google.errorprone.annotations.InlineMe;
-            import java.util.function.Supplier;
 
             public final class Client {
               @InlineMe(replacement = "this.after(/* name1= */ name1, /* name2= */ name2)")
@@ -189,7 +184,6 @@ public class ValidatorTest {
 
               public void after(String name1, String name2) {}
             }
-
             """)
         .doTest();
   }
@@ -201,7 +195,6 @@ public class ValidatorTest {
             "Client.java",
             """
             import com.google.errorprone.annotations.InlineMe;
-            import java.util.function.Supplier;
 
             public final class Client {
               @InlineMe(replacement = "this.after(string)")
@@ -213,7 +206,6 @@ public class ValidatorTest {
 
               public void after(String string) {}
             }
-
             """)
         .doTest();
   }
@@ -1038,6 +1030,55 @@ public class ValidatorTest {
               // BUG: Diagnostic contains: deprecated or less visible API elements: E
               public ArrayList<E> create() {
                 return new ArrayList<E>();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unqualifiedStaticField_valid() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              public static final String STR = "kurt";
+
+              @InlineMe(
+                  replacement = "Client.STR.length()",
+                  imports = "com.google.frobber.Client")
+              @Deprecated
+              public int stringLength() {
+                return STR.length();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unqualifiedStaticField_missingQualification_fails() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            """
+            package com.google.frobber;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              public static final String STR = "kurt";
+
+              @InlineMe(replacement = "STR.length()")
+              @Deprecated
+              // BUG: Diagnostic contains: InferredFromBody: Client.STR.length()
+              public int stringLength() {
+                return STR.length();
               }
             }
             """)

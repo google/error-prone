@@ -20,7 +20,6 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.errorprone.refaster.PlaceholderUnificationVisitor.State;
 import com.google.errorprone.refaster.UPlaceholderExpression.PlaceholderParamIdent;
 import com.google.errorprone.util.ASTHelpers;
@@ -218,26 +217,16 @@ abstract class PlaceholderUnificationVisitor
       new SimpleTreeVisitor<Boolean, Unifier>() {
         @Override
         protected Boolean defaultAction(Tree node, Unifier unifier) {
-          if (!(node instanceof JCExpression expr)) {
-            return false;
-          }
-          for (UFreeIdent.Key key :
-              Iterables.filter(unifier.getBindings().keySet(), UFreeIdent.Key.class)) {
-            JCExpression keyBinding = unifier.getBinding(key);
-            if (equivalentExprs(unifier, expr, keyBinding)) {
-              return true;
-            }
-          }
-          return false;
+          return node instanceof JCExpression expr
+              && unifier
+                  .getBindings()
+                  .hasFreeIdentMatching(keyBinding -> equivalentExprs(unifier, expr, keyBinding));
         }
 
         @Override
         public Boolean visitIdentifier(IdentifierTree node, Unifier unifier) {
-          for (LocalVarBinding localBinding :
-              Iterables.filter(unifier.getBindings().values(), LocalVarBinding.class)) {
-            if (localBinding.symbol().equals(ASTHelpers.getSymbol(node))) {
-              return true;
-            }
+          if (unifier.getBindings().hasBindingForLocalVar(ASTHelpers.getSymbol(node))) {
+            return true;
           }
           return defaultAction(node, unifier);
         }

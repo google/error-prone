@@ -282,7 +282,6 @@ public class BoxingComparatorTest {
             "Test.java",
             """
             import static java.util.Comparator.comparing;
-            import static java.util.Comparator.comparingInt;
 
             import java.util.Comparator;
 

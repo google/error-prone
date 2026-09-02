@@ -58,7 +58,6 @@ public class RequiredModifiersCheckerTest {
               @RequiredModifiers(modifier = {PUBLIC, FINAL})
               public @interface PublicAndFinalRequired {}
               """);
-
   JavaFileObject abstractRequired;
   JavaFileObject publicAndFinalRequired;
 

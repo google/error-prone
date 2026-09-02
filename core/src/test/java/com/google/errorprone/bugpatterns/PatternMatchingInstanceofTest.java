@@ -857,8 +857,6 @@ public final class PatternMatchingInstanceofTest {
         .addInputLines(
             "Test.java",
             """
-            import com.google.common.collect.ImmutableList;
-
             class Test {
               String f(Object o) {
                 o = o.toString();
@@ -1108,11 +1106,8 @@ public final class PatternMatchingInstanceofTest {
   }
 
   @Test
-  public void scopeExpansionClobbering_brokenRefactoring() {
-    // TODO: b/395603588 - This refactoring is broken because the pattern variable 's'
-    // scope expands and clashes with 'int s = 0'. It should be expectUnchanged().
+  public void scopeExpansionClobbering_noFinding() {
     helper
-        .allowBreakingChanges()
         .addInputLines(
             "Test.java",
             """
@@ -1129,21 +1124,7 @@ public final class PatternMatchingInstanceofTest {
               }
             }
             """)
-        .addOutputLines(
-            "Test.java",
-            """
-            class Test {
-              void test(Object o) {
-                if (!(o instanceof String s)) {
-                  return;
-                }
-                {
-                  System.out.println(s);
-                }
-                int s = 0;
-              }
-            }
-            """)
+        .expectUnchanged()
         .doTest();
   }
 
@@ -1178,6 +1159,172 @@ public final class PatternMatchingInstanceofTest {
               }
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  public void onlyDeclaration_refactors() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String) {
+                  String s = (String) o;
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String s) {
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void sequentialScopeExpanded() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o1, Object o2) {
+                if (!(o1 instanceof String)) {
+                  return;
+                }
+                {
+                  String s = (String) o1;
+                  System.out.println(s);
+                }
+                if (!(o2 instanceof String)) {
+                  return;
+                }
+                {
+                  String s = (String) o2;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o1, Object o2) {
+                if (!(o1 instanceof String)) {
+                  return;
+                }
+                {
+                  String s = (String) o1;
+                  System.out.println(s);
+                }
+                if (!(o2 instanceof String s)) {
+                  return;
+                }
+                {
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void scopeExpansionClobbering_expressionCast_generatesUniqueName() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof String)) {
+                  return;
+                }
+                System.out.println(((String) o).length());
+                int string = 0;
+                System.out.println(string);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof String string2)) {
+                  return;
+                }
+                System.out.println(string2.length());
+                int string = 0;
+                System.out.println(string);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void scopeExpansionClobbering_nestedDeclarationInClass_refactors() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof String)) {
+                  return;
+                }
+                String string = (String) o;
+                class Local {
+                  int string = 0;
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof String string)) {
+                  return;
+                }
+
+                class Local {
+                  int string = 0;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void scopeExpansionClobbering_localClassNameClash_noFinding() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (!(o instanceof String)) {
+                  return;
+                }
+                String string = (String) o;
+                class string {}
+              }
+            }
+            """)
+        .expectUnchanged()
         .doTest();
   }
 
@@ -1238,6 +1385,387 @@ public final class PatternMatchingInstanceofTest {
               }
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  public void nestedInstanceof_sameType_brokenRefactoring() {
+    // TODO(b/385114559): This refactoring is broken because both instanceof checks generate the
+    // same pattern variable name ('string'), causing a duplicate variable compiler error and
+    // incorrectly shadowing the outer variable.
+    helper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o1, Object o2) {
+                if (o1 instanceof String) {
+                  if (o2 instanceof String) {
+                    System.out.println(((String) o1).length());
+                    System.out.println(((String) o2).length());
+                  }
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o1, Object o2) {
+                if (o1 instanceof String string) {
+                  if (o2 instanceof String string) {
+                    System.out.println(string.length());
+                    System.out.println(string.length());
+                  }
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void compoundCondition_sameType_brokenRefactoring() {
+    // TODO(b/385114559): This refactoring is broken because both instanceof checks generate the
+    // same pattern variable name ('string'), causing a duplicate variable compiler error.
+    // See also https://github.com/google/error-prone/issues/4922
+    helper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o1, Object o2) {
+                if (o1 instanceof String && o2 instanceof String) {
+                  System.out.println(((String) o1).length());
+                  System.out.println(((String) o2).length());
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o1, Object o2) {
+                if (o1 instanceof String string && o2 instanceof String string) {
+                  System.out.println(string.length());
+                  System.out.println(string.length());
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void variableInitializer_ternary_sameName_brokenRefactoring() {
+    // TODO(b/395603588): This refactoring is broken because the pattern variable name ('i') clashes
+    // with the variable being initialized ('Integer i'). It should generate a unique name ('i2') or
+    // expectUnchanged().
+    // See also https://github.com/google/error-prone/issues/4922
+    helper
+        .allowBreakingChanges()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                Integer i = o instanceof Integer ? (Integer) o : 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                Integer i = o instanceof Integer i ? i : 0;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void whileLoop_variableDeclaration() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String s) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void whileLoop_castExpression() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String) {
+                  System.out.println(((String) o).length());
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String string) {
+                  System.out.println(string.length());
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void whileLoop_compoundCondition() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String && ((String) o).length() > 0) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String s && s.length() > 0) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void whileLoop_negated() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (!(o instanceof String)) {
+                  System.out.println(o);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void whileLoop_disjunction() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                while (o instanceof String || o == null) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void forLoop_variableDeclaration() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String; ) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String s; ) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void forLoop_castInUpdateAndBody() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (int i = 0; o instanceof String; i += ((String) o).length()) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (int i = 0; o instanceof String s; i += s.length()) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void forLoop_castExpression() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String; ) {
+                  System.out.println(((String) o).length());
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String string; ) {
+                  System.out.println(string.length());
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void forLoop_compoundCondition() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String && ((String) o).length() > 0; ) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String s && s.length() > 0; ) {
+
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void forLoop_negated() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; !(o instanceof String); ) {
+                  System.out.println(o);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void forLoop_disjunction() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                for (; o instanceof String || o != null; ) {
+                  String s = (String) o;
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
         .doTest();
   }
 }

@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIME_STATIC_FACTORIES;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -51,19 +52,7 @@ public final class StronglyTypeTime extends BugChecker implements CompilationUni
               .namedAnyOf("ofEpochMilli", "ofEpochSecond")
               .withParameters("long"),
           // Proto time.
-          staticMethod()
-              .onClass("com.google.protobuf.util.Timestamps")
-              .namedAnyOf("fromNanos", "fromMicros", "fromMillis", "fromSeconds"),
-          staticMethod()
-              .onClass("com.google.protobuf.util.Durations")
-              .namedAnyOf(
-                  "fromNanos",
-                  "fromMicros",
-                  "fromMillis",
-                  "fromSeconds",
-                  "fromMinutes",
-                  "fromHours",
-                  "fromDays"),
+          PROTO_TIME_STATIC_FACTORIES,
           // Joda time.
           staticMethod()
               .onClass("org.joda.time.Duration")

@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
@@ -24,10 +25,9 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ReturnTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.TrustingNullnessAnalysis;
@@ -35,10 +35,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
-import com.sun.source.tree.StatementTree;
-import com.sun.source.util.TreePath;
-import javax.inject.Inject;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Flags methods with collection return types which return {@code null} in some cases but don't
@@ -52,15 +48,6 @@ import org.jspecify.annotations.Nullable;
             + " annotate the method as @Nullable. See Effective Java 3rd Edition Item 54.",
     severity = SUGGESTION)
 public class ReturnsNullCollection extends BugChecker implements ReturnTreeMatcher {
-
-  private final boolean useAstHelpersEnclosingMethod;
-
-  @Inject
-  ReturnsNullCollection(ErrorProneFlags flags) {
-    this.useAstHelpersEnclosingMethod =
-        flags.getBoolean("ASTHelpers:EnclosingMethodFix").orElse(true);
-  }
-
   private static boolean methodWithoutNullable(MethodTree tree, VisitorState state) {
     return !TrustingNullnessAnalysis.hasNullableAnnotation(getSymbol(tree));
   }
@@ -76,11 +63,17 @@ public class ReturnsNullCollection extends BugChecker implements ReturnTreeMatch
 
   @Override
   public final Description matchReturn(ReturnTree tree, VisitorState state) {
-    if (tree.getExpression() == null || tree.getExpression().getKind() != NULL_LITERAL) {
+    if (tree.getExpression() == null) {
       return NO_MATCH;
     }
-    MethodTree methodTree =
-        useAstHelpersEnclosingMethod ? findEnclosingMethod(state) : buggyFindEnclosingMethod(state);
+    if (!hasDefinitelyNullBranch(
+        tree.getExpression(),
+        /* definitelyNullVars= */ ImmutableSet.of(),
+        /* varsProvenNullByParentIf= */ ImmutableSet.of(),
+        state)) {
+      return NO_MATCH;
+    }
+    MethodTree methodTree = findEnclosingMethod(state);
     if (methodTree == null) {
       return NO_MATCH;
     }
@@ -88,20 +81,5 @@ public class ReturnsNullCollection extends BugChecker implements ReturnTreeMatch
       return NO_MATCH;
     }
     return describeMatch(tree);
-  }
-
-  /**
-   * Returns the enclosing method of the given visitor state. Returns null if the state is within a
-   * lambda expression or anonymous class <b>or (bug!) {@code catch} block</b>.
-   */
-  private static @Nullable MethodTree buggyFindEnclosingMethod(VisitorState state) {
-    TreePath path = state.getPath();
-    while (path != null && path.getLeaf() instanceof StatementTree) {
-      path = path.getParentPath();
-    }
-    if (path == null || !(path.getLeaf() instanceof MethodTree)) {
-      return null;
-    }
-    return (MethodTree) path.getLeaf();
   }
 }

@@ -82,8 +82,6 @@ public final class UnescapedEntityTest {
             "Test.java",
             """
             /**
-             *
-             *
              * <pre>Foo</pre>
              *
              * <pre>Use an ImmutableMap<String,Object> please</pre>
@@ -96,8 +94,6 @@ public final class UnescapedEntityTest {
             "Test.java",
             """
             /**
-             *
-             *
              * <pre>Foo</pre>
              *
              * <pre>{@code Use an ImmutableMap<String,Object> please}</pre>
@@ -115,21 +111,13 @@ public final class UnescapedEntityTest {
         .addInputLines(
             "Test.java",
             """
-            /**
-             *
-             *
-             * <pre>n < 3</pre>
-             */
+            /** <pre>n < 3</pre> */
             interface Test {}
             """)
         .addOutputLines(
             "Test.java",
             """
-            /**
-             *
-             *
-             * <pre>{@code n < 3}</pre>
-             */
+            /** <pre>{@code n < 3}</pre> */
             interface Test {}
             """)
         .doTest();
@@ -144,21 +132,13 @@ public final class UnescapedEntityTest {
         .addInputLines(
             "Test.java",
             """
-            /**
-             *
-             *
-             * <pre>Use an ImmutableMap<String, Object> not a Map&lt;String, Object&gt;</pre>
-             */
+            /** <pre>Use an ImmutableMap<String, Object> not a Map&lt;String, Object&gt;</pre> */
             interface Test {}
             """)
         .addOutputLines(
             "Test.java",
             """
-            /**
-             *
-             *
-             * <pre>Use an ImmutableMap&lt;String, Object&gt; not a Map&lt;String, Object&gt;</pre>
-             */
+            /** <pre>Use an ImmutableMap&lt;String, Object&gt; not a Map&lt;String, Object&gt;</pre> */
             interface Test {}
             """)
         .doTest();
@@ -309,8 +289,6 @@ public final class UnescapedEntityTest {
             "Test.java",
             """
             /**
-             *
-             *
              * <pre>Foo List<Foo> bar</pre>
              *
              * </pre>
@@ -321,8 +299,6 @@ public final class UnescapedEntityTest {
             "Test.java",
             """
             /**
-             *
-             *
              * <pre>{@code Foo List<Foo> bar}</pre>
              *
              * </pre>
@@ -347,6 +323,180 @@ public final class UnescapedEntityTest {
             /** {@code List<List<Integer>>} */
             interface Test {}
             """)
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadoc() {
+    assume().that(Runtime.version().feature()).isAtLeast(23); // Markdown Javadoc is JDK 23+
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /// A command-line flag that parses arguments into a byte size represented as a `Flag<Long>`.
+            interface Test {}
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadocCodeBlock() {
+    assume().that(Runtime.version().feature()).isAtLeast(23); // Markdown Javadoc is JDK 23+
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /// ```java
+            /// List<String> list;
+            /// ```
+            interface Test {}
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadocUnmatchedBacktick() {
+    assume().that(Runtime.version().feature()).isAtLeast(23); // Markdown Javadoc is JDK 23+
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /// List<String> ` unmatched
+            interface Test {}
+            """)
+        // TODO(b/530215233): This should suggest wrapping in backticks:
+        // /// `List<String>` ` unmatched
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadocTildeCodeBlock() {
+    assume().that(Runtime.version().feature()).isAtLeast(23); // Markdown Javadoc is JDK 23+
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /// ~~~java
+            /// List<String> list;
+            /// ~~~
+            interface Test {}
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadocRawHtml() {
+    assume().that(Runtime.version().feature()).isAtLeast(23); // Markdown Javadoc is JDK 23+
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /// <code>List<String></code>
+            interface Test {}
+            """)
+        // TODO(b/530215233): This should suggest wrapping in {@code}:
+        // /// <code>{@code List<String>}</code>
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadocSingleTildeNotCode() {
+    assume().that(Runtime.version().feature()).isAtLeast(23); // Markdown Javadoc is JDK 23+
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /// ~List<String>~
+            interface Test {}
+            """)
+        // TODO(b/530215233): This should suggest wrapping in backticks:
+        // /// ~`List<String>`~
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadocMultipleCodeSpans() {
+    assume().that(Runtime.version().feature()).isAtLeast(23); // Markdown Javadoc is JDK 23+
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /// `List<String>` and `Map<String, Integer>`
+            interface Test {}
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadocMixedCodeSpanAndRawGeneric() {
+    assume().that(Runtime.version().feature()).isAtLeast(23); // Markdown Javadoc is JDK 23+
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /// `List<String>` but raw Map<String, Integer>
+            interface Test {}
+            """)
+        // TODO(b/530215233): This should suggest wrapping in backticks:
+        // /// `List<String>` but raw `Map<String, Integer>`
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadocEscapedBacktick() {
+    assume().that(Runtime.version().feature()).isAtLeast(23); // Markdown Javadoc is JDK 23+
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /// A literal backtick \\` and raw List<String> \\` more
+            interface Test {}
+            """)
+        // TODO(b/530215233): This should suggest wrapping in backticks:
+        // /// A literal backtick \\` and raw `List<String>` \\` more
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void nestedHtmlTagsInCodeHtml() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /** <code>List<String> <b>bold</b></code> */
+            interface Test {}
+            """)
+        // TODO(b/530215233): This should be expectUnchanged() because we shouldn't wrap
+        // nested HTML tags in {@code} which would escape them.
+        .addOutputLines(
+            "Test.java",
+            """
+            /** <code>{@code List<String> <b>bold</b>}</code> */
+            interface Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void markdownJavadocNestedHtmlTagsInCodeHtml() {
+    assume().that(Runtime.version().feature()).isAtLeast(23); // Markdown Javadoc is JDK 23+
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /// <code>List<String> <b>bold</b></code>
+            interface Test {}
+            """)
+        .expectUnchanged()
         .doTest();
   }
 }

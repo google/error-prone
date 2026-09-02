@@ -89,11 +89,6 @@ public final class UnusedMethodTest {
             """
             package unusedvars;
 
-            import java.io.IOException;
-            import java.io.ObjectStreamException;
-            import java.util.List;
-            import javax.inject.Inject;
-
             public class Unuseds {
               // BUG: Diagnostic contains:
               private void notUsedMethod() {}
@@ -249,6 +244,43 @@ public final class UnusedMethodTest {
             package unusedvars;
 
             public class UnusedWithComment {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void removal_markdownJavadocs() {
+    refactoringHelper
+        .addInputLines(
+            "UnusedWithComment.java",
+            """
+            package unusedvars;
+
+            public class UnusedWithComment {
+              /// Method comment
+              private void test1() {}
+
+              /// First line of method comment Second line of method comment
+              private void test2() {}
+
+              // Keep this comment
+
+              /// First line of method comment
+              ///
+              /// Second line of method comment
+              private void test3() {}
+            }
+            """)
+        .addOutputLines(
+            "UnusedWithComment.java",
+            """
+            package unusedvars;
+
+            public class UnusedWithComment {
+
+              // Keep this comment
+
+            }
             """)
         .doTest();
   }

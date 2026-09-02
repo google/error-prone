@@ -1575,7 +1575,7 @@ class Test {
 
       return compilationHelper.setArgs(
           "-XepOpt:" + CheckReturnValue.CHECK_ALL_METHODS + "=true",
-          "-XepOpt:CheckReturnValue:ApiExclusionList=" + file);
+          "-XepOpt:CheckReturnValue:ApiIgnorableList=" + file);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }

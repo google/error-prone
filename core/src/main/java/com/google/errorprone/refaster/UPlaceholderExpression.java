@@ -183,12 +183,12 @@ public abstract class UPlaceholderExpression extends UExpression {
                   : Optional.<Unifier>empty();
             }
             JCExpression result = state.result();
+            result.type = expr.type;
             if (!placeholder()
                 .matcher()
                 .matches(result, UMatches.makeVisitorState(expr, resultUnifier))) {
               return Optional.empty();
             }
-            result.type = expr.type;
             resultUnifier.putBinding(placeholder().exprKey(), result);
             return Optional.of(resultUnifier);
           } else {

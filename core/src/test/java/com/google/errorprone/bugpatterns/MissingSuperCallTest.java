@@ -32,6 +32,7 @@ public class MissingSuperCallTest {
               package android.support.annotation;
 
               import static java.lang.annotation.ElementType.METHOD;
+
               import java.lang.annotation.Target;
 
               @Target({METHOD})
@@ -259,8 +260,6 @@ public class MissingSuperCallTest {
         .addSourceLines(
             "Sub.java",
             """
-            import java.util.Objects;
-
             public class Sub implements Super {
               @Override
               public void doIt() {

@@ -43,47 +43,59 @@ import java.nio.file.Paths;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-/** External source of information about @CanIgnoreReturnValue-equivalent API's. */
-public final class ExternalCanIgnoreReturnValue extends ErrorProneMethodRule {
+/** External source of information about API return value ignorability. */
+public final class ExternalApiList extends ErrorProneMethodRule {
 
-  /** Returns a rule using an external list of APIs to ignore. */
-  public static ResultUseRule<VisitorState, Symbol> externalIgnoreList() {
-    return new ExternalCanIgnoreReturnValue();
+  /** Returns a rule using an external list of APIs to treat as @CanIgnoreReturnValue. */
+  public static ResultUseRule<VisitorState, Symbol> externalIgnorableList() {
+    return new ExternalApiList(EXTERNAL_API_IGNORABLE_LIST, ResultUsePolicy.OPTIONAL);
   }
 
-  private ExternalCanIgnoreReturnValue() {}
+  /** Returns a rule using an external list of APIs to treat as unspecified. */
+  public static ResultUseRule<VisitorState, Symbol> externalUnspecifiedList() {
+    return new ExternalApiList(EXTERNAL_API_UNSPECIFIED_LIST, ResultUsePolicy.UNSPECIFIED);
+  }
 
-  private static final String EXTERNAL_API_EXCLUSION_LIST = "CheckReturnValue:ApiExclusionList";
-  private static final String EXCLUSION_LIST_PARSER = "CheckReturnValue:ApiExclusionListParser";
+  private static final String EXTERNAL_API_IGNORABLE_LIST = "CheckReturnValue:ApiIgnorableList";
+  private static final String EXTERNAL_API_UNSPECIFIED_LIST = "CheckReturnValue:ApiUnspecifiedList";
 
-  private static final Supplier<MethodPredicate> EXTERNAL_RULE_EVALUATOR =
+  private static final String API_LIST_PARSER = "CheckReturnValue:ApiListParser";
+
+  private static final Supplier<ConfigParser> CONFIG_PARSER =
       VisitorState.memoize(
           state ->
               state
                   .errorProneOptions()
                   .getFlags()
-                  .get(EXTERNAL_API_EXCLUSION_LIST)
-                  .filter(s -> !s.isEmpty())
-                  .map(
-                      filename ->
-                          loadConfigListFromFile(
-                              filename,
-                              state
-                                  .errorProneOptions()
-                                  .getFlags()
-                                  .getEnum(EXCLUSION_LIST_PARSER, ConfigParser.class)
-                                  .orElse(ConfigParser.AS_STRINGS)))
-                  .orElse((m, s) -> false));
+                  .getEnum(API_LIST_PARSER, ConfigParser.class)
+                  .orElse(ConfigParser.AS_STRINGS));
+
+  private final ResultUsePolicy policy;
+  private final Supplier<MethodPredicate> evaluator;
+
+  private ExternalApiList(String flagName, ResultUsePolicy policy) {
+    this.policy = policy;
+    this.evaluator =
+        VisitorState.memoize(
+            state ->
+                state
+                    .errorProneOptions()
+                    .getFlags()
+                    .get(flagName)
+                    .filter(s -> !s.isEmpty())
+                    .map(filename -> loadConfigListFromFile(filename, CONFIG_PARSER.get(state)))
+                    .orElse((m, s) -> false));
+  }
 
   @Override
   public String id() {
-    return "EXTERNAL_API_EXCLUSION_LIST";
+    return "EXTERNAL_API_" + policy.name() + "_LIST";
   }
 
   @Override
   public Optional<ResultUsePolicy> evaluateMethod(MethodSymbol method, VisitorState state) {
-    return EXTERNAL_RULE_EVALUATOR.get(state).methodMatches(method, state)
-        ? Optional.of(ResultUsePolicy.UNSPECIFIED)
+    return evaluator.get(state).methodMatches(method, state)
+        ? Optional.of(policy)
         : Optional.empty();
   }
 

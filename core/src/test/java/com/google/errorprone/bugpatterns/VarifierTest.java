@@ -223,8 +223,6 @@ public final class VarifierTest {
         .addInputLines(
             "Test.java",
             """
-            import com.google.common.collect.ImmutableList;
-
             class Test {
               static class Foo {
                 static Builder newBuilder() {

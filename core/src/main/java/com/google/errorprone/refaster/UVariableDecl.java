@@ -131,6 +131,9 @@ public abstract class UVariableDecl extends USimpleStatement implements Variable
       modifiers = maker.Modifiers(0L);
       name = getName().inline(inliner);
     }
+    if (name.isEmpty()) {
+      name = inliner.asName("_");
+    }
     return maker.VarDef(
         modifiers,
         name,

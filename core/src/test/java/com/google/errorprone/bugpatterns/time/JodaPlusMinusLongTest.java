@@ -94,7 +94,6 @@ public class JodaPlusMinusLongTest {
             "TestClass.java",
             """
             import org.joda.time.Duration;
-            import org.joda.time.Instant;
 
             public class TestClass {
               private static final Duration PLUS = Duration.ZERO.plus(Duration.millis(42));

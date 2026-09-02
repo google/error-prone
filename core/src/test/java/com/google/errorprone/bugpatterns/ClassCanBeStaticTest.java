@@ -400,8 +400,6 @@ public class ClassCanBeStaticTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.List;
-
             class Test<T> {
               class One {
                 {

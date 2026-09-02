@@ -171,6 +171,7 @@ import com.google.errorprone.bugpatterns.GetClassOnAnnotation;
 import com.google.errorprone.bugpatterns.GetClassOnClass;
 import com.google.errorprone.bugpatterns.GetClassOnEnum;
 import com.google.errorprone.bugpatterns.GuiceNestedCombine;
+import com.google.errorprone.bugpatterns.HashCodeInObjectsHash;
 import com.google.errorprone.bugpatterns.HashtableContains;
 import com.google.errorprone.bugpatterns.HidingField;
 import com.google.errorprone.bugpatterns.ICCProfileGetInstance;
@@ -243,6 +244,7 @@ import com.google.errorprone.bugpatterns.LongFloatConversion;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.LoopConditionChecker;
 import com.google.errorprone.bugpatterns.LoopOverCharArray;
+import com.google.errorprone.bugpatterns.LoopToTestParameter;
 import com.google.errorprone.bugpatterns.LossyPrimitiveCompare;
 import com.google.errorprone.bugpatterns.MathAbsoluteNegative;
 import com.google.errorprone.bugpatterns.MathRoundIntLong;
@@ -482,6 +484,7 @@ import com.google.errorprone.bugpatterns.UnusedTypeParameter;
 import com.google.errorprone.bugpatterns.UnusedVariable;
 import com.google.errorprone.bugpatterns.UseCorrectAssertInTests;
 import com.google.errorprone.bugpatterns.UseEnumSwitch;
+import com.google.errorprone.bugpatterns.ValueClassIdentity;
 import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.VarTypeName;
 import com.google.errorprone.bugpatterns.VarWithPrimitive;
@@ -592,6 +595,7 @@ import com.google.errorprone.bugpatterns.javadoc.MissingSummary;
 import com.google.errorprone.bugpatterns.javadoc.NotJavadoc;
 import com.google.errorprone.bugpatterns.javadoc.PreferThrowsTag;
 import com.google.errorprone.bugpatterns.javadoc.ReturnFromVoid;
+import com.google.errorprone.bugpatterns.javadoc.TraditionalJavadocToMarkdown;
 import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.UnrecognisedJavadocTag;
 import com.google.errorprone.bugpatterns.javadoc.UrlInSee;
@@ -744,6 +748,7 @@ public final class BuiltInCheckerSuppliers {
           CollectionIncompatibleType.class,
           CollectionToArraySafeParameter.class,
           ComparableType.class,
+          CompareToZero.class,
           ComparingThisWithNull.class,
           ComparisonOutOfRange.class,
           CompatibleWithMisuse.class,
@@ -962,7 +967,6 @@ public final class BuiltInCheckerSuppliers {
           CollectionUndefinedEquality.class,
           CollectorShouldNotUseState.class,
           ComparableAndComparator.class,
-          CompareToZero.class,
           ComplexBooleanConstant.class,
           DateChecker.class,
           DateFormatConstant.class,
@@ -1012,6 +1016,7 @@ public final class BuiltInCheckerSuppliers {
           FutureTransformAsync.class,
           GetClassOnEnum.class,
           GuiceNestedCombine.class,
+          HashCodeInObjectsHash.class,
           HidingField.class,
           ICCProfileGetInstance.class,
           IdentityHashMapUsage.class,
@@ -1080,6 +1085,7 @@ public final class BuiltInCheckerSuppliers {
           LongDoubleConversion.class,
           LongFloatConversion.class,
           LoopOverCharArray.class,
+          LoopToTestParameter.class,
           MalformedInlineTag.class,
           MathAbsoluteNegative.class,
           MemoizeConstantVisitorStateLookups.class,
@@ -1137,7 +1143,6 @@ public final class BuiltInCheckerSuppliers {
           PreconditionsCheckNotNullRepeated.class,
           PreferCharsetOverload.class,
           PreferInstanceofOverGetKind.class,
-          PreferPreconditions.class,
           PreferTestParameter.class,
           PreferThrowsTag.class,
           PrimitiveAtomicReference.class,
@@ -1314,6 +1319,7 @@ public final class BuiltInCheckerSuppliers {
           ParameterComment.class,
           ParameterMissingNullable.class,
           PreferJavaTimeOverload.class,
+          PreferPreconditions.class,
           PreferredInterfaceType.class,
           PrimitiveArrayPassedToVarargsMethod.class,
           PrivateConstructorForNoninstantiableModule.class,
@@ -1346,6 +1352,7 @@ public final class BuiltInCheckerSuppliers {
           ThrowsUncheckedException.class,
           TimeUnitMismatch.class,
           TooManyParameters.class,
+          TraditionalJavadocToMarkdown.class,
           TransientMisuse.class,
           TruthContainsExactlyElementsInUsage.class,
           TryFailRefactoring.class,
@@ -1373,6 +1380,7 @@ public final class BuiltInCheckerSuppliers {
           UseCorrectAssertInTests.class,
           UseEnumSwitch.class,
           UsingJsr305CheckReturnValue.class,
+          ValueClassIdentity.class,
           VarChecker.class,
           VarWithPrimitive.class,
           Varifier.class,

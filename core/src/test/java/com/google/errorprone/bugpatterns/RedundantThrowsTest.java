@@ -37,7 +37,6 @@ public final class RedundantThrowsTest {
             """
             import java.io.FileNotFoundException;
             import java.io.IOException;
-            import java.nio.file.AccessDeniedException;
 
             interface Test {
               // BUG: Diagnostic contains: FileNotFoundException is a subtype of IOException

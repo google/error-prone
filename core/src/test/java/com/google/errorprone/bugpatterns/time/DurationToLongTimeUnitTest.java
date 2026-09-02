@@ -231,7 +231,6 @@ public class DurationToLongTimeUnitTest {
             import com.google.protobuf.Duration;
             import com.google.protobuf.Timestamp;
             import java.util.concurrent.Future;
-            import java.util.concurrent.TimeUnit;
 
             public class TestClass {
               void javaTime(Future<String> f, java.time.Duration d) throws Exception {

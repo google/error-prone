@@ -66,10 +66,7 @@ public class JUnit4ClassUsedInJUnit3 extends BugChecker
     if (!enclosingClass(isJUnit3TestClass).matches(tree, state)) {
       return NO_MATCH;
     }
-    // If we are inside a JUnit3 test class some annotation should not appear.
-    if (isType("org.junit.Ignore").matches(tree, state)) {
-      return makeDescription("@Ignore", tree);
-    }
+    // If we are inside a JUnit3 test class some annotations should not appear.
     if (isType("org.junit.Rule").matches(tree, state)) {
       return makeDescription("@Rule", tree);
     }

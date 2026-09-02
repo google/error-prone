@@ -151,4 +151,55 @@ final class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void protectedRecordClassCanonicalConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "in/Outer.java",
+            """
+            public class Outer {
+              protected record NestedRecord(int x) {
+                protected NestedRecord {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void packagePrivateRecordClassCanonicalConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "in/Outer.java",
+            """
+            public class Outer {
+              record NestedRecord(int x) {
+                // BUG: Diagnostic contains: NestedRecord
+                protected NestedRecord {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void protectedRecordClassAuxiliaryConstructor() {
+    compilationHelper
+        .addSourceLines(
+            "in/Outer.java",
+            """
+            public class Outer {
+              protected record NestedRecord(int x) {
+                protected NestedRecord {}
+
+                // BUG: Diagnostic contains: NestedRecord
+                protected NestedRecord(int x, int y) {
+                  this(x + y);
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }

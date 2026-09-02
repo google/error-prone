@@ -97,4 +97,64 @@ public class ProtoStringFieldReferenceEqualityTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void orBuilderPositive() {
+    compilationHelper
+        .addSourceLines(
+            "com/google/protobuf/MessageLiteOrBuilder.java",
+            """
+            package com.google.protobuf;
+
+            public interface MessageLiteOrBuilder {}
+            """)
+        .addSourceLines(
+            "ProtoOrBuilder.java",
+            """
+            public interface ProtoOrBuilder extends com.google.protobuf.MessageLiteOrBuilder {
+              String getMessage();
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean g(ProtoOrBuilder proto) {
+                // BUG: Diagnostic contains: proto.getMessage().equals("")
+                return proto.getMessage() == "";
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void orBuilderFlagDisabled() {
+    compilationHelper
+        .setArgs("-XepOpt:ProtoStringFieldReferenceEquality:CheckOrBuilder=false")
+        .addSourceLines(
+            "com/google/protobuf/MessageLiteOrBuilder.java",
+            """
+            package com.google.protobuf;
+
+            public interface MessageLiteOrBuilder {}
+            """)
+        .addSourceLines(
+            "ProtoOrBuilder.java",
+            """
+            public interface ProtoOrBuilder extends com.google.protobuf.MessageLiteOrBuilder {
+              String getMessage();
+            }
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean g(ProtoOrBuilder proto) {
+                return proto.getMessage() == "";
+              }
+            }
+            """)
+        .doTest();
+  }
 }

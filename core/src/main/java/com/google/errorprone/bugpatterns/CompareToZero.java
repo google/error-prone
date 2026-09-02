@@ -16,12 +16,16 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_DURATIONS_UTIL_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIMESTAMPS_UTIL_CLASS;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -31,28 +35,55 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
 
 /** Suggests comparing the result of {@code compareTo} to only {@code 0}. */
 @BugPattern(
     summary =
-        "The result of #compareTo or #compare should only be compared to 0. It is an "
-            + "implementation detail whether a given type returns strictly the values {-1, 0, +1} "
-            + "or others.",
-    severity = WARNING)
+        """
+        The result of #compareTo or #compare should only be compared to 0. It is an \
+        implementation detail whether a given type returns strictly the values {-1, 0, +1} \
+        or others.\
+        """,
+    severity = ERROR)
 public final class CompareToZero extends BugChecker implements MethodInvocationTreeMatcher {
   private static final String SUGGEST_IMPROVEMENT =
-      "It is generally more robust (and readable) to compare the result of #compareTo/#compare to "
-          + "0. Although the suggested replacement is identical in this case, we'd suggest it for "
-          + "consistency.";
+      """
+      It is generally more robust (and readable) to compare the result of #compareTo/#compare to \
+      0. Although the suggested replacement is identical in this case, we'd suggest it for \
+      consistency.\
+      """;
+
+  private static final String NON_RELATIONAL_OPERATOR =
+      """
+      It is unsafe to perform arithmetic or logical operations on the result of #compareTo or \
+      #compare, as the return value is not guaranteed to be strictly in the range {-1, 0, \
+      +1}. Consider using Integer.signum to normalize the result before performing \
+      operations.\
+      """;
+
+  private static final String ARITHMETIC_OPERATOR =
+      """
+      It is unsafe to perform arithmetic operations on the result of #compareTo or #compare, as \
+      the return value is not guaranteed to be strictly in the range {-1, 0, +1}, and operations \
+      (especially multiplication) can also overflow. Consider using Integer.signum on the result \
+      of #compareTo or #compare.\
+      """;
+
+  private static final String NEGATION_OPERATOR =
+      """
+      It is unsafe to negate the result of #compareTo or #compare, as negating the result can \
+      overflow if compareTo returns Integer.MIN_VALUE. Consider using Integer.signum on \
+      the result of #compareTo or #compare.\
+      """;
 
   private static final ImmutableSet<Kind> COMPARISONS =
       ImmutableSet.of(
@@ -70,8 +101,8 @@ public final class CompareToZero extends BugChecker implements MethodInvocationT
           Kind.GREATER_THAN, Kind.LESS_THAN,
           Kind.GREATER_THAN_EQUAL, Kind.LESS_THAN_EQUAL);
 
-  private static final ImmutableSet<Kind> OTHER_STRANGE_OPERATIONS =
-      ImmutableSet.of(Kind.PLUS, Kind.MINUS);
+  private static final ImmutableSet<Kind> ARITHMETIC_OPERATORS =
+      ImmutableSet.of(Kind.PLUS, Kind.MINUS, Kind.MULTIPLY, Kind.DIVIDE);
 
   private static final Matcher<ExpressionTree> COMPARE_TO =
       anyOf(
@@ -88,8 +119,8 @@ public final class CompareToZero extends BugChecker implements MethodInvocationT
                   "com.google.common.primitives.UnsignedBytes",
                   "com.google.common.primitives.UnsignedInts",
                   "com.google.common.primitives.UnsignedLongs",
-                  "com.google.protobuf.util.Durations",
-                  "com.google.protobuf.util.Timestamps",
+                  PROTO_DURATIONS_UTIL_CLASS,
+                  PROTO_TIMESTAMPS_UTIL_CLASS,
                   "java.lang.Boolean",
                   "java.lang.Byte",
                   "java.lang.Character",
@@ -120,6 +151,16 @@ public final class CompareToZero extends BugChecker implements MethodInvocationT
     }
 
     @Override
+    public Void visitUnary(UnaryTree unaryTree, VisitorState state) {
+      if (unaryTree.getKind() == Kind.UNARY_MINUS) {
+        state.reportMatch(buildDescription(unaryTree).setMessage(NEGATION_OPERATOR).build());
+      } else if (unaryTree.getKind() == Kind.BITWISE_COMPLEMENT) {
+        state.reportMatch(buildDescription(unaryTree).setMessage(NON_RELATIONAL_OPERATOR).build());
+      }
+      return null;
+    }
+
+    @Override
     public Void visitBinary(BinaryTree binaryTree, VisitorState state) {
       Kind kind = binaryTree.getKind();
 
@@ -131,14 +172,14 @@ public final class CompareToZero extends BugChecker implements MethodInvocationT
       ExpressionTree otherSide =
           reversed ? binaryTree.getLeftOperand() : binaryTree.getRightOperand();
 
-      if (OTHER_STRANGE_OPERATIONS.contains(kind)) {
-        // Consider string concatenation with the result of compareTo to be OK, but otherwise
-        // raise the alarm.
-        if (!(kind.equals(Kind.PLUS)
-            && ASTHelpers.isSameType(
-                ASTHelpers.getType(otherSide), state.getSymtab().stringType, state))) {
-          state.reportMatch(describeMatch(binaryTree));
-        }
+      if (!COMPARISONS.contains(kind)) {
+        boolean isStringConcat =
+            isSameType(getType(binaryTree), state.getSymtab().stringType, state);
+        String message =
+            ARITHMETIC_OPERATORS.contains(kind) && !isStringConcat
+                ? ARITHMETIC_OPERATOR
+                : NON_RELATIONAL_OPERATOR;
+        state.reportMatch(buildDescription(binaryTree).setMessage(message).build());
         return null;
       }
 
@@ -183,9 +224,7 @@ public final class CompareToZero extends BugChecker implements MethodInvocationT
             buildDescription(binaryTree).setMessage(SUGGEST_IMPROVEMENT).addFix(fix).build());
         return null;
       }
-      if (COMPARISONS.contains(binaryTree.getKind())) {
-        state.reportMatch(describeMatch(binaryTree));
-      }
+      state.reportMatch(describeMatch(binaryTree));
       return null;
     }
 

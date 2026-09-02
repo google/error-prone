@@ -20,7 +20,8 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.matchers.ProtobufMatchers.ENUM_LITE_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_BUILDER_CLASS;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
@@ -29,10 +30,8 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Type;
 import org.safere.Pattern;
 
 /** A BugPattern; see the summary. */
@@ -58,7 +57,7 @@ public final class SetUnrecognized extends BugChecker implements MethodInvocatio
     if (!argSymbol.getSimpleName().contentEquals("UNRECOGNIZED")) {
       return NO_MATCH;
     }
-    if (!isSubtype(argSymbol.owner.type, ENUM_LITE.get(state), state)) {
+    if (!isSubtype(argSymbol.owner.type, ENUM_LITE_TYPE.get(state), state)) {
       return NO_MATCH;
     }
     if (argSymbol
@@ -72,9 +71,6 @@ public final class SetUnrecognized extends BugChecker implements MethodInvocatio
 
   private static final Matcher<ExpressionTree> IS_PROTO_SETTER =
       instanceMethod()
-          .onDescendantOf("com.google.protobuf.MessageLite.Builder")
+          .onDescendantOf(MESSAGE_LITE_BUILDER_CLASS)
           .withNameMatching(Pattern.compile("(add|set).*"));
-
-  private static final Supplier<Type> ENUM_LITE =
-      typeFromString("com.google.protobuf.Internal.EnumLite");
 }

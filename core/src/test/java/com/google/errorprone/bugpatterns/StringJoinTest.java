@@ -103,8 +103,6 @@ public class StringJoinTest {
         .addInputLines(
             "Test.java",
             """
-            import java.util.List;
-
             class Test {
               private static final String[] FOO_BAR = {"foo", "bar"};
               private static final String JOINED = String.join(",", FOO_BAR);

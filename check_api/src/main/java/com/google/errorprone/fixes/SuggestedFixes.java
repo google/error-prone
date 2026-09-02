@@ -1943,19 +1943,52 @@ public final class SuggestedFixes {
     }
   }
 
+  /**
+   * Returns a {@link VariableNamer} that avoids shadowing any variables or identifiers in scope at
+   * the current {@code state} location.
+   */
   public static VariableNamer variableNamer(VisitorState state) {
-    return new VariableNamer(state);
+    return variableNamer(state, ImmutableList.of());
+  }
+
+  /**
+   * Returns a {@link VariableNamer} that avoids shadowing any variables or identifiers in scope at
+   * the current {@code state} location, as well as declarations within the given {@code extraScope}
+   * trees.
+   */
+  public static VariableNamer variableNamer(
+      VisitorState state, Iterable<? extends Tree> extraScope) {
+    return new VariableNamer(state, extraScope);
   }
 
   /** Helper class for avoiding variable name shadowing. */
   public static final class VariableNamer {
     private final Set<String> idents;
 
-    private VariableNamer(VisitorState state) {
+    private VariableNamer(VisitorState state, Iterable<? extends Tree> extraScope) {
       this.idents =
           FindIdentifiers.findAllIdents(state).stream()
               .map(s -> s.getSimpleName().toString())
               .collect(toCollection(HashSet::new));
+      scanExtraScope(extraScope);
+    }
+
+    private void scanExtraScope(Iterable<? extends Tree> extraScope) {
+      new TreeScanner<Void, Void>() {
+        @Override
+        public Void visitVariable(VariableTree node, Void unused) {
+          idents.add(node.getName().toString());
+          return super.visitVariable(node, null);
+        }
+
+        @Override
+        public Void visitClass(ClassTree node, Void unused) {
+          if (!node.getSimpleName().isEmpty()) {
+            idents.add(node.getSimpleName().toString());
+          }
+          return null;
+        }
+      }.scan(extraScope, null);
     }
 
     public String avoidShadowing(String name) {

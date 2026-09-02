@@ -137,7 +137,6 @@ public final class JUnitIncompatibleTypeTest {
             "Test.java",
             """
             import static org.junit.Assert.assertEquals;
-            import static org.junit.Assert.assertNotEquals;
 
             class Test {
               public void test() {

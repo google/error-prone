@@ -25,7 +25,6 @@ import com.google.common.collect.Lists;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
-import com.sun.tools.javac.tree.JCTree.JCExpression;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -57,24 +56,23 @@ public class ImportStatements {
   public static ImportStatements create(
       JCCompilationUnit compilationUnit, ImportOrganizer importOrganizer) {
     return new ImportStatements(
-        (JCExpression) compilationUnit.getPackageName(),
+        compilationUnit.getPackage(),
         compilationUnit.getImports(),
         compilationUnit,
         importOrganizer);
   }
 
   ImportStatements(
-      JCExpression packageTree,
+      JCTree packageTree,
       List<? extends JCTree> importTrees,
       JCCompilationUnit unit,
       ImportOrganizer importOrganizer) {
 
     // find start, end positions for current list of imports (for replacement)
     if (importTrees.isEmpty()) {
-      // start/end positions are just after the package expression
+      // start/end positions are just after the package declaration
       hasExistingImports = false;
-      // +2 for semicolon and newline
-      startPos = packageTree != null ? getEndPosition(packageTree, unit) + 2 : 0;
+      startPos = packageTree != null ? getEndPosition(packageTree, unit) : 0;
       endPos = startPos;
     } else {
       // process list of imports and find start/end positions

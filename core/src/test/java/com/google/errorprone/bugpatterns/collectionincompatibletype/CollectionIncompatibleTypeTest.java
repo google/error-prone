@@ -884,7 +884,6 @@ public class Test {
             """
             import com.google.common.collect.Sets;
             import java.util.Set;
-            import java.util.function.BiFunction;
 
             public interface Test {
               Set<Integer> test(Set<Integer> a, Set<String> b);

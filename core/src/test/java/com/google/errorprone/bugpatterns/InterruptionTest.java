@@ -175,7 +175,7 @@ public class InterruptionTest {
               }
             }
             """)
-        .setArgs("-XepCompilingTestOnlyCode")
+        .setTestOnly()
         .doTest();
   }
 }

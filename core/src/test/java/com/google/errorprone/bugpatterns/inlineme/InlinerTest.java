@@ -148,8 +148,6 @@ public class InlinerTest {
         .addInputLines(
             "Caller.java",
             """
-            import java.time.Duration;
-
             public final class Caller {
               public void doTest() {
                 Client client = new Client();
@@ -162,8 +160,6 @@ public class InlinerTest {
         .addOutputLines(
             "out/Caller.java",
             """
-            import java.time.Duration;
-
             public final class Caller {
               public void doTest() {
                 Client client = new Client();
@@ -271,7 +267,6 @@ public class InlinerTest {
   @Test
   public void staticMethod_explicitTypeParam_specifiedInReplacement() {
     refactoringTestHelper
-        .allowBreakingChanges()
         .addInputLines(
             "Client.java",
             """
@@ -312,7 +307,7 @@ public class InlinerTest {
 
             public final class Caller {
               public void doTest() {
-                String str = Client.<T>after();
+                String str = Client.<String>after();
               }
             }
             """)
@@ -322,7 +317,6 @@ public class InlinerTest {
   @Test
   public void staticMethod_twoTypeParams_methodCallInlining() {
     refactoringTestHelper
-        .allowBreakingChanges()
         .addInputLines(
             "Client.java",
             """
@@ -352,8 +346,8 @@ public class InlinerTest {
 
             public final class Caller {
               public void doTest() {
-                String x = Client.before(); // TODO(b/166285406): Client.after();
-                String y = Client.<Integer, String>before(); // TODO(b/166285406): Client.<String>after();
+                String x = Client.before();
+                String y = Client.<Integer, String>before();
               }
             }
             """)
@@ -364,8 +358,8 @@ public class InlinerTest {
 
             public final class Caller {
               public void doTest() {
-                String x = Client.<V>after(); // TODO(b/166285406): Client.after();
-                String y = Client.<V>after(); // TODO(b/166285406): Client.<String>after();
+                String x = Client.after();
+                String y = Client.<String>after();
               }
             }
             """)
@@ -375,7 +369,6 @@ public class InlinerTest {
   @Test
   public void staticMethod_twoTypeParams_constructorInlining() {
     refactoringTestHelper
-        .allowBreakingChanges()
         .addInputLines(
             "Client.java",
             """
@@ -405,8 +398,8 @@ public class InlinerTest {
 
             public final class Caller {
               public void doTest() {
-                List<String> x = Client.create(); // TODO(b/166285406): new ArrayList<>();
-                var y = Client.<Integer, String>create(); // TODO(b/166285406): new ArrayList<String>();
+                List<String> x = Client.create();
+                var y = Client.<Integer, String>create();
               }
             }
             """)
@@ -420,8 +413,163 @@ public class InlinerTest {
 
             public final class Caller {
               public void doTest() {
-                List<String> x = new ArrayList<V>(); // TODO(b/166285406): new ArrayList<>();
-                var y = new ArrayList<V>(); // TODO(b/166285406): new ArrayList<String>();
+                List<String> x = new ArrayList<>();
+                var y = new ArrayList<String>();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void staticMethod_typeParam_castInlining() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "(T) o")
+              public static <T> T cast(Object o) {
+                return (T) o;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            package com.google.foo;
+
+            public final class Caller {
+              public void doTest(Object obj, String strObj) {
+                Object o1 = Client.cast(obj);
+                String s1 = Client.<String>cast(obj);
+                String s2 = Client.cast(strObj);
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Caller.java",
+            """
+            package com.google.foo;
+
+            public final class Caller {
+              public void doTest(Object obj, String strObj) {
+                Object o1 = obj;
+                String s1 = (String) obj;
+                String s2 = strObj;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void instanceMethod_explicitTypeParam() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(replacement = "this.<T>after()")
+              public <T> T before() {
+                return this.<T>after();
+              }
+
+              public <T> T after() {
+                return null;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            package com.google.foo;
+
+            public final class Caller {
+              public void doTest(Client client, Object obj) {
+                String str1 = client.<String>before();
+                String str2 = client.before();
+                String str3 = ((Client) obj).<String>before();
+                String str4 = ((Client) obj).before();
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Caller.java",
+            """
+            package com.google.foo;
+
+            public final class Caller {
+              public void doTest(Client client, Object obj) {
+                String str1 = client.<String>after();
+                String str2 = client.after();
+                String str3 = ((Client) obj).<String>after();
+                String str4 = ((Client) obj).after();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void staticMethod_twoTypeParams_bothInReplacement() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            package com.google.foo;
+
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.HashMap;
+            import java.util.Map;
+
+            public final class Client {
+              @Deprecated
+              @InlineMe(
+                  replacement = "new HashMap<K, V>()",
+                  imports = {"java.util.HashMap"})
+              public static <K, V> Map<K, V> createMap() {
+                return new HashMap<K, V>();
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            package com.google.foo;
+
+            import java.util.Map;
+
+            public final class Caller {
+              public void doTest() {
+                Map<String, Integer> map = Client.<String, Integer>createMap();
+              }
+            }
+            """)
+        .addOutputLines(
+            "out/Caller.java",
+            """
+            package com.google.foo;
+
+            import java.util.HashMap;
+            import java.util.Map;
+
+            public final class Caller {
+              public void doTest() {
+                Map<String, Integer> map = new HashMap<String, Integer>();
               }
             }
             """)
@@ -1238,7 +1386,6 @@ public final class Caller {
             "Client.java",
             """
             import com.google.errorprone.annotations.InlineMe;
-            import java.time.Duration;
 
             public final class Client {
               @Deprecated

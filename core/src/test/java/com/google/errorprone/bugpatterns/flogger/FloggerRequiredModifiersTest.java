@@ -423,8 +423,6 @@ class Test {
         .addInputLines(
             "in/Parent.java",
             """
-            import com.google.common.flogger.FluentLogger;
-
             interface Parent {}
             """)
         .expectUnchanged()

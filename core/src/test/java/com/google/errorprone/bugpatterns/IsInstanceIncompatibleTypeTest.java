@@ -89,7 +89,6 @@ public class IsInstanceIncompatibleTypeTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.lang.Number;
             import java.util.Optional;
 
             class Test {

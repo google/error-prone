@@ -33,6 +33,7 @@ import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.sameVariable;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
+import static com.google.errorprone.util.ASTHelpers.unboxedType;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.THROW;
 import static java.lang.Math.max;
@@ -76,7 +77,6 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.code.Types;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -1428,6 +1428,25 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       return Optional.empty();
     }
 
+    // Using a non-null case constant requires the switch subject to be a type in
+    // ALLOWED_SWITCH_CASE_CONSTANT_TYPES
+    if (subject.isPresent()) {
+      Type switchExpressionType = getType(subject.get());
+      if (switchExpressionType != null) {
+        boolean switchSubjectTypeWorksWithConstants =
+            ALLOWED_SWITCH_CASE_CONSTANT_TYPES.stream()
+                .map(state::getTypeFromString)
+                .filter(Objects::nonNull)
+                .anyMatch(t -> types.isSameType(switchExpressionType, t));
+        boolean validConstantSubject =
+            compileTimeConstant.getKind() == Kind.NULL_LITERAL
+                || switchSubjectTypeWorksWithConstants;
+        if (!validConstantSubject) {
+          return Optional.empty();
+        }
+      }
+    }
+
     // The variable being switched on must also be one of the following types; this is
     // an outer bound (relaxed in preview features, which this checker does not yet support)
     if (subject.isPresent()) {
@@ -1578,25 +1597,6 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     var statements = blockTree.getStatements();
     return ImmutableList.copyOf(
         statements.subList(statements.indexOf(path.getLeaf()) + 1, statements.size()));
-  }
-
-  /**
-   * Unboxes the given type, if it is a reference type which can be unboxed. Returns {@code
-   * Optional.empty()} if cannot be unboxed.
-   */
-  private static Optional<Type> unboxed(Tree tree, VisitorState state) {
-    Type type = ASTHelpers.getType(tree);
-    if (type == null || !type.isReference()) {
-      return Optional.empty();
-    }
-    Type unboxed = state.getTypes().unboxedType(type);
-    if (unboxed == null
-        || unboxed.getTag() == TypeTag.NONE
-        // Don't match java.lang.Void.
-        || unboxed.getTag() == TypeTag.VOID) {
-      return Optional.empty();
-    }
-    return Optional.of(unboxed);
   }
 
   /**
@@ -1889,7 +1889,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
           }
           if (lhs.instanceOfOptional().isPresent()) {
             for (InstanceOfIr instanceOfIr : lhs.instanceOfOptional().get()) {
-              Optional<Type> unboxedInstanceOfType = unboxed(instanceOfIr.type(), state);
+              Optional<Type> unboxedInstanceOfType =
+                  unboxedType(getType(instanceOfIr.type()), state);
               if (unboxedInstanceOfType.isPresent()) {
                 if (isSubtype(getType(constantExpression), unboxedInstanceOfType.get(), state)) {
                   // RHS constant can be assigned to LHS unboxed instanceof's type

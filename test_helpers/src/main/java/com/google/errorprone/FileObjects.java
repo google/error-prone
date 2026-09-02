@@ -75,7 +75,7 @@ public final class FileObjects {
     return new SimpleJavaFileObject(URI.create("file:///" + path), Kind.SOURCE) {
       @Override
       public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-        return Joiner.on('\n').join(lines) + "\n";
+        return Joiner.on('\n').join(lines);
       }
     };
   }

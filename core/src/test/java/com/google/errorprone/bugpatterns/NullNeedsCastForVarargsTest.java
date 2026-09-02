@@ -305,7 +305,6 @@ public final class NullNeedsCastForVarargsTest {
             "Test.java",
             """
             import java.util.Arrays;
-            import java.util.List;
 
             class Test {
               void test() {

@@ -23,6 +23,9 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
+import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIME_STATIC_FACTORIES;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -376,7 +379,7 @@ public final class ConstantExpressions {
                   "com.google.common.collect.ImmutableSortedSet",
                   "com.google.common.collect.ImmutableTable",
                   "com.google.common.collect.Range"),
-          staticMethod().onClass("com.google.protobuf.GeneratedMessage"),
+          staticMethod().onClass(GENERATED_MESSAGE_CLASS),
           staticMethod()
               .onClass("java.time.Duration")
               .namedAnyOf("ofNanos", "ofMillis", "ofSeconds", "ofMinutes", "ofHours", "ofDays")
@@ -385,19 +388,7 @@ public final class ConstantExpressions {
               .onClass("java.time.Instant")
               .namedAnyOf("ofEpochMilli", "ofEpochSecond")
               .withParameters("long"),
-          staticMethod()
-              .onClass("com.google.protobuf.util.Timestamps")
-              .namedAnyOf("fromNanos", "fromMicros", "fromMillis", "fromSeconds"),
-          staticMethod()
-              .onClass("com.google.protobuf.util.Durations")
-              .namedAnyOf(
-                  "fromNanos",
-                  "fromMicros",
-                  "fromMillis",
-                  "fromSeconds",
-                  "fromMinutes",
-                  "fromHours",
-                  "fromDays"),
+          PROTO_TIME_STATIC_FACTORIES,
           staticMethod()
               .onClass("org.joda.time.Duration")
               .namedAnyOf(
@@ -450,9 +441,7 @@ public final class ConstantExpressions {
             return hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue", state)
                 && symbol.getModifiers().contains(ABSTRACT);
           },
-          staticMethod()
-              .onDescendantOf("com.google.protobuf.MessageLite")
-              .named("getDefaultInstance"),
+          staticMethod().onDescendantOf(MESSAGE_LITE_CLASS).named("getDefaultInstance"),
           allOf(
               instanceEqualsInvocation(),
               (t, s) -> {

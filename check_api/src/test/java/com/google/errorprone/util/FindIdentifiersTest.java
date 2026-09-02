@@ -753,7 +753,7 @@ public class FindIdentifiersTest {
                 try (BufferedReader reader = Files.newBufferedReader(Paths.get("foo"));
                     InputStream is =
                         new ByteArrayInputStream(
-                        // BUG: Diagnostic contains: [reader]
+                            // BUG: Diagnostic contains: [reader]
                             String.format(reader.readLine()).getBytes(StandardCharsets.UTF_8))) {
                   // BUG: Diagnostic contains: [reader, is]
                   String.format(reader.readLine() + is.toString());

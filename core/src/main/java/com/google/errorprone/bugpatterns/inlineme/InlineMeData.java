@@ -45,6 +45,7 @@ import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCLambda;
@@ -282,14 +283,18 @@ record InlineMeData(
         return super.visitIdentifier(identifierTree, null);
       }
       Symbol symbol = getSymbol(identifierTree);
-      if (symbol == null || symbol.isDirectlyOrIndirectlyLocal()) {
+      if (symbol == null
+          || symbol.isDirectlyOrIndirectlyLocal()
+          || symbol instanceof PackageSymbol) {
+        return super.visitIdentifier(identifierTree, null);
+      }
+
+      if (symbol instanceof ClassSymbol) {
+        maybeAddImport(symbol);
         return super.visitIdentifier(identifierTree, null);
       }
 
       Tree parentNode = getCurrentPath().getParentPath().getLeaf();
-      if (nameUsageDoesntRequireQualificationOrImport(parentNode)) {
-        return super.visitIdentifier(identifierTree, null);
-      }
 
       // TODO(glorioso): This suggestion has the following behavior:
       //   * instance methods: foo() -> this.foo(), no import needed
@@ -330,10 +335,6 @@ record InlineMeData(
       return symbol.owner != null
           && classSymbol.isSubClass(symbol.owner, state.getTypes())
           && !(parentNode instanceof NewClassTree);
-    }
-
-    private static boolean nameUsageDoesntRequireQualificationOrImport(Tree parentNode) {
-      return parentNode instanceof MemberSelectTree;
     }
 
     private static boolean nameUsageDoesntRequireQualification(Tree parentNode) {

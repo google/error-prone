@@ -51,8 +51,6 @@ public final class UnrecognisedJavadocTagTest {
             "Test.java",
             """
             /**
-             *
-             *
              * <pre>{@code
              * foo() {}
              * }</pre>

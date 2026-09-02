@@ -337,7 +337,7 @@ class Test {
   @Test
   public void booleanToTruthAssertion() {
     refactoringHelper
-        .setArgs("-XepCompilingTestOnlyCode")
+        .setTestOnly()
         .addInputLines(
             "Lib.java",
             """
@@ -421,8 +421,6 @@ class Test {
         .addSourceLines(
             "Test.java",
             """
-            import static org.junit.Assert.fail;
-
             class Test {
               void f(Foo foo) {
                 // BUG: Diagnostic contains: CheckReturnValue

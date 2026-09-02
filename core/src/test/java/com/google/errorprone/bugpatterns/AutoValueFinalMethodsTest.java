@@ -205,7 +205,6 @@ public class AutoValueFinalMethodsTest {
             "out/Test.java",
             """
             import com.google.auto.value.AutoValue;
-            import com.google.auto.value.extension.memoized.Memoized;
 
             @AutoValue
             abstract class Test {
@@ -230,7 +229,6 @@ public class AutoValueFinalMethodsTest {
             "out/Test.java",
             """
             import com.google.auto.value.AutoValue;
-            import com.google.auto.value.extension.memoized.Memoized;
 
             @AutoValue
             abstract class Test {

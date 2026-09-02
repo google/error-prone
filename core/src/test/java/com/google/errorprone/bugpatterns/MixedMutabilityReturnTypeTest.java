@@ -133,7 +133,6 @@ public final class MixedMutabilityReturnTypeTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.ArrayList;
             import java.util.Collections;
             import java.util.List;
 
@@ -155,7 +154,6 @@ public final class MixedMutabilityReturnTypeTest {
         .addSourceLines(
             "Test.java",
             """
-            import java.util.ArrayList;
             import java.util.Collections;
             import java.util.List;
 
@@ -289,7 +287,6 @@ public final class MixedMutabilityReturnTypeTest {
             """
             import com.google.common.collect.ImmutableList;
             import java.util.ArrayList;
-            import java.util.Collections;
             import java.util.List;
 
             final class Test {
@@ -310,7 +307,6 @@ public final class MixedMutabilityReturnTypeTest {
             """
             import com.google.common.collect.ImmutableList;
             import java.util.ArrayList;
-            import java.util.Collections;
             import java.util.List;
 
             final class Test {

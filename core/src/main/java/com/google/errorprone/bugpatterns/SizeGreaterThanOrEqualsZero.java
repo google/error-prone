@@ -21,6 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_OR_BUILDER_CLASS;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.stream.Collectors.joining;
@@ -31,6 +32,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.google.common.collect.Table.Cell;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -46,6 +48,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Scope;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import javax.inject.Inject;
 import org.safere.Pattern;
 
 /**
@@ -114,14 +117,29 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
           instanceMethod()
               .onDescendantOfAny(CLASSES.column(MethodName.LENGTH).keySet())
               .named("length"));
+  private final boolean checkLiteProtos;
+
+  @Inject
+  public SizeGreaterThanOrEqualsZero(ErrorProneFlags flags) {
+    this.checkLiteProtos =
+        flags.getBoolean("SizeGreaterThanOrEqualsZero:CheckLiteProtos").orElse(true);
+  }
+
+  public SizeGreaterThanOrEqualsZero() {
+    this(ErrorProneFlags.empty());
+  }
+
   private static final Pattern PROTO_COUNT_METHOD_PATTERN = Pattern.compile("get(.+)Count");
+  private static final Matcher<ExpressionTree> PROTO_REPEATED_COUNT =
+      instanceMethod()
+          .onDescendantOf(MESSAGE_LITE_OR_BUILDER_CLASS)
+          .withNameMatching(PROTO_COUNT_METHOD_PATTERN)
+          .withNoParameters();
   private static final Matcher<ExpressionTree> PROTO_METHOD_NAMED_GET_COUNT =
       instanceMethod()
           .onDescendantOf("com.google.protobuf.GeneratedMessage")
           .withNameMatching(PROTO_COUNT_METHOD_PATTERN)
           .withNoParameters();
-  private static final Matcher<ExpressionTree> PROTO_REPEATED_FIELD_COUNT_METHOD =
-      SizeGreaterThanOrEqualsZero::isProtoRepeatedFieldCountMethod;
   private static final Matcher<ExpressionTree> SIZE_OR_LENGTH_STATIC_METHOD =
       anyOf(
           Streams.concat(
@@ -155,7 +173,7 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
             tree, callToSize, state, expressionType);
       } else if (SIZE_OR_LENGTH_STATIC_METHOD.matches(callToSize, state)) {
         return provideReplacementForStaticMethodInvocation(tree, callToSize, state, expressionType);
-      } else if (PROTO_REPEATED_FIELD_COUNT_METHOD.matches(callToSize, state)) {
+      } else if (isProtoRepeatedFieldCountMethod(callToSize, state)) {
         return provideReplacementForProtoMethodInvocation(tree, callToSize, state);
       }
     } else if (operand instanceof MemberSelectTree memberSelectTree) {
@@ -166,9 +184,11 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
     return Description.NO_MATCH;
   }
 
-  private static boolean isProtoRepeatedFieldCountMethod(ExpressionTree tree, VisitorState state) {
+  private boolean isProtoRepeatedFieldCountMethod(ExpressionTree tree, VisitorState state) {
     // Instance method, on proto class, named `get<Field>Count`.
-    if (!PROTO_METHOD_NAMED_GET_COUNT.matches(tree, state)) {
+    Matcher<ExpressionTree> countMatcher =
+        checkLiteProtos ? PROTO_REPEATED_COUNT : PROTO_METHOD_NAMED_GET_COUNT;
+    if (!countMatcher.matches(tree, state)) {
       return false;
     }
     // Make sure it's the count method for a repeated field, not the get method for a non-repeated

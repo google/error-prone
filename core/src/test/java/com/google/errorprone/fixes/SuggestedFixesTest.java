@@ -235,7 +235,6 @@ public class SuggestedFixesTest {
             "Test.java",
             """
             import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
-            import javax.annotation.Nullable;
 
             @EditModifiers(value = "non-sealed", kind = EditModifiers.EditKind.ADD)
             sealed interface Test {
@@ -275,7 +274,6 @@ public class SuggestedFixesTest {
             "Test.java",
             """
             import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
-            import javax.annotation.Nullable;
 
             @EditModifiers(value = "non-sealed", kind = EditModifiers.EditKind.REMOVE)
             sealed interface Test {
@@ -293,7 +291,6 @@ public class SuggestedFixesTest {
             "Test.java",
             """
             import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
-            import javax.annotation.Nullable;
 
             @EditModifiers(value = "final", kind = EditModifiers.EditKind.ADD)
             class Test {
@@ -313,7 +310,6 @@ public class SuggestedFixesTest {
             "Test.java",
             """
             import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
-            import javax.annotation.Nullable;
 
             @EditModifiers(value = "public", kind = EditModifiers.EditKind.ADD)
             class Test {
@@ -355,7 +351,6 @@ public class SuggestedFixesTest {
             "Test.java",
             """
             import com.google.errorprone.fixes.SuggestedFixesTest.EditModifiers;
-            import javax.annotation.Nullable;
 
             @EditModifiers(
                 value = {"final", "static"},
@@ -537,6 +532,8 @@ public class SuggestedFixesTest {
             """)
         .doTest();
   }
+
+  private static final Supplier<Type> SOMEANNOTATION = typeFromString("some.pkg.SomeAnnotation");
 
   /** A test check that adds an annotation to all return types. */
   @BugPattern(summary = "Add an annotation", severity = ERROR)
@@ -2518,7 +2515,6 @@ public class Test {
           java.util.List list;
         }
         """;
-
     // This compilation will succeed because we only consider the compilation errors in the first
     // class.
     CompilationTestHelper.newInstance(
@@ -2865,5 +2861,83 @@ public class Test {
         .doTest();
   }
 
-  private static final Supplier<Type> SOMEANNOTATION = typeFromString("some.pkg.SomeAnnotation");
+  /** A test check that tests variableNamer with extraScope. */
+  @BugPattern(summary = "Test variable namer with extra scope", severity = ERROR)
+  public static class VariableNamerChecker extends BugChecker implements MethodTreeMatcher {
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      if (tree.getBody() == null || tree.getBody().getStatements().isEmpty()) {
+        return NO_MATCH;
+      }
+      SuggestedFixes.VariableNamer namer =
+          SuggestedFixes.variableNamer(state, tree.getBody().getStatements());
+      String name = namer.avoidShadowing("x");
+      return describeMatch(
+          tree,
+          SuggestedFix.prefixWith(
+              tree.getBody().getStatements().get(0), "int " + name + " = 0;\n"));
+    }
+  }
+
+  @Test
+  public void variableNamerWithExtraScope() {
+    BugCheckerRefactoringTestHelper.newInstance(VariableNamerChecker.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int a = 1;
+                int x = 2;
+                class Local {
+                  int x1 = 3;
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int x2 = 0;
+                int a = 1;
+                int x = 2;
+                class Local {
+                  int x1 = 3;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void variableNamerWithExtraScope_localClassClash() {
+    BugCheckerRefactoringTestHelper.newInstance(VariableNamerChecker.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int a = 1;
+                int x = 2;
+                class x2 {}
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                int x3 = 0;
+                int a = 1;
+                int x = 2;
+                class x2 {}
+              }
+            }
+            """)
+        .doTest();
+  }
 }

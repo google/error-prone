@@ -18,6 +18,8 @@ package com.google.errorprone.bugpatterns.time;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_DURATION_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIMESTAMP_CLASS;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
@@ -69,9 +71,6 @@ public final class DurationToLongTimeUnit extends BugChecker
   private static final String JODA_RDURATION = "org.joda.time.ReadableDuration";
   private static final String JODA_RINSTANT = "org.joda.time.ReadableInstant";
 
-  private static final String PROTO_DURATION = "com.google.protobuf.Duration";
-  private static final String PROTO_TIMESTAMP = "com.google.protobuf.Timestamp";
-
   private static final String TIME_UNIT = "java.util.concurrent.TimeUnit";
 
   private static final ImmutableMap<Matcher<ExpressionTree>, TimeUnit> MATCHERS =
@@ -104,8 +103,8 @@ public final class DurationToLongTimeUnit extends BugChecker
           .put(instanceMethod().onDescendantOf(JODA_RDURATION).named("getMillis"), MILLISECONDS)
           .put(instanceMethod().onDescendantOf(JODA_RINSTANT).named("getMillis"), MILLISECONDS)
           // ProtoTime
-          .put(instanceMethod().onExactClass(PROTO_DURATION).named("getSeconds"), SECONDS)
-          .put(instanceMethod().onExactClass(PROTO_TIMESTAMP).named("getSeconds"), SECONDS)
+          .put(instanceMethod().onExactClass(PROTO_DURATION_CLASS).named("getSeconds"), SECONDS)
+          .put(instanceMethod().onExactClass(PROTO_TIMESTAMP_CLASS).named("getSeconds"), SECONDS)
           .buildOrThrow();
 
   private static final Matcher<ExpressionTree> TIME_UNIT_DECOMPOSITION =

@@ -32,7 +32,6 @@ public final class JodaNewPeriodTest {
         .addSourceLines(
             "TestClass.java",
             """
-            import org.joda.time.Instant;
             import org.joda.time.LocalDate;
             import org.joda.time.Period;
 
@@ -55,7 +54,6 @@ public final class JodaNewPeriodTest {
         .addSourceLines(
             "TestClass.java",
             """
-            import org.joda.time.Instant;
             import org.joda.time.Period;
 
             public class TestClass {

@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.ProtobufMatchers.ENUM_LITE_CLASS;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -37,15 +38,13 @@ import com.sun.source.tree.MethodInvocationTree;
     severity = ERROR)
 public class ProtocolBufferOrdinal extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final String PROTO_SUPER_CLASS = "com.google.protobuf.Internal.EnumLite";
-
-  private static final Matcher<ExpressionTree> PROTO_MSG_ORDINAL_MATCHER =
-      instanceMethod().onDescendantOf(PROTO_SUPER_CLASS).named("ordinal").withNoParameters();
+  private static final Matcher<ExpressionTree> PROTO_ENUM_ORDINAL =
+      instanceMethod().onDescendantOf(ENUM_LITE_CLASS).named("ordinal").withNoParameters();
 
   @Override
   public Description matchMethodInvocation(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
-    return PROTO_MSG_ORDINAL_MATCHER.matches(methodInvocationTree, state)
+    return PROTO_ENUM_ORDINAL.matches(methodInvocationTree, state)
         ? describeMatch(methodInvocationTree)
         : Description.NO_MATCH;
   }

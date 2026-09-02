@@ -265,8 +265,6 @@ public class TruthIncompatibleTypeTest {
             """
             import static com.google.common.truth.Truth.assertThat;
 
-            import com.google.common.collect.ImmutableList;
-
             public class Test {
               public void f(Iterable<Long> xs, Number... x) {
                 assertThat(xs).containsExactly((Object[]) x);
@@ -284,8 +282,6 @@ public class TruthIncompatibleTypeTest {
             """
             import static com.google.common.truth.Truth.assertThat;
 
-            import com.google.common.collect.ImmutableList;
-
             public class Test {
               public void f(Iterable<Long> xs, Object x) {
                 assertThat(xs).containsExactlyElementsIn((Object[]) x);
@@ -302,8 +298,6 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
-
-            import com.google.common.collect.ImmutableList;
 
             public class Test {
               public void f(Iterable<Long> xs, String... x) {
@@ -323,8 +317,6 @@ public class TruthIncompatibleTypeTest {
             """
             import static com.google.common.truth.Truth.assertThat;
 
-            import com.google.common.collect.ImmutableList;
-
             public class Test {
               public void f(Iterable<byte[]> xs, byte[] ys) {
                 assertThat(xs).containsExactly(ys);
@@ -342,8 +334,6 @@ public class TruthIncompatibleTypeTest {
             """
             import static com.google.common.truth.Truth.assertThat;
 
-            import com.google.common.collect.ImmutableList;
-
             public class Test {
               public void f(Iterable<String> xs, Object... x) {
                 assertThat(xs).containsExactlyElementsIn(x);
@@ -360,8 +350,6 @@ public class TruthIncompatibleTypeTest {
             "Test.java",
             """
             import static com.google.common.truth.Truth.assertThat;
-
-            import com.google.common.collect.ImmutableList;
 
             public class Test {
               public void f(Iterable<Long> xs, String... x) {
@@ -401,7 +389,6 @@ public class TruthIncompatibleTypeTest {
             """
             import static com.google.common.truth.Truth.assertThat;
 
-            import com.google.common.collect.ImmutableList;
             import com.google.common.truth.Correspondence;
 
             public class Test {
@@ -422,7 +409,6 @@ public class TruthIncompatibleTypeTest {
             """
             import static com.google.common.truth.Truth.assertThat;
 
-            import com.google.common.collect.ImmutableList;
             import com.google.common.truth.Correspondence;
 
             public class Test {
@@ -443,7 +429,6 @@ public class TruthIncompatibleTypeTest {
             """
             import static com.google.common.truth.Truth.assertThat;
 
-            import com.google.common.collect.ImmutableList;
             import com.google.common.truth.Correspondence;
 
             public class Test {
@@ -562,7 +547,6 @@ public class TruthIncompatibleTypeTest {
             """
             import static com.google.common.truth.Truth.assertThat;
 
-            import com.google.common.collect.Multimap;
             import java.util.stream.Stream;
 
             public class Test {
@@ -665,7 +649,6 @@ public class TruthIncompatibleTypeTest {
 """
 import static com.google.common.truth.extensions.proto.ProtoTruth.assertThat;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.truth.Correspondence;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestFieldProtoMessage;
 import com.google.errorprone.bugpatterns.proto.ProtoTest.TestProtoMessage;
@@ -689,7 +672,6 @@ public class Test {
             """
             import static com.google.common.truth.Truth.assertThat;
 
-            import com.google.common.collect.ImmutableList;
             import com.google.common.truth.Correspondence;
 
             public class Test {

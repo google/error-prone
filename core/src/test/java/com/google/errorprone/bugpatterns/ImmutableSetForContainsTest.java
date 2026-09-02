@@ -91,10 +91,7 @@ public final class ImmutableSetForContainsTest {
         .addInputLines(
             "Test.java",
             """
-            import static com.google.common.collect.ImmutableList.toImmutableList;
-
             import com.google.common.collect.ImmutableList;
-            import java.util.ArrayList;
 
             class Test {
               private static final ImmutableList<String> MY_LIST = initMyList();
@@ -111,11 +108,8 @@ public final class ImmutableSetForContainsTest {
         .addOutputLines(
             "Test.java",
 """
-import static com.google.common.collect.ImmutableList.toImmutableList;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import java.util.ArrayList;
 
 class Test {
   private static final ImmutableSet<String> MY_LIST = ImmutableSet.copyOf(initMyList());
@@ -139,7 +133,6 @@ class Test {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import java.util.ArrayList;
 
             class Test {
               private static final ImmutableList MY_LIST = ImmutableList.of("hello");
@@ -154,7 +147,6 @@ class Test {
             """
             import com.google.common.collect.ImmutableList;
             import com.google.common.collect.ImmutableSet;
-            import java.util.ArrayList;
 
             class Test {
               private static final ImmutableSet MY_LIST = ImmutableSet.of("hello");
@@ -175,7 +167,6 @@ class Test {
             """
             import com.google.common.collect.ImmutableList;
             import com.google.inject.testing.fieldbinder.Bind;
-            import java.util.ArrayList;
 
             class Test {
               @Bind private static final ImmutableList MY_LIST = ImmutableList.of("hello");
@@ -221,7 +212,6 @@ class Test {
 
             import com.google.common.collect.ImmutableList;
             import com.sun.source.tree.Tree.Kind;
-            import java.util.ArrayList;
 
             class Test {
               private static final ImmutableList<String> STR_LIST = ImmutableList.of("hello");
@@ -260,7 +250,6 @@ class Test {
             "Test.java",
 """
 import com.google.common.collect.ImmutableList;
-import java.util.ArrayList;
 
 class Test {
   private static final ImmutableList<String> STR_LIST_1 = ImmutableList.of("hello", "hello");
@@ -287,7 +276,6 @@ class Test {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import java.util.ArrayList;
 
             class Test {
               private static final ImmutableList<String> STR_LIST =
@@ -311,7 +299,6 @@ class Test {
             import com.google.common.collect.ImmutableList;
             import com.google.common.collect.ImmutableSet;
             import com.google.common.collect.Iterables;
-            import java.util.ArrayList;
 
             class Test {
               private static final ImmutableList<String> MY_LIST = ImmutableList.of("hello");
@@ -334,9 +321,6 @@ class Test {
             """
             import com.google.common.collect.ImmutableList;
             import com.google.common.collect.ImmutableMap;
-            import com.google.common.collect.ImmutableSet;
-            import com.google.common.collect.Iterables;
-            import java.util.ArrayList;
             import java.util.List;
 
             class Test {
@@ -407,7 +391,6 @@ class Test {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import java.util.ArrayList;
 
             class Test {
               private static final ImmutableList<String> MY_LIST_1 = ImmutableList.of("hello");
@@ -428,11 +411,7 @@ class Test {
         .addInputLines(
             "Test.java",
             """
-            import static com.sun.source.tree.Tree.Kind.METHOD_INVOCATION;
-
             import com.google.common.collect.ImmutableList;
-            import com.sun.source.tree.Tree.Kind;
-            import java.util.ArrayList;
 
             class Test {
               private static final ImmutableList<Class<?>> CLS_LIST =
@@ -457,7 +436,6 @@ class Test {
             "Test.java",
             """
             import com.google.common.collect.ImmutableList;
-            import java.util.ArrayList;
 
             class Test {
               private static final ImmutableList<String> MY_LIST = ImmutableList.of("hello");

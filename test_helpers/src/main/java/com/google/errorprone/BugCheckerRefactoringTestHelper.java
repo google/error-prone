@@ -50,9 +50,6 @@ import com.google.errorprone.scanner.Scanner;
 import com.google.errorprone.scanner.ScannerSupplier;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
-import com.google.googlejavaformat.java.ImportOrderer;
-import com.google.googlejavaformat.java.JavaFormatterOptions.Style;
-import com.google.googlejavaformat.java.StringWrapper;
 import com.google.testing.compile.JavaFileObjects;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.TreePath;
@@ -68,6 +65,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UncheckedIOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -107,10 +105,7 @@ public final class BugCheckerRefactoringTestHelper {
       private String maybeFormat(String input, boolean allowFormattingErrors) {
         try {
           Formatter formatter = new Formatter();
-          String formatted = formatter.formatSource(input);
-          formatted = StringWrapper.wrap(formatted, formatter);
-          formatted = ImportOrderer.reorderImports(formatted, Style.GOOGLE);
-          return formatted;
+          return formatter.formatSourceAndFixImports(input);
         } catch (FormatterException e) {
           if (allowFormattingErrors) {
             return input;
@@ -179,15 +174,18 @@ public final class BugCheckerRefactoringTestHelper {
     }
   }
 
+  private static final String COMPILING_TEST_ONLY_CODE_ARG = "-XepCompilingTestOnlyCode";
+
   private final Map<JavaFileObject, JavaFileObject> sources = new HashMap<>();
   private final Class<?> clazz;
   private final ScannerSupplier scannerSupplier;
 
   private FixChooser fixChooser = FixChoosers.FIRST;
-  private ImmutableList<String> options = ImmutableList.of();
+  private final List<String> options = new ArrayList<>();
   private boolean allowBreakingChanges = false;
   private boolean allowFormattingErrors = false;
   private String importOrder = "static-first";
+  private boolean testOnly = false;
 
   private boolean run = false;
 
@@ -255,13 +253,21 @@ public final class BugCheckerRefactoringTestHelper {
   @CanIgnoreReturnValue
   public BugCheckerRefactoringTestHelper setArgs(ImmutableList<String> args) {
     checkState(options.isEmpty());
-    this.options = args;
+    this.options.addAll(args);
     return this;
   }
 
   @CanIgnoreReturnValue
   public BugCheckerRefactoringTestHelper setArgs(String... args) {
-    this.options = ImmutableList.copyOf(args);
+    this.options.clear();
+    this.options.addAll(Arrays.asList(args));
+    return this;
+  }
+
+  /** Configures the compilation to treat the code as test-only. Off by default. */
+  @CanIgnoreReturnValue
+  public BugCheckerRefactoringTestHelper setTestOnly() {
+    this.testOnly = true;
     return this;
   }
 
@@ -310,8 +316,11 @@ public final class BugCheckerRefactoringTestHelper {
 
     String depsForTestInputs = System.getProperty("com.google.errorprone.deps_for_test_inputs");
     if (depsForTestInputs != null) {
-      options =
-          ImmutableList.<String>builder().addAll(options).add("-cp").add(depsForTestInputs).build();
+      options.add("-cp");
+      options.add(depsForTestInputs);
+    }
+    if (testOnly && !options.contains(COMPILING_TEST_ONLY_CODE_ARG)) {
+      options.add(COMPILING_TEST_ONLY_CODE_ARG);
     }
 
     this.run = true;

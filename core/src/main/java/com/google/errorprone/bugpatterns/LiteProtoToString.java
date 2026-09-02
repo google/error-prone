@@ -18,10 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.predicates.TypePredicates.allOf;
-import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
-import static com.google.errorprone.predicates.TypePredicates.isExactType;
-import static com.google.errorprone.predicates.TypePredicates.not;
+import static com.google.errorprone.matchers.ProtobufMatchers.IS_LITE_PROTO;
+import static com.google.errorprone.matchers.ProtobufMatchers.IS_LITE_PROTO_ENUM;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
@@ -52,19 +50,6 @@ public final class LiteProtoToString extends AbstractToString {
           + " serialized representation of the value, or #name if you really need the name."
           + "";
 
-  private static final TypePredicate IS_LITE_PROTO =
-      allOf(
-          isDescendantOf("com.google.protobuf.MessageLite"),
-          not(isDescendantOf("com.google.protobuf.Message")),
-          not(isExactType("com.google.protobuf.UnknownFieldSet")));
-
-  private static final TypePredicate IS_LITE_ENUM =
-      allOf(
-          isDescendantOf("com.google.protobuf.Internal.EnumLite"),
-          not(isDescendantOf("com.google.protobuf.ProtocolMessageEnum")),
-          not(isDescendantOf("com.google.protobuf.Descriptors.EnumValueDescriptor")),
-          not(isDescendantOf("com.google.protobuf.AbstractMessageLite.InternalOneOfEnum")));
-
   private static final ImmutableSet<String> METHODS_STRIPPED_BY_OPTIMIZER =
       ImmutableSet.<String>builder()
           .add("atVerbose", "atFine", "atFiner", "atFinest", "atDebug", "atConfig", "atInfo")
@@ -88,7 +73,7 @@ public final class LiteProtoToString extends AbstractToString {
     if (isStrippedLogMessage(state)) {
       return false;
     }
-    return IS_LITE_PROTO.apply(type, state) || IS_LITE_ENUM.apply(type, state);
+    return IS_LITE_PROTO.apply(type, state) || IS_LITE_PROTO_ENUM.apply(type, state);
   }
 
   private static boolean isStrippedLogMessage(VisitorState state) {
@@ -106,7 +91,7 @@ public final class LiteProtoToString extends AbstractToString {
 
   @Override
   protected Optional<String> descriptionMessageForDefaultMatch(Type type, VisitorState state) {
-    return Optional.of(IS_LITE_ENUM.apply(type, state) ? LITE_ENUM_MESSAGE : message());
+    return Optional.of(IS_LITE_PROTO_ENUM.apply(type, state) ? LITE_ENUM_MESSAGE : message());
   }
 
   @Override

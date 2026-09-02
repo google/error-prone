@@ -162,8 +162,8 @@ public class IdentityBinaryExpressionTest {
         .addSourceLines(
             "Test.java",
             """
-            import static org.junit.Assert.assertTrue;
             import static org.junit.Assert.assertFalse;
+            import static org.junit.Assert.assertTrue;
 
             class Test {
               void f(int x) {

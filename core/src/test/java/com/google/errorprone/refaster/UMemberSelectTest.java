@@ -16,10 +16,16 @@
 
 package com.google.errorprone.refaster;
 
+import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.Mockito.mock;
 
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.SerializableTester;
+import com.sun.tools.javac.code.Symbol.ModuleSymbol;
+import com.sun.tools.javac.code.Symtab;
+import com.sun.tools.javac.tree.JCTree.JCIdent;
+import com.sun.tools.javac.tree.TreeMaker;
+import com.sun.tools.javac.util.Names;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -65,5 +71,17 @@ public class UMemberSelectTest extends AbstractUTreeTest {
             ULiteral.stringLit("foo"),
             "indexOf",
             UMethodType.create(UPrimitiveType.INT, UPrimitiveType.INT)));
+  }
+
+  @Test
+  public void unifyWithModuleIdentifier() {
+    UMemberSelect memberSelect =
+        UMemberSelect.create(ULiteral.stringLit("foo"), "length", mock(UType.class));
+
+    ModuleSymbol module =
+        Symtab.instance(context).enterModule(Names.instance(context).fromString("somemodule"));
+    JCIdent moduleIdentifier = TreeMaker.instance(context).Ident(module);
+
+    assertThat(memberSelect.unify(moduleIdentifier, unifier).findFirst()).isEmpty();
   }
 }

@@ -156,7 +156,6 @@ public class Test {
             "Test.java",
 """
 import dagger.Provides;
-import java.io.IOException;
 
 public class Test {
   @Provides
@@ -202,8 +201,6 @@ public class Test {
         .addSourceLines(
             "Test.java",
             """
-            import dagger.Provides;
-
             public class Test {
               public void doNothing() {
                 return;
@@ -236,6 +233,77 @@ public class Test {
               @Nullable
               public Object providesObject() {
                 return null;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void ternary_b536946282_shouldBeFlagged() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import dagger.Provides;
+
+            public class Test {
+              @Provides
+              public Object providesObject(boolean foo, Object bar) {
+                // BUG: Diagnostic contains: Did you mean '@Nullable' or 'throw new RuntimeException();'
+                return foo ? bar : null;
+              }
+
+              @Provides
+              public Object providesObjectReversed(boolean foo, Object bar) {
+                // BUG: Diagnostic contains: Did you mean '@Nullable' or 'throw new RuntimeException();'
+                return foo ? null : bar;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void ternary_b536946282_flagDisabled() {
+    compilationHelper
+        .setArgs("-XepOpt:ProvidesNull:CheckDefinitelyNullBranch=false")
+        .addSourceLines(
+            "Test.java",
+            """
+            import dagger.Provides;
+
+            public class Test {
+              @Provides
+              public Object providesObject(boolean foo, Object bar) {
+                return foo ? bar : null;
+              }
+
+              @Provides
+              public Object providesObjectReversed(boolean foo, Object bar) {
+                return foo ? null : bar;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void enclosingIfNull_b536946282_shouldBeFlagged() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import dagger.Provides;
+
+            public class Test {
+              @Provides
+              public Object providesObject(Object bar) {
+                if (bar == null) {
+                  // TODO(b/536946282): should be flagged by ProvidesNull
+                  return bar;
+                }
+                return bar;
               }
             }
             """)

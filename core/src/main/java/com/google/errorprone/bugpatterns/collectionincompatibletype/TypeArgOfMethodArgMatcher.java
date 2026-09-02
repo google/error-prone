@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.collectionincompatibletype;
 
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.extractTypeArgAsMemberOfSupertype;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.common.base.Splitter;

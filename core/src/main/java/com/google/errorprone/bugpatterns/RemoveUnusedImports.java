@@ -54,11 +54,18 @@ import com.sun.tools.javac.api.JavacTrees;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.DCTree.DCReference;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Name;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -211,11 +218,51 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
       if (node.getKind().equals(Tree.Kind.RECORD)) {
         getEnclosedElements(getSymbol(node)).stream()
             .flatMap(e -> e.getAnnotationMirrors().stream())
-            .map(a -> (Symbol) a.getAnnotationType().asElement())
-            .forEach(symbolSink::accept);
+            .forEach(a -> scanAnnotation(a, symbolSink));
       }
       return super.visitClass(node, symbolSink);
     }
+
+    private static void scanAnnotation(AnnotationMirror annotation, SymbolSink sink) {
+      sink.accept((Symbol) annotation.getAnnotationType().asElement());
+      for (AnnotationValue value : annotation.getElementValues().values()) {
+        value.accept(ANNOTATION_VALUE_VISITOR, sink);
+      }
+    }
+
+    private static final SimpleAnnotationValueVisitor8<Void, SymbolSink> ANNOTATION_VALUE_VISITOR =
+        new SimpleAnnotationValueVisitor8<>() {
+          @Override
+          public Void visitEnumConstant(VariableElement enumConstant, SymbolSink sink) {
+            sink.accept((Symbol) enumConstant);
+            return null;
+          }
+
+          @Override
+          public Void visitType(TypeMirror typeMirror, SymbolSink sink) {
+            if (typeMirror instanceof Type type) {
+              Symbol element = type.asElement();
+              if (element != null) {
+                sink.accept(element);
+              }
+            }
+            return null;
+          }
+
+          @Override
+          public Void visitAnnotation(AnnotationMirror annotationMirror, SymbolSink sink) {
+            scanAnnotation(annotationMirror, sink);
+            return null;
+          }
+
+          @Override
+          public Void visitArray(List<? extends AnnotationValue> vals, SymbolSink sink) {
+            for (AnnotationValue val : vals) {
+              val.accept(this, sink);
+            }
+            return null;
+          }
+        };
 
     @Override
     public Void scan(Tree tree, SymbolSink sink) {

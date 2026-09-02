@@ -340,8 +340,6 @@ public final class UnnecessarilyFullyQualifiedTest {
         .addInputLines(
             "Test.java",
             """
-            import org.immutables.value.Value.Immutable;
-
             class Test {
               @org.immutables.value.Value.Immutable
               abstract class AbstractType {}
@@ -351,7 +349,6 @@ public final class UnnecessarilyFullyQualifiedTest {
             "Test.java",
             """
             import org.immutables.value.Value;
-            import org.immutables.value.Value.Immutable;
 
             class Test {
               @Value.Immutable

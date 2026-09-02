@@ -165,8 +165,8 @@ public class SuggesterTest {
             "import com.google.errorprone.annotations.InlineMe;",
             "public final class Client {",
             "  public static final String STR = \"kurt\";",
-            // TODO(b/234643232): this is a bug; it should be "Client.STR.length()" plus an import
-            "  @InlineMe(replacement = \"STR.length()\")",
+            "  @InlineMe(replacement = \"Client.STR.length()\", imports ="
+                + " \"com.google.frobber.Client\")",
             "  @Deprecated",
             "  public int stringLength() {",
             "    return STR.length();",
@@ -1168,26 +1168,25 @@ public final class Client {
     refactoringTestHelper
         .addInputLines(
             "Client.java",
-            """
-            package com.google.frobber;
+"""
+package com.google.frobber;
 
-            import java.util.function.Supplier;
+import java.util.function.Supplier;
 
-            public class Client {
-              public static final Supplier<Integer> MAGIC = () -> 42;
+public class Client {
+  public static final Supplier<Integer> MAGIC = () -> 42;
 
-              @Deprecated
-              public static int before() {
-                return after(MAGIC.get());
-              }
+  @Deprecated
+  public static int before() {
+    return after(MAGIC.get());
+  }
 
-              public static int after(int value) {
-                return value;
-              }
-            }
+  public static int after(int value) {
+    return value;
+  }
+}
 
-            """)
-        // TODO(b/202145711): MAGIC.get() should be Client.MAGIC.get()
+""")
         .addOutputLines(
             "Client.java",
 """
@@ -1199,7 +1198,7 @@ import java.util.function.Supplier;
 public class Client {
   public static final Supplier<Integer> MAGIC = () -> 42;
 
-  @InlineMe(replacement = "Client.after(MAGIC.get())", imports = "com.google.frobber.Client")
+  @InlineMe(replacement = "Client.after(Client.MAGIC.get())", imports = "com.google.frobber.Client")
   @Deprecated
   public static int before() {
     return after(MAGIC.get());
@@ -1209,7 +1208,6 @@ public class Client {
     return value;
   }
 }
-
 """)
         .doTest();
   }
@@ -1253,8 +1251,6 @@ public class Client {
             package com.google.security.keymaster;
 
             import static java.nio.charset.StandardCharsets.US_ASCII;
-
-            import com.google.errorprone.annotations.InlineMe;
 
             public final class KeymasterEncrypter {
               @Deprecated
