@@ -29,7 +29,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Ordering;
 import com.google.errorprone.CodeTransformer;
-import com.google.errorprone.SubContext;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.refaster.annotation.AllowCodeBetweenLines;
 import com.google.errorprone.refaster.annotation.AlsoNegation;
@@ -59,23 +58,15 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
   private static final Logger logger =
       Logger.getLogger(RefasterRuleBuilderScanner.class.toString());
 
-  static final Context.Key<Map<MethodSymbol, PlaceholderMethod>> PLACEHOLDER_METHODS_KEY =
-      new Context.Key<>();
-
   private final Context context;
   private final Map<MethodSymbol, PlaceholderMethod> placeholderMethods;
   private final List<Template<?>> beforeTemplates;
   private final List<Template<?>> afterTemplates;
+  private boolean requireBlock;
 
   private RefasterRuleBuilderScanner(Context context) {
-    this.context = new SubContext(context);
-    if (context.get(PLACEHOLDER_METHODS_KEY) == null) {
-      this.placeholderMethods = new HashMap<>();
-      context.put(PLACEHOLDER_METHODS_KEY, placeholderMethods);
-    } else {
-      this.placeholderMethods = context.get(PLACEHOLDER_METHODS_KEY);
-    }
-
+    this.context = context;
+    this.placeholderMethods = new HashMap<>();
     this.beforeTemplates = new ArrayList<>();
     this.afterTemplates = new ArrayList<>();
   }
@@ -96,7 +87,7 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
         }.reverse().immutableSortedCopy(Iterables.filter(tree.getMembers(), MethodTree.class));
     scanner.visit(methods, null);
 
-    UTemplater templater = new UTemplater(context);
+    UTemplater templater = new UTemplater(context, scanner.placeholderMethods);
     List<UType> types = templater.templateTypes(sym.type.getTypeArguments());
 
     return scanner.createMatchers(
@@ -114,7 +105,7 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
         checkArgument(
             tree.getModifiers().getFlags().contains(Modifier.ABSTRACT),
             "@Placeholder methods are expected to be abstract");
-        UTemplater templater = new UTemplater(context);
+        UTemplater templater = new UTemplater(context, placeholderMethods);
         ImmutableMap.Builder<UVariableDecl, ImmutableClassToInstanceMap<Annotation>> params =
             ImmutableMap.builder();
         for (VariableTree param : tree.getParameters()) {
@@ -132,13 +123,15 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
                 UTemplater.annotationMap(sym)));
       } else if (hasAnnotation(tree, BEFORE_TEMPLATE_ANNOTATION, state)) {
         checkState(afterTemplates.isEmpty(), "BeforeTemplate must come before AfterTemplate");
-        Template<?> template = UTemplater.createTemplate(context, tree);
+        Template<?> template =
+            UTemplater.createTemplate(context, tree, placeholderMethods, requireBlock);
         beforeTemplates.add(template);
         if (template instanceof BlockTemplate) {
-          context.put(UTemplater.REQUIRE_BLOCK_KEY, /* data= */ true);
+          requireBlock = true;
         }
       } else if (hasAnnotation(tree, AFTER_TEMPLATE_ANNOTATION, state)) {
-        afterTemplates.add(UTemplater.createTemplate(context, tree));
+        afterTemplates.add(
+            UTemplater.createTemplate(context, tree, placeholderMethods, requireBlock));
       } else if (tree.getModifiers().getFlags().contains(Modifier.ABSTRACT)) {
         throw new IllegalArgumentException(
             "Placeholder methods must have @Placeholder, but abstract method does not: " + tree);

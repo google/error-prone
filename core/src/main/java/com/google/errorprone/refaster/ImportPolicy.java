@@ -17,8 +17,6 @@
 package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 
 import com.google.common.base.Joiner;
@@ -34,11 +32,8 @@ import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCImport;
 import com.sun.tools.javac.tree.TreeMaker;
-import com.sun.tools.javac.util.Context;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -106,8 +101,8 @@ public enum ImportPolicy {
       }
       // No conflicts
       String packge = Joiner.on('.').join(topLevelPath.subList(0, topLevelPath.size() - 1));
-      PackageSymbol currentPackage = inliner.getContext().get(PackageSymbol.class);
-      if (currentPackage == null || !currentPackage.getQualifiedName().contentEquals(packge)) {
+      PackageSymbol currentPackage = inliner.packageSymbol();
+      if (!currentPackage.getQualifiedName().contentEquals(packge)) {
         // don't import classes from the same package as the class we're refactoring
         inliner.addImport(topLevelClazz.toString());
       }
@@ -154,9 +149,8 @@ public enum ImportPolicy {
       String packge = topLevelClazz.toString();
       int lastDot = packge.lastIndexOf('.');
       packge = (lastDot >= 0) ? packge.substring(0, lastDot) : "";
-      PackageSymbol currentPackage = inliner.getContext().get(PackageSymbol.class);
-      if (currentPackage == null
-          || !currentPackage.getQualifiedName().contentEquals(packge)
+      PackageSymbol currentPackage = inliner.packageSymbol();
+      if (!currentPackage.getQualifiedName().contentEquals(packge)
           || !topLevelClazz.toString().contentEquals(fullyQualifiedClazz)) {
         // don't import classes from the same package as the class we're refactoring
         inliner.addImport(fullyQualifiedClazz.toString());
@@ -222,16 +216,6 @@ public enum ImportPolicy {
     }
   };
 
-  public static void bind(Context context, ImportPolicy policy) {
-    context.put(ImportPolicy.class, checkNotNull(policy));
-  }
-
-  public static ImportPolicy instance(Context context) {
-    ImportPolicy result = context.get(ImportPolicy.class);
-    checkState(result != null, "No ImportPolicy bound in this context");
-    return result;
-  }
-
   public abstract JCExpression classReference(
       Inliner inliner, CharSequence topLevelClazz, CharSequence fullyQualifiedClazz);
 
@@ -278,11 +262,7 @@ public enum ImportPolicy {
   private static ImmutableSet<String> getAllImports(Inliner inliner, WhichImports whichImports) {
     return Streams.concat(
             whichImports.getExistingImports(inliner),
-            Optional.ofNullable(inliner.getContext())
-                .map(c -> c.get(JCCompilationUnit.class))
-                .map(ImportPolicy::getImports)
-                .map(Collection::stream)
-                .orElse(Stream.of())
+            getImports(inliner.compilationUnit()).stream()
                 .filter(JCImport.class::isInstance)
                 .map(JCImport.class::cast)
                 .filter(whichImports::existingImportMatches)

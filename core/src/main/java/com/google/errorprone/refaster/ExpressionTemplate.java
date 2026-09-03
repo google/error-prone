@@ -94,10 +94,22 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
       UType returnType) {
     return new AutoValue_ExpressionTemplate(
         annotations,
+        ImmutableList.of(),
         ImmutableList.copyOf(typeVariables),
         ImmutableMap.copyOf(expressionArgumentTypes),
         expression,
         returnType);
+  }
+
+  @Override
+  public ExpressionTemplate withRuleTypeVariables(Iterable<UTypeVar> ruleTypeVariables) {
+    return new AutoValue_ExpressionTemplate(
+        annotations(),
+        ImmutableList.copyOf(ruleTypeVariables),
+        templateTypeVariables(),
+        expressionArgumentTypes(),
+        expression(),
+        returnType());
   }
 
   abstract UExpression expression();
@@ -113,8 +125,9 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
         returnType().equals(UPrimitiveType.BOOLEAN),
         "Return type must be boolean to generate negation, but was %s",
         returnType());
-    return create(
+    return new AutoValue_ExpressionTemplate(
         annotations(),
+        ruleTypeVariables(),
         templateTypeVariables(),
         expressionArgumentTypes(),
         expression().negate(),
@@ -123,9 +136,11 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
 
   /** Returns the matches of this template against the specified target AST. */
   @Override
-  public Iterable<ExpressionTemplateMatch> match(JCTree target, Context context) {
+  public Iterable<ExpressionTemplateMatch> match(
+      JCTree target, Context context, JCCompilationUnit compilationUnit) {
     if (target instanceof JCExpression targetExpr) {
-      Optional<Unifier> unifier = unify(targetExpr, new Unifier(context)).findFirst();
+      Optional<Unifier> unifier =
+          unify(targetExpr, new Unifier(context, compilationUnit)).findFirst();
       if (unifier.isPresent()) {
         return ImmutableList.of(new ExpressionTemplateMatch(targetExpr, unifier.get()));
       }
@@ -222,17 +237,14 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
   @Override
   public Fix replace(ExpressionTemplateMatch match) {
     Inliner inliner = match.createInliner();
-    Context context = inliner.getContext();
     if (annotations().containsKey(UseImportPolicy.class)) {
-      ImportPolicy.bind(context, annotations().getInstance(UseImportPolicy.class).value());
-    } else {
-      ImportPolicy.bind(context, ImportPolicy.IMPORT_TOP_LEVEL);
+      inliner.setImportPolicy(annotations().getInstance(UseImportPolicy.class).value());
     }
-    int prec = getPrecedence(match.getLocation(), context);
+    int prec = getPrecedence(match.getLocation(), inliner);
     SuggestedFix.Builder fix = SuggestedFix.builder();
     try {
       StringWriter writer = new StringWriter();
-      pretty(inliner.getContext(), writer).printExpr(expression().inline(inliner), prec);
+      pretty(inliner, writer).printExpr(expression().inline(inliner), prec);
       fix.replace(match.getLocation(), writer.toString());
     } catch (CouldNotResolveImportException e) {
       logger.log(SEVERE, "Failure to resolve in replacement", e);
@@ -246,10 +258,11 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
    * Returns the precedence level appropriate for unambiguously printing leaf as a subexpression of
    * its parent.
    */
-  private static int getPrecedence(JCTree leaf, Context context) {
-    JCCompilationUnit comp = context.get(JCCompilationUnit.class);
+  private static int getPrecedence(JCTree leaf, Inliner inliner) {
+    JCCompilationUnit comp = inliner.compilationUnit();
     JCTree parent =
-        (JCTree) JavacTrees.instance(context).getPath(comp, leaf).getParentPath().getLeaf();
+        (JCTree)
+            JavacTrees.instance(inliner.getContext()).getPath(comp, leaf).getParentPath().getLeaf();
 
     // In general, this should match the logic in com.sun.tools.javac.tree.Pretty.
     //

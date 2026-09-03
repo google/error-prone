@@ -18,6 +18,7 @@ package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 
 import com.google.auto.value.AutoValue;
 import com.google.common.annotations.VisibleForTesting;
@@ -27,17 +28,13 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.errorprone.CodeTransformer;
 import com.google.errorprone.DescriptionListener;
-import com.google.errorprone.SubContext;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.code.Symbol.PackageSymbol;
-import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.util.Context;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Set;
-import javax.tools.JavaFileManager;
 
 /**
  * A representation of an entire Refaster rule, corresponding to a class with @BeforeTemplates
@@ -105,14 +102,23 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
           afterTemplate.getClass(),
           qualifiedTemplateClass);
     }
+    ImmutableList<UTypeVar> typeVars = ImmutableList.copyOf(typeVariables);
+    ImmutableList<Template<?>> before =
+        beforeTemplates.stream()
+            .map(t -> t.withRuleTypeVariables(typeVars))
+            .collect(toImmutableList());
+    ImmutableList<Template<?>> after =
+        afterTemplates.stream()
+            .map(t -> t.withRuleTypeVariables(typeVars))
+            .collect(toImmutableList());
     @SuppressWarnings({"unchecked", "rawtypes"})
     RefasterRule<?, ?> result =
         new AutoValue_RefasterRule(
             qualifiedTemplateClass,
             fromSecondLevel(qualifiedTemplateClass),
-            ImmutableList.copyOf(typeVariables),
-            ImmutableList.copyOf(beforeTemplates),
-            ImmutableList.copyOf(afterTemplates),
+            typeVars,
+            before,
+            after,
             annotations);
     return result;
   }
@@ -134,26 +140,12 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
 
   @Override
   public void apply(TreePath path, Context context, DescriptionListener listener) {
-    RefasterScanner.create(this, listener)
-        .scan(
-            path.getLeaf(), prepareContext(context, (JCCompilationUnit) path.getCompilationUnit()));
+    JCCompilationUnit compilationUnit = (JCCompilationUnit) path.getCompilationUnit();
+    RefasterScanner.create(this, listener, compilationUnit).scan(path.getLeaf(), context);
   }
 
   boolean rejectMatchesWithComments() {
     return true; // TODO: b/12365776 - Make this option configurable.
-  }
-
-  static final Context.Key<ImmutableList<UTypeVar>> RULE_TYPE_VARS = new Context.Key<>();
-
-  private Context prepareContext(Context baseContext, JCCompilationUnit compilationUnit) {
-    Context context = new SubContext(baseContext);
-    if (context.get(JavaFileManager.class) == null) {
-      JavacFileManager.preRegister(context);
-    }
-    context.put(JCCompilationUnit.class, compilationUnit);
-    context.put(PackageSymbol.class, compilationUnit.packge);
-    context.put(RULE_TYPE_VARS, typeVariables());
-    return context;
   }
 
   @VisibleForTesting

@@ -98,7 +98,7 @@ public abstract class AbstractUTreeTest {
   protected <V> void bind(Bindings.Key<V> key, V value) {
     Bindings bindings = Bindings.create(inliner.bindings);
     bindings.putBinding(key, value);
-    inliner = new Inliner(context, bindings);
+    inliner = new Inliner(context, bindings, inliner.compilationUnit());
   }
 
   protected JCExpression ident(String name) {

@@ -21,6 +21,7 @@ import static org.junit.Assert.assertThrows;
 
 import com.google.common.testing.EqualsTester;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.util.Names;
 import java.util.ArrayList;
@@ -232,5 +233,15 @@ public class BindingsTest extends AbstractUTreeTest {
 
     assertThat(bindings.hasFreeIdentMatching(expr -> expr.toString().contains("nonExistent")))
         .isFalse();
+  }
+
+  @Test
+  public void unifierAndInliner_nonNullCompilationUnit() {
+    assertThat(unifier.compilationUnit()).isNotNull();
+    assertThat(inliner.compilationUnit()).isNotNull();
+    assertThrows(NullPointerException.class, () -> new Unifier(context, (JCCompilationUnit) null));
+    assertThrows(
+        NullPointerException.class,
+        () -> new Inliner(context, Bindings.create(), (JCCompilationUnit) null));
   }
 }

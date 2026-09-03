@@ -49,7 +49,6 @@ public class UNewClassTest extends AbstractUTreeTest {
 
   @Test
   public void inline() {
-    ImportPolicy.bind(context, ImportPolicy.IMPORT_TOP_LEVEL);
     assertInlines(
         "new String(\"123\")",
         UNewClass.create(UClassIdent.create("java.lang.String"), ULiteral.stringLit("123")));

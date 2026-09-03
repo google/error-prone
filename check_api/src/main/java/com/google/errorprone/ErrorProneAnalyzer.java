@@ -183,9 +183,10 @@ public final class ErrorProneAnalyzer implements TaskListener {
     this.errorProneOptions = checkNotNull(errorProneOptions);
     this.descriptionListenerFactory = checkNotNull(descriptionListenerFactory);
 
-    Context errorProneContext = new SubContext(context);
-    errorProneContext.put(ErrorProneOptions.class, errorProneOptions);
-    this.context = errorProneContext;
+    if (context.get(ErrorProneOptions.class) == null) {
+      context.put(ErrorProneOptions.class, errorProneOptions);
+    }
+    this.context = context;
   }
 
   private int errorProneErrors = 0;

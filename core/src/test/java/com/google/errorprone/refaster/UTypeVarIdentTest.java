@@ -52,7 +52,6 @@ public class UTypeVarIdentTest extends AbstractUTreeTest {
 
   @Test
   public void inline() {
-    ImportPolicy.bind(context, ImportPolicy.IMPORT_TOP_LEVEL);
     Symtab symtab = Symtab.instance(context);
     Type listType = symtab.listType;
     bind(

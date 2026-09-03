@@ -16,14 +16,16 @@
 
 package com.google.errorprone.refaster;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.errorprone.SubContext;
 import com.google.errorprone.refaster.UTypeVar.TypeWithExpression;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
+import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.code.Symtab;
@@ -36,6 +38,7 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.comp.Enter;
 import com.sun.tools.javac.comp.Infer;
 import com.sun.tools.javac.main.JavaCompiler;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
@@ -60,13 +63,16 @@ public final class Inliner {
   public final Bindings bindings;
 
   private final Map<String, TypeVar> typeVarCache;
+  private ImportPolicy importPolicy = ImportPolicy.IMPORT_TOP_LEVEL;
+  private final JCCompilationUnit compilationUnit;
 
-  public Inliner(Context context, Bindings bindings) {
-    this.context = new SubContext(context);
+  Inliner(Context context, Bindings bindings, JCCompilationUnit compilationUnit) {
+    this.context = checkNotNull(context);
     this.bindings = Bindings.create(bindings);
     this.importsToAdd = Sets.newHashSet();
     this.staticImportsToAdd = Sets.newHashSet();
     this.typeVarCache = Maps.newHashMap();
+    this.compilationUnit = checkNotNull(compilationUnit);
   }
 
   public void addImport(String qualifiedImport) {
@@ -98,6 +104,14 @@ public final class Inliner {
     return context;
   }
 
+  public JCCompilationUnit compilationUnit() {
+    return compilationUnit;
+  }
+
+  public PackageSymbol packageSymbol() {
+    return checkNotNull(compilationUnit.packge);
+  }
+
   public Types types() {
     return Types.instance(context);
   }
@@ -123,7 +137,11 @@ public final class Inliner {
   }
 
   public ImportPolicy importPolicy() {
-    return ImportPolicy.instance(context);
+    return importPolicy;
+  }
+
+  public void setImportPolicy(ImportPolicy importPolicy) {
+    this.importPolicy = checkNotNull(importPolicy);
   }
 
   public Name asName(CharSequence str) {

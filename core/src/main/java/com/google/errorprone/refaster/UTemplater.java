@@ -30,7 +30,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
-import com.google.errorprone.SubContext;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.refaster.annotation.Matches;
@@ -130,23 +129,15 @@ import org.jspecify.annotations.Nullable;
  * @author lowasser@google.com (Louis Wasserman)
  */
 public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
-  /**
-   * Context key to indicate that templates should be treated as BlockTemplates, regardless of their
-   * structure.
-   */
-  public static final Context.Key<Boolean> REQUIRE_BLOCK_KEY = new Context.Key<>();
-
-  /**
-   * Returns a template based on a method. One-line methods starting with a {@code return} statement
-   * are guessed to be expression templates, and all other methods are guessed to be block
-   * templates.
-   */
-  public static Template<?> createTemplate(Context context, MethodTree decl) {
+  public static Template<?> createTemplate(
+      Context context,
+      MethodTree decl,
+      Map<MethodSymbol, PlaceholderMethod> placeholderMethods,
+      boolean requireBlock) {
     MethodSymbol declSym = ASTHelpers.getSymbol(decl);
     ImmutableClassToInstanceMap<Annotation> annotations = UTemplater.annotationMap(declSym);
     ImmutableMap<String, VarSymbol> freeExpressionVars = freeExpressionVariables(decl);
-    Context subContext = new SubContext(context);
-    UTemplater templater = new UTemplater(freeExpressionVars, subContext);
+    UTemplater templater = new UTemplater(freeExpressionVars, context, placeholderMethods);
     ImmutableMap<String, UType> expressionVarTypes =
         ImmutableMap.copyOf(
             Maps.transformValues(
@@ -169,7 +160,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     List<? extends StatementTree> bodyStatements = decl.getBody().getStatements();
     if (bodyStatements.size() == 1
         && Iterables.getOnlyElement(bodyStatements) instanceof ReturnTree returnTree
-        && context.get(REQUIRE_BLOCK_KEY) == null) {
+        && !requireBlock) {
       ExpressionTree expression = returnTree.getExpression();
       return ExpressionTemplate.create(
           annotations,
@@ -187,6 +178,10 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
     }
   }
 
+  public static Template<?> createTemplate(Context context, MethodTree decl) {
+    return createTemplate(context, decl, ImmutableMap.of(), false);
+  }
+
   public static ImmutableMap<String, VarSymbol> freeExpressionVariables(
       MethodTree templateMethodDecl) {
     ImmutableMap.Builder<String, VarSymbol> builder = ImmutableMap.builder();
@@ -198,14 +193,27 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
 
   private final ImmutableMap<String, VarSymbol> freeVariables;
   private final Context context;
+  private final Map<MethodSymbol, PlaceholderMethod> placeholderMethods;
 
-  public UTemplater(Map<String, VarSymbol> freeVariables, Context context) {
+  public UTemplater(
+      Map<String, VarSymbol> freeVariables,
+      Context context,
+      Map<MethodSymbol, PlaceholderMethod> placeholderMethods) {
     this.freeVariables = ImmutableMap.copyOf(freeVariables);
     this.context = context;
+    this.placeholderMethods = placeholderMethods;
+  }
+
+  public UTemplater(Map<String, VarSymbol> freeVariables, Context context) {
+    this(freeVariables, context, ImmutableMap.of());
+  }
+
+  UTemplater(Context context, Map<MethodSymbol, PlaceholderMethod> placeholderMethods) {
+    this(ImmutableMap.of(), context, placeholderMethods);
   }
 
   UTemplater(Context context) {
-    this(ImmutableMap.<String, VarSymbol>of(), context);
+    this(ImmutableMap.of(), context, ImmutableMap.of());
   }
 
   public Tree template(Tree tree) {
@@ -464,9 +472,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
               VisitorState.createForUtilityPurposes(context)));
       return template(arg);
     }
-    Map<MethodSymbol, PlaceholderMethod> placeholderMethods =
-        context.get(RefasterRuleBuilderScanner.PLACEHOLDER_METHODS_KEY);
-    if (placeholderMethods != null && placeholderMethods.containsKey(ASTHelpers.getSymbol(tree))) {
+    if (placeholderMethods.containsKey(ASTHelpers.getSymbol(tree))) {
       return UPlaceholderExpression.create(
           placeholderMethods.get(ASTHelpers.getSymbol(tree)),
           templateExpressions(tree.getArguments()));
@@ -724,11 +730,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   }
 
   private @Nullable PlaceholderMethod placeholder(@Nullable ExpressionTree expr) {
-    Map<MethodSymbol, PlaceholderMethod> placeholderMethods =
-        context.get(RefasterRuleBuilderScanner.PLACEHOLDER_METHODS_KEY);
-    return (placeholderMethods != null && expr != null)
-        ? placeholderMethods.get(ASTHelpers.getSymbol(expr))
-        : null;
+    return expr != null ? placeholderMethods.get(ASTHelpers.getSymbol(expr)) : null;
   }
 
   @Override

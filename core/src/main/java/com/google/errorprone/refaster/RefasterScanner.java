@@ -53,13 +53,15 @@ import com.sun.tools.javac.util.ListBuffer;
 abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
     extends TreeScanner<Void, Context> {
   static <M extends TemplateMatch, T extends Template<M>> RefasterScanner<M, T> create(
-      RefasterRule<M, T> rule, DescriptionListener listener) {
-    return new AutoValue_RefasterScanner<>(rule, listener);
+      RefasterRule<M, T> rule, DescriptionListener listener, JCCompilationUnit compilationUnit) {
+    return new AutoValue_RefasterScanner<>(rule, listener, compilationUnit);
   }
 
   abstract RefasterRule<M, T> rule();
 
   abstract DescriptionListener listener();
+
+  abstract JCCompilationUnit compilationUnit();
 
   @Override
   public Void visitClass(ClassTree node, Context context) {
@@ -102,10 +104,10 @@ abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
     if (tree == null) {
       return null;
     }
-    JCCompilationUnit compilationUnit = context.get(JCCompilationUnit.class);
+    JCCompilationUnit compilationUnit = compilationUnit();
     for (T beforeTemplate : rule().beforeTemplates()) {
       matchLoop:
-      for (M match : beforeTemplate.match((JCTree) tree, context)) {
+      for (M match : beforeTemplate.match((JCTree) tree, context, compilationUnit)) {
         if (rule().rejectMatchesWithComments()) {
           String matchContents = match.getRange(compilationUnit);
           if (stringContainsComments(matchContents, context)) {

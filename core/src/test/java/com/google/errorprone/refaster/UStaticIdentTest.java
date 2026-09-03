@@ -67,7 +67,6 @@ public class UStaticIdentTest extends AbstractUTreeTest {
 
   @Test
   public void inline() {
-    ImportPolicy.bind(context, ImportPolicy.IMPORT_TOP_LEVEL);
     assertInlines(
         "Integer.valueOf",
         UStaticIdent.create(
