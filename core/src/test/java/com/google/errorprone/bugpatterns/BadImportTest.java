@@ -582,6 +582,53 @@ class BadImportPositiveCases {
         .doTest();
   }
 
+
+  @Test
+  public void recordComponentWithTypeUseAnnotation_doesNotCrash() {
+    refactoringTestHelper
+        .addInputLines(
+            "input/TypeUseAnnotation.java",
+            """
+            package test;
+
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Target;
+
+            @Target(ElementType.TYPE_USE)
+            @interface TypeUseAnnotation {}
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "input/SomeClass.java",
+            """
+            package test;
+
+            class SomeClass {
+              enum Builder {
+                A
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "input/Test.java",
+            """
+            package test;
+
+            import test.SomeClass.Builder;
+
+            record Test(@TypeUseAnnotation Builder builder) {}
+            """)
+        .addOutputLines(
+            "output/Test.java",
+            """
+            package test;
+
+            record Test(@TypeUseAnnotation SomeClass.Builder builder) {}
+            """)
+        .doTest();
+  }
+
   @Test
   public void negative_truth8AssertThatFalseFlag() {
     compilationTestHelper
