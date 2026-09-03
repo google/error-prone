@@ -17,9 +17,13 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 _Alternate names: MustBeClosed_
 
 ## The problem
-Methods or constructors annotated with `@MustBeClosed` require that the returned
-resource is closed. This is enforced by checking that invocations occur within
-the resource variable initializer of a try-with-resources statement:
+Some methods and constructors require that the returned resource is closed. This
+includes user methods/constructors annotated with `@MustBeClosed` and some
+additional well-known APIs. (Some further well-known APIs are covered by a
+different check, StreamResourceLeak.)
+
+This is enforced by checking that invocations occur within the resource variable
+initializer of a try-with-resources statement:
 
 ```java
 try (AutoCloseable resource = createTheResource()) {
