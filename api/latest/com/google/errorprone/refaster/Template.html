@@ -65,14 +65,16 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#annotations()" tabindex="0">annotations()</a></li>
+<li><a href="#ruleTypeVariables()" tabindex="0">ruleTypeVariables()</a></li>
 <li><a href="#templateTypeVariables()" tabindex="0">templateTypeVariables()</a></li>
+<li><a href="#withRuleTypeVariables(java.lang.Iterable)" tabindex="0">withRuleTypeVariables(Iterable)</a></li>
 <li><a href="#expressionArgumentTypes()" tabindex="0">expressionArgumentTypes()</a></li>
-<li><a href="#match(com.sun.tools.javac.tree.JCTree,com.sun.tools.javac.util.Context)" tabindex="0">match(JCTree, Context)</a></li>
+<li><a href="#match(com.sun.tools.javac.tree.JCTree,com.sun.tools.javac.util.Context,com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" tabindex="0">match(JCTree, Context, JCTree.JCCompilationUnit)</a></li>
 <li><a href="#replace(M)" tabindex="0">replace(M)</a></li>
 <li><a href="#expectedTypes(com.google.errorprone.refaster.Inliner)" tabindex="0">expectedTypes(Inliner)</a></li>
 <li><a href="#actualTypes(com.google.errorprone.refaster.Inliner)" tabindex="0">actualTypes(Inliner)</a></li>
 <li><a href="#typecheck(com.google.errorprone.refaster.Unifier,com.google.errorprone.refaster.Inliner,com.sun.tools.javac.util.Warner,com.sun.tools.javac.util.List,com.sun.tools.javac.util.List)" tabindex="0">typecheck(Unifier, Inliner, Warner, List, List)</a></li>
-<li><a href="#pretty(com.sun.tools.javac.util.Context,java.io.Writer)" tabindex="0">pretty(Context, Writer)</a></li>
+<li><a href="#pretty(com.google.errorprone.refaster.Inliner,java.io.Writer)" tabindex="0">pretty(Inliner, Writer)</a></li>
 <li><a href="#addImports(com.google.errorprone.refaster.Inliner,com.google.errorprone.fixes.SuggestedFix.Builder)" tabindex="0">addImports(Inliner, SuggestedFix.Builder)</a></li>
 </ol>
 </li>
@@ -164,26 +166,33 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#expressionArgumentTypes()" class="member-name-link">expressionArgumentTypes</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a><wbr>&lt;<a href="#type-param-M" title="type parameter in Template">M</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#match(com.sun.tools.javac.tree.JCTree,com.sun.tools.javac.util.Context)" class="member-name-link">match</a><wbr>(com.sun.tools.javac.tree.JCTree&nbsp;tree,
- com.sun.tools.javac.util.Context&nbsp;context)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#match(com.sun.tools.javac.tree.JCTree,com.sun.tools.javac.util.Context,com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" class="member-name-link">match</a><wbr>(com.sun.tools.javac.tree.JCTree&nbsp;tree,
+ com.sun.tools.javac.util.Context&nbsp;context,
+ com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>protected static com.sun.tools.javac.tree.Pretty</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#pretty(com.sun.tools.javac.util.Context,java.io.Writer)" class="member-name-link">pretty</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#pretty(com.google.errorprone.refaster.Inliner,java.io.Writer)" class="member-name-link">pretty</a><wbr>(<a href="Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Writer.html" title="class or interface in java.io" class="external-link">Writer</a>&nbsp;writer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="../fixes/Fix.html" title="interface in com.google.errorprone.fixes">Fix</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#replace(M)" class="member-name-link">replace</a><wbr>(<a href="#type-param-M" title="type parameter in Template">M</a>&nbsp;match)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract com.google.common.collect.ImmutableList<wbr>&lt;<a href="UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#templateTypeVariables()" class="member-name-link">templateTypeVariables</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#ruleTypeVariables()" class="member-name-link">ruleTypeVariables</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#typecheck(com.google.errorprone.refaster.Unifier,com.google.errorprone.refaster.Inliner,com.sun.tools.javac.util.Warner,com.sun.tools.javac.util.List,com.sun.tools.javac.util.List)" class="member-name-link">typecheck</a><wbr>(<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract com.google.common.collect.ImmutableList<wbr>&lt;<a href="UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#templateTypeVariables()" class="member-name-link">templateTypeVariables</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#typecheck(com.google.errorprone.refaster.Unifier,com.google.errorprone.refaster.Inliner,com.sun.tools.javac.util.Warner,com.sun.tools.javac.util.List,com.sun.tools.javac.util.List)" class="member-name-link">typecheck</a><wbr>(<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
  <a href="Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner,
  com.sun.tools.javac.util.Warner&nbsp;warner,
  com.sun.tools.javac.util.List&lt;com.sun.tools.javac.code.Type&gt;&nbsp;expectedTypes,
  com.sun.tools.javac.util.List&lt;com.sun.tools.javac.code.Type&gt;&nbsp;actualTypes)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="Template.html" title="class in com.google.errorprone.refaster">Template</a><wbr>&lt;<a href="#type-param-M" title="type parameter in Template">M</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#withRuleTypeVariables(java.lang.Iterable)" class="member-name-link">withRuleTypeVariables</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a>&gt;&nbsp;ruleTypeVariables)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -226,10 +235,26 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 </section>
 </li>
 <li>
+<section class="detail" id="ruleTypeVariables()">
+<h3>ruleTypeVariables</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a>&gt;</span>&nbsp;<span class="element-name">ruleTypeVariables</span>()</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="templateTypeVariables()">
 <h3>templateTypeVariables</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a>&gt;</span>&nbsp;<span class="element-name">templateTypeVariables</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="withRuleTypeVariables(java.lang.Iterable)">
+<h3>withRuleTypeVariables</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="Template.html" title="class in com.google.errorprone.refaster">Template</a>&lt;<a href="#type-param-M" title="type parameter in Template">M</a>&gt;</span>&nbsp;<span class="element-name">withRuleTypeVariables</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a>&gt;&nbsp;ruleTypeVariables)</span></div>
 </div>
 </section>
 </li>
@@ -242,11 +267,12 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 </section>
 </li>
 <li>
-<section class="detail" id="match(com.sun.tools.javac.tree.JCTree,com.sun.tools.javac.util.Context)">
+<section class="detail" id="match(com.sun.tools.javac.tree.JCTree,com.sun.tools.javac.util.Context,com.sun.tools.javac.tree.JCTree.JCCompilationUnit)">
 <h3>match</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="#type-param-M" title="type parameter in Template">M</a>&gt;</span>&nbsp;<span class="element-name">match</span><wbr><span class="parameters">(com.sun.tools.javac.tree.JCTree&nbsp;tree,
- com.sun.tools.javac.util.Context&nbsp;context)</span></div>
+ com.sun.tools.javac.util.Context&nbsp;context,
+ com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit)</span></div>
 </div>
 </section>
 </li>
@@ -303,10 +329,10 @@ bound to expression placeholders, sorted by the name of the placeholder method.<
 </section>
 </li>
 <li>
-<section class="detail" id="pretty(com.sun.tools.javac.util.Context,java.io.Writer)">
+<section class="detail" id="pretty(com.google.errorprone.refaster.Inliner,java.io.Writer)">
 <h3>pretty</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">com.sun.tools.javac.tree.Pretty</span>&nbsp;<span class="element-name">pretty</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context,
+<div class="member-signature"><span class="modifiers">protected static</span>&nbsp;<span class="return-type">com.sun.tools.javac.tree.Pretty</span>&nbsp;<span class="element-name">pretty</span><wbr><span class="parameters">(<a href="Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Writer.html" title="class or interface in java.io" class="external-link">Writer</a>&nbsp;writer)</span></div>
 </div>
 </section>

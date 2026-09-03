@@ -59,12 +59,14 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
+<li><a href="#%3Cinit%3E(com.sun.tools.javac.util.Context,com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" tabindex="0">Unifier(Context, JCTree.JCCompilationUnit)</a></li>
 <li><a href="#%3Cinit%3E(com.sun.tools.javac.util.Context)" tabindex="0">Unifier(Context)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#fork()" tabindex="0">fork()</a></li>
+<li><a href="#compilationUnit()" tabindex="0">compilationUnit()</a></li>
 <li><a href="#types()" tabindex="0">types()</a></li>
 <li><a href="#thisExpression(com.sun.tools.javac.code.Type)" tabindex="0">thisExpression(Type)</a></li>
 <li><a href="#createInliner()" tabindex="0">createInliner()</a></li>
@@ -118,6 +120,9 @@ tree.</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.sun.tools.javac.util.Context)" class="member-name-link">Unifier</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.sun.tools.javac.util.Context,com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" class="member-name-link">Unifier</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context,
+ com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -135,76 +140,79 @@ tree.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearBinding(com.google.errorprone.refaster.Bindings.Key)" class="member-name-link">clearBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;?&gt;&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createInliner()" class="member-name-link">createInliner</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.JCTree.JCCompilationUnit</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#compilationUnit()" class="member-name-link">compilationUnit</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fork()" class="member-name-link">fork</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createInliner()" class="member-name-link">createInliner</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fork()" class="member-name-link">fork</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a <code>Unifier</code> containing all the bindings from this <code>Unifier</code>, but which can
 succeed or fail independently of this <code>Unifier</code>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;@Nullable V</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBinding(com.google.errorprone.refaster.Bindings.Key)" class="member-name-link">getBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBindings()" class="member-name-link">getBindings</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;@Nullable V</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBinding(com.google.errorprone.refaster.Bindings.Key)" class="member-name-link">getBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.util.Context</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getContext()" class="member-name-link">getContext</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBindings()" class="member-name-link">getBindings</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;V</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#putBinding(com.google.errorprone.refaster.Bindings.Key,V)" class="member-name-link">putBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key,
- V&nbsp;value)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.util.Context</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getContext()" class="member-name-link">getContext</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;V</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#replaceBinding(com.google.errorprone.refaster.Bindings.Key,V)" class="member-name-link">replaceBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#putBinding(com.google.errorprone.refaster.Bindings.Key,V)" class="member-name-link">putBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key,
  V&nbsp;value)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.JCTree.JCExpression</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#thisExpression(com.sun.tools.javac.code.Type)" class="member-name-link">thisExpression</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;V</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#replaceBinding(com.google.errorprone.refaster.Bindings.Key,V)" class="member-name-link">replaceBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key,
+ V&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.JCTree.JCExpression</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#thisExpression(com.sun.tools.javac.code.Type)" class="member-name-link">thisExpression</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Types</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#types()" class="member-name-link">types</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T, U extends <a href="Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br>com.google.common.base.Function<wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>, <a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unifications(U,T)" class="member-name-link">unifications</a><wbr>(@Nullable U&nbsp;unifiable,
- @Nullable T&nbsp;target)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Types</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#types()" class="member-name-link">types</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T, U extends <a href="Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br>com.google.common.base.Function<wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>, <a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unifications(java.util.List,java.util.List)" class="member-name-link">unifications</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;U&gt;&nbsp;toUnify,
- @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends T&gt;&nbsp;targets)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unifications(U,T)" class="member-name-link">unifications</a><wbr>(@Nullable U&nbsp;unifiable,
+ @Nullable T&nbsp;target)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T, U extends <a href="Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br>com.google.common.base.Function<wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>, <a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unifications(java.util.List,java.util.List,boolean)" class="member-name-link">unifications</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;U&gt;&nbsp;toUnify,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unifications(java.util.List,java.util.List)" class="member-name-link">unifications</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;U&gt;&nbsp;toUnify,
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends T&gt;&nbsp;targets)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T, U extends <a href="Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br>com.google.common.base.Function<wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>, <a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unifications(java.util.List,java.util.List,boolean)" class="member-name-link">unifications</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;U&gt;&nbsp;toUnify,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends T&gt;&nbsp;targets,
  boolean&nbsp;allowVarargs)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T, U extends <a href="Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unifyList(com.google.errorprone.refaster.Unifier,java.util.List,java.util.List)" class="member-name-link">unifyList</a><wbr>(<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T, U extends <a href="Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unifyList(com.google.errorprone.refaster.Unifier,java.util.List,java.util.List)" class="member-name-link">unifyList</a><wbr>(<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;U&gt;&nbsp;toUnify,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends T&gt;&nbsp;targets)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns all successful unification paths from the specified <code>Unifier</code> unifying the
 specified lists, disallowing varargs.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T, U extends <a href="Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unifyList(com.google.errorprone.refaster.Unifier,java.util.List,java.util.List,boolean)" class="member-name-link">unifyList</a><wbr>(<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T, U extends <a href="Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unifyList(com.google.errorprone.refaster.Unifier,java.util.List,java.util.List,boolean)" class="member-name-link">unifyList</a><wbr>(<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;U&gt;&nbsp;toUnify,
  @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends T&gt;&nbsp;targets,
  boolean&nbsp;allowVarargs)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns all successful unification paths from the specified <code>Unifier</code> unifying the
 specified lists, allowing varargs if and only if <code>allowVarargs</code> is true.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T, U extends <a href="Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unifyNullable(com.google.errorprone.refaster.Unifier,U,T)" class="member-name-link">unifyNullable</a><wbr>(<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T, U extends <a href="Unifiable.html" title="interface in com.google.errorprone.refaster">Unifiable</a>&lt;? super T&gt;&gt;<br><a href="Choice.html" title="class in com.google.errorprone.refaster">Choice</a><wbr>&lt;<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#unifyNullable(com.google.errorprone.refaster.Unifier,U,T)" class="member-name-link">unifyNullable</a><wbr>(<a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a>&nbsp;unifier,
  @Nullable U&nbsp;unifiable,
  @Nullable T&nbsp;target)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -222,6 +230,15 @@ specified lists, allowing varargs if and only if <code>allowVarargs</code> is tr
 <section class="constructor-details" id="constructor-detail">
 <h2>Constructor Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="&lt;init&gt;(com.sun.tools.javac.util.Context,com.sun.tools.javac.tree.JCTree.JCCompilationUnit)">
+<h3>Unifier</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Unifier</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context,
+ com.sun.tools.javac.tree.JCTree.JCCompilationUnit&nbsp;compilationUnit)</span></div>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="&lt;init&gt;(com.sun.tools.javac.util.Context)">
 <h3>Unifier</h3>
@@ -245,6 +262,14 @@ specified lists, allowing varargs if and only if <code>allowVarargs</code> is tr
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Unifier.html" title="class in com.google.errorprone.refaster">Unifier</a></span>&nbsp;<span class="element-name">fork</span>()</div>
 <div class="block">Returns a <code>Unifier</code> containing all the bindings from this <code>Unifier</code>, but which can
 succeed or fail independently of this <code>Unifier</code>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="compilationUnit()">
+<h3>compilationUnit</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.tree.JCTree.JCCompilationUnit</span>&nbsp;<span class="element-name">compilationUnit</span>()</div>
 </div>
 </section>
 </li>

@@ -69,8 +69,6 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#values()" tabindex="0">values()</a></li>
 <li><a href="#valueOf(java.lang.String)" tabindex="0">valueOf(String)</a></li>
-<li><a href="#bind(com.sun.tools.javac.util.Context,com.google.errorprone.refaster.ImportPolicy)" tabindex="0">bind(Context, ImportPolicy)</a></li>
-<li><a href="#instance(com.sun.tools.javac.util.Context)" tabindex="0">instance(Context)</a></li>
 <li><a href="#classReference(com.google.errorprone.refaster.Inliner,java.lang.CharSequence,java.lang.CharSequence)" tabindex="0">classReference(Inliner, CharSequence, CharSequence)</a></li>
 <li><a href="#staticReference(com.google.errorprone.refaster.Inliner,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence)" tabindex="0">staticReference(Inliner, CharSequence, CharSequence, CharSequence)</a></li>
 </ol>
@@ -148,18 +146,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#bind(com.sun.tools.javac.util.Context,com.google.errorprone.refaster.ImportPolicy)" class="member-name-link">bind</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context,
- <a href="ImportPolicy.html" title="enum class in com.google.errorprone.refaster">ImportPolicy</a>&nbsp;policy)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract com.sun.tools.javac.tree.JCTree.JCExpression</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#classReference(com.google.errorprone.refaster.Inliner,java.lang.CharSequence,java.lang.CharSequence)" class="member-name-link">classReference</a><wbr>(<a href="Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract com.sun.tools.javac.tree.JCTree.JCExpression</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#classReference(com.google.errorprone.refaster.Inliner,java.lang.CharSequence,java.lang.CharSequence)" class="member-name-link">classReference</a><wbr>(<a href="Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;topLevelClazz,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;fullyQualifiedClazz)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ImportPolicy.html" title="enum class in com.google.errorprone.refaster">ImportPolicy</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#instance(com.sun.tools.javac.util.Context)" class="member-name-link">instance</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract com.sun.tools.javac.tree.JCTree.JCExpression</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#staticReference(com.google.errorprone.refaster.Inliner,java.lang.CharSequence,java.lang.CharSequence,java.lang.CharSequence)" class="member-name-link">staticReference</a><wbr>(<a href="Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a>&nbsp;inliner,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;topLevelClazz,
@@ -270,23 +261,6 @@ not permitted.)</div>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if this enum class has no constant with the specified name</dd>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/NullPointerException.html" title="class or interface in java.lang" class="external-link">NullPointerException</a></code> - if the argument is null</dd>
 </dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="bind(com.sun.tools.javac.util.Context,com.google.errorprone.refaster.ImportPolicy)">
-<h3>bind</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">bind</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context,
- <a href="ImportPolicy.html" title="enum class in com.google.errorprone.refaster">ImportPolicy</a>&nbsp;policy)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="instance(com.sun.tools.javac.util.Context)">
-<h3>instance</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ImportPolicy.html" title="enum class in com.google.errorprone.refaster">ImportPolicy</a></span>&nbsp;<span class="element-name">instance</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context)</span></div>
 </div>
 </section>
 </li>

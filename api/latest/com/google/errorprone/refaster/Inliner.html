@@ -56,16 +56,10 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
 <li><a href="#field-summary" tabindex="0">Field Summary</a></li>
-<li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#field-detail" tabindex="0">Field Details</a>
 <ol class="toc-list">
 <li><a href="#bindings" tabindex="0">bindings</a></li>
-</ol>
-</li>
-<li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
-<ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.sun.tools.javac.util.Context,com.google.errorprone.refaster.Bindings)" tabindex="0">Inliner(Context, Bindings)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -74,6 +68,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#addStaticImport(java.lang.String)" tabindex="0">addStaticImport(String)</a></li>
 <li><a href="#resolveClass(java.lang.CharSequence)" tabindex="0">resolveClass(CharSequence)</a></li>
 <li><a href="#getContext()" tabindex="0">getContext()</a></li>
+<li><a href="#compilationUnit()" tabindex="0">compilationUnit()</a></li>
+<li><a href="#packageSymbol()" tabindex="0">packageSymbol()</a></li>
 <li><a href="#types()" tabindex="0">types()</a></li>
 <li><a href="#symtab()" tabindex="0">symtab()</a></li>
 <li><a href="#enter()" tabindex="0">enter()</a></li>
@@ -81,6 +77,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#maker()" tabindex="0">maker()</a></li>
 <li><a href="#infer()" tabindex="0">infer()</a></li>
 <li><a href="#importPolicy()" tabindex="0">importPolicy()</a></li>
+<li><a href="#setImportPolicy(com.google.errorprone.refaster.ImportPolicy)" tabindex="0">setImportPolicy(ImportPolicy)</a></li>
 <li><a href="#asName(java.lang.CharSequence)" tabindex="0">asName(CharSequence)</a></li>
 <li><a href="#inlineAsTree(com.sun.tools.javac.code.Type)" tabindex="0">inlineAsTree(Type)</a></li>
 <li><a href="#getBinding(com.google.errorprone.refaster.Bindings.Key)" tabindex="0">getBinding(Bindings.Key)</a></li>
@@ -131,20 +128,6 @@ tree from a <code>UTree</code> based on a set of substitutions.</div>
 </div>
 </section>
 </li>
-<!-- ======== CONSTRUCTOR SUMMARY ======== -->
-<li>
-<section class="constructor-summary" id="constructor-summary">
-<h2>Constructor Summary</h2>
-<div class="caption"><span>Constructors</span></div>
-<div class="summary-table two-column-summary">
-<div class="table-header col-first">Constructor</div>
-<div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.sun.tools.javac.util.Context,com.google.errorprone.refaster.Bindings)" class="member-name-link">Inliner</a><wbr>(com.sun.tools.javac.util.Context&nbsp;context,
- <a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a>&nbsp;bindings)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
 <!-- ========== METHOD SUMMARY =========== -->
 <li>
 <section class="method-summary" id="method-summary">
@@ -165,56 +148,65 @@ tree from a <code>UTree</code> based on a set of substitutions.</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.util.Name</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#asName(java.lang.CharSequence)" class="member-name-link">asName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;str)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.comp.Enter</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#enter()" class="member-name-link">enter</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.JCTree.JCCompilationUnit</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#compilationUnit()" class="member-name-link">compilationUnit</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;V</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBinding(com.google.errorprone.refaster.Bindings.Key)" class="member-name-link">getBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.comp.Enter</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#enter()" class="member-name-link">enter</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.util.Context</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getContext()" class="member-name-link">getContext</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;V</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBinding(com.google.errorprone.refaster.Bindings.Key)" class="member-name-link">getBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getImportsToAdd()" class="member-name-link">getImportsToAdd</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.util.Context</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getContext()" class="member-name-link">getContext</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;V&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOptionalBinding(com.google.errorprone.refaster.Bindings.Key)" class="member-name-link">getOptionalBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getImportsToAdd()" class="member-name-link">getImportsToAdd</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStaticImportsToAdd()" class="member-name-link">getStaticImportsToAdd</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;V&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;V&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOptionalBinding(com.google.errorprone.refaster.Bindings.Key)" class="member-name-link">getOptionalBinding</a><wbr>(<a href="Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a>&lt;V&gt;&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ImportPolicy.html" title="enum class in com.google.errorprone.refaster">ImportPolicy</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#importPolicy()" class="member-name-link">importPolicy</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.common.collect.ImmutableSet<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStaticImportsToAdd()" class="member-name-link">getStaticImportsToAdd</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.comp.Infer</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#infer()" class="member-name-link">infer</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ImportPolicy.html" title="enum class in com.google.errorprone.refaster">ImportPolicy</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#importPolicy()" class="member-name-link">importPolicy</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.JCTree.JCExpression</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#inlineAsTree(com.sun.tools.javac.code.Type)" class="member-name-link">inlineAsTree</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.comp.Infer</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#infer()" class="member-name-link">infer</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.JCTree.JCExpression</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#inlineAsTree(com.sun.tools.javac.code.Type)" class="member-name-link">inlineAsTree</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Inlines the syntax tree representing the specified type.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Type.TypeVar</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#inlineAsVar(com.google.errorprone.refaster.UTypeVar)" class="member-name-link">inlineAsVar</a><wbr>(<a href="UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a>&nbsp;var)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;R&gt;&nbsp;com.sun.tools.javac.util.List<wbr>&lt;R&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#inlineList(java.lang.Iterable)" class="member-name-link">inlineList</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends com.google.errorprone.refaster.Inlineable&lt;? extends R&gt;&gt;&nbsp;elements)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Type.TypeVar</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#inlineAsVar(com.google.errorprone.refaster.UTypeVar)" class="member-name-link">inlineAsVar</a><wbr>(<a href="UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a>&nbsp;var)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.TreeMaker</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#maker()" class="member-name-link">maker</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;R&gt;&nbsp;com.sun.tools.javac.util.List<wbr>&lt;R&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#inlineList(java.lang.Iterable)" class="member-name-link">inlineList</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;? extends com.google.errorprone.refaster.Inlineable&lt;? extends R&gt;&gt;&nbsp;elements)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.util.Names</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#names()" class="member-name-link">names</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.tree.TreeMaker</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#maker()" class="member-name-link">maker</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.util.Names</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#names()" class="member-name-link">names</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symbol.PackageSymbol</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#packageSymbol()" class="member-name-link">packageSymbol</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symbol.ClassSymbol</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolveClass(java.lang.CharSequence)" class="member-name-link">resolveClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/CharSequence.html" title="class or interface in java.lang" class="external-link">CharSequence</a>&nbsp;qualifiedClass)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symtab</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#symtab()" class="member-name-link">symtab</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setImportPolicy(com.google.errorprone.refaster.ImportPolicy)" class="member-name-link">setImportPolicy</a><wbr>(<a href="ImportPolicy.html" title="enum class in com.google.errorprone.refaster">ImportPolicy</a>&nbsp;importPolicy)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Types</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#types()" class="member-name-link">types</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symtab</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#symtab()" class="member-name-link">symtab</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Types</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#types()" class="member-name-link">types</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -237,23 +229,6 @@ tree from a <code>UTree</code> based on a set of substitutions.</div>
 <h3>bindings</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public final</span>&nbsp;<span class="return-type"><a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></span>&nbsp;<span class="element-name">bindings</span></div>
-</div>
-</section>
-</li>
-</ul>
-</section>
-</li>
-<!-- ========= CONSTRUCTOR DETAIL ======== -->
-<li>
-<section class="constructor-details" id="constructor-detail">
-<h2>Constructor Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="&lt;init&gt;(com.sun.tools.javac.util.Context,com.google.errorprone.refaster.Bindings)">
-<h3>Inliner</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Inliner</span><wbr><span class="parameters">(com.sun.tools.javac.util.Context&nbsp;context,
- <a href="Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a>&nbsp;bindings)</span></div>
 </div>
 </section>
 </li>
@@ -299,6 +274,22 @@ tree from a <code>UTree</code> based on a set of substitutions.</div>
 <h3>getContext</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.util.Context</span>&nbsp;<span class="element-name">getContext</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="compilationUnit()">
+<h3>compilationUnit</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.tree.JCTree.JCCompilationUnit</span>&nbsp;<span class="element-name">compilationUnit</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="packageSymbol()">
+<h3>packageSymbol</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Symbol.PackageSymbol</span>&nbsp;<span class="element-name">packageSymbol</span>()</div>
 </div>
 </section>
 </li>
@@ -355,6 +346,14 @@ tree from a <code>UTree</code> based on a set of substitutions.</div>
 <h3>importPolicy</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ImportPolicy.html" title="enum class in com.google.errorprone.refaster">ImportPolicy</a></span>&nbsp;<span class="element-name">importPolicy</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setImportPolicy(com.google.errorprone.refaster.ImportPolicy)">
+<h3>setImportPolicy</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setImportPolicy</span><wbr><span class="parameters">(<a href="ImportPolicy.html" title="enum class in com.google.errorprone.refaster">ImportPolicy</a>&nbsp;importPolicy)</span></div>
 </div>
 </section>
 </li>
