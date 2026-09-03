@@ -1706,6 +1706,27 @@ class Test {
     assertCompiles(scanner);
   }
 
+  @Test
+  public void isSubtype_onUnknownType_isFalse() {
+    writeFile(
+        "A.java",
+        """
+        public class A {}
+        """);
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitClass(ClassTree tree, VisitorState state) {
+            setAssertionsComplete();
+            Type type = ASTHelpers.getType(tree);
+            assertThat(ASTHelpers.isSubtype(type, state.getSymtab().unknownType, state)).isFalse();
+            return super.visitClass(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
   /** Comments on method invocations with their receiver chain. */
   @BugPattern(
       summary = "Comments on method invocations with their receiver chain.",

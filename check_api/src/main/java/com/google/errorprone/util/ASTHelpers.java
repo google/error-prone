@@ -1384,7 +1384,10 @@ public final class ASTHelpers {
     if (SUBTYPE_UNDEFINED.contains(s.getTag())) {
       return false;
     }
-    if (t == state.getSymtab().unknownType) {
+    // UnknownType is an ErrorType in JDK 24+ (JDK-8339296), but had TypeTag.UNKNOWN in earlier
+    // JDKs. Compare tsym instead of type identity to avoid issues with type annotations or
+    // metadata.
+    if (Objects.equals(t.tsym, state.getSymtab().unknownSymbol)) {
       return false;
     }
     Types types = state.getTypes();
