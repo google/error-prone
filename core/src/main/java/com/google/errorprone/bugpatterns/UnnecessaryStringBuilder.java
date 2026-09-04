@@ -38,6 +38,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.TargetType;
+import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -142,7 +143,39 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
         return describeMatch(variableTree, fix.build());
       }
     }
+    // Support `StringBuilder x; x = new StringBuilder(...);` the same as the combined form.
+    if (leaf instanceof AssignmentTree assignmentTree
+        && assignmentTree.getVariable() instanceof IdentifierTree) {
+      Symbol assigned = getSymbol(assignmentTree.getVariable());
+      if (assigned != null && assigned.getKind().equals(ElementKind.LOCAL_VARIABLE)) {
+        VariableTree declaration = findVariableDeclaration(assigned, state);
+        if (declaration != null && isRewritableVariable(declaration, state)) {
+          SuggestedFix.Builder fix = SuggestedFix.builder();
+          if (!hasImplicitType(declaration, state)) {
+            fix.replace(declaration.getType(), "String");
+          }
+          fix.replace(assignmentTree.getExpression(), replacement(state, parts));
+          return describeMatch(assignmentTree, fix.build());
+        }
+      }
+    }
     return NO_MATCH;
+  }
+
+  /** Finds the {@link VariableTree} that declares {@code symbol} in the current compilation unit. */
+  private static VariableTree findVariableDeclaration(Symbol symbol, VisitorState state) {
+    VariableTree[] found = {null};
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitVariable(VariableTree tree, Void unused) {
+        if (symbol.equals(getSymbol(tree))) {
+          found[0] = tree;
+          return null;
+        }
+        return super.visitVariable(tree, null);
+      }
+    }.scan(state.getPath().getCompilationUnit(), null);
+    return found[0];
   }
 
   /**
@@ -159,6 +192,14 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
       @Override
       public Void visitIdentifier(IdentifierTree tree, Void unused) {
         if (sym.equals(getSymbol(tree))) {
+          Tree parent = getCurrentPath().getParentPath().getLeaf();
+          // The variable's own declaration or an initializing assignment does not count as a
+          // use that requires a StringBuilder.
+          if (parent instanceof VariableTree
+              || (parent instanceof AssignmentTree assignmentTree
+                  && assignmentTree.getVariable() == tree)) {
+            return super.visitIdentifier(tree, null);
+          }
           TargetType target = targetType(state.withPath(getCurrentPath()));
           if (isUsedAsStringBuilder(state, target)) {
             ok[0] = false;

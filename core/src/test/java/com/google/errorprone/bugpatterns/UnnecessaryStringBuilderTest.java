@@ -225,4 +225,42 @@ public class UnnecessaryStringBuilderTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void splitDeclarationAndAssignment() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                StringBuilder foo2;
+                // BUG: Diagnostic contains:
+                foo2 = new StringBuilder("x");
+                StringBuilder foo4;
+                // BUG: Diagnostic contains:
+                foo4 = new StringBuilder("x");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void splitDeclarationAndAssignment_combinedStillFires() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains:
+                StringBuilder foo2 = new StringBuilder("x");
+                // BUG: Diagnostic contains:
+                StringBuilder foo4 = new StringBuilder("x");
+              }
+            }
+            """)
+        .doTest();
+  }
 }
