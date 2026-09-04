@@ -73,6 +73,10 @@ public final class UnnecessaryQualifier extends BugChecker
       return NO_MATCH;
     }
 
+    if (getSymbol(tree).isConstructor() && isRecord(getSymbol(tree).enclClass())) {
+      return NO_MATCH;
+    }
+
     var enclosingClass = state.findEnclosing(ClassTree.class);
     if (getSymbol(enclosingClass).isInterface()) {
       // This is a sad admission of failure, and also not foolproof. Dagger dependencies can be
