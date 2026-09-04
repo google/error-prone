@@ -109,6 +109,146 @@ public class NonAtomicVolatileUpdateTest {
   }
 
   @Test
+  public void parenthesizedOperand_positive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              volatile int x;
+              volatile long y;
+
+              void bad() {
+                // BUG: Diagnostic contains:
+                (x)++;
+                // BUG: Diagnostic contains:
+                (y)++;
+                // BUG: Diagnostic contains:
+                (x)--;
+                // BUG: Diagnostic contains:
+                (y)--;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void parenthesizedPrefixIncrementDecrement_positive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              volatile int x;
+
+              void bad() {
+                // BUG: Diagnostic contains:
+                ++(x);
+                // BUG: Diagnostic contains:
+                --(x);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void doubleParenthesized_positive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              volatile int x;
+
+              void bad() {
+                // BUG: Diagnostic contains:
+                ((x))++;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void parenthesizedCompoundAssignment_positive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              volatile int x;
+              volatile long y;
+
+              void bad() {
+                // BUG: Diagnostic contains:
+                (x) += 1;
+                // BUG: Diagnostic contains:
+                (y) -= 1;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void parenthesizedNonVolatile_negative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              int nonVolatile;
+
+              void ok() {
+                (nonVolatile)++;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void parenthesizedSynchronized_negative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              volatile int x;
+
+              void ok() {
+                synchronized (this) {
+                  (x)++;
+                  ++(x);
+                  (x) += 1;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void parenthesizedVolatileString_positive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              volatile String s;
+
+              void bad() {
+                // BUG: Diagnostic contains:
+                (s) += "update";
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negativeCases() {
     compilationHelper
         .addSourceLines(
