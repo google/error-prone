@@ -69,6 +69,7 @@ public final class ErrorProneOptions {
       "-XepDisableWarningsInGeneratedCode";
   private static final String COMPILING_TEST_ONLY_CODE = "-XepCompilingTestOnlyCode";
   private static final String COMPILING_PUBLICLY_VISIBLE_CODE = "-XepCompilingPubliclyVisibleCode";
+  private static final String PRINT_TIMINGS = "-XepPrintTimings";
   private static final String ARGUMENT_FILE_PREFIX = "@";
 
   /** see {@link javax.tools.OptionChecker#isSupportedOption(String)} */
@@ -88,6 +89,7 @@ public final class ErrorProneOptions {
             || option.equals(IGNORE_SUPPRESSION_ANNOTATIONS)
             || option.equals(COMPILING_TEST_ONLY_CODE)
             || option.equals(COMPILING_PUBLICLY_VISIBLE_CODE)
+            || option.equals(PRINT_TIMINGS)
             || option.equals(DISABLE_ALL_WARNINGS);
     return isSupported ? 0 : -1;
   }
@@ -161,6 +163,7 @@ public final class ErrorProneOptions {
   private final Pattern excludedPattern;
   private final boolean ignoreSuppressionAnnotations;
   private final boolean ignoreLargeCodeGenerators;
+  private final boolean printTimings;
 
   private ErrorProneOptions(
       ImmutableMap<String, Severity> severityMap,
@@ -178,7 +181,8 @@ public final class ErrorProneOptions {
       PatchingOptions patchingOptions,
       Pattern excludedPattern,
       boolean ignoreSuppressionAnnotations,
-      boolean ignoreLargeCodeGenerators) {
+      boolean ignoreLargeCodeGenerators,
+      boolean printTimings) {
     this.severityMap = severityMap;
     this.remainingArgs = remainingArgs;
     this.ignoreUnknownChecks = ignoreUnknownChecks;
@@ -195,6 +199,7 @@ public final class ErrorProneOptions {
     this.excludedPattern = excludedPattern;
     this.ignoreSuppressionAnnotations = ignoreSuppressionAnnotations;
     this.ignoreLargeCodeGenerators = ignoreLargeCodeGenerators;
+    this.printTimings = printTimings;
   }
 
   public ImmutableList<String> getRemainingArgs() {
@@ -241,6 +246,14 @@ public final class ErrorProneOptions {
     return ignoreLargeCodeGenerators;
   }
 
+  /**
+   * Returns whether Error Prone records how long each check runs and prints the totals when the
+   * compilation finishes.
+   */
+  public boolean printTimings() {
+    return printTimings;
+  }
+
   public ErrorProneFlags getFlags() {
     return flags;
   }
@@ -265,6 +278,7 @@ public final class ErrorProneOptions {
     private boolean isPubliclyVisibleTarget = false;
     private boolean ignoreSuppressionAnnotations = false;
     private boolean ignoreLargeCodeGenerators = true;
+    private boolean printTimings = false;
     private final Map<String, Severity> severityMap = new LinkedHashMap<>();
     private final ErrorProneFlags.Builder flagsBuilder = ErrorProneFlags.builder();
     private final PatchingOptions.Builder patchingOptionsBuilder = PatchingOptions.builder();
@@ -339,6 +353,10 @@ public final class ErrorProneOptions {
       this.ignoreLargeCodeGenerators = ignoreLargeCodeGenerators;
     }
 
+    void setPrintTimings(boolean printTimings) {
+      this.printTimings = printTimings;
+    }
+
     void setDisableAllChecks(boolean disableAllChecks) {
       // Discard previously set severities so that the DisableAllChecks flag is position sensitive.
       severityMap.clear();
@@ -374,7 +392,8 @@ public final class ErrorProneOptions {
           patchingOptionsBuilder.build(),
           excludedPattern,
           ignoreSuppressionAnnotations,
-          ignoreLargeCodeGenerators);
+          ignoreLargeCodeGenerators,
+          printTimings);
     }
 
     void setExcludedPattern(Pattern excludedPattern) {
@@ -478,6 +497,7 @@ public final class ErrorProneOptions {
         case COMPILING_TEST_ONLY_CODE -> builder.setTestOnlyTarget(true);
         case COMPILING_PUBLICLY_VISIBLE_CODE -> builder.setPubliclyVisibleTarget(true);
         case DISABLE_ALL_WARNINGS -> builder.setDisableAllWarnings(true);
+        case PRINT_TIMINGS -> builder.setPrintTimings(true);
         default -> {
           if (arg.startsWith(SEVERITY_PREFIX)) {
             builder.parseSeverity(arg);
