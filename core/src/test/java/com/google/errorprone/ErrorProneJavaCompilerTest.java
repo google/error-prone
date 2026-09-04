@@ -131,6 +131,28 @@ public class ErrorProneJavaCompilerTest {
   }
 
   @Test
+  public void printTimingsReportsEveryCheckThatRan() {
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Arrays.asList("-XepPrintTimings"),
+            Collections.<Class<? extends BugChecker>>emptyList());
+    // A header alone would pass with nothing recorded, because it is printed before the rows.
+    assertThat(result.output).containsMatch("Error Prone ran [1-9]\\d* checks");
+    assertThat(result.output).containsMatch("\\d+ ms\\s+[\\d.]+%");
+  }
+
+  @Test
+  public void withoutPrintTimingsNoReportIsPrinted() {
+    CompilationResult result =
+        doCompile(
+            Arrays.asList("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            Collections.<String>emptyList(),
+            Collections.<Class<? extends BugChecker>>emptyList());
+    assertThat(result.output).doesNotContain("Error Prone ran");
+  }
+
+  @Test
   public void fileWithErrorIntegrationTest() {
     CompilationResult result =
         doCompile(
