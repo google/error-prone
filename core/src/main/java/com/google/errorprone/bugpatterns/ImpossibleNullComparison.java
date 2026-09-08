@@ -166,6 +166,7 @@ public final class ImpossibleNullComparison extends BugChecker
   private final boolean checkPrimitives;
   private final boolean checkValueOf;
   private final boolean checkOrBuilder;
+  private final boolean checkClassForName;
 
   @Inject
   ImpossibleNullComparison(ErrorProneFlags flags) {
@@ -174,6 +175,8 @@ public final class ImpossibleNullComparison extends BugChecker
     this.checkPrimitives = flags.getBoolean("ImmutableNullComparison:CheckPrimitives").orElse(true);
     this.checkValueOf = flags.getBoolean("ImpossibleNullComparison:CheckValueOf").orElse(true);
     this.checkOrBuilder = flags.getBoolean("ImpossibleNullComparison:CheckOrBuilder").orElse(true);
+    this.checkClassForName =
+        flags.getBoolean("ImpossibleNullComparison:CheckClassForName").orElse(true);
   }
 
   @Override
@@ -317,6 +320,7 @@ public final class ImpossibleNullComparison extends BugChecker
       return stream(GetterTypes.values())
           .filter(gt -> !gt.equals(GetterTypes.PRIMITIVE) || checkPrimitives)
           .filter(gt -> !gt.equals(GetterTypes.VALUE_OF) || checkValueOf)
+          .filter(gt -> !gt.equals(GetterTypes.CLASS_FOR_NAME) || checkClassForName)
           .map(type -> type.match(resolvedTree, state, checkOrBuilder))
           .filter(Objects::nonNull)
           .findFirst();
@@ -370,6 +374,17 @@ public final class ImpossibleNullComparison extends BugChecker
           .onDescendantOfAny("java.lang.Enum", "java.lang.Number")
           .named("valueOf")
           .withParameters("java.lang.String");
+
+  private static final Matcher<ExpressionTree> CLASS_FOR_NAME_MATCHER =
+      anyOf(
+          staticMethod()
+              .onClass("java.lang.Class")
+              .named("forName")
+              .withParameters("java.lang.String"),
+          staticMethod()
+              .onClass("java.lang.Class")
+              .named("forName")
+              .withParameters("java.lang.String", "boolean", "java.lang.ClassLoader"));
 
   private enum GetterTypes {
     OPTIONAL_GET {
@@ -455,6 +470,15 @@ public final class ImpossibleNullComparison extends BugChecker
           return null;
         }
         // TODO(cpovirk): Suggest Enums.getIfPresent, Ints.tryParse, etc.
+        return GetterTypes::emptyFix;
+      }
+    },
+    CLASS_FOR_NAME {
+      @Override
+      @Nullable Fixer match(ExpressionTree tree, VisitorState state, boolean checkOrBuilder) {
+        if (!CLASS_FOR_NAME_MATCHER.matches(tree, state)) {
+          return null;
+        }
         return GetterTypes::emptyFix;
       }
     },

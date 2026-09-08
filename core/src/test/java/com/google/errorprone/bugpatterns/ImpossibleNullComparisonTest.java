@@ -689,4 +689,55 @@ public class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void classForName() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static com.google.common.base.Preconditions.checkNotNull;
+            import static com.google.common.truth.Truth.assertThat;
+            import static org.junit.Assert.assertNotNull;
+
+            class Test {
+              void o(String s, ClassLoader loader, Module m) throws Exception {
+                // BUG: Diagnostic contains:
+                if (Class.forName(s) == null) {}
+                // BUG: Diagnostic contains:
+                if (Class.forName(s) != null) {}
+                // BUG: Diagnostic contains:
+                if (null == Class.forName(s)) {}
+                // BUG: Diagnostic contains:
+                if (null != Class.forName(s)) {}
+                // BUG: Diagnostic contains:
+                if (Class.forName(s, true, loader) == null) {}
+                // BUG: Diagnostic contains:
+                assertThat(Class.forName(s)).isNotNull();
+                // BUG: Diagnostic contains:
+                assertNotNull(Class.forName(s));
+                // BUG: Diagnostic contains:
+                checkNotNull(Class.forName(s));
+                if (Class.forName(m, s) == null) {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void classForName_flagDisabled() {
+    compilationHelper
+        .setArgs("-XepOpt:ImpossibleNullComparison:CheckClassForName=false")
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void o(String s) throws Exception {
+                if (Class.forName(s) == null) {}
+              }
+            }
+            """)
+        .doTest();
+  }
 }
