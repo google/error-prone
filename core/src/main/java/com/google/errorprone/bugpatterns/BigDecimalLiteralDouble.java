@@ -27,6 +27,8 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.tools.javac.code.Type;
+import javax.lang.model.type.TypeKind;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree.Kind;
@@ -54,12 +56,27 @@ public class BigDecimalLiteralDouble extends BugChecker implements NewClassTreeM
   // Matches literals and unary +/- followed by a literal, since most people conceptually think of
   // -1.0 as a literal. Doesn't handle nested unary operators as new BigDecimal(String) doesn't
   // accept multiple unary prefixes.
-  private static boolean floatingPointArgument(ExpressionTree tree) {
-    if (tree.getKind() == Kind.UNARY_PLUS || tree.getKind() == Kind.UNARY_MINUS) {
-      tree = ((UnaryTree) tree).getExpression();
-    }
-    return tree.getKind() == Kind.DOUBLE_LITERAL || tree.getKind() == Kind.FLOAT_LITERAL;
-  }
+  private static boolean floatingPointArgument(ExpressionTree tree, VisitorState state) {
+	  if (tree.getKind() == Kind.UNARY_PLUS || tree.getKind() == Kind.UNARY_MINUS) {
+	    tree = ((UnaryTree) tree).getExpression();
+	  }
+
+	  if (tree.getKind() == Kind.DOUBLE_LITERAL || tree.getKind() == Kind.FLOAT_LITERAL) {
+	    return true;
+	  }
+
+	  Type type = ASTHelpers.getType(tree);
+	  if (type == null) {
+	    return false;
+	  }
+
+	  if (type.getKind() == TypeKind.DOUBLE || type.getKind() == TypeKind.FLOAT) {
+	    return true;
+	  }
+
+	  return ASTHelpers.isSameType(type, state.getTypeFromString("java.lang.Double"), state)
+	      || ASTHelpers.isSameType(type, state.getTypeFromString("java.lang.Float"), state);
+	}
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
@@ -68,11 +85,19 @@ public class BigDecimalLiteralDouble extends BugChecker implements NewClassTreeM
     }
 
     ExpressionTree arg = getOnlyElement(tree.getArguments());
-    if (!floatingPointArgument(arg)) {
+
+    if (!floatingPointArgument(arg, state)) {
       return Description.NO_MATCH;
     }
 
-    return createDescription(arg, state);
+    if (arg.getKind() == Kind.DOUBLE_LITERAL
+        || arg.getKind() == Kind.FLOAT_LITERAL
+        || arg.getKind() == Kind.UNARY_PLUS
+        || arg.getKind() == Kind.UNARY_MINUS) {
+      return createDescription(arg, state);
+    }
+
+    return buildDescription(arg).build();
   }
 
   private Description createDescription(ExpressionTree arg, VisitorState state) {
