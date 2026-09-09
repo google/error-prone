@@ -328,7 +328,7 @@ compilation, but requires a <a href="VisitorState.html" title="class in com.goog
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link">AutoCloseable</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#timingSpan(com.google.errorprone.matchers.Suppressible)" class="member-name-link">timingSpan</a><wbr>(<a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns a timing span for the given <a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a>.</div>
+<div class="block">Returns a timing span for the given <a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a> if <code>ErrorProneOptions.recordTimings</code> is true, or else a span that records nothing.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="VisitorState.html" title="class in com.google.errorprone">VisitorState</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#withPath(com.sun.source.util.TreePath)" class="member-name-link">withPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link">TreePath</a>&nbsp;path)</code></div>
@@ -766,7 +766,7 @@ be used if a fix is already going to be emitted.</div>
 <h3>timingSpan</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link">AutoCloseable</a></span>&nbsp;<span class="element-name">timingSpan</span><wbr><span class="parameters">(<a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers">Suppressible</a>&nbsp;suppressible)</span></div>
-<div class="block">Returns a timing span for the given <a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a>.</div>
+<div class="block">Returns a timing span for the given <a href="matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a> if <code>ErrorProneOptions.recordTimings</code> is true, or else a span that records nothing.</div>
 </div>
 </section>
 </li>

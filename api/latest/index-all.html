@@ -12428,6 +12428,11 @@ matcher.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/PrimitiveAtomicReference.html#%3Cinit%3E()" class="member-name-link">PrimitiveAtomicReference()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PrimitiveAtomicReference.html" title="class in com.google.errorprone.bugpatterns">PrimitiveAtomicReference</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/ErrorProneOptions.html#printTimings()" class="member-name-link">printTimings()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></dt>
+<dd>
+<div class="block">Returns true if Error Prone records how long each check runs, and prints the totals once the
+compilation finishes.</div>
+</dd>
 <dt><a href="com/google/errorprone/annotations/Modifier.html#PRIVATE" class="member-name-link">PRIVATE</a> - Enum constant in enum class com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/Modifier.html" title="enum class in com.google.errorprone.annotations">Modifier</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFixes.Visibility.html#PRIVATE" class="member-name-link">PRIVATE</a> - Enum constant in enum class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.Visibility.html" title="enum class in com.google.errorprone.fixes">SuggestedFixes.Visibility</a></dt>
@@ -12774,6 +12779,10 @@ call.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/RecordComponentOverride.html#%3Cinit%3E()" class="member-name-link">RecordComponentOverride()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RecordComponentOverride.html" title="class in com.google.errorprone.bugpatterns">RecordComponentOverride</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/ErrorProneOptions.html#recordTimings()" class="member-name-link">recordTimings()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></dt>
+<dd>
+<div class="block">Returns true if Error Prone records how long each check runs.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/android/RectIntersectReturnValueIgnored.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.android">RectIntersectReturnValueIgnored</a> - Class in <a href="com/google/errorprone/bugpatterns/android/package-summary.html">com.google.errorprone.bugpatterns.android</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/RedundantControlFlow.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">RedundantControlFlow</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
@@ -14559,7 +14568,7 @@ thrownMatcher</code>.</div>
 </dd>
 <dt><a href="com/google/errorprone/VisitorState.html#timingSpan(com.google.errorprone.matchers.Suppressible)" class="member-name-link">timingSpan(Suppressible)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>
-<div class="block">Returns a timing span for the given <a href="com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a>.</div>
+<div class="block">Returns a timing span for the given <a href="com/google/errorprone/matchers/Suppressible.html" title="interface in com.google.errorprone.matchers"><code>Suppressible</code></a> if <code>ErrorProneOptions.recordTimings</code> is true, or else a span that records nothing.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.html#toBuilder()" class="member-name-link">toBuilder()</a> - Method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff</a></dt>
 <dd>&nbsp;</dd>

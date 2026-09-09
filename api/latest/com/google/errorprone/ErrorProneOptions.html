@@ -73,6 +73,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#isPubliclyVisibleTarget()" tabindex="0">isPubliclyVisibleTarget()</a></li>
 <li><a href="#isIgnoreSuppressionAnnotations()" tabindex="0">isIgnoreSuppressionAnnotations()</a></li>
 <li><a href="#ignoreLargeCodeGenerators()" tabindex="0">ignoreLargeCodeGenerators()</a></li>
+<li><a href="#printTimings()" tabindex="0">printTimings()</a></li>
+<li><a href="#recordTimings()" tabindex="0">recordTimings()</a></li>
 <li><a href="#getFlags()" tabindex="0">getFlags()</a></li>
 <li><a href="#patchingOptions()" tabindex="0">patchingOptions()</a></li>
 <li><a href="#getExcludedPattern()" tabindex="0">getExcludedPattern()</a></li>
@@ -191,17 +193,28 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.google.errorprone.ErrorProneOptions.PatchingOptions</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#patchingOptions()" class="member-name-link">patchingOptions</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#printTimings()" class="member-name-link">printTimings</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns true if Error Prone records how long each check runs, and prints the totals once the
+compilation finishes.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#processArgs(java.lang.Iterable)" class="member-name-link">processArgs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Given a list of command-line arguments, produce the corresponding <a href="ErrorProneOptions.html" title="class in com.google.errorprone"><code>ErrorProneOptions</code></a>
+instance.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#processArgs(java.lang.Iterable)" class="member-name-link">processArgs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;args)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#processArgs(java.lang.String%5B%5D)" class="member-name-link">processArgs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Given a list of command-line arguments, produce the corresponding <a href="ErrorProneOptions.html" title="class in com.google.errorprone"><code>ErrorProneOptions</code></a>
 instance.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#processArgs(java.lang.String%5B%5D)" class="member-name-link">processArgs</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;args)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Given a list of command-line arguments, produce the corresponding <a href="ErrorProneOptions.html" title="class in com.google.errorprone"><code>ErrorProneOptions</code></a>
-instance.</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#recordTimings()" class="member-name-link">recordTimings</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns true if Error Prone records how long each check runs.</div>
 </div>
 </div>
 </div>
@@ -330,6 +343,25 @@ instance.</div>
 <h3>ignoreLargeCodeGenerators</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">ignoreLargeCodeGenerators</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="printTimings()">
+<h3>printTimings</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">printTimings</span>()</div>
+<div class="block">Returns true if Error Prone records how long each check runs, and prints the totals once the
+compilation finishes.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="recordTimings()">
+<h3>recordTimings</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">recordTimings</span>()</div>
+<div class="block">Returns true if Error Prone records how long each check runs.</div>
 </div>
 </section>
 </li>
