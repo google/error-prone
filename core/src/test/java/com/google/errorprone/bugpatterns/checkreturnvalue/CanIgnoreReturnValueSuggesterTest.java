@@ -1298,4 +1298,21 @@ public class CanIgnoreReturnValueSuggesterTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void providesWithoutChangingType_b267463718() {
+    helper
+        .addInputLines(
+            "ExampleModule.java",
+            "package com.google.frobber;",
+            "public final class ExampleModule {",
+            "  @com.google.inject.Provides",
+            "  boolean provideEnableNewRiskAssignment(boolean enableNewRiskAssignment) {",
+            "    return enableNewRiskAssignment;",
+            "  }",
+            "}")
+        // we don't fire because @Provides is @Keep
+        .expectUnchanged()
+        .doTest();
+  }
 }
