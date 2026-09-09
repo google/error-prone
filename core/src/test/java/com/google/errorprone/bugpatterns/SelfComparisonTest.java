@@ -167,4 +167,103 @@ public class SelfComparisonTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void localDatePositiveCase() {
+    compilationHelper
+        .addSourceLines(
+            "LocalDateSelfComparisonPositiveCase.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+            
+            import java.time.LocalDate;
+
+            public class LocalDateSelfComparisonPositiveCase {
+
+              public boolean test1() {
+                LocalDate date = LocalDate.of(2025, 11, 10);
+                // BUG: Diagnostic contains: An object is compared to itself
+                return date.isAfter(date);
+              }
+
+              private LocalDate date = LocalDate.of(2025, 11, 10);
+
+              public boolean test2() {
+                // BUG: Diagnostic contains: An object is compared to itself
+                return date.isAfter(this.date);
+              }
+
+              public boolean test3() {
+                // BUG: Diagnostic contains: An object is compared to itself
+                return this.date.isBefore(date);
+              }
+
+              public boolean test4() {
+                // BUG: Diagnostic contains: An object is compared to itself
+                return this.date.isBefore(this.date);
+              }
+            }\
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void timeTypesPositiveCase() {
+    compilationHelper
+        .addSourceLines(
+            "TimeTypesSelfComparisonPositiveCase.java",
+            """
+            package com.google.errorprone.bugpatterns.testdata;
+            
+            import java.time.Instant;
+            import java.time.LocalDate;
+            import java.time.LocalDateTime;
+            import java.time.LocalDate;
+            import java.util.Date;
+
+            public class TimeTypesSelfComparisonPositiveCase {
+
+              public boolean testInstantAfter(Instant x) {
+                // BUG: Diagnostic contains: An object is compared to itself
+                return x.isAfter(x);
+              }
+
+              public boolean testInstantBefore(Instant x) {
+                // BUG: Diagnostic contains: An object is compared to itself
+                return x.isBefore(x);
+              }
+
+              public boolean testLocalDateAfter(LocalDate x) {
+                // BUG: Diagnostic contains: An object is compared to itself
+                return x.isAfter(x);
+              }
+
+              public boolean testLocalDateBefore(LocalDate x) {
+                // BUG: Diagnostic contains: An object is compared to itself
+                return x.isBefore(x);
+              }
+
+              public boolean testLocalDateTimeAfter(LocalDateTime x) {
+                // BUG: Diagnostic contains: An object is compared to itself
+                return x.isAfter(x);
+              }
+
+              public boolean testLocalDateTimeBefore(LocalDateTime x) {
+                // BUG: Diagnostic contains: An object is compared to itself
+                return x.isBefore(x);
+              }
+
+              public boolean testDateAfter(Date x) {
+                // BUG: Diagnostic contains: An object is compared to itself
+                return x.after(x);
+              }
+
+              public boolean testDateBefore(Date x) {
+                // BUG: Diagnostic contains: An object is compared to itself
+                return x.before(x);
+              }
+            }\
+            """)
+        .doTest();
+  }
 }

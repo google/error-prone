@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.receiverSameAsArgument;
 
@@ -44,7 +45,12 @@ public class SelfComparison extends BugChecker implements MethodInvocationTreeMa
    */
   private static final Matcher<MethodInvocationTree> COMPARE_TO_MATCHER =
       allOf(
-          instanceMethod().onDescendantOf("java.lang.Comparable").named("compareTo"),
+          anyOf(
+              instanceMethod().onDescendantOf("java.lang.Comparable").named("compareTo"),
+              instanceMethod().onDescendantOf("java.util.Date").namedAnyOf("after", "before"),
+              instanceMethod().onDescendantOf("java.time.Instant").namedAnyOf("isAfter", "isBefore"),
+              instanceMethod().onDescendantOf("java.time.chrono.ChronoLocalDate").namedAnyOf("isAfter", "isBefore"),
+              instanceMethod().onDescendantOf("java.time.chrono.ChronoLocalDateTime").namedAnyOf("isAfter", "isBefore")),
           receiverSameAsArgument(0));
 
   @Override
