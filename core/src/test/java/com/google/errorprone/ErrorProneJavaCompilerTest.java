@@ -45,8 +45,10 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.api.BasicJavacTask;
 import com.sun.tools.javac.file.JavacFileManager;
 import com.sun.tools.javac.util.Constants;
+import com.sun.tools.javac.util.Context;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -128,6 +130,41 @@ public class ErrorProneJavaCompilerTest {
     ErrorProneJavaCompiler compiler = new ErrorProneJavaCompiler();
     assertThat(compiler.getSourceVersions()).contains(SourceVersion.latest());
     assertThat(compiler.getSourceVersions()).doesNotContain(SourceVersion.RELEASE_5);
+  }
+
+  @Test
+  public void printTimingsReportsEveryCheckThatRan() {
+    CompilationResult result =
+        doCompile(
+            ImmutableList.of("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            ImmutableList.of("-XepPrintTimings"),
+            ImmutableList.of());
+    // A header alone would pass with nothing recorded, because it is printed before the rows.
+    assertThat(result.output).containsMatch("Error Prone ran [1-9]\\d* checks");
+    assertThat(result.output).containsMatch("\\d+ ms\\s+[\\d.]+%");
+    assertThat(ErrorProneTimings.instance(result.context()).timings()).isNotEmpty();
+  }
+
+  @Test
+  public void withoutPrintTimingsNoReportIsPrinted() {
+    CompilationResult result =
+        doCompile(
+            ImmutableList.of("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            ImmutableList.of(),
+            ImmutableList.of());
+    assertThat(result.output).doesNotContain("Error Prone ran");
+    assertThat(ErrorProneTimings.instance(result.context()).timings()).isEmpty();
+  }
+
+  @Test
+  public void recordTimingsCollectsWithoutPrintingReport() {
+    CompilationResult result =
+        doCompile(
+            ImmutableList.of("bugpatterns/testdata/SelfAssignmentPositiveCases1.java"),
+            ImmutableList.of("-XepRecordTimings"),
+            ImmutableList.of());
+    assertThat(result.output).doesNotContain("Error Prone ran");
+    assertThat(ErrorProneTimings.instance(result.context()).timings()).isNotEmpty();
   }
 
   @Test
@@ -590,7 +627,7 @@ public class ErrorProneJavaCompilerTest {
   }
 
   private static record CompilationResult(
-      boolean succeeded, String output, DiagnosticTestHelper diagnosticHelper) {
+      boolean succeeded, String output, DiagnosticTestHelper diagnosticHelper, Context context) {
     @Override
     public String toString() {
       return String.format(
@@ -626,9 +663,10 @@ public class ErrorProneJavaCompilerTest {
     JavaCompiler.CompilationTask task =
         errorProneJavaCompiler.getTask(
             printWriter, fileManager, diagnosticHelper.collector, args, null, files);
+    Context context = ((BasicJavacTask) task).getContext();
 
     return new CompilationResult(
-        task.call(), new String(outputStream.toByteArray(), UTF_8), diagnosticHelper);
+        task.call(), new String(outputStream.toByteArray(), UTF_8), diagnosticHelper, context);
   }
 
   private static void assertSucceeded(CompilationResult result) {

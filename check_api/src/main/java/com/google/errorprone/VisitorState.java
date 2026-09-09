@@ -604,9 +604,18 @@ public final class VisitorState {
     return Options.instance(context).getBoolean("androidCompatible");
   }
 
-  /** Returns a timing span for the given {@link Suppressible}. */
+  private static final AutoCloseable NO_TIMING_SPAN =
+      new AutoCloseable() {
+        @Override
+        public void close() {}
+      };
+
+  /**
+   * Returns a timing span for the given {@link Suppressible} if {@link
+   * ErrorProneOptions#recordTimings} is true, or else a span that records nothing.
+   */
   public AutoCloseable timingSpan(Suppressible suppressible) {
-    return sharedState.timings.span(suppressible);
+    return sharedState.recordTimings ? sharedState.timings.span(suppressible) : NO_TIMING_SPAN;
   }
 
   private static final class Cache<T> implements Supplier<T> {
@@ -680,6 +689,7 @@ public final class VisitorState {
     private final Names names;
     private final Symtab symtab;
     private final ErrorProneTimings timings;
+    private final boolean recordTimings;
     private final Types types;
     private final TreeMaker treeMaker;
     private final JavacInvocationInstance javacInvocationInstance;
@@ -704,6 +714,7 @@ public final class VisitorState {
       this.names = Names.instance(context);
       this.symtab = Symtab.instance(context);
       this.timings = ErrorProneTimings.instance(context);
+      this.recordTimings = errorProneOptions.recordTimings();
       this.types = Types.instance(context);
       this.treeMaker = TreeMaker.instance(context);
       this.javacInvocationInstance = JavacInvocationInstance.instance(context);

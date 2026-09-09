@@ -171,6 +171,29 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
+  public void recognizesPrintTimings() {
+    ErrorProneOptions options = ErrorProneOptions.processArgs(new String[] {"-XepPrintTimings"});
+    assertThat(options.printTimings()).isTrue();
+    assertThat(options.recordTimings()).isTrue();
+    assertThat(ErrorProneOptions.isSupportedOption("-XepPrintTimings")).isEqualTo(0);
+  }
+
+  @Test
+  public void recognizesRecordTimings() {
+    ErrorProneOptions options = ErrorProneOptions.processArgs(new String[] {"-XepRecordTimings"});
+    assertThat(options.recordTimings()).isTrue();
+    assertThat(options.printTimings()).isFalse();
+    assertThat(ErrorProneOptions.isSupportedOption("-XepRecordTimings")).isEqualTo(0);
+  }
+
+  @Test
+  public void printTimingsIsOffByDefault() {
+    ErrorProneOptions options = ErrorProneOptions.processArgs(new String[] {});
+    assertThat(options.printTimings()).isFalse();
+    assertThat(options.recordTimings()).isFalse();
+  }
+
+  @Test
   public void recognizesCompilingTestOnlyCode() {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepCompilingTestOnlyCode"});
