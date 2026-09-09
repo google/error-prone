@@ -27,6 +27,7 @@ import com.google.common.collect.Range;
 import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.CheckTiming;
 import com.google.errorprone.ErrorProneOptions;
 import com.google.errorprone.SuppressionInfo;
 import com.google.errorprone.VisitorState;
@@ -126,8 +127,21 @@ import java.util.function.BiPredicate;
  * @author Eddie Aftandilian (eaftan@google.com)
  */
 public abstract class BugChecker implements Suppressible, Serializable {
+
+  private final CheckTiming checkTiming = new CheckTiming();
+
   private final BugCheckerInfo info;
   private final BiPredicate<Set<? extends Name>, VisitorState> checkSuppression;
+
+  /**
+   * Returns where this check's run time accumulates while a compilation records timings.
+   *
+   * <p>{@link com.google.errorprone.ErrorProneTimings} reads this once per invocation, so the state
+   * is a field rather than a lookup by name.
+   */
+  public CheckTiming checkTiming() {
+    return checkTiming;
+  }
 
   public BugChecker() {
     info = BugCheckerInfo.create(getClass());
