@@ -77,7 +77,6 @@ public final class Varifier extends BugChecker implements VariableTreeMatcher {
     var symbol = getSymbol(tree);
     ExpressionTree initializer = tree.getInitializer();
     if (!symbol.getKind().equals(LOCAL_VARIABLE)
-        || !isConsideredFinal(symbol)
         || initializer == null
         || hasImplicitType(tree, state)) {
       return NO_MATCH;
