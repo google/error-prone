@@ -10,4 +10,5 @@ If this kind of regionalisation is desired, use
 `.toLowerCase(Locale.getDefault())` to make that explicit. If not,
 `.toLowerCase(Locale.ROOT)` or `.toLowerCase(Locale.ENGLISH)` will give you
 casing independent of the user's current `Locale`. If you know that you're
-operating on ASCII, prefer `Ascii.toLower/UpperCase` to make that explicit.
+operating on ASCII, prefer `Ascii.toLower/UpperCase` (from Guava, if available)
+to make that explicit.
