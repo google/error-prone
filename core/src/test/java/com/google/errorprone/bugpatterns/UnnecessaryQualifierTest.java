@@ -259,6 +259,36 @@ public final class UnnecessaryQualifierTest {
   }
 
   @Test
+  public void recordWithQualifiedConstructor_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            record Test(int x) {
+              @Qual
+              Test {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void recordWithQualifiedCustomConstructor_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            record Test(int x) {
+              @Qual
+              Test(int x, int y) {
+                this(x);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void recordWithoutExplicitlyAnnotatedConstructor_finding() {
     helper
         .addSourceLines(
