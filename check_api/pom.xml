@@ -118,6 +118,13 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <!-- Apache 2.0 -->
+      <groupId>com.google.testparameterinjector</groupId>
+      <artifactId>test-parameter-injector</artifactId>
+      <version>1.22</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <!-- MIT -->
       <groupId>com.github.kevinstern</groupId>
       <artifactId>software-and-algorithms</artifactId>

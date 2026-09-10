@@ -2383,4 +2383,26 @@ class Test {
     tests.add(scanner);
     assertCompiles(scanner);
   }
+
+  @BugPattern(summary = "Prints source path", severity = ERROR)
+  public static class SourcePathChecker extends BugChecker implements ClassTreeMatcher {
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      return buildDescription(tree).setMessage(ASTHelpers.getSourcePath(state)).build();
+    }
+  }
+
+  @Test
+  public void getSourcePath_bazelOut() {
+    CompilationTestHelper.newInstance(SourcePathChecker.class, getClass())
+        .addSourceLines(
+            "execroot/my_workspace/bazel-out/k8-fastbuild/bin/com/example/Foo.java",
+            """
+            package com.example;
+
+            // BUG: Diagnostic contains: com/example/Foo.java
+            class Foo {}
+            """)
+        .doTest();
+  }
 }

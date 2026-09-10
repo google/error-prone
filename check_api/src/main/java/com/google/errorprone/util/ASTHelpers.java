@@ -1696,6 +1696,27 @@ public final class ASTHelpers {
     return getFileNameFromUri(tree.getSourceFile().toUri());
   }
 
+  /**
+   * Extract a canonical repository/workspace-relative filename from a {@link CompilationUnitTree},
+   * normalizing away workspace roots (e.g. {@code /execroot/<workspace>/}) and build output
+   * directories (e.g. {@code blaze-out/.../(bin|genfiles)/} or {@code
+   * bazel-out/.../(bin|genfiles)/}).
+   */
+  public static String getSourcePath(CompilationUnitTree tree) {
+    String fileName = checkNotNull(getFileName(tree));
+    return SourcePathMatcher.canonicalizePath(fileName);
+  }
+
+  /**
+   * Extract a canonical repository/workspace-relative filename from the {@link VisitorState}'s
+   * compilation unit, normalizing away workspace roots (e.g. {@code /execroot/<workspace>/}) and
+   * build output directories (e.g. {@code blaze-out/.../(bin|genfiles)/} or {@code
+   * bazel-out/.../(bin|genfiles)/}).
+   */
+  public static String getSourcePath(VisitorState state) {
+    return getSourcePath(state.getPath().getCompilationUnit());
+  }
+
   private static final CharMatcher BACKSLASH_MATCHER = CharMatcher.is('\\');
 
   /**

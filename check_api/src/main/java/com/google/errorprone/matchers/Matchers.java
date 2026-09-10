@@ -17,6 +17,7 @@
 package com.google.errorprone.matchers;
 
 import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
@@ -42,6 +43,7 @@ import static javax.lang.model.element.Modifier.STATIC;
 import com.google.common.base.VerifyException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
@@ -55,6 +57,7 @@ import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.SourcePathMatcher;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.AssignmentTree;
@@ -1393,6 +1396,85 @@ public final class Matchers {
       }
       return matched;
     }
+  }
+
+  /**
+   * Matches if the compilation unit's canonical source path (as defined by {@link
+   * ASTHelpers#getSourcePath(VisitorState)}) starts with any of the given directory prefixes.
+   *
+   * @param prefix the directory prefix to match (e.g. "third_party/" or "javatests/"); must not
+   *     start with a leading {@code /}
+   * @see ASTHelpers#getSourcePath(VisitorState)
+   */
+  public static Matcher<Tree> sourcePathStartsWith(String prefix, String... morePrefixes) {
+    return sourcePathStartsWith(Lists.asList(prefix, morePrefixes));
+  }
+
+  /**
+   * Matches if the compilation unit's canonical source path (as defined by {@link
+   * ASTHelpers#getSourcePath(VisitorState)}) starts with any of the given directory prefixes.
+   *
+   * @see ASTHelpers#getSourcePath(VisitorState)
+   */
+  public static Matcher<Tree> sourcePathStartsWith(Iterable<String> prefixes) {
+    ImmutableList<String> prefixList =
+        stream(prefixes).map(Matchers::normalizePrefix).collect(toImmutableList());
+    return (tree, state) -> {
+      String canonicalPath = ASTHelpers.getSourcePath(state);
+      for (String p : prefixList) {
+        if (canonicalPath.startsWith(p)) {
+          return true;
+        }
+      }
+      return false;
+    };
+  }
+
+  private static final Matcher<Tree> IN_THIRD_PARTY = sourcePathStartsWith("third_party/");
+
+  /**
+   * Matches if the compilation unit's canonical source path (as defined by {@link
+   * ASTHelpers#getSourcePath(VisitorState)}) is located within third_party.
+   *
+   * @see ASTHelpers#getSourcePath(VisitorState)
+   */
+  public static Matcher<Tree> inThirdParty() {
+    return IN_THIRD_PARTY;
+  }
+
+  /**
+   * Matches if the compilation is marked as test-only (e.g. via {@code -XepCompilingTestOnlyCode}).
+   */
+  public static <T extends Tree> Matcher<T> isTestOnlyTarget() {
+    return (tree, state) -> state.errorProneOptions().isTestOnlyTarget();
+  }
+
+  private static String normalizePrefix(String prefix) {
+    checkArgument(!prefix.startsWith("/"), "Path prefix must not start with '/': %s", prefix);
+    checkArgument(!prefix.contains("//"), "Path prefix must not contain '//': %s", prefix);
+    return prefix.endsWith("/") ? prefix : prefix + "/";
+  }
+
+  /**
+   * Matches if the compilation unit's canonical source path (as defined by {@link
+   * ASTHelpers#getSourcePath(VisitorState)}) matches the given path pattern (exact path ending with
+   * {@code .java}, or directory prefix ending with {@code /}).
+   *
+   * @see ASTHelpers#getSourcePath(VisitorState)
+   */
+  public static Matcher<Tree> sourcePathMatches(String pattern) {
+    SourcePathMatcher matcher = SourcePathMatcher.create(pattern);
+    return (tree, state) -> matcher.matches(state);
+  }
+
+  /**
+   * Matches if the compilation unit's canonical source path (as defined by {@link
+   * ASTHelpers#getSourcePath(VisitorState)}) matches the given {@link SourcePathMatcher}.
+   *
+   * @see ASTHelpers#getSourcePath(VisitorState)
+   */
+  public static Matcher<Tree> sourcePathMatches(SourcePathMatcher matcher) {
+    return (tree, state) -> matcher.matches(state);
   }
 
   /** Matches an AST node whose compilation unit's package name matches the given predicate. */
