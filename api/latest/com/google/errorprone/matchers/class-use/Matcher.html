@@ -776,151 +776,161 @@ that expression.</div>
 <div class="col-last odd-row-color">
 <div class="block">Matches if this Tree is enclosed by either a synchronized block or a synchronized method.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#intLiteral(int)" class="member-name-link">intLiteral</a><wbr>(int&nbsp;value)</code></div>
+<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#inThirdParty()" class="member-name-link">inThirdParty</a>()</code></div>
 <div class="col-last even-row-color">
+<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) is located within third_party.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#intLiteral(int)" class="member-name-link">intLiteral</a><wbr>(int&nbsp;value)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches an <code>int</code> literal with the given value.</div>
 </div>
-<div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isArrayType()" class="member-name-link">isArrayType</a>()</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isArrayType()" class="member-name-link">isArrayType</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches an AST node if its type is an array type.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isBoxedPrimitiveType()" class="member-name-link">isBoxedPrimitiveType</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isBoxedPrimitiveType()" class="member-name-link">isBoxedPrimitiveType</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches an AST node if its type is a boxed primitive type.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isDirectImplementationOf(java.lang.String)" class="member-name-link">isDirectImplementationOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;clazz)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isDirectImplementationOf(java.lang.String)" class="member-name-link">isDirectImplementationOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;clazz)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches any node that is directly an implementation, but not extension, of the given Class.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isEnum()" class="member-name-link">isEnum</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isEnum()" class="member-name-link">isEnum</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches if a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ClassTree</code></a> is an enum declaration.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isExtensionOf(java.lang.String)" class="member-name-link">isExtensionOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;clazz)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isExtensionOf(java.lang.String)" class="member-name-link">isExtensionOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;clazz)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches any node that is a direct extension of the given class.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isField()" class="member-name-link">isField</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isField()" class="member-name-link">isField</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches if a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>VariableTree</code></a> is a field declaration, as opposed to a local variable, enum
 constant, parameter to a method, etc.</div>
 </div>
-<div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isInstance(java.lang.Class)" class="member-name-link">isInstance</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;klass)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isInstance(java.lang.Class)" class="member-name-link">isInstance</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;klass)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches if an AST node is an instance of the given class.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isInstanceField()" class="member-name-link">isInstanceField</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isInstanceField()" class="member-name-link">isInstanceField</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches an AST node that represents a non-static field.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../JUnitMatchers.html#isJUnit4TestRunnerOfType(java.lang.Iterable)" class="member-name-link">isJUnit4TestRunnerOfType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;runnerTypes)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../JUnitMatchers.html#isJUnit4TestRunnerOfType(java.lang.Iterable)" class="member-name-link">isJUnit4TestRunnerOfType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;runnerTypes)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches an argument of type <code>Class&lt;T&gt;</code>, where T is a subtype of one of the test runners
 listed in the TEST_RUNNERS field.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isLastStatementInBlock()" class="member-name-link">isLastStatementInBlock</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isLastStatementInBlock()" class="member-name-link">isLastStatementInBlock</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches a statement AST node if the statement is the last statement in the block.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isNonNull()" class="member-name-link">isNonNull</a>()</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isNonNull()" class="member-name-link">isNonNull</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="../Matchers.html#isNonNullUsingDataflow()"><code>Matchers.isNonNullUsingDataflow()</code></a> instead.</div>
 </div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isNonNullUsingDataflow()" class="member-name-link">isNonNullUsingDataflow</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isNonNullUsingDataflow()" class="member-name-link">isNonNullUsingDataflow</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches if the expression is provably non-null.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isNull()" class="member-name-link">isNull</a>()</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isNull()" class="member-name-link">isNull</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="../Matchers.html#isNullUsingDataflow()"><code>Matchers.isNullUsingDataflow()</code></a> instead.</div>
 </div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isNullUsingDataflow()" class="member-name-link">isNullUsingDataflow</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isNullUsingDataflow()" class="member-name-link">isNullUsingDataflow</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches if the expression is provably null.</div>
 </div>
-<div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isPrimitiveArrayType()" class="member-name-link">isPrimitiveArrayType</a>()</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isPrimitiveArrayType()" class="member-name-link">isPrimitiveArrayType</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches an AST node if its type is a primitive array type.</div>
 </div>
-<div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isPrimitiveOrBoxedPrimitiveType()" class="member-name-link">isPrimitiveOrBoxedPrimitiveType</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isPrimitiveOrBoxedPrimitiveType()" class="member-name-link">isPrimitiveOrBoxedPrimitiveType</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches an AST node if its type is a primitive type, or a boxed version of a primitive type.</div>
 </div>
-<div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isPrimitiveOrVoidType()" class="member-name-link">isPrimitiveOrVoidType</a>()</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isPrimitiveOrVoidType()" class="member-name-link">isPrimitiveOrVoidType</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches an AST node if its type is either a primitive type or a <code>void</code> type.</div>
 </div>
-<div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isPrimitiveType()" class="member-name-link">isPrimitiveType</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isPrimitiveType()" class="member-name-link">isPrimitiveType</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches an AST node if its type is a primitive type.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isRecord()" class="member-name-link">isRecord</a>()</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isRecord()" class="member-name-link">isRecord</a>()</code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches if a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ClassTree</code></a> is a <code>record</code> declaration.</div>
 </div>
-<div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSame(com.sun.source.tree.Tree)" class="member-name-link">isSame</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;t)</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSame(com.sun.source.tree.Tree)" class="member-name-link">isSame</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;t)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches an AST node which is the same object reference as the given node.</div>
 </div>
-<div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSameType(com.google.errorprone.suppliers.Supplier)" class="member-name-link">isSameType</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSameType(com.google.errorprone.suppliers.Supplier)" class="member-name-link">isSameType</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches an AST node if it has the same erased type as the given type.</div>
 </div>
-<div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSameType(java.lang.Class)" class="member-name-link">isSameType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSameType(java.lang.Class)" class="member-name-link">isSameType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches an AST node if it has the same erased type as the given class.</div>
 </div>
-<div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSameType(java.lang.String)" class="member-name-link">isSameType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeString)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSameType(java.lang.String)" class="member-name-link">isSameType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeString)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches an AST node if it has the same erased type as the given type.</div>
 </div>
-<div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isStatic()" class="member-name-link">isStatic</a>()</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isStatic()" class="member-name-link">isStatic</a>()</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches an AST node that is static.</div>
 </div>
-<div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSubtypeOf(com.google.errorprone.suppliers.Supplier)" class="member-name-link">isSubtypeOf</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Matches an AST node if its type is a subtype of the given type.</div>
-</div>
 <div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSubtypeOf(java.lang.Class)" class="member-name-link">isSubtypeOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSubtypeOf(com.google.errorprone.suppliers.Supplier)" class="member-name-link">isSubtypeOf</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Matches an AST node if its type is a subtype of the given type.</div>
 </div>
 <div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSubtypeOf(java.lang.String)" class="member-name-link">isSubtypeOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeStr)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSubtypeOf(java.lang.Class)" class="member-name-link">isSubtypeOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Matches an AST node if its type is a subtype of the given type.</div>
+</div>
+<div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isSubtypeOf(java.lang.String)" class="member-name-link">isSubtypeOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeStr)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Matches an AST node if its type is a subtype of the given type.</div>
+</div>
+<div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isTestOnlyTarget()" class="member-name-link">isTestOnlyTarget</a>()</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Matches if the compilation is marked as test-only (e.g. via <code>-XepCompilingTestOnlyCode</code>).</div>
 </div>
 <div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#isTransient()" class="member-name-link">isTransient</a>()</code></div>
@@ -1124,6 +1134,28 @@ same variable, as determined by <a href="../../util/ASTHelpers.html#sameVariable
 <div class="col-last odd-row-color">
 <div class="block">Returns a matcher for <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>MethodTree</code></a> whose implementation contains a single return
 statement with expression matching the passed <code>expressionTreeMatcher</code>.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#sourcePathMatches(com.google.errorprone.util.SourcePathMatcher)" class="member-name-link">sourcePathMatches</a><wbr>(<a href="../../util/SourcePathMatcher.html" title="class in com.google.errorprone.util">SourcePathMatcher</a>&nbsp;matcher)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) matches the given <a href="../../util/SourcePathMatcher.html" title="class in com.google.errorprone.util"><code>SourcePathMatcher</code></a>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#sourcePathMatches(java.lang.String)" class="member-name-link">sourcePathMatches</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;pattern)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) matches the given path pattern (exact path ending with
+<code>.java</code>, or directory prefix ending with <code>/</code>).</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#sourcePathStartsWith(java.lang.Iterable)" class="member-name-link">sourcePathStartsWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;prefixes)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) starts with any of the given directory prefixes.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#sourcePathStartsWith(java.lang.String,java.lang.String...)" class="member-name-link">sourcePathStartsWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;prefix,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;morePrefixes)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="../../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) starts with any of the given directory prefixes.</div>
 </div>
 <div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;<br><a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;T&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#staticEqualsInvocation()" class="member-name-link">staticEqualsInvocation</a>()</code></div>

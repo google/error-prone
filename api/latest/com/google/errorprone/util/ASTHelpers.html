@@ -157,6 +157,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#getAnnotationsWithSimpleName(java.util.List,java.lang.String)" tabindex="0">getAnnotationsWithSimpleName(List, String)</a></li>
 <li><a href="#getAnnotationType(com.sun.source.tree.AnnotationTree,com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" tabindex="0">getAnnotationType(AnnotationTree, Symbol, VisitorState)</a></li>
 <li><a href="#getFileName(com.sun.source.tree.CompilationUnitTree)" tabindex="0">getFileName(CompilationUnitTree)</a></li>
+<li><a href="#getSourcePath(com.sun.source.tree.CompilationUnitTree)" tabindex="0">getSourcePath(CompilationUnitTree)</a></li>
+<li><a href="#getSourcePath(com.google.errorprone.VisitorState)" tabindex="0">getSourcePath(VisitorState)</a></li>
 <li><a href="#getFileNameFromUri(java.net.URI)" tabindex="0">getFileNameFromUri(URI)</a></li>
 <li><a href="#resolveExistingMethod(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Symbol.TypeSymbol,com.sun.tools.javac.util.Name,java.lang.Iterable,java.lang.Iterable)" tabindex="0">resolveExistingMethod(VisitorState, Symbol.TypeSymbol, Name, Iterable, Iterable)</a></li>
 <li><a href="#getGeneratedBy(com.google.errorprone.VisitorState)" tabindex="0">getGeneratedBy(VisitorState)</a></li>
@@ -564,6 +566,18 @@ covariant overrides in subtypes of <code>Symbol</code>.</div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getRootAssignable(com.sun.source.tree.MethodInvocationTree)" class="member-name-link">getRootAssignable</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodInvocationTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodInvocationTree</a>&nbsp;methodInvocationTree)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Find the root assignable expression of a chain of field accesses.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getSourcePath(com.google.errorprone.VisitorState)" class="member-name-link">getSourcePath</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Extract a canonical repository/workspace-relative filename from the <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s
+compilation unit, normalizing away workspace roots (e.g.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getSourcePath(com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getSourcePath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;tree)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Extract a canonical repository/workspace-relative filename from a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a>,
+normalizing away workspace roots (e.g.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStartPosition(com.sun.source.tree.Tree)" class="member-name-link">getStartPosition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
@@ -2144,6 +2158,30 @@ be determined.</div>
 <div class="block">Extract the filename from a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a>, with special handling for jar files.
 The return value is normalized to always use '/' to separate elements of the path and to always
 have a leading '/'.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getSourcePath(com.sun.source.tree.CompilationUnitTree)">
+<h3>getSourcePath</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getSourcePath</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link">CompilationUnitTree</a>&nbsp;tree)</span></div>
+<div class="block">Extract a canonical repository/workspace-relative filename from a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a>,
+normalizing away workspace roots (e.g. <code>/execroot/&lt;workspace&gt;/</code>) and build output
+directories (e.g. <code>blaze-out/.../(bin|genfiles)/</code> or <code>
+bazel-out/.../(bin|genfiles)/</code>).</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getSourcePath(com.google.errorprone.VisitorState)">
+<h3>getSourcePath</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getSourcePath</span><wbr><span class="parameters">(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Extract a canonical repository/workspace-relative filename from the <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s
+compilation unit, normalizing away workspace roots (e.g. <code>/execroot/&lt;workspace&gt;/</code>) and
+build output directories (e.g. <code>blaze-out/.../(bin|genfiles)/</code> or <code>
+bazel-out/.../(bin|genfiles)/</code>).</div>
 </div>
 </section>
 </li>

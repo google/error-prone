@@ -5955,165 +5955,176 @@ be determined.</div>
 <div class="col-last even-row-color">
 <div class="block">Returns the <a href="../dataflow/nullnesspropagation/Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation"><code>Nullness</code></a> for an expression as determined by the nullness dataflow analysis.</div>
 </div>
-<div class="col-first odd-row-color"><code>static com.google.common.collect.ImmutableSet<wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#getThrownExceptions(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">getThrownExceptions</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)" class="member-name-link">getSourcePath</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Extract a canonical repository/workspace-relative filename from the <a href="../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s
+compilation unit, normalizing away workspace roots (e.g.</div>
+</div>
+<div class="col-first even-row-color"><code>static com.google.common.collect.ImmutableSet<wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#getThrownExceptions(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">getThrownExceptions</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Returns the exceptions thrown by <code>tree</code>.</div>
 </div>
-<div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,java.lang.Class,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+<div class="col-first odd-row-color"><code>static boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,java.lang.Class,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;annotationClass,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">prefer <a href="../util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Symbol, String, VisitorState)</code></a> to avoid needing a
     runtime dependency on the annotation class, and to prevent issues if there is skew between
     the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
 </div>
-<div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+<div class="col-first even-row-color"><code>static boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasAnnotation(com.sun.source.tree.Tree,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationClass,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Check for the presence of an annotation, considering annotation inheritance.</div>
 </div>
-<div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
+<div class="col-first odd-row-color"><code>static boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.Class,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;annotationClass,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">prefer <a href="../util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)"><code>ASTHelpers.hasAnnotation(Symbol, String, VisitorState)</code></a> to avoid needing a
     runtime dependency on the annotation class, and to prevent issues if there is skew between
     the definition of the annotation on the runtime and compile-time classpaths</div>
 </div>
 </div>
-<div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
+<div class="col-first even-row-color"><code>static boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasAnnotation(com.sun.tools.javac.code.Symbol,java.lang.String,com.google.errorprone.VisitorState)" class="member-name-link">hasAnnotation</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationClass,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Determines whether a symbol has an annotation of the given type.</div>
 </div>
-<div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasExplicitSource(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">hasExplicitSource</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Returns whether the given tree has an explicit source code representation.</div>
-</div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasImplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">hasImplicitType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasExplicitSource(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">hasExplicitSource</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns whether this is a <code>var</code> or a lambda parameter that has no explicit type.</div>
+<div class="block">Returns whether the given tree has an explicit source code representation.</div>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasOverloadWithOnlyOneParameter(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.util.Name,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">hasOverloadWithOnlyOneParameter</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;existingMethod,
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasImplicitType(com.sun.source.tree.VariableTree,com.google.errorprone.VisitorState)" class="member-name-link">hasImplicitType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Returns whether this is a <code>var</code> or a lambda parameter that has no explicit type.</div>
+</div>
+<div class="col-first odd-row-color"><code>static boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#hasOverloadWithOnlyOneParameter(com.sun.tools.javac.code.Symbol.MethodSymbol,com.sun.tools.javac.util.Name,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">hasOverloadWithOnlyOneParameter</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;existingMethod,
  com.sun.tools.javac.util.Name&nbsp;targetMethodName,
  com.sun.tools.javac.code.Type&nbsp;onlyParameterType,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Returns whether <code>existingMethod</code> has an overload (or "nearly" an overload) with the given
 <code>targetMethodName</code>, and only a single parameter of type <code>onlyParameterType</code>.</div>
 </div>
-<div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#inSamePackage(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">inSamePackage</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;targetSymbol,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Return true if the given symbol is defined in the current package.</div>
-</div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isBoxedPrimitiveType(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isBoxedPrimitiveType</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#inSamePackage(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">inSamePackage</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;targetSymbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns true if the given <code>tree</code> has a boxed primitive wrapper type.</div>
+<div class="block">Return true if the given symbol is defined in the current package.</div>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isBoxedPrimitiveType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isBoxedPrimitiveType</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isBoxedPrimitiveType(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isBoxedPrimitiveType</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Returns true if the given <code>tree</code> has a boxed primitive wrapper type.</div>
+</div>
+<div class="col-first even-row-color"><code>static boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isBoxedPrimitiveType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isBoxedPrimitiveType</a><wbr>(@Nullable com.sun.tools.javac.code.Type&nbsp;type,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Returns true if <code>type</code> is one of the 8 boxed primitive wrapper types (Boolean, Byte,
 Character, Short, Integer, Long, Float, Double).</div>
 </div>
-<div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isBugCheckerCode(com.google.errorprone.VisitorState)" class="member-name-link">isBugCheckerCode</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isBugCheckerCode(com.google.errorprone.VisitorState)" class="member-name-link">isBugCheckerCode</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Returns <code>true</code> if the code is in a BugChecker class.</div>
 </div>
-<div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isCanonicalRecordConstructor(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)" class="member-name-link">isCanonicalRecordConstructor</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;symbol,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Returns whether the given method is a record's canonical constructor.</div>
-</div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isCastable(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isCastable</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
- com.sun.tools.javac.code.Type&nbsp;t,
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isCanonicalRecordConstructor(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)" class="member-name-link">isCanonicalRecordConstructor</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns true if <code>erasure(s)</code> is castable to <code>erasure(t)</code>.</div>
+<div class="block">Returns whether the given method is a record's canonical constructor.</div>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isCheckedExceptionType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isCheckedExceptionType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;t,
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isCastable(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isCastable</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
+ com.sun.tools.javac.code.Type&nbsp;t,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Returns true if <code>erasure(s)</code> is castable to <code>erasure(t)</code>.</div>
+</div>
+<div class="col-first even-row-color"><code>static boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isCheckedExceptionType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isCheckedExceptionType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;t,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Returns true if <code>t</code> is a subtype of Throwable but not a subtype of RuntimeException or
 Error.</div>
 </div>
-<div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isInStaticInitializer(com.google.errorprone.VisitorState)" class="member-name-link">isInStaticInitializer</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isInStaticInitializer(com.google.errorprone.VisitorState)" class="member-name-link">isInStaticInitializer</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Attempts to detect whether we're in a static-initializer-like context: that includes direct
 assignments to static fields, assignments to enum fields, being contained within an expression
 which is ultimately assigned to a static field.</div>
 </div>
-<div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isJUnitTestCode(com.google.errorprone.VisitorState)" class="member-name-link">isJUnitTestCode</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isJUnitTestCode(com.google.errorprone.VisitorState)" class="member-name-link">isJUnitTestCode</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere
 underneath a class or method that is marked as JUnit 3 or 4 test code.</div>
 </div>
-<div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isKotlin(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">isKotlin</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol,
+<div class="col-first odd-row-color"><code>static boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isKotlin(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" class="member-name-link">isKotlin</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Returns <code>true</code> if this symbol was declared in Kotlin source.</div>
 </div>
-<div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isSameType(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isSameType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
- com.sun.tools.javac.code.Type&nbsp;t,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Returns true if <code>erasure(s) == erasure(t)</code>.</div>
-</div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isSubtype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isSubtype</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isSameType(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isSameType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
  com.sun.tools.javac.code.Type&nbsp;t,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns true if <code>erasure(s) &lt;: erasure(t)</code>.</div>
+<div class="block">Returns true if <code>erasure(s) == erasure(t)</code>.</div>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isTestNgTestCode(com.google.errorprone.VisitorState)" class="member-name-link">isTestNgTestCode</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isSubtype(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isSubtype</a><wbr>(com.sun.tools.javac.code.Type&nbsp;s,
+ com.sun.tools.javac.code.Type&nbsp;t,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Returns true if <code>erasure(s) &lt;: erasure(t)</code>.</div>
+</div>
+<div class="col-first even-row-color"><code>static boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isTestNgTestCode(com.google.errorprone.VisitorState)" class="member-name-link">isTestNgTestCode</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Returns true if the leaf node in the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/TreePath.html" title="class or interface in com.sun.source.util" class="external-link"><code>TreePath</code></a> from <code>state</code> sits somewhere
 underneath a class or method that is marked as TestNG test code.</div>
 </div>
-<div class="col-first even-row-color"><code>static boolean</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isVoidType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isVoidType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
- <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Return true if the given type is 'void' or 'Void'.</div>
-</div>
-<div class="col-first odd-row-color"><code>static @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#matchBinaryTree(com.sun.source.tree.BinaryTree,java.util.List,com.google.errorprone.VisitorState)" class="member-name-link">matchBinaryTree</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/BinaryTree.html" title="class or interface in com.sun.source.tree" class="external-link">BinaryTree</a>&nbsp;tree,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&gt;&nbsp;matchers,
+<div class="col-first odd-row-color"><code>static boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#isVoidType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isVoidType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;type,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Return true if the given type is 'void' or 'Void'.</div>
+</div>
+<div class="col-first even-row-color"><code>static @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#matchBinaryTree(com.sun.source.tree.BinaryTree,java.util.List,com.google.errorprone.VisitorState)" class="member-name-link">matchBinaryTree</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/BinaryTree.html" title="class or interface in com.sun.source.tree" class="external-link">BinaryTree</a>&nbsp;tree,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&gt;&nbsp;matchers,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Given a BinaryTree to match against and a list of two matchers, applies the matchers to the
 operands in both orders.</div>
+</div>
+<div class="col-first odd-row-color"><code>boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SourcePathMatcher.</span><code><a href="../util/SourcePathMatcher.html#matches(com.google.errorprone.VisitorState)" class="member-name-link">matches</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Returns <code>true</code> if the compilation unit in <code>state</code> matches any of the patterns in this matcher.</div>
 </div>
 <div class="col-first even-row-color"><code>static boolean</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#methodIsPublicAndNotAnOverride(com.sun.tools.javac.code.Symbol.MethodSymbol,com.google.errorprone.VisitorState)" class="member-name-link">methodIsPublicAndNotAnOverride</a><wbr>(com.sun.tools.javac.code.Symbol.MethodSymbol&nbsp;method,

@@ -2791,6 +2791,11 @@ inlined as an identifier.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/BlockTemplate.html#create(java.lang.Iterable,java.util.Map,com.google.errorprone.refaster.UStatement...)" class="member-name-link">create(Iterable, Map, UStatement...)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/BlockTemplate.html" title="class in com.google.errorprone.refaster">BlockTemplate</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/SourcePathMatcher.html#create(java.lang.Iterable)" class="member-name-link">create(Iterable)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/SourcePathMatcher.html" title="class in com.google.errorprone.util">SourcePathMatcher</a></dt>
+<dd>
+<div class="block">Creates a <a href="com/google/errorprone/util/SourcePathMatcher.html" title="class in com.google.errorprone.util"><code>SourcePathMatcher</code></a> from the given path patterns (exact file paths or directory
+prefixes ending with <code>/</code>).</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html#create(java.lang.String)" class="member-name-link">create(String)</a> - Static method in record class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation.ValidationResult</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html#create(java.lang.String)" class="member-name-link">create(String)</a> - Static method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/AnnotationInfo.html" title="class in com.google.errorprone.bugpatterns.threadsafety">AnnotationInfo</a></dt>
@@ -2805,6 +2810,11 @@ inlined as an identifier.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UTypeVar.html#create(java.lang.String)" class="member-name-link">create(String)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/SourcePathMatcher.html#create(java.lang.String...)" class="member-name-link">create(String...)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/SourcePathMatcher.html" title="class in com.google.errorprone.util">SourcePathMatcher</a></dt>
+<dd>
+<div class="block">Creates a <a href="com/google/errorprone/util/SourcePathMatcher.html" title="class in com.google.errorprone.util"><code>SourcePathMatcher</code></a> from the given path patterns (exact file paths or directory
+prefixes ending with <code>/</code>).</div>
+</dd>
 <dt><a href="com/google/errorprone/refaster/UTypeVar.html#create(java.lang.String,com.google.errorprone.refaster.UType)" class="member-name-link">create(String, UType)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UClassType.html#create(java.lang.String,com.google.errorprone.refaster.UType...)" class="member-name-link">create(String, UType...)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UClassType.html" title="class in com.google.errorprone.refaster">UClassType</a></dt>
@@ -3429,6 +3439,10 @@ which accepts a <code>&lt;long, TimeUnit&gt;</code> pair.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/ErrorProneOptions.html#empty()" class="member-name-link">empty()</a> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/SourcePathMatcher.html#empty()" class="member-name-link">empty()</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/SourcePathMatcher.html" title="class in com.google.errorprone.util">SourcePathMatcher</a></dt>
+<dd>
+<div class="block">Returns an empty <a href="com/google/errorprone/util/SourcePathMatcher.html" title="class in com.google.errorprone.util"><code>SourcePathMatcher</code></a>.</div>
+</dd>
 <dt><a href="com/google/errorprone/SuppressionInfo.html#EMPTY" class="member-name-link">EMPTY</a> - Static variable in class com.google.errorprone.<a href="com/google/errorprone/SuppressionInfo.html" title="class in com.google.errorprone">SuppressionInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/javadoc/EmptyBlockTag.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.javadoc">EmptyBlockTag</a> - Class in <a href="com/google/errorprone/bugpatterns/javadoc/package-summary.html">com.google.errorprone.bugpatterns.javadoc</a></dt>
@@ -5843,6 +5857,16 @@ to the user.</div>
 <dd>
 <div class="block">Gets the original source code that represents the given node.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)" class="member-name-link">getSourcePath(VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Extract a canonical repository/workspace-relative filename from the <a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a>'s
+compilation unit, normalizing away workspace roots (e.g.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#getSourcePath(com.sun.source.tree.CompilationUnitTree)" class="member-name-link">getSourcePath(CompilationUnitTree)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Extract a canonical repository/workspace-relative filename from a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/CompilationUnitTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>CompilationUnitTree</code></a>,
+normalizing away workspace roots (e.g.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/ErrorProneComment.html#getSourcePos(int)" class="member-name-link">getSourcePos(int)</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a></dt>
 <dd>
 <div class="block">Returns the source position of the character at index <code>index</code> in the comment text.</div>
@@ -7169,6 +7193,10 @@ catching a supertype, and not specially handled.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/IntFloatConversion.html#%3Cinit%3E()" class="member-name-link">IntFloatConversion()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/IntFloatConversion.html" title="class in com.google.errorprone.bugpatterns">IntFloatConversion</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/Matchers.html#inThirdParty()" class="member-name-link">inThirdParty()</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="com/google/errorprone/util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) is located within third_party.</div>
+</dd>
 <dt><a href="com/google/errorprone/refaster/ULiteral.html#intLit(int)" class="member-name-link">intLit(int)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ULiteral.html" title="class in com.google.errorprone.refaster">ULiteral</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#intLiteral(int)" class="member-name-link">intLiteral(int)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
@@ -7753,6 +7781,10 @@ underneath a class or method that is marked as TestNG test code.</div>
 </dd>
 <dt><a href="com/google/errorprone/ErrorProneOptions.html#isTestOnlyTarget()" class="member-name-link">isTestOnlyTarget()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneOptions.html" title="class in com.google.errorprone">ErrorProneOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/Matchers.html#isTestOnlyTarget()" class="member-name-link">isTestOnlyTarget()</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches if the compilation is marked as test-only (e.g. via <code>-XepCompilingTestOnlyCode</code>).</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html#isThreadSafeType(boolean,java.util.Set,com.sun.tools.javac.code.Type)" class="member-name-link">isThreadSafeType(boolean, Set, Type)</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety</a></dt>
 <dd>
 <div class="block">Returns an <a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Violation.html" title="class in com.google.errorprone.bugpatterns.threadsafety"><code>ThreadSafety.Violation</code></a> explaining whether the type is threadsafe.</div>
@@ -9023,6 +9055,10 @@ empty statement, and - The else part of the parent if does not exist</div>
 <dd>
 <div class="block">Returns the value of the <a href="./com/google/errorprone/matchers/MultiMatcher.MultiMatchResult.html#param-matches"><code>matches</code></a> record component.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/SourcePathMatcher.html#matches(com.google.errorprone.VisitorState)" class="member-name-link">matches(VisitorState)</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/SourcePathMatcher.html" title="class in com.google.errorprone.util">SourcePathMatcher</a></dt>
+<dd>
+<div class="block">Returns <code>true</code> if the compilation unit in <code>state</code> matches any of the patterns in this matcher.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/AnnotationDoesNotHaveArgument.html#matches(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState)" class="member-name-link">matches(AnnotationTree, VisitorState)</a> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/AnnotationDoesNotHaveArgument.html" title="class in com.google.errorprone.matchers">AnnotationDoesNotHaveArgument</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/AnnotationHasArgumentWithValue.html#matches(com.sun.source.tree.AnnotationTree,com.google.errorprone.VisitorState)" class="member-name-link">matches(AnnotationTree, VisitorState)</a> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/AnnotationHasArgumentWithValue.html" title="class in com.google.errorprone.matchers">AnnotationHasArgumentWithValue</a></dt>
@@ -9059,6 +9095,10 @@ empty statement, and - The else part of the parent if does not exist</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/method/ParameterPredicate.html#matches(com.sun.tools.javac.code.Symbol.VarSymbol,com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">matches(Symbol.VarSymbol, Type, VisitorState)</a> - Method in interface com.google.errorprone.matchers.method.<a href="com/google/errorprone/matchers/method/ParameterPredicate.html" title="interface in com.google.errorprone.matchers.method">ParameterPredicate</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/SourcePathMatcher.html#matches(java.lang.String)" class="member-name-link">matches(String)</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/SourcePathMatcher.html" title="class in com.google.errorprone.util">SourcePathMatcher</a></dt>
+<dd>
+<div class="block">Returns <code>true</code> if the given canonical path matches any of the patterns in this matcher.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/AbstractTypeMatcher.html#matches(T,com.google.errorprone.VisitorState)" class="member-name-link">matches(T, VisitorState)</a> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/AbstractTypeMatcher.html" title="class in com.google.errorprone.matchers">AbstractTypeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/ChildMultiMatcher.html#matches(T,com.google.errorprone.VisitorState)" class="member-name-link">matches(T, VisitorState)</a> - Method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/ChildMultiMatcher.html" title="class in com.google.errorprone.matchers">ChildMultiMatcher</a></dt>
@@ -13707,6 +13747,28 @@ statement with expression matching the passed <code>expressionTreeMatcher</code>
 </dd>
 <dt><a href="com/google/errorprone/apply/SourceFile.html#%3Cinit%3E(java.lang.String,java.lang.CharSequence)" class="member-name-link">SourceFile(String, CharSequence)</a> - Constructor for class com.google.errorprone.apply.<a href="com/google/errorprone/apply/SourceFile.html" title="class in com.google.errorprone.apply">SourceFile</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/SourcePathMatcher.html" class="type-name-link" title="class in com.google.errorprone.util">SourcePathMatcher</a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
+<dd>
+<div class="block">Matcher for canonical source file paths supporting exact source file paths and directory
+prefixes.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/Matchers.html#sourcePathMatches(com.google.errorprone.util.SourcePathMatcher)" class="member-name-link">sourcePathMatches(SourcePathMatcher)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="com/google/errorprone/util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) matches the given <a href="com/google/errorprone/util/SourcePathMatcher.html" title="class in com.google.errorprone.util"><code>SourcePathMatcher</code></a>.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/Matchers.html#sourcePathMatches(java.lang.String)" class="member-name-link">sourcePathMatches(String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="com/google/errorprone/util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) matches the given path pattern (exact path ending with
+<code>.java</code>, or directory prefix ending with <code>/</code>).</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/Matchers.html#sourcePathStartsWith(java.lang.Iterable)" class="member-name-link">sourcePathStartsWith(Iterable)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="com/google/errorprone/util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) starts with any of the given directory prefixes.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/Matchers.html#sourcePathStartsWith(java.lang.String,java.lang.String...)" class="member-name-link">sourcePathStartsWith(String, String...)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches if the compilation unit's canonical source path (as defined by <a href="com/google/errorprone/util/ASTHelpers.html#getSourcePath(com.google.errorprone.VisitorState)"><code>ASTHelpers.getSourcePath(VisitorState)</code></a>) starts with any of the given directory prefixes.</div>
+</dd>
 <dt><a href="com/google/errorprone/SourcePositionException.html" class="type-name-link" title="class in com.google.errorprone">SourcePositionException</a> - Exception Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">An invalid source position.</div>
