@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ListMultimap;
@@ -119,7 +120,7 @@ public class InlineTrivialConstant extends BugChecker implements CompilationUnit
     if (!isSameType(sym.asType(), state.getSymtab().stringType, state)) {
       return Optional.empty();
     }
-    ExpressionTree initializer = tree.getInitializer();
+    ExpressionTree initializer = stripParentheses(tree.getInitializer());
     if (initializer.getKind().equals(Tree.Kind.STRING_LITERAL)) {
       String value = (String) ((LiteralTree) initializer).getValue();
       if (Objects.equals(value, "")) {
