@@ -877,10 +877,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
     // Is the predicate sensible?
     Set<String> handledEnumValues = new HashSet<>(ifChainAnalysisState.handledEnumValues());
-    int caseStartPosition =
-        cases.isEmpty()
-            ? ifTreeRange.lowerEndpoint()
-            : cases.getLast().caseSourceCodeRange().upperEndpoint();
+    int caseStartPosition = nextCaseStartPosition(cases, ifTreeRange);
     Optional<ExpressionTree> newSubjectOptional =
         validatePredicateForSubject(
             condition,
@@ -1300,10 +1297,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
     if (instanceOfTree.getPattern() instanceof BindingPatternTree bpt) {
       boolean addDefault = hasElse && !hasElseIf;
-      int previousCaseEndPosition =
-          cases.isEmpty()
-              ? ifTreeRange.lowerEndpoint()
-              : cases.getLast().caseSourceCodeRange().upperEndpoint();
+      int caseStartPosition = nextCaseStartPosition(cases, ifTreeRange);
       cases.add(
           new CaseIr(
               /* hasCaseNull= */ false,
@@ -1317,14 +1311,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
-              /* caseSourceCodeRange= */ Range.closedOpen(
-                  previousCaseEndPosition, caseEndPosition)));
+              /* caseSourceCodeRange= */ Range.closedOpen(caseStartPosition, caseEndPosition)));
 
       if (addDefault) {
-        previousCaseEndPosition =
-            cases.isEmpty()
-                ? ifTreeRange.lowerEndpoint()
-                : cases.getLast().caseSourceCodeRange().upperEndpoint();
         cases.add(
             new CaseIr(
                 /* hasCaseNull= */ false,
@@ -1341,10 +1330,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       }
     } else if (instanceOfTree.getType() != null) {
       boolean addDefault = hasElse && !hasElseIf;
-      int previousCaseEndPosition =
-          cases.isEmpty()
-              ? ifTreeRange.lowerEndpoint()
-              : cases.getLast().caseSourceCodeRange().upperEndpoint();
+      int caseStartPosition = nextCaseStartPosition(cases, ifTreeRange);
       cases.add(
           new CaseIr(
               /* hasCaseNull= */ false,
@@ -1358,8 +1344,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
-              /* caseSourceCodeRange= */ Range.closedOpen(
-                  previousCaseEndPosition, Math.max(previousCaseEndPosition, caseEndPosition))));
+              /* caseSourceCodeRange= */ Range.closedOpen(caseStartPosition, caseEndPosition)));
       if (addDefault) {
         cases.add(
             new CaseIr(
@@ -1381,6 +1366,24 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     }
 
     return Optional.of(expression);
+  }
+
+  /**
+   * Returns the source position at which the next case to be added begins, namely the end of the
+   * last case that is not a synthesized {@code default}.
+   *
+   * <p>A synthesized {@code default} covers the {@code else} statement (so that comments within it
+   * are preserved), and thus its range can extend beyond the start position of a case that is added
+   * afterwards. That happens while speculatively validating the disjuncts of a predicate such as
+   * {@code x instanceof Foo || x == 1}: each disjunct appends a case (and possibly a {@code
+   * default}) that is subsequently discarded and replaced by a single, grouped case.
+   */
+  private static int nextCaseStartPosition(List<CaseIr> cases, Range<Integer> ifTreeRange) {
+    return cases.stream()
+        .filter(caseIr -> !caseIr.hasDefault())
+        .reduce((first, second) -> second)
+        .map(caseIr -> caseIr.caseSourceCodeRange().upperEndpoint())
+        .orElse(ifTreeRange.lowerEndpoint());
   }
 
   private Optional<ExpressionTree> validateCompileTimeConstantForSubject(
@@ -1462,10 +1465,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     }
 
     boolean addDefault = hasElse && !hasElseIf;
-    int previousCaseEndPosition =
-        cases.isEmpty()
-            ? ifTreeRange.lowerEndpoint()
-            : cases.getLast().caseSourceCodeRange().upperEndpoint();
+    int caseStartPosition = nextCaseStartPosition(cases, ifTreeRange);
     cases.add(
         new CaseIr(
             /* hasCaseNull= */ compileTimeConstant.getKind() == Kind.NULL_LITERAL,
@@ -1474,12 +1474,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             /* guardOptional= */ Optional.empty(),
             /* expressionsOptional= */ Optional.of(ImmutableList.of(compileTimeConstant)),
             /* arrowRhsOptional= */ arrowRhsOptional,
-            /* caseSourceCodeRange= */ Range.closedOpen(previousCaseEndPosition, caseEndPosition)));
+            /* caseSourceCodeRange= */ Range.closedOpen(caseStartPosition, caseEndPosition)));
     if (addDefault) {
-      previousCaseEndPosition =
-          cases.isEmpty()
-              ? ifTreeRange.lowerEndpoint()
-              : cases.getLast().caseSourceCodeRange().upperEndpoint();
+      caseStartPosition = nextCaseStartPosition(cases, ifTreeRange);
       cases.add(
           new CaseIr(
               /* hasCaseNull= */ false,
@@ -1489,7 +1486,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ elseOptional,
               /* caseSourceCodeRange= */ Range.closedOpen(
-                  previousCaseEndPosition,
+                  caseStartPosition,
                   elseOptional.isPresent()
                       ? getStartPosition(elseOptional.get())
                       : caseEndPosition)));
@@ -1541,10 +1538,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             .collect(toImmutableSet()));
 
     boolean addDefault = hasElse && !hasElseIf;
-    int previousCaseEndPosition =
-        cases.isEmpty()
-            ? ifTreeRange.lowerEndpoint()
-            : cases.getLast().caseSourceCodeRange().upperEndpoint();
+    int caseStartPosition = nextCaseStartPosition(cases, ifTreeRange);
     cases.add(
         new CaseIr(
             /* hasCaseNull= */ false,
@@ -1553,13 +1547,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             /* guardOptional= */ Optional.empty(),
             /* expressionsOptional= */ Optional.of(ImmutableList.of(compileTimeConstant)),
             /* arrowRhsOptional= */ arrowRhsOptional,
-            /* caseSourceCodeRange= */ Range.closedOpen(previousCaseEndPosition, caseEndPosition)));
+            /* caseSourceCodeRange= */ Range.closedOpen(caseStartPosition, caseEndPosition)));
 
     if (addDefault) {
-      previousCaseEndPosition =
-          cases.isEmpty()
-              ? ifTreeRange.lowerEndpoint()
-              : cases.getLast().caseSourceCodeRange().upperEndpoint();
       cases.add(
           new CaseIr(
               /* hasCaseNull= */ false,
