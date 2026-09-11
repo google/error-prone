@@ -145,7 +145,7 @@ public final class SourcePathMatcher {
   // another, which allows `matchesPrefix` to test only the predecessor candidate from `floor`.
   private static ImmutableSortedSet<String> sortAndPrunePrefixes(Iterable<String> prefixes) {
     ImmutableList<String> sorted = ImmutableList.sortedCopyOf(prefixes);
-    ImmutableList.Builder<String> pruned = ImmutableList.builder();
+    ImmutableSortedSet.Builder<String> pruned = ImmutableSortedSet.naturalOrder();
     String last = null;
     for (String prefix : sorted) {
       if (last == null || !prefix.startsWith(last)) {
@@ -153,7 +153,7 @@ public final class SourcePathMatcher {
         last = prefix;
       }
     }
-    return ImmutableSortedSet.copyOf(pruned.build());
+    return pruned.build();
   }
 
   private static void parsePath(
