@@ -89,4 +89,65 @@ public final class EqualsUsingHashCodeTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void positiveExtractedLocals() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private int a;
+
+              @Override
+              public boolean equals(Object o) {
+                // BUG: Diagnostic contains:
+                int left = hashCode();
+                int right = o.hashCode();
+                return left == right;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveExtractedLocalsWithInstanceofGuard() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              @Override
+              public boolean equals(Object o) {
+                // BUG: Diagnostic contains:
+                int left = hashCode();
+                int right = o.hashCode();
+                return o instanceof Test && left == right;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negativeExtractedLocalsWithFieldCheck() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private int a;
+
+              @Override
+              public boolean equals(Object o) {
+                Test that = (Test) o;
+                int left = hashCode();
+                int right = o.hashCode();
+                return left == right && a == that.a;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
