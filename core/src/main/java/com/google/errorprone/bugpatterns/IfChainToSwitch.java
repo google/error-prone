@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.bugpatterns.SwitchUtils.COMPILE_TIME_CONSTANT_MATCHER;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getReferencedLocalVariablesInTree;
 import static com.google.errorprone.bugpatterns.SwitchUtils.hasBreakOutOfTree;
 import static com.google.errorprone.bugpatterns.SwitchUtils.isEnumValue;
@@ -877,10 +876,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
     // Is the predicate sensible?
     Set<String> handledEnumValues = new HashSet<>(ifChainAnalysisState.handledEnumValues());
-    int caseStartPosition =
-        cases.isEmpty()
-            ? ifTreeRange.lowerEndpoint()
-            : cases.getLast().caseSourceCodeRange().upperEndpoint();
+    int caseStartPosition = nextCaseStartPosition(cases, ifTreeRange);
     Optional<ExpressionTree> newSubjectOptional =
         validatePredicateForSubject(
             condition,
@@ -1011,9 +1007,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       if (!mustBeSingleInstanceOf) {
         switch (binaryTree.getKind()) {
           case Kind.EQUAL_TO -> {
-            // Either lhs or rhs must be a compile-time constant.
-            if (COMPILE_TIME_CONSTANT_MATCHER.matches(lhs, state)
-                || COMPILE_TIME_CONSTANT_MATCHER.matches(rhs, state)) {
+            // Either lhs or rhs must be usable as a case constant.
+            if (isCaseConstant(lhs) || isCaseConstant(rhs)) {
               return validateCompileTimeConstantForSubject(lhs, rhs, params);
             } else {
               // Predicate is a binary tree, but neither side is a constant.
@@ -1188,10 +1183,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         case BinaryTree bt when bt.getKind().equals(Kind.EQUAL_TO) -> {
           // Maybe comparing to a non-null compile-time constant? (`case null` not supported here
           // due to Java syntax restrictions)
-          if ((COMPILE_TIME_CONSTANT_MATCHER.matches(bt.getLeftOperand(), state)
-                  && !isNull(bt.getLeftOperand()))
-              || (COMPILE_TIME_CONSTANT_MATCHER.matches(bt.getRightOperand(), state)
-                  && !isNull(bt.getRightOperand()))) {
+          if ((isCaseConstant(bt.getLeftOperand()) && !isNull(bt.getLeftOperand()))
+              || (isCaseConstant(bt.getRightOperand()) && !isNull(bt.getRightOperand()))) {
             subject =
                 validateCompileTimeConstantForSubject(
                     bt.getLeftOperand(), bt.getRightOperand(), params.withSubject(subject));
@@ -1201,9 +1194,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             }
 
             var compileTimeConstantExpression =
-                COMPILE_TIME_CONSTANT_MATCHER.matches(bt.getLeftOperand(), state)
-                    ? bt.getLeftOperand()
-                    : bt.getRightOperand();
+                isCaseConstant(bt.getLeftOperand()) ? bt.getLeftOperand() : bt.getRightOperand();
             caseExpressions.add(compileTimeConstantExpression);
           } else {
             // Maybe comparing to an enum value?
@@ -1265,6 +1256,22 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
+   * Determines whether the given expression may be rendered as a {@code CaseConstant} of a {@code
+   * switch}, which JLS 21 §14.11.1 requires to be a constant expression (JLS 21 §15.29) or the
+   * {@code null} literal. (Enum constants are also permitted, but are handled separately by {@link
+   * #validateEnumPredicateForSubject}.)
+   *
+   * <p>Note that this is deliberately narrower than {@code
+   * SwitchUtils.COMPILE_TIME_CONSTANT_MATCHER}, which additionally accepts expressions that javac
+   * does not fold to a constant, such as a parameter annotated {@code @CompileTimeConstant} or a
+   * conditional expression with a non-constant condition. Using those as a case constant would
+   * produce code that does not compile ("constant expression required").
+   */
+  private static boolean isCaseConstant(ExpressionTree expression) {
+    return isNull(expression) || constValue(expression) != null;
+  }
+
+  /**
    * Determines whether the {@code subject} expression "matches" the given {@code expression}. If
    * {@code enableSafe} is true, then matching means that the subject must be referring to the same
    * variable or constant expression. If {@code enableSafe} is false, then we also allow expressions
@@ -1300,10 +1307,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
     if (instanceOfTree.getPattern() instanceof BindingPatternTree bpt) {
       boolean addDefault = hasElse && !hasElseIf;
-      int previousCaseEndPosition =
-          cases.isEmpty()
-              ? ifTreeRange.lowerEndpoint()
-              : cases.getLast().caseSourceCodeRange().upperEndpoint();
+      int caseStartPosition = nextCaseStartPosition(cases, ifTreeRange);
       cases.add(
           new CaseIr(
               /* hasCaseNull= */ false,
@@ -1317,14 +1321,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
-              /* caseSourceCodeRange= */ Range.closedOpen(
-                  previousCaseEndPosition, caseEndPosition)));
+              /* caseSourceCodeRange= */ Range.closedOpen(caseStartPosition, caseEndPosition)));
 
       if (addDefault) {
-        previousCaseEndPosition =
-            cases.isEmpty()
-                ? ifTreeRange.lowerEndpoint()
-                : cases.getLast().caseSourceCodeRange().upperEndpoint();
         cases.add(
             new CaseIr(
                 /* hasCaseNull= */ false,
@@ -1341,10 +1340,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       }
     } else if (instanceOfTree.getType() != null) {
       boolean addDefault = hasElse && !hasElseIf;
-      int previousCaseEndPosition =
-          cases.isEmpty()
-              ? ifTreeRange.lowerEndpoint()
-              : cases.getLast().caseSourceCodeRange().upperEndpoint();
+      int caseStartPosition = nextCaseStartPosition(cases, ifTreeRange);
       cases.add(
           new CaseIr(
               /* hasCaseNull= */ false,
@@ -1358,8 +1354,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
-              /* caseSourceCodeRange= */ Range.closedOpen(
-                  previousCaseEndPosition, Math.max(previousCaseEndPosition, caseEndPosition))));
+              /* caseSourceCodeRange= */ Range.closedOpen(caseStartPosition, caseEndPosition)));
       if (addDefault) {
         cases.add(
             new CaseIr(
@@ -1383,6 +1378,24 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     return Optional.of(expression);
   }
 
+  /**
+   * Returns the source position at which the next case to be added begins, namely the end of the
+   * last case that is not a synthesized {@code default}.
+   *
+   * <p>A synthesized {@code default} covers the {@code else} statement (so that comments within it
+   * are preserved), and thus its range can extend beyond the start position of a case that is added
+   * afterwards. That happens while speculatively validating the disjuncts of a predicate such as
+   * {@code x instanceof Foo || x == 1}: each disjunct appends a case (and possibly a {@code
+   * default}) that is subsequently discarded and replaced by a single, grouped case.
+   */
+  private static int nextCaseStartPosition(List<CaseIr> cases, Range<Integer> ifTreeRange) {
+    return cases.stream()
+        .filter(caseIr -> !caseIr.hasDefault())
+        .reduce((first, second) -> second)
+        .map(caseIr -> caseIr.caseSourceCodeRange().upperEndpoint())
+        .orElse(ifTreeRange.lowerEndpoint());
+  }
+
   private Optional<ExpressionTree> validateCompileTimeConstantForSubject(
       ExpressionTree lhs, ExpressionTree rhs, ValidateCommonParams params) {
     Optional<ExpressionTree> subject = params.subject();
@@ -1395,7 +1408,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     boolean hasElse = params.hasElse();
     boolean hasElseIf = params.hasElseIf();
 
-    boolean compileTimeConstantOnLhs = COMPILE_TIME_CONSTANT_MATCHER.matches(lhs, state);
+    boolean compileTimeConstantOnLhs = isCaseConstant(lhs);
     ExpressionTree testExpression = compileTimeConstantOnLhs ? rhs : lhs;
     ExpressionTree compileTimeConstant = compileTimeConstantOnLhs ? lhs : rhs;
     Type compileTimeConstantType = getType(compileTimeConstant);
@@ -1462,10 +1475,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     }
 
     boolean addDefault = hasElse && !hasElseIf;
-    int previousCaseEndPosition =
-        cases.isEmpty()
-            ? ifTreeRange.lowerEndpoint()
-            : cases.getLast().caseSourceCodeRange().upperEndpoint();
+    int caseStartPosition = nextCaseStartPosition(cases, ifTreeRange);
     cases.add(
         new CaseIr(
             /* hasCaseNull= */ compileTimeConstant.getKind() == Kind.NULL_LITERAL,
@@ -1474,12 +1484,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             /* guardOptional= */ Optional.empty(),
             /* expressionsOptional= */ Optional.of(ImmutableList.of(compileTimeConstant)),
             /* arrowRhsOptional= */ arrowRhsOptional,
-            /* caseSourceCodeRange= */ Range.closedOpen(previousCaseEndPosition, caseEndPosition)));
+            /* caseSourceCodeRange= */ Range.closedOpen(caseStartPosition, caseEndPosition)));
     if (addDefault) {
-      previousCaseEndPosition =
-          cases.isEmpty()
-              ? ifTreeRange.lowerEndpoint()
-              : cases.getLast().caseSourceCodeRange().upperEndpoint();
+      caseStartPosition = nextCaseStartPosition(cases, ifTreeRange);
       cases.add(
           new CaseIr(
               /* hasCaseNull= */ false,
@@ -1489,7 +1496,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ elseOptional,
               /* caseSourceCodeRange= */ Range.closedOpen(
-                  previousCaseEndPosition,
+                  caseStartPosition,
                   elseOptional.isPresent()
                       ? getStartPosition(elseOptional.get())
                       : caseEndPosition)));
@@ -1541,10 +1548,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             .collect(toImmutableSet()));
 
     boolean addDefault = hasElse && !hasElseIf;
-    int previousCaseEndPosition =
-        cases.isEmpty()
-            ? ifTreeRange.lowerEndpoint()
-            : cases.getLast().caseSourceCodeRange().upperEndpoint();
+    int caseStartPosition = nextCaseStartPosition(cases, ifTreeRange);
     cases.add(
         new CaseIr(
             /* hasCaseNull= */ false,
@@ -1553,13 +1557,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             /* guardOptional= */ Optional.empty(),
             /* expressionsOptional= */ Optional.of(ImmutableList.of(compileTimeConstant)),
             /* arrowRhsOptional= */ arrowRhsOptional,
-            /* caseSourceCodeRange= */ Range.closedOpen(previousCaseEndPosition, caseEndPosition)));
+            /* caseSourceCodeRange= */ Range.closedOpen(caseStartPosition, caseEndPosition)));
 
     if (addDefault) {
-      previousCaseEndPosition =
-          cases.isEmpty()
-              ? ifTreeRange.lowerEndpoint()
-              : cases.getLast().caseSourceCodeRange().upperEndpoint();
       cases.add(
           new CaseIr(
               /* hasCaseNull= */ false,
