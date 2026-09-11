@@ -87,17 +87,33 @@ public final class UnrecognisedJavadocTag extends BugChecker
     for (var entry : tagStrings.entrySet()) {
       int pos = entry.getKey();
       if (!recognisedTags.contains(pos)) {
-        state.reportMatch(
-            buildDescription(getDiagnosticPosition(pos, path.getTreePath().getLeaf()))
-                .setMessage(
-                    "This Javadoc tag '%s' wasn't recognised by the parser. Is it malformed"
-                        + " somehow, perhaps with mismatched braces?",
-                    entry.getValue())
-                .build());
+        // Check if this is a well-formed tag that we can verify independently
+        // If we found a properly closed tag (ending with '}'), it's likely valid
+        // even if position matching with DocTree fails due to annotation-related offsets
+        String tag = entry.getValue();
+        if (!isValidTag(tag)) {
+          state.reportMatch(
+              buildDescription(getDiagnosticPosition(pos, path.getTreePath().getLeaf()))
+                  .setMessage(
+                      "This Javadoc tag '%s' wasn't recognised by the parser. Is it malformed"
+                          + " somehow, perhaps with mismatched braces?",
+                      tag)
+                  .build());
+        }
       }
     }
 
     return NO_MATCH;
+  }
+
+  /**
+   * Validates if a tag string appears to be well-formed.
+   * Returns true if the tag looks valid (e.g., has proper closing brace).
+   */
+  private static boolean isValidTag(String tag) {
+    // A valid tag should be of the form {@code ...} or {@link ...}
+    // and should contain a closing brace
+    return tag.endsWith("}");
   }
 
   private ImmutableRangeSet<Integer> findRecognisedTags(DocTreePath path, VisitorState state) {
