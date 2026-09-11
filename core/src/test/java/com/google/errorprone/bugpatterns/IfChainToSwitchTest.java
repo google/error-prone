@@ -3132,6 +3132,253 @@ class Test {
   }
 
   @Test
+  public void ifChain_genericArrayType_error() {
+    // Type arguments belong to the element type of an array, and must be preserved.  A generic
+    // array type pattern requires a `final` modifier in order for javac to parse the `case` label.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof List<?>[] a) {
+                  System.out.println("list array " + a.length);
+                } else if (o instanceof Map<?, ?>[] b) {
+                  System.out.println("map array " + b.length);
+                } else if (o instanceof String[][] c) {
+                  System.out.println("string matrix " + c.length);
+                } else if (o instanceof int[] d) {
+                  System.out.println("int array " + d.length);
+                } else {
+                  System.out.println("other");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Test {
+              public void foo(Object o) {
+                switch (o) {
+                  case final List<?>[] a -> System.out.println("list array " + a.length);
+                  case final Map<?, ?>[] b -> System.out.println("map array " + b.length);
+                  case String[][] c -> System.out.println("string matrix " + c.length);
+                  case int[] d -> System.out.println("int array " + d.length);
+                  default -> System.out.println("other");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_rawArrayType_error() {
+    // A raw element type is converted to the wildcard type, just as for a non-array raw type.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof List[] a) {
+                  System.out.println("list array " + a.length);
+                } else if (o instanceof Map[][] b) {
+                  System.out.println("map matrix " + b.length);
+                } else if (o instanceof String[] c) {
+                  System.out.println("string array " + c.length);
+                } else {
+                  System.out.println("other");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Test {
+              public void foo(Object o) {
+                switch (o) {
+                  case final List<?>[] a -> System.out.println("list array " + a.length);
+                  case final Map<?, ?>[][] b -> System.out.println("map matrix " + b.length);
+                  case String[] c -> System.out.println("string array " + c.length);
+                  default -> System.out.println("other");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_genericArrayTypePatternVariableReassigned_error() {
+    // A pattern variable is an ordinary local variable, so `a` may be reassigned.  That rules out
+    // the `final` modifier, and without a modifier the generic array type cannot be parsed, so the
+    // element type's arguments are erased instead.  The decision is made per pattern variable: `b`
+    // is never reassigned and so keeps both its `final` modifier and its type arguments.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof List<?>[] a) {
+                  a = null;
+                  System.out.println("list array " + a);
+                } else if (o instanceof Map<?, ?>[] b) {
+                  System.out.println("map array " + b.length);
+                } else if (o instanceof String[] c) {
+                  System.out.println("string array " + c.length);
+                } else {
+                  System.out.println("other");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Test {
+              public void foo(Object o) {
+                switch (o) {
+                  case List[] a -> {
+                    a = null;
+                    System.out.println("list array " + a);
+                  }
+                  case final Map<?, ?>[] b -> System.out.println("map array " + b.length);
+                  case String[] c -> System.out.println("string array " + c.length);
+                  default -> System.out.println("other");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_genericArrayTypePatternVariableElementAssigned_error() {
+    // Assigning to an *element* of the array does not reassign the pattern variable itself, so it
+    // remains effectively final and the `final` modifier may still be applied.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof List<?>[] a) {
+                  a[0] = null;
+                  System.out.println("list array " + a.length);
+                } else if (o instanceof String[] b) {
+                  System.out.println("string array " + b.length);
+                } else if (o instanceof int[] c) {
+                  System.out.println("int array " + c.length);
+                } else {
+                  System.out.println("other");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            class Test {
+              public void foo(Object o) {
+                switch (o) {
+                  case final List<?>[] a -> {
+                    a[0] = null;
+                    System.out.println("list array " + a.length);
+                  }
+                  case String[] b -> System.out.println("string array " + b.length);
+                  case int[] c -> System.out.println("int array " + c.length);
+                  default -> System.out.println("other");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_nonArrayGenericPatternVariableReassigned_error() {
+    // A non-array generic type pattern parses without any modifier, so reassignment has no bearing
+    // on it: the type arguments are retained even though `a` is reassigned.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof List<?> a) {
+                  a = null;
+                  System.out.println("list " + a);
+                } else if (o instanceof String b) {
+                  System.out.println("string " + b);
+                } else if (o instanceof Integer c) {
+                  System.out.println("integer " + c);
+                } else {
+                  System.out.println("other");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            class Test {
+              public void foo(Object o) {
+                switch (o) {
+                  case List<?> a -> {
+                    a = null;
+                    System.out.println("list " + a);
+                  }
+                  case String b -> System.out.println("string " + b);
+                  case Integer c -> System.out.println("integer " + c);
+                  default -> System.out.println("other");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
   public void ifChain_duplicateConstant_noError() {
     // Duplicate constant
     helper
