@@ -56,6 +56,50 @@ public class SourcePathMatcherTest {
   }
 
   @Test
+  public void directoryPrefixMatch_subsumedPrefixesPruned() {
+    SourcePathMatcher matcher =
+        SourcePathMatcher.create(
+            "java/com/google/foo/", "java/com/google/foo/bar/", "java/com/google/foo/bar/baz/");
+    assertThat(matcher.matches("java/com/google/foo/Bar.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/foo/bar/Baz.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/foo/bar/baz/Quux.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/foo/other/Other.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/other/Other.java")).isFalse();
+  }
+
+  @Test
+  public void directoryPrefixMatch_binarySearchOrdering() {
+    SourcePathMatcher matcher = SourcePathMatcher.create("b/c/", "b/e/", "m/n/", "z/w/");
+
+    // Before first prefix
+    assertThat(matcher.matches("a/Foo.java")).isFalse();
+    assertThat(matcher.matches("b/b/Foo.java")).isFalse();
+
+    // Matching first prefix
+    assertThat(matcher.matches("b/c/Foo.java")).isTrue();
+    assertThat(matcher.matches("b/c/sub/Foo.java")).isTrue();
+
+    // Between b/c/ and b/e/
+    assertThat(matcher.matches("b/d/Foo.java")).isFalse();
+    assertThat(matcher.matches("b/c-other/Foo.java")).isFalse();
+
+    // Matching second prefix
+    assertThat(matcher.matches("b/e/Foo.java")).isTrue();
+
+    // Between b/e/ and m/n/
+    assertThat(matcher.matches("f/Foo.java")).isFalse();
+
+    // Matching m/n/
+    assertThat(matcher.matches("m/n/Foo.java")).isTrue();
+
+    // Matching last prefix
+    assertThat(matcher.matches("z/w/Foo.java")).isTrue();
+
+    // After last prefix
+    assertThat(matcher.matches("z/x/Foo.java")).isFalse();
+  }
+
+  @Test
   public void invalidPatterns_rejected() {
     // Leading slash
     assertThrows(

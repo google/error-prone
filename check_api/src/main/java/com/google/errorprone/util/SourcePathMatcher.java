@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
 import com.google.errorprone.VisitorState;
 import java.util.Arrays;
 import org.jspecify.annotations.Nullable;
@@ -98,12 +99,12 @@ public final class SourcePathMatcher {
   }
 
   private static final SourcePathMatcher EMPTY =
-      new SourcePathMatcher(ImmutableSet.of(), ImmutableList.of());
+      new SourcePathMatcher(ImmutableSet.of(), ImmutableSortedSet.of());
 
   private final ImmutableSet<String> exactPaths;
-  private final ImmutableList<String> prefixes;
+  private final ImmutableSortedSet<String> prefixes;
 
-  private SourcePathMatcher(ImmutableSet<String> exactPaths, ImmutableList<String> prefixes) {
+  private SourcePathMatcher(ImmutableSet<String> exactPaths, ImmutableSortedSet<String> prefixes) {
     this.exactPaths = exactPaths;
     this.prefixes = prefixes;
   }
@@ -130,12 +131,29 @@ public final class SourcePathMatcher {
     }
 
     ImmutableSet<String> exact = exactBuilder.build();
-    ImmutableList<String> pref = prefixesBuilder.build();
+    ImmutableSortedSet<String> pref = sortAndPrunePrefixes(prefixesBuilder.build());
 
     if (exact.isEmpty() && pref.isEmpty()) {
       return EMPTY;
     }
     return new SourcePathMatcher(exact, pref);
+  }
+
+  // Sorts directory prefixes and prunes subsumed descendant prefixes. Because directory prefixes
+  // end with '/', any descendant prefix (e.g. `a/b/c/`) sorts lexicographically after its ancestor
+  // prefix (e.g. `a/b/`). Pruning redundant prefixes ensures no prefix in the list is a prefix of
+  // another, which allows `matchesPrefix` to test only the predecessor candidate from `floor`.
+  private static ImmutableSortedSet<String> sortAndPrunePrefixes(Iterable<String> prefixes) {
+    ImmutableList<String> sorted = ImmutableList.sortedCopyOf(prefixes);
+    ImmutableList.Builder<String> pruned = ImmutableList.builder();
+    String last = null;
+    for (String prefix : sorted) {
+      if (last == null || !prefix.startsWith(last)) {
+        pruned.add(prefix);
+        last = prefix;
+      }
+    }
+    return ImmutableSortedSet.copyOf(pruned.build());
   }
 
   private static void parsePath(
@@ -181,12 +199,12 @@ public final class SourcePathMatcher {
     if (!exactPaths.isEmpty() && exactPaths.contains(canonicalPath)) {
       return true;
     }
-    for (String prefix : prefixes) {
-      if (canonicalPath.startsWith(prefix)) {
-        return true;
-      }
-    }
-    return false;
+    return matchesPrefix(canonicalPath);
+  }
+
+  private boolean matchesPrefix(String canonicalPath) {
+    String prefix = prefixes.floor(canonicalPath);
+    return prefix != null && canonicalPath.startsWith(prefix);
   }
 
   /// Returns `true` if the compilation unit in `state` matches any of the patterns in this matcher.
