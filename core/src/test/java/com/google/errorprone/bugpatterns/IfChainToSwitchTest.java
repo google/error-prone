@@ -4336,6 +4336,146 @@ class Test {
         .doTest();
   }
 
+  @Test
+  public void ifChain_instanceOfOrIntConstant_noCrash() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Integer x) {
+                if (x instanceof Number || x == 5) {
+                  System.out.println("a");
+                } else {
+                  System.out.println("b");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_instanceOfOrEnumConstant_noCrash() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof String || o == Suit.HEART) {
+                  System.out.println("a");
+                } else {
+                  System.out.println("b");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_conditionalExpressionConstant_noError() {
+    // The ternary expression is not a compile-time constant
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int x, boolean flag) {
+                if (x == (flag ? 1 : 2)) {
+                  System.out.println("a");
+                } else if (x == 3) {
+                  System.out.println("b");
+                } else if (x == 4) {
+                  System.out.println("c");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_compileTimeConstantParameter_noError() {
+    // Although c is annotated with @CompileTimeConstant, it is not a compile-time constant.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.CompileTimeConstant;
+
+            class Test {
+              public void foo(int x, @CompileTimeConstant final int c) {
+                if (x == c) {
+                  System.out.println("a");
+                } else if (x == 3) {
+                  System.out.println("b");
+                } else if (x == 4) {
+                  System.out.println("c");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_exhaustiveEnumWithTrailingStatements_keepsTrailingStatements() {
+    // The trailing AssertionError should be kept.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit s) {
+                if (s == Suit.HEART) {
+                  return 1;
+                } else if (s == Suit.SPADE) {
+                  return 2;
+                } else if (s == Suit.DIAMOND) {
+                  return 3;
+                } else if (s == Suit.CLUB) {
+                  return 4;
+                }
+                System.out.println("not reached today, but reachable as far as javac knows");
+                throw new AssertionError();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit s) {
+                switch (s) {
+                  case Suit.HEART -> {
+                    return 1;
+                  }
+                  case Suit.SPADE -> {
+                    return 2;
+                  }
+                  case Suit.DIAMOND -> {
+                    return 3;
+                  }
+                  case Suit.CLUB -> {
+                    return 4;
+                  }
+                }
+                System.out.println("not reached today, but reachable as far as javac knows");
+                throw new AssertionError();
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
   /** Substitute underscore for {@code unused} variables, if supported. */
   private static String maybeChangeToUnnamedVariable(String s) {
     if (Runtime.version().feature() >= 22) {
