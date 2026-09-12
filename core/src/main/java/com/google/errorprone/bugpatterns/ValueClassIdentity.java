@@ -99,6 +99,17 @@ public class ValueClassIdentity extends BugChecker
   private static final Matcher<ExpressionTree> OBJECT_WAIT_NOTIFY =
       instanceMethod().onDescendantOf("java.lang.Object").namedAnyOf("wait", "notify", "notifyAll");
 
+  private static final Matcher<ExpressionTree> IDENTITY_HASH_MAP_METHOD =
+      anyOf(
+          instanceMethod()
+              .onDescendantOf("java.util.IdentityHashMap")
+              .namedAnyOf("containsKey", "containsValue", "get", "remove")
+              .withParameters("java.lang.Object"),
+          instanceMethod()
+              .onDescendantOf("java.util.IdentityHashMap")
+              .namedAnyOf("put", "putIfAbsent", "remove")
+              .withParameters("java.lang.Object", "java.lang.Object"));
+
   private static final Matcher<ExpressionTree> CACHE_OR_MAP_BUILDER =
       anyOf(
           instanceMethod()
@@ -197,6 +208,10 @@ public class ValueClassIdentity extends BugChecker
       return Description.NO_MATCH;
     }
 
+    if (IDENTITY_HASH_MAP_METHOD.matches(tree, state)) {
+      return checkIdentityHashMapArguments(tree, state);
+    }
+
     if (CACHE_OR_MAP_BUILDER.matches(tree, state)) {
       Type returnType = ASTHelpers.getType(tree);
       if (returnType != null && returnType.getTypeArguments().size() >= 2) {
@@ -221,6 +236,55 @@ public class ValueClassIdentity extends BugChecker
         }
       }
     }
+    return Description.NO_MATCH;
+  }
+
+  /**
+   * Checks for value-based classes passed directly as arguments to {@link
+   * java.util.IdentityHashMap} methods.
+   *
+   * <p>Only the static types of the argument expressions are considered. Cases that would require
+   * dataflow, such as a value-based instance assigned to an {@code Object} local first or a
+   * receiver declared as {@code Map}, are not handled.
+   */
+  private Description checkIdentityHashMapArguments(MethodInvocationTree tree, VisitorState state) {
+    List<? extends ExpressionTree> arguments = tree.getArguments();
+    String methodName = ASTHelpers.getSymbol(tree).getSimpleName().toString();
+
+    if (methodName.equals("containsValue")) {
+      if (arguments.size() != 1) {
+        return Description.NO_MATCH;
+      }
+      ExpressionTree value = arguments.get(0);
+      if (isValueClass(ASTHelpers.getType(value), state)) {
+        return buildDescription(value)
+            .setMessage(
+                message("passing a value-based class as a value to IdentityHashMap is unsafe."))
+            .build();
+      }
+      return Description.NO_MATCH;
+    }
+    if (arguments.isEmpty()) {
+      return Description.NO_MATCH;
+    }
+
+    ExpressionTree key = arguments.get(0);
+    if (isValueClass(ASTHelpers.getType(key), state)) {
+      return buildDescription(key)
+          .setMessage(message("passing a value-based class as a key to IdentityHashMap is unsafe."))
+          .build();
+    }
+
+    if (arguments.size() == 2) {
+      ExpressionTree value = arguments.get(1);
+      if (isValueClass(ASTHelpers.getType(value), state)) {
+        return buildDescription(value)
+            .setMessage(
+                message("passing a value-based class as a value to IdentityHashMap is unsafe."))
+            .build();
+      }
+    }
+
     return Description.NO_MATCH;
   }
 
