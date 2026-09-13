@@ -4336,6 +4336,133 @@ class Test {
         .doTest();
   }
 
+  @Test
+  public void ifChain_instanceOfOrIntConstant_noCrash() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Integer x) {
+                if (x instanceof Number || x == 5) {
+                  System.out.println("a");
+                } else {
+                  System.out.println("b");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_instanceOfOrEnumConstant_noCrash() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof String || o == Suit.HEART) {
+                  System.out.println("a");
+                } else {
+                  System.out.println("b");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_conditionalExpressionConstant_noError() {
+    // BUG (does not compile): `COMPILE_TIME_CONSTANT_MATCHER` accepts `flag ? 1 : 2` (it only
+    // requires the two branches to be constant, not the condition), but a `case` label requires a
+    // constant expression as defined by JLS 21 15.29.  The suggested fix produces
+    // `case (flag ? 1 : 2) ->`, which javac rejects with "constant expression required".
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int x, boolean flag) {
+                // BUG: Diagnostic contains: This if-chain may be converted into a switch
+                if (x == (flag ? 1 : 2)) {
+                  System.out.println("a");
+                } else if (x == 3) {
+                  System.out.println("b");
+                } else if (x == 4) {
+                  System.out.println("c");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_compileTimeConstantParameter_noError() {
+    // BUG (does not compile): `COMPILE_TIME_CONSTANT_MATCHER` also accepts a final parameter
+    // annotated with `@CompileTimeConstant`, which is not a constant variable, so the suggested
+    // fix produces `case c ->` and javac reports "constant expression required".
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.CompileTimeConstant;
+
+            class Test {
+              public void foo(int x, @CompileTimeConstant final int c) {
+                // BUG: Diagnostic contains: This if-chain may be converted into a switch
+                if (x == c) {
+                  System.out.println("a");
+                } else if (x == 3) {
+                  System.out.println("b");
+                } else if (x == 4) {
+                  System.out.println("c");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_exhaustiveEnumWithTrailingStatements_keepsTrailingStatements() {
+    // BUG (does not compile): when every enum constant is handled, no `default` is emitted.  A
+    // switch *statement* over an enum is not "enhanced" (JLS 21 14.11.2), so javac considers it
+    // able to complete normally even when it is exhaustive.  The checker's own reachability
+    // analysis disagrees and deletes the statements following the switch, so the generated method
+    // fails to compile with "missing return statement".
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit s) {
+                // BUG: Diagnostic contains: This if-chain may be converted into a switch
+                if (s == Suit.HEART) {
+                  return 1;
+                } else if (s == Suit.SPADE) {
+                  return 2;
+                } else if (s == Suit.DIAMOND) {
+                  return 3;
+                } else if (s == Suit.CLUB) {
+                  return 4;
+                }
+                System.out.println("not reached today, but reachable as far as javac knows");
+                throw new AssertionError();
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
   /** Substitute underscore for {@code unused} variables, if supported. */
   private static String maybeChangeToUnnamedVariable(String s) {
     if (Runtime.version().feature() >= 22) {
