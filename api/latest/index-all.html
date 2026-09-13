@@ -965,16 +965,42 @@ result in an ArrayStoreException.</div>
 <dd>
 <div class="block">Converts the given annotation value to one or more annotations.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#asAnnotationValue(javax.lang.model.element.AnnotationValue)" class="member-name-link">asAnnotationValue(AnnotationValue)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Converts the given attribute to an annotation mirror.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#asBooleanValue(javax.lang.model.element.AnnotationValue)" class="member-name-link">asBooleanValue(AnnotationValue)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Converts the given attribute to a boolean value.</div>
+</dd>
 <dt><a href="com/google/errorprone/fixes/Replacements.html#ascending()" class="member-name-link">ascending()</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/Replacements.html" title="class in com.google.errorprone.fixes">Replacements</a></dt>
 <dd>
 <div class="block">Non-overlapping replacements, sorted in ascending order by position.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#asElement(javax.lang.model.element.AnnotationMirror)" class="member-name-link">asElement(AnnotationMirror)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Returns the <code>Symbol.TypeSymbol</code> representing the declaration of the annotation mirror.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#asEnumValue(java.lang.Class,javax.lang.model.element.AnnotationValue)" class="member-name-link">asEnumValue(Class, AnnotationValue)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Prefer <a href="com/google/errorprone/util/MoreAnnotations.html#asEnumValue(javax.lang.model.element.AnnotationValue)"><code>MoreAnnotations.asEnumValue(AnnotationValue)</code></a>.</div>
+</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#asEnumValue(javax.lang.model.element.AnnotationValue)" class="member-name-link">asEnumValue(AnnotationValue)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
 <div class="block">Converts the given attribute to an enum value.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#asEnumValues(java.lang.Class,javax.lang.model.element.AnnotationValue)" class="member-name-link">asEnumValues(Class, AnnotationValue)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Prefer <a href="com/google/errorprone/util/MoreAnnotations.html#asEnumValues(javax.lang.model.element.AnnotationValue)"><code>MoreAnnotations.asEnumValues(AnnotationValue)</code></a>.</div>
+</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#asEnumValues(javax.lang.model.element.AnnotationValue)" class="member-name-link">asEnumValues(AnnotationValue)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Converts the given annotation value to one or more enum values.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#asFlagSet(long)" class="member-name-link">asFlagSet(long)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Returns a set of strings representing the flags in the given long.</div>
@@ -1107,7 +1133,7 @@ class, and the annotation is itself annotated with <code>@ScopeAnnotation</code>
 </dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#asStringValue(javax.lang.model.element.AnnotationValue)" class="member-name-link">asStringValue(AnnotationValue)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
-<div class="block">Converts the given attribute to an string value.</div>
+<div class="block">Converts the given attribute to a string value.</div>
 </dd>
 <dt><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.TestMode.html#AST_MATCH" class="member-name-link">AST_MATCH</a> - Enum constant in enum class com.google.errorprone.<a href="com/google/errorprone/BugCheckerRefactoringTestHelper.TestMode.html" title="enum class in com.google.errorprone">BugCheckerRefactoringTestHelper.TestMode</a></dt>
 <dd>
@@ -1165,6 +1191,12 @@ argument.</div>
 <div class="block">A BugPattern; see the summary.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/AttemptedNegativeZero.html#%3Cinit%3E()" class="member-name-link">AttemptedNegativeZero()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AttemptedNegativeZero.html" title="class in com.google.errorprone.bugpatterns">AttemptedNegativeZero</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#AUTO_BUILDER_ANNOTATION" class="member-name-link">AUTO_BUILDER_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#AUTO_FACTORY_ANNOTATION" class="member-name-link">AUTO_FACTORY_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#AUTO_VALUE_ANNOTATION" class="member-name-link">AUTO_VALUE_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/checkreturnvalue/AutoValueRules.html#autoBuilders()" class="member-name-link">autoBuilders()</a> - Static method in class com.google.errorprone.bugpatterns.checkreturnvalue.<a href="com/google/errorprone/bugpatterns/checkreturnvalue/AutoValueRules.html" title="class in com.google.errorprone.bugpatterns.checkreturnvalue">AutoValueRules</a></dt>
 <dd>
@@ -1927,6 +1959,8 @@ the caller passes <code>foo</code> as a parameter.</div>
 <dt><a href="com/google/errorprone/bugpatterns/CheckReturnValue.html#CHECK_ALL_CONSTRUCTORS" class="member-name-link">CHECK_ALL_CONSTRUCTORS</a> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CheckReturnValue.html" title="class in com.google.errorprone.bugpatterns">CheckReturnValue</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/CheckReturnValue.html#CHECK_ALL_METHODS" class="member-name-link">CHECK_ALL_METHODS</a> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CheckReturnValue.html" title="class in com.google.errorprone.bugpatterns">CheckReturnValue</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#CHECK_RETURN_VALUE_ANNOTATION" class="member-name-link">CHECK_RETURN_VALUE_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/CheckedExceptionNotThrown.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">CheckedExceptionNotThrown</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -3048,6 +3082,8 @@ expression is not equal to another expression with this <code>Nullness</code>.</
 <div class="block">Matches the behaviour of the javac dep-ann Xlint warning.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/DepAnn.html#%3Cinit%3E()" class="member-name-link">DepAnn()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/DepAnn.html" title="class in com.google.errorprone.bugpatterns">DepAnn</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#DEPRECATED_ANNOTATION" class="member-name-link">DEPRECATED_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/DeprecatedVariable.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">DeprecatedVariable</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -4888,6 +4924,15 @@ based on its context.</div>
     meta-syntactically inspect the annotation.</div>
 </div>
 </dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getAnnotation(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getAnnotation(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Returns the annotation on the given element with the specified qualified binary or canonical
+name.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getAnnotation(javax.lang.model.element.Element,javax.lang.model.element.Name)" class="member-name-link">getAnnotation(Element, Name)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Returns the annotation on the given element with the specified qualified name.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotationMirror(com.sun.source.tree.AnnotationTree)" class="member-name-link">getAnnotationMirror(AnnotationTree)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Return a mirror of this annotation.</div>
@@ -4909,12 +4954,23 @@ be determined.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getAnnotationValue(com.sun.tools.javac.code.Attribute.Compound,java.lang.String)" class="member-name-link">getAnnotationValue(Attribute.Compound, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
-<div class="block">Returns the value of the annotation element-value pair with the given name if it is explicitly
-set.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Prefer <a href="com/google/errorprone/util/MoreAnnotations.html#getValue(javax.lang.model.element.AnnotationMirror,java.lang.String)"><code>MoreAnnotations.getValue(AnnotationMirror, String)</code></a>.</div>
+</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getAnnotationValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getAnnotationValue(AnnotationMirror, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use <a href="com/google/errorprone/util/MoreAnnotations.html#getValue(javax.lang.model.element.AnnotationMirror,java.lang.String)"><code>MoreAnnotations.getValue(AnnotationMirror, String)</code></a> instead.</div>
+</div>
 </dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#getAnnotationWithSimpleName(java.util.List,java.lang.String)" class="member-name-link">getAnnotationWithSimpleName(List, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Returns an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/AnnotationTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>AnnotationTree</code></a> with the given simple name, or <code>null</code>.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getAnnotationWithSimpleName(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getAnnotationWithSimpleName(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Returns the annotation on the given element with the specified simple name.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/AnnotationMatcherUtils.html#getArgument(com.sun.source.tree.AnnotationTree,java.lang.String)" class="member-name-link">getArgument(AnnotationTree, String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/AnnotationMatcherUtils.html" title="class in com.google.errorprone.matchers">AnnotationMatcherUtils</a></dt>
 <dd>
@@ -4936,6 +4992,14 @@ set.</div>
 <dd>
 <div class="block">Gets the flag value for the given key as a Boolean, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is
 empty if the flag is unset.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getBooleanValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getBooleanValue(AnnotationMirror, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting a boolean value of a named element from an annotation mirror.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getBooleanValue(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getBooleanValue(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting the "value" boolean of a named annotation on an element.</div>
 </dd>
 <dt><a href="com/google/errorprone/scanner/ErrorProneScanner.html#getBugCheckers()" class="member-name-link">getBugCheckers()</a> - Method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/ErrorProneScanner.html" title="class in com.google.errorprone.scanner">ErrorProneScanner</a></dt>
 <dd>&nbsp;</dd>
@@ -5267,6 +5331,22 @@ empty if the flag is unset.</div>
 <dt><a href="com/google/errorprone/ErrorProneFlags.html#getEnumSet(java.lang.String,java.lang.Class)" class="member-name-link">getEnumSet(String, Class)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ErrorProneFlags.html" title="class in com.google.errorprone">ErrorProneFlags</a></dt>
 <dd>
 <div class="block">Gets the flag value for a comma-separated set of enums of the given type, wrapped in an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link"><code>Optional</code></a>, which is empty if the flag is unset.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getEnumValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getEnumValue(AnnotationMirror, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting an enum value of a named element from an annotation mirror.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getEnumValue(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getEnumValue(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting the "value" enum of a named annotation on an element.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getEnumValues(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getEnumValues(AnnotationMirror, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting enum values of a named element from an annotation mirror.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getEnumValues(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getEnumValues(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting the "value" enum values of a named annotation on an element.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#getErasedTypeTree(com.sun.source.tree.Tree)" class="member-name-link">getErasedTypeTree(Tree)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
@@ -5813,6 +5893,10 @@ of the tree within the overall source.</div>
 <dd>
 <div class="block">Returns the type that this expression tree will evaluate to.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getRetentionPolicy(javax.lang.model.element.Element)" class="member-name-link">getRetentionPolicy(Element)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Returns the effective <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/RetentionPolicy.html" title="class or interface in java.lang.annotation" class="external-link"><code>RetentionPolicy</code></a> of the annotation symbol (defaulting to <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/RetentionPolicy.html#CLASS" title="class or interface in java.lang.annotation" class="external-link"><code>RetentionPolicy.CLASS</code></a> per JLS 9.6.4.2 if omitted or not found).</div>
+</dd>
 <dt><a href="com/google/errorprone/refaster/UMethodType.html#getReturnType()" class="member-name-link">getReturnType()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UMethodType.html" title="class in com.google.errorprone.refaster">UMethodType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#getReturnType(com.sun.source.tree.ExpressionTree)" class="member-name-link">getReturnType(ExpressionTree)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
@@ -5899,6 +5983,23 @@ normalizing away workspace roots (e.g.</div>
 </dd>
 <dt><a href="com/google/errorprone/refaster/Inliner.html#getStaticImportsToAdd()" class="member-name-link">getStaticImportsToAdd()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getStrings(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getStrings(AnnotationMirror, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting a list of strings for a named element (e.g. array or single string).</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getStrings(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getStrings(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting a list of strings from the "value" element of a named annotation on an
+element.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getStringValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getStringValue(AnnotationMirror, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting a string value of a named element from an annotation mirror.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getStringValue(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getStringValue(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting the "value" string of a named annotation on an element.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/ErrorProneComment.html#getStyle()" class="member-name-link">getStyle()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/scanner/BuiltInCheckerSuppliers.html#getSuppliers(java.lang.Class...)" class="member-name-link">getSuppliers(Class...)</a> - Static method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/BuiltInCheckerSuppliers.html" title="class in com.google.errorprone.scanner">BuiltInCheckerSuppliers</a></dt>
@@ -5957,6 +6058,11 @@ normalizing away workspace roots (e.g.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/BugCheckerInfo.html#getTags()" class="member-name-link">getTags()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getTargetElementTypes(javax.lang.model.element.Element)" class="member-name-link">getTargetElementTypes(Element)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Returns the set of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html" title="class or interface in java.lang.annotation" class="external-link"><code>ElementType</code></a> targets specified in the annotation's <code>@Target</code>
+meta-annotation, or <code>null</code> if no <code>@Target</code> meta-annotation is present.</div>
+</dd>
 <dt><a href="com/google/errorprone/BaseErrorProneJavaCompiler.html#getTask(java.io.Writer,javax.tools.JavaFileManager,javax.tools.DiagnosticListener,java.lang.Iterable,java.lang.Iterable,java.lang.Iterable)" class="member-name-link">getTask(Writer, JavaFileManager, DiagnosticListener, Iterable, Iterable, Iterable)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/BaseErrorProneJavaCompiler.html" title="class in com.google.errorprone">BaseErrorProneJavaCompiler</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/ErrorProneComment.html#getText()" class="member-name-link">getText()</a> - Method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ErrorProneComment.html" title="class in com.google.errorprone.util">ErrorProneComment</a></dt>
@@ -6026,9 +6132,26 @@ determined.</div>
 </dd>
 <dt><a href="com/google/errorprone/VisitorState.html#getTypes()" class="member-name-link">getTypes()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getTypes(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getTypes(AnnotationMirror, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting a list of types for a named element (e.g.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getTypes(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getTypes(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting a list of types from the "value" element of a named annotation on an
+element.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#getTypeSubstitution(com.sun.tools.javac.code.Type,com.sun.tools.javac.code.Symbol)" class="member-name-link">getTypeSubstitution(Type, Symbol)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Returns the mapping between type variables and their instantiations in the given type.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getTypeValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getTypeValue(AnnotationMirror, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting a type value of a named element from an annotation mirror.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getTypeValue(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getTypeValue(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting the "value" type of a named annotation on an element.</div>
 </dd>
 <dt><a href="com/google/errorprone/refaster/UForAll.html#getTypeVars()" class="member-name-link">getTypeVars()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UForAll.html" title="class in com.google.errorprone.refaster">UForAll</a></dt>
 <dd>&nbsp;</dd>
@@ -6053,6 +6176,12 @@ find any default in scope of the given type variable.</div>
 <dt><a href="com/google/errorprone/refaster/ULiteral.html#getValue()" class="member-name-link">getValue()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/ULiteral.html" title="class in com.google.errorprone.refaster">ULiteral</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getValue(com.sun.tools.javac.code.Attribute.Compound,java.lang.String)" class="member-name-link">getValue(Attribute.Compound, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Prefer <a href="com/google/errorprone/util/MoreAnnotations.html#getValue(javax.lang.model.element.AnnotationMirror,java.lang.String)"><code>MoreAnnotations.getValue(AnnotationMirror, String)</code></a>.</div>
+</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getValue(AnnotationMirror, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
 <div class="block">Returns the value of the annotation element-value pair with the given name if it is explicitly
 set.</div>
@@ -6828,6 +6957,8 @@ imports.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/Incomparable.html#%3Cinit%3E()" class="member-name-link">Incomparable()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/Incomparable.html" title="class in com.google.errorprone.bugpatterns">Incomparable</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#INCOMPATIBLE_MODIFIERS_ANNOTATION" class="member-name-link">INCOMPATIBLE_MODIFIERS_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/IncompatibleArgumentType.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">IncompatibleArgumentType</a> - Class in <a href="com/google/errorprone/bugpatterns/collectionincompatibletype/package-summary.html">com.google.errorprone.bugpatterns.collectionincompatibletype</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/annotations/IncompatibleModifiers.html" class="type-name-link" title="annotation interface in com.google.errorprone.annotations">IncompatibleModifiers</a> - Annotation Interface in <a href="com/google/errorprone/annotations/package-summary.html">com.google.errorprone.annotations</a></dt>
@@ -7014,6 +7145,10 @@ if possible.</div>
 <dt><a href="com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html#inline(com.google.errorprone.refaster.Inliner)" class="member-name-link">inline(Inliner)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTypeVar.TypeWithExpression.html" title="class in com.google.errorprone.refaster">UTypeVar.TypeWithExpression</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UVariableDecl.html#inline(com.google.errorprone.refaster.Inliner)" class="member-name-link">inline(Inliner)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UVariableDecl.html" title="class in com.google.errorprone.refaster">UVariableDecl</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#INLINE_ME_ANNOTATION" class="member-name-link">INLINE_ME_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#INLINE_ME_VALIDATION_DISABLED_ANNOTATION" class="member-name-link">INLINE_ME_VALIDATION_DISABLED_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Inliner.html#inlineAsTree(com.sun.tools.javac.code.Type)" class="member-name-link">inlineAsTree(Type)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Inliner.html" title="class in com.google.errorprone.refaster">Inliner</a></dt>
 <dd>
@@ -7797,6 +7932,10 @@ underneath a class or method that is marked as TestNG test code.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#isType(java.lang.String)" class="member-name-link">isType(String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#isTypeAnnotation(javax.lang.model.element.Element)" class="member-name-link">isTypeAnnotation(Element)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Returns whether the annotation is a type annotation (i.e. its <code>@Target</code> includes <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html#TYPE_USE" title="class or interface in java.lang.annotation" class="external-link"><code>ElementType.TYPE_USE</code></a> or <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html#TYPE_PARAMETER" title="class or interface in java.lang.annotation" class="external-link"><code>ElementType.TYPE_PARAMETER</code></a>).</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TypeParameterNaming.TypeParameterNamingClassification.html#isValidName()" class="member-name-link">isValidName()</a> - Method in enum class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeParameterNaming.TypeParameterNamingClassification.html" title="enum class in com.google.errorprone.bugpatterns">TypeParameterNaming.TypeParameterNamingClassification</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#isVariable()" class="member-name-link">isVariable()</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
@@ -9118,6 +9257,8 @@ empty statement, and - The else part of the parent if does not exist</div>
 <div class="block">Specify an error-prone <a href="com/google/errorprone/matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><code>Matcher</code></a> to further restrict what expressions are matched by the
 annotated parameter.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#MATCHES_ANNOTATION" class="member-name-link">MATCHES_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TypesWithUndefinedEquality.html#matchesType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">matchesType(Type, VisitorState)</a> - Method in enum class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypesWithUndefinedEquality.html" title="enum class in com.google.errorprone.bugpatterns">TypesWithUndefinedEquality</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/BugChecker.ExportsTreeMatcher.html#matchExports(com.sun.source.tree.ExportsTree,com.google.errorprone.VisitorState)" class="member-name-link">matchExports(ExportsTree, VisitorState)</a> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.ExportsTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ExportsTreeMatcher</a></dt>
@@ -11583,6 +11724,8 @@ this shouldn't suggest to add more.</div>
 </dd>
 <dt><a href="com/google/errorprone/predicates/TypePredicates.html#not(com.google.errorprone.predicates.TypePredicate)" class="member-name-link">not(TypePredicate)</a> - Static method in class com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicates.html" title="class in com.google.errorprone.predicates">TypePredicates</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#NOT_MATCHES_ANNOTATION" class="member-name-link">NOT_MATCHES_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#nothing()" class="member-name-link">nothing()</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">A matcher that matches no AST node.</div>
@@ -11603,6 +11746,10 @@ this shouldn't suggest to add more.</div>
 annotated parameter.</div>
 </dd>
 <dt><a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#NULL" class="member-name-link">NULL</a> - Enum constant in enum class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#NULL_MARKED_ANNOTATION" class="member-name-link">NULL_MARKED_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#NULL_UNMARKED_ANNOTATION" class="member-name-link">NULL_UNMARKED_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html#NULLABLE" class="member-name-link">NULLABLE</a> - Enum constant in enum class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/Nullness.html" title="enum class in com.google.errorprone.dataflow.nullnesspropagation">Nullness</a></dt>
 <dd>
@@ -11759,6 +11906,8 @@ won't produce meaningful output.</div>
 <dd>
 <div class="block">Returns a <code>Choice</code> with only one option, <code>t</code>.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#OF_KIND_ANNOTATION" class="member-name-link">OF_KIND_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/ErrorProneOptions.Severity.html#OFF" class="member-name-link">OFF</a> - Enum constant in enum class com.google.errorprone.<a href="com/google/errorprone/ErrorProneOptions.Severity.html" title="enum class in com.google.errorprone">ErrorProneOptions.Severity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/annotation/OfKind.html" class="type-name-link" title="annotation interface in com.google.errorprone.refaster.annotation">OfKind</a> - Annotation Interface in <a href="com/google/errorprone/refaster/annotation/package-summary.html">com.google.errorprone.refaster.annotation</a></dt>
@@ -11982,6 +12131,8 @@ won't produce meaningful output.</div>
 <dt><a href="com/google/errorprone/bugpatterns/inject/OverlappingQualifierAndScopeAnnotation.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject">OverlappingQualifierAndScopeAnnotation</a> - Class in <a href="com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/OverlappingQualifierAndScopeAnnotation.html#%3Cinit%3E()" class="member-name-link">OverlappingQualifierAndScopeAnnotation()</a> - Constructor for class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/OverlappingQualifierAndScopeAnnotation.html" title="class in com.google.errorprone.bugpatterns.inject">OverlappingQualifierAndScopeAnnotation</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#OVERRIDE_ANNOTATION" class="member-name-link">OVERRIDE_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/Overrides.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">Overrides</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -13002,6 +13153,8 @@ replacement</code>.</div>
 <div class="block">Renames usage of the given <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>VariableTree</code></a> in the current compilation unit to <code>
 replacement</code>.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#REPEATABLE_ANNOTATION" class="member-name-link">REPEATABLE_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/annotation/Repeated.html" class="type-name-link" title="annotation interface in com.google.errorprone.refaster.annotation">Repeated</a> - Annotation Interface in <a href="com/google/errorprone/refaster/annotation/package-summary.html">com.google.errorprone.refaster.annotation</a></dt>
 <dd>
 <div class="block">An annotation for repeated Refaster template variables.</div>
@@ -13113,6 +13266,8 @@ with this template.</div>
 <dd>
 <div class="block">Returns the value of the <code>required</code> record component.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#REQUIRED_MODIFIERS_ANNOTATION" class="member-name-link">REQUIRED_MODIFIERS_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/annotation/RequiredAnnotation.html" class="type-name-link" title="annotation interface in com.google.errorprone.refaster.annotation">RequiredAnnotation</a> - Annotation Interface in <a href="com/google/errorprone/refaster/annotation/package-summary.html">com.google.errorprone.refaster.annotation</a></dt>
 <dd>
 <div class="block">Indicates that an annotation requires the presence of another annotation.</div>
@@ -13252,6 +13407,8 @@ for the methods.</div>
 <div class="block">A rule that evaluates symbols of any kind to determine a <a href="com/google/errorprone/bugpatterns/checkreturnvalue/ResultUsePolicy.html" title="enum class in com.google.errorprone.bugpatterns.checkreturnvalue"><code>ResultUsePolicy</code></a> to associate
 with them.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#RETENTION_ANNOTATION" class="member-name-link">RETENTION_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/RethrowReflectiveOperationExceptionAsLinkageError.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">RethrowReflectiveOperationExceptionAsLinkageError</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
@@ -14195,6 +14352,8 @@ currently-processed one; the files can then be recompiled.</div>
 <dd>
 <div class="block">Returns true if the compiler source version level supports unnamed variables and patterns.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#SUPPRESS_WARNINGS_ANNOTATION" class="member-name-link">SUPPRESS_WARNINGS_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#suppressAnnotation(java.lang.Iterable)" class="member-name-link">suppressAnnotation(Iterable)</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
 <dd>
 <div class="block">An annotation which, when found on a class, should suppress the test</div>
@@ -14357,8 +14516,14 @@ variable if needed.</div>
 <dd>
 <div class="block">A list of Stringly-typed tags to apply to this check.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/AnnotationNames.html#TARGET_ANNOTATION" class="member-name-link">TARGET_ANNOTATION</a> - Static variable in class com.google.errorprone.util.<a href="com/google/errorprone/util/AnnotationNames.html" title="class in com.google.errorprone.util">AnnotationNames</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/DocGenTool.TargetEnumConverter.html#%3Cinit%3E()" class="member-name-link">TargetEnumConverter()</a> - Constructor for class com.google.errorprone.<a href="com/google/errorprone/DocGenTool.TargetEnumConverter.html" title="class in com.google.errorprone">DocGenTool.TargetEnumConverter</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#targetsElement(javax.lang.model.element.Element,java.lang.annotation.ElementType)" class="member-name-link">targetsElement(Element, ElementType)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Returns whether the annotation applies to the given <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/ElementType.html" title="class or interface in java.lang.annotation" class="external-link"><code>ElementType</code></a>.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AbstractCollectionIncompatibleTypeMatcher.MatchResult.html#targetType()" class="member-name-link">targetType()</a> - Method in record class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AbstractCollectionIncompatibleTypeMatcher.MatchResult.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AbstractCollectionIncompatibleTypeMatcher.MatchResult</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>targetType</code> record component.</div>
