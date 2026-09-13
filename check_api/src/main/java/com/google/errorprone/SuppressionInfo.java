@@ -24,17 +24,17 @@ import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.matchers.Suppressible;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
+import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.SimpleTreeVisitor;
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.util.Name;
-import com.sun.tools.javac.util.Pair;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import javax.lang.model.element.AnnotationMirror;
 
 /**
  * Immutable container of "suppression signals" - annotations or other information gathered from
@@ -53,7 +53,6 @@ public final class SuppressionInfo {
 
   private static final Supplier<Name> ANDROID_SUPPRESS_LINT =
       VisitorState.memoize(state -> state.getName("android.annotation.SuppressLint"));
-  private static final Supplier<Name> VALUE = VisitorState.memoize(state -> state.getName("value"));
   private final ImmutableSet<String> suppressWarningsStrings;
 
   @SuppressWarnings("Immutable") /* Name is javac's interned version of a string. */
@@ -152,30 +151,19 @@ public final class SuppressionInfo {
 
     /* Handle {@code @SuppressWarnings} and {@code @SuppressLint}. */
     Name suppressLint = ANDROID_SUPPRESS_LINT.get(state);
-    Name valueName = VALUE.get(state);
     Set<String> newSuppressions = null;
     // Iterate over annotations on this symbol, looking for SuppressWarnings
-    for (Attribute.Compound attr : sym.getAnnotationMirrors()) {
-      if ((attr.type.tsym == state.getSymtab().suppressWarningsType.tsym)
-          || attr.type.tsym.getQualifiedName().equals(suppressLint)) {
-        for (Pair<MethodSymbol, Attribute> value : attr.values) {
-          if (value.fst.name.equals(valueName)) {
-            if (value.snd
-                instanceof Attribute.Array array) { // SuppressWarnings/SuppressLint take an array
-              for (Attribute suppress : array.values) {
-                String suppressedWarning = (String) suppress.getValue();
-                if (!suppressWarningsStrings.contains(suppressedWarning)) {
-                  anyModification = true;
-                  if (newSuppressions == null) {
-                    newSuppressions = new HashSet<>(suppressWarningsStrings);
-                  }
-                  newSuppressions.add(suppressedWarning);
-                }
-              }
-            } else {
-              throw new RuntimeException(
-                  "Expected SuppressWarnings/SuppressLint annotation to take array type");
+    for (AnnotationMirror attr : sym.getAnnotationMirrors()) {
+      TypeSymbol tsym = MoreAnnotations.asElement(attr);
+      if (tsym.equals(state.getSymtab().suppressWarningsType.tsym)
+          || tsym.getQualifiedName().equals(suppressLint)) {
+        for (String suppressedWarning : MoreAnnotations.getStrings(attr, "value")) {
+          if (!suppressWarningsStrings.contains(suppressedWarning)) {
+            anyModification = true;
+            if (newSuppressions == null) {
+              newSuppressions = new HashSet<>(suppressWarningsStrings);
             }
+            newSuppressions.add(suppressedWarning);
           }
         }
       }

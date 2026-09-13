@@ -24,7 +24,6 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.fixes.ErrorProneEndPosTable.getEndPosition;
-import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
@@ -35,7 +34,6 @@ import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.sun.tools.javac.code.TypeTag.CLASS;
 import static com.sun.tools.javac.util.Position.NOPOS;
 import static java.lang.Math.max;
-import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toCollection;
 
@@ -62,6 +60,7 @@ import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.ErrorProneToken;
 import com.google.errorprone.util.ErrorProneTokens;
 import com.google.errorprone.util.FindIdentifiers;
+import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.doctree.ParamTree;
 import com.sun.source.tree.AnnotationTree;
@@ -114,7 +113,7 @@ import com.sun.tools.javac.util.Position;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.annotation.Target;
+import java.lang.annotation.ElementType;
 import java.net.JarURLConnection;
 import java.net.URI;
 import java.nio.file.Path;
@@ -139,6 +138,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -1122,7 +1122,8 @@ public final class SuggestedFixes {
       return;
     }
 
-    SuppressWarnings existingAnnotation = getAnnotation(suppressibleNode, SuppressWarnings.class);
+    AnnotationTree suppressAnnotationTree =
+        getAnnotationWithSimpleName(findAnnotationsTree(suppressibleNode), "SuppressWarnings");
     String suppression = state.getTreeMaker().Literal(CLASS, warningToSuppress).toString();
 
     // Line comment to add, if it is present.
@@ -1130,18 +1131,15 @@ public final class SuggestedFixes {
         Optional.ofNullable(lineComment).map(s -> "// " + s + "\n");
 
     // If we have an existing @SuppressWarnings on the element, extend its value
-    if (existingAnnotation != null) {
+    if (suppressAnnotationTree != null) {
       // Add warning to the existing annotation
-      String[] values = existingAnnotation.value();
-      if (Arrays.asList(values).contains(warningToSuppress)) {
+      AnnotationMirror compound = ASTHelpers.getAnnotationMirror(suppressAnnotationTree);
+      ImmutableSet<String> values =
+          compound != null
+              ? ImmutableSet.copyOf(MoreAnnotations.getStrings(compound, "value"))
+              : ImmutableSet.of();
+      if (values.contains(warningToSuppress)) {
         // The nearest suppress warnings already contains this thing, so we can't add another thing
-        return;
-      }
-      AnnotationTree suppressAnnotationTree =
-          getAnnotationWithSimpleName(
-              findAnnotationsTree(suppressibleNode), SuppressWarnings.class.getSimpleName());
-      if (suppressAnnotationTree == null) {
-        // This is weird, bail out
         return;
       }
 
@@ -1174,14 +1172,16 @@ public final class SuggestedFixes {
     }
 
     AnnotationTree suppressAnnotationTree =
-        getAnnotationWithSimpleName(
-            findAnnotationsTree(suppressibleNode), SuppressWarnings.class.getSimpleName());
+        getAnnotationWithSimpleName(findAnnotationsTree(suppressibleNode), "SuppressWarnings");
     if (suppressAnnotationTree == null) {
       return;
     }
 
-    SuppressWarnings annotation = getAnnotation(suppressibleNode, SuppressWarnings.class);
-    ImmutableSet<String> warningsSuppressed = ImmutableSet.copyOf(annotation.value());
+    AnnotationMirror suppression = ASTHelpers.getAnnotationMirror(suppressAnnotationTree);
+    ImmutableSet<String> warningsSuppressed =
+        suppression != null
+            ? ImmutableSet.copyOf(MoreAnnotations.getStrings(suppression, "value"))
+            : ImmutableSet.of();
     ImmutableSet<String> newWarningSet =
         warningsSuppressed.stream()
             .filter(warning -> !warning.equals(warningToRemove))
@@ -1735,14 +1735,15 @@ public final class SuggestedFixes {
 
   private static ImmutableSet<Class<? extends Tree>> supportedTreeTypes(
       Element exemptingAnnotation) {
-    Target targetAnnotation = exemptingAnnotation.getAnnotation(Target.class);
-    if (targetAnnotation == null) {
+    Set<ElementType> targetElementTypes =
+        MoreAnnotations.getTargetElementTypes(exemptingAnnotation);
+    if (targetElementTypes == null) {
       // in the absence of further information, we assume the annotation is supported on classes and
       // methods.
       return TREE_TYPE_UNKNOWN_ANNOTATION;
     }
-    return stream(targetAnnotation.value())
-        .flatMap(
+    return targetElementTypes.stream()
+        .<Class<? extends Tree>>flatMap(
             t ->
                 switch (t) {
                   case TYPE -> Stream.of(ClassTree.class);

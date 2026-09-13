@@ -120,7 +120,8 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
                 tree.getName(),
                 templater.template(sym.getReturnType()),
                 params.buildOrThrow(),
-                UTemplater.annotationMap(sym)));
+                UTemplater.annotationMap(sym),
+                sym));
       } else if (hasAnnotation(tree, BEFORE_TEMPLATE_ANNOTATION, state)) {
         checkState(afterTemplates.isEmpty(), "BeforeTemplate must come before AfterTemplate");
         Template<?> template =
