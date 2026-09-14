@@ -191,11 +191,14 @@ public final class TypeCompatibility {
   }
 
   /**
-   * Returns if the method represents an override of equals(Object) that is not on `Object` or
-   * `Enum`.
+   * Returns if the method represents an override of equals(Object) that is not on `Object`, `Enum`,
+   * or `Record`.
    *
    * <p>This would represent an equals method that could specify equality semantics aside from
    * object identity.
+   *
+   * <p>`Record` only declares equals(Object) abstractly; it specifies no equality semantics that
+   * two distinct record types could share, so it is excluded like `Object` and `Enum`.
    */
   private static boolean customEqualsMethod(MethodSymbol methodSymbol, VisitorState state) {
     ClassSymbol owningClass = methodSymbol.enclClass();
@@ -208,7 +211,8 @@ public final class TypeCompatibility {
             .isSameType(
                 getOnlyElement(methodSymbol.getParameters()).type, state.getSymtab().objectType)
         && !owningClass.equals(state.getSymtab().objectType.tsym)
-        && !owningClass.equals(state.getSymtab().enumSym);
+        && !owningClass.equals(state.getSymtab().enumSym)
+        && !owningClass.equals(state.getSymtab().recordType.tsym);
   }
 
   /**
