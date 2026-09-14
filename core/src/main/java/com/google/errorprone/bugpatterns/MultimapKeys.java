@@ -34,17 +34,18 @@ import com.sun.source.tree.MethodInvocationTree;
 /** A BugPattern; see the summary. */
 @BugPattern(
     summary =
-        "Iterating over `Multimap.keys()` does not collapse duplicates. Did you mean `keySet()`?",
+        "Iterating or streaming over `Multimap.keys()` does not collapse duplicates. Did you mean"
+            + " `keySet()`?",
     severity = WARNING)
 public final class MultimapKeys extends BugChecker implements MethodInvocationTreeMatcher {
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    return KEYS.matches(tree, state) && isBeingIteratedOver(state)
+    return KEYS.matches(tree, state) && isBeingIteratedOrStreamed(state)
         ? describeMatch(tree, renameMethodInvocation(tree, "keySet", state))
         : NO_MATCH;
   }
 
-  private static boolean isBeingIteratedOver(VisitorState state) {
+  private static boolean isBeingIteratedOrStreamed(VisitorState state) {
     var parent = state.getPath().getParentPath().getLeaf();
     if (parent instanceof EnhancedForLoopTree) {
       return true;
@@ -52,7 +53,7 @@ public final class MultimapKeys extends BugChecker implements MethodInvocationTr
     if (parent instanceof MemberSelectTree) {
       var grandparent = state.getPath().getParentPath().getParentPath().getLeaf();
       return grandparent instanceof MethodInvocationTree methodInvocationTree
-          && FOR_EACH.matches(methodInvocationTree, state);
+          && FOR_EACH_OR_STREAM.matches(methodInvocationTree, state);
     }
     return false;
   }
@@ -60,6 +61,8 @@ public final class MultimapKeys extends BugChecker implements MethodInvocationTr
   private static final Matcher<ExpressionTree> KEYS =
       instanceMethod().onDescendantOf("com.google.common.collect.Multimap").named("keys");
 
-  private static final Matcher<ExpressionTree> FOR_EACH =
-      instanceMethod().onDescendantOf("java.util.Collection").named("forEach");
+  private static final Matcher<ExpressionTree> FOR_EACH_OR_STREAM =
+      instanceMethod()
+          .onDescendantOf("java.util.Collection")
+          .namedAnyOf("forEach", "stream", "parallelStream");
 }
