@@ -1,7 +1,7 @@
 ---
 title: MultimapKeys
-summary: Iterating over `Multimap.keys()` does not collapse duplicates. Did you mean
-  `keySet()`?
+summary: Iterating or streaming over `Multimap.keys()` does not collapse duplicates.
+  Did you mean `keySet()`?
 layout: bugpattern
 tags: ''
 severity: WARNING
