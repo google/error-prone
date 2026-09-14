@@ -720,6 +720,27 @@ public class EqualsIncompatibleTypeRecursiveTypes {
   }
 
   @Test
+  public void unrelatedRecordsCanBeEqualWhenFlagDisabled() {
+    compilationHelper
+        .setArgs("-XepOpt:TypeCompatibility:TreatRecordsAsIncomparable=false")
+        .addSourceLines(
+            "Test.java",
+            """
+            public class Test {
+              record UserId(long id) {}
+
+              record OrderId(long id) {}
+
+              public void test(UserId userId, OrderId orderId) {
+                userId.equals(orderId);
+                orderId.equals(userId);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void protoBuildersCannotBeEqual() {
     compilationHelper
         .addSourceLines(

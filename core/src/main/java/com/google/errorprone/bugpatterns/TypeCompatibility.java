@@ -63,11 +63,14 @@ public final class TypeCompatibility {
   private static final String WITHOUT_EQUALS_REASON =
       ". Though these types are the same, the type doesn't implement equals.";
   private final boolean treatBuildersAsIncomparable;
+  private final boolean treatRecordsAsIncomparable;
 
   @Inject
   TypeCompatibility(ErrorProneFlags flags) {
     this.treatBuildersAsIncomparable =
         flags.getBoolean("TypeCompatibility:TreatBuildersAsIncomparable").orElse(true);
+    this.treatRecordsAsIncomparable =
+        flags.getBoolean("TypeCompatibility:TreatRecordsAsIncomparable").orElse(true);
   }
 
   public TypeCompatibilityReport compatibilityOfTypes(
@@ -170,7 +173,7 @@ public final class TypeCompatibility {
         : TypeCompatibilityReport.compatible();
   }
 
-  private static boolean isFeasiblyCompatible(Type leftType, Type rightType, VisitorState state) {
+  private boolean isFeasiblyCompatible(Type leftType, Type rightType, VisitorState state) {
     // If one type can be cast into the other, they are potentially equal to each other.
     // Note: we do this precisely in this order to allow primitive values to be checked pre-1.7:
     // 1.6: java.lang.Object can't be cast to primitives
@@ -191,16 +194,15 @@ public final class TypeCompatibility {
   }
 
   /**
-   * Returns if the method represents an override of equals(Object) that is not on `Object`, `Enum`,
-   * or `Record`.
+   * Returns if the method represents an implementation of {@code equals(Object)} that is not on
+   * {@link Object}, {@link Enum}, or {@link Record}.
    *
-   * <p>This would represent an equals method that could specify equality semantics aside from
-   * object identity.
-   *
-   * <p>`Record` only declares equals(Object) abstractly; it specifies no equality semantics that
-   * two distinct record types could share, so it is excluded like `Object` and `Enum`.
+   * <p>This indicates an {@code equals} method that could specify equality semantics aside from
+   * object identity. Or, in the case of {@link Record}, it indicates an abstract declaration of
+   * {@code equals(Object)}, which specifies no equality semantics that two distinct record types
+   * could share.
    */
-  private static boolean customEqualsMethod(MethodSymbol methodSymbol, VisitorState state) {
+  private boolean customEqualsMethod(MethodSymbol methodSymbol, VisitorState state) {
     ClassSymbol owningClass = methodSymbol.enclClass();
     return !methodSymbol.isStatic()
         && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
@@ -212,7 +214,7 @@ public final class TypeCompatibility {
                 getOnlyElement(methodSymbol.getParameters()).type, state.getSymtab().objectType)
         && !owningClass.equals(state.getSymtab().objectType.tsym)
         && !owningClass.equals(state.getSymtab().enumSym)
-        && !owningClass.equals(state.getSymtab().recordType.tsym);
+        && (!treatRecordsAsIncomparable || !owningClass.equals(state.getSymtab().recordType.tsym));
   }
 
   /**
