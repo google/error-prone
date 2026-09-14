@@ -2589,10 +2589,10 @@ public final class IfChainToSwitchTest {
                   } else if (suit == Suit.CLUB) {
                     return;
                   }
-                  System.out.println("this will become unreachable");
-                  System.out.println("this will too");
+                  System.out.println("this will not become unreachable");
+                  System.out.println("this will not too");
                 }
-                System.out.println("this will too");
+                System.out.println("this will not too");
               }
             }
             """)
@@ -2617,7 +2617,10 @@ public final class IfChainToSwitchTest {
                       return;
                     }
                   }
+                  System.out.println("this will not become unreachable");
+                  System.out.println("this will not too");
                 }
+                System.out.println("this will not too");
               }
             }
             """)
@@ -3126,6 +3129,253 @@ class Test {
   }
 }
 """))
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_genericArrayType_error() {
+    // Type arguments belong to the element type of an array, and must be preserved.  A generic
+    // array type pattern requires a `final` modifier in order for javac to parse the `case` label.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof List<?>[] a) {
+                  System.out.println("list array " + a.length);
+                } else if (o instanceof Map<?, ?>[] b) {
+                  System.out.println("map array " + b.length);
+                } else if (o instanceof String[][] c) {
+                  System.out.println("string matrix " + c.length);
+                } else if (o instanceof int[] d) {
+                  System.out.println("int array " + d.length);
+                } else {
+                  System.out.println("other");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Test {
+              public void foo(Object o) {
+                switch (o) {
+                  case final List<?>[] a -> System.out.println("list array " + a.length);
+                  case final Map<?, ?>[] b -> System.out.println("map array " + b.length);
+                  case String[][] c -> System.out.println("string matrix " + c.length);
+                  case int[] d -> System.out.println("int array " + d.length);
+                  default -> System.out.println("other");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_rawArrayType_error() {
+    // A raw element type is converted to the wildcard type, just as for a non-array raw type.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof List[] a) {
+                  System.out.println("list array " + a.length);
+                } else if (o instanceof Map[][] b) {
+                  System.out.println("map matrix " + b.length);
+                } else if (o instanceof String[] c) {
+                  System.out.println("string array " + c.length);
+                } else {
+                  System.out.println("other");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Test {
+              public void foo(Object o) {
+                switch (o) {
+                  case final List<?>[] a -> System.out.println("list array " + a.length);
+                  case final Map<?, ?>[][] b -> System.out.println("map matrix " + b.length);
+                  case String[] c -> System.out.println("string array " + c.length);
+                  default -> System.out.println("other");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_genericArrayTypePatternVariableReassigned_error() {
+    // A pattern variable is an ordinary local variable, so `a` may be reassigned.  That rules out
+    // the `final` modifier, and without a modifier the generic array type cannot be parsed, so the
+    // element type's arguments are erased instead.  The decision is made per pattern variable: `b`
+    // is never reassigned and so keeps both its `final` modifier and its type arguments.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof List<?>[] a) {
+                  a = null;
+                  System.out.println("list array " + a);
+                } else if (o instanceof Map<?, ?>[] b) {
+                  System.out.println("map array " + b.length);
+                } else if (o instanceof String[] c) {
+                  System.out.println("string array " + c.length);
+                } else {
+                  System.out.println("other");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.List;
+            import java.util.Map;
+
+            class Test {
+              public void foo(Object o) {
+                switch (o) {
+                  case List[] a -> {
+                    a = null;
+                    System.out.println("list array " + a);
+                  }
+                  case final Map<?, ?>[] b -> System.out.println("map array " + b.length);
+                  case String[] c -> System.out.println("string array " + c.length);
+                  default -> System.out.println("other");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_genericArrayTypePatternVariableElementAssigned_error() {
+    // Assigning to an *element* of the array does not reassign the pattern variable itself, so it
+    // remains effectively final and the `final` modifier may still be applied.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof List<?>[] a) {
+                  a[0] = null;
+                  System.out.println("list array " + a.length);
+                } else if (o instanceof String[] b) {
+                  System.out.println("string array " + b.length);
+                } else if (o instanceof int[] c) {
+                  System.out.println("int array " + c.length);
+                } else {
+                  System.out.println("other");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            class Test {
+              public void foo(Object o) {
+                switch (o) {
+                  case final List<?>[] a -> {
+                    a[0] = null;
+                    System.out.println("list array " + a.length);
+                  }
+                  case String[] b -> System.out.println("string array " + b.length);
+                  case int[] c -> System.out.println("int array " + c.length);
+                  default -> System.out.println("other");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_nonArrayGenericPatternVariableReassigned_error() {
+    // A non-array generic type pattern parses without any modifier, so reassignment has no bearing
+    // on it: the type arguments are retained even though `a` is reassigned.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof List<?> a) {
+                  a = null;
+                  System.out.println("list " + a);
+                } else if (o instanceof String b) {
+                  System.out.println("string " + b);
+                } else if (o instanceof Integer c) {
+                  System.out.println("integer " + c);
+                } else {
+                  System.out.println("other");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.List;
+
+            class Test {
+              public void foo(Object o) {
+                switch (o) {
+                  case List<?> a -> {
+                    a = null;
+                    System.out.println("list " + a);
+                  }
+                  case String b -> System.out.println("string " + b);
+                  case Integer c -> System.out.println("integer " + c);
+                  default -> System.out.println("other");
+                }
+              }
+            }
+            """)
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
@@ -4532,8 +4782,8 @@ class Test {
                     } else if (s == Suit.CLUB) {
                       throw new AssertionError("club");
                     }
-                    System.out.println("Delete me");
-                    System.out.println("Delete me too");
+                    System.out.println("Don't delete me");
+                    System.out.println("Don't delete me too");
                   }
                 }
                 return new Bar().toString();
@@ -4553,12 +4803,139 @@ class Test {
                       case Suit.DIAMOND -> throw new AssertionError("diamond");
                       case Suit.CLUB -> throw new AssertionError("club");
                     }
+                    System.out.println("Don't delete me");
+                    System.out.println("Don't delete me too");
                   }
                 }
                 return new Bar().toString();
               }
             }
             """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_exhaustiveEnumInConstructor_keepsTrailingStatements() {
+    // The trailing statements discharge the definite-assignment obligation for the blank final
+    // field (JLS 16.9), so they may not be deleted even though every case throws or returns.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              final int x;
+
+              Test(Suit s) {
+                if (s == Suit.HEART) {
+                  x = 1;
+                  return;
+                } else if (s == Suit.SPADE) {
+                  x = 2;
+                  return;
+                } else if (s == Suit.DIAMOND) {
+                  x = 3;
+                  return;
+                } else if (s == Suit.CLUB) {
+                  x = 4;
+                  return;
+                }
+                System.out.println("not reached");
+                x = 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              final int x;
+
+              Test(Suit s) {
+                switch (s) {
+                  case Suit.HEART -> {
+                    x = 1;
+                    return;
+                  }
+                  case Suit.SPADE -> {
+                    x = 2;
+                    return;
+                  }
+                  case Suit.DIAMOND -> {
+                    x = 3;
+                    return;
+                  }
+                  case Suit.CLUB -> {
+                    x = 4;
+                    return;
+                  }
+                }
+                System.out.println("not reached");
+                x = 0;
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_exhaustiveEnumInSwitchExpressionArm_keepsTrailingStatements() {
+    // The The trailing {@code yield} is the switch expression's only result expression (JLS
+    // 15.28.1), so it may not be deleted. The enclosing method is {@code void}, so its reachability
+    // says nothing about the reachability of the arm.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s, int k) {
+                int result =
+                    switch (k) {
+                      default -> {
+                        if (s == Suit.HEART) {
+                          throw new AssertionError();
+                        } else if (s == Suit.SPADE) {
+                          throw new AssertionError();
+                        } else if (s == Suit.DIAMOND) {
+                          throw new AssertionError();
+                        } else if (s == Suit.CLUB) {
+                          throw new AssertionError();
+                        }
+                        System.out.println("not reached");
+                        yield 0;
+                      }
+                    };
+                System.out.println(result);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s, int k) {
+                int result =
+                    switch (k) {
+                      default -> {
+                        switch (s) {
+                          case Suit.HEART -> throw new AssertionError();
+                          case Suit.SPADE -> throw new AssertionError();
+                          case Suit.DIAMOND -> throw new AssertionError();
+                          case Suit.CLUB -> throw new AssertionError();
+                        }
+                        System.out.println("not reached");
+                        yield 0;
+                      }
+                    };
+                System.out.println(result);
+              }
+            }
+            """)
+        .allowFormattingErrors()
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
