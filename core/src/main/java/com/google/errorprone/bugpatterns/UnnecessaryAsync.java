@@ -33,6 +33,8 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
+import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
@@ -42,10 +44,13 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
@@ -75,8 +80,17 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
     if (!symbol.getKind().equals(ElementKind.LOCAL_VARIABLE) || !isConsideredFinal(symbol)) {
       return NO_MATCH;
     }
-    var initializer = tree.getInitializer();
-    if (initializer == null || !NEW_SYNCHRONIZED_THING.matches(initializer, state)) {
+    ExpressionTree initializer = tree.getInitializer();
+    AssignmentTree initializingAssignment = null;
+    if (initializer == null) {
+      // Support `T x; x = new Atomic...(...);` the same as `T x = new Atomic...(...);`.
+      initializingAssignment = findSoleInitializingAssignment(symbol, state);
+      if (initializingAssignment == null) {
+        return NO_MATCH;
+      }
+      initializer = initializingAssignment.getExpression();
+    }
+    if (!NEW_SYNCHRONIZED_THING.matches(initializer, state)) {
       return NO_MATCH;
     }
     AtomicBoolean escapes = new AtomicBoolean(false);
@@ -111,8 +125,10 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
         }
         var parentTree = getCurrentPath().getParentPath().getLeaf();
         // Anything other than a method invocation on our symbol constitutes a reference to it
-        // escaping.
-        if (isVariableDeclarationItself(parentTree) || parentTree instanceof MemberSelectTree) {
+        // escaping. An initializing assignment is equivalent to a declarator initializer.
+        if (isVariableDeclarationItself(parentTree)
+            || isAssignmentToThisSymbol(parentTree)
+            || parentTree instanceof MemberSelectTree) {
           return super.visitIdentifier(tree, null);
         }
         escapes.set(true);
@@ -122,11 +138,43 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
       private boolean isVariableDeclarationItself(Tree parentTree) {
         return parentTree instanceof VariableTree && getSymbol(parentTree).equals(symbol);
       }
+
+      private boolean isAssignmentToThisSymbol(Tree parentTree) {
+        return parentTree instanceof AssignmentTree assignmentTree
+            && symbol.equals(getSymbol(assignmentTree.getVariable()));
+      }
     }.scan(state.getPath().getParentPath(), null);
-    return escapes.get() ? NO_MATCH : describeMatch(tree, attemptFix(tree, state));
+    return escapes.get()
+        ? NO_MATCH
+        : describeMatch(
+            tree,
+            attemptFix(tree, state, (NewClassTree) initializer, initializingAssignment));
   }
 
-  private SuggestedFix attemptFix(VariableTree tree, VisitorState state) {
+  /**
+   * Finds the sole assignment to {@code symbol} in the enclosing scope, used when the variable is
+   * declared without an initializer ({@code T x; x = ...;}).
+   */
+  private static AssignmentTree findSoleInitializingAssignment(
+      VarSymbol symbol, VisitorState state) {
+    List<AssignmentTree> assignments = new ArrayList<>();
+    new TreePathScanner<Void, Void>() {
+      @Override
+      public Void visitAssignment(AssignmentTree tree, Void unused) {
+        if (symbol.equals(getSymbol(tree.getVariable()))) {
+          assignments.add(tree);
+        }
+        return super.visitAssignment(tree, null);
+      }
+    }.scan(state.getPath().getParentPath(), null);
+    return assignments.size() == 1 ? assignments.get(0) : null;
+  }
+
+  private SuggestedFix attemptFix(
+      VariableTree tree,
+      VisitorState state,
+      NewClassTree constructor,
+      AssignmentTree initializingAssignment) {
     var symbol = getSymbol(tree);
     if (!symbol.type.toString().startsWith("java.util.concurrent.atomic")) {
       return SuggestedFix.emptyFix();
@@ -134,8 +182,6 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
 
     AtomicBoolean fixable = new AtomicBoolean(true);
     SuggestedFix.Builder fix = SuggestedFix.builder();
-
-    var constructor = (NewClassTree) tree.getInitializer();
 
     fix.replace(
         tree,
@@ -146,6 +192,16 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
             constructor.getArguments().isEmpty()
                 ? getDefaultInitializer(symbol, state.getTypes())
                 : state.getSourceForNode(constructor.getArguments().get(0))));
+    if (initializingAssignment != null) {
+      TreePath assignmentPath =
+          TreePath.getPath(state.getPath().getCompilationUnit(), initializingAssignment);
+      Tree parent = assignmentPath.getParentPath().getLeaf();
+      if (parent instanceof ExpressionStatementTree) {
+        fix.delete(parent);
+      } else {
+        fix.delete(initializingAssignment);
+      }
+    }
 
     new TreePathScanner<Void, Void>() {
       @Override
@@ -154,7 +210,7 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
           return super.visitIdentifier(tree, null);
         }
         var parentTree = getCurrentPath().getParentPath().getLeaf();
-        if (isVariableDeclarationItself(parentTree)) {
+        if (isVariableDeclarationItself(parentTree) || isAssignmentToThisSymbol(parentTree)) {
           return super.visitIdentifier(tree, null);
         }
         if (parentTree instanceof MemberSelectTree memberSelectTree) {
@@ -196,6 +252,11 @@ public final class UnnecessaryAsync extends BugChecker implements VariableTreeMa
 
       private boolean isVariableDeclarationItself(Tree parentTree) {
         return parentTree instanceof VariableTree && getSymbol(parentTree).equals(symbol);
+      }
+
+      private boolean isAssignmentToThisSymbol(Tree parentTree) {
+        return parentTree instanceof AssignmentTree assignmentTree
+            && symbol.equals(getSymbol(assignmentTree.getVariable()));
       }
     }.scan(state.getPath().getParentPath(), null);
     return fixable.get() ? fix.build() : SuggestedFix.emptyFix();
