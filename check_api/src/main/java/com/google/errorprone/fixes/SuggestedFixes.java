@@ -24,7 +24,6 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.fixes.ErrorProneEndPosTable.getEndPosition;
-import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getModifiers;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -97,6 +96,7 @@ import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
 import com.sun.tools.javac.main.Arguments;
@@ -1123,7 +1123,7 @@ public final class SuggestedFixes {
     }
 
     AnnotationTree suppressAnnotationTree =
-        getAnnotationWithSimpleName(findAnnotationsTree(suppressibleNode), "SuppressWarnings");
+        findSuppressWarnings(findAnnotationsTree(suppressibleNode), state);
     String suppression = state.getTreeMaker().Literal(CLASS, warningToSuppress).toString();
 
     // Line comment to add, if it is present.
@@ -1172,7 +1172,7 @@ public final class SuggestedFixes {
     }
 
     AnnotationTree suppressAnnotationTree =
-        getAnnotationWithSimpleName(findAnnotationsTree(suppressibleNode), "SuppressWarnings");
+        findSuppressWarnings(findAnnotationsTree(suppressibleNode), state);
     if (suppressAnnotationTree == null) {
       return;
     }
@@ -1198,6 +1198,18 @@ public final class SuggestedFixes {
     }
     fixBuilder.merge(
         updateAnnotationArgumentValues(suppressAnnotationTree, state, "value", newWarningSet));
+  }
+
+  private static @Nullable AnnotationTree findSuppressWarnings(
+      List<? extends AnnotationTree> annotations, VisitorState state) {
+    TypeSymbol suppressWarningsType = state.getSymtab().suppressWarningsType.tsym;
+    for (AnnotationTree annotation : annotations) {
+      AnnotationMirror compound = ASTHelpers.getAnnotationMirror(annotation);
+      if (compound != null && MoreAnnotations.asElement(compound).equals(suppressWarningsType)) {
+        return annotation;
+      }
+    }
+    return null;
   }
 
   private static List<? extends AnnotationTree> findAnnotationsTree(Tree tree) {
