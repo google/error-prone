@@ -1,2 +1,2 @@
-As per JLS 15.21.1, == NaN comparisons always return false, even NaN == NaN.
-Instead, use the isNaN methods to check for NaN.
+As per the Java Language Specification, == comparisions with NaN always return false, including NaN == NaN.
+Instead, use the isNaN methods to test for NaN values.
