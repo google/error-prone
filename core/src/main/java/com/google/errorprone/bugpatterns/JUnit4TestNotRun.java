@@ -108,6 +108,13 @@ public class JUnit4TestNotRun extends BugChecker implements ClassTreeMatcher {
     if (isSameType(annotationType, FROM_DATA_POINTS.get(state), state)) {
       return true;
     }
+    if (annotationType
+        .tsym
+        .getQualifiedName()
+        .toString()
+        .startsWith("com.google.testing.junit.testparameterinjector.")) {
+      return true;
+    }
     return false;
   }
 
