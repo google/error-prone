@@ -231,4 +231,46 @@ public class BooleanLiteralTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void booleanLiteralReplacementCausesAmbiguity_b561940638() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void assertEquals(Object expected, Object actual) {}
+
+              void assertEquals(boolean expected, boolean actual) {}
+
+              void f(Boolean b) {
+                assertEquals(Boolean.FALSE, b);
+                assertEquals(b, Boolean.FALSE);
+                assertEquals(Boolean.TRUE, b);
+                assertEquals(b, Boolean.TRUE);
+              }
+            }
+            """)
+        // TODO(b/561940638): this should be .expectUnchanged()
+        // Replacing Boolean.FALSE with false here makes the call to assertEquals() ambiguous
+        // between the (Object, Object) and (boolean, boolean) overloads.
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void assertEquals(Object expected, Object actual) {}
+
+              void assertEquals(boolean expected, boolean actual) {}
+
+              void f(Boolean b) {
+                assertEquals(false, b);
+                assertEquals(b, false);
+                assertEquals(true, b);
+                assertEquals(b, true);
+              }
+            }
+            """)
+        .allowBreakingChanges()
+        .doTest();
+  }
 }
