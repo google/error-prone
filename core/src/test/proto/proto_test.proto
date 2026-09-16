@@ -18,7 +18,9 @@ syntax = "proto2";
 
 package com.google.errorprone.bugpatterns;
 
-option java_package = "com.google.errorprone.bugpatterns.proto";
+option java_api_version = 1;
+option java_package = "com.google.errorprone.bugpatterns.proto.proto1api";
+option java_alt_api_package = "com.google.errorprone.bugpatterns.proto";
 
 message TestFieldProtoMessage {
   optional TestFieldProtoMessage field = 1;
