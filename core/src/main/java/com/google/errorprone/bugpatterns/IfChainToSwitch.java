@@ -61,10 +61,13 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.Tree;
@@ -596,8 +599,28 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
                               caseIr.arrowRhsOptional().get(), ImmutableMap.of()))
               .count();
 
-      if (emptyRhsBlockCount + canCompleteNormallyBlockCount == 0) {
-        // All cases cannot complete normally, so we need to do reachability analysis
+      // javac treats a switch as exhaustive only if it has a `default` or is enhanced (JLS 21
+      // §14.11.2: a pattern or `null` label, or a selector whose type is not a legacy type such
+      // as an enum).  A switch covering every enum constant without  a `default` is therefore
+      // not exhaustive to javac, even though this check "knows" it is
+      boolean javacSeesSwitchAsExhaustive =
+          cases.stream()
+              .anyMatch(
+                  caseIr ->
+                      caseIr.hasDefault()
+                          || caseIr.hasCaseNull()
+                          || caseIr.instanceOfOptional().isPresent());
+
+      // If javac sees the switch as exhaustive, then (given that no case can complete normally)
+      // javac also sees the switch itself as unable to complete normally, so the statements that
+      // follow it are dead to javac too and can always be deleted.  Otherwise javac believes the
+      // switch can complete normally, and it will still require a trailing `return` or `throw` --
+      // so deleting those statements is only safe if the enclosing method or lambda body is
+      // itself permitted to complete normally (JLS 21 §8.4.7).
+      if (emptyRhsBlockCount + canCompleteNormallyBlockCount == 0
+          && (javacSeesSwitchAsExhaustive || enclosingBodyMayCompleteNormally(state))) {
+        // Neither the switch nor any of its cases can complete normally, so we need to do
+        // reachability analysis
         Tree cannotCompleteNormallyTree = ifTree;
         // Search up the AST for enclosing statement blocks, marking any newly-dead code for
         // deletion along the way
@@ -658,6 +681,40 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         // fixing it merely puts the new case in the correct position
         ? maybeFixDominance(cases, state, subject, /* canReorderCases= */ true)
         : Optional.of(cases);
+  }
+
+  /**
+   * Returns whether the body of the method or lambda enclosing the current position is permitted to
+   * complete normally, that is, whether it is <em>not</em> required by JLS 21 §8.4.7 to end with a
+   * {@code return} or {@code throw}.
+   *
+   * <p>Returns {@code true} when the enclosing body is a constructor, a {@code void} method, a
+   * {@code void}-returning lambda, or an initializer block.
+   */
+  private static boolean enclosingBodyMayCompleteNormally(VisitorState state) {
+    for (Tree tree : state.getPath()) {
+      if (tree instanceof LambdaExpressionTree lambdaExpressionTree) {
+        Type functionalInterfaceType = getType(lambdaExpressionTree);
+        if (functionalInterfaceType == null) {
+          return false;
+        }
+        Type descriptorType = state.getTypes().findDescriptorType(functionalInterfaceType);
+        return descriptorType != null
+            && ASTHelpers.isVoidType(descriptorType.getReturnType(), state);
+      }
+      if (tree instanceof MethodTree methodTree) {
+        Tree returnType = methodTree.getReturnType();
+        // Constructors have no return type, and may always complete normally.
+        return returnType == null || ASTHelpers.isVoidType(getType(returnType), state);
+      }
+      if (tree instanceof ClassTree) {
+        // We've reached a class boundary (e.g. a local or anonymous class) without finding an
+        // enclosing method or lambda, so the enclosing body is an initializer block or a field
+        // initializer, which may complete normally.
+        return true;
+      }
+    }
+    return true;
   }
 
   /**

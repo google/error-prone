@@ -4426,18 +4426,13 @@ class Test {
 
   @Test
   public void ifChain_exhaustiveEnumWithTrailingStatements_keepsTrailingStatements() {
-    // BUG (does not compile): when every enum constant is handled, no `default` is emitted.  A
-    // switch *statement* over an enum is not "enhanced" (JLS 21 14.11.2), so javac considers it
-    // able to complete normally even when it is exhaustive.  The checker's own reachability
-    // analysis disagrees and deletes the statements following the switch, so the generated method
-    // fails to compile with "missing return statement".
-    helper
-        .addSourceLines(
+    // The trailing AssertionError should be kept.
+    refactoringHelper
+        .addInputLines(
             "Test.java",
             """
             class Test {
               public int foo(Suit s) {
-                // BUG: Diagnostic contains: This if-chain may be converted into a switch
                 if (s == Suit.HEART) {
                   return 1;
                 } else if (s == Suit.SPADE) {
@@ -4446,6 +4441,30 @@ class Test {
                   return 3;
                 } else if (s == Suit.CLUB) {
                   return 4;
+                }
+                System.out.println("not reached today, but reachable as far as javac knows");
+                throw new AssertionError();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit s) {
+                switch (s) {
+                  case Suit.HEART -> {
+                    return 1;
+                  }
+                  case Suit.SPADE -> {
+                    return 2;
+                  }
+                  case Suit.DIAMOND -> {
+                    return 3;
+                  }
+                  case Suit.CLUB -> {
+                    return 4;
+                  }
                 }
                 System.out.println("not reached today, but reachable as far as javac knows");
                 throw new AssertionError();
@@ -4489,6 +4508,59 @@ class Test {
             }
             """)
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_exhaustiveEnumInLocalClassInitializer_error() {
+    // The enclosing body is the initializer block of the local class `Bar`, which may complete
+    // normally, rather than the (non-void) enclosing method `foo`.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              String foo(Suit s) {
+                class Bar {
+                  {
+                    if (s == Suit.HEART) {
+                      throw new AssertionError("heart");
+                    } else if (s == Suit.SPADE) {
+                      throw new AssertionError("spade");
+                    } else if (s == Suit.DIAMOND) {
+                      throw new AssertionError("diamond");
+                    } else if (s == Suit.CLUB) {
+                      throw new AssertionError("club");
+                    }
+                    System.out.println("Delete me");
+                    System.out.println("Delete me too");
+                  }
+                }
+                return new Bar().toString();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              String foo(Suit s) {
+                class Bar {
+                  {
+                    switch (s) {
+                      case Suit.HEART -> throw new AssertionError("heart");
+                      case Suit.SPADE -> throw new AssertionError("spade");
+                      case Suit.DIAMOND -> throw new AssertionError("diamond");
+                      case Suit.CLUB -> throw new AssertionError("club");
+                    }
+                  }
+                }
+                return new Bar().toString();
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
   }
 
