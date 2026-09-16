@@ -4336,19 +4336,8 @@ class Test {
         .doTest();
   }
 
-  // ---------------------------------------------------------------------------------------------
-  // Reproducers for suspected bugs in IfChainToSwitch.  All of the tests in this section fail as
-  // of the time of writing; each one documents the behavior that the checker *should* have.
-  // ---------------------------------------------------------------------------------------------
-
   @Test
   public void ifChain_instanceOfOrIntConstant_noCrash() {
-    // BUG (crash): `validateInstanceOfForSubject` records the source range of the synthesized
-    // `default` case as [start(else), *end*(else)), whereas every other case uses
-    // [.., start(else)).  When a subsequent disjunct is a compile-time constant, the next case's
-    // range is computed as [end(else), start(else)), and `Range.closedOpen` throws
-    // `IllegalArgumentException: Invalid range`.
-
     helper
         .addSourceLines(
             "Test.java",
@@ -4363,14 +4352,12 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3);
-    // TODO: add doTest()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
   }
 
   @Test
   public void ifChain_instanceOfOrEnumConstant_noCrash() {
-    // BUG (crash): same root cause as above, but the invalid range is constructed in
-    // `validateEnumPredicateForSubject` instead.
     helper
         .addSourceLines(
             "Test.java",
@@ -4385,8 +4372,8 @@ class Test {
               }
             }
             """)
-        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3);
-    // TODO: add doTest()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
   }
 
   @Test
