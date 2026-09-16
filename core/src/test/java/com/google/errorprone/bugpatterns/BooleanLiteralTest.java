@@ -233,15 +233,14 @@ public class BooleanLiteralTest {
   }
 
   @Test
-  public void booleanLiteralReplacementCausesAmbiguity_b561940638() {
+  public void junitAssertEqualsIsSkipped_b561940638() {
     refactoringHelper
         .addInputLines(
             "Test.java",
             """
-            class Test {
-              void assertEquals(Object expected, Object actual) {}
+            import static org.junit.Assert.assertEquals;
 
-              void assertEquals(boolean expected, boolean actual) {}
+            class Test {
 
               void f(Boolean b) {
                 assertEquals(Boolean.FALSE, b);
@@ -251,26 +250,7 @@ public class BooleanLiteralTest {
               }
             }
             """)
-        // TODO(b/561940638): this should be .expectUnchanged()
-        // Replacing Boolean.FALSE with false here makes the call to assertEquals() ambiguous
-        // between the (Object, Object) and (boolean, boolean) overloads.
-        .addOutputLines(
-            "Test.java",
-            """
-            class Test {
-              void assertEquals(Object expected, Object actual) {}
-
-              void assertEquals(boolean expected, boolean actual) {}
-
-              void f(Boolean b) {
-                assertEquals(false, b);
-                assertEquals(b, false);
-                assertEquals(true, b);
-                assertEquals(b, true);
-              }
-            }
-            """)
-        .allowBreakingChanges()
+        .expectUnchanged()
         .doTest();
   }
 }

@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
@@ -26,6 +27,7 @@ import com.google.errorprone.bugpatterns.BugChecker.IdentifierTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberSelectTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.TargetType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -42,6 +44,12 @@ import com.sun.tools.javac.code.TypeTag;
     severity = WARNING)
 public class BooleanLiteral extends BugChecker
     implements IdentifierTreeMatcher, MemberSelectTreeMatcher {
+
+  private static final Matcher<ExpressionTree> JUNIT_ASSERT =
+      staticMethod()
+          .onClassAny("org.junit.Assert", "junit.framework.Assert")
+          .namedAnyOf("assertEquals", "assertNotEquals");
+
   @Override
   public Description matchIdentifier(IdentifierTree tree, VisitorState state) {
     return match(tree, state);
@@ -91,6 +99,13 @@ public class BooleanLiteral extends BugChecker
     if (targetType == null
         || targetType.type().hasTag(TypeTag.TYPEVAR)
         || !state.getTypes().unboxedType(targetType.type()).hasTag(TypeTag.NONE)) {
+      return NO_MATCH;
+    }
+    // Replacing Boolean.TRUE/FALSE with a boolean literal in assertEquals(Boolean.FALSE,
+    // boxedBoolean) causes an ambiguous overload resolution between assertEquals(Object, Object)
+    // and assertEquals(boolean, boolean).
+    if (targetType.path().getLeaf() instanceof MethodInvocationTree invocation
+        && JUNIT_ASSERT.matches(invocation, state)) {
       return NO_MATCH;
     }
     return describeMatch(tree, SuggestedFix.replace(tree, Boolean.toString(value)));
