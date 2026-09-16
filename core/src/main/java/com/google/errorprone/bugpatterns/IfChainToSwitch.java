@@ -20,7 +20,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.bugpatterns.SwitchUtils.COMPILE_TIME_CONSTANT_MATCHER;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getReferencedLocalVariablesInTree;
 import static com.google.errorprone.bugpatterns.SwitchUtils.hasBreakOutOfTree;
 import static com.google.errorprone.bugpatterns.SwitchUtils.isEnumValue;
@@ -1009,9 +1008,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       if (!mustBeSingleInstanceOf) {
         switch (binaryTree.getKind()) {
           case Kind.EQUAL_TO -> {
-            // Either lhs or rhs must be a compile-time constant.
-            if (COMPILE_TIME_CONSTANT_MATCHER.matches(lhs, state)
-                || COMPILE_TIME_CONSTANT_MATCHER.matches(rhs, state)) {
+            // Either lhs or rhs must be usable as a case constant.
+            if (isCaseConstant(lhs) || isCaseConstant(rhs)) {
               return validateCompileTimeConstantForSubject(lhs, rhs, params);
             } else {
               // Predicate is a binary tree, but neither side is a constant.
@@ -1186,10 +1184,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         case BinaryTree bt when bt.getKind().equals(Kind.EQUAL_TO) -> {
           // Maybe comparing to a non-null compile-time constant? (`case null` not supported here
           // due to Java syntax restrictions)
-          if ((COMPILE_TIME_CONSTANT_MATCHER.matches(bt.getLeftOperand(), state)
-                  && !isNull(bt.getLeftOperand()))
-              || (COMPILE_TIME_CONSTANT_MATCHER.matches(bt.getRightOperand(), state)
-                  && !isNull(bt.getRightOperand()))) {
+          if ((isCaseConstant(bt.getLeftOperand()) && !isNull(bt.getLeftOperand()))
+              || (isCaseConstant(bt.getRightOperand()) && !isNull(bt.getRightOperand()))) {
             subject =
                 validateCompileTimeConstantForSubject(
                     bt.getLeftOperand(), bt.getRightOperand(), params.withSubject(subject));
@@ -1199,9 +1195,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             }
 
             var compileTimeConstantExpression =
-                COMPILE_TIME_CONSTANT_MATCHER.matches(bt.getLeftOperand(), state)
-                    ? bt.getLeftOperand()
-                    : bt.getRightOperand();
+                isCaseConstant(bt.getLeftOperand()) ? bt.getLeftOperand() : bt.getRightOperand();
             caseExpressions.add(compileTimeConstantExpression);
           } else {
             // Maybe comparing to an enum value?
@@ -1260,6 +1254,22 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
   private static boolean isNull(ExpressionTree expression) {
     return expression.getKind() == Kind.NULL_LITERAL;
+  }
+
+  /**
+   * Determines whether the given expression may be rendered as a {@code CaseConstant} of a {@code
+   * switch}, which JLS 21 §14.11.1 requires to be a constant expression (JLS 21 §15.29) or the
+   * {@code null} literal. (Enum constants are also permitted, but are handled separately by {@link
+   * #validateEnumPredicateForSubject}.)
+   *
+   * <p>Note that this is deliberately narrower than {@code
+   * SwitchUtils.COMPILE_TIME_CONSTANT_MATCHER}, which additionally accepts expressions that javac
+   * does not fold to a constant, such as a parameter annotated {@code @CompileTimeConstant} or a
+   * conditional expression with a non-constant condition. Using those as a case constant would
+   * produce code that does not compile ("constant expression required").
+   */
+  private static boolean isCaseConstant(ExpressionTree expression) {
+    return isNull(expression) || constValue(expression) != null;
   }
 
   /**
@@ -1397,7 +1407,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     boolean hasElse = params.hasElse();
     boolean hasElseIf = params.hasElseIf();
 
-    boolean compileTimeConstantOnLhs = COMPILE_TIME_CONSTANT_MATCHER.matches(lhs, state);
+    boolean compileTimeConstantOnLhs = isCaseConstant(lhs);
     ExpressionTree testExpression = compileTimeConstantOnLhs ? rhs : lhs;
     ExpressionTree compileTimeConstant = compileTimeConstantOnLhs ? lhs : rhs;
     Type compileTimeConstantType = getType(compileTimeConstant);

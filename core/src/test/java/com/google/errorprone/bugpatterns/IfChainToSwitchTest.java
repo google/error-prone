@@ -4378,17 +4378,13 @@ class Test {
 
   @Test
   public void ifChain_conditionalExpressionConstant_noError() {
-    // BUG (does not compile): `COMPILE_TIME_CONSTANT_MATCHER` accepts `flag ? 1 : 2` (it only
-    // requires the two branches to be constant, not the condition), but a `case` label requires a
-    // constant expression as defined by JLS 21 15.29.  The suggested fix produces
-    // `case (flag ? 1 : 2) ->`, which javac rejects with "constant expression required".
+    // The ternary expression is not a compile-time constant
     helper
         .addSourceLines(
             "Test.java",
             """
             class Test {
               public void foo(int x, boolean flag) {
-                // BUG: Diagnostic contains: This if-chain may be converted into a switch
                 if (x == (flag ? 1 : 2)) {
                   System.out.println("a");
                 } else if (x == 3) {
@@ -4405,9 +4401,7 @@ class Test {
 
   @Test
   public void ifChain_compileTimeConstantParameter_noError() {
-    // BUG (does not compile): `COMPILE_TIME_CONSTANT_MATCHER` also accepts a final parameter
-    // annotated with `@CompileTimeConstant`, which is not a constant variable, so the suggested
-    // fix produces `case c ->` and javac reports "constant expression required".
+    // Although c is annotated with @CompileTimeConstant, it is not a compile-time constant.
     helper
         .addSourceLines(
             "Test.java",
@@ -4416,7 +4410,6 @@ class Test {
 
             class Test {
               public void foo(int x, @CompileTimeConstant final int c) {
-                // BUG: Diagnostic contains: This if-chain may be converted into a switch
                 if (x == c) {
                   System.out.println("a");
                 } else if (x == 3) {
