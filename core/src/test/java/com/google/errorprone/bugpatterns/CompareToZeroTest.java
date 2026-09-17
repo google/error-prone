@@ -242,15 +242,14 @@ public final class CompareToZeroTest {
 
   @Test
   public void switchStatements_positive() {
-    compilationHelper
-        .addSourceLines(
+    refactoringHelper
+        .addInputLines(
             "Test.java",
             """
             import java.util.Comparator;
 
             class Test {
               boolean switchCompare(String left, String right, Comparator<String> comparator) {
-                // TODO(b/561674957): we should flag this!
                 switch (comparator.compare(left, right)) {
                   case 1 -> {
                     return false;
@@ -265,7 +264,6 @@ public final class CompareToZeroTest {
               }
 
               boolean switchCompareTo(String left, String right) {
-                // TODO(b/561674957): we should flag this!
                 switch (left.compareTo(right)) {
                   case 1 -> {
                     return false;
@@ -278,6 +276,64 @@ public final class CompareToZeroTest {
                 }
                 return false;
               }
+              boolean switchCompareToOnlyZero(String left, String right) {
+                switch (left.compareTo(right)) {
+                  case 0 -> {
+                    return true;
+                  }
+                  default -> {
+                    return false;
+                  }
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static java.lang.Integer.signum;
+
+            import java.util.Comparator;
+
+            class Test {
+              boolean switchCompare(String left, String right, Comparator<String> comparator) {
+                switch (signum(comparator.compare(left, right))) {
+                  case 1 -> {
+                    return false;
+                  }
+                  case -1 -> {
+                    return true;
+                  }
+                  case 0 -> {}
+                  default -> {}
+                }
+                return false;
+              }
+
+              boolean switchCompareTo(String left, String right) {
+                switch (signum(left.compareTo(right))) {
+                  case 1 -> {
+                    return false;
+                  }
+                  case -1 -> {
+                    return true;
+                  }
+                  case 0 -> {}
+                  default -> {}
+                }
+                return false;
+              }
+
+              boolean switchCompareToOnlyZero(String left, String right) {
+                switch (signum(left.compareTo(right))) {
+                  case 0 -> {
+                    return true;
+                  }
+                  default -> {
+                    return false;
+                  }
+                }
+              }
             }
             """)
         .doTest();
@@ -289,6 +345,8 @@ public final class CompareToZeroTest {
         .addSourceLines(
             "Test.java",
             """
+            import static java.lang.Integer.signum;
+
             import java.util.Comparator;
 
             class Test {
@@ -318,6 +376,27 @@ public final class CompareToZeroTest {
                   default -> {}
                 }
                 return false;
+              }
+
+              boolean switchNegativeOneAndDefault(String left, String right) {
+                return switch (signum(left.compareTo(right))) {
+                  case -1 -> true;
+                  default -> false;
+                };
+              }
+
+              boolean switchNegativeOnePositiveOneAndDefault(String left, String right) {
+                return switch (signum(left.compareTo(right))) {
+                  case -1, 1 -> true;
+                  default -> false;
+                };
+              }
+
+              boolean switchZeroPositiveOneAndDefault(String left, String right) {
+                return switch (signum(left.compareTo(right))) {
+                  case 0, 1 -> true;
+                  default -> false;
+                };
               }
             }
             """)
