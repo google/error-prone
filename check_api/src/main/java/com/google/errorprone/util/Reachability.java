@@ -257,13 +257,9 @@ public class Reachability {
      */
     @Override
     public Boolean visitSwitch(SwitchTree tree, Void unused) {
-      // (1)
-      if (tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
-        return true;
-      }
       // A switch statement whose switch block consists of switch rules can complete normally iff at
       // least one of the following is true:
-      //   (1 above) The switch statement is not enhanced (§14.11.2) and its switch block does not
+      //   (1) The switch statement is not enhanced (§14.11.2) and its switch block does not
       // contain a default label.
       //   (2) One of the switch rules introduces a switch rule expression (which is necessarily a
       // statement expression).
@@ -271,8 +267,16 @@ public class Reachability {
       //   (4) One of the switch rules introduces a switch rule block that contains a reachable
       // break statement which exits the switch statement.
       if (tree.getCases().stream().anyMatch(c -> c.getCaseKind().equals(CaseKind.RULE))) {
+        boolean anyCompletes = false;
+        for (CaseTree c : tree.getCases()) {
+          anyCompletes |= scan(c.getBody());
+        }
+        // (1)
+        if (tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
+          return true;
+        }
         // (2) and (3)
-        if (tree.getCases().stream().anyMatch(c -> scan(c.getBody()))) {
+        if (anyCompletes) {
           return true;
         }
         // (4)
@@ -281,21 +285,26 @@ public class Reachability {
         }
         return false;
       }
+
       // Past this point, we know each case is a statement.
+      boolean lastCompletes = true;
+      for (CaseTree c : tree.getCases()) {
+        lastCompletes = scan(c.getStatements());
+      }
+      // (1)
+      if (tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
+        return true;
+      }
       // (2)
       if (tree.getCases().stream().allMatch(c -> c.getStatements().isEmpty())) {
         return true;
       }
       // (3)
-      boolean lastCompletes = true;
-      for (CaseTree c : tree.getCases()) {
-        lastCompletes = scan(c.getStatements());
-      }
       if (lastCompletes) {
         return true;
       }
       // (4)
-      if (getLast(tree.getCases()).getStatements().isEmpty()) {
+      if (!tree.getCases().isEmpty() && getLast(tree.getCases()).getStatements().isEmpty()) {
         return true;
       }
       // (5)
