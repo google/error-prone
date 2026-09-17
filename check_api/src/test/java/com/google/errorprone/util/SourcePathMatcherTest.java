@@ -37,9 +37,13 @@ public class SourcePathMatcherTest {
   @Test
   public void exactPathMatch() {
     SourcePathMatcher matcher =
-        SourcePathMatcher.create("java/com/google/foo/Bar.java", "java/com/google/foo/Baz.java");
+        SourcePathMatcher.create(
+            "java/com/google/foo/Bar.java",
+            "java/com/google/foo/Baz.kt",
+            "java/com/google/foo/Build.kts");
     assertThat(matcher.matches("java/com/google/foo/Bar.java")).isTrue();
-    assertThat(matcher.matches("java/com/google/foo/Baz.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/foo/Baz.kt")).isTrue();
+    assertThat(matcher.matches("java/com/google/foo/Build.kts")).isTrue();
     assertThat(matcher.matches("java/com/google/foo/Other.java")).isFalse();
     assertThat(matcher.matches("java/com/google/foo/Bar.java.tmp")).isFalse();
   }
@@ -110,13 +114,10 @@ public class SourcePathMatcherTest {
     // Bare directory without trailing slash
     assertThrows(
         IllegalArgumentException.class, () -> SourcePathMatcher.create("java/com/google/foo"));
-    // Non-java file
+    // Non-java/kt file
     assertThrows(
         IllegalArgumentException.class,
         () -> SourcePathMatcher.create("java/com/google/foo/Bar.proto"));
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> SourcePathMatcher.create("java/com/google/foo/Bar.kt"));
     // Empty / slash only
     assertThrows(IllegalArgumentException.class, () -> SourcePathMatcher.create(""));
     assertThrows(IllegalArgumentException.class, () -> SourcePathMatcher.create("/"));
@@ -138,6 +139,14 @@ public class SourcePathMatcherTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> SourcePathMatcher.create("java/com/google/foo/Bar?.java"));
+    // Path traversal
+    assertThrows(
+        IllegalArgumentException.class, () -> SourcePathMatcher.create("java/com/../foo/Bar.java"));
+    assertThrows(IllegalArgumentException.class, () -> SourcePathMatcher.create("../foo/Bar.java"));
+    assertThrows(
+        IllegalArgumentException.class, () -> SourcePathMatcher.create("./java/com/foo/Bar.java"));
+    assertThrows(
+        IllegalArgumentException.class, () -> SourcePathMatcher.create("java/com/./foo/Bar.java"));
   }
 
   private enum CanonicalizeTestCase {
@@ -148,6 +157,35 @@ public class SourcePathMatcherTest {
     BAZEL_EXECROOT_CUSTOM(
         "/execroot/my_workspace/src/main/java/com/example/Bar.java",
         "src/main/java/com/example/Bar.java"),
+
+    // Bazel runfiles paths:
+    BAZEL_RUNFILES(
+        "/execroot/_main/bazel-out/k8-opt/bin/test.runfiles/_main/java/com/google/foo/Bar.java",
+        "java/com/google/foo/Bar.java"),
+    BAZEL_RUNFILES_SLASH(
+        "/runfiles/my_workspace/java/com/google/foo/Bar.java", "java/com/google/foo/Bar.java"),
+    FILE_URI("file:///execroot/_main/java/com/google/foo/Bar.java", "java/com/google/foo/Bar.java"),
+
+    // Relative paths with 'runfiles' or 'execroot' in package names are preserved:
+    RELATIVE_RUNFILES_PACKAGE(
+        "java/com/google/devtools/build/runfiles/Runfiles.java",
+        "java/com/google/devtools/build/runfiles/Runfiles.java"),
+    RELATIVE_EXECROOT_PACKAGE(
+        "java/com/google/devtools/build/execroot/ExecRoot.java",
+        "java/com/google/devtools/build/execroot/ExecRoot.java"),
+    RELATIVE_EXECROOT_TOP_LEVEL("execroot/workspace/Foo.java", "execroot/workspace/Foo.java"),
+    RELATIVE_RUNFILES_TOP_LEVEL("runfiles/workspace/Foo.java", "runfiles/workspace/Foo.java"),
+
+    // Nested or unanchored directory names matching build roots are preserved:
+    UNANCHORED_RUNFILES(
+        "/path/to/test.runfiles/my_workspace/java/com/google/foo/Bar.kt",
+        "path/to/test.runfiles/my_workspace/java/com/google/foo/Bar.kt"),
+    NESTED_RUNFILES_DIR(
+        "java/com/example/nested.runfiles/_main/java/com/example/Foo.java",
+        "java/com/example/nested.runfiles/_main/java/com/example/Foo.java"),
+    NESTED_EXECROOT_DIR(
+        "/execroot/_main/java/com/example/execroot/_main/java/com/example/Foo.java",
+        "java/com/example/execroot/_main/java/com/example/Foo.java"),
 
     // Build output directories (blaze-out / bazel-out):
     // Generated source files (e.g., AutoValue, Dagger, Protos) located under
@@ -187,5 +225,13 @@ public class SourcePathMatcherTest {
   @Test
   public void canonicalizePath_nullRejected() {
     assertThrows(NullPointerException.class, () -> SourcePathMatcher.canonicalizePath(null));
+  }
+
+  @Test
+  public void nestedPath_execroot_notExempted() {
+    SourcePathMatcher matcher = SourcePathMatcher.create("java/com/google/allowed/");
+    String path =
+        "/execroot/_main/java/com/google/disallowed/execroot/_main/java/com/google/allowed/Foo.java";
+    assertThat(matcher.matches(SourcePathMatcher.canonicalizePath(path))).isFalse();
   }
 }

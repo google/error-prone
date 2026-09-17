@@ -595,5 +595,125 @@ public class RestrictedApiCheckerTest {
         .doTest();
   }
 
+  @Test
+  public void allowedPaths() {
+    helper
+        .addSourceLines(
+            "com/google/restricted/Restricted.java",
+            """
+            package com.google.restricted;
+
+            import com.google.errorprone.annotations.RestrictedApi;
+
+            public class Restricted {
+              @RestrictedApi(
+                  explanation = "test",
+                  link = "",
+                  allowedPaths = {"com/google/allowed/", "com/google/other/SpecificCaller.java"})
+              public static void method() {}
+            }
+            """)
+        .addSourceLines(
+            "com/google/allowed/AllowedCaller.java",
+            """
+            package com.google.allowed;
+
+            import com.google.restricted.Restricted;
+
+            class AllowedCaller {
+              void test() {
+                Restricted.method();
+              }
+            }
+            """)
+        .addSourceLines(
+            "com/google/other/SpecificCaller.java",
+            """
+            package com.google.other;
+
+            import com.google.restricted.Restricted;
+
+            class SpecificCaller {
+              void test() {
+                Restricted.method();
+              }
+            }
+            """)
+        .addSourceLines(
+            "com/google/disallowed/DisallowedCaller.java",
+            """
+            package com.google.disallowed;
+
+            import com.google.restricted.Restricted;
+
+            class DisallowedCaller {
+              void test() {
+                // BUG: Diagnostic contains: test
+                Restricted.method();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void allowedPathsAndAllowedOnPathBothSpecified() {
+    helper
+        .addSourceLines(
+            "in/Testcase.java",
+            """
+            package separate.test;
+
+            import com.google.errorprone.annotations.RestrictedApi;
+
+            class Testcase {
+              // BUG: Diagnostic contains: Do not specify both allowedPaths and allowedOnPath on @RestrictedApi;
+              // prefer allowedPaths.
+              @RestrictedApi(
+                  explanation = "test",
+                  link = "",
+                  allowedPaths = {"foo/"},
+                  allowedOnPath = ".*")
+              void restrictedMethod() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void allowedPaths_nestedRunfiles_rejected() {
+    helper
+        .addSourceLines(
+            "com/google/restricted/Restricted.java",
+            """
+            package com.google.restricted;
+
+            import com.google.errorprone.annotations.RestrictedApi;
+
+            public class Restricted {
+              @RestrictedApi(
+                  explanation = "test",
+                  link = "",
+                  allowedPaths = {"java/com/google/allowed/"})
+              public static void method() {}
+            }
+            """)
+        .addSourceLines(
+            "java/com/google/disallowed/nested.runfiles/my_workspace/java/com/google/allowed/Foo.java",
+            """
+            package java.com.google.allowed;
+
+            import com.google.restricted.Restricted;
+
+            class Foo {
+              void test() {
+                // BUG: Diagnostic contains: test
+                Restricted.method();
+              }
+            }
+            """)
+        .doTest();
+  }
+
   // NOTE: @RestrictedApi cannot be applied to an entire record declaration
 }

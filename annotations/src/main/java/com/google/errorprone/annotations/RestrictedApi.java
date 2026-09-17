@@ -105,6 +105,15 @@ public @interface RestrictedApi {
   String link() default "";
 
   /**
+   * Allow the restricted API on paths matching any of the given patterns (evaluated against the
+   * canonical repository-relative path).
+   *
+   * <p>Supports exact source file paths (e.g. {@code "java/com/google/foo/Bar.java"}) and directory
+   * prefixes ending in {@code "/"} (e.g. {@code "java/com/google/foo/"}).
+   */
+  String[] allowedPaths() default {};
+
+  /**
    * Allow the restricted API on paths matching this regular expression.
    *
    * <p>Leave empty (the default) to enforce the API restrictions on all paths.

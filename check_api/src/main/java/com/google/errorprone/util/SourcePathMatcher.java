@@ -34,8 +34,8 @@ import org.jspecify.annotations.Nullable;
 ///
 /// ## Supported Pattern Syntax
 ///
-/// * **Exact file paths**: Matches the exact relative path for a `.java` source file (e.g.,
-///   `java/com/google/foo/Bar.java`).
+/// * **Exact file paths**: Matches the exact relative path for a `.java`, `.kt`, or `.kts` source
+///   file (e.g., `java/com/google/foo/Bar.java`, `java/com/google/foo/Bar.kt`).
 /// * **Directory prefixes**: Trailing `/` matches any file in the directory hierarchy (e.g.,
 ///   `java/com/google/foo/`).
 ///
@@ -48,28 +48,51 @@ public final class SourcePathMatcher {
   static String canonicalizePath(String path) {
     checkNotNull(path, "path");
 
-    // Bazel execroots: `/execroot/<workspace_name>/...` (e.g.
+    if (path.startsWith("file://")) {
+      path = path.substring("file://".length());
+    } else if (path.startsWith("file:")) {
+      path = path.substring("file:".length());
+    }
+
+    // Bazel execroots in sandbox: `/execroot/<workspace_name>/...` (e.g.
     // `/execroot/_main/path/Foo.java` -> `path/Foo.java`).
-    String afterExecroot = substringAfter(path, "/execroot/");
-    if (afterExecroot != null) {
-      String afterWorkspace = substringAfter(afterExecroot, '/');
+    if (path.startsWith("/execroot/")) {
+      String afterWorkspace = substringAfter(path.substring("/execroot/".length()), '/');
       if (afterWorkspace != null) {
         path = afterWorkspace;
       }
-    } else if (path.startsWith("/")) {
+    }
+
+    // Bazel runfiles in sandbox: `/runfiles/<workspace_name>/...` (e.g.
+    // `/runfiles/my_workspace/path/Foo.java` -> `path/Foo.java`).
+    if (path.startsWith("/runfiles/")) {
+      String afterWorkspace = substringAfter(path.substring("/runfiles/".length()), '/');
+      if (afterWorkspace != null) {
+        path = afterWorkspace;
+      }
+    }
+
+    if (path.startsWith("/")) {
       path = path.substring(1);
     }
 
     // Build output directories: `(blaze-out|bazel-out)/<config-spec>/(bin|genfiles)/...`
-    // for generated files such as protos, AutoValue, Dagger, or annotation processing outputs
-    // (e.g. `blaze-out/k8-opt/bin/path/Foo.java` -> `path/Foo.java`).
+    // for generated files or test binaries (`.../<test>.runfiles/<workspace_name>/...`).
     if (path.startsWith("blaze-out/") || path.startsWith("bazel-out/")) {
-      int slash2 = nthIndexOf(path, '/', 2);
-      int slash3 = nthIndexOf(path, '/', 3);
-      if (slash2 >= 0 && slash3 >= 0) {
-        String dir = path.substring(slash2 + 1, slash3);
-        if (dir.equals("bin") || dir.equals("genfiles")) {
-          path = path.substring(slash3 + 1);
+      String afterDotRunfiles = substringAfter(path, ".runfiles/");
+      if (afterDotRunfiles != null) {
+        String afterWorkspace = substringAfter(afterDotRunfiles, '/');
+        if (afterWorkspace != null) {
+          path = afterWorkspace;
+        }
+      } else {
+        int slash2 = nthIndexOf(path, '/', 2);
+        int slash3 = nthIndexOf(path, '/', 3);
+        if (slash2 >= 0 && slash3 >= 0) {
+          String dir = path.substring(slash2 + 1, slash3);
+          if (dir.equals("bin") || dir.equals("genfiles")) {
+            path = path.substring(slash3 + 1);
+          }
         }
       }
     }
@@ -167,6 +190,11 @@ public final class SourcePathMatcher {
         "Path patterns must be repository-relative and must not start with '/': %s",
         pattern);
     checkArgument(!pattern.contains("//"), "Path patterns must not contain '//': %s", pattern);
+    checkArgument(!pattern.contains(".."), "Path patterns must not contain '..': %s", pattern);
+    checkArgument(
+        !pattern.startsWith("./") && !pattern.contains("/./"),
+        "Path patterns must not contain './': %s",
+        pattern);
     checkArgument(
         !pattern.contains("*") && !pattern.contains("?"),
         "Wildcards are not supported: %s",
@@ -179,8 +207,9 @@ public final class SourcePathMatcher {
     }
 
     checkArgument(
-        pattern.endsWith(".java"),
-        "Exact path pattern must end with '.java' (use a trailing '/' for directory prefixes): %s",
+        pattern.endsWith(".java") || pattern.endsWith(".kt") || pattern.endsWith(".kts"),
+        "Exact path pattern must end with '.java', '.kt', or '.kts' (use a trailing '/' for"
+            + " directory prefixes): %s",
         pattern);
     exactBuilder.add(pattern);
   }
