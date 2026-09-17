@@ -543,9 +543,26 @@ given matchers do.</div>
 statements in @BeforeTemplates that do not refer to variables Refaster knows about and do not
 break or return, and moves that code to the beginning of the @AfterTemplate.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#allowedInTestonlyTargets()" class="member-name-link">allowedInTestonlyTargets()</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>allowedInTestonlyTargets</code> record component.</div>
+</dd>
 <dt><a href="com/google/errorprone/annotations/RestrictedApi.html#allowedOnPath()" class="member-name-link">allowedOnPath()</a> - Element in annotation interface com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/RestrictedApi.html" title="annotation interface in com.google.errorprone.annotations">RestrictedApi</a></dt>
 <dd>
 <div class="block">Allow the restricted API on paths matching this regular expression.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#allowedOnPath()" class="member-name-link">allowedOnPath()</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>allowedOnPath</code> record component.</div>
+</dd>
+<dt><a href="com/google/errorprone/annotations/RestrictedApi.html#allowedPaths()" class="member-name-link">allowedPaths()</a> - Element in annotation interface com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/RestrictedApi.html" title="annotation interface in com.google.errorprone.annotations">RestrictedApi</a></dt>
+<dd>
+<div class="block">Allow the restricted API on paths matching any of the given patterns (evaluated against the
+canonical repository-relative path).</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#allowedPaths()" class="member-name-link">allowedPaths()</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>allowedPaths</code> record component.</div>
 </dd>
 <dt><a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html#allowFormattingErrors()" class="member-name-link">allowFormattingErrors()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerRefactoringTestHelper.html" title="class in com.google.errorprone">BugCheckerRefactoringTestHelper</a></dt>
 <dd>
@@ -559,6 +576,10 @@ whether an exception is thrown.</div>
 <dt><a href="com/google/errorprone/annotations/RestrictedApi.html#allowlistAnnotations()" class="member-name-link">allowlistAnnotations()</a> - Element in annotation interface com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/RestrictedApi.html" title="annotation interface in com.google.errorprone.annotations">RestrictedApi</a></dt>
 <dd>
 <div class="block">Allow calls to the restricted API in methods or classes with this annotation.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#allowlistAnnotations()" class="member-name-link">allowlistAnnotations()</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>allowlistAnnotations</code> record component.</div>
 </dd>
 <dt><a href="com/google/errorprone/annotations/RestrictedApi.html#allowlistWithWarningAnnotations()" class="member-name-link">allowlistWithWarningAnnotations()</a> - Element in annotation interface com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/RestrictedApi.html" title="annotation interface in com.google.errorprone.annotations">RestrictedApi</a></dt>
 <dd>
@@ -2288,6 +2309,8 @@ injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</d
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/overloading/package-summary.html">com.google.errorprone.bugpatterns.overloading</a> - package com.google.errorprone.bugpatterns.overloading</dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/package-summary.html">com.google.errorprone.bugpatterns.restrictedapi</a> - package com.google.errorprone.bugpatterns.restrictedapi</dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/package-summary.html">com.google.errorprone.bugpatterns.threadsafety</a> - package com.google.errorprone.bugpatterns.threadsafety</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/time/package-summary.html">com.google.errorprone.bugpatterns.time</a> - package com.google.errorprone.bugpatterns.time</dt>
@@ -3669,6 +3692,10 @@ chosen.</div>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></dt>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
@@ -4108,6 +4135,10 @@ producing the error string.</div>
 <dt><a href="com/google/errorprone/BugPattern.html#explanation()" class="member-name-link">explanation()</a> - Element in annotation interface com.google.errorprone.<a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone">BugPattern</a></dt>
 <dd>
 <div class="block">A longer explanation of the problem that this checker detects.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#explanation()" class="member-name-link">explanation()</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>explanation</code> record component.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/ExplicitArrayForVarargs.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ExplicitArrayForVarargs</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -4717,6 +4748,10 @@ fragile, or violates generally-accepted assumptions of behavior.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Choice.html#from(java.util.Collection)" class="member-name-link">from(Collection)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#from(javax.lang.model.element.AnnotationMirror)" class="member-name-link">from(AnnotationMirror)</a> - Static method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Parses a <a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi"><code>Restriction</code></a> from an <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link"><code>AnnotationMirror</code></a>.</div>
+</dd>
 <dt><a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html#fromAnnotationMirrors(java.util.List)" class="member-name-link">fromAnnotationMirrors(List)</a> - Static method in class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnnotations</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html#fromAnnotationsOn(com.sun.tools.javac.code.Symbol)" class="member-name-link">fromAnnotationsOn(Symbol)</a> - Static method in class com.google.errorprone.dataflow.nullnesspropagation.<a href="com/google/errorprone/dataflow/nullnesspropagation/NullnessAnnotations.html" title="class in com.google.errorprone.dataflow.nullnesspropagation">NullnessAnnotations</a></dt>
@@ -6476,6 +6511,10 @@ its type.</div>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/StaticImports.StaticImportInfo.html" title="class in com.google.errorprone.bugpatterns">StaticImports.StaticImportInfo</a></dt>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
@@ -7464,6 +7503,14 @@ throw a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/ja
 <div class="block">Returns <code>true</code> if the given expression is allowed to have an unused return value based on
 its context.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#isAllowed(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isAllowed(Tree, VisitorState)</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Returns true if usage at <code>where</code> is exempt by path, test-only target, or allowlist.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#isAllowlisted(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isAllowlisted(Tree, VisitorState)</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Returns true if usage at <code>where</code> is permitted by an allowlist annotation.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#isAmbiguousJUnitVersion" class="member-name-link">isAmbiguousJUnitVersion</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
 <dd>
 <div class="block">Matches classes which have attributes of both JUnit 3 and 4 classes.</div>
@@ -7763,6 +7810,10 @@ underneath a class or method that is marked as JUnit 3 or 4 test code.</div>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#isNullUsingDataflow()" class="member-name-link">isNullUsingDataflow()</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches if the expression is provably null.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#isPathOrTestonlyExempt(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isPathOrTestonlyExempt(Tree, VisitorState)</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Returns true if usage at <code>where</code> is exempt by path or test-only target rules.</div>
 </dd>
 <dt><a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html#isPoly()" class="member-name-link">isPoly()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html" title="class in com.google.errorprone.refaster">UPlaceholderExpression.PlaceholderParamIdent</a></dt>
 <dd>&nbsp;</dd>
@@ -8388,6 +8439,10 @@ cases, but couldn't otherwise be turned on as an ERROR.</div>
 <dt><a href="com/google/errorprone/BugPattern.html#link()" class="member-name-link">link()</a> - Element in annotation interface com.google.errorprone.<a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone">BugPattern</a></dt>
 <dd>
 <div class="block">The link URL to use if linkType() is LinkType.CUSTOM.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#link()" class="member-name-link">link()</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>link</code> record component.</div>
 </dd>
 <dt><a href="com/google/errorprone/BugPattern.html#linkType()" class="member-name-link">linkType()</a> - Element in annotation interface com.google.errorprone.<a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone">BugPattern</a></dt>
 <dd>
@@ -13351,6 +13406,14 @@ argTypes</code> and <code>tyargTypes</code> and return its MethodSymbol.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/RestrictedApiChecker.html#%3Cinit%3E()" class="member-name-link">RestrictedApiChecker()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RestrictedApiChecker.html" title="class in com.google.errorprone.bugpatterns">RestrictedApiChecker</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a> - Record Class in <a href="com/google/errorprone/bugpatterns/restrictedapi/package-summary.html">com.google.errorprone.bugpatterns.restrictedapi</a></dt>
+<dd>
+<div class="block">Details of a restriction declared via an annotation like <code>@RestrictedApi</code>.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#%3Cinit%3E(java.lang.String,java.lang.String,com.google.common.collect.ImmutableList,java.lang.String,com.google.common.collect.ImmutableList,java.util.Optional,boolean,boolean)" class="member-name-link">Restriction(String, String, ImmutableList, String, ImmutableList, Optional, boolean, boolean)</a> - Constructor for record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Creates an instance of a <code>Restriction</code> record class.</div>
+</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFixes.FixCompiler.Result.html#%3Cinit%3E(java.util.List)" class="member-name-link">Result(List)</a> - Constructor for record class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.FixCompiler.Result.html" title="class in com.google.errorprone.fixes">SuggestedFixes.FixCompiler.Result</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>Result</code> record class.</div>
@@ -14242,6 +14305,10 @@ setter methods' results ignorable.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/SubstringOfZero.html#%3Cinit%3E()" class="member-name-link">SubstringOfZero()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SubstringOfZero.html" title="class in com.google.errorprone.bugpatterns">SubstringOfZero</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#suggestedAllowlistAnnotation()" class="member-name-link">suggestedAllowlistAnnotation()</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>suggestedAllowlistAnnotation</code> record component.</div>
+</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFixes.html#suggestedExemptingAnnotationSupported(javax.lang.model.element.Element)" class="member-name-link">suggestedExemptingAnnotationSupported(Element)</a> - Static method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFixes.html" title="class in com.google.errorprone.fixes">SuggestedFixes</a></dt>
 <dd>
 <div class="block">Returns true iff <code>suggestExemptingAnnotation()</code> supports this annotation.</div>
@@ -14860,6 +14927,10 @@ thrownMatcher</code>.</div>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html#toString()" class="member-name-link">toString()</a> - Method in record class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.ValidationResult.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation.ValidationResult</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#toString()" class="member-name-link">toString()</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
@@ -15879,6 +15950,11 @@ ASTs.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html#validate(com.sun.tools.javac.code.Symbol.MethodSymbol,java.util.Collection,com.google.errorprone.VisitorState)" class="member-name-link">validate(Symbol.MethodSymbol, Collection, VisitorState)</a> - Static method in class com.google.errorprone.bugpatterns.formatstring.<a href="com/google/errorprone/bugpatterns/formatstring/FormatStringValidation.html" title="class in com.google.errorprone.bugpatterns.formatstring">FormatStringValidation</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#validateAnnotation(javax.lang.model.element.AnnotationMirror,com.sun.tools.javac.code.Symbol)" class="member-name-link">validateAnnotation(AnnotationMirror, Symbol)</a> - Static method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Validates path restrictions on an annotation, returning an error message if both <code>
+allowedPaths</code> and <code>allowedOnPath</code> are specified.</div>
+</dd>
 <dt><a href="com/google/errorprone/ValidationException.html" class="type-name-link" title="class in com.google.errorprone">ValidationException</a> - Exception Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
 <dd>
 <div class="block">An exception that indicates that BugPattern validation failed.</div>
@@ -16937,6 +17013,10 @@ establish whether a given <a href="https://docs.oracle.com/en/java/javase/21/doc
 <dd>
 <div class="block">Returns a <a href="com/google/errorprone/scanner/ScannerSupplier.html" title="class in com.google.errorprone.scanner"><code>ScannerSupplier</code></a> with the <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>s that are in the ENABLED_WARNINGS
 list.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html#warningOnlyForRefactoring()" class="member-name-link">warningOnlyForRefactoring()</a> - Method in record class com.google.errorprone.bugpatterns.restrictedapi.<a href="com/google/errorprone/bugpatterns/restrictedapi/Restriction.html" title="class in com.google.errorprone.bugpatterns.restrictedapi">Restriction</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>warningOnlyForRefactoring</code> record component.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/WellKnownKeep.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">WellKnownKeep</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>

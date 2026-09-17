@@ -100,31 +100,33 @@ injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</d
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><a href="#com.google.errorprone.bugpatterns.overloading">com.google.errorprone.bugpatterns.overloading</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.bugpatterns.restrictedapi">com.google.errorprone.bugpatterns.restrictedapi</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time</a></div>
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.fixes">com.google.errorprone.fixes</a></div>
-<div class="col-last even-row-color">
+<div class="col-first even-row-color"><a href="#com.google.errorprone.bugpatterns.time">com.google.errorprone.bugpatterns.time</a></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.fixes">com.google.errorprone.fixes</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Support code for providing automated corrections for defects we find.</div>
 </div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.matchers">com.google.errorprone.matchers</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="#com.google.errorprone.matchers">com.google.errorprone.matchers</a></div>
+<div class="col-last even-row-color">
 <div class="block">A predicate DSL for matching javac AST nodes.</div>
 </div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.matchers.method">com.google.errorprone.matchers.method</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.predicates">com.google.errorprone.predicates</a></div>
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.matchers.method">com.google.errorprone.matchers.method</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.predicates">com.google.errorprone.predicates</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.suppliers">com.google.errorprone.suppliers</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.suppliers">com.google.errorprone.suppliers</a></div>
+<div class="col-last even-row-color">
 <div class="block">Supports matchers, but rather than giving Matcher implementations which are predicates on
 individual AST nodes, a supplier gives contextual information from the traversal of the AST.</div>
 </div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.util">com.google.errorprone.util</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.util">com.google.errorprone.util</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Utility code.</div>
 </div>
 </div>
@@ -4433,6 +4435,35 @@ Optional.orNull()</code>).</div>
 <div class="col-second even-row-color"><span class="type-name-label">InconsistentOverloads.</span><code><a href="../bugpatterns/overloading/InconsistentOverloads.html#matchClass(com.sun.source.tree.ClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ClassTree.html" title="class or interface in com.sun.source.tree" class="external-link">ClassTree</a>&nbsp;classTree,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.bugpatterns.restrictedapi">
+<h2>Uses of <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a> in <a href="../bugpatterns/restrictedapi/package-summary.html">com.google.errorprone.bugpatterns.restrictedapi</a></h2>
+<div class="caption"><span>Methods in <a href="../bugpatterns/restrictedapi/package-summary.html">com.google.errorprone.bugpatterns.restrictedapi</a> with parameters of type <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Restriction.</span><code><a href="../bugpatterns/restrictedapi/Restriction.html#isAllowed(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isAllowed</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;where,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Returns true if usage at <code>where</code> is exempt by path, test-only target, or allowlist.</div>
+</div>
+<div class="col-first odd-row-color"><code>boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Restriction.</span><code><a href="../bugpatterns/restrictedapi/Restriction.html#isAllowlisted(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isAllowlisted</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;where,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Returns true if usage at <code>where</code> is permitted by an allowlist annotation.</div>
+</div>
+<div class="col-first even-row-color"><code>boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Restriction.</span><code><a href="../bugpatterns/restrictedapi/Restriction.html#isPathOrTestonlyExempt(com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">isPathOrTestonlyExempt</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;where,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Returns true if usage at <code>where</code> is exempt by path or test-only target rules.</div>
+</div>
 </div>
 </section>
 </li>

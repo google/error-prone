@@ -61,6 +61,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#explanation()" tabindex="0">explanation</a></li>
 <li><a href="#link()" tabindex="0">link</a></li>
+<li><a href="#allowedPaths()" tabindex="0">allowedPaths</a></li>
 <li><a href="#allowedOnPath()" tabindex="0">allowedOnPath</a></li>
 <li><a href="#allowlistAnnotations()" tabindex="0">allowlistAnnotations</a></li>
 <li><a href="#allowlistWithWarningAnnotations()" tabindex="0">allowlistWithWarningAnnotations</a></li>
@@ -184,19 +185,25 @@ visibility of the record's accessor methods. For example:
 <div class="col-last even-row-color">
 <div class="block">Allow the restricted API on paths matching this regular expression.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</code></div>
-<div class="col-second odd-row-color"><code><a href="#allowlistAnnotations()" class="member-name-link">allowlistAnnotations</a></code></div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#allowedPaths()" class="member-name-link">allowedPaths</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Allow calls to the restricted API in methods or classes with this annotation.</div>
+<div class="block">Allow the restricted API on paths matching any of the given patterns (evaluated against the
+canonical repository-relative path).</div>
 </div>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</code></div>
-<div class="col-second even-row-color"><code><a href="#allowlistWithWarningAnnotations()" class="member-name-link">allowlistWithWarningAnnotations</a></code></div>
+<div class="col-second even-row-color"><code><a href="#allowlistAnnotations()" class="member-name-link">allowlistAnnotations</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Allow calls to the restricted API in methods or classes with this annotation.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;? extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#allowlistWithWarningAnnotations()" class="member-name-link">allowlistWithWarningAnnotations</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Emit warnings, not errors, on calls to the restricted API for callers with this annotation.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#link()" class="member-name-link">link</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#link()" class="member-name-link">link</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Optional link explaining why the API is restricted.</div>
 </div>
 </div>
@@ -229,6 +236,23 @@ visibility of the record's accessor methods. For example:
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>""</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="allowedPaths()">
+<h3>allowedPaths</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="element-name">allowedPaths</span></div>
+<div class="block">Allow the restricted API on paths matching any of the given patterns (evaluated against the
+canonical repository-relative path).
+
+<p>Supports exact source file paths (e.g. <code>"java/com/google/foo/Bar.java"</code>) and directory
+prefixes ending in <code>"/"</code> (e.g. <code>"java/com/google/foo/"</code>).</div>
+<dl class="notes">
+<dt>Default:</dt>
+<dd><code>{}</code></dd>
 </dl>
 </div>
 </section>
