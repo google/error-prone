@@ -300,15 +300,36 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         for (InstanceOfIr instanceOfIr : caseIr.instanceOfOptional().get()) {
           StringBuilder renderedInstanceOf = new StringBuilder();
           if (instanceOfIr.patternVariable().isPresent()) {
-            renderedInstanceOf.append(
-                printRawTypesAsWildcards(
-                    getType(instanceOfIr.patternVariable().get()), state, suggestedFixBuilder));
+            VariableTree patternVariable = instanceOfIr.patternVariable().get();
+            Type patternType = getType(patternVariable);
+            Symbol sym = ASTHelpers.getSymbol(patternVariable);
+            // Applying `final` to a pattern variable that is reassigned would not compile, so in
+            // that case fall back to erasing the element type's arguments, which compiles
+            boolean requiresFinalModifier = typePatternRequiresFinalModifier(patternType, state);
+            boolean canApplyFinalModifier = isConsideredFinal(sym);
+            renderedInstanceOf
+                .append(requiresFinalModifier && canApplyFinalModifier ? "final " : "")
+                .append(
+                    printRawTypesAsWildcards(
+                        patternType,
+                        state,
+                        suggestedFixBuilder,
+                        /* eraseGenericArrayTypeArguments= */ requiresFinalModifier
+                            && !canApplyFinalModifier));
 
-            Symbol sym = ASTHelpers.getSymbol(instanceOfIr.patternVariable().get());
             renderedInstanceOf.append(" ").append(sym.getSimpleName());
           } else if (instanceOfIr.expression().isPresent()) {
-            renderedInstanceOf.append(
-                printRawTypesAsWildcards(getType(instanceOfIr.type()), state, suggestedFixBuilder));
+            Type patternType = getType(instanceOfIr.type());
+            // The pattern variable rendered below is synthesized here and is never reassigned, so
+            // a `final` modifier may always be applied to it.
+            renderedInstanceOf
+                .append(typePatternRequiresFinalModifier(patternType, state) ? "final " : "")
+                .append(
+                    printRawTypesAsWildcards(
+                        patternType,
+                        state,
+                        suggestedFixBuilder,
+                        /* eraseGenericArrayTypeArguments= */ false));
             if (SourceVersion.supportsUnnamedVariablesAndPatterns(state.context)) {
               renderedInstanceOf.append(" _");
             } else {
@@ -382,36 +403,71 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
+   * Returns whether a type pattern for the supplied {@code Type} must be prefixed with a {@code
+   * final} modifier in order to be parsed as a {@code case} label.
+   *
+   * <p>javac cannot parse a generic array type in a {@code case} label unless the pattern starts
+   * with a modifier: {@code case List<?>[] l} is rejected with "illegal start of expression", while
+   * {@code case final List<?>[] l} is accepted. (Both are permitted by the grammar for a type
+   * pattern in JLS 21 §14.30.1.) Erasing the element type to {@code List[]} would also parse, but
+   * would make the pattern variable raw and introduce a {@code [rawtypes]} warning.
+   *
+   * <p>A {@code final} modifier may only be applied to a pattern variable that is never reassigned,
+   * since a pattern variable is an ordinary local variable rather than an implicitly final one (JLS
+   * 21 §14.30.1). Callers must therefore pair this predicate with an effective-finality check and
+   * fall back to the erased element type when it does not hold; see {@code
+   * printRawTypesAsWildcards}.
+   */
+  private static boolean typePatternRequiresFinalModifier(Type type, VisitorState state) {
+    Types types = state.getTypes();
+    if (!types.isArray(type)) {
+      return false;
+    }
+    Type elementType = type;
+    while (types.isArray(elementType)) {
+      elementType = types.elemtype(elementType);
+    }
+    // Matches the condition under which printRawTypesAsWildcards renders type arguments.
+    return !elementType.tsym.getTypeParameters().isEmpty();
+  }
+
+  /**
    * Renders Java source code representation of the supplied {@code Type} that is suitable for use
    * in fixes, where any raw types are replaced with wildcard types. For example, `List` becomes
    * `List<?>`.
+   *
+   * <p>Array types are rendered by applying the same treatment to the element type, so {@code
+   * List[]} becomes {@code List<?>[]} and {@code List<?>[]} is preserved rather than being erased
+   * to {@code List[]}. When {@code eraseGenericArrayTypeArguments} is set, the element type's
+   * arguments are instead erased, so that {@code List<?>[]} renders as {@code List[]}.
    */
   private static String printRawTypesAsWildcards(
-      Type type, VisitorState state, SuggestedFix.Builder suggestedFixBuilder) {
+      Type type,
+      VisitorState state,
+      SuggestedFix.Builder suggestedFixBuilder,
+      boolean eraseGenericArrayTypeArguments) {
     StringBuilder sb = new StringBuilder();
-    List<TypeVariableSymbol> typeParameters = type.tsym.getTypeParameters();
-    List<Type> typeArguments = type.getTypeArguments();
     Types types = state.getTypes();
 
-    // Unwrap array-of's
-    if (types.isArray(type)) {
-      Type at = type;
-      StringBuilder suffix = new StringBuilder();
-      while (types.isArray(at)) {
-        suffix.append("[]");
-        at = types.elemtype(at);
-      }
-      // Primitive types are always in context and don't need qualification
-      sb.append(
-          at.isPrimitive()
-              ? SuggestedFixes.prettyType(at, state)
-              : SuggestedFixes.qualifyType(state, suggestedFixBuilder, at.tsym));
-      sb.append(suffix);
-    } else {
-      sb.append(SuggestedFixes.qualifyType(state, suggestedFixBuilder, type.tsym));
+    // Unwrap array-of's. Type parameters and arguments must be read from the element type rather
+    // than from the array type itself, both because an array type has none of its own and because
+    // they are rendered before the `[]` suffixes.
+    Type elementType = type;
+    StringBuilder arraySuffix = new StringBuilder();
+    while (types.isArray(elementType)) {
+      arraySuffix.append("[]");
+      elementType = types.elemtype(elementType);
     }
 
-    if (!typeParameters.isEmpty()) {
+    // Primitive types are always in context and don't need qualification
+    sb.append(
+        elementType.isPrimitive()
+            ? SuggestedFixes.prettyType(elementType, state)
+            : SuggestedFixes.qualifyType(state, suggestedFixBuilder, elementType.tsym));
+
+    List<TypeVariableSymbol> typeParameters = elementType.tsym.getTypeParameters();
+    List<Type> typeArguments = elementType.getTypeArguments();
+    if (!typeParameters.isEmpty() && !eraseGenericArrayTypeArguments) {
       if (typeArguments.isEmpty()) {
         sb.append("<");
         sb.repeat("?,", max(0, typeParameters.size() - 1))
@@ -426,6 +482,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         sb.append(">");
       }
     }
+    sb.append(arraySuffix);
 
     return sb.toString();
   }
