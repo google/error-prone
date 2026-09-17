@@ -187,7 +187,7 @@ public class LoopConditionChecker extends BugChecker
     }
 
     private void check(ExpressionTree expression) {
-      Symbol sym = ASTHelpers.getSymbol(expression);
+      Symbol sym = ASTHelpers.getSymbol(ASTHelpers.stripParentheses(expression));
       modified |= variables.contains(sym);
     }
   }
