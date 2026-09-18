@@ -13,7 +13,7 @@ mechanism (more information
 
 Many deprecated APIs are implemented simply as calls to other, non-deprecated
 public APIs. Pushing the implementation of a deprecated method "up into" the
-caller is a process known as _inlining_. `@InlineMe` provides an easy to use
+caller is a process known as *inlining*. `@InlineMe` provides an easy to use
 mechanism to automatically inline deprecated APIs. For example:
 
 ```java
@@ -139,7 +139,7 @@ public final class MyClass {
 ### Static method with no new imports
 
 NOTE: you should always add the enclosing class as an `import` on the
-`@InlineMe` annotation because the caller _may_ have static imported the old
+`@InlineMe` annotation because the caller *may* have static imported the old
 method (and thus won't have an import for the replacement).
 
 ```java
@@ -163,7 +163,7 @@ public final class Frobber {
 ### Static method with new static imports
 
 NOTE: you should always add the enclosing class as an `import` on the
-`@InlineMe` annotation because the caller _may_ have static imported the old
+`@InlineMe` annotation because the caller *may* have static imported the old
 method (and thus won't have an import for the replacement).
 
 ```java
