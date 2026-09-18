@@ -259,13 +259,66 @@ public final class UnnecessaryQualifierTest {
   }
 
   @Test
-  public void recordWithoutExplicitlyAnnotatedConstructor_finding() {
+  public void recordComponent_noFinding() {
     helper
         .addSourceLines(
             "Test.java",
             """
-            // BUG: Diagnostic contains:
+            record Test(@Qual int x) {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void recordComponentWithConstructor_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
             record Test(@Qual int x) {
+              Test {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void multiComponentRecord_noFinding() {
+    helper
+        .addSourceLines(
+            "ConfigComponent.java",
+            """
+            record ConfigComponent(@Qual String host, @Qual int port) {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void recordSecondaryConstructorParameter_finding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            record Test(int x) {
+              Test(
+                  // BUG: Diagnostic contains:
+                  @Qual String s) {
+                this(s.length());
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void recordWithQualifiedConstructor_finding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            record Test(int x) {
+              // BUG: Diagnostic contains:
+              @Qual
               Test {}
             }
             """)
