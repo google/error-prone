@@ -1,6 +1,6 @@
 Even though varargs methods are different than methods with an array parameter
 as the last parameter, varargs methods are compiled into bytecode as methods
-with an array as the last parameter. When a varargs method is _called_, the Java
+with an array as the last parameter. When a varargs method is *called*, the Java
 compiler will insert instructions to automatically box the varargs arguments
 into an array.
 

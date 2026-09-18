@@ -23,7 +23,7 @@ This check detects the above circumstances, and won't let you attempt to put
 
 ## What about Lists?
 
-`List<T>` doesn't have the same issue, since generic types are _not_ covariant.
+`List<T>` doesn't have the same issue, since generic types are *not* covariant.
 
 ```java
 List<String> foo = new ArrayList<>();

@@ -17,7 +17,7 @@ you need to tolerate null values.
 It's dangerous to rely on your instances being interned. We have no tooling to
 check or enforce that, and it's easy to get wrong.
 
-### But what about `Boolean` values? We _know_ there's just `TRUE` and `FALSE` (and `null`). Surely _they're_ okay!
+### But what about `Boolean` values? We *know* there's just `TRUE` and `FALSE` (and `null`). Surely *they're* okay!
 
 Well, no, because some tricky client can always generate a new instance with
 `new Boolean(true)`. Comparing with `equals` always works; comparing with `==`

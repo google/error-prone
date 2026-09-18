@@ -5,8 +5,8 @@ appropriate generic type.
 
 This is useful when a method can't just take a parameter of the generic type to
 allow developers to safely operate with instances held with a wildcard type when
-using an instance as both a _consumer_ and _producer_ of values. This should
-_not_ be the default, as most interfaces are either one or the other. Containers
+using an instance as both a *consumer* and *producer* of values. This should
+*not* be the default, as most interfaces are either one or the other. Containers
 and container-like class are the most likely places to use this tool.
 
 TIP: More explanation can be found on the page for [CollectionIncompatibleType]
