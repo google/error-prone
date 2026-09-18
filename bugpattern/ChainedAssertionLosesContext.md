@@ -14,7 +14,7 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-Assertions made _inside the implementation of another [Truth] assertion_ should
+Assertions made *inside the implementation of another [Truth] assertion* should
 use [`check`], not `assertThat`.
 
 Before:

@@ -20,11 +20,13 @@ types may give surprising results.
 
 For example:
 
-    Object t = true ? Double.valueOf(0) : Integer.valueOf(0);
-    System.out.println(t.getClass());  // class java.lang.Double
+```
+Object t = true ? Double.valueOf(0) : Integer.valueOf(0);
+System.out.println(t.getClass());  // class java.lang.Double
 
-    Object f = false ? Double.valueOf(0) : Integer.valueOf(0);
-    System.out.println(f.getClass());  // class java.lang.Double !!
+Object f = false ? Double.valueOf(0) : Integer.valueOf(0);
+System.out.println(f.getClass());  // class java.lang.Double !!
+```
 
 Despite the apparent intent to get a `Double` in one case, and an `Integer` in
 the other, the result is a `Double` in both cases.
@@ -34,26 +36,32 @@ This is because the rules in
 state that differing numeric types will undergo binary numeric promotion. As
 such, the latter case is evaluated as:
 
-    Object f =
-        Double.valueOf(
-            false
-                ? Double.valueOf(0).doubleValue()
-                : (double) Integer.valueOf(0).intValue());
+```
+Object f =
+    Double.valueOf(
+        false
+            ? Double.valueOf(0).doubleValue()
+            : (double) Integer.valueOf(0).intValue());
+```
 
 To get a different type in the two cases, one can either explicitly cast the
 operands to a non-boxable type:
 
-    Object f = false ? ((Object) Double.valueOf(0)) : ((Object) Integer.valueOf(0));
-    System.out.println(t.getClass());  // class java.lang.Integer
+```
+Object f = false ? ((Object) Double.valueOf(0)) : ((Object) Integer.valueOf(0));
+System.out.println(t.getClass());  // class java.lang.Integer
+```
 
 Or use if/else:
 
-    Object f;
-    if (false) {
-      f = Double.valueOf(0);
-    } else {
-      f = Integer.valueOf(0);
-    }
+```
+Object f;
+if (false) {
+  f = Double.valueOf(0);
+} else {
+  f = Integer.valueOf(0);
+}
+```
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("ConditionalExpressionNumericPromotion")` to the enclosing element.
