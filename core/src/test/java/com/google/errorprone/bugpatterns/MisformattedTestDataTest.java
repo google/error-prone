@@ -153,6 +153,102 @@ public final class MisformattedTestDataTest {
   }
 
   @Test
+  public void bugMarkerComment_notWrapped() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    class Test {
+                      void method() {
+                        // BUG: Diagnostic contains: expected phrase that is sufficiently long that google-java-format would otherwise wrap it onto another comment line and change the test's meaning
+                        int a =
+                            1;
+                      }
+                    }
+                    \""");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    class Test {
+                      void method() {
+                        // BUG: Diagnostic contains: expected phrase that is sufficiently long that google-java-format would otherwise wrap it onto another comment line and change the test's meaning
+                        int a = 1;
+                      }
+                    }
+                    \""");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void bugMarkerContinuationComment_notWrapped() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    class Test {
+                      void method() {
+                        // BUG: Diagnostic contains: first expected phrase
+                        // second expected phrase that is sufficiently long that google-java-format would otherwise wrap it onto another comment line and change the test's meaning
+                        int a =
+                            1;
+                      }
+                    }
+                    \""");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    class Test {
+                      void method() {
+                        // BUG: Diagnostic contains: first expected phrase
+                        // second expected phrase that is sufficiently long that google-java-format would otherwise wrap it onto another comment line and change the test's meaning
+                        int a = 1;
+                      }
+                    }
+                    \""");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void misformattedMultiple_suggestsFixesCombined() {
     refactoringHelper
         .addInputLines(
