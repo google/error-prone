@@ -219,9 +219,22 @@ public final class SourcePathMatcher {
     return exactPaths.isEmpty() && prefixes.isEmpty();
   }
 
-  /// Returns `true` if the given canonical path matches any of the patterns in this matcher.
-  public boolean matches(String canonicalPath) {
-    checkNotNull(canonicalPath, "canonicalPath");
+  /// Returns `true` if the given path matches any of the patterns in this matcher.
+  public boolean matches(String path) {
+    checkNotNull(path, "path");
+    if (isEmpty()) {
+      return false;
+    }
+    return matchesCanonical(canonicalizePath(path));
+  }
+
+  /// Returns `true` if the compilation unit in `state` matches any of the patterns in this matcher.
+  public boolean matches(VisitorState state) {
+    String canonicalPath = ASTHelpers.getSourcePath(state);
+    return matchesCanonical(canonicalPath);
+  }
+
+  private boolean matchesCanonical(String canonicalPath) {
     if (isEmpty()) {
       return false;
     }
@@ -234,11 +247,5 @@ public final class SourcePathMatcher {
   private boolean matchesPrefix(String canonicalPath) {
     String prefix = prefixes.floor(canonicalPath);
     return prefix != null && canonicalPath.startsWith(prefix);
-  }
-
-  /// Returns `true` if the compilation unit in `state` matches any of the patterns in this matcher.
-  public boolean matches(VisitorState state) {
-    String canonicalPath = ASTHelpers.getSourcePath(state);
-    return matches(canonicalPath);
   }
 }
