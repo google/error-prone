@@ -34,7 +34,7 @@ public final class AddNullMarkedToPackageInfo extends BugChecker
     implements CompilationUnitTreeMatcher {
   @Override
   public Description matchCompilationUnit(CompilationUnitTree unit, VisitorState state) {
-    if (!isPackageInfo(unit)) {
+    if (!isPackageInfo(unit) || isSuppressed(unit.getPackage(), state)) {
       return NO_MATCH;
     }
     boolean nullMarkedAnnotationPresent =

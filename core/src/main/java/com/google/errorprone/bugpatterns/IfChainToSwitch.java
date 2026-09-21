@@ -299,22 +299,46 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         List<String> terms = new ArrayList<>();
         for (InstanceOfIr instanceOfIr : caseIr.instanceOfOptional().get()) {
           StringBuilder renderedInstanceOf = new StringBuilder();
-          if (instanceOfIr.patternVariable().isPresent()) {
-            renderedInstanceOf.append(
-                printRawTypesAsWildcards(
-                    getType(instanceOfIr.patternVariable().get()), state, suggestedFixBuilder));
+          switch (instanceOfIr) {
+            case InstanceOfIr.BindingPattern bindingPattern -> {
+              VariableTree patternVariable = bindingPattern.patternVariable();
+              Type patternType = getType(patternVariable);
+              Symbol sym = ASTHelpers.getSymbol(patternVariable);
+              // Applying `final` to a pattern variable that is reassigned would not compile, so in
+              // that case fall back to erasing the element type's arguments, which compiles
+              boolean requiresFinal = typePatternRequiresFinal(patternType, state);
+              boolean canApplyFinalModifier = isConsideredFinal(sym);
+              renderedInstanceOf
+                  .append(requiresFinal && canApplyFinalModifier ? "final " : "")
+                  .append(
+                      printRawTypesAsWildcards(
+                          patternType,
+                          state,
+                          suggestedFixBuilder,
+                          /* eraseGenericArrayTypeArguments= */ requiresFinal
+                              && !canApplyFinalModifier));
 
-            Symbol sym = ASTHelpers.getSymbol(instanceOfIr.patternVariable().get());
-            renderedInstanceOf.append(" ").append(sym.getSimpleName());
-          } else if (instanceOfIr.expression().isPresent()) {
-            renderedInstanceOf.append(
-                printRawTypesAsWildcards(getType(instanceOfIr.type()), state, suggestedFixBuilder));
-            if (SourceVersion.supportsUnnamedVariablesAndPatterns(state.context)) {
-              renderedInstanceOf.append(" _");
-            } else {
-              // It's possible that "unused" could conflict with an existing local variable name;
-              // support for unnamed variables gets around this, but requires later Java versions
-              renderedInstanceOf.append(" unused");
+              renderedInstanceOf.append(" ").append(sym.getSimpleName());
+            }
+            case InstanceOfIr.TypeTest typeTest -> {
+              Type patternType = getType(typeTest.type());
+              // The pattern variable rendered below is synthesized here and is never reassigned, so
+              // a `final` modifier may always be applied to it.
+              renderedInstanceOf
+                  .append(typePatternRequiresFinal(patternType, state) ? "final " : "")
+                  .append(
+                      printRawTypesAsWildcards(
+                          patternType,
+                          state,
+                          suggestedFixBuilder,
+                          /* eraseGenericArrayTypeArguments= */ false));
+              if (SourceVersion.supportsUnnamedVariablesAndPatterns(state.context)) {
+                renderedInstanceOf.append(" _");
+              } else {
+                // It's possible that "unused" could conflict with an existing local variable name;
+                // support for unnamed variables gets around this, but requires later Java versions
+                renderedInstanceOf.append(" unused");
+              }
             }
           }
           terms.add(renderedInstanceOf.toString());
@@ -382,36 +406,64 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
+   * Returns whether a type pattern for the supplied {@code Type} must be prefixed with a modifier
+   * in order to be successfully parsed as a {@code case} label.
+   *
+   * <p>Empirically, javac cannot parse a generic array type in a {@code case} label unless the
+   * pattern starts with a modifier: {@code case List<?>[] l} is rejected with "illegal start of
+   * expression", whereas {@code case final List<?>[] l} is accepted. (Both appear to be permitted
+   * by the formal grammar for a TypePattern specified in JLS 21 § 14.30.1.)
+   */
+  private static boolean typePatternRequiresFinal(Type type, VisitorState state) {
+    Types types = state.getTypes();
+    if (!types.isArray(type)) {
+      return false;
+    }
+    Type elementType = type;
+    while (types.isArray(elementType)) {
+      elementType = types.elemtype(elementType);
+    }
+    // Matches the condition under which printRawTypesAsWildcards renders type arguments.
+    return !elementType.tsym.getTypeParameters().isEmpty();
+  }
+
+  /**
    * Renders Java source code representation of the supplied {@code Type} that is suitable for use
    * in fixes, where any raw types are replaced with wildcard types. For example, `List` becomes
    * `List<?>`.
+   *
+   * <p>Array types are rendered by applying the same treatment to the element type, so {@code
+   * List[]} becomes {@code List<?>[]} and {@code List<?>[]} is preserved rather than being erased
+   * to {@code List[]}. When {@code eraseGenericArrayTypeArguments} is set, the element type's
+   * arguments are instead erased, so that {@code List<?>[]} renders as {@code List[]}.
    */
   private static String printRawTypesAsWildcards(
-      Type type, VisitorState state, SuggestedFix.Builder suggestedFixBuilder) {
+      Type type,
+      VisitorState state,
+      SuggestedFix.Builder suggestedFixBuilder,
+      boolean eraseGenericArrayTypeArguments) {
     StringBuilder sb = new StringBuilder();
-    List<TypeVariableSymbol> typeParameters = type.tsym.getTypeParameters();
-    List<Type> typeArguments = type.getTypeArguments();
     Types types = state.getTypes();
 
-    // Unwrap array-of's
-    if (types.isArray(type)) {
-      Type at = type;
-      StringBuilder suffix = new StringBuilder();
-      while (types.isArray(at)) {
-        suffix.append("[]");
-        at = types.elemtype(at);
-      }
-      // Primitive types are always in context and don't need qualification
-      sb.append(
-          at.isPrimitive()
-              ? SuggestedFixes.prettyType(at, state)
-              : SuggestedFixes.qualifyType(state, suggestedFixBuilder, at.tsym));
-      sb.append(suffix);
-    } else {
-      sb.append(SuggestedFixes.qualifyType(state, suggestedFixBuilder, type.tsym));
+    // Unwrap array-of's. Type parameters and arguments must be read from the element type rather
+    // than from the array type itself, both because an array type has none of its own and because
+    // they are rendered before the `[]` suffixes.
+    Type elementType = type;
+    StringBuilder arraySuffix = new StringBuilder();
+    while (types.isArray(elementType)) {
+      arraySuffix.append("[]");
+      elementType = types.elemtype(elementType);
     }
 
-    if (!typeParameters.isEmpty()) {
+    // Primitive types are always in context and don't need qualification
+    sb.append(
+        elementType.isPrimitive()
+            ? SuggestedFixes.prettyType(elementType, state)
+            : SuggestedFixes.qualifyType(state, suggestedFixBuilder, elementType.tsym));
+
+    List<TypeVariableSymbol> typeParameters = elementType.tsym.getTypeParameters();
+    List<Type> typeArguments = elementType.getTypeArguments();
+    if (!typeParameters.isEmpty() && !eraseGenericArrayTypeArguments) {
       if (typeArguments.isEmpty()) {
         sb.append("<");
         sb.repeat("?,", max(0, typeParameters.size() - 1))
@@ -426,6 +478,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         sb.append(">");
       }
     }
+    sb.append(arraySuffix);
 
     return sb.toString();
   }
@@ -1232,11 +1285,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
           if (subject.isEmpty()) {
             return Optional.empty();
           }
-          instanceOfs.add(
-              new InstanceOfIr(
-                  /* expression= */ Optional.of(instanceOfTree.getExpression()),
-                  /* patternVariable= */ Optional.empty(),
-                  /* type= */ instanceOfTree.getType()));
+          instanceOfs.add(new InstanceOfIr.TypeTest(instanceOfTree.getType()));
         }
         case BinaryTree bt when bt.getKind().equals(Kind.EQUAL_TO) -> {
           // Maybe comparing to a non-null compile-time constant? (`case null` not supported here
@@ -1372,10 +1421,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* hasDefault= */ false,
               /* instanceOfOptional= */ Optional.of(
                   ImmutableList.of(
-                      new InstanceOfIr(
-                          Optional.ofNullable(instanceOfTree.getExpression()),
-                          Optional.ofNullable(bpt.getVariable()),
-                          instanceOfTree.getType()))),
+                      new InstanceOfIr.BindingPattern(
+                          bpt.getVariable(), instanceOfTree.getType()))),
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
@@ -1404,11 +1451,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               /* hasCaseNull= */ false,
               /* hasDefault= */ false,
               /* instanceOfOptional= */ Optional.of(
-                  ImmutableList.of(
-                      new InstanceOfIr(
-                          Optional.ofNullable(instanceOfTree.getExpression()),
-                          Optional.empty(),
-                          instanceOfTree.getType()))),
+                  ImmutableList.of(new InstanceOfIr.TypeTest(instanceOfTree.getType()))),
               /* guardOptional= */ Optional.empty(),
               /* expressionsOptional= */ Optional.empty(),
               /* arrowRhsOptional= */ arrowRhsOptional,
@@ -2026,15 +2069,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     // Is LHS a pattern?
     if (lhs.instanceOfOptional().isPresent()) {
       for (var lhsIo : lhs.instanceOfOptional().get()) {
-        Type lhsType =
-            lhsIo.type() != null
-                ? getType(lhsIo.type())
-                : getType(lhsIo.patternVariable().get().getType());
+        Type lhsType = getType(lhsIo.type());
         for (var rhsIo : rhs.instanceOfOptional().get()) {
-          Type rhsType =
-              rhsIo.type() != null
-                  ? getType(rhsIo.type())
-                  : getType(rhsIo.patternVariable().get().getType());
+          Type rhsType = getType(rhsIo.type());
           if (isSubtype(rhsType, lhsType, state)) {
             // The RHS type is a subtype of the LHS type, so the LHS dominates the RHS
             return true;
@@ -2077,19 +2114,29 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
   }
 
   /**
-   * This record is an intermediate representation of a single `x instanceof Y` or `x instanceof Y
-   * y` expression.
+   * Intermediate representation of a single `x instanceof Y` or `x instanceof Y y` expression.
+   *
+   * <p>Those two forms are mutually exclusive, so they are modelled as separate implementations
+   * rather than as a single type with optional fields. This makes the distinction structural, so
+   * that javac can check that every consumer handles both.
    */
-  private record InstanceOfIr(
-      // In the example above, the expression would be `y`.
-      Optional<ExpressionTree> expression,
-      // In the example above, the variable tree would be `Y y`.
-      Optional<VariableTree> patternVariable,
-      // In the example above, the type would be `Y`.
-      Tree type) {
+  private sealed interface InstanceOfIr {
+    /** In the examples above, the type would be `Y`. */
+    Tree type();
 
-    InstanceOfIr {
-      checkArgument(type != null);
+    /** An `x instanceof Y y` expression, which declares the pattern variable `y`. */
+    record BindingPattern(VariableTree patternVariable, Tree type) implements InstanceOfIr {
+      public BindingPattern {
+        checkArgument(patternVariable != null);
+        checkArgument(type != null);
+      }
+    }
+
+    /** An `x instanceof Y` expression, which declares no pattern variable. */
+    record TypeTest(Tree type) implements InstanceOfIr {
+      public TypeTest {
+        checkArgument(type != null);
+      }
     }
   }
 
