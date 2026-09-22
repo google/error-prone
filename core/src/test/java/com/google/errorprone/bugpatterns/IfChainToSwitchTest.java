@@ -4450,11 +4450,9 @@ class Test {
     helper
         .addSourceLines(
             "Test.java",
-            // TODO(user): this should not be flagged by IfChainToSwitch
             """
             class Test {
               public void foo(Object o) {
-                // BUG: Diagnostic contains: This if-chain may be converted into a switch
                 if (o instanceof Float) {
                   System.out.println("a");
                 } else if (o instanceof Object || o instanceof Number || o instanceof Object) {
@@ -4588,14 +4586,13 @@ class Test {
             """)
         .addOutputLines(
             "Test.java",
-            // TODO(user): the String and Boolean cases are missing!
             """
             class Test {
               public void foo(Object o) {
                 switch (o) {
                   case Float _ -> System.out.println("It's a float");
                   case Integer _ -> System.out.println("It's an integer");
-                  case Character _ -> System.out.println("It's one of three things");
+                  case String _, Boolean _, Character _ -> System.out.println("It's one of three things");
                   default -> System.out.println("It's something else");
                 }
               }
@@ -4631,14 +4628,13 @@ class Test {
             """)
         .addOutputLines(
             "Test.java",
-            // TODO(user): the Boolean and Character cases are missing!
             """
             class Test {
               public void foo(Object o) {
                 switch (o) {
                   case Float _ -> System.out.println("It's a float");
                   case Integer _ -> System.out.println("It's an integer");
-                  case String _ -> System.out.println("It's one of three things");
+                  case String _, Boolean _, Character _ -> System.out.println("It's one of three things");
                   default -> System.out.println("It's something else");
                 }
               }
@@ -4654,15 +4650,12 @@ class Test {
   public void ifChain_groupingInstanceofsOrConstant_noError() {
     // Instanceof patterns still cannot be mixed with constants when there are three alternatives;
     // JLS forbids constants and patterns in the same case label.
-    assume().that(Runtime.version().feature()).isAtLeast(22);
     helper
         .addSourceLines(
             "Test.java",
-            // TODO(user): this should not be flagged by IfChainToSwitch
             """
             class Test {
               public void foo(Integer x) {
-                // BUG: Diagnostic contains: This if-chain may be converted into a switch
                 if (x == 1) {
                   System.out.println("a");
                 } else if (x == 2) {

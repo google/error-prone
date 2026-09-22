@@ -1341,6 +1341,7 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
               subjectAndCaseExpressionsOptional.get();
           subject = Optional.of(subjectAndCaseExpressions.subject());
           caseExpressions.addAll(subjectAndCaseExpressions.expressions());
+          instanceOfs.addAll(subjectAndCaseExpressions.instanceOfs());
         }
         default -> {
           // Unsupported
