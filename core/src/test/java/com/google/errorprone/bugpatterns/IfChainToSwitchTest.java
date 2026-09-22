@@ -2135,14 +2135,14 @@ public final class IfChainToSwitchTest {
                       /* gamma */
                       /* delta */
                       /* epsilon */
-                      /* nu */
-                      /* theta */
                       {
                         // zeta
                         return;
                         /* eta */
                       }
                       case Suit.DIAMOND ->
+                      /* nu */
+                      /* theta */
                       /* iota */
                       /* kappa */
                       {
@@ -2220,14 +2220,14 @@ public final class IfChainToSwitchTest {
                       /* gamma */
                       /* delta */
                       /* epsilon */
-                      /* nu */
-                      /* theta */
                       {
                         // zeta
                         return;
                         /* eta */
                       }
                       case Suit.DIAMOND ->
+                      /* nu */
+                      /* theta */
                       /* iota */
                       /* kappa */
                       {
@@ -2589,10 +2589,10 @@ public final class IfChainToSwitchTest {
                   } else if (suit == Suit.CLUB) {
                     return;
                   }
-                  System.out.println("this will become unreachable");
-                  System.out.println("this will too");
+                  System.out.println("this will not become unreachable");
+                  System.out.println("this will not too");
                 }
-                System.out.println("this will too");
+                System.out.println("this will not too");
               }
             }
             """)
@@ -2617,7 +2617,10 @@ public final class IfChainToSwitchTest {
                       return;
                     }
                   }
+                  System.out.println("this will not become unreachable");
+                  System.out.println("this will not too");
                 }
+                System.out.println("this will not too");
               }
             }
             """)
@@ -3430,6 +3433,351 @@ class Test {
               }
             }
             """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_siblingConvertibleChain_error() {
+    // The single statement following the first chain is itself a convertible chain.  Pulling it up
+    // would delete source that the second chain's own fix replaces, and applying both throws.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int a, int b) {
+                if (a == 1) {
+                  return;
+                } else if (a == 2) {
+                  return;
+                } else if (a == 3) {
+                  return;
+                }
+                if (b == 1) {
+                  System.out.println("x");
+                } else if (b == 2) {
+                  System.out.println("y");
+                } else if (b == 3) {
+                  System.out.println("z");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int a, int b) {
+                switch (a) {
+                  case 1 -> {
+                    return;
+                  }
+                  case 2 -> {
+                    return;
+                  }
+                  case 3 -> {
+                    return;
+                  }
+                  default -> {}
+                }
+                switch (b) {
+                  case 1 -> System.out.println("x");
+                  case 2 -> System.out.println("y");
+                  case 3 -> System.out.println("z");
+                  default -> {}
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_pullUpBlockContainingChain_error() {
+    // As above, but the convertible chain is nested inside the trailing statement rather than
+    // being it, so the deletion range strictly contains the other fix's range.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int a, int b) {
+                if (a == 1) {
+                  return;
+                } else if (a == 2) {
+                  return;
+                } else if (a == 3) {
+                  return;
+                }
+                {
+                  if (b == 1) {
+                    System.out.println("x");
+                  } else if (b == 2) {
+                    System.out.println("y");
+                  } else if (b == 3) {
+                    System.out.println("z");
+                  }
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int a, int b) {
+                switch (a) {
+                  case 1 -> {
+                    return;
+                  }
+                  case 2 -> {
+                    return;
+                  }
+                  case 3 -> {
+                    return;
+                  }
+                  default -> {}
+                }
+                {
+                  switch (b) {
+                    case 1 -> System.out.println("x");
+                    case 2 -> System.out.println("y");
+                    case 3 -> System.out.println("z");
+                    default -> {}
+                  }
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_deadCodeRegionContainsChain_error() {
+    // Two trailing statements, so pull-up declines and the dead-code deletion would fire.  That
+    // code cannot be left in place (it would be unreachable), so the conversion is declined and
+    // only the inner chain is converted.
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int b) {
+                if (o instanceof Integer) {
+                  throw new AssertionError();
+                } else if (o instanceof String) {
+                  throw new AssertionError();
+                } else if (o instanceof Object) {
+                  throw new AssertionError();
+                }
+                System.out.println("dead");
+                if (b == 1) {
+                  System.out.println("x");
+                } else if (b == 2) {
+                  System.out.println("y");
+                } else if (b == 3) {
+                  System.out.println("z");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int b) {
+                if (o instanceof Integer) {
+                  throw new AssertionError();
+                } else if (o instanceof String) {
+                  throw new AssertionError();
+                } else if (o instanceof Object) {
+                  throw new AssertionError();
+                }
+                System.out.println("dead");
+                switch (b) {
+                  case 1 -> System.out.println("x");
+                  case 2 -> System.out.println("y");
+                  case 3 -> System.out.println("z");
+                  default -> {}
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_deadCodeRegionContainsLoneIf_noError() {
+    // The dead region holds a lone `if` that is not itself convertible, so no conflicting fix is
+    // possible.  hasIfInTree matches any `if` rather than trying to predict matchability, so the
+    // conversion is declined.  This could be improved by deeper examination of the if-chain to be
+    // deleted.
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int b) {
+                if (o instanceof Integer) {
+                  throw new AssertionError();
+                } else if (o instanceof String) {
+                  throw new AssertionError();
+                } else if (o instanceof Object) {
+                  throw new AssertionError();
+                }
+                System.out.println("dead");
+                if (b == 1) {
+                  System.out.println("x");
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_commentBeforeElseIf_error() {
+    // A comment between `else` and `if` documents the branch that follows it, so it must be
+    // attached to that branch's case rather than to the preceding one.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int x) {
+                // about one
+                if (x == 1) {
+                  System.out.println("a");
+                } else /* about two */ if (x == 2) {
+                  System.out.println("b");
+                } else /* about three */ if (x == 3) {
+                  System.out.println("c");
+                } else /* about four */ if (x == 4) {
+                  System.out.println("d");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int x) {
+                // about one
+                switch (x) {
+                  case 1 -> System.out.println("a");
+                  case 2 ->
+                      /* about two */
+                      System.out.println("b");
+                  case 3 ->
+                      /* about three */
+                      System.out.println("c");
+                  case 4 ->
+                      /* about four */
+                      System.out.println("d");
+                  default -> {}
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_lineCommentBeforeElseIf_error() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int x) {
+                if (x == 1) {
+                  System.out.println("a");
+                } else
+                // explains case two
+                if (x == 2) {
+                  System.out.println("b");
+                } else if (x == 3) {
+                  System.out.println("c");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int x) {
+                switch (x) {
+                  case 1 -> System.out.println("a");
+                  case 2 ->
+                      // explains case two
+                      System.out.println("b");
+                  case 3 -> System.out.println("c");
+                  default -> {}
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_commentBeforeElseBlock_error() {
+    // The comment documents the `else`, so it belongs to the synthesized `default`.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int x) {
+                if (x == 1) {
+                  System.out.println("a");
+                } else if (x == 2) {
+                  System.out.println("b");
+                } else if (x == 3) {
+                  System.out.println("c");
+                } else /* about the rest */ {
+                  System.out.println("d");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int x) {
+                switch (x) {
+                  case 1 -> System.out.println("a");
+                  case 2 -> System.out.println("b");
+                  case 3 -> System.out.println("c");
+                  default ->
+                      /* about the rest */
+                      System.out.println("d");
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
@@ -4968,8 +5316,8 @@ class Test {
                     } else if (s == Suit.CLUB) {
                       throw new AssertionError("club");
                     }
-                    System.out.println("Delete me");
-                    System.out.println("Delete me too");
+                    System.out.println("Don't delete me");
+                    System.out.println("Don't delete me too");
                   }
                 }
                 return new Bar().toString();
@@ -4989,9 +5337,134 @@ class Test {
                       case Suit.DIAMOND -> throw new AssertionError("diamond");
                       case Suit.CLUB -> throw new AssertionError("club");
                     }
+                    System.out.println("Don't delete me");
+                    System.out.println("Don't delete me too");
                   }
                 }
                 return new Bar().toString();
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_exhaustiveEnumInConstructor_keepsTrailingStatements() {
+    // The trailing statements discharge the definite-assignment obligation for the blank final
+    // field (JLS 16.9), so they may not be deleted even though every case throws or returns.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              final int x;
+
+              Test(Suit s) {
+                if (s == Suit.HEART) {
+                  x = 1;
+                  return;
+                } else if (s == Suit.SPADE) {
+                  x = 2;
+                  return;
+                } else if (s == Suit.DIAMOND) {
+                  x = 3;
+                  return;
+                } else if (s == Suit.CLUB) {
+                  x = 4;
+                  return;
+                }
+                System.out.println("not reached");
+                x = 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              final int x;
+
+              Test(Suit s) {
+                switch (s) {
+                  case Suit.HEART -> {
+                    x = 1;
+                    return;
+                  }
+                  case Suit.SPADE -> {
+                    x = 2;
+                    return;
+                  }
+                  case Suit.DIAMOND -> {
+                    x = 3;
+                    return;
+                  }
+                  case Suit.CLUB -> {
+                    x = 4;
+                    return;
+                  }
+                }
+                System.out.println("not reached");
+                x = 0;
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_exhaustiveEnumInSwitchExpressionArm_keepsTrailingStatements() {
+    // The The trailing {@code yield} is the switch expression's only result expression (JLS
+    // 15.28.1), so it may not be deleted. The enclosing method is {@code void}, so its reachability
+    // says nothing about the reachability of the arm.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s, int k) {
+                int result =
+                    switch (k) {
+                      default -> {
+                        if (s == Suit.HEART) {
+                          throw new AssertionError();
+                        } else if (s == Suit.SPADE) {
+                          throw new AssertionError();
+                        } else if (s == Suit.DIAMOND) {
+                          throw new AssertionError();
+                        } else if (s == Suit.CLUB) {
+                          throw new AssertionError();
+                        }
+                        System.out.println("not reached");
+                        yield 0;
+                      }
+                    };
+                System.out.println(result);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s, int k) {
+                int result =
+                    switch (k) {
+                      default -> {
+                        switch (s) {
+                          case Suit.HEART -> throw new AssertionError();
+                          case Suit.SPADE -> throw new AssertionError();
+                          case Suit.DIAMOND -> throw new AssertionError();
+                          case Suit.CLUB -> throw new AssertionError();
+                        }
+                        System.out.println("not reached");
+                        yield 0;
+                      }
+                    };
+                System.out.println(result);
               }
             }
             """)
