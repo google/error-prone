@@ -84,6 +84,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#looksLikeJUnit4After" tabindex="0">looksLikeJUnit4After</a></li>
 <li><a href="#wouldRunInJUnit4" tabindex="0">wouldRunInJUnit4</a></li>
 <li><a href="#TEST_CASE" tabindex="0">TEST_CASE</a></li>
+<li><a href="#JUNIT5_TEST_METHOD" tabindex="0">JUNIT5_TEST_METHOD</a></li>
+<li><a href="#JUNIT5_LIFECYCLE_METHOD" tabindex="0">JUNIT5_LIFECYCLE_METHOD</a></li>
+<li><a href="#JUNIT5_TEST_OR_LIFECYCLE_METHOD" tabindex="0">JUNIT5_TEST_OR_LIFECYCLE_METHOD</a></li>
 <li><a href="#hasJUnit4TestRunner" tabindex="0">hasJUnit4TestRunner</a></li>
 <li><a href="#isJUnit4TestClass" tabindex="0">isJUnit4TestClass</a></li>
 <li><a href="#isAmbiguousJUnitVersion" tabindex="0">isAmbiguousJUnitVersion</a></li>
@@ -209,33 +212,48 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="#JUNIT4_THEORY_ANNOTATION" class="member-name-link">JUNIT4_THEORY_ANNOTATION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#looksLikeJUnit3SetUp" class="member-name-link">looksLikeJUnit3SetUp</a></code></div>
+<div class="col-second even-row-color"><code><a href="#JUNIT5_LIFECYCLE_METHOD" class="member-name-link">JUNIT5_LIFECYCLE_METHOD</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Matches a JUnit 5 (Jupiter) lifecycle method, i.e. a setup or teardown method.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#JUNIT5_TEST_METHOD" class="member-name-link">JUNIT5_TEST_METHOD</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Matches a JUnit 5 (Jupiter) test method.</div>
+</div>
+<div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#JUNIT5_TEST_OR_LIFECYCLE_METHOD" class="member-name-link">JUNIT5_TEST_OR_LIFECYCLE_METHOD</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Matches a JUnit 5 (Jupiter) method that is invoked reflectively.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#looksLikeJUnit3SetUp" class="member-name-link">looksLikeJUnit3SetUp</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Match a method which appears to be a JUnit 3 setUp method</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#looksLikeJUnit3TearDown" class="member-name-link">looksLikeJUnit3TearDown</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#looksLikeJUnit3TearDown" class="member-name-link">looksLikeJUnit3TearDown</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Match a method which appears to be a JUnit 3 tearDown method</div>
 </div>
-<div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#looksLikeJUnit4After" class="member-name-link">looksLikeJUnit4After</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#looksLikeJUnit4After" class="member-name-link">looksLikeJUnit4After</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches a method which appears to be a JUnit4 @After method.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#looksLikeJUnit4Before" class="member-name-link">looksLikeJUnit4Before</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#looksLikeJUnit4Before" class="member-name-link">looksLikeJUnit4Before</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches a method which appears to be a JUnit4 @Before method.</div>
 </div>
-<div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#TEST_CASE" class="member-name-link">TEST_CASE</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#TEST_CASE" class="member-name-link">TEST_CASE</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches a JUnit 3 or 4 test case.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><code><a href="#wouldRunInJUnit4" class="member-name-link">wouldRunInJUnit4</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#wouldRunInJUnit4" class="member-name-link">wouldRunInJUnit4</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches a method annotated with @Test but not @Ignore.</div>
 </div>
 </div>
@@ -649,6 +667,36 @@ listed in the TEST_RUNNERS field.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</span>&nbsp;<span class="element-name">TEST_CASE</span></div>
 <div class="block">Matches a JUnit 3 or 4 test case.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="JUNIT5_TEST_METHOD">
+<h3>JUNIT5_TEST_METHOD</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</span>&nbsp;<span class="element-name">JUNIT5_TEST_METHOD</span></div>
+<div class="block">Matches a JUnit 5 (Jupiter) test method.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="JUNIT5_LIFECYCLE_METHOD">
+<h3>JUNIT5_LIFECYCLE_METHOD</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</span>&nbsp;<span class="element-name">JUNIT5_LIFECYCLE_METHOD</span></div>
+<div class="block">Matches a JUnit 5 (Jupiter) lifecycle method, i.e. a setup or teardown method.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="JUNIT5_TEST_OR_LIFECYCLE_METHOD">
+<h3>JUNIT5_TEST_OR_LIFECYCLE_METHOD</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</span>&nbsp;<span class="element-name">JUNIT5_TEST_OR_LIFECYCLE_METHOD</span></div>
+<div class="block">Matches a JUnit 5 (Jupiter) method that is invoked reflectively.
+
+<p>Unlike <a href="#TEST_CASE"><code>TEST_CASE</code></a> this also covers lifecycle methods, as Jupiter permits those to
+declare parameters.</div>
 </div>
 </section>
 </li>

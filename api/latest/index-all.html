@@ -6391,6 +6391,10 @@ constructors.</div>
 <dd>
 <div class="block">Determines whether an expression has an annotation of the given type.</div>
 </dd>
+<dt><a href="com/google/errorprone/predicates/TypePredicates.html#hasAnnotation(java.lang.String)" class="member-name-link">hasAnnotation(String)</a> - Static method in class com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicates.html" title="class in com.google.errorprone.predicates">TypePredicates</a></dt>
+<dd>
+<div class="block">Match types that are annotated with the given annotation.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#hasAnnotation(javax.lang.model.type.TypeMirror)" class="member-name-link">hasAnnotation(TypeMirror)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Determines if an expression has an annotation referred to by the given mirror.</div>
@@ -6696,6 +6700,11 @@ org.junit package.</div>
 <dt><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiffOrBuilder.html#hasMemberDiff()" class="member-name-link">hasMemberDiff()</a> - Method in interface com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiffOrBuilder.html" title="interface in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiffOrBuilder</a></dt>
 <dd>
 <div class="block"><code>.devtools.staticanalysis.errorprone.apidiff.MemberDiff member_diff = 2;</code></div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/Matchers.html#hasMetaAnnotation(java.lang.String)" class="member-name-link">hasMetaAnnotation(String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
+<dd>
+<div class="block">Matches an annotation that is itself annotated with the given annotation, i.e. a
+meta-annotation.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#hasMethod(com.google.errorprone.matchers.Matcher)" class="member-name-link">hasMethod(Matcher)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
@@ -8267,6 +8276,18 @@ annotated with a non-JUnit4 @After annotation.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/JUnit4TestsNotRunWithinEnclosed.html#%3Cinit%3E()" class="member-name-link">JUnit4TestsNotRunWithinEnclosed()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnit4TestsNotRunWithinEnclosed.html" title="class in com.google.errorprone.bugpatterns">JUnit4TestsNotRunWithinEnclosed</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT5_LIFECYCLE_METHOD" class="member-name-link">JUNIT5_LIFECYCLE_METHOD</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
+<dd>
+<div class="block">Matches a JUnit 5 (Jupiter) lifecycle method, i.e. a setup or teardown method.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT5_TEST_METHOD" class="member-name-link">JUNIT5_TEST_METHOD</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
+<dd>
+<div class="block">Matches a JUnit 5 (Jupiter) test method.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/JUnitMatchers.html#JUNIT5_TEST_OR_LIFECYCLE_METHOD" class="member-name-link">JUNIT5_TEST_OR_LIFECYCLE_METHOD</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/JUnitMatchers.html" title="class in com.google.errorprone.matchers">JUnitMatchers</a></dt>
+<dd>
+<div class="block">Matches a JUnit 5 (Jupiter) method that is invoked reflectively.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/JUnitAmbiguousTestClass.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">JUnitAmbiguousTestClass</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/JUnitAmbiguousTestClass.html#%3Cinit%3E()" class="member-name-link">JUnitAmbiguousTestClass()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/JUnitAmbiguousTestClass.html" title="class in com.google.errorprone.bugpatterns">JUnitAmbiguousTestClass</a></dt>
