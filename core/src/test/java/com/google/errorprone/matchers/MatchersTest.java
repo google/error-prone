@@ -32,6 +32,7 @@ import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.MatcherChecker;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -39,6 +40,7 @@ import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodClassMatcher;
 import com.google.errorprone.scanner.ErrorProneScanner;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -61,6 +63,34 @@ public class MatchersTest {
     assertThrows(IllegalArgumentException.class, () -> methodClassMatcher.named("getBytes()"));
     assertThrows(IllegalArgumentException.class, () -> methodClassMatcher.named("getBytes)"));
     assertThrows(IllegalArgumentException.class, () -> methodClassMatcher.named("getBytes("));
+  }
+
+  @Test
+  public void hasMetaAnnotation() {
+    CompilationTestHelper.newInstance(HasMetaAnnotationChecker.class, getClass())
+        .addSourceLines(
+            "Annotations.java",
+            """
+            @interface Meta {}
+
+            @Meta
+            @interface Composed {}
+
+            @interface Plain {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains: HasMetaAnnotation
+              @Composed
+              void composed() {}
+
+              @Plain
+              void plain() {}
+            }
+            """)
+        .doTest();
   }
 
   @Test
@@ -620,6 +650,17 @@ public class MatchersTest {
         return describeMatch(tree);
       }
       return Description.NO_MATCH;
+    }
+  }
+
+  /** Checker that flags annotations matched by {@link Matchers#hasMetaAnnotation(String)}. */
+  @BugPattern(summary = "Checker that flags meta-annotated annotations", severity = ERROR)
+  public static class HasMetaAnnotationChecker extends BugChecker implements AnnotationTreeMatcher {
+    @Override
+    public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
+      return Matchers.hasMetaAnnotation("Meta").matches(tree, state)
+          ? this.buildDescription(tree).setMessage("HasMetaAnnotation").build()
+          : Description.NO_MATCH;
     }
   }
 }
