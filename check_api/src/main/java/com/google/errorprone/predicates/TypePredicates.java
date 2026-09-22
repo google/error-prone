@@ -50,6 +50,11 @@ public final class TypePredicates {
     return (type, state) -> type.isPrimitive();
   }
 
+  /** Match types that are annotated with the given annotation. */
+  public static TypePredicate hasAnnotation(String annotationType) {
+    return (type, state) -> ASTHelpers.hasAnnotation(type.tsym, annotationType, state);
+  }
+
   /** Match types that are exactly equal. */
   public static TypePredicate isExactType(String type) {
     return isExactType(typeFromString(type));

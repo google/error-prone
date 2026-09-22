@@ -54,6 +54,7 @@ import com.google.errorprone.matchers.method.MethodMatchers.ConstructorMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.InstanceMethodMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.StaticMethodMatcher;
 import com.google.errorprone.predicates.TypePredicate;
+import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
@@ -704,6 +705,14 @@ public final class Matchers {
 
   public static Matcher<AnnotationTree> isType(String annotationClassName) {
     return new AnnotationType(annotationClassName);
+  }
+
+  /**
+   * Matches an annotation that is itself annotated with the given annotation, i.e. a
+   * meta-annotation.
+   */
+  public static Matcher<AnnotationTree> hasMetaAnnotation(String annotationClassName) {
+    return typePredicateMatcher(TypePredicates.hasAnnotation(annotationClassName));
   }
 
   /**

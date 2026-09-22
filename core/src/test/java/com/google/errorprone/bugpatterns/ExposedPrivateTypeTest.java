@@ -339,6 +339,40 @@ public final class ExposedPrivateTypeTest {
   }
 
   @Test
+  public void dontReduceVisibilityJUnit5TestCase() {
+    refactoringTestHelper
+        .addInputLines(
+            "org/junit/jupiter/api/Test.java",
+            """
+            package org.junit.jupiter.api;
+
+            public @interface Test {}
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Outer.java",
+            """
+            class Outer {
+              private static class PrivateInner {}
+
+              @org.junit.jupiter.api.Test
+              void test(PrivateInner p) {}
+            }
+            """)
+        .addOutputLines(
+            "Outer.java",
+            """
+            class Outer {
+              static class PrivateInner {}
+
+              @org.junit.jupiter.api.Test
+              void test(PrivateInner p) {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void privateAnnotationOnParameter() {
     compilationHelper
         .addSourceLines(
