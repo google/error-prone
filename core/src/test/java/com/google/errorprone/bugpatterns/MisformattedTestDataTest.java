@@ -229,6 +229,52 @@ public final class MisformattedTestDataTest {
   }
 
   @Test
+  public void stripTrailingWhitespaceFromBugMarkerComment() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    class Test {
+                      void method() {
+                        // BUG: Diagnostic contains: expected phrase that is sufficiently long that google-java-format would otherwise wrap it onto another comment line and change the test's meaning\s\s\s
+                        int a = 1;
+                      }
+                    }
+                    \""");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    class Test {
+                      void method() {
+                        // BUG: Diagnostic contains: expected phrase that is sufficiently long that google-java-format would otherwise wrap it onto another comment line and change the test's meaning
+                        int a = 1;
+                      }
+                    }
+                    \""");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void bugMarkerComment_diagnosticMatches_notWrapped() {
     refactoringHelper
         .addInputLines(
@@ -280,6 +326,85 @@ public final class MisformattedTestDataTest {
             }
             """)
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void bugMarkerTrailingComment_notWrapped() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    class Test {
+                      void method() {
+                        int a = 1; // BUG: Diagnostic matches: expected phrase that is sufficiently long that google-java-format would otherwise wrap it onto another comment line and change the test's meaning
+                        int b = 2;
+                      }
+                    }
+                    \""");
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void bugMarkerTrailingComment_notWrapped_whenLineIsWrapped() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    class Test {
+                      void method() {
+                        String s = "testtesttest" + "testtesttest" + "testtesttest" + "testtesttest" + "testtesttest" + "testtesttest"; // BUG: Diagnostic matches: expected phrase that is sufficiently long that google-java-format would otherwise wrap it onto another comment line and change the test's meaning
+                        int a = 1;
+                      }
+                    }
+                    \""");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    class Test {
+                      void method() {
+                        String s =
+                            "testtesttest"
+                                + "testtesttest"
+                                + "testtesttest"
+                                + "testtesttest"
+                                + "testtesttest"
+                                + "testtesttest"; // BUG: Diagnostic matches: expected phrase that is sufficiently long that google-java-format would otherwise wrap it onto another comment line and change the test's meaning
+                        int a = 1;
+                      }
+                    }
+                    \""");
+              }
+            }
+            """)
         .doTest();
   }
 

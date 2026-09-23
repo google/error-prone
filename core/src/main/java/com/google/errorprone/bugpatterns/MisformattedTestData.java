@@ -185,14 +185,16 @@ public final class MisformattedTestData extends BugChecker implements Compilatio
         String line = lines.get(i);
         String trimmedLine = line.trim();
         boolean startsBugMarkerComment =
-            trimmedLine.startsWith(DIAGNOSTIC_CONTAINS_MARKER)
-                || trimmedLine.startsWith(DIAGNOSTIC_MATCHES_MARKER);
+            line.indexOf(DIAGNOSTIC_CONTAINS_MARKER) != -1
+                || line.indexOf(DIAGNOSTIC_MATCHES_MARKER) != -1;
         if (!startsBugMarkerComment && !(inBugMarkerComment && trimmedLine.startsWith("//"))) {
           inBugMarkerComment = false;
         } else {
           inBugMarkerComment = true;
           int commentStart = line.indexOf("//");
-          comments.add(line.substring(commentStart));
+          // still strip trailing whitespace from bug marker comments, as DiagnosticTestHelper also
+          // ignores such whitespace
+          comments.add(line.substring(commentStart).stripTrailing());
           line =
               line.substring(0, commentStart)
                   + SourceWithProtectedBugMarkers.placeholder(
