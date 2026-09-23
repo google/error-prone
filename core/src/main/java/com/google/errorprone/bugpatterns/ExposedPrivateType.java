@@ -189,7 +189,8 @@ public final class ExposedPrivateType extends BugChecker
     if (ASTHelpers.streamSuperMethods(methodSymbol, state.getTypes()).findAny().isPresent()) {
       return false;
     }
-    if (JUnitMatchers.TEST_CASE.matches(methodTree, state)) {
+    if (JUnitMatchers.TEST_CASE.matches(methodTree, state)
+        || JUnitMatchers.JUNIT5_TEST_OR_LIFECYCLE_METHOD.matches(methodTree, state)) {
       return false;
     }
     return true;

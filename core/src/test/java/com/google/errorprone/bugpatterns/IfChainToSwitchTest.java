@@ -4444,6 +4444,30 @@ class Test {
   }
 
   @Test
+  public void ifChain_groupingInstanceofDuplicatedUnsafe_noError() {
+    // Duplication of `Object` should not be allowed, even when cases may be reordered
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof Float) {
+                  System.out.println("a");
+                } else if (o instanceof Object || o instanceof Number || o instanceof Object) {
+                  System.out.println("b");
+                } else if (o instanceof Integer) {
+                  System.out.println("c");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
   public void ifChain_groupingInstanceofSubjectMismatch_noError() {
     //  instanceof subject must match between || terms
     assume().that(Runtime.version().feature()).isAtLeast(22);
@@ -4535,6 +4559,114 @@ class Test {
 """)
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_groupingThreeInstanceofs_error() {
+    // Every alternative of the disjunction must be retained, not just the last one
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof Float) {
+                  System.out.println("It's a float");
+                } else if (o instanceof Integer) {
+                  System.out.println("It's an integer");
+                } else if (o instanceof String || o instanceof Boolean || o instanceof Character) {
+                  System.out.println("It's one of three things");
+                } else {
+                  System.out.println("It's something else");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o) {
+                switch (o) {
+                  case Float _ -> System.out.println("It's a float");
+                  case Integer _ -> System.out.println("It's an integer");
+                  case String _, Boolean _, Character _ -> System.out.println("It's one of three things");
+                  default -> System.out.println("It's something else");
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_groupingParenthesizedInstanceofs_error() {
+    // Parentheses regroup the disjunction, but every alternative must still be retained
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o) {
+                if (o instanceof Float) {
+                  System.out.println("It's a float");
+                } else if (o instanceof Integer) {
+                  System.out.println("It's an integer");
+                } else if (o instanceof String || (o instanceof Boolean || o instanceof Character)) {
+                  System.out.println("It's one of three things");
+                } else {
+                  System.out.println("It's something else");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o) {
+                switch (o) {
+                  case Float _ -> System.out.println("It's a float");
+                  case Integer _ -> System.out.println("It's an integer");
+                  case String _, Boolean _, Character _ -> System.out.println("It's one of three things");
+                  default -> System.out.println("It's something else");
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_groupingInstanceofsOrConstant_noError() {
+    // Instanceof patterns still cannot be mixed with constants when there are three alternatives;
+    // JLS forbids constants and patterns in the same case label.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Integer x) {
+                if (x == 1) {
+                  System.out.println("a");
+                } else if (x == 2) {
+                  System.out.println("b");
+                } else if (x instanceof Number || x instanceof Comparable || x == 5) {
+                  System.out.println("c");
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
