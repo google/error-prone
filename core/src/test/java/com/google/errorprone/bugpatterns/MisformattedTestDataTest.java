@@ -180,6 +180,33 @@ public final class MisformattedTestDataTest {
   }
 
   @Test
+  public void bugMarkerComment_diagnosticMatches_notWrapped() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.errorprone.BugCheckerRefactoringTestHelper;
+
+            class Test {
+              void method(BugCheckerRefactoringTestHelper h) {
+                h.addInputLines(
+                    "Test.java",
+                    \"""
+                    class Test {
+                      void method() {
+                        // BUG: Diagnostic matches: expected phrase that is sufficiently long that google-java-format would otherwise wrap it onto another comment line and change the test's meaning
+                        int a = 1;
+                      }
+                    }
+                    \""");
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
   public void bugMarkerContinuationComment_notWrapped() {
     refactoringHelper
         .addInputLines(
