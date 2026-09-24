@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.TruthJUnit.assume;
+import static org.junit.Assert.assertThrows;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
@@ -3432,6 +3433,255 @@ class Test {
             """)
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_siblingConvertibleChain_error() {
+    // TODO: This test pins current, buggy behavior.  The statement following
+    // the first chain is itself a convertible chain.  Pulling it up deletes source that
+    // the second chain's own fix replaces, so both fixes cover exactly the same range and
+    // applying them together throws.  The pull-up should be declined so that both chains
+    // convert independently into the output `siblingConvertibleChain` already asserts.
+    // Once that is fixed, inline the helper back into this test and drop the assertThrows.
+    AssertionError thrown = assertThrows(AssertionError.class, this::siblingConvertibleChain);
+
+    assertThat(thrown).hasMessageThat().contains("conflicts with existing replacement");
+  }
+
+  private void siblingConvertibleChain() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int a, int b) {
+                if (a == 1) {
+                  return;
+                } else if (a == 2) {
+                  return;
+                } else if (a == 3) {
+                  return;
+                }
+                if (b == 1) {
+                  System.out.println("x");
+                } else if (b == 2) {
+                  System.out.println("y");
+                } else if (b == 3) {
+                  System.out.println("z");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int a, int b) {
+                switch (a) {
+                  case 1 -> {
+                    return;
+                  }
+                  case 2 -> {
+                    return;
+                  }
+                  case 3 -> {
+                    return;
+                  }
+                  default -> {}
+                }
+                switch (b) {
+                  case 1 -> System.out.println("x");
+                  case 2 -> System.out.println("y");
+                  case 3 -> System.out.println("z");
+                  default -> {}
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_pullUpBlockContainingChain_error() {
+    // TODO: This test pins current, buggy behavior.  As above, but the
+    // convertible chain is nested inside the trailing statement rather than being it, so
+    // the deletion range strictly contains the other fix's range -- which `Replacements`
+    // reports differently.  Once the pull-up is declined, inline
+    // `pullUpBlockContainingChain` back into this test and drop the assertThrows.
+    AssertionError thrown = assertThrows(AssertionError.class, this::pullUpBlockContainingChain);
+
+    assertThat(thrown).hasMessageThat().contains("overlaps with existing replacements");
+  }
+
+  private void pullUpBlockContainingChain() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int a, int b) {
+                if (a == 1) {
+                  return;
+                } else if (a == 2) {
+                  return;
+                } else if (a == 3) {
+                  return;
+                }
+                {
+                  if (b == 1) {
+                    System.out.println("x");
+                  } else if (b == 2) {
+                    System.out.println("y");
+                  } else if (b == 3) {
+                    System.out.println("z");
+                  }
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(int a, int b) {
+                switch (a) {
+                  case 1 -> {
+                    return;
+                  }
+                  case 2 -> {
+                    return;
+                  }
+                  case 3 -> {
+                    return;
+                  }
+                  default -> {}
+                }
+                {
+                  switch (b) {
+                    case 1 -> System.out.println("x");
+                    case 2 -> System.out.println("y");
+                    case 3 -> System.out.println("z");
+                    default -> {}
+                  }
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_deadCodeRegionContainsChain_error() {
+    // TODO: This test pins current, buggy behavior.  There are two trailing
+    // statements, so pull-up declines and the dead-code deletion fires instead.  The
+    // deleted region contains a convertible chain whose own fix replaces the same source,
+    // so applying both throws.  The conversion should be declined so that only the inner
+    // chain is converted; once that is fixed, inline `deadCodeRegionContainsChain` back
+    // into this test and drop the assertThrows.
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    AssertionError thrown = assertThrows(AssertionError.class, this::deadCodeRegionContainsChain);
+
+    assertThat(thrown).hasMessageThat().contains("overlaps with existing replacements");
+  }
+
+  private void deadCodeRegionContainsChain() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int b) {
+                if (o instanceof Integer) {
+                  throw new AssertionError();
+                } else if (o instanceof String) {
+                  throw new AssertionError();
+                } else if (o instanceof Object) {
+                  throw new AssertionError();
+                }
+                System.out.println("dead");
+                if (b == 1) {
+                  System.out.println("x");
+                } else if (b == 2) {
+                  System.out.println("y");
+                } else if (b == 3) {
+                  System.out.println("z");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int b) {
+                if (o instanceof Integer) {
+                  throw new AssertionError();
+                } else if (o instanceof String) {
+                  throw new AssertionError();
+                } else if (o instanceof Object) {
+                  throw new AssertionError();
+                }
+                System.out.println("dead");
+                switch (b) {
+                  case 1 -> System.out.println("x");
+                  case 2 -> System.out.println("y");
+                  case 3 -> System.out.println("z");
+                  default -> {}
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_deadCodeRegionContainsLoneIf_noError() {
+    // This test pins current behavior so that the fix shows up as a behavior change.
+    // TODO: The dead region holds a lone `if` that is not itself convertible, so no
+    // conflicting fix is possible here -- but the region is still deleted wholesale
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int b) {
+                if (o instanceof Integer) {
+                  throw new AssertionError();
+                } else if (o instanceof String) {
+                  throw new AssertionError();
+                } else if (o instanceof Object) {
+                  throw new AssertionError();
+                }
+                System.out.println("dead");
+                if (b == 1) {
+                  System.out.println("x");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int b) {
+                switch (o) {
+                  case Integer _ -> throw new AssertionError();
+                  case String _ -> throw new AssertionError();
+                  case Object _ -> throw new AssertionError();
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
