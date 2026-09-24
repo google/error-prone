@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.TruthJUnit.assume;
-import static org.junit.Assert.assertThrows;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
@@ -2318,6 +2317,99 @@ public final class IfChainToSwitchTest {
   }
 
   @Test
+  public void ifChain_pullUpCompoundStatement_error() {
+    // Each trailing statement has more than one child node, so scanning it for `break`, `yield`,
+    // and `if` combines child results rather than just passing one through.  In `foo`, the
+    // assignment contains none of those, so it is pulled up.  In `bar`, the `break` is found in
+    // the `try` block (combined with the empty resources) and must still be reported when later
+    // combined with the empty catches and the `finally` block.  Pulling it up into `default ->`
+    // would make the `break` exit the switch rather than the loop, so it stays put.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              int x;
+
+              public void foo(int a) {
+                if (a == 1) {
+                  return;
+                } else if (a == 2) {
+                  return;
+                } else if (a == 3) {
+                  return;
+                }
+                x = a;
+              }
+
+              public void bar(int a) {
+                while (true) {
+                  if (a == 1) {
+                    return;
+                  } else if (a == 2) {
+                    return;
+                  } else if (a == 3) {
+                    return;
+                  }
+                  try {
+                    break;
+                  } finally {
+                    x = a;
+                  }
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              int x;
+
+              public void foo(int a) {
+                switch (a) {
+                  case 1 -> {
+                    return;
+                  }
+                  case 2 -> {
+                    return;
+                  }
+                  case 3 -> {
+                    return;
+                  }
+                  default -> x = a;
+                }
+              }
+
+              public void bar(int a) {
+                while (true) {
+                  switch (a) {
+                    case 1 -> {
+                      return;
+                    }
+                    case 2 -> {
+                      return;
+                    }
+                    case 3 -> {
+                      return;
+                    }
+                    default -> {}
+                  }
+                  try {
+                    break;
+                  } finally {
+                    x = a;
+                  }
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
   public void ifChain_pullUpHasExplicitNullCheck_error() {
 
     refactoringHelper
@@ -3438,18 +3530,8 @@ class Test {
 
   @Test
   public void ifChain_siblingConvertibleChain_error() {
-    // TODO: This test pins current, buggy behavior.  The statement following
-    // the first chain is itself a convertible chain.  Pulling it up deletes source that
-    // the second chain's own fix replaces, so both fixes cover exactly the same range and
-    // applying them together throws.  The pull-up should be declined so that both chains
-    // convert independently into the output `siblingConvertibleChain` already asserts.
-    // Once that is fixed, inline the helper back into this test and drop the assertThrows.
-    AssertionError thrown = assertThrows(AssertionError.class, this::siblingConvertibleChain);
-
-    assertThat(thrown).hasMessageThat().contains("conflicts with existing replacement");
-  }
-
-  private void siblingConvertibleChain() {
+    // The single statement following the first chain is itself a convertible chain.  Pulling it up
+    // would delete source that the second chain's own fix replaces, and applying both throws.
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -3506,17 +3588,9 @@ class Test {
 
   @Test
   public void ifChain_pullUpBlockContainingChain_error() {
-    // TODO: This test pins current, buggy behavior.  As above, but the
-    // convertible chain is nested inside the trailing statement rather than being it, so
-    // the deletion range strictly contains the other fix's range -- which `Replacements`
-    // reports differently.  Once the pull-up is declined, inline
-    // `pullUpBlockContainingChain` back into this test and drop the assertThrows.
-    AssertionError thrown = assertThrows(AssertionError.class, this::pullUpBlockContainingChain);
-
-    assertThat(thrown).hasMessageThat().contains("overlaps with existing replacements");
-  }
-
-  private void pullUpBlockContainingChain() {
+    // As in `ifChain_siblingConvertibleChain_error`, but the convertible chain is nested inside the
+    // trailing statement rather than being it, so the deletion range strictly contains the other
+    // fix's range
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -3577,19 +3651,12 @@ class Test {
 
   @Test
   public void ifChain_deadCodeRegionContainsChain_error() {
-    // TODO: This test pins current, buggy behavior.  There are two trailing
-    // statements, so pull-up declines and the dead-code deletion fires instead.  The
-    // deleted region contains a convertible chain whose own fix replaces the same source,
-    // so applying both throws.  The conversion should be declined so that only the inner
-    // chain is converted; once that is fixed, inline `deadCodeRegionContainsChain` back
-    // into this test and drop the assertThrows.
+    // Two trailing statements, so pull-up declines and the dead-code deletion would fire.  That
+    // code cannot be left in place (it would be unreachable), so the conversion of the first chain
+    // is declined and only the second chain is converted.  (However, if the user were to apply the
+    // fix and then run the checker again against the updated code, the finding for the first
+    // if-chain would then be reported.  So, this limitation just adds an extra step.)
     assume().that(Runtime.version().feature()).isAtLeast(22);
-    AssertionError thrown = assertThrows(AssertionError.class, this::deadCodeRegionContainsChain);
-
-    assertThat(thrown).hasMessageThat().contains("overlaps with existing replacements");
-  }
-
-  private void deadCodeRegionContainsChain() {
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -3643,9 +3710,10 @@ class Test {
 
   @Test
   public void ifChain_deadCodeRegionContainsLoneIf_noError() {
-    // This test pins current behavior so that the fix shows up as a behavior change.
-    // TODO: The dead region holds a lone `if` that is not itself convertible, so no
-    // conflicting fix is possible here -- but the region is still deleted wholesale
+    // The dead region holds a lone `if` that is not itself convertible, so no conflicting fix is
+    // possible.  hasIfInTree matches any `if` rather than trying to predict matchability, so the
+    // conversion is declined.  This could be improved by deeper examination of the if-chain to be
+    // deleted.
     assume().that(Runtime.version().feature()).isAtLeast(22);
     refactoringHelper
         .addInputLines(
@@ -3667,20 +3735,7 @@ class Test {
               }
             }
             """)
-        .addOutputLines(
-            "Test.java",
-            """
-            class Test {
-              public void foo(Object o, int b) {
-                switch (o) {
-                  case Integer _ -> throw new AssertionError();
-                  case String _ -> throw new AssertionError();
-                  case Object _ -> throw new AssertionError();
-                }
-              }
-            }
-            """)
-        .allowFormattingErrors()
+        .expectUnchanged()
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }

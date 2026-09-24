@@ -696,6 +696,13 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
             }
             // If a next statement in this block exists, then it is not reachable.
             if (indexInBlock + numberPulledUp < statements.size() - 1) {
+              if (statements.subList(indexInBlock + 1, statements.size()).stream()
+                  .anyMatch(IfChainToSwitch::hasIfInTree)) {
+                // This code is now unreachable, so leaving it in place would not compile, but it
+                // contains an `if` that this check may rewrite under a separate finding whose fix
+                // would overlap this deletion.  Decline to convert instead.
+                return Optional.empty();
+              }
               String deletedRegion =
                   state
                       .getSourceCode()
@@ -799,8 +806,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       int subsequentStatementsLimit = 1;
       if (subsequentIfStatements.size() <= subsequentStatementsLimit) {
         for (StatementTree statement : subsequentIfStatements) {
-          if (hasBreakOrYieldInTree(statement)) {
-            // Statements containing break or yield cannot be pulled up
+          if (hasBreakOrYieldInTree(statement) || hasIfInTree(statement)) {
+            // Statements containing break or yield cannot be pulled up.  Neither can statements
+            // containing an `if`, which this check may rewrite under a separate finding whose fix
+            // would overlap the deletion performed here.
             break;
           }
           int startPos =
@@ -1047,6 +1056,24 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
 
           @Override
           public Boolean visitYield(YieldTree continueTree, Void unused) {
+            return true;
+          }
+
+          @Override
+          public Boolean reduce(@Nullable Boolean left, @Nullable Boolean right) {
+            return Objects.equals(left, true) || Objects.equals(right, true);
+          }
+        }.scan(tree, null);
+
+    return result != null && result;
+  }
+
+  /** Determines whether any {@code if} statement is present in the tree. */
+  private static boolean hasIfInTree(Tree tree) {
+    Boolean result =
+        new TreeScanner<Boolean, Void>() {
+          @Override
+          public Boolean visitIf(IfTree ifTree, Void unused) {
             return true;
           }
 
