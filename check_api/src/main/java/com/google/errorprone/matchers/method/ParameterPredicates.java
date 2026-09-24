@@ -59,7 +59,7 @@ public final class ParameterPredicates {
     return (parameter, type, state) -> {
       MethodSymbol method = (MethodSymbol) parameter.owner;
       List<TypeVariableSymbol> typeParameters = method.getTypeParameters();
-      return !typeParameters.isEmpty()
+      return typeParameters.size() == 1
           && type.hasTag(TypeTag.TYPEVAR)
           && type.tsym == typeParameters.getFirst();
     };

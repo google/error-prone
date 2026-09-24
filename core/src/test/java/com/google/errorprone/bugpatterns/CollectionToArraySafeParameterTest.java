@@ -177,8 +177,11 @@ public class CollectionToArraySafeParameterNegativeCases {
 
               void toArray(int[] a);
 
-              default void f(int[] a) {
+              <T extends Number, U> void toArray(T[] a);
+
+              default void f(int[] a, Integer[] b) {
                 toArray(a);
+                toArray(b);
               }
             }
             """)
