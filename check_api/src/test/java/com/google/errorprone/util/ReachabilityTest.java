@@ -344,4 +344,147 @@ public class ReachabilityTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void breakOutOfEnclosingLoop_switchWithoutDefault() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    while (true) {
+                      switch (x) {
+                        case 1:
+                          break l;
+                      }
+                    }
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void breakOutOfEnclosingLoop_arrowSwitchShortCircuits() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    while (true) {
+                      switch (x) {
+                        case 1 -> {}
+                        case 2 -> {}
+                        default -> {
+                          break l;
+                        }
+                      }
+                    }
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void breakOutOfEnclosingLoop_arrowSwitchBreakInFirstCase() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    while (true) {
+                      switch (x) {
+                        default -> {
+                          break l;
+                        }
+                        case 1 -> {}
+                        case 2 -> {}
+                      }
+                    }
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void breakOutOfEnclosingLoop_arrowSwitchWithoutDefault() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    while (true) {
+                      switch (x) {
+                        case 1 -> {
+                          break l;
+                        }
+                      }
+                    }
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void continueEnclosingDoLoop_switchWithoutDefault() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    do {
+                      switch (x) {
+                        case 1:
+                          continue l;
+                      }
+                      return;
+                    } while (false);
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }
