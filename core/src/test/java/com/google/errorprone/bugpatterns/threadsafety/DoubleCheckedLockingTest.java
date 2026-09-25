@@ -53,6 +53,33 @@ public class DoubleCheckedLockingTest {
         .doTest();
   }
 
+  // https://github.com/google/error-prone/issues/5963
+  @Test
+  public void positiveNegatedNotEqualsNull() {
+    compilationHelper
+        .addSourceLines(
+            "threadsafety/Test.java",
+            """
+            package threadsafety;
+
+            class Test {
+              public Object x;
+
+              void m() {
+                // BUG: Diagnostic contains: public volatile Object x
+                if (!(x != null)) {
+                  synchronized (this) {
+                    if (x == null) {
+                      x = new Object();
+                    }
+                  }
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
   @Test
   public void positiveNoFix() {
     compilationHelper
