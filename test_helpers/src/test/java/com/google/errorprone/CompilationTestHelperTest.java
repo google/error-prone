@@ -190,6 +190,165 @@ public class CompilationTestHelperTest {
   }
 
   @Test
+  public void fileWithTwoBugMarkersAndNoErrorsReportsBothLines() {
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .addSourceLines(
+                        "Test.java",
+                        """
+                        public class Test {
+                          // BUG: Diagnostic contains:
+                          public void doIt() {}
+
+                          // BUG: Diagnostic contains:
+                          public void doItAgain() {}
+                        }
+                        """)
+                    .doTest());
+    assertThat(expected)
+        .hasMessageThat()
+        .isEqualTo(
+            """
+            Did not see an error on line 3 matching .
+                public void doIt() {}
+            Did not see an error on line 6 matching .
+                public void doItAgain() {}
+            There were no errors.""");
+  }
+
+  @Test
+  public void fileWithTwoUnexpectedErrorsReportsBothLinesBeforeTheDiagnostics() {
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .addSourceLines(
+                        "Test.java",
+                        """
+                        public class Test {
+                          public boolean doIt() {
+                            return true;
+                          }
+
+                          public boolean doItAgain() {
+                            return false;
+                          }
+                        }
+                        """)
+                    .doTest());
+    assertThat(expected)
+        .hasMessageThat()
+        .startsWith(
+            """
+            Saw unexpected error on line 3.
+            Saw unexpected error on line 7.
+            All errors:
+            """);
+  }
+
+  @Test
+  public void markerWithUnknownKeyIsReportedWithTheOtherMismatches() {
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .addSourceLines(
+                        "Test.java",
+                        """
+                        public class Test {
+                          public boolean doIt() {
+                            return true;
+                          }
+
+                          // BUG: Diagnostic matches: X
+                          public void doItAgain() {}
+                        }
+                        """)
+                    .doTest());
+    assertThat(expected)
+        .hasMessageThat()
+        .startsWith(
+            """
+            Saw unexpected error on line 3.
+            No expected error message with key [X] as expected from line [6] \
+            with diagnostic [// BUG: Diagnostic matches: X]
+            All errors:
+            """);
+  }
+
+  @Test
+  public void fileWithUnexpectedErrorBeforeMissingOneReportsBothLines() {
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .addSourceLines(
+                        "Test.java",
+                        """
+                        public class Test {
+                          public boolean doIt() {
+                            return true;
+                          }
+
+                          // BUG: Diagnostic contains:
+                          public void doItAgain() {}
+                        }
+                        """)
+                    .doTest());
+    assertThat(expected)
+        .hasMessageThat()
+        .startsWith(
+            """
+            Saw unexpected error on line 3.
+            Did not see an error on line 7 matching .
+                public void doItAgain() {}
+            All errors:
+            """);
+  }
+
+  @Test
+  public void mismatchesInTwoFilesAreReportedWithTheirFileNames() {
+    AssertionError expected =
+        assertThrows(
+            AssertionError.class,
+            () ->
+                compilationHelper
+                    .addSourceLines(
+                        "A.java",
+                        """
+                        public class A {
+                          public boolean doIt() {
+                            return true;
+                          }
+                        }
+                        """)
+                    .addSourceLines(
+                        "B.java",
+                        """
+                        public class B {
+                          // BUG: Diagnostic contains:
+                          public void doIt() {}
+                        }
+                        """)
+                    .doTest());
+    assertThat(expected)
+        .hasMessageThat()
+        .startsWith(
+            """
+            /A.java: Saw unexpected error on line 3.
+            /B.java: Did not see an error on line 3 matching .
+                public void doIt() {}
+            All errors:
+            """);
+  }
+
+  @Test
   public void fileWithMultipleBugMarkersAndMatchingErrorsSucceeds() {
     compilationHelper
         .addSourceLines(
@@ -272,6 +431,14 @@ public class CompilationTestHelperTest {
                         "    return}",
                         "}")
                     .doTest());
+    assertThat(expected)
+        .hasMessageThat()
+        .startsWith(
+            """
+            Did not see an error on line 4 containing [ReturnTreeChecker].
+                return}
+            All errors:
+            """);
     assertThat(expected).hasMessageThat().contains("error: illegal start of expression");
   }
 
