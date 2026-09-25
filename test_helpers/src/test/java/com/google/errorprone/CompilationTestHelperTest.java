@@ -213,7 +213,9 @@ public class CompilationTestHelperTest {
         .isEqualTo(
             """
             Did not see an error on line 3 matching .
+                public void doIt() {}
             Did not see an error on line 6 matching .
+                public void doItAgain() {}
             There were no errors.""");
   }
 
@@ -305,6 +307,7 @@ public class CompilationTestHelperTest {
             """
             Saw unexpected error on line 3.
             Did not see an error on line 7 matching .
+                public void doItAgain() {}
             All errors:
             """);
   }
@@ -340,6 +343,7 @@ public class CompilationTestHelperTest {
             """
             /A.java: Saw unexpected error on line 3.
             /B.java: Did not see an error on line 3 matching .
+                public void doIt() {}
             All errors:
             """);
   }
@@ -432,6 +436,7 @@ public class CompilationTestHelperTest {
         .startsWith(
             """
             Did not see an error on line 4 containing [ReturnTreeChecker].
+                return}
             All errors:
             """);
     assertThat(expected).hasMessageThat().contains("error: illegal start of expression");
