@@ -52,6 +52,89 @@ public class InlineTrivialConstantTest {
   }
 
   @Test
+  public void positive_parenthesizedInitializer() {
+    BugCheckerRefactoringTestHelper.newInstance(InlineTrivialConstant.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private static final String EMPTY = ("");
+
+              void f() {
+                System.err.println(EMPTY);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+
+              void f() {
+                System.err.println("");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positive_doubleParenthesizedInitializer() {
+    BugCheckerRefactoringTestHelper.newInstance(InlineTrivialConstant.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              private static final String EMPTY = ((""));
+
+              void f() {
+                System.err.println(EMPTY);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+
+              void f() {
+                System.err.println("");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positive_otherValidNamesParenthesized() {
+    CompilationTestHelper.newInstance(InlineTrivialConstant.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              // BUG: Diagnostic contains:
+              private static final String EMPTY_STR = ("");
+              // BUG: Diagnostic contains:
+              private static final String EMPTY_STRING = ("");
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void negative_nonEmptyParenthesized() {
+    CompilationTestHelper.newInstance(InlineTrivialConstant.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final String EMPTY = ("hello");
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     CompilationTestHelper.newInstance(InlineTrivialConstant.class, getClass())
         .addSourceLines(

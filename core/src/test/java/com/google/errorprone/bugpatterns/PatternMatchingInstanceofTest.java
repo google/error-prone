@@ -87,6 +87,128 @@ public final class PatternMatchingInstanceofTest {
   }
 
   @Test
+  public void seesThroughParensOnCastOperand() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              int test(Object o) {
+                if (o instanceof String) {
+                  String s = (String)(o);
+                  return s.length();
+                }
+                return o.hashCode();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              int test(Object o) {
+                if (o instanceof String s) {
+
+                  return s.length();
+                }
+                return o.hashCode();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void seesThroughDoubleParensOnCastOperand() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              int test(Object o) {
+                if (o instanceof String) {
+                  String s = (String)((o));
+                  return s.length();
+                }
+                return o.hashCode();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              int test(Object o) {
+                if (o instanceof String s) {
+
+                  return s.length();
+                }
+                return o.hashCode();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void parenthesizedOperandNegatedIfElse() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              int test(Object o) {
+                if (!(o instanceof String)) {
+                } else {
+                  String s = (String)(o);
+                  return s.length();
+                }
+                return o.hashCode();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              int test(Object o) {
+                if (!(o instanceof String s)) {
+                } else {
+
+                  return s.length();
+                }
+                return o.hashCode();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void parenthesizedOperandInTernary() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              int test(Object o) {
+                return o instanceof String ? ((String)(o)).length() : 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              int test(Object o) {
+                return o instanceof String string ? string.length() : 0;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void seesThroughParens() {
     helper
         .addInputLines(
