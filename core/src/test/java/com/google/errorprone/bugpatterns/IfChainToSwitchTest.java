@@ -2682,10 +2682,10 @@ public final class IfChainToSwitchTest {
                   } else if (suit == Suit.CLUB) {
                     return;
                   }
-                  System.out.println("this will become unreachable");
-                  System.out.println("this will too");
+                  System.out.println("this will not become unreachable");
+                  System.out.println("this will not too");
                 }
-                System.out.println("this will too");
+                System.out.println("this will not too");
               }
             }
             """)
@@ -2710,7 +2710,10 @@ public final class IfChainToSwitchTest {
                       return;
                     }
                   }
+                  System.out.println("this will not become unreachable");
+                  System.out.println("this will not too");
                 }
+                System.out.println("this will not too");
               }
             }
             """)
@@ -5273,8 +5276,8 @@ class Test {
                     } else if (s == Suit.CLUB) {
                       throw new AssertionError("club");
                     }
-                    System.out.println("Delete me");
-                    System.out.println("Delete me too");
+                    System.out.println("Don't delete me");
+                    System.out.println("Don't delete me too");
                   }
                 }
                 return new Bar().toString();
@@ -5294,12 +5297,139 @@ class Test {
                       case Suit.DIAMOND -> throw new AssertionError("diamond");
                       case Suit.CLUB -> throw new AssertionError("club");
                     }
+                    System.out.println("Don't delete me");
+                    System.out.println("Don't delete me too");
                   }
                 }
                 return new Bar().toString();
               }
             }
             """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_exhaustiveEnumInConstructor_keepsTrailingStatements() {
+    // The trailing statements discharge the definite-assignment obligation for the blank final
+    // field (JLS 16.9), so they may not be deleted even though every case throws or returns.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              final int x;
+
+              Test(Suit s) {
+                if (s == Suit.HEART) {
+                  x = 1;
+                  return;
+                } else if (s == Suit.SPADE) {
+                  x = 2;
+                  return;
+                } else if (s == Suit.DIAMOND) {
+                  x = 3;
+                  return;
+                } else if (s == Suit.CLUB) {
+                  x = 4;
+                  return;
+                }
+                System.out.println("not reached");
+                x = 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              final int x;
+
+              Test(Suit s) {
+                switch (s) {
+                  case Suit.HEART -> {
+                    x = 1;
+                    return;
+                  }
+                  case Suit.SPADE -> {
+                    x = 2;
+                    return;
+                  }
+                  case Suit.DIAMOND -> {
+                    x = 3;
+                    return;
+                  }
+                  case Suit.CLUB -> {
+                    x = 4;
+                    return;
+                  }
+                }
+                System.out.println("not reached");
+                x = 0;
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_exhaustiveEnumInSwitchExpressionArm_keepsTrailingStatements() {
+    // The The trailing {@code yield} is the switch expression's only result expression (JLS
+    // 15.28.1), so it may not be deleted. The enclosing method is {@code void}, so its reachability
+    // says nothing about the reachability of the arm.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s, int k) {
+                int result =
+                    switch (k) {
+                      default -> {
+                        if (s == Suit.HEART) {
+                          throw new AssertionError();
+                        } else if (s == Suit.SPADE) {
+                          throw new AssertionError();
+                        } else if (s == Suit.DIAMOND) {
+                          throw new AssertionError();
+                        } else if (s == Suit.CLUB) {
+                          throw new AssertionError();
+                        }
+                        System.out.println("not reached");
+                        yield 0;
+                      }
+                    };
+                System.out.println(result);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s, int k) {
+                int result =
+                    switch (k) {
+                      default -> {
+                        switch (s) {
+                          case Suit.HEART -> throw new AssertionError();
+                          case Suit.SPADE -> throw new AssertionError();
+                          case Suit.DIAMOND -> throw new AssertionError();
+                          case Suit.CLUB -> throw new AssertionError();
+                        }
+                        System.out.println("not reached");
+                        yield 0;
+                      }
+                    };
+                System.out.println(result);
+              }
+            }
+            """)
+        .allowFormattingErrors()
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
         .doTest();
