@@ -25,6 +25,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -32,6 +33,7 @@ import com.google.errorprone.apply.ImportOrganizer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -543,7 +545,21 @@ public final class ErrorProneOptions {
                         String path = remaining.substring("refaster:".length());
                         try (InputStream in =
                                 Files.newInputStream(FileSystems.getDefault().getPath(path));
-                            ObjectInputStream ois = new ObjectInputStream(in)) {
+                            ObjectInputStream ois =
+                                new ObjectInputStream(in) {
+                                  // Work around https://github.com/google/guava/issues/8693.
+                                  @Override
+                                  protected ObjectStreamClass readClassDescriptor()
+                                      throws IOException, ClassNotFoundException {
+                                    ObjectStreamClass desc = super.readClassDescriptor();
+                                    if (desc.getName()
+                                        .equals(ImmutableClassToInstanceMap.class.getName())) {
+                                      return ObjectStreamClass.lookup(
+                                          ImmutableClassToInstanceMap.class);
+                                    }
+                                    return desc;
+                                  }
+                                }) {
                           return (CodeTransformer) ois.readObject();
                         } catch (IOException | ClassNotFoundException e) {
                           throw new RuntimeException("Can't load Refaster rule from " + path, e);
