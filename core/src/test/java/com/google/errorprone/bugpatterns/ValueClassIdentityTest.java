@@ -230,6 +230,167 @@ public class ValueClassIdentityTest {
   }
 
   @Test
+  public void identityHashMapArgumentPositive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.time.LocalDate;
+            import java.util.IdentityHashMap;
+
+            class Test {
+              void f(IdentityHashMap<Object, Object> map, LocalDate date) {
+                // BUG: Diagnostic contains: ValueClassIdentity
+                map.put(date, "x");
+                // BUG: Diagnostic contains: ValueClassIdentity
+                map.putIfAbsent(date, "x");
+                // BUG: Diagnostic contains: ValueClassIdentity
+                map.put("k", date);
+                // BUG: Diagnostic contains: ValueClassIdentity
+                map.get(date);
+                // BUG: Diagnostic contains: ValueClassIdentity
+                map.containsKey(date);
+                // BUG: Diagnostic contains: ValueClassIdentity
+                map.containsValue(date);
+                // BUG: Diagnostic contains: ValueClassIdentity
+                map.remove(date);
+                // BUG: Diagnostic contains: ValueClassIdentity
+                map.remove("k", date);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void identityHashMapArgumentBoxedPositive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.IdentityHashMap;
+
+            class Test {
+              void f(IdentityHashMap<Object, Object> map, Integer i) {
+                // BUG: Diagnostic contains: ValueClassIdentity
+                map.put(i, "x");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void identityHashMapArgumentNegative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.IdentityHashMap;
+
+            class Test {
+              void f(IdentityHashMap<Object, Object> map, String s) {
+                map.put(s, s);
+                map.get(s);
+                map.containsValue(s);
+                map.remove(s);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void identityHashMapArgumentNoVisibleConstructionPositive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.time.LocalDate;
+            import java.util.IdentityHashMap;
+
+            class Test {
+              // The map is not created in this compilation unit, so the construction site
+              // diagnostic never fires here.
+              void fromParameter(IdentityHashMap<LocalDate, String> map, LocalDate date) {
+                // BUG: Diagnostic contains: ValueClassIdentity
+                map.put(date, "x");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void identityHashMapArgumentSubclassPositive() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.time.LocalDate;
+            import java.util.IdentityHashMap;
+
+            class Test {
+              static class MyMap<K, V> extends IdentityHashMap<K, V> {}
+
+              void f(MyMap<Object, Object> map, LocalDate date) {
+                // BUG: Diagnostic contains: ValueClassIdentity
+                map.put(date, "x");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void identityHashMapArgumentUnrelatedOverloadNegative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.time.LocalDate;
+            import java.util.IdentityHashMap;
+
+            class Test {
+              static class MyMap<K, V> extends IdentityHashMap<K, V> {
+                void get(LocalDate date) {}
+              }
+
+              void f(MyMap<Object, Object> map) {
+                map.get(LocalDate.now());
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void identityHashMapArgumentRequiringDataflowNegative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.time.LocalDate;
+            import java.util.IdentityHashMap;
+            import java.util.Map;
+
+            class Test {
+              // Seeing through the Object local would require dataflow.
+              void widenedLocal(IdentityHashMap<Object, Object> map) {
+                Object key = LocalDate.now();
+                map.put(key, "x");
+              }
+
+              // The static receiver type is Map, so IdentityHashMap methods do not match.
+              void declaredAsMap(Map<Object, Object> map) {
+                map.put(LocalDate.now(), "x");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void identityHashMapNegative() {
     compilationHelper
         .addSourceLines(
