@@ -166,7 +166,6 @@ public final class ImpossibleNullComparison extends BugChecker
   private final boolean checkPrimitives;
   private final boolean checkValueOf;
   private final boolean checkOrBuilder;
-  private final boolean checkClassForName;
 
   @Inject
   ImpossibleNullComparison(ErrorProneFlags flags) {
@@ -175,8 +174,6 @@ public final class ImpossibleNullComparison extends BugChecker
     this.checkPrimitives = flags.getBoolean("ImmutableNullComparison:CheckPrimitives").orElse(true);
     this.checkValueOf = flags.getBoolean("ImpossibleNullComparison:CheckValueOf").orElse(true);
     this.checkOrBuilder = flags.getBoolean("ImpossibleNullComparison:CheckOrBuilder").orElse(true);
-    this.checkClassForName =
-        flags.getBoolean("ImpossibleNullComparison:CheckClassForName").orElse(true);
   }
 
   @Override
@@ -320,7 +317,6 @@ public final class ImpossibleNullComparison extends BugChecker
       return stream(GetterTypes.values())
           .filter(gt -> !gt.equals(GetterTypes.PRIMITIVE) || checkPrimitives)
           .filter(gt -> !gt.equals(GetterTypes.VALUE_OF) || checkValueOf)
-          .filter(gt -> !gt.equals(GetterTypes.CLASS_FOR_NAME) || checkClassForName)
           .map(type -> type.match(resolvedTree, state, checkOrBuilder))
           .filter(Objects::nonNull)
           .findFirst();

@@ -724,20 +724,4 @@ public class Test {
             """)
         .doTest();
   }
-
-  @Test
-  public void classForName_flagDisabled() {
-    compilationHelper
-        .setArgs("-XepOpt:ImpossibleNullComparison:CheckClassForName=false")
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              void o(String s) throws Exception {
-                if (Class.forName(s) == null) {}
-              }
-            }
-            """)
-        .doTest();
-  }
 }
