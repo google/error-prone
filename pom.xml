@@ -42,7 +42,7 @@
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
     <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
-    <protobuf.version>4.36.1</protobuf.version>
+    <protobuf.version>4.36.2</protobuf.version>
     <grpc.version>1.43.3</grpc.version>
     <jspecify.version>1.0.1</jspecify.version>
     <google-java-format.version>1.36.1</google-java-format.version>
