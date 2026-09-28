@@ -25,6 +25,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -32,6 +33,7 @@ import com.google.errorprone.apply.ImportOrganizer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectStreamClass;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -69,6 +71,8 @@ public final class ErrorProneOptions {
       "-XepDisableWarningsInGeneratedCode";
   private static final String COMPILING_TEST_ONLY_CODE = "-XepCompilingTestOnlyCode";
   private static final String COMPILING_PUBLICLY_VISIBLE_CODE = "-XepCompilingPubliclyVisibleCode";
+  private static final String PRINT_TIMINGS = "-XepPrintTimings";
+  private static final String RECORD_TIMINGS = "-XepRecordTimings";
   private static final String ARGUMENT_FILE_PREFIX = "@";
 
   /** see {@link javax.tools.OptionChecker#isSupportedOption(String)} */
@@ -88,6 +92,8 @@ public final class ErrorProneOptions {
             || option.equals(IGNORE_SUPPRESSION_ANNOTATIONS)
             || option.equals(COMPILING_TEST_ONLY_CODE)
             || option.equals(COMPILING_PUBLICLY_VISIBLE_CODE)
+            || option.equals(PRINT_TIMINGS)
+            || option.equals(RECORD_TIMINGS)
             || option.equals(DISABLE_ALL_WARNINGS);
     return isSupported ? 0 : -1;
   }
@@ -161,6 +167,8 @@ public final class ErrorProneOptions {
   private final Pattern excludedPattern;
   private final boolean ignoreSuppressionAnnotations;
   private final boolean ignoreLargeCodeGenerators;
+  private final boolean printTimings;
+  private final boolean recordTimings;
 
   private ErrorProneOptions(
       ImmutableMap<String, Severity> severityMap,
@@ -178,7 +186,9 @@ public final class ErrorProneOptions {
       PatchingOptions patchingOptions,
       Pattern excludedPattern,
       boolean ignoreSuppressionAnnotations,
-      boolean ignoreLargeCodeGenerators) {
+      boolean ignoreLargeCodeGenerators,
+      boolean printTimings,
+      boolean recordTimings) {
     this.severityMap = severityMap;
     this.remainingArgs = remainingArgs;
     this.ignoreUnknownChecks = ignoreUnknownChecks;
@@ -195,6 +205,8 @@ public final class ErrorProneOptions {
     this.excludedPattern = excludedPattern;
     this.ignoreSuppressionAnnotations = ignoreSuppressionAnnotations;
     this.ignoreLargeCodeGenerators = ignoreLargeCodeGenerators;
+    this.printTimings = printTimings;
+    this.recordTimings = recordTimings;
   }
 
   public ImmutableList<String> getRemainingArgs() {
@@ -241,6 +253,19 @@ public final class ErrorProneOptions {
     return ignoreLargeCodeGenerators;
   }
 
+  /**
+   * Returns true if Error Prone records how long each check runs, and prints the totals once the
+   * compilation finishes.
+   */
+  public boolean printTimings() {
+    return printTimings;
+  }
+
+  /** Returns true if Error Prone records how long each check runs. */
+  public boolean recordTimings() {
+    return recordTimings;
+  }
+
   public ErrorProneFlags getFlags() {
     return flags;
   }
@@ -265,6 +290,8 @@ public final class ErrorProneOptions {
     private boolean isPubliclyVisibleTarget = false;
     private boolean ignoreSuppressionAnnotations = false;
     private boolean ignoreLargeCodeGenerators = true;
+    private boolean printTimings = false;
+    private boolean recordTimings = false;
     private final Map<String, Severity> severityMap = new LinkedHashMap<>();
     private final ErrorProneFlags.Builder flagsBuilder = ErrorProneFlags.builder();
     private final PatchingOptions.Builder patchingOptionsBuilder = PatchingOptions.builder();
@@ -339,6 +366,14 @@ public final class ErrorProneOptions {
       this.ignoreLargeCodeGenerators = ignoreLargeCodeGenerators;
     }
 
+    void setPrintTimings(boolean printTimings) {
+      this.printTimings = printTimings;
+    }
+
+    void setRecordTimings(boolean recordTimings) {
+      this.recordTimings = recordTimings;
+    }
+
     void setDisableAllChecks(boolean disableAllChecks) {
       // Discard previously set severities so that the DisableAllChecks flag is position sensitive.
       severityMap.clear();
@@ -374,7 +409,9 @@ public final class ErrorProneOptions {
           patchingOptionsBuilder.build(),
           excludedPattern,
           ignoreSuppressionAnnotations,
-          ignoreLargeCodeGenerators);
+          ignoreLargeCodeGenerators,
+          printTimings,
+          recordTimings || printTimings);
     }
 
     void setExcludedPattern(Pattern excludedPattern) {
@@ -478,6 +515,8 @@ public final class ErrorProneOptions {
         case COMPILING_TEST_ONLY_CODE -> builder.setTestOnlyTarget(true);
         case COMPILING_PUBLICLY_VISIBLE_CODE -> builder.setPubliclyVisibleTarget(true);
         case DISABLE_ALL_WARNINGS -> builder.setDisableAllWarnings(true);
+        case PRINT_TIMINGS -> builder.setPrintTimings(true);
+        case RECORD_TIMINGS -> builder.setRecordTimings(true);
         default -> {
           if (arg.startsWith(SEVERITY_PREFIX)) {
             builder.parseSeverity(arg);
@@ -506,7 +545,21 @@ public final class ErrorProneOptions {
                         String path = remaining.substring("refaster:".length());
                         try (InputStream in =
                                 Files.newInputStream(FileSystems.getDefault().getPath(path));
-                            ObjectInputStream ois = new ObjectInputStream(in)) {
+                            ObjectInputStream ois =
+                                new ObjectInputStream(in) {
+                                  // Work around https://github.com/google/guava/issues/8693.
+                                  @Override
+                                  protected ObjectStreamClass readClassDescriptor()
+                                      throws IOException, ClassNotFoundException {
+                                    ObjectStreamClass desc = super.readClassDescriptor();
+                                    if (desc.getName()
+                                        .equals(ImmutableClassToInstanceMap.class.getName())) {
+                                      return ObjectStreamClass.lookup(
+                                          ImmutableClassToInstanceMap.class);
+                                    }
+                                    return desc;
+                                  }
+                                }) {
                           return (CodeTransformer) ois.readObject();
                         } catch (IOException | ClassNotFoundException e) {
                           throw new RuntimeException("Can't load Refaster rule from " + path, e);

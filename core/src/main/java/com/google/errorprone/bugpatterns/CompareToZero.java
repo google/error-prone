@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
@@ -39,6 +40,8 @@ import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.ParenthesizedTree;
+import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.UnaryTree;
@@ -156,6 +159,30 @@ public final class CompareToZero extends BugChecker implements MethodInvocationT
         state.reportMatch(buildDescription(unaryTree).setMessage(NEGATION_OPERATOR).build());
       } else if (unaryTree.getKind() == Kind.BITWISE_COMPLEMENT) {
         state.reportMatch(buildDescription(unaryTree).setMessage(NON_RELATIONAL_OPERATOR).build());
+      }
+      return null;
+    }
+
+    @Override
+    public Void visitSwitch(SwitchTree switchTree, VisitorState state) {
+      return handleSwitch(switchTree, switchTree.getExpression(), state);
+    }
+
+    @Override
+    public Void visitSwitchExpression(
+        SwitchExpressionTree switchExpressionTree, VisitorState state) {
+      return handleSwitch(switchExpressionTree, switchExpressionTree.getExpression(), state);
+    }
+
+    private Void handleSwitch(Tree switchTree, ExpressionTree expression, VisitorState state) {
+      if (expression == child) {
+        ExpressionTree selector = stripParentheses(expression);
+        SuggestedFix fix =
+            SuggestedFix.builder()
+                .addStaticImport("java.lang.Integer.signum")
+                .replace(selector, String.format("signum(%s)", state.getSourceForNode(selector)))
+                .build();
+        state.reportMatch(describeMatch(switchTree, fix));
       }
       return null;
     }

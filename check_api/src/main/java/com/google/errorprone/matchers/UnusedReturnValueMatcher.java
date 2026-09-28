@@ -219,8 +219,7 @@ public final class UnusedReturnValueMatcher implements Matcher<ExpressionTree> {
     return getSymbol(tree).getAnnotationMirrors().stream()
         .filter(am -> am.type.tsym.getQualifiedName().contentEquals("org.junit.Test"))
         .findFirst()
-        .flatMap(testAm -> MoreAnnotations.getAnnotationValue(testAm, "expected"))
-        .flatMap(MoreAnnotations::asTypeValue)
+        .flatMap(testAm -> MoreAnnotations.getTypeValue(testAm, "expected"))
         .filter(tv -> !tv.toString().equals("org.junit.Test.None"))
         .isPresent();
   }

@@ -24,7 +24,9 @@ import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.MethodTree;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -39,6 +41,8 @@ public final class JUnitMatchersTest {
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(JUnitVersionMatcher.class, getClass());
+  private final CompilationTestHelper junit5CompilationHelper =
+      CompilationTestHelper.newInstance(JUnit5MethodMatcher.class, getClass());
 
   @Test
   public void runWithAnnotationOnClass_shouldBeJUnit4() {
@@ -220,6 +224,76 @@ public final class JUnitMatchersTest {
         .doTest();
   }
 
+  @Test
+  public void junit5Matchers() {
+    junit5CompilationHelper
+        .addSourceLines(
+            "org/junit/jupiter/api/Test.java",
+            """
+            package org.junit.jupiter.api;
+
+            public @interface Test {}
+            """)
+        .addSourceLines(
+            "org/junit/jupiter/api/TestFactory.java",
+            """
+            package org.junit.jupiter.api;
+
+            public @interface TestFactory {}
+            """)
+        .addSourceLines(
+            "org/junit/jupiter/api/BeforeEach.java",
+            """
+            package org.junit.jupiter.api;
+
+            public @interface BeforeEach {}
+            """)
+        .addSourceLines(
+            "org/junit/jupiter/api/TestTemplate.java",
+            """
+            package org.junit.jupiter.api;
+
+            public @interface TestTemplate {}
+            """)
+        .addSourceLines(
+            "org/junit/jupiter/params/ParameterizedTest.java",
+            """
+            package org.junit.jupiter.params;
+
+            @org.junit.jupiter.api.TestTemplate
+            public @interface ParameterizedTest {}
+            """)
+        .addSourceLines(
+            "JUnit5Methods.java",
+            """
+            public class JUnit5Methods {
+              @org.junit.jupiter.api.Test
+              // BUG: Diagnostic contains: [JUNIT5_TEST_METHOD, JUNIT5_TEST_OR_LIFECYCLE_METHOD]
+              void test() {}
+
+              @org.junit.jupiter.api.TestFactory
+              // BUG: Diagnostic contains: [JUNIT5_TEST_METHOD, JUNIT5_TEST_OR_LIFECYCLE_METHOD]
+              Object testFactory() {
+                return null;
+              }
+
+              @org.junit.jupiter.api.BeforeEach
+              // BUG: Diagnostic contains: [JUNIT5_LIFECYCLE_METHOD, JUNIT5_TEST_OR_LIFECYCLE_METHOD]
+              void setUp() {}
+
+              @org.junit.jupiter.params.ParameterizedTest
+              // BUG: Diagnostic contains: [JUNIT5_TEST_METHOD, JUNIT5_TEST_OR_LIFECYCLE_METHOD]
+              void parameterizedTest() {}
+
+              @org.junit.Test
+              public void junit4Test() {}
+
+              void notATest() {}
+            }
+            """)
+        .doTest();
+  }
+
   /** Helper class to surface which version of JUnit a class looks like to Error Prone. */
   @BugPattern(
       summary = "Matches on JUnit test classes, emits description with its JUnit version.",
@@ -246,6 +320,30 @@ public final class JUnitMatchersTest {
       }
       assertThat(versions).hasSize(1);
       return this.buildDescription(tree).setMessage("Version:" + versions.get(0)).build();
+    }
+  }
+
+  /** Helper class to surface which JUnit 5 matchers a method matches. */
+  @BugPattern(
+      summary = "Matches JUnit 5 test and lifecycle methods.",
+      severity = SeverityLevel.WARNING)
+  public static class JUnit5MethodMatcher extends BugChecker implements MethodTreeMatcher {
+
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      List<String> matches = new ArrayList<>();
+      if (JUnitMatchers.JUNIT5_TEST_METHOD.matches(tree, state)) {
+        matches.add("JUNIT5_TEST_METHOD");
+      }
+      if (JUnitMatchers.JUNIT5_LIFECYCLE_METHOD.matches(tree, state)) {
+        matches.add("JUNIT5_LIFECYCLE_METHOD");
+      }
+      if (JUnitMatchers.JUNIT5_TEST_OR_LIFECYCLE_METHOD.matches(tree, state)) {
+        matches.add("JUNIT5_TEST_OR_LIFECYCLE_METHOD");
+      }
+      return matches.isEmpty()
+          ? Description.NO_MATCH
+          : this.buildDescription(tree).setMessage(matches.toString()).build();
     }
   }
 }

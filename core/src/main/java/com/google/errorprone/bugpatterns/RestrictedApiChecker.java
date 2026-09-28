@@ -30,11 +30,11 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.annotations.RestrictedApi;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
+import com.google.errorprone.bugpatterns.restrictedapi.Restriction;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
@@ -55,14 +55,12 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.model.AnnotationProxyMaker;
 import com.sun.tools.javac.tree.JCTree;
-import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 import java.util.stream.Stream;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import org.jspecify.annotations.Nullable;
 
 /** Check for non-allowlisted callers to RestrictedApiChecker. */
@@ -89,9 +87,13 @@ public class RestrictedApiChecker extends BugChecker
     }
     // TODO(bangert): make a more elegant API to get the annotation within an annotation tree.
     // Maybe find the declared object and get annotations on that...
-    Attribute.Compound restrictedApi = (Attribute.Compound) ASTHelpers.getAnnotationMirror(tree);
+    AnnotationMirror restrictedApi = ASTHelpers.getAnnotationMirror(tree);
     if (restrictedApi == null) {
       return NO_MATCH;
+    }
+    Optional<String> pathError = Restriction.validateAnnotation(restrictedApi, getSymbol(tree));
+    if (pathError.isPresent()) {
+      return buildDescription(tree).setMessage(pathError.get()).build();
     }
     return NO_MATCH;
   }
@@ -183,7 +185,7 @@ public class RestrictedApiChecker extends BugChecker
 
   private Description checkMethodUse(
       MethodSymbol method, ExpressionTree where, VisitorState state) {
-    Attribute.Compound annotation = getRestrictedApiAnnotation(method, state);
+    AnnotationMirror annotation = getRestrictedApiAnnotation(method, state);
     if (annotation != null) {
       return checkRestriction(annotation, where, state);
     }
@@ -208,33 +210,19 @@ public class RestrictedApiChecker extends BugChecker
   }
 
   private Description checkRestriction(
-      Attribute.@Nullable Compound attribute, Tree where, VisitorState state) {
+      @Nullable AnnotationMirror attribute, Tree where, VisitorState state) {
     if (attribute == null) {
       return NO_MATCH;
     }
-    RestrictedApi restriction =
-        AnnotationProxyMaker.generateAnnotation(attribute, RestrictedApi.class);
+    Restriction restriction = Restriction.from(attribute).orElse(null);
     if (restriction == null) {
       return NO_MATCH;
     }
-    if (!restriction.allowedOnPath().isEmpty()) {
-      JCCompilationUnit compilationUnit = (JCCompilationUnit) state.getPath().getCompilationUnit();
-      String path = compilationUnit.getSourceFile().toUri().toString();
-      try {
-        if (Pattern.matches(restriction.allowedOnPath(), path)) {
-          return NO_MATCH;
-        }
-
-      } catch (PatternSyntaxException e) {
-        throw new IllegalArgumentException(
-            String.format(
-                "Invalid regex for RestrictedApi annotation of %s", state.getSourceForNode(where)),
-            e);
-      }
+    if (restriction.isPathOrTestonlyExempt(where, state)) {
+      return NO_MATCH;
     }
     boolean warn = Matchers.enclosingNode(shouldAllowWithWarning(attribute)).matches(where, state);
-
-    boolean allow = Matchers.enclosingNode(shouldAllow(attribute)).matches(where, state);
+    boolean allow = restriction.isAllowlisted(where, state);
     if (warn && allow) {
       // TODO(bangert): Clarify this message if possible.
       var descriptionBuilder =
@@ -264,22 +252,8 @@ public class RestrictedApiChecker extends BugChecker
   }
 
   // TODO(bangert): Memoize these if necessary.
-  private static Matcher<Tree> shouldAllow(Attribute.Compound api) {
-    Optional<Attribute> allowlistAnnotations =
-        MoreAnnotations.getValue(api, "allowlistAnnotations");
-    // TODO(b/178905039): remove handling of legacy names
-    if (allowlistAnnotations.isEmpty()) {
-      allowlistAnnotations = MoreAnnotations.getValue(api, "whitelistAnnotations");
-    }
-    return Matchers.hasAnyAnnotation(
-        allowlistAnnotations
-            .map(MoreAnnotations::asTypes)
-            .orElse(Stream.empty())
-            .collect(toImmutableList()));
-  }
-
-  private static Matcher<Tree> shouldAllowWithWarning(Attribute.Compound api) {
-    Optional<Attribute> allowlistWithWarningAnnotations =
+  private static Matcher<Tree> shouldAllowWithWarning(AnnotationMirror api) {
+    Optional<AnnotationValue> allowlistWithWarningAnnotations =
         MoreAnnotations.getValue(api, "allowlistWithWarningAnnotations");
     // TODO(b/178905039): remove handling of legacy names
     if (allowlistWithWarningAnnotations.isEmpty()) {

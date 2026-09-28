@@ -239,4 +239,167 @@ public final class CompareToZeroTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void switchStatements_positive() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.Comparator;
+
+            class Test {
+              boolean switchCompare(String left, String right, Comparator<String> comparator) {
+                switch (comparator.compare(left, right)) {
+                  case 1 -> {
+                    return false;
+                  }
+                  case -1 -> {
+                    return true;
+                  }
+                  case 0 -> {}
+                  default -> {}
+                }
+                return false;
+              }
+
+              boolean switchCompareTo(String left, String right) {
+                switch (left.compareTo(right)) {
+                  case 1 -> {
+                    return false;
+                  }
+                  case -1 -> {
+                    return true;
+                  }
+                  case 0 -> {}
+                  default -> {}
+                }
+                return false;
+              }
+              boolean switchCompareToOnlyZero(String left, String right) {
+                switch (left.compareTo(right)) {
+                  case 0 -> {
+                    return true;
+                  }
+                  default -> {
+                    return false;
+                  }
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import static java.lang.Integer.signum;
+
+            import java.util.Comparator;
+
+            class Test {
+              boolean switchCompare(String left, String right, Comparator<String> comparator) {
+                switch (signum(comparator.compare(left, right))) {
+                  case 1 -> {
+                    return false;
+                  }
+                  case -1 -> {
+                    return true;
+                  }
+                  case 0 -> {}
+                  default -> {}
+                }
+                return false;
+              }
+
+              boolean switchCompareTo(String left, String right) {
+                switch (signum(left.compareTo(right))) {
+                  case 1 -> {
+                    return false;
+                  }
+                  case -1 -> {
+                    return true;
+                  }
+                  case 0 -> {}
+                  default -> {}
+                }
+                return false;
+              }
+
+              boolean switchCompareToOnlyZero(String left, String right) {
+                switch (signum(left.compareTo(right))) {
+                  case 0 -> {
+                    return true;
+                  }
+                  default -> {
+                    return false;
+                  }
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void switchStatements_negative() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static java.lang.Integer.signum;
+
+            import java.util.Comparator;
+
+            class Test {
+              boolean switchCompare(String left, String right, Comparator<String> comparator) {
+                switch (Integer.signum(comparator.compare(left, right))) {
+                  case 1 -> {
+                    return false;
+                  }
+                  case -1 -> {
+                    return true;
+                  }
+                  case 0 -> {}
+                  default -> {}
+                }
+                return false;
+              }
+
+              boolean switchCompareTo(String left, String right) {
+                switch (Integer.signum(left.compareTo(right))) {
+                  case 1 -> {
+                    return false;
+                  }
+                  case -1 -> {
+                    return true;
+                  }
+                  case 0 -> {}
+                  default -> {}
+                }
+                return false;
+              }
+
+              boolean switchNegativeOneAndDefault(String left, String right) {
+                return switch (signum(left.compareTo(right))) {
+                  case -1 -> true;
+                  default -> false;
+                };
+              }
+
+              boolean switchNegativeOnePositiveOneAndDefault(String left, String right) {
+                return switch (signum(left.compareTo(right))) {
+                  case -1, 1 -> true;
+                  default -> false;
+                };
+              }
+
+              boolean switchZeroPositiveOneAndDefault(String left, String right) {
+                return switch (signum(left.compareTo(right))) {
+                  case 0, 1 -> true;
+                  default -> false;
+                };
+              }
+            }
+            """)
+        .doTest();
+  }
 }

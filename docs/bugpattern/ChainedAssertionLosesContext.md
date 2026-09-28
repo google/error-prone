@@ -1,4 +1,4 @@
-Assertions made _inside the implementation of another [Truth] assertion_ should
+Assertions made *inside the implementation of another [Truth] assertion* should
 use [`check`], not `assertThat`.
 
 Before:

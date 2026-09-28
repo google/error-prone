@@ -42,24 +42,22 @@ public class UnificationTest extends CompilerBasedTest {
 
   public void expectMatches(Template<?> template, Match... expected) {
     Set<Match> expectedMatches = Sets.newHashSet(expected);
-    TreeScanner matchScanner =
-        new TreeScanner() {
-          @Override
-          public void scan(JCTree tree) {
-            if (tree == null) {
-              return;
-            }
-            for (TemplateMatch templateMatch : template.match(tree, context)) {
-              Match match = Match.create(templateMatch);
-              if (!expectedMatches.remove(match)) {
-                fail(String.format("Unexpected match against template %s:%n%s", template, match));
-              }
-            }
-            super.scan(tree);
-          }
-        };
     for (JCCompilationUnit unit : compilationUnits) {
-      matchScanner.scan(unit);
+      new TreeScanner() {
+        @Override
+        public void scan(JCTree tree) {
+          if (tree == null) {
+            return;
+          }
+          for (TemplateMatch templateMatch : template.match(tree, context, unit)) {
+            Match match = Match.create(templateMatch);
+            if (!expectedMatches.remove(match)) {
+              fail(String.format("Unexpected match against template %s:%n%s", template, match));
+            }
+          }
+          super.scan(tree);
+        }
+      }.scan(unit);
     }
     for (Match missingMatch : expectedMatches) {
       fail(

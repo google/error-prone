@@ -111,6 +111,62 @@ public final class MultimapKeysTest {
   }
 
   @Test
+  public void positiveStream() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.Multimap;
+
+            class Test {
+              void test(Multimap<String, String> m) {
+                var unused = m.keys().stream();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.Multimap;
+
+            class Test {
+              void test(Multimap<String, String> m) {
+                var unused = m.keySet().stream();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void positiveParallelStream() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.Multimap;
+
+            class Test {
+              void test(Multimap<String, String> m) {
+                var unused = m.keys().parallelStream();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.common.collect.Multimap;
+
+            class Test {
+              void test(Multimap<String, String> m) {
+                var unused = m.keySet().parallelStream();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negative() {
     refactoring
         .addInputLines(

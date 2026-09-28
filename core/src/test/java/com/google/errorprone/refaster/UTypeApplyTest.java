@@ -53,7 +53,6 @@ public class UTypeApplyTest extends AbstractUTreeTest {
 
   @Test
   public void inline() {
-    ImportPolicy.bind(context, ImportPolicy.IMPORT_TOP_LEVEL);
     assertInlines(
         "List<String>",
         UTypeApply.create(

@@ -20,20 +20,31 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.truth.Truth.assertThat;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.nio.file.Files.newOutputStream;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableClassToInstanceMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.ErrorProneOptions.Severity;
 import com.google.errorprone.apply.ImportOrganizer;
+import com.sun.source.util.TreePath;
+import com.sun.tools.javac.util.Context;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.ObjectStreamClass;
+import java.io.Serializable;
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Retention;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.safere.Pattern;
@@ -45,6 +56,7 @@ import org.safere.Pattern;
  */
 @RunWith(JUnit4.class)
 public class ErrorProneOptionsTest {
+  @Rule public final TemporaryFolder tempFolder = new TemporaryFolder();
 
   @Test
   public void nonErrorProneFlagsPlacedInRemainingArgs() {
@@ -171,6 +183,29 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
+  public void recognizesPrintTimings() {
+    ErrorProneOptions options = ErrorProneOptions.processArgs(new String[] {"-XepPrintTimings"});
+    assertThat(options.printTimings()).isTrue();
+    assertThat(options.recordTimings()).isTrue();
+    assertThat(ErrorProneOptions.isSupportedOption("-XepPrintTimings")).isEqualTo(0);
+  }
+
+  @Test
+  public void recognizesRecordTimings() {
+    ErrorProneOptions options = ErrorProneOptions.processArgs(new String[] {"-XepRecordTimings"});
+    assertThat(options.recordTimings()).isTrue();
+    assertThat(options.printTimings()).isFalse();
+    assertThat(ErrorProneOptions.isSupportedOption("-XepRecordTimings")).isEqualTo(0);
+  }
+
+  @Test
+  public void printTimingsIsOffByDefault() {
+    ErrorProneOptions options = ErrorProneOptions.processArgs(new String[] {});
+    assertThat(options.printTimings()).isFalse();
+    assertThat(options.recordTimings()).isFalse();
+  }
+
+  @Test
   public void recognizesCompilingTestOnlyCode() {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepCompilingTestOnlyCode"});
@@ -256,6 +291,45 @@ public class ErrorProneOptionsTest {
     assertThat(options.patchingOptions().doRefactor()).isTrue();
     assertThat(options.patchingOptions().inPlace()).isTrue();
     assertThat(options.patchingOptions().customRefactorer()).isPresent();
+  }
+
+  private record ThrowingCodeTransformer(ImmutableClassToInstanceMap<Annotation> annotations)
+      implements CodeTransformer, Serializable {
+    @Override
+    public void apply(TreePath path, Context context, DescriptionListener listener) {
+      throw new AssertionError();
+    }
+  }
+
+  @Test
+  public void refasterRuleWithDifferentImmutableClassToInstanceMapSerialVersionUID()
+      throws Exception {
+    var rulePath = tempFolder.newFile().toPath();
+    @SuppressWarnings("IdentifierName") // might as well match JDK casing
+    long currentSerialVersionUID =
+        ObjectStreamClass.lookup(ImmutableClassToInstanceMap.class).getSerialVersionUID();
+    var annotations =
+        ImmutableClassToInstanceMap.<Annotation, Retention>of(
+            Retention.class, Test.class.getAnnotation(Retention.class));
+    try (var oos =
+        new ObjectOutputStream(newOutputStream(rulePath)) {
+          boolean wroteLong;
+
+          @Override
+          public void writeLong(long val) throws IOException {
+            wroteLong = true;
+            super.writeLong(val == currentSerialVersionUID ? ~val : val);
+          }
+        }) {
+      oos.writeObject(new ThrowingCodeTransformer(annotations));
+      assertThat(oos.wroteLong).isTrue();
+    }
+
+    var options =
+        ErrorProneOptions.processArgs(
+            new String[] {"-XepPatchChecks:refaster:" + rulePath, "-XepPatchLocation:IN_PLACE"});
+    assertThat(options.patchingOptions().customRefactorer().get().get().annotations())
+        .isEqualTo(annotations);
   }
 
   @Test

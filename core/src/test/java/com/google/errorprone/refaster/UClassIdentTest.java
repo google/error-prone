@@ -19,8 +19,6 @@ package com.google.errorprone.refaster;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.testing.EqualsTester;
 import com.google.common.testing.SerializableTester;
-import com.sun.tools.javac.code.Symbol.PackageSymbol;
-import com.sun.tools.javac.code.Symtab;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -50,16 +48,12 @@ public class UClassIdentTest extends AbstractUTreeTest {
 
   @Test
   public void inline() {
-    ImportPolicy.bind(context, ImportPolicy.IMPORT_TOP_LEVEL);
-    context.put(PackageSymbol.class, Symtab.instance(context).rootPackage);
     assertInlines("List", UClassIdent.create("java.util.List"));
     assertInlines("Map.Entry", UClassIdent.create("java.util.Map.Entry"));
   }
 
   @Test
   public void importConflicts() {
-    ImportPolicy.bind(context, ImportPolicy.IMPORT_TOP_LEVEL);
-    context.put(PackageSymbol.class, Symtab.instance(context).rootPackage);
     // Test fully qualified class names
     inliner.addImport("package.Exception");
     assertInlines("Exception", UClassIdent.create("package.Exception"));

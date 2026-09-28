@@ -25,6 +25,7 @@ import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.util.AnnotationNames.NULL_MARKED_ANNOTATION;
 import static com.sun.tools.javac.code.Scope.LookupKind.NON_RECURSIVE;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toCollection;
@@ -86,7 +87,6 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.api.JavacTrees;
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Attribute.TypeCompound;
 import com.sun.tools.javac.code.Flags;
@@ -1069,7 +1069,7 @@ public final class ASTHelpers {
       Stream<? extends AnnotationMirror> annotations, String simpleName) {
     return annotations.anyMatch(
         annotation ->
-            annotation.getAnnotationType().asElement().getSimpleName().contentEquals(simpleName));
+            MoreAnnotations.asElement(annotation).getSimpleName().contentEquals(simpleName));
   }
 
   /**
@@ -1090,8 +1090,7 @@ public final class ASTHelpers {
 
   private static boolean hasDirectAnnotation(
       Stream<? extends AnnotationMirror> annotations, Predicate<Element> matcher) {
-    return annotations.anyMatch(
-        annotation -> matcher.test(annotation.getAnnotationType().asElement()));
+    return annotations.anyMatch(annotation -> matcher.test(MoreAnnotations.asElement(annotation)));
   }
 
   /**
@@ -1384,7 +1383,10 @@ public final class ASTHelpers {
     if (SUBTYPE_UNDEFINED.contains(s.getTag())) {
       return false;
     }
-    if (t == state.getSymtab().unknownType) {
+    // UnknownType is an ErrorType in JDK 24+ (JDK-8339296), but had TypeTag.UNKNOWN in earlier
+    // JDKs. Compare tsym instead of type identity to avoid issues with type annotations or
+    // metadata.
+    if (Objects.equals(t.tsym, state.getSymtab().unknownSymbol)) {
       return false;
     }
     Types types = state.getTypes();
@@ -1693,6 +1695,27 @@ public final class ASTHelpers {
     return getFileNameFromUri(tree.getSourceFile().toUri());
   }
 
+  /**
+   * Extract a canonical repository/workspace-relative filename from a {@link CompilationUnitTree},
+   * normalizing away workspace roots (e.g. {@code /execroot/<workspace>/}) and build output
+   * directories (e.g. {@code blaze-out/.../(bin|genfiles)/} or {@code
+   * bazel-out/.../(bin|genfiles)/}).
+   */
+  public static String getSourcePath(CompilationUnitTree tree) {
+    String fileName = checkNotNull(getFileName(tree));
+    return SourcePathMatcher.canonicalizePath(fileName);
+  }
+
+  /**
+   * Extract a canonical repository/workspace-relative filename from the {@link VisitorState}'s
+   * compilation unit, normalizing away workspace roots (e.g. {@code /execroot/<workspace>/}) and
+   * build output directories (e.g. {@code blaze-out/.../(bin|genfiles)/} or {@code
+   * bazel-out/.../(bin|genfiles)/}).
+   */
+  public static String getSourcePath(VisitorState state) {
+    return getSourcePath(state.getPath().getCompilationUnit());
+  }
+
   private static final CharMatcher BACKSLASH_MATCHER = CharMatcher.is('\\');
 
   /**
@@ -1805,12 +1828,11 @@ public final class ASTHelpers {
     return getGeneratedBy(symbol);
   }
 
-  private static Stream<String> generatedValues(Attribute.Compound attribute) {
-    return attribute.getElementValues().entrySet().stream()
-        .filter(e -> e.getKey().getSimpleName().contentEquals("value"))
-        .findFirst()
-        .map(e -> MoreAnnotations.asStrings(e.getValue()))
-        .orElseGet(() -> Stream.of(attribute.type.tsym.getQualifiedName().toString()));
+  private static Stream<String> generatedValues(AnnotationMirror attribute) {
+    return MoreAnnotations.getValue(attribute, "value")
+        .map(MoreAnnotations::asStrings)
+        .orElseGet(
+            () -> Stream.of(MoreAnnotations.asElement(attribute).getQualifiedName().toString()));
   }
 
   public static boolean isSuper(Tree tree) {
@@ -2337,7 +2359,7 @@ public final class ASTHelpers {
   }
 
   private static final Supplier<Name> NULL_MARKED_NAME =
-      memoize(state -> state.getName("org.jspecify.annotations.NullMarked"));
+      memoize(state -> state.getName(NULL_MARKED_ANNOTATION));
 
   private ASTHelpers() {}
 }

@@ -16,13 +16,15 @@ package com.google.errorprone.refaster;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.sun.tools.javac.util.List.nil;
 
 import com.google.common.base.Function;
-import com.google.errorprone.SubContext;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
+import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.Context;
@@ -41,15 +43,39 @@ public final class Unifier {
   private final Bindings bindings;
 
   private final Context context;
+  private final Types types;
+  private final TreeMaker treeMaker;
+  private final JCCompilationUnit compilationUnit;
 
-  public Unifier(Context context) {
+  public Unifier(Context context, JCCompilationUnit compilationUnit) {
     this.bindings = Bindings.create();
     this.context = checkNotNull(context);
+    this.types = Types.instance(context);
+    this.treeMaker = TreeMaker.instance(context);
+    this.compilationUnit = checkNotNull(compilationUnit);
   }
 
-  private Unifier(Context context, Bindings bindings) {
-    this.context = new SubContext(context);
+  public Unifier(Context context) {
+    this(context, defaultCompilationUnit(context));
+  }
+
+  private static JCCompilationUnit defaultCompilationUnit(Context context) {
+    JCCompilationUnit compilationUnit = TreeMaker.instance(context).TopLevel(nil());
+    compilationUnit.packge = Symtab.instance(context).unnamedModule.unnamedPackage;
+    return compilationUnit;
+  }
+
+  private Unifier(
+      Context context,
+      Bindings bindings,
+      Types types,
+      TreeMaker treeMaker,
+      JCCompilationUnit compilationUnit) {
+    this.context = context;
     this.bindings = Bindings.create(bindings);
+    this.types = types;
+    this.treeMaker = treeMaker;
+    this.compilationUnit = checkNotNull(compilationUnit);
   }
 
   /**
@@ -57,19 +83,23 @@ public final class Unifier {
    * succeed or fail independently of this {@code Unifier}.
    */
   public Unifier fork() {
-    return new Unifier(context, bindings);
+    return new Unifier(context, bindings, types, treeMaker, compilationUnit);
+  }
+
+  public JCCompilationUnit compilationUnit() {
+    return compilationUnit;
   }
 
   public Types types() {
-    return Types.instance(context);
+    return types;
   }
 
   public JCExpression thisExpression(Type type) {
-    return TreeMaker.instance(context).This(type);
+    return treeMaker.This(type);
   }
 
   public Inliner createInliner() {
-    return new Inliner(context, bindings);
+    return new Inliner(context, bindings, compilationUnit);
   }
 
   public <V> @Nullable V getBinding(Bindings.Key<V> key) {

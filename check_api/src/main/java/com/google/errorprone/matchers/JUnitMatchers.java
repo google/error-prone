@@ -26,9 +26,11 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.hasAnnotationOnAnyOverriddenMethod;
 import static com.google.errorprone.matchers.Matchers.hasAnnotationWithSimpleName;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
+import static com.google.errorprone.matchers.Matchers.hasMetaAnnotation;
 import static com.google.errorprone.matchers.Matchers.hasMethod;
 import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.methodHasNoParameters;
 import static com.google.errorprone.matchers.Matchers.methodHasVisibility;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
@@ -244,6 +246,34 @@ public final class JUnitMatchers {
           isJunit3TestCase,
           hasAnnotation(JUNIT4_TEST_ANNOTATION),
           hasAnnotation(JUNIT4_THEORY_ANNOTATION));
+
+  /** Matches a JUnit 5 (Jupiter) test method. */
+  public static final Matcher<MethodTree> JUNIT5_TEST_METHOD =
+      annotations(
+          AT_LEAST_ONE,
+          anyOf(
+              isType("org.junit.jupiter.api.Test"),
+              isType("org.junit.jupiter.api.TestFactory"),
+              hasMetaAnnotation("org.junit.jupiter.api.TestTemplate")));
+
+  /** Matches a JUnit 5 (Jupiter) lifecycle method, i.e. a setup or teardown method. */
+  public static final Matcher<MethodTree> JUNIT5_LIFECYCLE_METHOD =
+      annotations(
+          AT_LEAST_ONE,
+          anyOf(
+              isType("org.junit.jupiter.api.AfterAll"),
+              isType("org.junit.jupiter.api.AfterEach"),
+              isType("org.junit.jupiter.api.BeforeAll"),
+              isType("org.junit.jupiter.api.BeforeEach")));
+
+  /**
+   * Matches a JUnit 5 (Jupiter) method that is invoked reflectively.
+   *
+   * <p>Unlike {@link #TEST_CASE} this also covers lifecycle methods, as Jupiter permits those to
+   * declare parameters.
+   */
+  public static final Matcher<MethodTree> JUNIT5_TEST_OR_LIFECYCLE_METHOD =
+      anyOf(JUNIT5_TEST_METHOD, JUNIT5_LIFECYCLE_METHOD);
 
   /**
    * A list of test runners that this matcher should look for in the @RunWith annotation. Subclasses

@@ -371,6 +371,17 @@ public final class ImpossibleNullComparison extends BugChecker
           .named("valueOf")
           .withParameters("java.lang.String");
 
+  private static final Matcher<ExpressionTree> CLASS_FOR_NAME_MATCHER =
+      anyOf(
+          staticMethod()
+              .onClass("java.lang.Class")
+              .named("forName")
+              .withParameters("java.lang.String"),
+          staticMethod()
+              .onClass("java.lang.Class")
+              .named("forName")
+              .withParameters("java.lang.String", "boolean", "java.lang.ClassLoader"));
+
   private enum GetterTypes {
     OPTIONAL_GET {
       @Override
@@ -455,6 +466,15 @@ public final class ImpossibleNullComparison extends BugChecker
           return null;
         }
         // TODO(cpovirk): Suggest Enums.getIfPresent, Ints.tryParse, etc.
+        return GetterTypes::emptyFix;
+      }
+    },
+    CLASS_FOR_NAME {
+      @Override
+      @Nullable Fixer match(ExpressionTree tree, VisitorState state, boolean checkOrBuilder) {
+        if (!CLASS_FOR_NAME_MATCHER.matches(tree, state)) {
+          return null;
+        }
         return GetterTypes::emptyFix;
       }
     },

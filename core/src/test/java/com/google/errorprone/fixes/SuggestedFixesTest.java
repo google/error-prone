@@ -1506,6 +1506,45 @@ class Test {
         .doTest();
   }
 
+  @Test
+  public void customSuppressWarningsFix() {
+    BugCheckerRefactoringTestHelper refactorTestHelper =
+        BugCheckerRefactoringTestHelper.newInstance(SuppressMe.class, getClass());
+    refactorTestHelper
+        .addInputLines(
+            "SuppressWarnings.java",
+            """
+            package com.example;
+
+            public @interface SuppressWarnings {
+              String[] value();
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              @com.example.SuppressWarnings("one")
+              public void doIt() {
+                System.out.println("" + 42);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              @SuppressWarnings("SuppressMe")
+              @com.example.SuppressWarnings("one")
+              public void doIt() {
+                System.out.println("" + 42);
+              }
+            }
+            """)
+        .doTest();
+  }
+
   /** A {@link BugChecker} for testing. */
   @BugPattern(summary = "", severity = ERROR)
   public static final class SuppressMeWithComment extends BugChecker implements LiteralTreeMatcher {

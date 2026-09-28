@@ -30,6 +30,7 @@ import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
+import static com.google.errorprone.util.ASTHelpers.isCanonicalRecordConstructor;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static java.util.stream.Collectors.joining;
@@ -106,17 +107,7 @@ public final class UnnecessaryQualifier extends BugChecker
           return NO_MATCH;
         }
         if (isRecord(symbol)) {
-          var clazzTree = state.findEnclosing(ClassTree.class);
-          if (clazzTree.getMembers().stream()
-              .anyMatch(
-                  m -> {
-                    var sym = getSymbol(m);
-                    return sym.isConstructor()
-                        && isRecord(sym) // canonical record constructor
-                        && INJECTION_METHODS.stream().anyMatch(ip -> hasAnnotation(m, ip, state));
-                  })) {
-            return NO_MATCH;
-          }
+          return NO_MATCH;
         }
       }
       case PARAMETER -> {
@@ -149,6 +140,9 @@ public final class UnnecessaryQualifier extends BugChecker
           return NO_MATCH;
         }
 
+        if (isCanonicalRecordConstructor(methodSymbol, state)) {
+          return NO_MATCH;
+        }
         if (CLASS_ANNOTATIONS_EXEMPTING_METHODS.stream()
             .anyMatch(anno -> hasAnnotation(enclosingClass, anno, state))) {
           return NO_MATCH;

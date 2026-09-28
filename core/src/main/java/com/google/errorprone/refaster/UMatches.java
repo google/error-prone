@@ -24,9 +24,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.source.util.TreePath;
-import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
-import com.sun.tools.javac.util.Context;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -93,9 +91,8 @@ abstract class UMatches extends UExpression {
   }
 
   static VisitorState makeVisitorState(Tree target, Unifier unifier) {
-    Context context = unifier.getContext();
-    VisitorState state = VisitorState.createForUtilityPurposes(context);
-    TreePath path = TreePath.getPath(context.get(JCCompilationUnit.class), target);
+    VisitorState state = VisitorState.createForUtilityPurposes(unifier.getContext());
+    TreePath path = TreePath.getPath(unifier.compilationUnit(), target);
     if (path != null) {
       state = state.withPath(path);
     }

@@ -42,7 +42,8 @@ public abstract class UForAll extends UType {
   public Choice<Unifier> visitForAll(ForAll target, Unifier unifier) {
     Types types = unifier.types();
     try {
-      Type myType = inline(new Inliner(unifier.getContext(), Bindings.create()));
+      Type myType =
+          inline(new Inliner(unifier.getContext(), Bindings.create(), unifier.compilationUnit()));
       return Choice.condition(
           types.overrideEquivalent(types.erasure(myType), types.erasure(target)), unifier);
     } catch (CouldNotResolveImportException e) {

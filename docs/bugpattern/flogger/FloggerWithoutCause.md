@@ -1,6 +1,6 @@
 Flogger uses `withCause(exception)` to associate Exceptions with log statements.
-Passing exceptions directly to `log()` only records the name and message,
-and loses the stack trace.
+Passing exceptions directly to `log()` only records the name and message, and
+loses the stack trace.
 
 ```java
 logger.atWarning().log("Unexpected exception: %s", e);

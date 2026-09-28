@@ -231,4 +231,26 @@ public class BooleanLiteralTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void junitAssertEqualsIsSkipped_b561940638() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertEquals;
+
+            class Test {
+
+              void f(Boolean b) {
+                assertEquals(Boolean.FALSE, b);
+                assertEquals(b, Boolean.FALSE);
+                assertEquals(Boolean.TRUE, b);
+                assertEquals(b, Boolean.TRUE);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }

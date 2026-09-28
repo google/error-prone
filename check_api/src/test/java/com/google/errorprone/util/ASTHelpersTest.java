@@ -1706,6 +1706,27 @@ class Test {
     assertCompiles(scanner);
   }
 
+  @Test
+  public void isSubtype_onUnknownType_isFalse() {
+    writeFile(
+        "A.java",
+        """
+        public class A {}
+        """);
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitClass(ClassTree tree, VisitorState state) {
+            setAssertionsComplete();
+            Type type = ASTHelpers.getType(tree);
+            assertThat(ASTHelpers.isSubtype(type, state.getSymtab().unknownType, state)).isFalse();
+            return super.visitClass(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
+  }
+
   /** Comments on method invocations with their receiver chain. */
   @BugPattern(
       summary = "Comments on method invocations with their receiver chain.",
@@ -2361,5 +2382,27 @@ class Test {
     scanner.setAssertionsComplete();
     tests.add(scanner);
     assertCompiles(scanner);
+  }
+
+  @BugPattern(summary = "Prints source path", severity = ERROR)
+  public static class SourcePathChecker extends BugChecker implements ClassTreeMatcher {
+    @Override
+    public Description matchClass(ClassTree tree, VisitorState state) {
+      return buildDescription(tree).setMessage(ASTHelpers.getSourcePath(state)).build();
+    }
+  }
+
+  @Test
+  public void getSourcePath_bazelOut() {
+    CompilationTestHelper.newInstance(SourcePathChecker.class, getClass())
+        .addSourceLines(
+            "execroot/my_workspace/bazel-out/k8-fastbuild/bin/com/example/Foo.java",
+            """
+            package com.example;
+
+            // BUG: Diagnostic contains: com/example/Foo.java
+            class Foo {}
+            """)
+        .doTest();
   }
 }

@@ -132,4 +132,17 @@ public class AddNullMarkedToPackageInfoTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void annotationNotInserted_suppressed() {
+    refactoringTestHelper
+        .addInputLines(
+            "in/package-info.java",
+            """
+            @SuppressWarnings("AddNullMarkedToPackageInfo")
+            package com.google.apps.bigtop.sync.client.api.gmailcards;
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }

@@ -33,7 +33,6 @@ import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.AnnotationNames.MUST_BE_CLOSED_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -52,13 +51,8 @@ import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
-import javax.inject.Inject;
 
-/**
- * Checks if a constructor or method annotated with {@link
- * com.google.errorprone.annotations.MustBeClosed} is called within the resource variable
- * initializer of a try-with-resources statement.
- */
+/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     altNames = "MustBeClosed",
     summary =
@@ -80,24 +74,8 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
   private static final Matcher<ExpressionTree> HARDCODED_MUST_BE_CLOSED_METHODS =
       staticMethod().onClass("java.lang.foreign.Arena").namedAnyOf("ofConfined", "ofShared");
 
-  private final Matcher<ExpressionTree> mustBeClosedMatcher;
-
-  @Inject
-  MustBeClosedChecker(ErrorProneFlags flags) {
-    var checkArena =
-        flags
-            .getBoolean("MustBeClosed:CheckArena")
-            .or(() -> flags.getBoolean("MustBeClosedChecker:CheckArena"))
-            .orElse(true);
-    this.mustBeClosedMatcher =
-        checkArena
-            ? anyOf(HAS_MUST_BE_CLOSED_ANNOTATION, HARDCODED_MUST_BE_CLOSED_METHODS)
-            : HAS_MUST_BE_CLOSED_ANNOTATION::matches;
-  }
-
-  public MustBeClosedChecker() {
-    this(ErrorProneFlags.empty());
-  }
+  private static final Matcher<ExpressionTree> MUST_BE_CLOSED_ANNOTATION_OR_METHOD =
+      anyOf(HAS_MUST_BE_CLOSED_ANNOTATION, HARDCODED_MUST_BE_CLOSED_METHODS);
 
   /**
    * Check that the {@code MustBeClosed} annotation is only used for constructors of AutoCloseables
@@ -109,7 +87,7 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
     state.reportMatch(
         scanEntireMethodFor(
             (t, s) -> {
-              if (!mustBeClosedMatcher.matches(t, s)) {
+              if (!MUST_BE_CLOSED_ANNOTATION_OR_METHOD.matches(t, s)) {
                 return false;
               }
               if (t instanceof MethodInvocationTree && getSymbol(t).isConstructor()) {

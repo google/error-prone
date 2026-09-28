@@ -14,6 +14,9 @@
 
 package com.google.errorprone.refaster;
 
+import static com.google.errorprone.util.AnnotationNames.MATCHES_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.NOT_MATCHES_ANNOTATION;
+
 import com.google.common.base.Predicates;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.ImmutableClassToInstanceMap;
@@ -23,14 +26,13 @@ import com.google.common.collect.Maps;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.refaster.UPlaceholderExpression.PlaceholderParamIdent;
-import com.google.errorprone.refaster.annotation.Matches;
 import com.google.errorprone.refaster.annotation.MayOptionallyUse;
-import com.google.errorprone.refaster.annotation.NotMatches;
 import com.google.errorprone.refaster.annotation.OfKind;
 import com.google.errorprone.refaster.annotation.Placeholder;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
 import com.sun.tools.javac.util.List;
@@ -57,16 +59,13 @@ record PlaceholderMethod(
       CharSequence name,
       UType returnType,
       ImmutableMap<UVariableDecl, ImmutableClassToInstanceMap<Annotation>> parameters,
-      ClassToInstanceMap<Annotation> annotations) {
+      ClassToInstanceMap<Annotation> annotations,
+      MethodSymbol sym) {
     boolean allowsIdentity = annotations.getInstance(Placeholder.class).allowsIdentity();
     Class<? extends Matcher<? super ExpressionTree>> matchesClass =
-        annotations.containsKey(Matches.class)
-            ? UTemplater.getValue(annotations.getInstance(Matches.class))
-            : null;
+        UTemplater.getMatcherClass(sym, MATCHES_ANNOTATION);
     Class<? extends Matcher<? super ExpressionTree>> notMatchesClass =
-        annotations.containsKey(NotMatches.class)
-            ? UTemplater.getValue(annotations.getInstance(NotMatches.class))
-            : null;
+        UTemplater.getMatcherClass(sym, NOT_MATCHES_ANNOTATION);
     Predicate<Kind> allowedKinds =
         annotations.containsKey(OfKind.class)
             ? Predicates.<Tree.Kind>in(Arrays.asList(annotations.getInstance(OfKind.class).value()))

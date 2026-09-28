@@ -19,7 +19,6 @@ package com.google.errorprone.apply;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.base.Joiner;
@@ -33,7 +32,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ClassTree;
-import com.sun.tools.javac.code.Attribute;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.util.Optional;
@@ -60,43 +58,30 @@ public class ImportStatementsTest {
   public static class ImportsToAddChecker extends BugChecker implements ClassTreeMatcher {
     @Override
     public Description matchClass(ClassTree tree, VisitorState state) {
-      Optional<Attribute.Compound> annotation =
-          getSymbol(tree).getAnnotationMirrors().stream()
-              .filter(
-                  a ->
-                      a.type
-                          .tsym
-                          .getQualifiedName()
-                          .contentEquals(ImportsToAdd.class.getCanonicalName()))
-              .findAny();
+      var annotation =
+          MoreAnnotations.getAnnotation(getSymbol(tree), ImportsToAdd.class.getCanonicalName());
       if (annotation.isEmpty()) {
         return NO_MATCH;
       }
       SuggestedFix.Builder fix = SuggestedFix.builder();
-      getAnnotationValue(annotation.get(), "toAdd")
-          .map(MoreAnnotations::asStrings)
-          .ifPresent(
-              toAdd ->
-                  toAdd.forEach(
-                      i -> {
-                        if (i.startsWith("static ")) {
-                          fix.addStaticImport(i.substring("static ".length()));
-                        } else {
-                          fix.addImport(i);
-                        }
-                      }));
-      getAnnotationValue(annotation.get(), "toRemove")
-          .map(MoreAnnotations::asStrings)
-          .ifPresent(
-              toRemove ->
-                  toRemove.forEach(
-                      i -> {
-                        if (i.startsWith("static ")) {
-                          fix.removeStaticImport(i.substring("static ".length()));
-                        } else {
-                          fix.removeImport(i);
-                        }
-                      }));
+      MoreAnnotations.getStrings(annotation.get(), "toAdd")
+          .forEach(
+              i -> {
+                if (i.startsWith("static ")) {
+                  fix.addStaticImport(i.substring("static ".length()));
+                } else {
+                  fix.addImport(i);
+                }
+              });
+      MoreAnnotations.getStrings(annotation.get(), "toRemove")
+          .forEach(
+              i -> {
+                if (i.startsWith("static ")) {
+                  fix.removeStaticImport(i.substring("static ".length()));
+                } else {
+                  fix.removeImport(i);
+                }
+              });
       return describeMatch(tree, fix.build());
     }
   }
