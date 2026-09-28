@@ -26,8 +26,10 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.sun.source.doctree.AttributeTree;
 import com.sun.source.doctree.DocTree;
 import com.sun.source.doctree.ErroneousTree;
+import com.sun.source.doctree.SnippetTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
@@ -89,6 +91,25 @@ public final class InvalidSnippet extends BugChecker
                 .build());
       }
       return null;
+    }
+
+    @Override
+    public Void visitSnippet(SnippetTree snippetTree, Void unused) {
+      if (snippetTree.getBody() == null) {
+        if (snippetTree.getAttributes().stream()
+            .anyMatch(
+                a -> a instanceof AttributeTree attr && attr.getName().contentEquals("file"))) {
+          return super.visitSnippet(snippetTree, null);
+        }
+        String message =
+            "This @snippet has no body. Is it meant to contain inline code? Snippets should start"
+                + " with \"{@snippet :\" followed by a newline.";
+        state.reportMatch(
+            buildDescription(diagnosticPosition(getCurrentPath(), state))
+                .setMessage(message)
+                .build());
+      }
+      return super.visitSnippet(snippetTree, null);
     }
 
     @Override
