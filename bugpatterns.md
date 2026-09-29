@@ -1734,6 +1734,9 @@ This overriding method is redundant, and can be removed.
 __[RedundantThrows](bugpattern/RedundantThrows)__<br>
 Thrown exception is a subtype of another
 
+__[SimplifyTestParameter](bugpattern/SimplifyTestParameter)__<br>
+Explicitly specifying all values on a boolean or enum @TestParameter is unnecessary
+
 __[StringFormatWithLiteral](bugpattern/StringFormatWithLiteral)__<br>
 There is no need to use String.format() when all the arguments are literals.
 
