@@ -97,18 +97,16 @@ public final class TypeCompatibility {
       // comparable to themselves. It would be reasonable to mistake Builders as having value
       // semantics, which may be misleading.
       if (treatBuildersAsIncomparable
-          && !leftUpperBound.tsym.isEnum()
           && leftUpperBound.isFinal()
           && leftUpperBound.tsym.name.toString().endsWith("Builder")) {
         Names names = state.getNames();
         MethodSymbol equals =
-            (MethodSymbol)
-                state.getSymtab().objectType.tsym.members().findFirst(state.getNames().equals);
+            (MethodSymbol) state.getSymtab().objectType.tsym.members().findFirst(names.equals);
         return isEmpty(
                 types
                     .membersClosure(leftUpperBound, /* skipInterface= */ false)
                     .getSymbolsByName(
-                        names.toString,
+                        names.equals,
                         m ->
                             m != equals
                                 && m.overrides(

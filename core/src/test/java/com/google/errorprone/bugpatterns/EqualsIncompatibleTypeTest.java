@@ -743,7 +743,7 @@ public class EqualsIncompatibleTypeRecursiveTypes {
   }
 
   @Test
-  public void enumsNamedBuilderCanBeEqual() {
+  public void enumsAndRecordsNamedBuilderCanBeEqual() {
     compilationHelper
         .addSourceLines(
             "Test.java",
@@ -753,8 +753,10 @@ public class EqualsIncompatibleTypeRecursiveTypes {
                 A
               }
 
-              public boolean test(FooBuilder a, FooBuilder b) {
-                return a.equals(b);
+              record BarBuilder(int x) {}
+
+              public boolean test(FooBuilder a, FooBuilder b, BarBuilder c, BarBuilder d) {
+                return a.equals(b) && c.equals(d);
               }
             }
             """)
