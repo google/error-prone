@@ -91,7 +91,6 @@ public final class LoopToTestParameterTest {
             """
             import com.google.testing.junit.testparameterinjector.TestParameter;
             import com.google.testing.junit.testparameterinjector.TestParameterInjector;
-            import java.util.EnumSet;
             import java.util.concurrent.TimeUnit;
             import org.junit.Test;
             import org.junit.runner.RunWith;
@@ -158,7 +157,7 @@ public final class LoopToTestParameterTest {
   }
 
   @Test
-  public void enumListLoop_noMatch() {
+  public void enumListLoop_refactoring() {
     refactoringHelper
         .addInputLines(
             "TestType.java",
@@ -176,7 +175,23 @@ public final class LoopToTestParameterTest {
               }
             }
             """)
-        .expectUnchanged()
+        .addOutputLines(
+            "TestType.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+            import com.google.testing.junit.testparameterinjector.TestParameterInjector;
+            import java.util.concurrent.TimeUnit;
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+
+            @RunWith(TestParameterInjector.class)
+            public class TestType {
+              @Test
+              public void myTest(@TestParameter({"SECONDS"}) TimeUnit e) {
+                System.out.println(e);
+              }
+            }
+            """)
         .doTest();
   }
 
@@ -346,7 +361,6 @@ public final class LoopToTestParameterTest {
             """
             import com.google.testing.junit.testparameterinjector.TestParameter;
             import com.google.testing.junit.testparameterinjector.TestParameterInjector;
-            import java.util.Arrays;
             import java.util.concurrent.TimeUnit;
             import org.junit.Test;
             import org.junit.runner.RunWith;
@@ -384,7 +398,6 @@ public final class LoopToTestParameterTest {
         .addOutputLines(
             "TestType.java",
             """
-            import com.google.common.collect.ImmutableList;
             import com.google.testing.junit.testparameterinjector.TestParameter;
             import com.google.testing.junit.testparameterinjector.TestParameterInjector;
             import java.util.concurrent.TimeUnit;
@@ -424,7 +437,6 @@ public final class LoopToTestParameterTest {
         .addOutputLines(
             "TestType.java",
             """
-            import com.google.common.collect.ImmutableSet;
             import com.google.testing.junit.testparameterinjector.TestParameter;
             import com.google.testing.junit.testparameterinjector.TestParameterInjector;
             import java.util.concurrent.TimeUnit;
@@ -471,7 +483,6 @@ public final class LoopToTestParameterTest {
             import java.util.concurrent.TimeUnit;
             import org.junit.Test;
             import org.junit.runner.RunWith;
-            import org.junit.runners.JUnit4;
 
             @RunWith(TestParameterInjector.class)
             public class TestType {
@@ -932,6 +943,439 @@ public final class LoopToTestParameterTest {
             public abstract class TestType {
               @Test
               public abstract void myTest();
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void stringArrayLoop_refactoring() {
+    refactoringHelper
+        .addInputLines(
+            "TestType.java",
+            """
+            import org.junit.Test;
+
+            public class TestType {
+              @Test
+              public void compileQuantified_repetitionCounts_compileSingleCopyOfElement() {
+                for (String regex :
+                    new String[] {
+                      "a{0,3}", "a{2,4}", "a{3}", "a{2147483607,}", "((a{3}){3}){3}",
+                    }) {
+                  System.out.println(regex);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "TestType.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+            import com.google.testing.junit.testparameterinjector.TestParameterInjector;
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+
+            @RunWith(TestParameterInjector.class)
+            public class TestType {
+              @Test
+              public void compileQuantified_repetitionCounts_compileSingleCopyOfElement(
+                  @TestParameter({"a{0,3}", "a{2,4}", "a{3}", "a{2147483607,}", "((a{3}){3}){3}"})
+                      String regex) {
+                System.out.println(regex);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void asListStringLoop_refactoring() {
+    refactoringHelper
+        .addInputLines(
+            "TestType.java",
+            """
+            import static java.util.Arrays.asList;
+
+            import org.junit.Test;
+
+            public class TestType {
+              @Test
+              public void myTest() {
+                for (String s : asList("a", "b", "c")) {
+                  System.out.println(s);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "TestType.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+            import com.google.testing.junit.testparameterinjector.TestParameterInjector;
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+
+            @RunWith(TestParameterInjector.class)
+            public class TestType {
+              @Test
+              public void myTest(@TestParameter({"a", "b", "c"}) String s) {
+                System.out.println(s);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void collectionFactoriesLoop_refactoring() {
+    refactoringHelper
+        .addInputLines(
+            "TestType.java",
+            """
+            import static java.util.concurrent.TimeUnit.SECONDS;
+
+            import com.google.common.collect.ImmutableSet;
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+            import java.util.EnumSet;
+            import java.util.List;
+            import java.util.Set;
+            import java.util.concurrent.TimeUnit;
+            import org.junit.Test;
+
+            public class TestType {
+              @Test
+              public void listOfTest() {
+                for (var s : List.of("true", "false")) {
+                  System.out.println(s);
+                }
+              }
+
+              @Test
+              public void setOfTest() {
+                for (int x : Set.of(+1, (-2), -(3))) {
+                  System.out.println(x);
+                }
+              }
+
+              @Test
+              public void immutableSetOfTest() {
+                for (double d : ImmutableSet.of(1.5, -2.5)) {
+                  System.out.println(d);
+                }
+              }
+
+              @Test
+              public void enumSetOfTest() {
+                for (TimeUnit u : EnumSet.of(SECONDS, TimeUnit.MINUTES)) {
+                  System.out.println(u);
+                }
+              }
+
+              @Test
+              public void parenthesizedEnumValuesTest() {
+                for (TimeUnit u : (TimeUnit.values())) {
+                  System.out.println(u);
+                }
+              }
+
+              @Test
+              public void existingParam(@TestParameter int a) {
+                for (int b : List.of(1, 2)) {
+                  System.out.println(a + b);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "TestType.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+            import com.google.testing.junit.testparameterinjector.TestParameterInjector;
+            import java.util.concurrent.TimeUnit;
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+
+            @RunWith(TestParameterInjector.class)
+            public class TestType {
+              @Test
+              public void listOfTest(@TestParameter({"true", "false"}) String s) {
+                System.out.println(s);
+              }
+
+              @Test
+              public void setOfTest(@TestParameter({"1", "-2", "-3"}) int x) {
+                System.out.println(x);
+              }
+
+              @Test
+              public void immutableSetOfTest(@TestParameter({"1.5", "-2.5"}) double d) {
+                System.out.println(d);
+              }
+
+              @Test
+              public void enumSetOfTest(@TestParameter({"SECONDS", "MINUTES"}) TimeUnit u) {
+                System.out.println(u);
+              }
+
+              @Test
+              public void parenthesizedEnumValuesTest(@TestParameter TimeUnit u) {
+                System.out.println(u);
+              }
+
+              @Test
+              public void existingParam(@TestParameter int a, @TestParameter({"1", "2"}) int b) {
+                System.out.println(a + b);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void primitiveArraysAndNullElementsLoop_refactoring() {
+    refactoringHelper
+        .addInputLines(
+            "TestType.java",
+            """
+            import static java.util.Arrays.asList;
+
+            import java.util.concurrent.TimeUnit;
+            import org.junit.Test;
+
+            public class TestType {
+              @Test
+              public void longArrayTest() {
+                for (long l : new long[] {10L, -20L}) {
+                  System.out.println(l);
+                }
+              }
+
+              @Test
+              public void floatArrayTest() {
+                for (float f : new float[] {1.0f, 2.5f}) {
+                  System.out.println(f);
+                }
+              }
+
+              @Test
+              public void booleanArrayTest() {
+                for (boolean b : new boolean[] {true, false}) {
+                  System.out.println(b);
+                }
+              }
+
+              @Test
+              public void boxedBooleanListTest() {
+                for (Boolean b : asList(false, true)) {
+                  System.out.println(b);
+                }
+              }
+
+              @Test
+              public void nullableBooleanTest() {
+                for (Boolean b : asList(true, false, null)) {
+                  System.out.println(b);
+                }
+              }
+
+              @Test
+              public void singleBooleanTest() {
+                for (boolean b : new boolean[] {true}) {
+                  System.out.println(b);
+                }
+              }
+
+              @Test
+              public void enumArrayTest() {
+                for (TimeUnit u : new TimeUnit[] {TimeUnit.SECONDS, TimeUnit.MINUTES}) {
+                  System.out.println(u);
+                }
+              }
+
+              @Test
+              public void nullableElementsTest() {
+                for (String s : asList("a", null)) {
+                  System.out.println(s);
+                }
+              }
+
+              @Test
+              public void nullableEnumTest() {
+                for (TimeUnit u : asList(TimeUnit.SECONDS, null)) {
+                  System.out.println(u);
+                }
+              }
+
+              @Test
+              public void nullableBoxedIntTest() {
+                for (Integer i : asList(1, null)) {
+                  System.out.println(i);
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "TestType.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+            import com.google.testing.junit.testparameterinjector.TestParameterInjector;
+            import java.util.concurrent.TimeUnit;
+            import org.junit.Test;
+            import org.junit.runner.RunWith;
+
+            @RunWith(TestParameterInjector.class)
+            public class TestType {
+              @Test
+              public void longArrayTest(@TestParameter({"10", "-20"}) long l) {
+                System.out.println(l);
+              }
+
+              @Test
+              public void floatArrayTest(@TestParameter({"1.0", "2.5"}) float f) {
+                System.out.println(f);
+              }
+
+              @Test
+              public void booleanArrayTest(@TestParameter boolean b) {
+                System.out.println(b);
+              }
+
+              @Test
+              public void boxedBooleanListTest(@TestParameter Boolean b) {
+                System.out.println(b);
+              }
+
+              @Test
+              public void nullableBooleanTest(@TestParameter({"true", "false", "null"}) Boolean b) {
+                System.out.println(b);
+              }
+
+              @Test
+              public void singleBooleanTest(@TestParameter({"true"}) boolean b) {
+                System.out.println(b);
+              }
+
+              @Test
+              public void enumArrayTest(@TestParameter({"SECONDS", "MINUTES"}) TimeUnit u) {
+                System.out.println(u);
+              }
+
+              @Test
+              public void nullableElementsTest(@TestParameter({"a", "null"}) String s) {
+                System.out.println(s);
+              }
+
+              @Test
+              public void nullableEnumTest(@TestParameter({"SECONDS", "null"}) TimeUnit u) {
+                System.out.println(u);
+              }
+
+              @Test
+              public void nullableBoxedIntTest(@TestParameter({"1", "null"}) Integer i) {
+                System.out.println(i);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unsupportedArrayAndListLoops_noMatch() {
+    refactoringHelper
+        .addInputLines(
+            "TestType.java",
+            """
+            import static java.util.Arrays.asList;
+
+            import com.google.common.collect.ImmutableList;
+            import org.junit.Test;
+
+            public class TestType {
+              private static final String CONST = "foo";
+
+              @Test
+              public void nonLoopSingleStatement() {
+                System.out.println(CONST);
+              }
+
+              @Test
+              public void nullStringLiteral() {
+                for (String s : new String[] {"a", "null"}) {
+                  System.out.println(s);
+                }
+              }
+
+              @Test
+              public void nonLiteralElement() {
+                for (String s : asList(CONST, "bar")) {
+                  System.out.println(s);
+                }
+              }
+
+              @Test
+              public void binaryExpressionElement() {
+                for (int x : asList(1 + 2, 3)) {
+                  System.out.println(x);
+                }
+              }
+
+              @Test
+              public void primitiveWithNullElement() {
+                for (int x : asList(1, null)) {
+                  System.out.println(x);
+                }
+              }
+
+              @Test
+              public void unsupportedPrimitiveArrays() {
+                for (char c : new char[] {'a', 'b'}) {
+                  System.out.println(c);
+                }
+              }
+
+              @Test
+              public void byteArray() {
+                for (byte b : new byte[] {1, 2}) {
+                  System.out.println(b);
+                }
+              }
+
+              @Test
+              public void shortArray() {
+                for (short s : new short[] {1, 2}) {
+                  System.out.println(s);
+                }
+              }
+
+              @Test
+              public void unsupportedVarType() {
+                for (Object o : asList("a", "b")) {
+                  System.out.println(o);
+                }
+              }
+
+              @Test
+              public void emptyList() {
+                for (String s : ImmutableList.<String>of()) {
+                  System.out.println(s);
+                }
+              }
+
+              @Test
+              public void emptyArray() {
+                for (String s : new String[] {}) {
+                  System.out.println(s);
+                }
+              }
+
+              @Test
+              public void uninitializedArray() {
+                for (int x : new int[3]) {
+                  System.out.println(x);
+                }
+              }
             }
             """)
         .expectUnchanged()

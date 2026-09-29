@@ -36,11 +36,15 @@ import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.kindAnyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.toType;
+import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.isEnumConstant;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.sun.source.tree.Tree.Kind.BREAK;
 import static com.sun.source.tree.Tree.Kind.CONTINUE;
 import static com.sun.source.tree.Tree.Kind.RETURN;
@@ -48,6 +52,7 @@ import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -62,13 +67,22 @@ import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.EnhancedForLoopTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
+import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.type.TypeKind;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -101,6 +115,20 @@ public final class LoopToTestParameter extends BugChecker implements ClassTreeMa
           ENUM_VALUES,
           staticMethod().onClass("java.util.EnumSet").named("allOf"),
           toType(MethodInvocationTree.class, WRAPPED_ENUM_VALUES));
+
+  /** Matches common collection factory methods with explicit elements. */
+  private static final Matcher<ExpressionTree> COLLECTION_FACTORY =
+      anyOf(
+          staticMethod().onClass("java.util.Arrays").named("asList"),
+          staticMethod().onClass("java.util.EnumSet").named("of"),
+          staticMethod().onClass("java.util.List").named("of"),
+          staticMethod().onClass("java.util.Set").named("of"),
+          staticMethod().onClass("com.google.common.collect.ImmutableList").named("of"),
+          staticMethod().onClass("com.google.common.collect.ImmutableSet").named("of"));
+
+  private static final ImmutableSet<TypeKind> SUPPORTED_PRIMITIVE_TYPES =
+      Sets.immutableEnumSet(
+          TypeKind.BOOLEAN, TypeKind.INT, TypeKind.LONG, TypeKind.FLOAT, TypeKind.DOUBLE);
 
   // NOTE: don't use JUnitMatchers.TEST_CASE because we don't want to match JUnit3 test methods!
   private static final Matcher<MethodTree> TEST_METHOD = hasAnnotation(JUNIT4_TEST_ANNOTATION);
@@ -192,13 +220,91 @@ public final class LoopToTestParameter extends BugChecker implements ClassTreeMa
     }
 
     StatementTree statement = getOnlyElement(tree.getBody().getStatements());
-    if (statement instanceof EnhancedForLoopTree loopTree
-        && ENUM_VALUES_ITERABLE.matches(loopTree.getExpression(), state)) {
-      // Don't refactor if there's a custom control flow statement inside the loop.
-      if (!CONTAINS_CUSTOM_CONTROL_FLOW.matches(loopTree.getStatement(), state)) {
-        applyFix(tree, loopTree, state, fix);
+    if (!(statement instanceof EnhancedForLoopTree loopTree)) {
+      return;
+    }
+    // Don't refactor if there's a custom control flow statement inside the loop.
+    if (CONTAINS_CUSTOM_CONTROL_FLOW.matches(loopTree.getStatement(), state)) {
+      return;
+    }
+
+    extractTestParameterValues(loopTree, state)
+        .ifPresent(values -> applyFix(tree, loopTree, values, state, fix));
+  }
+
+  /**
+   * Extracts the list of {@code @TestParameter} values from the given loop, returning an empty list
+   * if {@code @TestParameter} can be used without explicit values (e.g., all enum values or {@code
+   * {true, false}} for a boolean), or {@link Optional#empty()} if the loop expression or its
+   * elements cannot be represented as {@code @TestParameter} values.
+   */
+  private static Optional<ImmutableList<String>> extractTestParameterValues(
+      EnhancedForLoopTree loopTree, VisitorState state) {
+    ExpressionTree loopExpr = stripParentheses(loopTree.getExpression());
+    if (ENUM_VALUES_ITERABLE.matches(loopExpr, state)) {
+      return Optional.of(ImmutableList.of());
+    }
+
+    List<? extends ExpressionTree> elements;
+    if (loopExpr instanceof NewArrayTree newArray && newArray.getInitializers() != null) {
+      elements = newArray.getInitializers();
+    } else if (loopExpr instanceof MethodInvocationTree invocation
+        && COLLECTION_FACTORY.matches(invocation, state)) {
+      elements = invocation.getArguments();
+    } else {
+      return Optional.empty();
+    }
+
+    Type varType = getType(loopTree.getVariable());
+    if (elements.isEmpty() || !isSupportedParameterType(varType, state)) {
+      return Optional.empty();
+    }
+
+    ImmutableList.Builder<String> values = ImmutableList.builder();
+    for (ExpressionTree element : elements) {
+      Optional<String> value = extractTestParameterValue(stripParentheses(element), varType);
+      if (value.isEmpty()) {
+        return Optional.empty();
+      }
+      values.add(value.get());
+    }
+    ImmutableList<String> result = values.build();
+    if (state.getTypes().unboxedTypeOrType(varType).getKind() == TypeKind.BOOLEAN
+        && ImmutableSet.copyOf(result).equals(ImmutableSet.of("true", "false"))) {
+      return Optional.of(ImmutableList.of());
+    }
+    return Optional.of(result);
+  }
+
+  private static boolean isSupportedParameterType(Type type, VisitorState state) {
+    return isSameType(type, state.getSymtab().stringType, state)
+        || (type.tsym != null && type.tsym.getKind() == ElementKind.ENUM)
+        || SUPPORTED_PRIMITIVE_TYPES.contains(state.getTypes().unboxedTypeOrType(type).getKind());
+  }
+
+  private static Optional<String> extractTestParameterValue(ExpressionTree element, Type varType) {
+    if (element.getKind() == Kind.NULL_LITERAL) {
+      return varType.isPrimitive() ? Optional.empty() : Optional.of("null");
+    }
+    if (isEnumConstant(element)) {
+      return Optional.of(getSymbol(element).getSimpleName().toString());
+    }
+    if (isSupportedLiteral(element)) {
+      Object value = constValue(element);
+      // TestParameterInjector parses "null" as a null reference, so bail out on literal "null".
+      if (value != null && !value.equals("null")) {
+        return Optional.of(value.toString());
       }
     }
+    return Optional.empty();
+  }
+
+  private static boolean isSupportedLiteral(ExpressionTree tree) {
+    if (tree instanceof UnaryTree unary
+        && (unary.getKind() == Kind.UNARY_MINUS || unary.getKind() == Kind.UNARY_PLUS)) {
+      tree = stripParentheses(unary.getExpression());
+    }
+    return tree instanceof LiteralTree && tree.getKind() != Kind.CHAR_LITERAL;
   }
 
   /**
@@ -206,7 +312,11 @@ public final class LoopToTestParameter extends BugChecker implements ClassTreeMa
    * a method parameter.
    */
   private static void applyFix(
-      MethodTree tree, EnhancedForLoopTree loopTree, VisitorState state, SuggestedFix.Builder fix) {
+      MethodTree tree,
+      EnhancedForLoopTree loopTree,
+      ImmutableList<String> values,
+      VisitorState state,
+      SuggestedFix.Builder fix) {
     // TODO(kak): we currently bail out if the loop contains any comments, but we could collect the
     // comments that would be deleted, and stick them somewhere before or after the fix (so they're
     // preserved even if the positioning is weird).
@@ -240,7 +350,7 @@ public final class LoopToTestParameter extends BugChecker implements ClassTreeMa
       }
     }
     if (leftParen.isPresent() && rightParen.isPresent()) {
-      String newMethodParam = getNewMethodParam(loopTree, state, fix);
+      String newMethodParam = getNewMethodParam(loopTree, values, state, fix);
       if (tree.getParameters().isEmpty()) {
         fix.replace(leftParen.getAsInt() + 1, rightParen.getAsInt(), newMethodParam);
       } else {
@@ -254,11 +364,22 @@ public final class LoopToTestParameter extends BugChecker implements ClassTreeMa
    * including the {@code @TestParameter} annotation.
    */
   private static String getNewMethodParam(
-      EnhancedForLoopTree loopTree, VisitorState state, SuggestedFix.Builder fix) {
+      EnhancedForLoopTree loopTree,
+      ImmutableList<String> values,
+      VisitorState state,
+      SuggestedFix.Builder fix) {
     VariableTree varTree = loopTree.getVariable();
     String varType = SuggestedFixes.qualifyType(state, fix, getType(varTree));
     String varName = varTree.getName().toString();
     String testParameter = SuggestedFixes.qualifyType(state, fix, TEST_PARAMETER_TYPE);
-    return String.format("@%s %s %s", testParameter, varType, varName);
+    if (values.isEmpty()) {
+      return String.format("@%s %s %s", testParameter, varType, varName);
+    }
+    return String.format(
+        "@%s({%s}) %s %s",
+        testParameter,
+        values.stream().map(state::getConstantExpression).collect(joining(", ")),
+        varType,
+        varName);
   }
 }
