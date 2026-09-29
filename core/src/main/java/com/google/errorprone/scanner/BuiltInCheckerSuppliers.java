@@ -379,6 +379,7 @@ import com.google.errorprone.bugpatterns.SelfSet;
 import com.google.errorprone.bugpatterns.SetUnrecognized;
 import com.google.errorprone.bugpatterns.ShortCircuitBoolean;
 import com.google.errorprone.bugpatterns.ShouldHaveEvenArgs;
+import com.google.errorprone.bugpatterns.SimplifyTestParameter;
 import com.google.errorprone.bugpatterns.SizeGreaterThanOrEqualsZero;
 import com.google.errorprone.bugpatterns.StatementSwitchToExpressionSwitch;
 import com.google.errorprone.bugpatterns.StaticAssignmentInConstructor;
@@ -1336,6 +1337,7 @@ public final class BuiltInCheckerSuppliers {
           ReturnMissingNullable.class,
           ReturnsNullCollection.class,
           ScopeOnModule.class,
+          SimplifyTestParameter.class,
           StaticOrDefaultInterfaceMethod.class,
           StaticQualifiedUsingExpression.class,
           StringFormatWithLiteral.class,
