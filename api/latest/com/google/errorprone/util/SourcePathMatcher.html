@@ -92,7 +92,9 @@ file (e.g., <code>java/com/google/foo/Bar.java</code>, <code>java/com/google/foo
 <code>java/com/google/foo/</code>).</li>
 </ul>
 <p>Patterns must be repository-relative and must not start with a leading <code>/</code>. Wildcards (<code>*</code>, <code>?</code>)
-are not supported.</p>
+and regex grouping (<code>(</code>, <code>)</code>) are not supported. Multiple paths can be separated by <code>|</code> (e.g.,
+<code>java/foo/|javatests/foo/</code>), allowing multiple paths to be combined into a single string
+constant.</p>
 </div>
 </div>
 </section>
