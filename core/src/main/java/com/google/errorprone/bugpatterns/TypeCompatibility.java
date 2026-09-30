@@ -16,8 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Iterables.isEmpty;
+import static com.google.common.collect.Streams.concat;
+import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.ProtobufMatchers.DYNAMIC_MESSAGE_TYPE;
 import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_TYPE;
 import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_TYPE;
@@ -27,7 +30,9 @@ import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isCastable;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static java.util.stream.Stream.empty;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -63,11 +68,22 @@ public final class TypeCompatibility {
   private static final String WITHOUT_EQUALS_REASON =
       ". Though these types are the same, the type doesn't implement equals.";
   private final boolean treatBuildersAsIncomparable;
+  private final Supplier<ImmutableSet<Name>> classesWithNonInheritedEquals;
 
   @Inject
   TypeCompatibility(ErrorProneFlags flags) {
     this.treatBuildersAsIncomparable =
         flags.getBoolean("TypeCompatibility:TreatBuildersAsIncomparable").orElse(true);
+    var matchAdditionalTypes = flags.getBoolean("TypeCompatibility:AdditionalTypes").orElse(true);
+    var extraTypes = flags.getSetOrEmpty("TypeCompatibility:ClassesWithNonInheritedEquals");
+    this.classesWithNonInheritedEquals =
+        memoize(
+            state ->
+                concat(
+                        matchAdditionalTypes ? CLASSES_WITH_NON_INHERITED_EQUALS.stream() : empty(),
+                        extraTypes.stream())
+                    .map(state::getName)
+                    .collect(toImmutableSet()));
   }
 
   public TypeCompatibilityReport compatibilityOfTypes(
@@ -168,7 +184,7 @@ public final class TypeCompatibility {
         : TypeCompatibilityReport.compatible();
   }
 
-  private static boolean isFeasiblyCompatible(Type leftType, Type rightType, VisitorState state) {
+  private boolean isFeasiblyCompatible(Type leftType, Type rightType, VisitorState state) {
     // If one type can be cast into the other, they are potentially equal to each other.
     // Note: we do this precisely in this order to allow primitive values to be checked pre-1.7:
     // 1.6: java.lang.Object can't be cast to primitives
@@ -189,15 +205,11 @@ public final class TypeCompatibility {
   }
 
   /**
-   * Returns if the method represents an implementation of {@code equals(Object)} that is not on
-   * {@link Object}, {@link Enum}, or {@link Record}.
-   *
-   * <p>This indicates an {@code equals} method that could specify equality semantics aside from
-   * object identity. Or, in the case of {@link Record}, it indicates an abstract declaration of
-   * {@code equals(Object)}, which specifies no equality semantics that two distinct record types
-   * could share.
+   * Returns {@code true} if the given {@code equals} method represents an implementation of {@code
+   * equals(Object)} that is not on {@link Object}, {@link Enum}, {@link Record}, or other types
+   * whose {@code equals} declaration does not define cross-subtype value equality.
    */
-  private static boolean customEqualsMethod(MethodSymbol methodSymbol, VisitorState state) {
+  private boolean customEqualsMethod(MethodSymbol methodSymbol, VisitorState state) {
     ClassSymbol owningClass = methodSymbol.enclClass();
     return !methodSymbol.isStatic()
         && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
@@ -209,7 +221,8 @@ public final class TypeCompatibility {
                 getOnlyElement(methodSymbol.getParameters()).type, state.getSymtab().objectType)
         && !owningClass.equals(state.getSymtab().objectType.tsym)
         && !owningClass.equals(state.getSymtab().enumSym)
-        && !owningClass.equals(state.getSymtab().recordType.tsym);
+        && !owningClass.equals(state.getSymtab().recordType.tsym)
+        && !classesWithNonInheritedEquals.get(state).contains(owningClass.getQualifiedName());
   }
 
   /**
@@ -397,4 +410,34 @@ public final class TypeCompatibility {
       VisitorState.memoize(state -> state.getName("equals"));
 
   private static final Supplier<Type> JAVA_UTIL_COLLECTION = typeFromString("java.util.Collection");
+
+  private static final ImmutableSet<String> CLASSES_WITH_NON_INHERITED_EQUALS =
+      ImmutableSet.of(
+          "com.google.common.base.Converter",
+          "com.google.common.base.Equivalence",
+          "com.google.common.base.Function",
+          "com.google.common.base.Predicate",
+          "com.google.common.base.Supplier",
+          "com.google.common.flags.Flag",
+          "com.google.common.flogger.MetadataKey",
+          "com.google.common.reflect.AbstractInvocationHandler",
+          "com.sun.tools.javac.code.Type",
+          "java.awt.RenderingHints.Key",
+          "java.lang.ProcessHandle",
+          "java.net.InetAddress",
+          "java.nio.file.Path",
+          "java.security.BasicPermission",
+          "java.security.Permission",
+          "java.security.Principal",
+          "java.text.AttributedCharacterIterator.Attribute",
+          "java.text.Collator",
+          "java.text.DateFormat",
+          "java.text.NumberFormat",
+          "java.time.Clock",
+          "java.time.chrono.ChronoLocalDate",
+          "java.time.chrono.ChronoLocalDateTime",
+          "java.time.chrono.ChronoPeriod",
+          "java.time.chrono.ChronoZonedDateTime",
+          "java.util.Collection",
+          "java.util.Comparator");
 }

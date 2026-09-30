@@ -869,4 +869,468 @@ public class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void additionalTypes_guavaFunctionalAndBaseTypes() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.base.Converter;
+            import com.google.common.base.Equivalence;
+            import com.google.common.base.Function;
+            import com.google.common.base.Predicate;
+            import com.google.common.base.Supplier;
+            import com.google.common.reflect.AbstractInvocationHandler;
+
+            class Test {
+              static class SupplierA implements Supplier<String> {
+                @Override
+                public String get() {
+                  return "";
+                }
+              }
+
+              static class SupplierB implements Supplier<String> {
+                @Override
+                public String get() {
+                  return "";
+                }
+              }
+
+              static class PredicateA implements Predicate<String> {
+                @Override
+                public boolean apply(String input) {
+                  return true;
+                }
+              }
+
+              static class PredicateB implements Predicate<String> {
+                @Override
+                public boolean apply(String input) {
+                  return false;
+                }
+              }
+
+              static class FunctionA implements Function<String, String> {
+                @Override
+                public String apply(String input) {
+                  return input;
+                }
+              }
+
+              static class FunctionB implements Function<String, String> {
+                @Override
+                public String apply(String input) {
+                  return input;
+                }
+              }
+
+              static class ConverterA extends Converter<String, String> {
+                @Override
+                protected String doForward(String s) {
+                  return s;
+                }
+
+                @Override
+                protected String doBackward(String s) {
+                  return s;
+                }
+              }
+
+              static class ConverterB extends Converter<String, String> {
+                @Override
+                protected String doForward(String s) {
+                  return s;
+                }
+
+                @Override
+                protected String doBackward(String s) {
+                  return s;
+                }
+              }
+
+              static class EquivalenceA extends Equivalence<String> {
+                @Override
+                protected boolean doEquivalent(String a, String b) {
+                  return a.equals(b);
+                }
+
+                @Override
+                protected int doHash(String t) {
+                  return t.hashCode();
+                }
+              }
+
+              static class EquivalenceB extends Equivalence<String> {
+                @Override
+                protected boolean doEquivalent(String a, String b) {
+                  return a.equals(b);
+                }
+
+                @Override
+                protected int doHash(String t) {
+                  return t.hashCode();
+                }
+              }
+
+              abstract static class HandlerA extends AbstractInvocationHandler {}
+
+              abstract static class HandlerB extends AbstractInvocationHandler {}
+
+              void test(
+                  SupplierA sa,
+                  SupplierB sb,
+                  Supplier<String> rawSupplier,
+                  PredicateA pa,
+                  PredicateB pb,
+                  FunctionA fa,
+                  FunctionB fb,
+                  ConverterA ca,
+                  ConverterB cb,
+                  EquivalenceA ea,
+                  EquivalenceB eb,
+                  HandlerA ha,
+                  HandlerB hb) {
+                // BUG: Diagnostic contains: incompatible types
+                sa.equals(sb);
+                // BUG: Diagnostic contains: incompatible types
+                pa.equals(pb);
+                // BUG: Diagnostic contains: incompatible types
+                fa.equals(fb);
+                // BUG: Diagnostic contains: incompatible types
+                ca.equals(cb);
+                // BUG: Diagnostic contains: incompatible types
+                ea.equals(eb);
+                // BUG: Diagnostic contains: incompatible types
+                ha.equals(hb);
+
+                // Interface vs concrete implementation remains compatible
+                rawSupplier.equals(sa);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void additionalTypes_collections() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.common.collect.ImmutableSet;
+            import java.util.ArrayDeque;
+            import java.util.ArrayList;
+            import java.util.Deque;
+            import java.util.HashSet;
+            import java.util.LinkedList;
+            import java.util.List;
+
+            class Test {
+              void test(
+                  ArrayList<String> arrayList,
+                  LinkedList<String> linkedList,
+                  HashSet<String> hashSet,
+                  ArrayDeque<String> arrayDeque,
+                  ImmutableList<String> immutableList,
+                  ImmutableSet<String> immutableSet,
+                  Deque<String> deque,
+                  List<String> list) {
+                // BUG: Diagnostic contains: incompatible types
+                arrayList.equals(hashSet);
+                // BUG: Diagnostic contains: incompatible types
+                immutableList.equals(immutableSet);
+                // BUG: Diagnostic contains: incompatible types
+                arrayDeque.equals(arrayList);
+
+                // Compatible collection comparisons
+                arrayList.equals(linkedList);
+                deque.equals(list);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void additionalTypes_jdkInterfacesAndBaseClasses() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.io.FilePermission;
+            import java.net.Inet4Address;
+            import java.net.Inet6Address;
+            import java.nio.file.Path;
+            import java.security.Principal;
+            import java.security.SecurityPermission;
+            import java.text.ChoiceFormat;
+            import java.text.Collator;
+            import java.text.DateFormat;
+            import java.text.DecimalFormat;
+            import java.text.RuleBasedCollator;
+            import java.text.SimpleDateFormat;
+            import java.time.Clock;
+            import java.time.LocalDate;
+            import java.time.chrono.JapaneseDate;
+            import java.util.Comparator;
+
+            @SuppressWarnings("removal")
+            class Test {
+              static class ComparatorA implements Comparator<String> {
+                @Override
+                public int compare(String a, String b) {
+                  return 0;
+                }
+              }
+
+              static class ComparatorB implements Comparator<String> {
+                @Override
+                public int compare(String a, String b) {
+                  return 0;
+                }
+              }
+
+              abstract static class ClockA extends Clock {}
+
+              abstract static class ClockB extends Clock {}
+
+              static class DateFormatA extends DateFormat {
+                @Override
+                public StringBuffer format(
+                    java.util.Date date,
+                    StringBuffer toAppendTo,
+                    java.text.FieldPosition fieldPosition) {
+                  return toAppendTo;
+                }
+
+                @Override
+                public java.util.Date parse(String source, java.text.ParsePosition pos) {
+                  return null;
+                }
+              }
+
+              static class CollatorA extends Collator {
+                @Override
+                public int compare(String source, String target) {
+                  return 0;
+                }
+
+                @Override
+                public java.text.CollationKey getCollationKey(String source) {
+                  return null;
+                }
+
+                @Override
+                public int hashCode() {
+                  return 0;
+                }
+              }
+
+              static class PrincipalA implements Principal {
+                @Override
+                public String getName() {
+                  return "a";
+                }
+              }
+
+              static class PrincipalB implements Principal {
+                @Override
+                public String getName() {
+                  return "b";
+                }
+              }
+
+              abstract static class PathA implements Path {}
+
+              abstract static class PathB implements Path {}
+
+              abstract static class ProcessHandleA implements ProcessHandle {}
+
+              abstract static class ProcessHandleB implements ProcessHandle {}
+
+              void test(
+                  ComparatorA compA,
+                  ComparatorB compB,
+                  ClockA clockA,
+                  ClockB clockB,
+                  LocalDate localDate,
+                  JapaneseDate japaneseDate,
+                  DecimalFormat decimalFormat,
+                  ChoiceFormat choiceFormat,
+                  SimpleDateFormat simpleDateFormat,
+                  DateFormatA dateFormatA,
+                  RuleBasedCollator ruleBasedCollator,
+                  CollatorA collatorA,
+                  Inet4Address inet4Address,
+                  Inet6Address inet6Address,
+                  FilePermission filePermission,
+                  RuntimePermission runtimePermission,
+                  SecurityPermission securityPermission,
+                  PrincipalA principalA,
+                  PrincipalB principalB,
+                  PathA pathA,
+                  PathB pathB,
+                  ProcessHandleA processHandleA,
+                  ProcessHandleB processHandleB) {
+                // BUG: Diagnostic contains: incompatible types
+                compA.equals(compB);
+                // BUG: Diagnostic contains: incompatible types
+                clockA.equals(clockB);
+                // BUG: Diagnostic contains: incompatible types
+                localDate.equals(japaneseDate);
+                // BUG: Diagnostic contains: incompatible types
+                decimalFormat.equals(choiceFormat);
+                // BUG: Diagnostic contains: incompatible types
+                simpleDateFormat.equals(dateFormatA);
+                // BUG: Diagnostic contains: incompatible types
+                ruleBasedCollator.equals(collatorA);
+                // BUG: Diagnostic contains: incompatible types
+                inet4Address.equals(inet6Address);
+                // BUG: Diagnostic contains: incompatible types
+                filePermission.equals(runtimePermission);
+                // BUG: Diagnostic contains: incompatible types
+                runtimePermission.equals(securityPermission);
+                // BUG: Diagnostic contains: incompatible types
+                principalA.equals(principalB);
+                // BUG: Diagnostic contains: incompatible types
+                pathA.equals(pathB);
+                // BUG: Diagnostic contains: incompatible types
+                processHandleA.equals(processHandleB);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void additionalTypes_finalIdentityEquals() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.flogger.MetadataKey;
+            import java.text.AttributedCharacterIterator;
+            import java.text.Format;
+
+            class Test {
+              static class KeyA extends MetadataKey<String> {
+                KeyA() {
+                  super("a", String.class, false);
+                }
+              }
+
+              static class KeyB extends MetadataKey<String> {
+                KeyB() {
+                  super("b", String.class, false);
+                }
+              }
+
+              static class AttrA extends AttributedCharacterIterator.Attribute {
+                AttrA() {
+                  super("a");
+                }
+              }
+
+              void test(
+                  KeyA keyA,
+                  KeyB keyB,
+                  Format.Field formatField,
+                  AttrA attrA) {
+                // BUG: Diagnostic contains: incompatible types
+                keyA.equals(keyB);
+                // BUG: Diagnostic contains: incompatible types
+                formatField.equals(attrA);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void additionalTypes_flagDisabled() {
+    compilationHelper
+        .setArgs("-XepOpt:TypeCompatibility:AdditionalTypes=false")
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.base.Supplier;
+            import java.net.Inet4Address;
+            import java.net.Inet6Address;
+            import java.util.ArrayList;
+            import java.util.HashSet;
+
+            class Test {
+              static class SupplierA implements Supplier<String> {
+                @Override
+                public String get() {
+                  return "";
+                }
+              }
+
+              static class SupplierB implements Supplier<String> {
+                @Override
+                public String get() {
+                  return "";
+                }
+              }
+
+              void test(
+                  SupplierA sa,
+                  SupplierB sb,
+                  ArrayList<String> arrayList,
+                  HashSet<String> hashSet,
+                  Inet4Address inet4Address,
+                  Inet6Address inet6Address) {
+                sa.equals(sb);
+                arrayList.equals(hashSet);
+                inet4Address.equals(inet6Address);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void customClassesWithNonInheritedEqualsFlag() {
+    compilationHelper
+        .setArgs(
+            "-XepOpt:TypeCompatibility:AdditionalTypes=false",
+            "-XepOpt:TypeCompatibility:ClassesWithNonInheritedEquals=Test.BaseInterface,Test.BaseClass")
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              interface BaseInterface {
+                @Override
+                boolean equals(Object o);
+              }
+
+              static class ImplA implements BaseInterface {}
+
+              static class ImplB implements BaseInterface {}
+
+              abstract static class BaseClass {
+                @Override
+                public abstract boolean equals(Object o);
+              }
+
+              abstract static class SubA extends BaseClass {}
+
+              abstract static class SubB extends BaseClass {}
+
+              void test(ImplA implA, ImplB implB, BaseInterface base, SubA subA, SubB subB) {
+                // BUG: Diagnostic contains: incompatible types
+                implA.equals(implB);
+                // BUG: Diagnostic contains: incompatible types
+                subA.equals(subB);
+
+                base.equals(implA);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
