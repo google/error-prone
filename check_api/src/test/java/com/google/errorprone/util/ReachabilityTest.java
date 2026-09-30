@@ -16,10 +16,8 @@
 
 package com.google.errorprone.util;
 
-import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -385,8 +383,7 @@ public class ReachabilityTest {
   /** A labeled block exited by a {@code break} can complete normally (JLS 21 §14.22). */
   @Test
   public void breakExitsLabeledStatement_block() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ true,
             """
             l:
@@ -396,11 +393,8 @@ public class ReachabilityTest {
               }
               return;
             }
-            """);
-    // Reachability ignores the `break`, so the expected diagnostic is missing.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Did not see an error on line");
-    assertThat(e).hasMessageThat().contains("There were no errors.");
+            """)
+        .doTest();
   }
 
   /**
@@ -408,8 +402,7 @@ public class ReachabilityTest {
    */
   @Test
   public void breakExitsLabeledStatement_if() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ true,
             """
             l:
@@ -418,11 +411,8 @@ public class ReachabilityTest {
             } else {
               return;
             }
-            """);
-    // Reachability ignores the `break`, so the expected diagnostic is missing.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Did not see an error on line");
-    assertThat(e).hasMessageThat().contains("There were no errors.");
+            """)
+        .doTest();
   }
 
   /**
@@ -431,8 +421,7 @@ public class ReachabilityTest {
    */
   @Test
   public void breakExitsLabeledStatement_try() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ true,
             """
             l:
@@ -441,11 +430,8 @@ public class ReachabilityTest {
             } catch (RuntimeException e) {
               return;
             }
-            """);
-    // Reachability ignores the `break`, so the expected diagnostic is missing.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Did not see an error on line");
-    assertThat(e).hasMessageThat().contains("There were no errors.");
+            """)
+        .doTest();
   }
 
   /**
@@ -454,19 +440,15 @@ public class ReachabilityTest {
    */
   @Test
   public void breakExitsLabeledStatement_synchronized() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ true,
             """
             l:
             synchronized (this) {
               break l;
             }
-            """);
-    // Reachability ignores the `break`, so the expected diagnostic is missing.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Did not see an error on line");
-    assertThat(e).hasMessageThat().contains("There were no errors.");
+            """)
+        .doTest();
   }
 
   /**
@@ -475,8 +457,7 @@ public class ReachabilityTest {
    */
   @Test
   public void breakExitsLabeledStatement_nestedLabelsOnLoop() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ true,
             """
             outer:
@@ -484,11 +465,8 @@ public class ReachabilityTest {
             while (true) {
               break outer;
             }
-            """);
-    // Reachability ignores the `break`, so the expected diagnostic is missing.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Did not see an error on line");
-    assertThat(e).hasMessageThat().contains("There were no errors.");
+            """)
+        .doTest();
   }
 
   /**
@@ -498,8 +476,7 @@ public class ReachabilityTest {
    */
   @Test
   public void breakExitsLabeledStatement_nestedLabelsOnSwitch() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ true,
             """
             outer:
@@ -508,10 +485,68 @@ public class ReachabilityTest {
               default:
                 break outer;
             }
-            """);
-    // Reachability ignores the `break`, so the expected diagnostic is missing.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Did not see an error on line");
-    assertThat(e).hasMessageThat().contains("There were no errors.");
+            """)
+        .doTest();
+  }
+
+  /**
+   * An unlabeled {@code break} exits only the loop it is in, not the labeled block around it, which
+   * here cannot complete normally.
+   */
+  @Test
+  public void jumpDoesNotExitLabeledStatement_breakOutOfNestedLoop() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            l:
+            {
+              while (true) {
+                if (x == 1) {
+                  break;
+                }
+              }
+              throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * {@code break inner} exits only the inner labeled block, not the outer one, which here cannot
+   * complete normally.
+   */
+  @Test
+  public void jumpDoesNotExitLabeledStatement_breakOutOfInnerLabel() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            outer:
+            {
+              inner:
+              {
+                if (x == 1) {
+                  break inner;
+                }
+              }
+              throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /** {@code continue l} does not exit the labeled loop, which here cannot complete normally. */
+  @Test
+  public void jumpDoesNotExitLabeledStatement_continueOfLabeledLoop() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            l:
+            while (true) {
+              if (x == 1) {
+                continue l;
+              }
+            }
+            """)
+        .doTest();
   }
 }

@@ -181,11 +181,24 @@ public class Reachability {
       return true;
     }
 
+    /*
+     * A labeled statement can complete normally if at least one of the
+     * following is true:
+     *
+     *  1) The contained statement can complete normally.
+     *  2) There is a reachable break statement that exits the labeled
+     *     statement.
+     *
+     * The contained statement is reachable iff the labeled statement is
+     * reachable.
+     */
     @Override
     public Boolean visitLabeledStatement(LabeledStatementTree tree, Void unused) {
-      // break/continue targets have already been resolved by javac, so
-      // there's nothing to do here
-      return scan(tree.getStatement());
+      // (1)
+      boolean completes = scan(tree.getStatement());
+      // (2) `visitBreak` records a `break` against the statement contained in its target (see
+      // `skipLabel`).
+      return completes || breaks.contains(tree.getStatement());
     }
 
     /* An expression statement can complete normally iff it is reachable. */
