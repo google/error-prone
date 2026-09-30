@@ -139,6 +139,13 @@ public class SourcePathMatcherTest {
     assertThrows(
         IllegalArgumentException.class,
         () -> SourcePathMatcher.create("java/com/google/foo/Bar?.java"));
+    // Regex grouping not supported
+    assertThrows(
+        IllegalArgumentException.class,
+        () -> SourcePathMatcher.create("(java|javatests)/com/google/foo/"));
+    // Pipe only / whitespace only
+    assertThrows(IllegalArgumentException.class, () -> SourcePathMatcher.create("|"));
+    assertThrows(IllegalArgumentException.class, () -> SourcePathMatcher.create(" | | "));
     // Path traversal
     assertThrows(
         IllegalArgumentException.class, () -> SourcePathMatcher.create("java/com/../foo/Bar.java"));
@@ -147,6 +154,28 @@ public class SourcePathMatcherTest {
         IllegalArgumentException.class, () -> SourcePathMatcher.create("./java/com/foo/Bar.java"));
     assertThrows(
         IllegalArgumentException.class, () -> SourcePathMatcher.create("java/com/./foo/Bar.java"));
+  }
+
+  @Test
+  public void pipeDelimitedPatterns() {
+    SourcePathMatcher matcher =
+        SourcePathMatcher.create(
+            "java/com/google/foo/|javatests/com/google/foo/|java/com/google/other/Specific.java");
+    assertThat(matcher.matches("java/com/google/foo/Bar.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/foo/bar/Baz.java")).isTrue();
+    assertThat(matcher.matches("javatests/com/google/foo/BarTest.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/other/Specific.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/other/Other.java")).isFalse();
+  }
+
+  @Test
+  public void pipeDelimitedPatterns_withWhitespaceAndLeadingTrailingPipes() {
+    SourcePathMatcher matcher =
+        SourcePathMatcher.create("| java/com/google/foo/ | javatests/com/google/foo/ |");
+    assertThat(matcher.matches("java/com/google/foo/Bar.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/foo/bar/Baz.java")).isTrue();
+    assertThat(matcher.matches("javatests/com/google/foo/BarTest.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/other/Bar.java")).isFalse();
   }
 
   private enum CanonicalizeTestCase {

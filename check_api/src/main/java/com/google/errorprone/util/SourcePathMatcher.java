@@ -19,6 +19,7 @@ package com.google.errorprone.util;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
@@ -40,7 +41,9 @@ import org.jspecify.annotations.Nullable;
 ///   `java/com/google/foo/`).
 ///
 /// Patterns must be repository-relative and must not start with a leading `/`. Wildcards (`*`, `?`)
-/// are not supported.
+/// and regex grouping (`(`, `)`) are not supported. Multiple paths can be separated by `|` (e.g.,
+/// `java/foo/|javatests/foo/`), allowing multiple paths to be combined into a single string
+/// constant.
 public final class SourcePathMatcher {
 
   /// Normalizes a source path by stripping repository workspace roots and build output directories
@@ -124,6 +127,8 @@ public final class SourcePathMatcher {
   private static final SourcePathMatcher EMPTY =
       new SourcePathMatcher(ImmutableSet.of(), ImmutableSortedSet.of());
 
+  private static final Splitter PIPE_SPLITTER = Splitter.on('|').trimResults().omitEmptyStrings();
+
   private final ImmutableSet<String> exactPaths;
   private final ImmutableSortedSet<String> prefixes;
 
@@ -150,7 +155,13 @@ public final class SourcePathMatcher {
     ImmutableList.Builder<String> prefixesBuilder = ImmutableList.builder();
 
     for (String pattern : pathPatterns) {
-      parsePath(pattern, exactBuilder, prefixesBuilder);
+      checkNotNull(pattern, "pattern");
+      checkArgument(!pattern.trim().isEmpty(), "Path pattern must not be empty");
+      ImmutableList<String> parts = ImmutableList.copyOf(PIPE_SPLITTER.split(pattern));
+      checkArgument(!parts.isEmpty(), "Path pattern must not be empty: %s", pattern);
+      for (String part : parts) {
+        parsePath(part, exactBuilder, prefixesBuilder);
+      }
     }
 
     ImmutableSet<String> exact = exactBuilder.build();
@@ -198,6 +209,10 @@ public final class SourcePathMatcher {
     checkArgument(
         !pattern.contains("*") && !pattern.contains("?"),
         "Wildcards are not supported: %s",
+        pattern);
+    checkArgument(
+        !pattern.contains("(") && !pattern.contains(")"),
+        "Regex grouping is not supported; specify each full path separated by '|': %s",
         pattern);
 
     if (pattern.endsWith("/")) {
