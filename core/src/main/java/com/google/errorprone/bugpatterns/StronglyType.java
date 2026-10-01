@@ -20,6 +20,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
@@ -151,6 +152,9 @@ public abstract class StronglyType {
       return NO_MATCH;
     }
     VariableTree variableTree = (VariableTree) variableTreePath.getLeaf();
+    if (hasAnnotation(variableTree, "com.google.inject.testing.fieldbinder.Bind", state)) {
+      return NO_MATCH;
+    }
     ExpressionTree factory = invocationTrees.iterator().next();
     String newName = renameFunction().apply(variableTree.getName().toString());
     SuggestedFix.Builder fix = SuggestedFix.builder();
