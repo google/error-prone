@@ -20,6 +20,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -134,20 +136,26 @@ public class ValueClassIdentity extends BugChecker
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
     Type type = ASTHelpers.getType(tree);
     if (checkSupertypeIdentity(
-        type, REFERENCE_TYPE.get(state), /* alsoCheckSecondTypeArg= */ false, state)) {
+        type, REFERENCE_TYPE.get(state), /* alsoCheckSecondTypeArgExceptBoolean= */ false, state)) {
       return buildDescription(tree)
           .setMessage(
               message("using a value-based class as a referent type in Reference is unsafe."))
           .build();
     }
     if (checkSupertypeIdentity(
-        type, WEAK_HASH_MAP_TYPE.get(state), /* alsoCheckSecondTypeArg= */ false, state)) {
+        type,
+        WEAK_HASH_MAP_TYPE.get(state),
+        /* alsoCheckSecondTypeArgExceptBoolean= */ false,
+        state)) {
       return buildDescription(tree)
           .setMessage(message("using a value-based class key in WeakHashMap is unsafe."))
           .build();
     }
     if (checkSupertypeIdentity(
-        type, IDENTITY_HASH_MAP_TYPE.get(state), /* alsoCheckSecondTypeArg= */ true, state)) {
+        type,
+        IDENTITY_HASH_MAP_TYPE.get(state),
+        /* alsoCheckSecondTypeArgExceptBoolean= */ true,
+        state)) {
       return buildDescription(tree)
           .setMessage(
               message("using a value-based class as a key or value in IdentityHashMap is unsafe."))
@@ -157,7 +165,7 @@ public class ValueClassIdentity extends BugChecker
   }
 
   private static boolean checkSupertypeIdentity(
-      Type type, Type superType, boolean alsoCheckSecondTypeArg, VisitorState state) {
+      Type type, Type superType, boolean alsoCheckSecondTypeArgExceptBoolean, VisitorState state) {
     if (superType == null || !ASTHelpers.isSubtype(type, superType, state)) {
       return false;
     }
@@ -166,7 +174,10 @@ public class ValueClassIdentity extends BugChecker
       return false;
     }
     return isValueClass(typeArgs.get(0), state)
-        || (alsoCheckSecondTypeArg && typeArgs.size() >= 2 && isValueClass(typeArgs.get(1), state));
+        || (alsoCheckSecondTypeArgExceptBoolean
+            && typeArgs.size() >= 2
+            && isValueClass(typeArgs.get(1), state)
+            && !isSameType(typeArgs.get(1), JAVA_LANG_BOOLEAN_TYPE.get(state), state));
   }
 
   @Override

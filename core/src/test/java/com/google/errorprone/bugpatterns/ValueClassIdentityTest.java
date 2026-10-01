@@ -194,6 +194,8 @@ public class ValueClassIdentityTest {
                 new IdentityHashMap<String, Integer>();
                 // BUG: Diagnostic contains: ValueClassIdentity
                 new IdentityHashMap<Optional<String>, String>();
+                // BUG: Diagnostic contains: ValueClassIdentity
+                new IdentityHashMap<Boolean, String>();
               }
             }
             """)
@@ -240,6 +242,7 @@ public class ValueClassIdentityTest {
             class Test {
               void f() {
                 new IdentityHashMap<String, String>();
+                new IdentityHashMap<String, Boolean>();
               }
             }
             """)
