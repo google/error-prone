@@ -17,11 +17,11 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.bugpatterns.threadsafety.HeldLockAnalyzer.INVOKES_LAMBDAS_IMMEDIATELY;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -32,8 +32,10 @@ import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -60,8 +62,12 @@ public class GuardedByChecker extends BugChecker
 
   private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
 
+  private final Matcher<ExpressionTree> invokesLambdasImmediately;
+
   @Inject
-  GuardedByChecker() {}
+  GuardedByChecker(ErrorProneFlags flags) {
+    this.invokesLambdasImmediately = HeldLockAnalyzer.invokesLambdasImmediately(flags);
+  }
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -79,7 +85,7 @@ public class GuardedByChecker extends BugChecker
   public Description matchLambdaExpression(LambdaExpressionTree tree, VisitorState state) {
     var parent = state.getPath().getParentPath().getLeaf();
     if (parent instanceof MethodInvocationTree methodInvocationTree
-        && INVOKES_LAMBDAS_IMMEDIATELY.matches(methodInvocationTree, state)) {
+        && invokesLambdasImmediately.matches(methodInvocationTree, state)) {
       return NO_MATCH;
     }
     analyze(state.withPath(new TreePath(state.getPath(), tree.getBody())));
@@ -90,7 +96,7 @@ public class GuardedByChecker extends BugChecker
   public Description matchMemberReference(MemberReferenceTree tree, VisitorState state) {
     var parent = state.getPath().getParentPath().getLeaf();
     if (parent instanceof MethodInvocationTree methodInvocationTree
-        && INVOKES_LAMBDAS_IMMEDIATELY.matches(methodInvocationTree, state)) {
+        && invokesLambdasImmediately.matches(methodInvocationTree, state)) {
       return NO_MATCH;
     }
     analyze(state);
@@ -101,7 +107,8 @@ public class GuardedByChecker extends BugChecker
     HeldLockAnalyzer.analyze(
         state,
         (tree, guard, live) -> report(checkGuardedAccess(tree, guard, live, state), state),
-        tree -> isSuppressed(tree, state));
+        tree -> isSuppressed(tree, state),
+        invokesLambdasImmediately);
   }
 
   @Override
