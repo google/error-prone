@@ -704,6 +704,11 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (wellKnownKeep.shouldKeep(variableTree)) {
         return;
       }
+      // Skip variables that don't have an explicit source position
+      // (e.g., Lombok-generated fields like @Slf4j's log field).
+      if (!hasExplicitSource(variableTree, state)) {
+        return;
+      }
       switch (symbol.getKind()) {
         case FIELD -> {
           // We are only interested in private fields and those which are not special.
