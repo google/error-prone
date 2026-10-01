@@ -131,6 +131,157 @@ public final class AssignmentExpressionTest {
   }
 
   @Test
+  public void multipleAssignments_parenthesizedInner_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                Object a;
+                Object b;
+                a = (b = new Object());
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void comparedToNull_innerParenthesized_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                Object a;
+                Object b;
+                if ((a = (b = new Object())) != null) {
+                  return;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void initializerWithParenthesizedAssignment_finding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                int j;
+                // BUG: Diagnostic contains:
+                int i = (j = 0);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void deeplyChainedAssignments_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                Object a, b, c;
+                a = (b = (c = new Object()));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void deeplyChainedInitializer_innerFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                int k;
+                int j;
+                // BUG: Diagnostic contains:
+                int i = (j = (k = 0));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void duplicateAssignment_throughParens() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                // BUG: Diagnostic contains:
+                Object a = (a = new Object());
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test() {
+                // BUG: Diagnostic contains:
+                Object a = (new Object());
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void doubleParenthesizedBinaryContext_noFinding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              Object a;
+              Object b;
+
+              void test() {
+                if (((a = b)) != null) {
+                  return;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void returnedParenthesized_finding() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              Object field;
+
+              Object test() {
+                // BUG: Diagnostic contains:
+                return (field = new Object());
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void returnedValue() {
     helper
         .addSourceLines(
