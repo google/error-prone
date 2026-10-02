@@ -87,8 +87,10 @@ injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</d
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><a href="#com.google.errorprone.bugpatterns.overloading">com.google.errorprone.bugpatterns.overloading</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></div>
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.bugpatterns.testparameterinjector">com.google.errorprone.bugpatterns.testparameterinjector</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.bugpatterns.threadsafety">com.google.errorprone.bugpatterns.threadsafety</a></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 <section class="class-uses">
 <ul class="block-list">
@@ -252,58 +254,48 @@ be constants.</div>
 <div class="col-second odd-row-color"><code><a href="../JUnitAmbiguousTestClass.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">JUnitAmbiguousTestClass</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>final class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../LoopToTestParameter.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">LoopToTestParameter</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
-</div>
-<div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../MissingRefasterAnnotation.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MissingRefasterAnnotation</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
-</div>
-<div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../MultiVariableDeclaration.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MultiVariableDeclaration</a></code></div>
+<div class="col-second even-row-color"><code><a href="../MissingRefasterAnnotation.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MissingRefasterAnnotation</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../MustBeClosedChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></code></div>
+<div class="col-second odd-row-color"><code><a href="../MultiVariableDeclaration.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MultiVariableDeclaration</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </div>
-<div class="col-first even-row-color"><code>final class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../NamedLikeContextualKeyword.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NamedLikeContextualKeyword</a></code></div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../MustBeClosedChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</div>
+<div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../NamedLikeContextualKeyword.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NamedLikeContextualKeyword</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Warns on classes or methods being named similarly to contextual keywords, or invoking such
 methods.</div>
 </div>
-<div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../ParametersButNotParameterized.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ParametersButNotParameterized</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../ParametersButNotParameterized.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ParametersButNotParameterized</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Flags uses of parameters in non-parameterized tests.</div>
 </div>
-<div class="col-first even-row-color"><code>final class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../PrivateConstructorForUtilityClass.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">PrivateConstructorForUtilityClass</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../ProtectedMembersInFinalClass.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ProtectedMembersInFinalClass</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../PrivateConstructorForUtilityClass.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">PrivateConstructorForUtilityClass</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../ProtectedMembersInFinalClass.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ProtectedMembersInFinalClass</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Flags protected members in final classes.</div>
 </div>
-<div class="col-first even-row-color"><code>class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../RecordComponentAccessorAnnotationConflict.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">RecordComponentAccessorAnnotationConflict</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">A BugPattern; see the summary.</div>
-</div>
 <div class="col-first odd-row-color"><code>class&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../RecordComponentOverride.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">RecordComponentOverride</a></code></div>
+<div class="col-second odd-row-color"><code><a href="../RecordComponentAccessorAnnotationConflict.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">RecordComponentAccessorAnnotationConflict</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">A BugPattern; see the summary.</div>
 </div>
-<div class="col-first even-row-color"><code>final class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../TestParametersNotInitialized.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TestParametersNotInitialized</a></code></div>
+<div class="col-first even-row-color"><code>class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../RecordComponentOverride.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">RecordComponentOverride</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Flags uses of parameters in non-parameterized tests.</div>
+<div class="block">A BugPattern; see the summary.</div>
 </div>
 <div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
 <div class="col-second odd-row-color"><code><a href="../TheoryButNoTheories.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">TheoryButNoTheories</a></code></div>
@@ -565,6 +557,27 @@ class, and the annotation is itself annotated with <code>@ScopeAnnotation</code>
 <div class="col-second even-row-color"><code><a href="../overloading/InconsistentOverloads.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.overloading">InconsistentOverloads</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a> that detects inconsistently overloaded methods in Java classes.</div>
+</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.bugpatterns.testparameterinjector">
+<h2>Uses of <a href="../BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a> in <a href="../testparameterinjector/package-summary.html">com.google.errorprone.bugpatterns.testparameterinjector</a></h2>
+<div class="caption"><span>Classes in <a href="../testparameterinjector/package-summary.html">com.google.errorprone.bugpatterns.testparameterinjector</a> that implement <a href="../BugChecker.ClassTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.ClassTreeMatcher</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../testparameterinjector/LoopToTestParameter.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.testparameterinjector">LoopToTestParameter</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">A <a href="../BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</div>
+<div class="col-first odd-row-color"><code>final class&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../testparameterinjector/TestParametersNotInitialized.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.testparameterinjector">TestParametersNotInitialized</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Flags uses of parameters in non-parameterized tests.</div>
 </div>
 </div>
 </section>
