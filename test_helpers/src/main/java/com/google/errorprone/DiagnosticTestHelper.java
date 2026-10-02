@@ -16,7 +16,6 @@
 
 package com.google.errorprone;
 
-import static com.google.common.truth.Truth.assertWithMessage;
 import static java.util.Locale.ENGLISH;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.fail;
@@ -216,14 +215,30 @@ public class DiagnosticTestHelper {
   /**
    * Asserts that the diagnostics contain a diagnostic on each line of the source file that matches
    * our bug marker pattern. Parses the bug marker pattern for the specific string to look for in
-   * the diagnostic.
+   * the diagnostic. The failure message names every line that fails, each with the first
+   * expectation it fails.
    *
    * @param source File in which to find matching lines
    */
   public void assertHasDiagnosticOnAllMatchingLines(
       JavaFileObject source, LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic)
       throws IOException {
+    ImmutableList<String> mismatches = findMismatchedLines(source, lookForCheckNameInDiagnostic);
+    if (!mismatches.isEmpty()) {
+      fail(describeMismatches(mismatches));
+    }
+  }
+
+  /**
+   * Returns one message for each line of {@code source} that fails, in source order, naming the
+   * first expectation the line fails: a marker whose key has no expected message, a marked line
+   * without a matching diagnostic, or an unmarked line with a diagnostic.
+   */
+  ImmutableList<String> findMismatchedLines(
+      JavaFileObject source, LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic)
+      throws IOException {
     List<Diagnostic<? extends JavaFileObject>> diagnostics = getDiagnostics();
+    ImmutableList.Builder<String> mismatches = ImmutableList.builder();
     LineNumberReader reader =
         new LineNumberReader(CharSource.wrap(source.getCharContent(false)).openStream());
     do {
@@ -233,6 +248,8 @@ public class DiagnosticTestHelper {
       }
 
       List<Predicate<? super String>> predicates = null;
+      // The first expectation this line fails, so that each line gets at most one message.
+      String mismatch = null;
       if (line.contains(BUG_MARKER_COMMENT_INLINE)) {
         // Diagnostic must contain all patterns from the bug marker comment.
         List<String> patterns = extractPatterns(line, reader, BUG_MARKER_COMMENT_INLINE);
@@ -245,12 +262,14 @@ public class DiagnosticTestHelper {
         List<String> lookupKeys = extractPatterns(line, reader, BUG_MARKER_COMMENT_LOOKUP);
         predicates = new ArrayList<>(lookupKeys.size());
         for (String lookupKey : lookupKeys) {
-          assertWithMessage(
-                  "No expected error message with key [%s] as expected from line [%s] "
-                      + "with diagnostic [%s]",
-                  lookupKey, markerLineNumber, line.trim())
-              .that(expectedErrorMsgs.containsKey(lookupKey))
-              .isTrue();
+          if (!expectedErrorMsgs.containsKey(lookupKey)) {
+            mismatch =
+                String.format(
+                    "No expected error message with key [%s] as expected from line [%s] "
+                        + "with diagnostic [%s]",
+                    lookupKey, markerLineNumber, line.trim());
+            break;
+          }
           predicates.add(expectedErrorMsgs.get(lookupKey));
           usedLookupKeys.add(lookupKey);
         }
@@ -261,24 +280,26 @@ public class DiagnosticTestHelper {
         for (Predicate<? super String> predicate : predicates) {
           Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> patternMatcher =
               hasItem(diagnosticOnLine(source.toUri(), lineNumber, predicate));
-          assertWithMessage(
-                  "Did not see an error on line %s matching %s. %s",
-                  lineNumber, predicate, allErrors(diagnostics))
-              .that(patternMatcher.matches(diagnostics))
-              .isTrue();
+          if (mismatch == null && !patternMatcher.matches(diagnostics)) {
+            mismatch =
+                String.format(
+                    "Did not see an error on line %s matching %s.", lineNumber, predicate);
+          }
         }
 
-        if (checkName != null && lookForCheckNameInDiagnostic == LookForCheckNameInDiagnostic.YES) {
+        if (mismatch == null
+            && checkName != null
+            && lookForCheckNameInDiagnostic == LookForCheckNameInDiagnostic.YES) {
           // Diagnostic must contain check name.
           Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> checkNameMatcher =
               hasItem(
                   diagnosticOnLine(
                       source.toUri(), lineNumber, new SimpleStringContains("[" + checkName + "]")));
-          assertWithMessage(
-                  "Did not see an error on line %s containing [%s]. %s",
-                  lineNumber, checkName, allErrors(diagnostics))
-              .that(checkNameMatcher.matches(diagnostics))
-              .isTrue();
+          if (!checkNameMatcher.matches(diagnostics)) {
+            mismatch =
+                String.format(
+                    "Did not see an error on line %s containing [%s].", lineNumber, checkName);
+          }
         }
 
       } else {
@@ -286,11 +307,23 @@ public class DiagnosticTestHelper {
         Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
             hasItem(diagnosticOnLine(source.toUri(), lineNumber));
         if (matcher.matches(diagnostics)) {
-          fail("Saw unexpected error on line " + lineNumber + ". " + allErrors(diagnostics));
+          mismatch = "Saw unexpected error on line " + lineNumber + ".";
         }
+      }
+      if (mismatch != null) {
+        mismatches.add(mismatch);
       }
     } while (true);
     reader.close();
+    return mismatches.build();
+  }
+
+  /**
+   * Returns a failure message with each of {@code mismatches} on its own line, followed by every
+   * diagnostic the compilation reported.
+   */
+  String describeMismatches(List<String> mismatches) {
+    return String.join("\n", mismatches) + "\n" + allErrors(getDiagnostics());
   }
 
   private static String allErrors(List<Diagnostic<? extends JavaFileObject>> diagnostics) {
