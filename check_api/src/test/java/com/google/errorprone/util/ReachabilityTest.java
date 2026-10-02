@@ -56,6 +56,9 @@ public class ReachabilityTest {
    * Returns a test that {@link Reachability} and javac agree on whether {@code statement} can
    * complete normally. {@code expected} is the ground truth of whether the {@code statement} can
    * complete normally.
+   *
+   * <p>The {@code statement} may use (but doesn't need to use) the parameters {@code x}, {@code o},
+   * {@code shape}, {@code paint} and {@code color}, of the types declared in the generated source.
    */
   private CompilationTestHelper canCompleteNormallyTest(boolean expected, String statement) {
     return CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
@@ -63,7 +66,23 @@ public class ReachabilityTest {
             "in/Test.java",
             """
             class Test {
-              void f(int x) {
+              sealed interface Shape {}
+
+              record Circle() implements Shape {}
+
+              record Square() implements Shape {}
+
+              record Triangle() implements Shape {}
+
+              sealed interface Paint {}
+
+              enum Color implements Paint {
+                RED,
+                GREEN,
+                BLUE
+              }
+
+              void f(int x, Object o, Shape shape, Paint paint, Color color) {
                 switch (x) {
                   case 1:
             %s
@@ -73,7 +92,7 @@ public class ReachabilityTest {
                 }
               }
 
-              %s javacAgrees(int x) {
+              %s javacAgrees(int x, Object o, Shape shape, Paint paint, Color color) {
             %s
                 %s
               }
@@ -763,6 +782,326 @@ public class ReachabilityTest {
               } finally {
                 throw new AssertionError();
               }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void breakOutOfEnclosingLoop_switchWithoutDefault() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    while (true) {
+                      switch (x) {
+                        case 1:
+                          break l;
+                      }
+                    }
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void breakOutOfEnclosingLoop_arrowSwitchShortCircuits() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    while (true) {
+                      switch (x) {
+                        case 1 -> {}
+                        case 2 -> {}
+                        default -> {
+                          break l;
+                        }
+                      }
+                    }
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void breakOutOfEnclosingLoop_arrowSwitchBreakInFirstCase() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    while (true) {
+                      switch (x) {
+                        default -> {
+                          break l;
+                        }
+                        case 1 -> {}
+                        case 2 -> {}
+                      }
+                    }
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void breakOutOfEnclosingLoop_arrowSwitchWithoutDefault() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    while (true) {
+                      switch (x) {
+                        case 1 -> {
+                          break l;
+                        }
+                      }
+                    }
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void continueEnclosingDoLoop_switchWithoutDefault() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    do {
+                      switch (x) {
+                        case 1:
+                          continue l;
+                      }
+                      return;
+                    } while (false);
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code switch} over a sealed interface, with a pattern for each permitted subclass and no
+   * {@code default}, is enhanced, so it cannot complete normally when every case throws.
+   */
+  @Test
+  public void enhancedSwitchWithoutDefault_sealedPatterns() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            switch (shape) {
+              case Circle c -> throw new AssertionError();
+              case Square s -> throw new AssertionError();
+              case Triangle t -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /** Like {@link #enhancedSwitchWithoutDefault_sealedPatterns}, but with old-style colon switch. */
+  @Test
+  public void enhancedSwitchWithoutDefault_sealedPatternsInStatementGroups() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            switch (shape) {
+              case Circle c:
+                throw new AssertionError();
+              case Square s:
+                throw new AssertionError();
+              case Triangle t:
+                throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code switch} over an enum with a {@code case null} is enhanced, so without a {@code
+   * default} it cannot complete normally when every case throws (§14.22).
+   */
+  @Test
+  public void enhancedSwitchWithoutDefault_nullLabel() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            switch (color) {
+              case RED -> throw new AssertionError();
+              case GREEN, BLUE -> throw new AssertionError();
+              case null -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * An unconditional pattern is similar to but not the same as a {@code default}: a {@code switch}
+   * with patterns is enhanced, so it cannot complete normally when every case throws.
+   */
+  @Test
+  public void enhancedSwitchWithoutDefault_unconditionalPattern() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            switch (o) {
+              case String s -> throw new AssertionError();
+              case Integer i -> throw new AssertionError();
+              case Object other -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code switch} over a sealed interface is enhanced (JLS 21 §14.11.2) even if its only labels
+   * are constants of an enum that implements the interface, so it cannot complete normally when
+   * every case throws (§14.22).
+   */
+  @Test
+  public void enhancedSwitchWithoutDefault_enumConstantsOfSealedInterface() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            switch (paint) {
+              case Color.RED -> throw new AssertionError();
+              case Color.GREEN -> throw new AssertionError();
+              case Color.BLUE -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code switch} over an enum with only constant labels is not enhanced (JLS 21 §14.11.2), so
+   * without a {@code default} it can complete normally, even though it names every constant and
+   * every case throws (§14.22).
+   */
+  @Test
+  public void notEnhancedSwitchWithoutDefault_enum() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            switch (color) {
+              case RED -> throw new AssertionError();
+              case GREEN -> throw new AssertionError();
+              case BLUE -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code switch} with only constant labels is not enhanced if the type of the selector
+   * expression is in a designated set of types. So without a {@code default} it can complete
+   * normally even though every case throws.
+   */
+  @Test
+  public void notEnhancedSwitchWithoutDefault_selectorType(
+      @TestParameter({
+            "(char) x",
+            "(byte) x",
+            "(short) x",
+            "x",
+            "(Character) (char) x",
+            "(Byte) (byte) x",
+            "(Short) (short) x",
+            "(Integer) x"
+          })
+          String selector) {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            switch (%s) {
+              case 1 -> throw new AssertionError();
+              case 2 -> throw new AssertionError();
+              case 3 -> throw new AssertionError();
+            }
+            """
+                .formatted(selector))
+        .doTest();
+  }
+
+  /** Similar to {@link #notEnhancedSwitchWithoutDefault_selectorType}, but with {@code String}. */
+  @Test
+  public void notEnhancedSwitchWithoutDefault_string() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            switch (String.valueOf(x)) {
+              case "1" -> throw new AssertionError();
+              case "2" -> throw new AssertionError();
+              case "3" -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * An enhanced {@code switch} without a {@code default} can still complete normally if a {@code
+   * break} exits it.
+   */
+  @Test
+  public void enhancedSwitchWithoutDefault_breakExitsSwitch() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            switch (shape) {
+              case Circle c:
+                break;
+              case Square s:
+                throw new AssertionError();
+              case Triangle t:
+                throw new AssertionError();
             }
             """)
         .doTest();
