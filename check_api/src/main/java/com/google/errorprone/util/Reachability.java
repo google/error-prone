@@ -19,10 +19,12 @@ package com.google.errorprone.util;
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.source.tree.AssertTree;
 import com.sun.source.tree.BlockTree;
@@ -31,6 +33,7 @@ import com.sun.source.tree.CaseTree;
 import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.source.tree.ConstantCaseLabelTree;
 import com.sun.source.tree.ContinueTree;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.EmptyStatementTree;
@@ -41,6 +44,7 @@ import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
@@ -53,14 +57,25 @@ import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.tree.YieldTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import javax.lang.model.element.ElementKind;
 
 /** An implementation of JLS 14.21 reachability. */
 public class Reachability {
+
+  /** Designated classes that are involved in determining when a switch statement is enhanced. */
+  private static final ImmutableSet<String> ENHANCED_SWITCH_CLASSES =
+      ImmutableSet.of(
+          Character.class.getName(),
+          Byte.class.getName(),
+          Short.class.getName(),
+          Integer.class.getName(),
+          String.class.getName());
 
   /**
    * Returns true if the given statement can complete normally, as defined by JLS 14.21.
@@ -251,7 +266,8 @@ public class Reachability {
      * A non-arrow switch statement can complete normally iff at least one of the
      * following is true:
      *
-     *  1) The switch block does not contain a default label.
+     *  1) The switch statement is not enhanced and its switch block
+     *     does not contain a default label.
      *  2) The switch block is empty or contains only switch labels.
      *  3) The last statement in the switch block can complete normally.
      *  4) There is at least one switch label after the last switch block
@@ -270,13 +286,9 @@ public class Reachability {
      */
     @Override
     public Boolean visitSwitch(SwitchTree tree, Void unused) {
-      // (1)
-      if (tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
-        return true;
-      }
       // A switch statement whose switch block consists of switch rules can complete normally iff at
       // least one of the following is true:
-      //   (1 above) The switch statement is not enhanced (§14.11.2) and its switch block does not
+      //   (1) The switch statement is not enhanced (§14.11.2) and its switch block does not
       // contain a default label.
       //   (2) One of the switch rules introduces a switch rule expression (which is necessarily a
       // statement expression).
@@ -284,8 +296,16 @@ public class Reachability {
       //   (4) One of the switch rules introduces a switch rule block that contains a reachable
       // break statement which exits the switch statement.
       if (tree.getCases().stream().anyMatch(c -> c.getCaseKind().equals(CaseKind.RULE))) {
+        boolean anyCompletes = false;
+        for (CaseTree c : tree.getCases()) {
+          anyCompletes |= scan(c.getBody());
+        }
+        // (1)
+        if (!isEnhanced(tree) && tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
+          return true;
+        }
         // (2) and (3)
-        if (tree.getCases().stream().anyMatch(c -> scan(c.getBody()))) {
+        if (anyCompletes) {
           return true;
         }
         // (4)
@@ -294,21 +314,26 @@ public class Reachability {
         }
         return false;
       }
+
       // Past this point, we know each case is a statement.
+      boolean lastCompletes = true;
+      for (CaseTree c : tree.getCases()) {
+        lastCompletes = scan(c.getStatements());
+      }
+      // (1)
+      if (!isEnhanced(tree) && tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
+        return true;
+      }
       // (2)
       if (tree.getCases().stream().allMatch(c -> c.getStatements().isEmpty())) {
         return true;
       }
       // (3)
-      boolean lastCompletes = true;
-      for (CaseTree c : tree.getCases()) {
-        lastCompletes = scan(c.getStatements());
-      }
       if (lastCompletes) {
         return true;
       }
       // (4)
-      if (getLast(tree.getCases()).getStatements().isEmpty()) {
+      if (!tree.getCases().isEmpty() && getLast(tree.getCases()).getStatements().isEmpty()) {
         return true;
       }
       // (5)
@@ -316,6 +341,37 @@ public class Reachability {
         return true;
       }
       return false;
+    }
+
+    /**
+     * Returns whether the switch statement is enhanced: either (i) the type of its selector
+     * expression is not in a designated set of types, or an enum type, or (ii) there is a case
+     * pattern or {@code case null}.
+     */
+    private static boolean isEnhanced(SwitchTree tree) {
+      // (i)
+      Type type = getType(tree.getExpression());
+      boolean isListedType =
+          switch (type.getKind()) {
+            case CHAR, BYTE, SHORT, INT -> true;
+            case DECLARED ->
+                type.asElement().getKind() == ElementKind.ENUM
+                    || ENHANCED_SWITCH_CLASSES.contains(
+                        type.asElement().getQualifiedName().toString());
+            default -> false;
+          };
+      if (!isListedType) {
+        return true;
+      }
+      // (ii)
+      return tree.getCases().stream()
+          .flatMap(c -> c.getLabels().stream())
+          .anyMatch(
+              label ->
+                  label instanceof PatternCaseLabelTree
+                      || (label instanceof ConstantCaseLabelTree constantLabel
+                          && constantLabel.getConstantExpression().getKind()
+                              == Tree.Kind.NULL_LITERAL));
     }
 
     /*
