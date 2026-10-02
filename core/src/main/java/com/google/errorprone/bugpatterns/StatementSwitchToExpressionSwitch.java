@@ -21,15 +21,24 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.SwitchUtils.KINDS_RETURN_OR_THROW;
+import static com.google.errorprone.bugpatterns.SwitchUtils.REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION;
+import static com.google.errorprone.bugpatterns.SwitchUtils.analyzeCaseForNullAndDefault;
+import static com.google.errorprone.bugpatterns.SwitchUtils.findCombinableVariableTree;
+import static com.google.errorprone.bugpatterns.SwitchUtils.getPrecedingStatementsInBlock;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getReferencedLocalVariablesInTree;
-import static com.google.errorprone.bugpatterns.SwitchUtils.noReadsOfVariable;
+import static com.google.errorprone.bugpatterns.SwitchUtils.isCompatibleWithFirstAssignment;
+import static com.google.errorprone.bugpatterns.SwitchUtils.isSwitchCoveringAllEnumValues;
+import static com.google.errorprone.bugpatterns.SwitchUtils.printCaseExpressionsOrPatternAndGuard;
+import static com.google.errorprone.bugpatterns.SwitchUtils.renderNullDefaultKindPrefix;
+import static com.google.errorprone.bugpatterns.SwitchUtils.renderVariableTreeAnnotations;
+import static com.google.errorprone.bugpatterns.SwitchUtils.renderVariableTreeComments;
+import static com.google.errorprone.bugpatterns.SwitchUtils.renderVariableTreeFlags;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
-import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
-import static com.sun.source.tree.Tree.Kind.RETURN;
 import static com.sun.source.tree.Tree.Kind.THROW;
 import static java.util.stream.Collectors.joining;
 
@@ -40,17 +49,16 @@ import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
+import com.google.errorprone.bugpatterns.SwitchUtils.CaseQualifications;
+import com.google.errorprone.bugpatterns.SwitchUtils.NullDefaultKind;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
-import com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.Reachability;
@@ -63,7 +71,6 @@ import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LabeledStatementTree;
-import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.SwitchTree;
@@ -72,16 +79,11 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.tree.JCTree.JCAssign;
-import com.sun.tools.javac.tree.JCTree.JCAssignOp;
-import com.sun.tools.javac.tree.Pretty;
 import java.io.BufferedReader;
 import java.io.CharArrayReader;
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -93,7 +95,6 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import javax.inject.Inject;
-import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.IntersectionType;
 import org.jspecify.annotations.Nullable;
 
@@ -107,7 +108,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   // it's either an ExpressionStatement or a Throw.  Refer to JLS 14 §14.11.1
   private static final ImmutableSet<Kind> KINDS_CONVERTIBLE_WITHOUT_BRACES =
       ImmutableSet.of(THROW, EXPRESSION_STATEMENT);
-  private static final ImmutableSet<Kind> KINDS_RETURN_OR_THROW = ImmutableSet.of(THROW, RETURN);
   private static final Pattern FALL_THROUGH_PATTERN =
       Pattern.compile("\\bfalls?.?(through|out)\\b", Pattern.CASE_INSENSITIVE);
 
@@ -134,12 +134,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
           ImmutableBiMap.of(),
           /* mustSurroundWithBraces= */ false);
 
-  private static final String EQUALS_STRING = "=";
-  private static final Matcher<ExpressionTree> COMPILE_TIME_CONSTANT_MATCHER =
-      CompileTimeConstantExpressionMatcher.instance();
-  private static final String REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION =
-      "Remove default case because all enum values handled";
-
   /**
    * Tri-state to represent the fall-thru control flow of a particular case of a particular
    * statement switch
@@ -148,30 +142,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     DEFINITELY_DOES_NOT_FALL_THRU,
     MAYBE_FALLS_THRU,
     DEFINITELY_DOES_FALL_THRU
-  }
-
-  /**
-   * Tri-state to represent whether cases within a single switch statement meet an (unspecified)
-   * qualification predicate
-   */
-  enum CaseQualifications {
-    NO_CASES_ASSESSED,
-    ALL_CASES_QUALIFY,
-    SOME_OR_ALL_CASES_DONT_QUALIFY
-  }
-
-  /**
-   * The kind of null/default cases included within a single CaseTree.
-   *
-   * <p>This enum is used to classify whether a CaseTree includes a null and/or default. Referencing
-   * JLS 21 §14.11.1, the `SwitchLabel:` production has specific rules applicable to null/default
-   * cases: `case null, [default]` and `default`. All other scenarios are lumped into KIND_NEITHER.
-   */
-  enum NullDefaultKind {
-    KIND_NULL_AND_DEFAULT,
-    KIND_DEFAULT,
-    KIND_NULL,
-    KIND_NEITHER
   }
 
   private final boolean enableDirectConversion;
@@ -460,7 +430,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
             hasDefaultCase, handledEnumValues, ASTHelpers.getType(switchTree.getExpression()));
     boolean canRemoveDefault =
         hasDefaultCase
-            && isSwitchExhaustiveWithoutDefault(
+            && isSwitchCoveringAllEnumValues(
                 handledEnumValues, ASTHelpers.getType(switchTree.getExpression()));
 
     boolean canConvertToReturnSwitch =
@@ -516,37 +486,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
             assignmentSwitchAnalysisState.assignmentExpressionKindOptional(),
             assignmentSwitchAnalysisState
                 .assignmentTreeOptional()
-                .map(StatementSwitchToExpressionSwitch::renderJavaSourceOfAssignment)),
+                .map(SwitchUtils::renderJavaSourceOfAssignment)),
         ImmutableList.copyOf(groupedWithNextCase),
         ImmutableBiMap.copyOf(symbolsToHoist),
         mustSurroundWithBraces);
-  }
-
-  private static Optional<VariableTree> findCombinableVariableTree(
-      ExpressionTree assignmentTarget,
-      ImmutableList<StatementTree> precedingStatements,
-      VisitorState state) {
-    // Don't try to combine when multiple variables are declared together
-    if (precedingStatements.isEmpty()
-        || !precedingTwoStatementsNotInSameVariableDeclaratorList(precedingStatements)) {
-      return Optional.empty();
-    }
-    if (!(getLast(precedingStatements) instanceof VariableTree variableTree)) {
-      return Optional.empty();
-    }
-    if (variableTree.getInitializer() != null
-        && !COMPILE_TIME_CONSTANT_MATCHER.matches(variableTree.getInitializer(), state)) {
-      return Optional.empty();
-    }
-    // If we are reading the initialized value in the switch block, we can't remove it
-    if (!noReadsOfVariable(ASTHelpers.getSymbol(variableTree), state)) {
-      return Optional.empty();
-    }
-    // The variable and the switch's assignment must be compatible
-    if (!isVariableCompatibleWithAssignment(assignmentTarget, variableTree)) {
-      return Optional.empty();
-    }
-    return Optional.of(variableTree);
   }
 
   /**
@@ -628,37 +571,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
 
     return false;
-  }
-
-  /**
-   * Renders the Java source code for a [compound] assignment operator. The parameter must be either
-   * an {@code AssignmentTree} or a {@code CompoundAssignmentTree}.
-   */
-  private static String renderJavaSourceOfAssignment(ExpressionTree tree) {
-    // Simple assignment tree?
-    if (tree instanceof JCAssign) {
-      return EQUALS_STRING;
-    }
-
-    // Invariant: must be a compound assignment tree
-    JCAssignOp jcAssignOp = (JCAssignOp) tree;
-    Pretty pretty = new Pretty(new StringWriter(), /* sourceOutput= */ true);
-    return pretty.operatorName(jcAssignOp.getTag().noAssignOp()) + EQUALS_STRING;
-  }
-
-  /**
-   * Renders the Java source prefix needed for the supplied {@code nullDefaultKind}, incorporating
-   * whether the `default` case should be removed.
-   */
-  private static String renderNullDefaultKindPrefix(
-      NullDefaultKind nullDefaultKind, boolean removeDefault) {
-
-    return switch (nullDefaultKind) {
-      case KIND_NULL_AND_DEFAULT -> removeDefault ? "case null" : "case null, default";
-      case KIND_NULL -> "case null";
-      case KIND_DEFAULT -> removeDefault ? "" : "default";
-      case KIND_NEITHER -> "case ";
-    };
   }
 
   /**
@@ -815,41 +727,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   }
 
   /**
-   * In a switch with multiple assignments, determine whether a subsequent assignment target is
-   * compatible with the first assignment target.
-   */
-  private static boolean isCompatibleWithFirstAssignment(
-      Optional<ExpressionTree> assignmentTargetOptional,
-      Optional<ExpressionTree> caseAssignmentTargetOptional) {
-
-    if (assignmentTargetOptional.isEmpty() || caseAssignmentTargetOptional.isEmpty()) {
-      return false;
-    }
-
-    Symbol assignmentTargetSymbol = getSymbol(assignmentTargetOptional.get());
-    // For non-symbol assignment targets, multiple assignments are not currently supported
-    if (assignmentTargetSymbol == null) {
-      return false;
-    }
-
-    Symbol caseAssignmentTargetSymbol = getSymbol(caseAssignmentTargetOptional.get());
-    return Objects.equals(assignmentTargetSymbol, caseAssignmentTargetSymbol);
-  }
-
-  /**
-   * Determines whether a variable definition is compatible with an assignment target (e.g. of a
-   * switch statement). Compatibility means that the assignment is being made to to the same
-   * variable that is being defined.
-   */
-  private static boolean isVariableCompatibleWithAssignment(
-      ExpressionTree assignmentTarget, VariableTree variableDefinition) {
-    Symbol assignmentTargetSymbol = getSymbol(assignmentTarget);
-    Symbol definedSymbol = ASTHelpers.getSymbol(variableDefinition);
-
-    return Objects.equals(assignmentTargetSymbol, definedSymbol);
-  }
-
-  /**
    * Determines whether the supplied case's {@code statements} are capable of being mapped to an
    * equivalent expression switch case (without repeating code), returning {@code true} if so.
    * Detection is based on an ad-hoc algorithm that is not guaranteed to detect every convertible
@@ -871,45 +748,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     // statements.  If the last statement cannot complete normally, then the block cannot, and thus
     // the block cannot fall-thru
     return !Reachability.canCompleteNormally(getLast(statements));
-  }
-
-  /**
-   * Renders all comments of the supplied {@code variableTree} into a list of Strings, in code
-   * order.
-   */
-  private static ImmutableList<String> renderVariableTreeComments(
-      VariableTree variableTree, VisitorState state) {
-    return state.getTokensForNode(variableTree).stream()
-        .flatMap(errorProneToken -> errorProneToken.comments().stream())
-        .filter(comment -> !comment.getText().isEmpty())
-        .map(ErrorProneComment::getText)
-        .collect(toImmutableList());
-  }
-
-  /**
-   * Renders all annotations of the supplied {@code variableTree} into a list of Strings, in code
-   * order.
-   */
-  private static ImmutableList<String> renderVariableTreeAnnotations(
-      VariableTree variableTree, VisitorState state) {
-    return variableTree.getModifiers().getAnnotations().stream()
-        .map(state::getSourceForNode)
-        .collect(toImmutableList());
-  }
-
-  /**
-   * Renders the flags of the supplied variable declaration, such as "final", into a single
-   * space-separated String.
-   */
-  private static String renderVariableTreeFlags(VariableTree variableTree) {
-    StringBuilder flagsBuilder = new StringBuilder();
-    if (!variableTree.getModifiers().getFlags().isEmpty()) {
-      flagsBuilder.append(
-          variableTree.getModifiers().getFlags().stream()
-              .map(flag -> flag + " ")
-              .collect(joining("")));
-    }
-    return flagsBuilder.toString();
   }
 
   /**
@@ -1259,41 +1097,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
     suggestedFixBuilder.replace(switchTree, replacementCodeBuilder.toString());
     return suggestedFixBuilder.build();
-  }
-
-  /** Retrieves a list of all statements (if any) preceding the current path, if any. */
-  private static ImmutableList<StatementTree> getPrecedingStatementsInBlock(VisitorState state) {
-    TreePath path = state.getPath();
-    if (!(path.getParentPath().getLeaf() instanceof BlockTree blockTree)) {
-      return ImmutableList.of();
-    }
-    var statements = blockTree.getStatements();
-    return ImmutableList.copyOf(statements.subList(0, statements.indexOf(path.getLeaf())));
-  }
-
-  /**
-   * Determines whether the last two preceding statements are not variable declarations within the
-   * same VariableDeclaratorList, for example {@code int x, y;}. VariableDeclaratorLists are defined
-   * in e.g. JLS 21 § 14.4. Precondition: all preceding statements are taken from the same {@code
-   * BlockTree}.
-   */
-  private static boolean precedingTwoStatementsNotInSameVariableDeclaratorList(
-      List<StatementTree> precedingStatements) {
-
-    if (precedingStatements.size() < 2) {
-      return true;
-    }
-
-    StatementTree secondToLastStatement = precedingStatements.get(precedingStatements.size() - 2);
-    StatementTree lastStatement = Iterables.getLast(precedingStatements);
-    if (!(secondToLastStatement instanceof VariableTree variableTree1)
-        || !(lastStatement instanceof VariableTree variableTree2)) {
-      return true;
-    }
-
-    // Start positions will vary if the variable declarations are in the same
-    // VariableDeclaratorList.
-    return getStartPosition(variableTree1) != getStartPosition(variableTree2);
   }
 
   /**
@@ -1715,31 +1518,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
   }
 
-  private static boolean hasCasePattern(CaseTree caseTree) {
-    return caseTree.getLabels().stream()
-        .anyMatch(caseLabelTree -> caseLabelTree instanceof PatternCaseLabelTree);
-  }
-
-  /**
-   * Prints source for all expressions in a given {@code case}, separated by commas, or the pattern
-   * and guard (if present).
-   */
-  private static String printCaseExpressionsOrPatternAndGuard(
-      CaseTree caseTree, VisitorState state) {
-    if (!hasCasePattern(caseTree)) {
-      return caseTree.getExpressions().stream().map(state::getSourceForNode).collect(joining(", "));
-    }
-    // Currently, `case`s can only have a single pattern, however the compiler's class structure
-    // does not reflect this restriction.
-    StringBuilder sb =
-        new StringBuilder(
-            caseTree.getLabels().stream().map(state::getSourceForNode).collect(joining(", ")));
-    if (caseTree.getGuard() != null) {
-      sb.append(" when ").append(state.getSourceForNode(caseTree.getGuard())).append(" ");
-    }
-    return sb.toString();
-  }
-
   /**
    * Ad-hoc algorithm to search for a surjective map from (non-null) values of a {@code switch}'s
    * expression to a {@code CaseTree}. Note that this algorithm does not compute whether such a map
@@ -1752,21 +1530,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       return true;
     }
 
-    return isSwitchExhaustiveWithoutDefault(handledEnumValues, switchType);
-  }
-
-  /**
-   * Ad-hoc algorithm to search for a surjective map from (non-null) values of a {@code switch}'s
-   * expression to a {@code CaseTree}, not including a {@code default} case (if present).
-   */
-  private static boolean isSwitchExhaustiveWithoutDefault(
-      Set<String> handledEnumValues, Type switchType) {
-    // Handles switching on enum only (map is bijective)
-    if (switchType.asElement().getKind() != ElementKind.ENUM) {
-      // Give up on search
-      return false;
-    }
-    return handledEnumValues.containsAll(ASTHelpers.enumValues(switchType.asElement()));
+    return isSwitchCoveringAllEnumValues(handledEnumValues, switchType);
   }
 
   /**
@@ -1839,26 +1603,6 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     transformedBlockBuilder.append(state.getSourceCode(), codeBlockStart, codeBlockEnd);
 
     return transformedBlockBuilder.toString();
-  }
-
-  /**
-   * Determines whether the supplied {@code caseTree} case contains `case null` and/or `default`.
-   */
-  private static NullDefaultKind analyzeCaseForNullAndDefault(CaseTree caseTree) {
-    boolean hasDefault = isSwitchDefault(caseTree);
-    boolean hasNull =
-        caseTree.getExpressions().stream()
-            .anyMatch(expression -> expression.getKind().equals(Tree.Kind.NULL_LITERAL));
-
-    if (hasNull && hasDefault) {
-      return NullDefaultKind.KIND_NULL_AND_DEFAULT;
-    } else if (hasNull) {
-      return NullDefaultKind.KIND_NULL;
-    } else if (hasDefault) {
-      return NullDefaultKind.KIND_DEFAULT;
-    }
-
-    return NullDefaultKind.KIND_NEITHER;
   }
 
   /**

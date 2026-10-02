@@ -72,7 +72,7 @@ public final class SwitchUtils {
       CompileTimeConstantExpressionMatcher.instance();
   static final ImmutableSet<Kind> KINDS_RETURN_OR_THROW = ImmutableSet.of(THROW, RETURN);
 
-  static final String EQUALS_STRING = "=";
+  private static final String EQUALS_STRING = "=";
   static final String REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION =
       "Remove default case because all enum values handled";
 
@@ -185,7 +185,7 @@ public final class SwitchUtils {
    * Determines whether local variable {@code symbol} has no reads within the scope of the {@code
    * VisitorState}. (Writes to the variable are ignored.)
    */
-  static boolean noReadsOfVariable(VarSymbol symbol, VisitorState state) {
+  private static boolean noReadsOfVariable(VarSymbol symbol, VisitorState state) {
     Set<VarSymbol> referencedLocalVariables = new HashSet<>();
     new TreePathScanner<Void, Void>() {
 
@@ -227,7 +227,7 @@ public final class SwitchUtils {
    * in e.g. JLS 21 § 14.4. Precondition: all preceding statements are taken from the same {@code
    * BlockTree}.
    */
-  static boolean precedingTwoStatementsNotInSameVariableDeclaratorList(
+  private static boolean precedingTwoStatementsNotInSameVariableDeclaratorList(
       List<StatementTree> precedingStatements) {
 
     if (precedingStatements.size() < 2) {
@@ -251,7 +251,7 @@ public final class SwitchUtils {
    * switch statement). Compatibility means that the assignment is being made to to the same
    * variable that is being defined.
    */
-  static boolean isVariableCompatibleWithAssignment(
+  private static boolean isVariableCompatibleWithAssignment(
       ExpressionTree assignmentTarget, VariableTree variableDefinition) {
     Symbol assignmentTargetSymbol = getSymbol(assignmentTarget);
     Symbol definedSymbol = ASTHelpers.getSymbol(variableDefinition);
