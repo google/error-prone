@@ -292,4 +292,59 @@ public final class UnnecessaryAsyncTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void splitDeclarationAndAssignment() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.concurrent.atomic.AtomicInteger;
+
+            class Test {
+              int f() {
+                // BUG: Diagnostic contains:
+                AtomicInteger a;
+                a = new AtomicInteger(0);
+                a.incrementAndGet();
+                return a.get();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void splitDeclarationAndAssignment_refactoring() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.atomic.AtomicInteger;
+
+            class Test {
+              int f() {
+                AtomicInteger a;
+                a = new AtomicInteger(0);
+                a.incrementAndGet();
+                return a.get();
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.atomic.AtomicInteger;
+
+            class Test {
+              int f() {
+                int a = 0;
+
+                ++a;
+                return a;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
