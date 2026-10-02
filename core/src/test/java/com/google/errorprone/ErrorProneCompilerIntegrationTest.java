@@ -909,4 +909,62 @@ public class ErrorProneCompilerIntegrationTest {
         .contains(
             "com.google.errorprone.SourcePositionException: invalid source position: [35, 29)");
   }
+
+  @BugPattern(severity = BugPattern.SeverityLevel.WARNING, summary = "")
+  public static class WarnOnEveryMethod extends BugChecker implements MethodTreeMatcher {
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      return describeMatch(tree);
+    }
+  }
+
+  private Result compileWithTwoWarningsAcrossTwoFiles(String... args) {
+    compilerBuilder.report(ScannerSupplier.fromBugCheckerClasses(WarnOnEveryMethod.class));
+    compiler = compilerBuilder.build();
+    return compiler.compile(
+        args,
+        Arrays.asList(
+            forSourceLines("A.java", "class A {", "  void a() {}", "}"),
+            forSourceLines(
+                "B.java",
+                "class B {",
+                "  void b() {}",
+                "  @SuppressWarnings(\"WarnOnEveryMethod\") void suppressed() {}",
+                "}")));
+  }
+
+  @Test
+  public void maxWarnings_atLimit_passes() {
+    Result exitCode = compileWithTwoWarningsAcrossTwoFiles("-XepMaxWarnings:2");
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
+  }
+
+  @Test
+  public void maxWarnings_overLimit_failsAndCountsAcrossFiles() {
+    Result exitCode = compileWithTwoWarningsAcrossTwoFiles("-XepMaxWarnings:1");
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
+    assertThat(diagnosticHelper.getDiagnostics())
+        .comparingElementsUsing(DIAGNOSTIC_CONTAINING)
+        .contains(
+            "Error Prone reported 2 warnings, which exceeds the maximum of 1 set by"
+                + " -XepMaxWarnings");
+  }
+
+  @Test
+  public void maxWarnings_zero_failsOnAnyWarning() {
+    Result exitCode = compileWithTwoWarningsAcrossTwoFiles("-XepMaxWarnings:0");
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.ERROR);
+  }
+
+  @Test
+  public void maxWarnings_unset_warningsDoNotFail() {
+    Result exitCode = compileWithTwoWarningsAcrossTwoFiles();
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
+  }
+
+  @Test
+  public void maxWarnings_checkDisabled_doesNotCount() {
+    Result exitCode = compileWithTwoWarningsAcrossTwoFiles("-XepMaxWarnings:0", "-Xep:WarnOnEveryMethod:OFF");
+    assertWithMessage(outputStream.toString()).that(exitCode).isEqualTo(Result.OK);
+  }
 }

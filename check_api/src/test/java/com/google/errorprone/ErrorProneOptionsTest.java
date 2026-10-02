@@ -206,6 +206,30 @@ public class ErrorProneOptionsTest {
   }
 
   @Test
+  public void recognizesMaxWarnings() {
+    ErrorProneOptions options = ErrorProneOptions.processArgs(new String[] {"-XepMaxWarnings:3"});
+    assertThat(options.maxWarnings()).hasValue(3);
+    assertThat(ErrorProneOptions.isSupportedOption("-XepMaxWarnings:3")).isEqualTo(0);
+  }
+
+  @Test
+  public void maxWarningsIsUnboundedByDefault() {
+    ErrorProneOptions options = ErrorProneOptions.processArgs(new String[] {});
+    assertThat(options.maxWarnings()).isEmpty();
+  }
+
+  @Test
+  public void maxWarningsRejectsInvalidValues() {
+    for (String arg : new String[] {"-XepMaxWarnings:", "-XepMaxWarnings:-1", "-XepMaxWarnings:many"}) {
+      InvalidCommandLineOptionException expected =
+          assertThrows(
+              InvalidCommandLineOptionException.class,
+              () -> ErrorProneOptions.processArgs(new String[] {arg}));
+      assertThat(expected).hasMessageThat().contains("non-negative integer");
+    }
+  }
+
+  @Test
   public void recognizesCompilingTestOnlyCode() {
     ErrorProneOptions options =
         ErrorProneOptions.processArgs(new String[] {"-XepCompilingTestOnlyCode"});
