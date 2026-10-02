@@ -25,7 +25,6 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneOptions.Severity;
 import com.google.errorprone.RefactoringCollection.RefactoringResult;
 import com.google.errorprone.scanner.ErrorProneScannerTransformer;
@@ -51,6 +50,7 @@ import java.time.Duration;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Map;
+import java.util.OptionalInt;
 import java.util.Set;
 import javax.tools.JavaFileObject;
 import org.safere.Pattern;
@@ -195,6 +195,30 @@ public final class ErrorProneAnalyzer implements TaskListener {
   }
 
   private int errorProneErrors = 0;
+  private int errorProneWarnings = 0;
+
+  /**
+   * Fails the compilation if Error Prone reported more warnings than {@code -XepMaxWarnings}
+   * allows. Patching runs are exempt: they exist to fix the findings, not to gate on them.
+   */
+  private void enforceMaxWarnings() {
+    OptionalInt maxWarnings = errorProneOptions.maxWarnings();
+    if (maxWarnings.isEmpty()
+        || errorProneOptions.patchingOptions().doRefactor()
+        || errorProneWarnings <= maxWarnings.getAsInt()) {
+      return;
+    }
+    Log.instance(context)
+        .error(
+            "error.prone",
+            String.format(
+                Locale.ROOT,
+                "Error Prone reported %d warning%s, which exceeds the maximum of %d set by"
+                    + " -XepMaxWarnings",
+                errorProneWarnings,
+                errorProneWarnings == 1 ? "" : "s",
+                maxWarnings.getAsInt()));
+  }
 
   /** Prints how long each check ran, slowest first. */
   private void printTimings() {
@@ -230,6 +254,7 @@ public final class ErrorProneAnalyzer implements TaskListener {
       if (errorProneOptions.printTimings()) {
         printTimings();
       }
+      enforceMaxWarnings();
     }
     if (taskEvent.getKind() != Kind.ANALYZE) {
       return;
@@ -249,8 +274,10 @@ public final class ErrorProneAnalyzer implements TaskListener {
         descriptionListenerFactory.getDescriptionListener(log, compilation);
     DescriptionListener countingDescriptionListener =
         d -> {
-          if (d.severity() == SeverityLevel.ERROR) {
-            errorProneErrors++;
+          switch (d.severity()) {
+            case ERROR -> errorProneErrors++;
+            case WARNING -> errorProneWarnings++;
+            case SUGGESTION -> {}
           }
           descriptionListener.onDescribed(d);
         };
