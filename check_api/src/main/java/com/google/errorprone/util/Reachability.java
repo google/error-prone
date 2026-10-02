@@ -468,14 +468,17 @@ public class Reachability {
      */
     @Override
     public Boolean visitTry(TryTree that, Void unused) {
+      if (that.getFinallyBlock() != null && !scan(that.getFinallyBlock())) {
+        // The finally block runs before control is transferred out of the try statement, and since
+        // it cannot complete normally, any jump out from try/catch never reaches its target.
+        // There is nothing to learn from scanning the try block or catch block(s).
+        return false;
+      }
       boolean completes = scan(that.getBlock());
       // assume all catch blocks are reachable; javac has already rejected unreachable
       // checked exception handlers
       for (CatchTree catchTree : that.getCatches()) {
         completes |= scan(catchTree.getBlock());
-      }
-      if (that.getFinallyBlock() != null && !scan(that.getFinallyBlock())) {
-        completes = false;
       }
       return completes;
     }

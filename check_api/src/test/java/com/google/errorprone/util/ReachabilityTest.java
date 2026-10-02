@@ -16,10 +16,8 @@
 
 package com.google.errorprone.util;
 
-import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -559,8 +557,7 @@ public class ReachabilityTest {
    */
   @Test
   public void jumpDiscardedByFinally_breakInTryBlock() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ false,
             """
             while (true) {
@@ -570,10 +567,8 @@ public class ReachabilityTest {
                 throw new AssertionError();
               }
             }
-            """);
-    // Reachability counts the discarded `break`, so reports an unexpected diagnostic.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Saw unexpected error on line");
+            """)
+        .doTest();
   }
 
   /**
@@ -582,8 +577,7 @@ public class ReachabilityTest {
    */
   @Test
   public void jumpDiscardedByFinally_breakInCatchBlock() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ false,
             """
             while (true) {
@@ -595,10 +589,8 @@ public class ReachabilityTest {
                 throw new AssertionError();
               }
             }
-            """);
-    // Reachability counts the discarded `break`, so reports an unexpected diagnostic.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Saw unexpected error on line");
+            """)
+        .doTest();
   }
 
   /**
@@ -608,8 +600,7 @@ public class ReachabilityTest {
    */
   @Test
   public void jumpDiscardedByFinally_continueInTryBlock() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ false,
             """
             do {
@@ -619,10 +610,8 @@ public class ReachabilityTest {
                 throw new AssertionError();
               }
             } while (x == 0);
-            """);
-    // Reachability counts the discarded `continue`, so reports an unexpected diagnostic.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Saw unexpected error on line");
+            """)
+        .doTest();
   }
 
   /**
@@ -631,8 +620,7 @@ public class ReachabilityTest {
    */
   @Test
   public void jumpDiscardedByFinally_camouflagedContinueInTryBlock() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ false,
             """
             do {
@@ -646,10 +634,8 @@ public class ReachabilityTest {
                 throw new AssertionError();
               }
             } while (x == 0);
-            """);
-    // Reachability counts the discarded `continue`, so reports an unexpected diagnostic.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Saw unexpected error on line");
+            """)
+        .doTest();
   }
 
   /**
@@ -659,8 +645,7 @@ public class ReachabilityTest {
    */
   @Test
   public void jumpDiscardedByFinally_breakOutOfSwitch() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ false,
             """
             switch (x) {
@@ -671,10 +656,8 @@ public class ReachabilityTest {
                   throw new AssertionError();
                 }
             }
-            """);
-    // Reachability counts the discarded `break`, so reports an unexpected diagnostic.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Saw unexpected error on line");
+            """)
+        .doTest();
   }
 
   /**
@@ -684,8 +667,7 @@ public class ReachabilityTest {
    */
   @Test
   public void jumpDiscardedByFinally_breakOutOfLabeledStatement() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ false,
             """
             l:
@@ -694,10 +676,8 @@ public class ReachabilityTest {
             } finally {
               throw new AssertionError();
             }
-            """);
-    // Reachability counts the discarded `break`, so reports an unexpected diagnostic.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Saw unexpected error on line");
+            """)
+        .doTest();
   }
 
   /**
@@ -707,8 +687,7 @@ public class ReachabilityTest {
    */
   @Test
   public void jumpDiscardedByFinally_outerFinally() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ false,
             """
             while (true) {
@@ -722,9 +701,70 @@ public class ReachabilityTest {
                 throw new AssertionError();
               }
             }
-            """);
-    // Reachability counts the discarded `break`, so reports an unexpected diagnostic.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Saw unexpected error on line");
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code break} in a {@code try} block exits the loop if the {@code finally} block can complete
+   * normally.
+   */
+  @Test
+  public void jumpNotDiscardedByFinally_finallyCompletesNormally() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            while (true) {
+              try {
+                break;
+              } finally {
+                x++;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code break} in the {@code finally} block itself exits the loop, even though it means that
+   * the {@code finally} block cannot complete normally.
+   */
+  @Test
+  public void jumpNotDiscardedByFinally_breakInFinallyBlock() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            while (true) {
+              try {
+                x++;
+              } finally {
+                break;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code break} before the {@code try} statement still exits the loop, even though a {@code
+   * break} to the same loop inside the {@code try} block is discarded.
+   */
+  @Test
+  public void jumpNotDiscardedByFinally_breakBeforeTry() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            while (true) {
+              if (x == 1) {
+                break;
+              }
+              try {
+                break;
+              } finally {
+                throw new AssertionError();
+              }
+            }
+            """)
+        .doTest();
   }
 }
