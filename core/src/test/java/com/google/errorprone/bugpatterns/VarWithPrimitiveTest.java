@@ -33,6 +33,24 @@ public final class VarWithPrimitiveTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(VarWithPrimitive.class, getClass());
 
+  @Test
+  public void implicitlyTypedPrimitiveLambdaParameter() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.function.IntConsumer;
+
+            class Test {
+              void test() {
+                IntConsumer consumer = value -> {};
+                IntConsumer parenthesized = (value) -> {};
+              }
+            }
+            """)
+        .doTest();
+  }
+
   // from https://openjdk.org/projects/amber/guides/lvti-style-guide#G7
   @Test
   public void lvtiExamples() {
