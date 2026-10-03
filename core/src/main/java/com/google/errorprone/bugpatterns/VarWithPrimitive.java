@@ -40,7 +40,7 @@ public final class VarWithPrimitive extends BugChecker implements VariableTreeMa
 
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
-    if (hasImplicitType(tree, state)) {
+    if (tree.getType() != null && hasImplicitType(tree, state)) {
       Type type = getType(tree);
       if (type != null && type.isPrimitive()) {
         return replaceVariableType(tree, type.toString(), state)
