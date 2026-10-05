@@ -546,14 +546,15 @@ public final class ASTHelpers {
    * <p>TODO(eaftan): Are there other places this could be used?
    */
   public static Type getReturnType(ExpressionTree expressionTree) {
-    return switch (expressionTree) {
-      case JCFieldAccess methodCall -> methodCall.type.getReturnType();
-      case JCIdent methodCall -> methodCall.type.getReturnType();
-      case JCMethodInvocation jCMethodInvocation ->
-          getReturnType(jCMethodInvocation.getMethodSelect());
-      case JCMemberReference jCMemberReference -> jCMemberReference.sym.type.getReturnType();
-      default -> throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
-    };
+    return checkNotNull(
+        switch (expressionTree) {
+          case JCFieldAccess methodCall -> methodCall.type.getReturnType();
+          case JCIdent methodCall -> methodCall.type.getReturnType();
+          case JCMethodInvocation jCMethodInvocation ->
+              getReturnType(jCMethodInvocation.getMethodSelect());
+          case JCMemberReference jCMemberReference -> jCMemberReference.sym.type.getReturnType();
+          default -> throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
+        });
   }
 
   /**
@@ -588,16 +589,18 @@ public final class ASTHelpers {
    * }</pre>
    */
   public static Type getReceiverType(ExpressionTree expressionTree) {
-    return switch (expressionTree) {
-      case JCFieldAccess methodSelectFieldAccess -> methodSelectFieldAccess.selected.type;
-      case JCIdent methodCall -> methodCall.sym.owner.type;
-      case JCMethodInvocation jCMethodInvocation ->
-          getReceiverType(jCMethodInvocation.getMethodSelect());
-      case JCMemberReference jCMemberReference -> jCMemberReference.getQualifierExpression().type;
-      default ->
-          throw new IllegalArgumentException(
-              "Expected a JCFieldAccess or JCIdent from expression " + expressionTree);
-    };
+    return checkNotNull(
+        switch (expressionTree) {
+          case JCFieldAccess methodSelectFieldAccess -> methodSelectFieldAccess.selected.type;
+          case JCIdent methodCall -> methodCall.sym.owner.type;
+          case JCMethodInvocation jCMethodInvocation ->
+              getReceiverType(jCMethodInvocation.getMethodSelect());
+          case JCMemberReference jCMemberReference ->
+              jCMemberReference.getQualifierExpression().type;
+          default ->
+              throw new IllegalArgumentException(
+                  "Expected a JCFieldAccess or JCIdent from expression " + expressionTree);
+        });
   }
 
   /**
@@ -1886,7 +1889,7 @@ public final class ASTHelpers {
    * @return an {@code AnnotationMirror} for the annotation represented by {@code annotationTree}.
    */
   public static AnnotationMirror getAnnotationMirror(AnnotationTree annotationTree) {
-    return ((JCAnnotation) annotationTree).attribute;
+    return checkNotNull(((JCAnnotation) annotationTree).attribute);
   }
 
   /** Returns whether the given {@code tree} contains any comments in its source. */
