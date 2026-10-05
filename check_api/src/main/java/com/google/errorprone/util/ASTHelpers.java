@@ -136,6 +136,7 @@ import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Position;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.annotation.Annotation;
 import java.net.JarURLConnection;
 import java.net.URI;
@@ -1691,7 +1692,7 @@ public final class ASTHelpers {
    * The return value is normalized to always use '/' to separate elements of the path and to always
    * have a leading '/'.
    */
-  public static @Nullable String getFileName(CompilationUnitTree tree) {
+  public static String getFileName(CompilationUnitTree tree) {
     return getFileNameFromUri(tree.getSourceFile().toUri());
   }
 
@@ -1722,9 +1723,9 @@ public final class ASTHelpers {
    * Extract the filename from the URI, with special handling for jar files. The return value is
    * normalized to always use '/' to separate elements of the path and to always have a leading '/'.
    */
-  public static @Nullable String getFileNameFromUri(URI uri) {
+  public static String getFileNameFromUri(URI uri) {
     if (!uri.getScheme().equals("jar")) {
-      return uri.getPath();
+      return requireNonNull(uri.getPath());
     }
 
     try {
@@ -1737,7 +1738,7 @@ public final class ASTHelpers {
       }
       return jarEntryFileName;
     } catch (IOException e) {
-      return null;
+      throw new UncheckedIOException(e);
     }
   }
 
