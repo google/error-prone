@@ -54,6 +54,7 @@ import com.sun.source.tree.YieldTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.TreeInfo;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -251,7 +252,8 @@ public class Reachability {
      * A non-arrow switch statement can complete normally iff at least one of the
      * following is true:
      *
-     *  1) The switch block does not contain a default label.
+     *  1) The switch statement is not enhanced and its switch block
+     *     does not contain a default label.
      *  2) The switch block is empty or contains only switch labels.
      *  3) The last statement in the switch block can complete normally.
      *  4) There is at least one switch label after the last switch block
@@ -271,7 +273,7 @@ public class Reachability {
     @Override
     public Boolean visitSwitch(SwitchTree tree, Void unused) {
       // (1)
-      if (tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
+      if (!isEnhanced(tree) && tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
         return true;
       }
       // A switch statement whose switch block consists of switch rules can complete normally iff at
@@ -316,6 +318,15 @@ public class Reachability {
         return true;
       }
       return false;
+    }
+
+    /**
+     * Returns whether the switch statement is enhanced: either (i) the type of its selector
+     * expression is not in a designated set of types, or an enum type, or (ii) there is a case
+     * pattern or {@code case null}.
+     */
+    private static boolean isEnhanced(SwitchTree tree) {
+      return TreeInfo.expectedExhaustive((JCTree.JCSwitch) tree);
     }
 
     /*

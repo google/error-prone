@@ -16,10 +16,8 @@
 
 package com.google.errorprone.util;
 
-import static com.google.common.truth.Truth.assertThat;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
@@ -795,8 +793,7 @@ public class ReachabilityTest {
    */
   @Test
   public void enhancedSwitchWithoutDefault_sealedPatterns() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ false,
             """
             switch (shape) {
@@ -804,17 +801,14 @@ public class ReachabilityTest {
               case Square s -> throw new AssertionError();
               case Triangle t -> throw new AssertionError();
             }
-            """);
-    // Reachability ignores that the `switch` is enhanced, so reports an unexpected diagnostic.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Saw unexpected error on line");
+            """)
+        .doTest();
   }
 
   /** Like {@link #enhancedSwitchWithoutDefault_sealedPatterns}, but with old-style colon switch. */
   @Test
   public void enhancedSwitchWithoutDefault_sealedPatternsInStatementGroups() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ false,
             """
             switch (shape) {
@@ -825,10 +819,8 @@ public class ReachabilityTest {
               case Triangle t:
                 throw new AssertionError();
             }
-            """);
-    // Reachability ignores that the `switch` is enhanced, so reports an unexpected diagnostic.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Saw unexpected error on line");
+            """)
+        .doTest();
   }
 
   /**
@@ -837,8 +829,7 @@ public class ReachabilityTest {
    */
   @Test
   public void enhancedSwitchWithoutDefault_nullLabel() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ false,
             """
             switch (color) {
@@ -846,10 +837,8 @@ public class ReachabilityTest {
               case GREEN, BLUE -> throw new AssertionError();
               case null -> throw new AssertionError();
             }
-            """);
-    // Reachability ignores that the `switch` is enhanced, so reports an unexpected diagnostic.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Saw unexpected error on line");
+            """)
+        .doTest();
   }
 
   /**
@@ -858,8 +847,7 @@ public class ReachabilityTest {
    */
   @Test
   public void enhancedSwitchWithoutDefault_unconditionalPattern() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ false,
             """
             switch (o) {
@@ -867,10 +855,8 @@ public class ReachabilityTest {
               case Integer i -> throw new AssertionError();
               case Object other -> throw new AssertionError();
             }
-            """);
-    // Reachability ignores that the `switch` is enhanced, so reports an unexpected diagnostic.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Saw unexpected error on line");
+            """)
+        .doTest();
   }
 
   /**
@@ -880,8 +866,7 @@ public class ReachabilityTest {
    */
   @Test
   public void enhancedSwitchWithoutDefault_enumConstantsOfSealedInterface() {
-    CompilationTestHelper testHelper =
-        canCompleteNormallyTest(
+    canCompleteNormallyTest(
             /* expected= */ false,
             """
             switch (paint) {
@@ -889,9 +874,93 @@ public class ReachabilityTest {
               case Color.GREEN -> throw new AssertionError();
               case Color.BLUE -> throw new AssertionError();
             }
-            """);
-    // Reachability ignores that the `switch` is enhanced, so reports an unexpected diagnostic.
-    AssertionError e = assertThrows(AssertionError.class, testHelper::doTest);
-    assertThat(e).hasMessageThat().contains("Saw unexpected error on line");
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code switch} over an enum with only constant labels is not enhanced (JLS 21 §14.11.2), so
+   * without a {@code default} it can complete normally, even though it names every constant and
+   * every case throws (§14.22).
+   */
+  @Test
+  public void notEnhancedSwitchWithoutDefault_enum() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            switch (color) {
+              case RED -> throw new AssertionError();
+              case GREEN -> throw new AssertionError();
+              case BLUE -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code switch} with only constant labels is not enhanced if the type of the selector
+   * expression is in a designated set of types. So without a {@code default} it can complete
+   * normally even though every case throws.
+   */
+  @Test
+  public void notEnhancedSwitchWithoutDefault_selectorType(
+      @TestParameter({
+            "(char) x",
+            "(byte) x",
+            "(short) x",
+            "x",
+            "(Character) (char) x",
+            "(Byte) (byte) x",
+            "(Short) (short) x",
+            "(Integer) x"
+          })
+          String selector) {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            switch (%s) {
+              case 1 -> throw new AssertionError();
+              case 2 -> throw new AssertionError();
+              case 3 -> throw new AssertionError();
+            }
+            """
+                .formatted(selector))
+        .doTest();
+  }
+
+  /** Similar to {@link #notEnhancedSwitchWithoutDefault_selectorType}, but with {@code String}. */
+  @Test
+  public void notEnhancedSwitchWithoutDefault_string() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            switch (String.valueOf(x)) {
+              case "1" -> throw new AssertionError();
+              case "2" -> throw new AssertionError();
+              case "3" -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * An enhanced {@code switch} without a {@code default} can still complete normally if a {@code
+   * break} exits it.
+   */
+  @Test
+  public void enhancedSwitchWithoutDefault_breakExitsSwitch() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            switch (shape) {
+              case Circle c:
+                break;
+              case Square s:
+                throw new AssertionError();
+              case Triangle t:
+                throw new AssertionError();
+            }
+            """)
+        .doTest();
   }
 }
