@@ -330,7 +330,8 @@ c"));</code>
                                            throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
 <div class="block">Asserts that the diagnostics contain a diagnostic on each line of the source file that matches
 our bug marker pattern. Parses the bug marker pattern for the specific string to look for in
-the diagnostic.</div>
+the diagnostic. The failure message names every line that fails, each with the first
+expectation it fails.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>source</code> - File in which to find matching lines</dd>
