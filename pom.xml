@@ -35,9 +35,9 @@
     <autovalue.version>1.11.1</autovalue.version>
     <junit.version>4.13.2</junit.version>
     <dataflow.version>3.41.0-eisop1</dataflow.version>
-    <mockito.version>5.23.0</mockito.version>
+    <mockito.version>5.24.0</mockito.version>
     <compile.testing.version>0.23.0</compile.testing.version>
-    <caffeine.version>3.2.4</caffeine.version>
+    <caffeine.version>3.3.0</caffeine.version>
     <flogger.version>0.9</flogger.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
