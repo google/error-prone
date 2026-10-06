@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.javadoc;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,10 +68,8 @@ public final class UnrecognisedJavadocTagTest {
         .addSourceLines(
             "Test.java",
             """
-            /**
-             * // BUG: Diagnostic contains: '{@link Test)'
-             * {@link Test)
-             */
+            // BUG: Diagnostic contains: '{@link Test)'
+            /** {@link Test) */
             class Test {}
             """)
         .doTest();
@@ -123,6 +123,45 @@ public final class UnrecognisedJavadocTagTest {
              */
             @Deprecated
             class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void markdownCodeSpanAndBlockNegative() {
+    assume().that(Runtime.version().feature()).isAtLeast(23);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /// Mentioning `<pre>{@code ...}</pre>`, `<pre>{@code`, and `{@link ...}` in backticks, or in a
+            /// fenced code block:
+            ///
+            /// ```
+            /// {@code unclosed
+            /// {@link Test)
+            /// ```
+            class Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void markdownPositive() {
+    assume().that(Runtime.version().feature()).isAtLeast(23);
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            // BUG: Diagnostic contains: '{@link Test)'
+            /// {@link Test)
+            class Test {
+              /// // BUG: Diagnostic contains:
+              /// <pre>{@code
+              ///  foo() {
+              /// }</pre>
+              void f() {}
+            }
             """)
         .doTest();
   }

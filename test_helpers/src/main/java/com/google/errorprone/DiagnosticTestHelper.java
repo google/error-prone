@@ -357,7 +357,7 @@ public class DiagnosticTestHelper {
     String restOfLine = line.substring(bugMarkerIndex + matchString.length()).trim();
     result.add(restOfLine);
     line = reader.readLine().trim();
-    while (line.startsWith("//")) {
+    while (line.startsWith("//") && !line.startsWith("///")) {
       restOfLine = line.substring(2).trim();
       result.add(restOfLine);
       line = reader.readLine().trim();
