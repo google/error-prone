@@ -42,6 +42,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.Reachability;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BinaryTree;
+import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompoundAssignmentTree;
@@ -89,11 +90,21 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     if (!supportsPatternMatchingInstanceof(state.context)) {
       return NO_MATCH;
     }
-    if (instanceOfTree.getPattern() != null) {
+    VariableTree existingPatternVariable = null;
+    if (instanceOfTree.getPattern() instanceof BindingPatternTree bindingPattern) {
+      existingPatternVariable = bindingPattern.getVariable();
+      if (existingPatternVariable.getName().isEmpty()) {
+        return NO_MATCH;
+      }
+    } else if (instanceOfTree.getPattern() != null) {
       return NO_MATCH;
     }
     var impliedStatements = findImpliedStatements(instanceOfTree, state);
     if (impliedStatements.isEmpty()) {
+      return NO_MATCH;
+    }
+    if (existingPatternVariable != null
+        && isReassigned(existingPatternVariable, impliedStatements)) {
       return NO_MATCH;
     }
     var constant =
@@ -104,6 +115,17 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     Type targetType = getType(instanceOfTree.getType());
 
     var allCasts = findAllCasts(constant, impliedStatements, targetType, state);
+    if (allCasts.isEmpty()) {
+      return NO_MATCH;
+    }
+    if (existingPatternVariable != null) {
+      String name = existingPatternVariable.getName().toString();
+      return describeMatch(
+          instanceOfTree,
+          allCasts.stream()
+              .map(c -> SuggestedFix.replace(c.getLeaf(), name))
+              .collect(mergeFixes()));
+    }
     int typeArgCount = getType(instanceOfTree.getType()).tsym.getTypeParameters().size();
     // If the target type is generic, pattern matching instanceof only supports unbounded wildcards
     // (e.g. Foo<?>). If any cast uses specific type arguments (e.g. Foo<String>), we cannot safely

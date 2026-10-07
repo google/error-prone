@@ -1783,8 +1783,17 @@ public final class PatternMatchingInstanceofTest {
               }
             }
             """)
-        // TODO(user): Replace redundant ((String) o) cast with existing pattern variable s
-        .expectUnchanged()
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String s) {
+                  System.out.println(s.length() + s.length());
+                }
+              }
+            }
+            """)
         .doTest();
   }
 
