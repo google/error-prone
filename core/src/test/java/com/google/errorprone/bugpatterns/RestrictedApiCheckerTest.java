@@ -681,6 +681,50 @@ public class RestrictedApiCheckerTest {
   }
 
   @Test
+  public void invalidAllowedPaths_rejectedAtDeclaration() {
+    helper
+        .addSourceLines(
+            "in/Testcase.java",
+            """
+            package separate.test;
+
+            import com.google.errorprone.annotations.RestrictedApi;
+
+            class Testcase {
+              // BUG: Diagnostic contains: Invalid allowedPaths on @RestrictedApi
+              @RestrictedApi(
+                  explanation = "test",
+                  link = "",
+                  allowedPaths = {"/foo/"})
+              void restrictedMethod() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void invalidAllowedOnPath_rejectedAtDeclaration() {
+    helper
+        .addSourceLines(
+            "in/Testcase.java",
+            """
+            package separate.test;
+
+            import com.google.errorprone.annotations.RestrictedApi;
+
+            class Testcase {
+              // BUG: Diagnostic contains: Invalid allowedOnPath regex on @RestrictedApi
+              @RestrictedApi(
+                  explanation = "test",
+                  link = "",
+                  allowedOnPath = "[")
+              void restrictedMethod() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void allowedPaths_nestedRunfiles_rejected() {
     helper
         .addSourceLines(

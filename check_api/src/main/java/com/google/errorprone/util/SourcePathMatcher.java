@@ -19,12 +19,14 @@ package com.google.errorprone.util;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.errorprone.VisitorState;
 import java.util.Arrays;
+import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
 /// Matcher for canonical source file paths supporting exact source file paths and directory
@@ -173,6 +175,17 @@ public final class SourcePathMatcher {
     return new SourcePathMatcher(exact, pref);
   }
 
+  /// Validates the given path patterns, returning an error message if any pattern is invalid, or
+  /// [Optional#empty] if all patterns are valid.
+  public static Optional<String> validate(Iterable<String> pathPatterns) {
+    try {
+      var unused = create(pathPatterns);
+      return Optional.empty();
+    } catch (IllegalArgumentException e) {
+      return Optional.ofNullable(e.getMessage());
+    }
+  }
+
   // Sorts directory prefixes and prunes subsumed descendant prefixes. Because directory prefixes
   // end with '/', any descendant prefix (e.g. `a/b/c/`) sorts lexicographically after its ancestor
   // prefix (e.g. `a/b/`). Pruning redundant prefixes ensures no prefix in the list is a prefix of
@@ -203,15 +216,15 @@ public final class SourcePathMatcher {
     checkArgument(!pattern.contains("//"), "Path patterns must not contain '//': %s", pattern);
     checkArgument(!pattern.contains(".."), "Path patterns must not contain '..': %s", pattern);
     checkArgument(
-        !pattern.startsWith("./") && !pattern.contains("/./"),
-        "Path patterns must not contain './': %s",
+        !pattern.startsWith(".") && !pattern.contains("/./"),
+        "Path patterns must not start with '.' or contain '/./': %s",
         pattern);
     checkArgument(
-        !pattern.contains("*") && !pattern.contains("?"),
-        "Wildcards are not supported: %s",
+        CharMatcher.anyOf("*?[]^$\\").matchesNoneOf(pattern),
+        "Wildcards and regular expression syntax are not supported: %s",
         pattern);
     checkArgument(
-        !pattern.contains("(") && !pattern.contains(")"),
+        CharMatcher.anyOf("()").matchesNoneOf(pattern),
         "Regex grouping is not supported; specify each full path separated by '|': %s",
         pattern);
 
