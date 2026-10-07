@@ -98,4 +98,225 @@ public class NonRuntimeAnnotationNegativeCases {
 """)
         .doTest();
   }
+
+  @Test
+  public void additionalMethods() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+
+            class Test {
+              @Retention(RetentionPolicy.SOURCE)
+              @interface SourceRetention {}
+
+              @Retention(RetentionPolicy.CLASS)
+              @interface ClassRetention {}
+
+              @Retention(RetentionPolicy.RUNTIME)
+              @interface RuntimeRetention {}
+
+              void test(Class<?> clazz) {
+                // BUG: Diagnostic contains: Calling getAnnotation on an annotation that is not retained at
+                // runtime; SourceRetention has SOURCE retention
+                clazz.getAnnotation(SourceRetention.class);
+                // BUG: Diagnostic contains:
+                clazz.isAnnotationPresent(ClassRetention.class);
+                // BUG: Diagnostic contains:
+                clazz.getAnnotationsByType(SourceRetention.class);
+                // BUG: Diagnostic contains:
+                clazz.getDeclaredAnnotation(ClassRetention.class);
+                // BUG: Diagnostic contains:
+                clazz.getDeclaredAnnotationsByType(SourceRetention.class);
+
+                clazz.getAnnotation(RuntimeRetention.class);
+                clazz.isAnnotationPresent(RuntimeRetention.class);
+                clazz.getAnnotationsByType(RuntimeRetention.class);
+                clazz.getDeclaredAnnotation(RuntimeRetention.class);
+                clazz.getDeclaredAnnotationsByType(RuntimeRetention.class);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void additionalReceivers() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.reflect.Invokable;
+            import java.lang.annotation.Annotation;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.reflect.AnnotatedElement;
+            import java.lang.reflect.Constructor;
+            import java.lang.reflect.Field;
+            import java.lang.reflect.Method;
+            import java.lang.reflect.Parameter;
+            import java.lang.reflect.RecordComponent;
+            import javax.lang.model.element.Element;
+
+            class Test {
+              @Retention(RetentionPolicy.CLASS)
+              @interface NonRuntime {}
+
+              @Retention(RetentionPolicy.RUNTIME)
+              @interface Runtime {}
+
+              void test(
+                  AnnotatedElement element,
+                  Method method,
+                  Field field,
+                  Constructor<?> constructor,
+                  Parameter parameter,
+                  RecordComponent recordComponent,
+                  Package pkg,
+                  Module module,
+                  Invokable<?, ?> invokable,
+                  com.google.common.reflect.Parameter guavaParameter,
+                  Element javacElement,
+                  Class<? extends Annotation> unknownAnnotation) {
+                // BUG: Diagnostic contains:
+                element.getAnnotation(NonRuntime.class);
+                // BUG: Diagnostic contains:
+                method.isAnnotationPresent(NonRuntime.class);
+                // BUG: Diagnostic contains:
+                field.getAnnotationsByType(NonRuntime.class);
+                // BUG: Diagnostic contains:
+                constructor.getDeclaredAnnotation(NonRuntime.class);
+                // BUG: Diagnostic contains:
+                parameter.getDeclaredAnnotationsByType(NonRuntime.class);
+                // BUG: Diagnostic contains:
+                recordComponent.getAnnotation(NonRuntime.class);
+                // BUG: Diagnostic contains:
+                pkg.isAnnotationPresent(NonRuntime.class);
+                // BUG: Diagnostic contains:
+                module.getAnnotation(NonRuntime.class);
+                // BUG: Diagnostic contains:
+                invokable.isAnnotationPresent(NonRuntime.class);
+                // BUG: Diagnostic contains:
+                guavaParameter.getAnnotation(NonRuntime.class);
+
+                element.getAnnotation(Runtime.class);
+                method.isAnnotationPresent(Runtime.class);
+                invokable.isAnnotationPresent(Runtime.class);
+                guavaParameter.getAnnotation(Runtime.class);
+                javacElement.getAnnotation(NonRuntime.class);
+                element.isAnnotationPresent(unknownAnnotation);
+              }
+
+              <A extends Annotation> void genericTest(
+                  AnnotatedElement element, Class<A> clazz, Class<? extends A> wildcardClazz) {
+                element.getAnnotation(clazz);
+                element.isAnnotationPresent(wildcardClazz);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void typeAnnotations() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.reflect.Invokable;
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+            import java.lang.reflect.AnnotatedParameterizedType;
+            import java.lang.reflect.AnnotatedType;
+            import java.lang.reflect.Field;
+            import java.lang.reflect.Method;
+            import java.lang.reflect.TypeVariable;
+
+            class Test {
+              @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
+              @Retention(RetentionPolicy.CLASS)
+              @interface NonRuntimeTypeUse {}
+
+              @Target({ElementType.TYPE_USE, ElementType.TYPE_PARAMETER})
+              @Retention(RetentionPolicy.RUNTIME)
+              @interface RuntimeTypeUse {}
+
+              void test(
+                  AnnotatedType annotatedType,
+                  AnnotatedParameterizedType parameterizedType,
+                  TypeVariable<?> typeVariable,
+                  Field field,
+                  Method method,
+                  Invokable<?, ?> invokable,
+                  com.google.common.reflect.Parameter guavaParameter) {
+                // BUG: Diagnostic contains:
+                annotatedType.getAnnotation(NonRuntimeTypeUse.class);
+                // BUG: Diagnostic contains:
+                annotatedType.isAnnotationPresent(NonRuntimeTypeUse.class);
+                // BUG: Diagnostic contains:
+                parameterizedType.getAnnotatedActualTypeArguments()[0].getAnnotationsByType(
+                    NonRuntimeTypeUse.class);
+                // BUG: Diagnostic contains:
+                typeVariable.getDeclaredAnnotation(NonRuntimeTypeUse.class);
+                // BUG: Diagnostic contains:
+                typeVariable.getAnnotatedBounds()[0].getDeclaredAnnotationsByType(NonRuntimeTypeUse.class);
+                // BUG: Diagnostic contains:
+                field.getAnnotatedType().getAnnotation(NonRuntimeTypeUse.class);
+                // BUG: Diagnostic contains:
+                method.getAnnotatedReturnType().isAnnotationPresent(NonRuntimeTypeUse.class);
+                // BUG: Diagnostic contains:
+                invokable.getAnnotatedReturnType().getAnnotation(NonRuntimeTypeUse.class);
+                // BUG: Diagnostic contains:
+                guavaParameter.getAnnotatedType().isAnnotationPresent(NonRuntimeTypeUse.class);
+
+                annotatedType.getAnnotation(RuntimeTypeUse.class);
+                typeVariable.isAnnotationPresent(RuntimeTypeUse.class);
+                field.getAnnotatedType().getAnnotation(RuntimeTypeUse.class);
+                method.getAnnotatedReturnType().isAnnotationPresent(RuntimeTypeUse.class);
+                invokable.getAnnotatedReturnType().getAnnotation(RuntimeTypeUse.class);
+                guavaParameter.getAnnotatedType().isAnnotationPresent(RuntimeTypeUse.class);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void additionalApisDisabled() {
+    compilationHelper
+        .setArgs("-XepOpt:NonRuntimeAnnotation:AdditionalApis=false")
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.annotation.ElementType;
+            import java.lang.annotation.Retention;
+            import java.lang.annotation.RetentionPolicy;
+            import java.lang.annotation.Target;
+            import java.lang.reflect.AnnotatedType;
+            import java.lang.reflect.Method;
+
+            class Test {
+              @Target({ElementType.TYPE, ElementType.METHOD, ElementType.TYPE_USE})
+              @Retention(RetentionPolicy.CLASS)
+              @interface NonRuntime {}
+
+              void test(Class<?> clazz, Method method, AnnotatedType annotatedType) {
+                // BUG: Diagnostic contains:
+                clazz.getAnnotation(NonRuntime.class);
+
+                clazz.isAnnotationPresent(NonRuntime.class);
+                clazz.getAnnotationsByType(NonRuntime.class);
+                clazz.getDeclaredAnnotation(NonRuntime.class);
+                clazz.getDeclaredAnnotationsByType(NonRuntime.class);
+                method.getAnnotation(NonRuntime.class);
+                annotatedType.getAnnotation(NonRuntime.class);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

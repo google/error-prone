@@ -20,11 +20,13 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -33,6 +35,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Attribute.RetentionPolicy;
 import com.sun.tools.javac.code.Type;
+import javax.inject.Inject;
 
 /**
  * @author scottjohnson@google.com (Scott Johnson)
@@ -42,15 +45,36 @@ import com.sun.tools.javac.code.Type;
     severity = ERROR)
 public class NonRuntimeAnnotation extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> MATCHER =
+  private static final Matcher<ExpressionTree> LEGACY_MATCHER =
       instanceMethod()
           .onExactClass("java.lang.Class")
           .named("getAnnotation")
           .withParameters("java.lang.Class");
 
+  private static final Matcher<ExpressionTree> ADDITIONAL_APIS_MATCHER =
+      instanceMethod()
+          .onDescendantOf("java.lang.reflect.AnnotatedElement")
+          .namedAnyOf(
+              "getAnnotation",
+              "isAnnotationPresent",
+              "getAnnotationsByType",
+              "getDeclaredAnnotation",
+              "getDeclaredAnnotationsByType")
+          .withParameters("java.lang.Class");
+
+  private final Matcher<ExpressionTree> matcher;
+
+  @Inject
+  NonRuntimeAnnotation(ErrorProneFlags flags) {
+    this.matcher =
+        flags.getBoolean("NonRuntimeAnnotation:AdditionalApis").orElse(true)
+            ? ADDITIONAL_APIS_MATCHER
+            : LEGACY_MATCHER;
+  }
+
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!MATCHER.matches(tree, state)) {
+    if (!matcher.matches(tree, state)) {
       return NO_MATCH;
     }
     Type classType = getType(getOnlyElement(tree.getArguments()));
@@ -67,9 +91,8 @@ public class NonRuntimeAnnotation extends BugChecker implements MethodInvocation
       case SOURCE, CLASS -> {
         return buildDescription(tree)
             .setMessage(
-                String.format(
-                    "%s; %s has %s retention",
-                    message(), type.asElement().getSimpleName(), retention))
+                "Calling %s on an annotation that is not retained at runtime; %s has %s retention",
+                getSymbol(tree).getSimpleName(), type.asElement().getSimpleName(), retention)
             .build();
       }
     }
