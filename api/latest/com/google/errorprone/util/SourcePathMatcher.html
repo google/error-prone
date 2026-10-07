@@ -61,6 +61,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#empty()" tabindex="0">empty()</a></li>
 <li><a href="#create(java.lang.String...)" tabindex="0">create(String...)</a></li>
 <li><a href="#create(java.lang.Iterable)" tabindex="0">create(Iterable)</a></li>
+<li><a href="#validate(java.lang.Iterable)" tabindex="0">validate(Iterable)</a></li>
 <li><a href="#matches(java.lang.String)" tabindex="0">matches(String)</a></li>
 <li><a href="#matches(com.google.errorprone.VisitorState)" tabindex="0">matches(VisitorState)</a></li>
 </ol>
@@ -138,6 +139,12 @@ prefixes ending with <code>/</code>).</div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns <code>true</code> if the given path matches any of the patterns in this matcher.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#validate(java.lang.Iterable)" class="member-name-link">validate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;pathPatterns)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Validates the given path patterns, returning an error message if any pattern is invalid, or
+<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a> if all patterns are valid.</div>
+</div>
 </div>
 </div>
 </div>
@@ -185,6 +192,16 @@ prefixes ending with <code>/</code>).</div>
 </section>
 </li>
 <li>
+<section class="detail" id="validate(java.lang.Iterable)">
+<h3>validate</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">validate</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;pathPatterns)</span></div>
+<div class="block">Validates the given path patterns, returning an error message if any pattern is invalid, or
+<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html#empty()" title="class or interface in java.util" class="external-link"><code>Optional.empty()</code></a> if all patterns are valid.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="matches(java.lang.String)">
 <h3>matches</h3>
 <div class="horizontal-scroll">
@@ -210,7 +227,7 @@ prefixes ending with <code>/</code>).</div>
 <!-- ========= END OF CLASS DATA ========= -->
 <footer>
 <hr>
-<p class="legal-copy"><small>Copyright &#169; 1980 <a href="https://www.google.com">Google LLC</a>. All rights reserved.</small></p>
+<p class="legal-copy"><small>Copyright &#169; 2026 <a href="https://www.google.com">Google LLC</a>. All rights reserved.</small></p>
 </footer>
 </main>
 </div>

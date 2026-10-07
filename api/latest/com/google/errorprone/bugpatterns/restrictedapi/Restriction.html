@@ -214,8 +214,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#validateAnnotation(javax.lang.model.element.AnnotationMirror,com.sun.tools.javac.code.Symbol)" class="member-name-link">validateAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationMirror</a>&nbsp;attribute,
  com.sun.tools.javac.code.Symbol&nbsp;annotationSymbol)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Validates path restrictions on an annotation, returning an error message if both <code>
-allowedPaths</code> and <code>allowedOnPath</code> are specified.</div>
+<div class="block">Validates path restrictions on an annotation, returning an error message if <code>
+allowedPaths</code> or <code>allowedOnPath</code> is invalid or if both are specified.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#warningOnlyForRefactoring()" class="member-name-link">warningOnlyForRefactoring</a>()</code></div>
@@ -280,8 +280,8 @@ allowedPaths</code> and <code>allowedOnPath</code> are specified.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">validateAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationMirror</a>&nbsp;attribute,
  com.sun.tools.javac.code.Symbol&nbsp;annotationSymbol)</span></div>
-<div class="block">Validates path restrictions on an annotation, returning an error message if both <code>
-allowedPaths</code> and <code>allowedOnPath</code> are specified.</div>
+<div class="block">Validates path restrictions on an annotation, returning an error message if <code>
+allowedPaths</code> or <code>allowedOnPath</code> is invalid or if both are specified.</div>
 </div>
 </section>
 </li>
@@ -483,7 +483,7 @@ allowedPaths</code> and <code>allowedOnPath</code> are specified.</div>
 <!-- ========= END OF CLASS DATA ========= -->
 <footer>
 <hr>
-<p class="legal-copy"><small>Copyright &#169; 1980 <a href="https://www.google.com">Google LLC</a>. All rights reserved.</small></p>
+<p class="legal-copy"><small>Copyright &#169; 2026 <a href="https://www.google.com">Google LLC</a>. All rights reserved.</small></p>
 </footer>
 </main>
 </div>
