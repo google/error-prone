@@ -13,8 +13,11 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 
 
 ## The problem
-Calling getAnnotation on an annotation that does not have its Retention set to
-RetentionPolicy.RUNTIME will always return null.
+Querying `AnnotatedElement` (via `getAnnotation`, `isAnnotationPresent`,
+`getAnnotationsByType`, `getDeclaredAnnotation`, or
+`getDeclaredAnnotationsByType`) for an annotation that does not have its
+`@Retention` set to `RetentionPolicy.RUNTIME` will always fail to find the
+annotation (returning `null`, `false`, or an empty array).
 
 ## Suppression
 Suppress false positives by adding the suppression annotation `@SuppressWarnings("NonRuntimeAnnotation")` to the enclosing element.
