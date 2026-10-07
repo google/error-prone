@@ -30,7 +30,6 @@ import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isCastable;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static java.util.stream.Stream.empty;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
@@ -74,14 +73,11 @@ public final class TypeCompatibility {
   TypeCompatibility(ErrorProneFlags flags) {
     this.treatBuildersAsIncomparable =
         flags.getBoolean("TypeCompatibility:TreatBuildersAsIncomparable").orElse(true);
-    var matchAdditionalTypes = flags.getBoolean("TypeCompatibility:AdditionalTypes").orElse(true);
     var extraTypes = flags.getSetOrEmpty("TypeCompatibility:ClassesWithNonInheritedEquals");
     this.classesWithNonInheritedEquals =
         memoize(
             state ->
-                concat(
-                        matchAdditionalTypes ? CLASSES_WITH_NON_INHERITED_EQUALS.stream() : empty(),
-                        extraTypes.stream())
+                concat(CLASSES_WITH_NON_INHERITED_EQUALS.stream(), extraTypes.stream())
                     .map(state::getName)
                     .collect(toImmutableSet()));
   }

@@ -1250,54 +1250,9 @@ public class Test {
   }
 
   @Test
-  public void additionalTypes_flagDisabled() {
-    compilationHelper
-        .setArgs("-XepOpt:TypeCompatibility:AdditionalTypes=false")
-        .addSourceLines(
-            "Test.java",
-            """
-            import com.google.common.base.Supplier;
-            import java.net.Inet4Address;
-            import java.net.Inet6Address;
-            import java.util.ArrayList;
-            import java.util.HashSet;
-
-            class Test {
-              static class SupplierA implements Supplier<String> {
-                @Override
-                public String get() {
-                  return "";
-                }
-              }
-
-              static class SupplierB implements Supplier<String> {
-                @Override
-                public String get() {
-                  return "";
-                }
-              }
-
-              void test(
-                  SupplierA sa,
-                  SupplierB sb,
-                  ArrayList<String> arrayList,
-                  HashSet<String> hashSet,
-                  Inet4Address inet4Address,
-                  Inet6Address inet6Address) {
-                sa.equals(sb);
-                arrayList.equals(hashSet);
-                inet4Address.equals(inet6Address);
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
   public void customClassesWithNonInheritedEqualsFlag() {
     compilationHelper
         .setArgs(
-            "-XepOpt:TypeCompatibility:AdditionalTypes=false",
             "-XepOpt:TypeCompatibility:ClassesWithNonInheritedEquals=Test.BaseInterface,Test.BaseClass")
         .addSourceLines(
             "Test.java",
