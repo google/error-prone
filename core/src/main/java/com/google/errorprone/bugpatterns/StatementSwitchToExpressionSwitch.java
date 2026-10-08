@@ -21,10 +21,12 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.SwitchUtils.KINDS_CONVERTIBLE_WITHOUT_BRACES;
 import static com.google.errorprone.bugpatterns.SwitchUtils.KINDS_RETURN_OR_THROW;
 import static com.google.errorprone.bugpatterns.SwitchUtils.REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION;
 import static com.google.errorprone.bugpatterns.SwitchUtils.analyzeCaseForNullAndDefault;
 import static com.google.errorprone.bugpatterns.SwitchUtils.findCombinableVariableTree;
+import static com.google.errorprone.bugpatterns.SwitchUtils.getHandledEnumValues;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getPrecedingStatementsInBlock;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getReferencedLocalVariablesInTree;
 import static com.google.errorprone.bugpatterns.SwitchUtils.isCompatibleWithFirstAssignment;
@@ -38,8 +40,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
-import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
-import static com.sun.source.tree.Tree.Kind.THROW;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.base.Joiner;
@@ -104,10 +104,6 @@ import org.jspecify.annotations.Nullable;
     summary = "This statement switch can be converted to a new-style arrow switch")
 public final class StatementSwitchToExpressionSwitch extends BugChecker
     implements SwitchTreeMatcher {
-  // Braces are not required if there is exactly one statement on the right hand of the arrow, and
-  // it's either an ExpressionStatement or a Throw.  Refer to JLS 14 §14.11.1
-  private static final ImmutableSet<Kind> KINDS_CONVERTIBLE_WITHOUT_BRACES =
-      ImmutableSet.of(THROW, EXPRESSION_STATEMENT);
   private static final Pattern FALL_THROUGH_PATTERN =
       Pattern.compile("\\bfalls?.?(through|out)\\b", Pattern.CASE_INSENSITIVE);
 
@@ -308,12 +304,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       }
 
       // Accumulate enum values included in this case
-      handledEnumValues.addAll(
-          caseTree.getExpressions().stream()
-              .map(ASTHelpers::getSymbol)
-              .filter(x -> x != null)
-              .map(symbol -> symbol.getSimpleName().toString())
-              .collect(toImmutableSet()));
+      handledEnumValues.addAll(getHandledEnumValues(caseTree));
       boolean isLastCaseInSwitch = caseIndex == cases.size() - 1;
 
       ImmutableList<StatementTree> statements = getStatements(caseTree);

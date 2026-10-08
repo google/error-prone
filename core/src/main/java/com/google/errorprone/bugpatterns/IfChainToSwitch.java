@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.SwitchUtils.KINDS_CONVERTIBLE_WITHOUT_BRACES;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getReferencedLocalVariablesInTree;
 import static com.google.errorprone.bugpatterns.SwitchUtils.hasBreakOutOfTree;
 import static com.google.errorprone.bugpatterns.SwitchUtils.isEnumValue;
@@ -33,8 +34,6 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.sameVariable;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.google.errorprone.util.ASTHelpers.unboxedType;
-import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
-import static com.sun.source.tree.Tree.Kind.THROW;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 import static java.util.stream.Collectors.joining;
@@ -99,10 +98,6 @@ import org.jspecify.annotations.Nullable;
 /** Checks for chains of if statements that may be converted to a switch. */
 @BugPattern(severity = WARNING, summary = "This if-chain may be converted into a switch")
 public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
-  // Braces are not required if there is exactly one statement on the right hand of the arrow, and
-  // it's either an ExpressionStatement or a Throw.  Refer to JLS 14 §14.11.1
-  private static final ImmutableSet<Kind> KINDS_CONVERTIBLE_WITHOUT_BRACES =
-      ImmutableSet.of(THROW, EXPRESSION_STATEMENT);
   // Types that are allowed for CaseConstant expressions to be assignable to in a switch, as
   // specified in JLS 21 §14.11.1.
   private static final ImmutableSet<String> ALLOWED_SWITCH_CASE_CONSTANT_TYPES =

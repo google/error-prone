@@ -17,13 +17,13 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.SwitchUtils.KINDS_RETURN_OR_THROW;
 import static com.google.errorprone.bugpatterns.SwitchUtils.REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION;
 import static com.google.errorprone.bugpatterns.SwitchUtils.analyzeCaseForNullAndDefault;
 import static com.google.errorprone.bugpatterns.SwitchUtils.findCombinableVariableTree;
+import static com.google.errorprone.bugpatterns.SwitchUtils.getHandledEnumValues;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getPrecedingStatementsInBlock;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getStatements;
 import static com.google.errorprone.bugpatterns.SwitchUtils.hasContinueOutOfTree;
@@ -198,12 +198,7 @@ public final class RefactorSwitch extends BugChecker
       }
 
       // Accumulate enum values included in this case
-      handledEnumValues.addAll(
-          caseTree.getExpressions().stream()
-              .map(ASTHelpers::getSymbol)
-              .filter(x -> x != null)
-              .map(symbol -> symbol.getSimpleName().toString())
-              .collect(toImmutableSet()));
+      handledEnumValues.addAll(getHandledEnumValues(caseTree));
 
       returnSwitchCaseQualifications =
           analyzeCaseForReturnSwitch(returnSwitchCaseQualifications, statements);
@@ -357,12 +352,7 @@ public final class RefactorSwitch extends BugChecker
       ImmutableList<StatementTree> statements = getStatements(caseTree);
 
       // Accumulate enum values included in this case
-      handledEnumValues.addAll(
-          caseTree.getExpressions().stream()
-              .map(ASTHelpers::getSymbol)
-              .filter(x -> x != null)
-              .map(symbol -> symbol.getSimpleName().toString())
-              .collect(toImmutableSet()));
+      handledEnumValues.addAll(getHandledEnumValues(caseTree));
 
       canSimplify = canSimplify || analyzeCaseForSimplify(statements, caseTree);
     }

@@ -17,10 +17,12 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
+import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.RETURN;
 import static com.sun.source.tree.Tree.Kind.THROW;
 import static java.util.Objects.requireNonNull;
@@ -71,6 +73,10 @@ public final class SwitchUtils {
   static final Matcher<ExpressionTree> COMPILE_TIME_CONSTANT_MATCHER =
       CompileTimeConstantExpressionMatcher.instance();
   static final ImmutableSet<Kind> KINDS_RETURN_OR_THROW = ImmutableSet.of(THROW, RETURN);
+  // Braces are not required if there is exactly one statement on the right hand of the arrow, and
+  // it's either an ExpressionStatement or a Throw. Refer to JLS 14 §14.11.1
+  static final ImmutableSet<Kind> KINDS_CONVERTIBLE_WITHOUT_BRACES =
+      ImmutableSet.of(THROW, EXPRESSION_STATEMENT);
 
   private static final String EQUALS_STRING = "=";
   static final String REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION =
@@ -497,6 +503,20 @@ public final class SwitchUtils {
       }
     }.scan(tree, null);
     return referencedLocalVariables;
+  }
+
+  /** Returns the names of enum constants handled by {@code caseTree}. */
+  static ImmutableSet<String> getHandledEnumValues(CaseTree caseTree) {
+    return caseTree.getExpressions().stream()
+        .map(ASTHelpers::getSymbol)
+        .filter(Objects::nonNull)
+        .map(symbol -> symbol.getSimpleName().toString())
+        .collect(toImmutableSet());
+  }
+
+  /** Returns the names of enum constants handled across all {@code cases}. */
+  static ImmutableSet<String> getHandledEnumValues(List<? extends CaseTree> cases) {
+    return cases.stream().flatMap(c -> getHandledEnumValues(c).stream()).collect(toImmutableSet());
   }
 
   private SwitchUtils() {}
