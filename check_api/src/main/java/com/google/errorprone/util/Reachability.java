@@ -62,6 +62,16 @@ import java.util.Set;
 
 /** An implementation of JLS 14.21 reachability. */
 public class Reachability {
+  /**
+   * A replacement for the completion result of one tree, for {@link
+   * #canCompleteNormally(StatementTree, ImmutableMap)}.
+   *
+   * @param analyzeInside whether the tree is still analyzed, so that the targets of any {@code
+   *     break} and {@code continue} statements it contains are recorded.
+   * @param canCompleteNormally the completion result to use for the tree, in place of the one the
+   *     JLS would give.
+   */
+  public record CanCompleteNormallyPatch(boolean analyzeInside, boolean canCompleteNormally) {}
 
   /**
    * Returns true if the given statement can complete normally, as defined by JLS 14.21.
@@ -75,13 +85,13 @@ public class Reachability {
   /**
    * Returns whether the given statement can complete normally, as defined by JLS 14.21, when taking
    * into account the given {@code patches}. The patches are a (possibly empty) map from {@code
-   * Tree} to a boolean indicating whether that specific {@code Tree} can complete normally. All
-   * relevant tree(s) not present in the patches will be analyzed as per the JLS.
+   * Tree} to a {@link CanCompleteNormallyPatch}. All relevant tree(s) not present in the patches
+   * will be analyzed as per the JLS.
    *
    * <p>An exception is made for {@code System.exit}, which cannot complete normally in practice.
    */
   public static boolean canCompleteNormally(
-      StatementTree statement, ImmutableMap<Tree, Boolean> patches) {
+      StatementTree statement, ImmutableMap<Tree, CanCompleteNormallyPatch> patches) {
     return new CanCompleteNormallyVisitor(patches).scan(statement);
   }
 
@@ -116,10 +126,10 @@ public class Reachability {
     /** Trees that are the target of a reachable continue statement. */
     private final Set<Tree> continues = new HashSet<>();
 
-    /** Trees that are patched to have a specific completion result. */
-    private final ImmutableMap<Tree, Boolean> patches;
+    /** Trees whose completion result is replaced by a patch. */
+    private final ImmutableMap<Tree, CanCompleteNormallyPatch> patches;
 
-    CanCompleteNormallyVisitor(ImmutableMap<Tree, Boolean> patches) {
+    CanCompleteNormallyVisitor(ImmutableMap<Tree, CanCompleteNormallyPatch> patches) {
       this.patches = patches;
     }
 
@@ -135,10 +145,13 @@ public class Reachability {
     // don't otherwise affect the result of the reachability analysis.
     @CanIgnoreReturnValue
     private boolean scan(Tree tree) {
-      if (patches.containsKey(tree)) {
-        return patches.get(tree);
+      CanCompleteNormallyPatch patch = patches.get(tree);
+      if (patch != null && !patch.analyzeInside()) {
+        return patch.canCompleteNormally();
       }
-      return tree.accept(this, null);
+      // Analyze even when the result is known, to record the targets of the jumps it contains
+      boolean completes = tree.accept(this, null);
+      return patch != null ? patch.canCompleteNormally() : completes;
     }
 
     /* A break statement cannot complete normally. */
@@ -272,13 +285,9 @@ public class Reachability {
      */
     @Override
     public Boolean visitSwitch(SwitchTree tree, Void unused) {
-      // (1)
-      if (!isEnhanced(tree) && tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
-        return true;
-      }
       // A switch statement whose switch block consists of switch rules can complete normally iff at
       // least one of the following is true:
-      //   (1 above) The switch statement is not enhanced (§14.11.2) and its switch block does not
+      //   (1) The switch statement is not enhanced (§14.11.2) and its switch block does not
       // contain a default label.
       //   (2) One of the switch rules introduces a switch rule expression (which is necessarily a
       // statement expression).
@@ -286,8 +295,16 @@ public class Reachability {
       //   (4) One of the switch rules introduces a switch rule block that contains a reachable
       // break statement which exits the switch statement.
       if (tree.getCases().stream().anyMatch(c -> c.getCaseKind().equals(CaseKind.RULE))) {
+        boolean anyCompletes = false;
+        for (CaseTree c : tree.getCases()) {
+          anyCompletes |= scan(c.getBody());
+        }
+        // (1)
+        if (!isEnhanced(tree) && tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
+          return true;
+        }
         // (2) and (3)
-        if (tree.getCases().stream().anyMatch(c -> scan(c.getBody()))) {
+        if (anyCompletes) {
           return true;
         }
         // (4)
@@ -296,21 +313,26 @@ public class Reachability {
         }
         return false;
       }
+
       // Past this point, we know each case is a statement.
+      boolean lastCompletes = true;
+      for (CaseTree c : tree.getCases()) {
+        lastCompletes = scan(c.getStatements());
+      }
+      // (1)
+      if (!isEnhanced(tree) && tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
+        return true;
+      }
       // (2)
       if (tree.getCases().stream().allMatch(c -> c.getStatements().isEmpty())) {
         return true;
       }
       // (3)
-      boolean lastCompletes = true;
-      for (CaseTree c : tree.getCases()) {
-        lastCompletes = scan(c.getStatements());
-      }
       if (lastCompletes) {
         return true;
       }
       // (4)
-      if (getLast(tree.getCases()).getStatements().isEmpty()) {
+      if (!tree.getCases().isEmpty() && getLast(tree.getCases()).getStatements().isEmpty()) {
         return true;
       }
       // (5)

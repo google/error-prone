@@ -56,6 +56,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
 import com.google.errorprone.util.Reachability;
+import com.google.errorprone.util.Reachability.CanCompleteNormallyPatch;
 import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
@@ -638,7 +639,11 @@ public final class RefactorSwitch extends BugChecker
         // analyze reachability here; deeper-nested statements are not relevant.
         boolean nextStatementReachable =
             Reachability.canCompleteNormally(
-                statements.get(indexInBlock), ImmutableMap.of(cannotCompleteNormallyTree, false));
+                statements.get(indexInBlock),
+                ImmutableMap.of(
+                    cannotCompleteNormallyTree,
+                    new CanCompleteNormallyPatch(
+                        /* analyzeInside= */ false, /* canCompleteNormally= */ false)));
         // If we continue to the ancestor statement block, it will be because the end of this
         // statement block is not reachable
         cannotCompleteNormallyTree = blockTree;

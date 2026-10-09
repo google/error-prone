@@ -19,16 +19,23 @@ package com.google.errorprone.util;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.DoWhileLoopTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.Reachability.CanCompleteNormallyPatch;
 import com.google.testing.junit.testparameterinjector.TestParameter;
 import com.google.testing.junit.testparameterinjector.TestParameterInjector;
+import com.sun.source.tree.DoWhileLoopTree;
+import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.SwitchTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.util.TreeScanner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -959,6 +966,279 @@ public class ReachabilityTest {
                 throw new AssertionError();
               case Triangle t:
                 throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void breakOutOfEnclosingLoop_switchWithoutDefault() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    while (true) {
+                      switch (x) {
+                        case 1:
+                          break l;
+                      }
+                    }
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void breakOutOfEnclosingLoop_arrowSwitchShortCircuits() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    while (true) {
+                      switch (x) {
+                        case 1 -> {}
+                        case 2 -> {}
+                        default -> {
+                          break l;
+                        }
+                      }
+                    }
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void breakOutOfEnclosingLoop_arrowSwitchBreakInFirstCase() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    while (true) {
+                      switch (x) {
+                        default -> {
+                          break l;
+                        }
+                        case 1 -> {}
+                        case 2 -> {}
+                      }
+                    }
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void breakOutOfEnclosingLoop_arrowSwitchWithoutDefault() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    while (true) {
+                      switch (x) {
+                        case 1 -> {
+                          break l;
+                        }
+                      }
+                    }
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void continueEnclosingDoLoop_switchWithoutDefault() {
+    CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                switch (x) {
+                  case 1:
+                    l:
+                    do {
+                      switch (x) {
+                        case 1:
+                          continue l;
+                      }
+                      return;
+                    } while (false);
+                  // BUG: Diagnostic contains:
+                  default:
+                    break;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * Reports a {@code do} loop that can complete normally, where each statement in its body labeled
+   * {@code completes} or {@code doesNotComplete} is given as an analyzed patch with that result.
+   */
+  @BugPattern(summary = "", severity = ERROR)
+  public static class DoWhileCompletesWithAnalyzedPatches extends BugChecker
+      implements DoWhileLoopTreeMatcher {
+
+    @Override
+    public Description matchDoWhileLoop(DoWhileLoopTree tree, VisitorState state) {
+      ImmutableMap.Builder<Tree, CanCompleteNormallyPatch> analyzedPatches = ImmutableMap.builder();
+      new TreeScanner<Void, Void>() {
+        @Override
+        public Void visitLabeledStatement(LabeledStatementTree labeled, Void unused) {
+          switch (labeled.getLabel().toString()) {
+            case "completes" ->
+                analyzedPatches.put(
+                    labeled,
+                    new CanCompleteNormallyPatch(
+                        /* analyzeInside= */ true, /* canCompleteNormally= */ true));
+            case "doesNotComplete" ->
+                analyzedPatches.put(
+                    labeled,
+                    new CanCompleteNormallyPatch(
+                        /* analyzeInside= */ true, /* canCompleteNormally= */ false));
+            // No label? Handle as normal
+            default -> {}
+          }
+          return super.visitLabeledStatement(labeled, null);
+        }
+      }.scan(tree.getStatement(), null);
+      return Reachability.canCompleteNormally(tree, analyzedPatches.buildOrThrow())
+          ? describeMatch(tree)
+          : NO_MATCH;
+    }
+  }
+
+  /**
+   * A tree patched to be unable to complete normally is still analyzed, so a {@code continue}
+   * inside it is recorded and makes the enclosing {@code do} able to complete normally. (Patching
+   * the same tree with {@code patches} would not descend into it, so the {@code continue} would be
+   * missed.)
+   */
+  @Test
+  public void analyzedPatches_doesNotComplete_recordsJumpsInside() {
+    CompilationTestHelper.newInstance(DoWhileCompletesWithAnalyzedPatches.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void continues(boolean b) {
+                // BUG: Diagnostic contains:
+                do {
+                  doesNotComplete:
+                  if (b) {
+                    continue;
+                  }
+                } while (b);
+              }
+
+              void noJump(boolean b) {
+                do {
+                  doesNotComplete:
+                  if (b) {
+                    throw new AssertionError();
+                  }
+                } while (b);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A tree can also be patched to be able to complete normally, overriding the analysis. It is
+   * still analyzed, so a {@code break} inside it is recorded too.
+   */
+  @Test
+  public void analyzedPatches_completes() {
+    CompilationTestHelper.newInstance(DoWhileCompletesWithAnalyzedPatches.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              // The `if` cannot complete normally, but is patched to, so the loop can too.
+              void patched(boolean b) {
+                // BUG: Diagnostic contains:
+                do {
+                  completes:
+                  if (b) {
+                    return;
+                  } else {
+                    throw new AssertionError();
+                  }
+                } while (b);
+              }
+
+              // Control: the same loop without the patch cannot complete normally.
+              void unpatched(boolean b) {
+                do {
+                  if (b) {
+                    return;
+                  } else {
+                    throw new AssertionError();
+                  }
+                } while (b);
+              }
+
+              // The inner loop cannot complete normally whatever its body does, so the outer loop
+              // can complete normally only through the `break`, which is recorded only because the
+              // patched tree is still analyzed.
+              void breakInsidePatched(boolean b) {
+                outer:
+                // BUG: Diagnostic contains:
+                do {
+                  while (true) {
+                    completes:
+                    if (b) {
+                      break outer;
+                    } else {
+                      throw new AssertionError();
+                    }
+                  }
+                } while (b);
+              }
             }
             """)
         .doTest();

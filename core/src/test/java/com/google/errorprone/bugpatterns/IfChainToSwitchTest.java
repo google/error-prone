@@ -2682,7 +2682,7 @@ public final class IfChainToSwitchTest {
                   } else if (suit == Suit.CLUB) {
                     return;
                   }
-                  System.out.println("this will become unreachable");
+                  System.out.println("this will remain reachable");
                   System.out.println("this will too");
                 }
                 System.out.println("this will too");
@@ -2710,7 +2710,10 @@ public final class IfChainToSwitchTest {
                       return;
                     }
                   }
+                  System.out.println("this will remain reachable");
+                  System.out.println("this will too");
                 }
+                System.out.println("this will too");
               }
             }
             """)
@@ -5273,8 +5276,8 @@ class Test {
                     } else if (s == Suit.CLUB) {
                       throw new AssertionError("club");
                     }
-                    System.out.println("Delete me");
-                    System.out.println("Delete me too");
+                    System.out.println("Don't delete me");
+                    System.out.println("Don't delete me too");
                   }
                 }
                 return new Bar().toString();
@@ -5294,6 +5297,8 @@ class Test {
                       case Suit.DIAMOND -> throw new AssertionError("diamond");
                       case Suit.CLUB -> throw new AssertionError("club");
                     }
+                    System.out.println("Don't delete me");
+                    System.out.println("Don't delete me too");
                   }
                 }
                 return new Bar().toString();
@@ -5305,6 +5310,556 @@ class Test {
         .doTest();
   }
 
+  @Test
+  public void ifChain_exhaustiveEnumInConstructor_keepsTrailingStatements() {
+    // The trailing statements discharge the definite-assignment obligation for the blank final
+    // field (JLS 16.9), so they may not be deleted even though every case throws or returns.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              final int x;
+
+              Test(Suit s) {
+                if (s == Suit.HEART) {
+                  x = 1;
+                  return;
+                } else if (s == Suit.SPADE) {
+                  x = 2;
+                  return;
+                } else if (s == Suit.DIAMOND) {
+                  x = 3;
+                  return;
+                } else if (s == Suit.CLUB) {
+                  x = 4;
+                  return;
+                }
+                System.out.println("not reached");
+                x = 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              final int x;
+
+              Test(Suit s) {
+                switch (s) {
+                  case Suit.HEART -> {
+                    x = 1;
+                    return;
+                  }
+                  case Suit.SPADE -> {
+                    x = 2;
+                    return;
+                  }
+                  case Suit.DIAMOND -> {
+                    x = 3;
+                    return;
+                  }
+                  case Suit.CLUB -> {
+                    x = 4;
+                    return;
+                  }
+                }
+                System.out.println("not reached");
+                x = 0;
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_exhaustiveEnumInSwitchExpressionArm_keepsTrailingStatements() {
+    // The trailing {@code yield} is the switch expression's only result expression (JLS
+    // 15.28.1), so it may not be deleted. The enclosing method is {@code void}, so its reachability
+    // says nothing about the reachability of the arm.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s, int k) {
+                int result =
+                    switch (k) {
+                      default -> {
+                        if (s == Suit.HEART) {
+                          throw new AssertionError();
+                        } else if (s == Suit.SPADE) {
+                          throw new AssertionError();
+                        } else if (s == Suit.DIAMOND) {
+                          throw new AssertionError();
+                        } else if (s == Suit.CLUB) {
+                          throw new AssertionError();
+                        }
+                        System.out.println("not reached");
+                        yield 0;
+                      }
+                    };
+                System.out.println(result);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Suit s, int k) {
+                int result =
+                    switch (k) {
+                      default -> {
+                        switch (s) {
+                          case Suit.HEART -> throw new AssertionError();
+                          case Suit.SPADE -> throw new AssertionError();
+                          case Suit.DIAMOND -> throw new AssertionError();
+                          case Suit.CLUB -> throw new AssertionError();
+                        }
+                        System.out.println("not reached");
+                        yield 0;
+                      }
+                    };
+                System.out.println(result);
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_colonCaseTrailingDeadCode_error() {
+    // The statements following the chain live in a colon-style `case`, which holds them directly
+    // rather than in a block.  They are dead once the chain becomes an exhaustive switch, so they
+    // must be deleted; leaving them would not compile.
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int k) {
+                switch (k) {
+                  case 1:
+                    if (o instanceof Integer) {
+                      throw new AssertionError();
+                    } else if (o instanceof String) {
+                      throw new AssertionError();
+                    } else if (o instanceof Object) {
+                      throw new AssertionError();
+                    }
+                    System.out.println("dead");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int k) {
+                switch (k) {
+                  case 1:
+                    switch (o) {
+                      case Integer _ -> throw new AssertionError();
+                      case String _ -> throw new AssertionError();
+                      case Object _ -> throw new AssertionError();
+                    }
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_colonCaseTrailingDeadCodeContainsIf_noError() {
+    // As above, but the dead statements in the colon-style `case` contain an `if`, which this check
+    // may rewrite under a separate finding whose fix would overlap the deletion.
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int k, int b) {
+                switch (k) {
+                  case 1:
+                    if (o instanceof Integer) {
+                      throw new AssertionError();
+                    } else if (o instanceof String) {
+                      throw new AssertionError();
+                    } else if (o instanceof Object) {
+                      throw new AssertionError();
+                    }
+                    System.out.println("dead");
+                    if (b == 1) {
+                      System.out.println("x");
+                    }
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_colonCaseTrailingDeadCodeSafe_error() {
+    // Safe mode injects `case null -> {}`, so the switch can still complete normally and the
+    // following statements stay reachable.  Nothing is deleted.
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int k) {
+                switch (k) {
+                  case 1:
+                    if (o instanceof Integer) {
+                      throw new AssertionError();
+                    } else if (o instanceof String) {
+                      throw new AssertionError();
+                    } else if (o instanceof Object) {
+                      throw new AssertionError();
+                    }
+                    System.out.println("dead");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int k) {
+                switch (k) {
+                  case 1:
+                    switch (o) {
+                      case Integer _ -> throw new AssertionError();
+                      case String _ -> throw new AssertionError();
+                      case Object _ -> throw new AssertionError();
+                      case null -> {}
+                    }
+                    System.out.println("dead");
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE_TRUE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_colonCaseDeadCodeCascadesPastSwitch_error() {
+    // Deleting the dead statements in the colon-style `case` leaves the enclosing `switch` unable
+    // to complete normally, so the statement after it is dead too and must also be deleted.
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int k) {
+                switch (k) {
+                  default:
+                    throw new AssertionError();
+                  case 1:
+                    if (o instanceof Integer) {
+                      throw new AssertionError();
+                    } else if (o instanceof String) {
+                      throw new AssertionError();
+                    } else if (o instanceof Object) {
+                      throw new AssertionError();
+                    }
+                    System.out.println("dead");
+                }
+                System.out.println("afterSwitch");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int k) {
+                switch (k) {
+                  default:
+                    throw new AssertionError();
+                  case 1:
+                    switch (o) {
+                      case Integer _ -> throw new AssertionError();
+                      case String _ -> throw new AssertionError();
+                      case Object _ -> throw new AssertionError();
+                    }
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_colonCaseDeadCodeWithBreak_error() {
+    // The dead statements hold the only `break` out of the enclosing `switch`, so deleting them
+    // leaves that switch unable to complete normally and the statement after it dead as well.
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int k, boolean flag) {
+                lbl:
+                switch (k) {
+                  default:
+                    throw new AssertionError();
+                  case 1:
+                    if (o instanceof Integer) {
+                      throw new AssertionError();
+                    } else if (o instanceof String) {
+                      throw new AssertionError();
+                    } else if (o instanceof Object) {
+                      throw new AssertionError();
+                    }
+                    while (flag) {
+                      break lbl;
+                    }
+                    System.out.println("dead");
+                }
+                System.out.println("afterSwitch");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int k, boolean flag) {
+                lbl:
+                switch (k) {
+                  default:
+                    throw new AssertionError();
+                  case 1:
+                    switch (o) {
+                      case Integer _ -> throw new AssertionError();
+                      case String _ -> throw new AssertionError();
+                      case Object _ -> throw new AssertionError();
+                    }
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_deadCodeLeavesSurvivingBreak_error() {
+    // The `break l` in the other case survives the fix and still exits the loop, so the statement
+    // after the loop stays reachable and must be left alone.
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int x) {
+                l:
+                while (true) {
+                  switch (x) {
+                    default:
+                      break l;
+                    case 1:
+                      if (o instanceof Integer) {
+                        throw new AssertionError();
+                      } else if (o instanceof String) {
+                        throw new AssertionError();
+                      } else if (o instanceof Object) {
+                        throw new AssertionError();
+                      }
+                      System.out.println("remove me");
+                  }
+                }
+                System.out.println("after");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int x) {
+                l:
+                while (true) {
+                  switch (x) {
+                    default:
+                      break l;
+                    case 1:
+                      switch (o) {
+                        case Integer _ -> throw new AssertionError();
+                        case String _ -> throw new AssertionError();
+                        case Object _ -> throw new AssertionError();
+                      }
+                  }
+                }
+                System.out.println("after");
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_continueKeepsDoWhileCompletable_error() {
+    // Each switch contains a `continue`, which reaches the condition of the enclosing `do`, so the
+    // loop can still complete normally and the statement after it stays reachable.  In `foo` the
+    // `continue` is in a branch of the chain; in `bar` it is pulled up into the `default` case.  In
+    // `baz` and `qux` nothing follows the chain; in `baz` the `continue` is in the last branch,
+    // whose `if` has no `else`, and in `qux` it is in an earlier branch.
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, boolean b) {
+                do {
+                  if (o instanceof Integer) {
+                    continue;
+                  } else if (o instanceof String) {
+                    throw new AssertionError();
+                  } else if (o instanceof Object) {
+                    throw new AssertionError();
+                  }
+                  System.out.println("dead");
+                } while (b);
+                System.out.println("after");
+              }
+
+              public void bar(Object o, boolean b) {
+                do {
+                  if (o instanceof Integer) {
+                    throw new AssertionError();
+                  } else if (o instanceof String) {
+                    throw new AssertionError();
+                  } else if (o instanceof Long) {
+                    throw new AssertionError();
+                  }
+                  continue;
+                } while (b);
+                System.out.println("after");
+              }
+
+              public void baz(Object o, boolean b) {
+                do {
+                  if (o instanceof Integer) {
+                    throw new AssertionError();
+                  } else if (o instanceof String) {
+                    throw new AssertionError();
+                  } else if (o instanceof Object) {
+                    continue;
+                  }
+                } while (b);
+                System.out.println("after");
+              }
+
+              public void qux(Object o, boolean b) {
+                do {
+                  if (o instanceof Integer) {
+                    continue;
+                  } else if (o instanceof String) {
+                    throw new AssertionError();
+                  } else if (o instanceof Object) {
+                    throw new AssertionError();
+                  }
+                } while (b);
+                System.out.println("after");
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, boolean b) {
+                do {
+                  switch (o) {
+                    case Integer _ -> {
+                      continue;
+                    }
+                    case String _ -> throw new AssertionError();
+                    case Object _ -> throw new AssertionError();
+                  }
+                } while (b);
+                System.out.println("after");
+              }
+
+              public void bar(Object o, boolean b) {
+                do {
+                  switch (o) {
+                    case Integer _ -> throw new AssertionError();
+                    case String _ -> throw new AssertionError();
+                    case Long _ -> throw new AssertionError();
+                    default -> {
+                      continue;
+                    }
+                  }
+
+                } while (b);
+                System.out.println("after");
+              }
+
+              public void baz(Object o, boolean b) {
+                do {
+                  switch (o) {
+                    case Integer _ -> throw new AssertionError();
+                    case String _ -> throw new AssertionError();
+                    case Object _ -> {
+                      continue;
+                    }
+                  }
+                } while (b);
+                System.out.println("after");
+              }
+
+              public void qux(Object o, boolean b) {
+                do {
+                  switch (o) {
+                    case Integer _ -> {
+                      continue;
+                    }
+                    case String _ -> throw new AssertionError();
+                    case Object _ -> throw new AssertionError();
+                  }
+                } while (b);
+                System.out.println("after");
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
   /** Substitute underscore for {@code unused} variables, if supported. */
   private static String maybeChangeToUnnamedVariable(String s) {
     if (Runtime.version().feature() >= 22) {
@@ -5312,6 +5867,100 @@ class Test {
     } else {
       return s;
     }
+  }
+
+  @Test
+  public void ifChain_deletedDeclarationUsedInLaterCase_noError() {
+    // Converting would make the rest of `case 1` unreachable, so it would be deleted, but `y` is
+    // still used by `case 2`
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              int f(int x, Object o) {
+                switch (x) {
+                  case 1:
+                    if (o instanceof String s) {
+                      return 1;
+                    } else if (o instanceof Integer i) {
+                      return 2;
+                    } else if (o instanceof Object obj) {
+                      return 3;
+                    }
+                    int y = 5; // Used below!
+                    return y;
+                  case 2:
+                    y = 7;
+                    return y;
+                  default:
+                    return 0;
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_deletedDeclarationUnusedInLaterCase_error() {
+    // The rest of `case 1` becomes unreachable and is deleted, including the declaration of `y`,
+    // which is safe because no later case refers to it
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              int f(int x, Object o) {
+                switch (x) {
+                  case 1:
+                    if (o instanceof String s) {
+                      return 1;
+                    } else if (o instanceof Integer i) {
+                      return 2;
+                    } else if (o instanceof Object obj) {
+                      return 3;
+                    }
+                    int y = 5;
+                    return y;
+                  case 2:
+                    return 7;
+                  default:
+                    return 0;
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              int f(int x, Object o) {
+                switch (x) {
+                  case 1:
+                    switch (o) {
+                      case String s -> {
+                        return 1;
+                      }
+                      case Integer i -> {
+                        return 2;
+                      }
+                      case Object obj -> {
+                        return 3;
+                      }
+                    }
+                  case 2:
+                    return 7;
+                  default:
+                    return 0;
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
   }
 
   /**
