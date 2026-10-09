@@ -55,6 +55,7 @@ loadScripts(document, 'script');</script>
 <div class="toc-header">Contents&nbsp;<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false"><input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset"></div>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
+<li><a href="#nested-class-summary" tabindex="0">Nested Class Summary</a></li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
@@ -89,6 +90,23 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="Reachability.CanCompleteNormallyPatch.html" class="type-name-link" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">A replacement for the completion result of one tree, for <a href="#canCompleteNormally(com.sun.source.tree.StatementTree,com.google.common.collect.ImmutableMap)"><code>canCompleteNormally(StatementTree, ImmutableMap)</code></a>.</div>
+</div>
+</div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -120,7 +138,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#canCompleteNormally(com.sun.source.tree.StatementTree,com.google.common.collect.ImmutableMap)" class="member-name-link">canCompleteNormally</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&nbsp;statement,
- com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;&nbsp;patches)</code></div>
+ com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>, <a href="Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a>&gt;&nbsp;patches)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns whether the given statement can complete normally, as defined by JLS 14.21, when taking
 into account the given <code>patches</code>.</div>
@@ -179,11 +197,11 @@ into account the given <code>patches</code>.</div>
 <h3>canCompleteNormally</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canCompleteNormally</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/StatementTree.html" title="class or interface in com.sun.source.tree" class="external-link">StatementTree</a>&nbsp;statement,
- com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;&nbsp;patches)</span></div>
+ com.google.common.collect.ImmutableMap&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>, <a href="Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a>&gt;&nbsp;patches)</span></div>
 <div class="block">Returns whether the given statement can complete normally, as defined by JLS 14.21, when taking
 into account the given <code>patches</code>. The patches are a (possibly empty) map from <code>
-Tree</code> to a boolean indicating whether that specific <code>Tree</code> can complete normally. All
-relevant tree(s) not present in the patches will be analyzed as per the JLS.
+Tree</code> to a <a href="Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util"><code>Reachability.CanCompleteNormallyPatch</code></a>. All relevant tree(s) not present in the patches
+will be analyzed as per the JLS.
 
 <p>An exception is made for <code>System.exit</code>, which cannot complete normally in practice.</div>
 </div>

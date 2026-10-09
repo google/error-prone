@@ -1879,6 +1879,16 @@ into account the given <code>patches</code>.</div>
 returns <code>this</code>, returns an effectively final input param, or if it looks like a builder
 method (that is likely to return <code>this</code>).</div>
 </dd>
+<dt><a href="com/google/errorprone/util/Reachability.CanCompleteNormallyPatch.html#CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE" class="member-name-link">CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE</a> - Enum constant in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a></dt>
+<dd>
+<div class="block">The tree cannot complete normally, but is still analyzed, so that the targets of any <code>
+break</code> and <code>continue</code> statements it contains are recorded.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/Reachability.CanCompleteNormallyPatch.html#CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE" class="member-name-link">CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE</a> - Enum constant in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a></dt>
+<dd>
+<div class="block">The tree cannot complete normally, and is not analyzed, so the targets of any <code>break</code>
+and <code>continue</code> statements it contains are not recorded.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/CannotMockFinalClass.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">CannotMockFinalClass</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Bug pattern to recognize attempts to mock final types.</div>
@@ -12971,6 +12981,10 @@ trying to static import it if possible.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/Reachability.html#%3Cinit%3E()" class="member-name-link">Reachability()</a> - Constructor for class com.google.errorprone.util.<a href="com/google/errorprone/util/Reachability.html" title="class in com.google.errorprone.util">Reachability</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/Reachability.CanCompleteNormallyPatch.html" class="type-name-link" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a> - Enum Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
+<dd>
+<div class="block">A replacement for the completion result of one tree, for <a href="com/google/errorprone/util/Reachability.html#canCompleteNormally(com.sun.source.tree.StatementTree,com.google.common.collect.ImmutableMap)"><code>Reachability.canCompleteNormally(StatementTree, ImmutableMap)</code></a>.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ReachabilityFenceUsage.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ReachabilityFenceUsage</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
@@ -16168,6 +16182,10 @@ isn't strictly an inlining).</div>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/Reachability.CanCompleteNormallyPatch.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this class with the specified name.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/Visibility.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/Visibility.html" title="enum class in com.google.errorprone.util">Visibility</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
@@ -16317,6 +16335,11 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/OperatorPrecedence.html#values()" class="member-name-link">values()</a> - Static method in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum class, in
+the order they are declared.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/Reachability.CanCompleteNormallyPatch.html#values()" class="member-name-link">values()</a> - Static method in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/Reachability.CanCompleteNormallyPatch.html" title="enum class in com.google.errorprone.util">Reachability.CanCompleteNormallyPatch</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>
