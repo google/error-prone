@@ -40,6 +40,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
+import static com.google.errorprone.util.Reachability.CanCompleteNormallyPatch.CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.base.Joiner;
@@ -1047,7 +1048,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         // analyze reachability here; deeper-nested statements are not relevant.
         boolean nextStatementReachable =
             Reachability.canCompleteNormally(
-                statements.get(indexInBlock), ImmutableMap.of(cannotCompleteNormallyTree, false));
+                statements.get(indexInBlock),
+                ImmutableMap.of(cannotCompleteNormallyTree, CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE));
         // If we continue to the ancestor statement block, it will be because the end of this
         // statement block is not reachable
         cannotCompleteNormallyTree = blockTree;

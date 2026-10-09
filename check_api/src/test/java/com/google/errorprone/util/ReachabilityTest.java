@@ -18,17 +18,25 @@ package com.google.errorprone.util;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.Reachability.CanCompleteNormallyPatch.CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.DoWhileLoopTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.Reachability.CanCompleteNormallyPatch;
 import com.google.testing.junit.testparameterinjector.TestParameter;
 import com.google.testing.junit.testparameterinjector.TestParameterInjector;
+import com.sun.source.tree.DoWhileLoopTree;
+import com.sun.source.tree.LabeledStatementTree;
 import com.sun.source.tree.SwitchTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.util.TreeScanner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -959,6 +967,68 @@ public class ReachabilityTest {
                 throw new AssertionError();
               case Triangle t:
                 throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * Reports a {@code do} loop that can complete normally, where each statement in its body labeled
+   * {@code doesNotComplete} is patched with {@code CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE}.
+   */
+  @BugPattern(summary = "", severity = ERROR)
+  public static class DoWhileCompletesWithAnalyzedPatches extends BugChecker
+      implements DoWhileLoopTreeMatcher {
+
+    @Override
+    public Description matchDoWhileLoop(DoWhileLoopTree tree, VisitorState state) {
+      ImmutableMap.Builder<Tree, CanCompleteNormallyPatch> analyzedPatches = ImmutableMap.builder();
+      new TreeScanner<Void, Void>() {
+        @Override
+        public Void visitLabeledStatement(LabeledStatementTree labeled, Void unused) {
+          if (labeled.getLabel().contentEquals("doesNotComplete")) {
+            analyzedPatches.put(labeled, CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE);
+          }
+          return super.visitLabeledStatement(labeled, null);
+        }
+      }.scan(tree.getStatement(), null);
+      return Reachability.canCompleteNormally(tree, analyzedPatches.buildOrThrow())
+          ? describeMatch(tree)
+          : NO_MATCH;
+    }
+  }
+
+  /**
+   * A tree patched to be unable to complete normally is still analyzed, so a {@code continue}
+   * inside it is recorded and makes the enclosing {@code do} able to complete normally. (Patching
+   * the same tree with {@code CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE} would not descend into it, so
+   * the {@code continue} would be missed.)
+   */
+  @Test
+  public void analyzedPatches_doesNotComplete_recordsJumpsInside() {
+    CompilationTestHelper.newInstance(DoWhileCompletesWithAnalyzedPatches.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void continues(boolean b) {
+                // BUG: Diagnostic contains:
+                do {
+                  doesNotComplete:
+                  if (b) {
+                    continue;
+                  }
+                } while (b);
+              }
+
+              void noJump(boolean b) {
+                do {
+                  doesNotComplete:
+                  if (b) {
+                    throw new AssertionError();
+                  }
+                } while (b);
+              }
             }
             """)
         .doTest();
