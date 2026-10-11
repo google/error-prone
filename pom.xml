@@ -29,7 +29,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <guava.version>33.7.1-jre</guava.version>
+    <guava.version>33.7.2-jre</guava.version>
     <truth.version>1.4.5</truth.version>
     <autoservice.version>1.1.1</autoservice.version>
     <autovalue.version>1.11.1</autovalue.version>
@@ -45,7 +45,7 @@
     <protobuf.version>4.36.2</protobuf.version>
     <grpc.version>1.43.3</grpc.version>
     <jspecify.version>1.0.1</jspecify.version>
-    <google-java-format.version>1.36.1</google-java-format.version>
+    <google-java-format.version>1.37.0</google-java-format.version>
   </properties>
 
   <organization>
