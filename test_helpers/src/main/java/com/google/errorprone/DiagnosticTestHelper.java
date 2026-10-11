@@ -220,9 +220,24 @@ public class DiagnosticTestHelper {
    *
    * @param source File in which to find matching lines
    */
+  private final Set<Diagnostic<? extends JavaFileObject>> handledDiagnostics = new HashSet<>();
+
+  void resetHandledDiagnostics() {
+    handledDiagnostics.clear();
+  }
+
+  /**
+   * Asserts that the diagnostics contain a diagnostic on each line of the source file that matches
+   * our bug marker pattern. Parses the bug marker pattern for the specific string to look for in
+   * the diagnostic. The failure message names every line that fails, each with the first
+   * expectation it fails.
+   *
+   * @param source File in which to find matching lines
+   */
   public void assertHasDiagnosticOnAllMatchingLines(
       JavaFileObject source, LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic)
       throws IOException {
+    resetHandledDiagnostics();
     ImmutableList<String> mismatches = findMismatchedLines(source, lookForCheckNameInDiagnostic);
     if (!mismatches.isEmpty()) {
       fail(describeMismatches(mismatches));
@@ -238,6 +253,8 @@ public class DiagnosticTestHelper {
       JavaFileObject source, LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic)
       throws IOException {
     List<Diagnostic<? extends JavaFileObject>> diagnostics = getDiagnostics();
+    ImmutableList<String> sourceLines =
+        CharSource.wrap(source.getCharContent(false)).readLines();
     ImmutableList.Builder<String> mismatches = ImmutableList.builder();
     LineNumberReader reader =
         new LineNumberReader(CharSource.wrap(source.getCharContent(false)).openStream());
@@ -250,6 +267,7 @@ public class DiagnosticTestHelper {
       List<Predicate<? super String>> predicates = null;
       // The first expectation this line fails, so that each line gets at most one message.
       String mismatch = null;
+      int failedLineNumber = -1;
       if (line.contains(BUG_MARKER_COMMENT_INLINE)) {
         // Diagnostic must contain all patterns from the bug marker comment.
         List<String> patterns = extractPatterns(line, reader, BUG_MARKER_COMMENT_INLINE);
@@ -268,6 +286,7 @@ public class DiagnosticTestHelper {
                     "No expected error message with key [%s] as expected from line [%s] "
                         + "with diagnostic [%s]",
                     lookupKey, markerLineNumber, line.trim());
+            failedLineNumber = markerLineNumber;
             break;
           }
           predicates.add(expectedErrorMsgs.get(lookupKey));
@@ -284,6 +303,7 @@ public class DiagnosticTestHelper {
             mismatch =
                 String.format(
                     "Did not see an error on line %s matching %s.", lineNumber, predicate);
+            failedLineNumber = lineNumber;
           }
         }
 
@@ -299,19 +319,60 @@ public class DiagnosticTestHelper {
             mismatch =
                 String.format(
                     "Did not see an error on line %s containing [%s].", lineNumber, checkName);
+            failedLineNumber = lineNumber;
           }
         }
 
+        if (mismatch == null) {
+          for (Diagnostic<? extends JavaFileObject> d : diagnostics) {
+            if (d.getSource() != null
+                && d.getSource().toUri().equals(source.toUri())
+                && d.getLineNumber() == lineNumber) {
+              handledDiagnostics.add(d);
+            }
+          }
+        }
       } else {
         int lineNumber = reader.getLineNumber();
         Matcher<? super Iterable<Diagnostic<? extends JavaFileObject>>> matcher =
             hasItem(diagnosticOnLine(source.toUri(), lineNumber));
         if (matcher.matches(diagnostics)) {
           mismatch = "Saw unexpected error on line " + lineNumber + ".";
+          failedLineNumber = lineNumber;
         }
       }
       if (mismatch != null) {
-        mismatches.add(mismatch);
+        int targetLine = failedLineNumber > 0 ? failedLineNumber : reader.getLineNumber();
+        List<Diagnostic<? extends JavaFileObject>> lineDiagnostics = new ArrayList<>();
+        for (Diagnostic<? extends JavaFileObject> d : diagnostics) {
+          if (d.getSource() != null
+              && d.getSource().toUri().equals(source.toUri())
+              && d.getLineNumber() == targetLine) {
+            lineDiagnostics.add(d);
+          }
+        }
+        handledDiagnostics.addAll(lineDiagnostics);
+        if (!lineDiagnostics.isEmpty()) {
+          mismatches.add(
+              mismatch
+                  + "\n"
+                  + lineDiagnostics.stream()
+                      .map(Object::toString)
+                      .collect(Collectors.joining("\n\n")));
+        } else {
+          String sourceLine =
+              targetLine > 0 && targetLine <= sourceLines.size()
+                  ? sourceLines.get(targetLine - 1).trim()
+                  : "";
+          mismatches.add(
+              mismatch
+                  + "\n"
+                  + source.getName()
+                  + ":"
+                  + targetLine
+                  + ": no diagnostic was reported on this line"
+                  + (sourceLine.isEmpty() ? "" : "\n    " + sourceLine));
+        }
       }
     } while (true);
     reader.close();
@@ -319,19 +380,23 @@ public class DiagnosticTestHelper {
   }
 
   /**
-   * Returns a failure message with each of {@code mismatches} on its own line, followed by every
-   * diagnostic the compilation reported.
+   * Returns a failure message with each of {@code mismatches} separated by blank lines, followed by
+   * any other diagnostics that were not matched by passing lines or reported in mismatches.
    */
   String describeMismatches(List<String> mismatches) {
-    return String.join("\n", mismatches) + "\n" + allErrors(getDiagnostics());
-  }
-
-  private static String allErrors(List<Diagnostic<? extends JavaFileObject>> diagnostics) {
-    if (diagnostics.isEmpty()) {
-      return "There were no errors.";
+    String message = String.join("\n\n", mismatches);
+    List<Diagnostic<? extends JavaFileObject>> otherDiagnostics =
+        getDiagnostics().stream()
+            .filter(d -> !handledDiagnostics.contains(d))
+            .collect(Collectors.toList());
+    if (!otherDiagnostics.isEmpty()) {
+      message +=
+          "\n\nOther diagnostics:\n"
+              + otherDiagnostics.stream()
+                  .map(Object::toString)
+                  .collect(Collectors.joining("\n\n"));
     }
-    return "All errors:\n"
-        + diagnostics.stream().map(Object::toString).collect(Collectors.joining("\n\n"));
+    return message;
   }
 
   /** Returns the lookup keys that weren't used. */
