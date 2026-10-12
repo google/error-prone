@@ -16,11 +16,15 @@
 
 package com.google.errorprone.refaster;
 
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.stringContainsComments;
+import static com.google.errorprone.util.AnnotationNames.BEFORE_TEMPLATE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.PLACEHOLDER_ANNOTATION;
 
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.DescriptionListener;
+import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.ErrorPronePosition;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -85,7 +89,11 @@ abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
 
   @Override
   public Void visitMethod(MethodTree node, Context context) {
-    if (isSuppressed(node, context)) {
+    VisitorState state = VisitorState.createForUtilityPurposes(context);
+    Symbol sym = ASTHelpers.getSymbol(node);
+    if (hasAnnotation(sym, BEFORE_TEMPLATE_ANNOTATION, state)
+        || hasAnnotation(sym, PLACEHOLDER_ANNOTATION, state)
+        || isSuppressed(node, context)) {
       return null;
     }
     return super.visitMethod(node, context);

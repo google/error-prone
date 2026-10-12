@@ -62,6 +62,8 @@ public final class AnnotationNames {
   public static final String OF_KIND_ANNOTATION =
       "com.google.errorprone.refaster.annotation.OfKind";
   public static final String OVERRIDE_ANNOTATION = "java.lang.Override";
+  public static final String PLACEHOLDER_ANNOTATION =
+      "com.google.errorprone.refaster.annotation.Placeholder";
   public static final String REPEATABLE_ANNOTATION = "java.lang.annotation.Repeatable";
   public static final String REPEATED_ANNOTATION =
       "com.google.errorprone.refaster.annotation.Repeated";

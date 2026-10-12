@@ -21,6 +21,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.AnnotationNames.AFTER_TEMPLATE_ANNOTATION;
 import static com.google.errorprone.util.AnnotationNames.BEFORE_TEMPLATE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.PLACEHOLDER_ANNOTATION;
 import static java.util.logging.Level.FINE;
 
 import com.google.common.collect.ImmutableClassToInstanceMap;
@@ -101,7 +102,7 @@ public final class RefasterRuleBuilderScanner extends SimpleTreeVisitor<Void, Vo
     try {
       VisitorState state = VisitorState.createForUtilityPurposes(context);
       logger.log(FINE, "Discovered method with name {0}", tree.getName());
-      if (hasAnnotation(tree, "com.google.errorprone.refaster.annotation.Placeholder", state)) {
+      if (hasAnnotation(tree, PLACEHOLDER_ANNOTATION, state)) {
         checkArgument(
             tree.getModifiers().getFlags().contains(Modifier.ABSTRACT),
             "@Placeholder methods are expected to be abstract");

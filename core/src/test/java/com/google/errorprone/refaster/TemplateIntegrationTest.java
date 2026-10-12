@@ -440,4 +440,69 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
 
     expectTransforms(transformer, input, expectedOutput);
   }
+
+  @Test
+  public void beforeTemplateAndPlaceholderSuppressed() throws IOException {
+    CodeTransformer transformer =
+        extractRefasterRule(
+            forResource(String.format("%s/SuppressWarningsTemplate.java", TEMPLATE_DIR)));
+
+    JavaFileObject input =
+        forSourceString(
+            "OtherTemplate",
+            """
+            import com.google.errorprone.refaster.annotation.AfterTemplate;
+            import com.google.errorprone.refaster.annotation.BeforeTemplate;
+            import com.google.errorprone.refaster.annotation.Placeholder;
+
+            abstract class OtherTemplate {
+              @Placeholder
+              abstract int placeholder(int x);
+
+              @BeforeTemplate
+              int before(int x) {
+                return x < 0 ? -x : x;
+              }
+
+              @AfterTemplate
+              int after(int x) {
+                return x < 0 ? -x : x;
+              }
+
+              int normalMethod(int x) {
+                return x < 0 ? -x : x;
+              }
+            }
+            """);
+
+    JavaFileObject expectedOutput =
+        forSourceString(
+            "OtherTemplate",
+            """
+            import com.google.errorprone.refaster.annotation.AfterTemplate;
+            import com.google.errorprone.refaster.annotation.BeforeTemplate;
+            import com.google.errorprone.refaster.annotation.Placeholder;
+
+            abstract class OtherTemplate {
+              @Placeholder
+              abstract int placeholder(int x);
+
+              @BeforeTemplate
+              int before(int x) {
+                return x < 0 ? -x : x;
+              }
+
+              @AfterTemplate
+              int after(int x) {
+                return Math.abs(x);
+              }
+
+              int normalMethod(int x) {
+                return Math.abs(x);
+              }
+            }
+            """);
+
+    expectTransforms(transformer, input, expectedOutput);
+  }
 }
