@@ -20,6 +20,7 @@ import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAS
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.common.collect.ImmutableSet;
@@ -275,6 +276,15 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
               SuggestedFix.Builder builder) {
             for (AnnotationTree annotation :
                 HAS_TYPE_USE_ANNOTATION.multiMatchResult(annotationHolder, state).matchingNodes()) {
+              if (!hasExplicitSource(annotation, state)) {
+                // A record component's type-use annotation can be reached through javac's
+                // synthesized members (field/accessor/canonical constructor), whose copy of the
+                // annotation tree has no recorded end position. Deleting and reinserting it would
+                // build an invalid Replacement and crash the whole compilation (#6074). Leave the
+                // annotation where it is -- the node is still qualified by the prefixWith() call
+                // above, it just won't be relocated ahead of the qualified type.
+                continue;
+              }
               builder.delete(annotation);
               builder.prefixWith(node, state.getSourceForNode(annotation) + " ");
             }
