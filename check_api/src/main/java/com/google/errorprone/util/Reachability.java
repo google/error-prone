@@ -165,19 +165,18 @@ public class Reachability {
     /* A break statement cannot complete normally. */
     @Override
     public Boolean visitBreak(BreakTree tree, Void unused) {
-      breaks.add(skipLabel(requireNonNull(((JCTree.JCBreak) tree).target)));
+      // The target of a `break` with a label is the labeled statement
+      breaks.add(requireNonNull(((JCTree.JCBreak) tree).target));
       return false;
     }
 
     /* A continue statement cannot complete normally. */
     @Override
     public Boolean visitContinue(ContinueTree tree, Void unused) {
-      continues.add(skipLabel(requireNonNull(((JCTree.JCContinue) tree).target)));
+      // The target of a `continue` with a label is the loop that the label labels, not the labeled
+      // statement (JLS 21 §14.16); javac already resolves it to that loop.
+      continues.add(requireNonNull(((JCTree.JCContinue) tree).target));
       return false;
-    }
-
-    private static Tree skipLabel(JCTree tree) {
-      return tree.hasTag(JCTree.Tag.LABELLED) ? ((JCTree.JCLabeledStatement) tree).body : tree;
     }
 
     @Override
@@ -218,9 +217,8 @@ public class Reachability {
     public Boolean visitLabeledStatement(LabeledStatementTree tree, Void unused) {
       // (1)
       boolean completes = scan(tree.getStatement());
-      // (2) `visitBreak` records a `break` against the statement contained in its target (see
-      // `skipLabel`).
-      return completes || breaks.contains(tree.getStatement());
+      // (2)
+      return completes || breaks.contains(tree);
     }
 
     /* An expression statement can complete normally iff it is reachable. */
