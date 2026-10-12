@@ -28,6 +28,7 @@ import static com.google.errorprone.matchers.Matchers.sameVariable;
 import static com.google.errorprone.matchers.Matchers.toType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
@@ -55,7 +56,7 @@ public class NonAtomicVolatileUpdate extends BugChecker
   /** Extracts the expression from a UnaryTree and applies a matcher to it. */
   private static Matcher<UnaryTree> expressionFromUnaryTree(Matcher<ExpressionTree> exprMatcher) {
     return (UnaryTree tree, VisitorState state) -> {
-      return exprMatcher.matches(tree.getExpression(), state);
+      return exprMatcher.matches(ASTHelpers.stripParentheses(tree.getExpression()), state);
     };
   }
 
@@ -63,7 +64,7 @@ public class NonAtomicVolatileUpdate extends BugChecker
   private static Matcher<CompoundAssignmentTree> variableFromCompoundAssignmentTree(
       Matcher<ExpressionTree> exprMatcher) {
     return (CompoundAssignmentTree tree, VisitorState state) -> {
-      return exprMatcher.matches(tree.getVariable(), state);
+      return exprMatcher.matches(ASTHelpers.stripParentheses(tree.getVariable()), state);
     };
   }
 
@@ -71,7 +72,7 @@ public class NonAtomicVolatileUpdate extends BugChecker
   private static Matcher<AssignmentTree> variableFromAssignmentTree(
       Matcher<ExpressionTree> exprMatcher) {
     return (AssignmentTree tree, VisitorState state) -> {
-      return exprMatcher.matches(tree.getVariable(), state);
+      return exprMatcher.matches(ASTHelpers.stripParentheses(tree.getVariable()), state);
     };
   }
 

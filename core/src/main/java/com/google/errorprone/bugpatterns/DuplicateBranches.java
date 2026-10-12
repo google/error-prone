@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static java.util.stream.Collectors.joining;
 
 import com.google.errorprone.BugPattern;
@@ -31,6 +32,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ErrorProneTokens;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ConditionalExpressionTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IfTree;
 import com.sun.source.tree.Tree;
 
@@ -66,7 +68,9 @@ public class DuplicateBranches extends BugChecker
     // do exactly what we want here, which is to compare the syntax including of identifiers and
     // not their underlying symbols, and it would require a lot of case work to implement for all
     // AST nodes.
-    if (!thenTree.toString().equals(elseTree.toString())) {
+    Tree strippedThen = thenTree instanceof ExpressionTree et ? stripParentheses(et) : thenTree;
+    Tree strippedElse = elseTree instanceof ExpressionTree et ? stripParentheses(et) : elseTree;
+    if (!strippedThen.toString().equals(strippedElse.toString())) {
       return NO_MATCH;
     }
     int start = getStartPosition(elseTree);
