@@ -16,6 +16,7 @@
 
 package com.google.errorprone.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.Reachability.CanCompleteNormallyPatch.CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE;
@@ -27,6 +28,7 @@ import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.DoWhileLoopTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.LabeledStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.Reachability.CanCompleteNormallyPatch;
@@ -34,6 +36,7 @@ import com.google.testing.junit.testparameterinjector.TestParameter;
 import com.google.testing.junit.testparameterinjector.TestParameterInjector;
 import com.sun.source.tree.DoWhileLoopTree;
 import com.sun.source.tree.LabeledStatementTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
@@ -57,6 +60,26 @@ public class ReachabilityTest {
               Iterables.getLast(tree.getCases().get(0).getStatements()))
           ? describeMatch(tree.getCases().get(1))
           : NO_MATCH;
+    }
+  }
+
+  /**
+   * Reports whether {@link Reachability} thinks that the statement contained in each labeled
+   * statement in a method named {@code f} can complete normally.
+   */
+  @BugPattern(summary = "", severity = ERROR)
+  public static class ContainedStatementCanCompleteNormally extends BugChecker
+      implements LabeledStatementTreeMatcher {
+
+    @Override
+    public Description matchLabeledStatement(LabeledStatementTree tree, VisitorState state) {
+      MethodTree method = state.findEnclosing(MethodTree.class);
+      if (method == null || !method.getName().contentEquals("f")) {
+        return NO_MATCH;
+      }
+      return buildDescription(tree)
+          .setMessage("Reachability: " + Reachability.canCompleteNormally(tree.getStatement()))
+          .build();
     }
   }
 
@@ -112,6 +135,68 @@ public class ReachabilityTest {
                     expected ? "void" : "int",
                     statement,
                     expected ? "System.out.println(\"reached\");" : ""));
+  }
+
+  /**
+   * Returns a test that {@link Reachability} and javac agree on whether the statement contained in
+   * {@code labeledStatement} (call it {@code S}) can complete normally. {@code expected} is the
+   * ground truth of whether {@code S} can complete normally per the JLS.
+   *
+   * <p>A unit test can't easily access the answer for {@code S}, because any code after {@code S}
+   * is also after {@code labeledStatement}. However, this can be addressed with a couple tricks,
+   * depending on the ground truth value:
+   *
+   * <p>Ground truth: the statement {@code S} can complete normally 1. We put {@code S} in {@code if
+   * (!(o instanceof String s)) S}, inside a block labeled {@code l}. 2. The pattern variable {@code
+   * s} is in scope after the {@code if} statement iff {@code S} cannot complete normally. 3.
+   * declare a new local variable {@code s}, which would clash with the pattern variable if it were
+   * in scope.
+   *
+   * <p>Ground truth: the statement {@code S} cannot complete normally 1.-2. as above, 3. code after
+   * the {@code if} references the pattern variable {@code s}, which would otherwise not be in
+   * scope.
+   */
+  private CompilationTestHelper containedStatementCanCompleteNormallyTest(
+      boolean expected, String labeledStatement) {
+    return containedStatementCanCompleteNormallyTest(expected, expected, labeledStatement);
+  }
+
+  /**
+   * Like {@link #containedStatementCanCompleteNormallyTest(boolean, String)}, but documents a bug
+   * where {@link Reachability} disagrees with javac: {@code reachability} is what {@link
+   * Reachability} currently answers, and {@code javac} is what javac answers (the ground truth).
+   */
+  private CompilationTestHelper containedStatementCanCompleteNormallyTest(
+      boolean reachability, boolean javac, String labeledStatement) {
+    String label = "l:\n";
+    checkArgument(labeledStatement.startsWith(label), labeledStatement);
+    String statement = labeledStatement.substring(label.length());
+    return CompilationTestHelper.newInstance(
+            ContainedStatementCanCompleteNormally.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                // BUG: Diagnostic contains: Reachability: %s
+            %s
+              }
+
+              void javacAgrees(int x, Object o) {
+                l:
+                {
+                  if (!(o instanceof String s))
+            %s
+                  %s
+                }
+              }
+            }
+            """
+                .formatted(
+                    reachability,
+                    labeledStatement,
+                    statement,
+                    javac ? "String s = \"\";" : "s.length();"));
   }
 
   @Test
@@ -514,6 +599,133 @@ public class ReachabilityTest {
             }
             """)
         .doTest();
+  }
+
+  /**
+   * A {@code break l} exits the labeled statement, not the {@code while} statement it contains (JLS
+   * 21 §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
+   */
+  @Test
+  public void breakExitsLabeledStatement_while() {
+    String statement =
+        """
+        l:
+        while (true) {
+          break l;
+        }
+        """;
+    canCompleteNormallyTest(/* expected= */ true, statement).doTest();
+    // BUG: Reachability credits `break l` to the statement contained in `l`, so it disagrees with
+    // javac, which says that statement can't complete normally.
+    containedStatementCanCompleteNormallyTest(
+            /* reachability= */ true, /* javac= */ false, statement)
+        .doTest();
+  }
+
+  /**
+   * A {@code break l} exits the labeled statement, not the {@code do} statement it contains (JLS 21
+   * §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
+   */
+  @Test
+  public void breakExitsLabeledStatement_do() {
+    String statement =
+        """
+        l:
+        do {
+          break l;
+        } while (true);
+        """;
+    canCompleteNormallyTest(/* expected= */ true, statement).doTest();
+    // BUG: Reachability credits `break l` to the statement contained in `l`, so it disagrees with
+    // javac, which says that statement can't complete normally.
+    containedStatementCanCompleteNormallyTest(
+            /* reachability= */ true, /* javac= */ false, statement)
+        .doTest();
+  }
+
+  /**
+   * A {@code break l} exits the labeled statement, not the {@code for} statement it contains (JLS
+   * 21 §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
+   */
+  @Test
+  public void breakExitsLabeledStatement_for() {
+    String statement =
+        """
+        l:
+        for (;;) {
+          break l;
+        }
+        """;
+    canCompleteNormallyTest(/* expected= */ true, statement).doTest();
+    // BUG: Reachability credits `break l` to the statement contained in `l`, so it disagrees with
+    // javac, which says that statement can't complete normally.
+    containedStatementCanCompleteNormallyTest(
+            /* reachability= */ true, /* javac= */ false, statement)
+        .doTest();
+  }
+
+  /**
+   * A {@code break l} exits the labeled statement, not the {@code switch} statement it contains
+   * (JLS 21 §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
+   */
+  @Test
+  public void breakExitsLabeledStatement_switch() {
+    String statement =
+        """
+        l:
+        switch (x) {
+          case 1:
+            break l;
+          default:
+            throw new AssertionError();
+        }
+        """;
+    canCompleteNormallyTest(/* expected= */ true, statement).doTest();
+    // BUG: Reachability credits `break l` to the statement contained in `l`, so it disagrees with
+    // javac, which says that statement can't complete normally.
+    containedStatementCanCompleteNormallyTest(
+            /* reachability= */ true, /* javac= */ false, statement)
+        .doTest();
+  }
+
+  /** Like {@link #breakExitsLabeledStatement_switch}, but with switch rules. */
+  @Test
+  public void breakExitsLabeledStatement_arrowSwitch() {
+    String statement =
+        """
+        l:
+        switch (x) {
+          case 1 -> {
+            break l;
+          }
+          case 2 -> throw new AssertionError();
+          default -> throw new AssertionError();
+        }
+        """;
+    canCompleteNormallyTest(/* expected= */ true, statement).doTest();
+    // BUG: Reachability credits `break l` to the statement contained in `l`, so it disagrees with
+    // javac, which says that statement can't complete normally.
+    containedStatementCanCompleteNormallyTest(
+            /* reachability= */ true, /* javac= */ false, statement)
+        .doTest();
+  }
+
+  /**
+   * A {@code break} with no label exits the innermost {@code switch}, {@code while}, {@code do} or
+   * {@code for} statement around it (JLS 21 §14.15). So here the {@code while} statement can
+   * complete normally (JLS 21 §14.22), even though it has a label.
+   */
+  @Test
+  public void breakExitsContainedStatement_withoutLabel() {
+    String statement =
+        """
+        l:
+        while (true) {
+          break;
+        }
+        """;
+    canCompleteNormallyTest(/* expected= */ true, statement).doTest();
+    containedStatementCanCompleteNormallyTest(/* expected= */ true, statement).doTest();
   }
 
   /**
