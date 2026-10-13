@@ -33,7 +33,7 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "The first argument to nCopies is the number of copies, and the second is the item to copy",

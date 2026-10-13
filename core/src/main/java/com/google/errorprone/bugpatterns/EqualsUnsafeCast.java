@@ -43,11 +43,9 @@ import com.sun.tools.javac.code.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Checks for {@code equals} implementations making unsafe casts.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Checks for `equals` implementations making unsafe casts.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary =
         "The contract of #equals states that it should return false for incompatible types, "

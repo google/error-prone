@@ -32,7 +32,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 import org.safere.Pattern;
 
-/** Check for disallowed access to private_do_not_access_or_else proto fields. */
+/// Check for disallowed access to private_do_not_access_or_else proto fields.
 @BugPattern(
     summary =
         "Access to a private protocol buffer field is forbidden. This protocol buffer carries"

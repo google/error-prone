@@ -28,11 +28,9 @@ import com.sun.tools.javac.tree.JCTree.JCNewClass;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UTree} version of {@link NewClassTree}, which represents a constructor invocation.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] version of [NewClassTree], which represents a constructor invocation.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UNewClass extends UExpression implements NewClassTree {
 
@@ -62,11 +60,9 @@ abstract class UNewClass extends UExpression implements NewClassTree {
   @Override
   public abstract @Nullable UExpression getEnclosingExpression();
 
-  /**
-   * Note: these are not the type arguments to the class, but to the constructor, for those
-   * extremely rare constructors that look like e.g. {@code <E> Foo(E e)}, where the type parameter
-   * is for the constructor alone and not the class.
-   */
+  /// Note: these are not the type arguments to the class, but to the constructor, for those
+  /// extremely rare constructors that look like e.g. `<E> Foo(E e)`, where the type parameter is
+  /// for the constructor alone and not the class.
   @Override
   public abstract ImmutableList<UExpression> getTypeArguments();
 

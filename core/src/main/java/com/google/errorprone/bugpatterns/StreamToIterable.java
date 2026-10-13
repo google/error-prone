@@ -39,7 +39,7 @@ import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 
-/** Discourage {@code stream::iterator} to create {@link Iterable}s. */
+/// Discourage `stream::iterator` to create [Iterable]s.
 @BugPattern(
     summary =
         "Using stream::iterator creates a one-shot Iterable, which may cause surprising failures.",

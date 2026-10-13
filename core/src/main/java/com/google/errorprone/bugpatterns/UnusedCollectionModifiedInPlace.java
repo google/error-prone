@@ -31,18 +31,14 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree.Kind;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// @author eaftan@google.com (Eddie Aftandilian)
 @BugPattern(
     summary = "Collection is modified in place, but the result is not used",
     severity = ERROR)
 public class UnusedCollectionModifiedInPlace extends BugChecker
     implements MethodInvocationTreeMatcher {
-  /**
-   * Matches "destructive" methods in java.util.Collections, which modify their first argument in
-   * place and return void.
-   */
+  /// Matches "destructive" methods in java.util.Collections, which modify their first argument in
+  /// place and return void.
   private static final Matcher<MethodInvocationTree> COLLECTIONS_DESTRUCTIVE =
       anyOf(
           staticMethod().onClass("java.util.Collections").named("copy"),
@@ -53,10 +49,8 @@ public class UnusedCollectionModifiedInPlace extends BugChecker
           staticMethod().onClass("java.util.Collections").named("sort"),
           staticMethod().onClass("java.util.Collections").named("swap"));
 
-  /**
-   * Matches cases where the first argument to the method call constructs a new list, but the result
-   * is not assigned.
-   */
+  /// Matches cases where the first argument to the method call constructs a new list, but the
+  /// result is not assigned.
   private static final Matcher<MethodInvocationTree> FIRST_ARG_CONSTRUCTS_NEW_LIST =
       argument(
           0,

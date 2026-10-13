@@ -40,10 +40,8 @@ import com.sun.tools.javac.code.Type;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author cushon@google.com (Liam Miller-Cushon)
- * @author eleanorh@google.com (Eleanor Harris)
- */
+/// @author cushon@google.com (Liam Miller-Cushon)
+/// @author eleanorh@google.com (Eleanor Harris)
 @BugPattern(summary = "This use of isInstance will always evaluate to false.", severity = ERROR)
 public final class IsInstanceIncompatibleType extends BugChecker
     implements MethodInvocationTreeMatcher, MemberReferenceTreeMatcher {

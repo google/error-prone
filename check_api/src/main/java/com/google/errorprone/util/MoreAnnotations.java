@@ -47,20 +47,18 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 import org.jspecify.annotations.Nullable;
 
-/** Annotation-related utilities. */
+/// Annotation-related utilities.
 public final class MoreAnnotations {
 
-  /**
-   * Returns the annotation on the given element with the specified qualified binary or canonical
-   * name.
-   *
-   * <p>Prefer {@link #getAnnotation(Element, ClassName)}.
-   */
+  /// Returns the annotation on the given element with the specified qualified binary or canonical
+  /// name.
+  ///
+  /// Prefer [#getAnnotation(Element, ClassName)].
   public static Optional<Attribute.Compound> getAnnotation(Element sym, String qualifiedName) {
     return getAnnotation(sym, ClassName.of(qualifiedName));
   }
 
-  /** Returns the annotation on the given element with the specified qualified name. */
+  /// Returns the annotation on the given element with the specified qualified name.
   public static Optional<Attribute.Compound> getAnnotation(Element sym, Name qualifiedName) {
     if (!(sym instanceof Symbol symbol)) {
       return Optional.empty();
@@ -73,7 +71,7 @@ public final class MoreAnnotations {
     return Optional.empty();
   }
 
-  /** Returns the annotation on the given element with the specified class name. */
+  /// Returns the annotation on the given element with the specified class name.
   public static Optional<Attribute.Compound> getAnnotation(Element sym, ClassName annotationName) {
     if (!(sym instanceof Symbol symbol)) {
       return Optional.empty();
@@ -86,7 +84,7 @@ public final class MoreAnnotations {
     return Optional.empty();
   }
 
-  /** Returns the annotation on the given element with the specified simple name. */
+  /// Returns the annotation on the given element with the specified simple name.
   public static Optional<Attribute.Compound> getAnnotationWithSimpleName(
       Element sym, String simpleName) {
     if (!(sym instanceof Symbol symbol)) {
@@ -100,10 +98,8 @@ public final class MoreAnnotations {
     return Optional.empty();
   }
 
-  /**
-   * Returns the value of the annotation element-value pair with the given name if it is explicitly
-   * set.
-   */
+  /// Returns the value of the annotation element-value pair with the given name if it is explicitly
+  /// set.
   public static Optional<AnnotationValue> getValue(AnnotationMirror annotationMirror, String name) {
     if (annotationMirror == null) {
       return Optional.empty();
@@ -114,12 +110,10 @@ public final class MoreAnnotations {
         .findFirst();
   }
 
-  /**
-   * Returns the value of the annotation element-value pair with the given name if it is explicitly
-   * set.
-   *
-   * @deprecated Prefer {@link #getValue(AnnotationMirror, String)}.
-   */
+  /// Returns the value of the annotation element-value pair with the given name if it is explicitly
+  /// set.
+  ///
+  /// @deprecated Prefer [#getValue(AnnotationMirror, String)].
   @InlineMe(
       replacement =
           "MoreAnnotations.getValue((AnnotationMirror) attribute, name).map(Attribute.class::cast)",
@@ -133,162 +127,142 @@ public final class MoreAnnotations {
     return getValue((AnnotationMirror) attribute, name).map(Attribute.class::cast);
   }
 
-  /** Shorthand for extracting a string value of a named element from an annotation mirror. */
+  /// Shorthand for extracting a string value of a named element from an annotation mirror.
   public static Optional<String> getStringValue(AnnotationMirror attribute, String name) {
     return getValue(attribute, name).flatMap(MoreAnnotations::asStringValue);
   }
 
-  /**
-   * Shorthand for extracting the "value" string of a named annotation on an element.
-   *
-   * <p>Prefer {@link #getStringValue(Element, ClassName)}.
-   */
+  /// Shorthand for extracting the "value" string of a named annotation on an element.
+  ///
+  /// Prefer [#getStringValue(Element, ClassName)].
   public static Optional<String> getStringValue(Element sym, String annotationName) {
     return getStringValue(sym, ClassName.of(annotationName));
   }
 
-  /** Shorthand for extracting the "value" string of a named annotation on an element. */
+  /// Shorthand for extracting the "value" string of a named annotation on an element.
   public static Optional<String> getStringValue(Element sym, ClassName annotationName) {
     return getAnnotation(sym, annotationName).flatMap(a -> getStringValue(a, "value"));
   }
 
-  /** Shorthand for extracting a boolean value of a named element from an annotation mirror. */
+  /// Shorthand for extracting a boolean value of a named element from an annotation mirror.
   public static Optional<Boolean> getBooleanValue(AnnotationMirror attribute, String name) {
     return getValue(attribute, name).flatMap(MoreAnnotations::asBooleanValue);
   }
 
-  /**
-   * Shorthand for extracting the "value" boolean of a named annotation on an element.
-   *
-   * <p>Prefer {@link #getBooleanValue(Element, ClassName)}.
-   */
+  /// Shorthand for extracting the "value" boolean of a named annotation on an element.
+  ///
+  /// Prefer [#getBooleanValue(Element, ClassName)].
   public static Optional<Boolean> getBooleanValue(Element sym, String annotationName) {
     return getBooleanValue(sym, ClassName.of(annotationName));
   }
 
-  /** Shorthand for extracting the "value" boolean of a named annotation on an element. */
+  /// Shorthand for extracting the "value" boolean of a named annotation on an element.
   public static Optional<Boolean> getBooleanValue(Element sym, ClassName annotationName) {
     return getAnnotation(sym, annotationName).flatMap(a -> getBooleanValue(a, "value"));
   }
 
-  /** Shorthand for extracting an enum value of a named element from an annotation mirror. */
+  /// Shorthand for extracting an enum value of a named element from an annotation mirror.
   public static Optional<VarSymbol> getEnumValue(AnnotationMirror attribute, String name) {
     return getValue(attribute, name).flatMap(MoreAnnotations::asEnumValue);
   }
 
-  /**
-   * Shorthand for extracting the "value" enum of a named annotation on an element.
-   *
-   * <p>Prefer {@link #getEnumValue(Element, ClassName)}.
-   */
+  /// Shorthand for extracting the "value" enum of a named annotation on an element.
+  ///
+  /// Prefer [#getEnumValue(Element, ClassName)].
   public static Optional<VarSymbol> getEnumValue(Element sym, String annotationName) {
     return getEnumValue(sym, ClassName.of(annotationName));
   }
 
-  /** Shorthand for extracting the "value" enum of a named annotation on an element. */
+  /// Shorthand for extracting the "value" enum of a named annotation on an element.
   public static Optional<VarSymbol> getEnumValue(Element sym, ClassName annotationName) {
     return getAnnotation(sym, annotationName).flatMap(a -> getEnumValue(a, "value"));
   }
 
-  /** Shorthand for extracting enum values of a named element from an annotation mirror. */
+  /// Shorthand for extracting enum values of a named element from an annotation mirror.
   public static ImmutableList<VarSymbol> getEnumValues(AnnotationMirror attribute, String name) {
     return getValue(attribute, name)
         .map(v -> asEnumValues(v).collect(toImmutableList()))
         .orElseGet(ImmutableList::of);
   }
 
-  /**
-   * Shorthand for extracting the "value" enum values of a named annotation on an element.
-   *
-   * <p>Prefer {@link #getEnumValues(Element, ClassName)}.
-   */
+  /// Shorthand for extracting the "value" enum values of a named annotation on an element.
+  ///
+  /// Prefer [#getEnumValues(Element, ClassName)].
   public static ImmutableList<VarSymbol> getEnumValues(Element sym, String annotationName) {
     return getEnumValues(sym, ClassName.of(annotationName));
   }
 
-  /** Shorthand for extracting the "value" enum values of a named annotation on an element. */
+  /// Shorthand for extracting the "value" enum values of a named annotation on an element.
   public static ImmutableList<VarSymbol> getEnumValues(Element sym, ClassName annotationName) {
     return getAnnotation(sym, annotationName)
         .map(a -> getEnumValues(a, "value"))
         .orElseGet(ImmutableList::of);
   }
 
-  /**
-   * Shorthand for extracting a list of strings for a named element (e.g. array or single string).
-   */
+  /// Shorthand for extracting a list of strings for a named element (e.g. array or single string).
   public static ImmutableList<String> getStrings(AnnotationMirror attribute, String name) {
     return getValue(attribute, name)
         .map(v -> asStrings(v).collect(toImmutableList()))
         .orElseGet(ImmutableList::of);
   }
 
-  /**
-   * Shorthand for extracting a list of strings from the "value" element of a named annotation on an
-   * element.
-   *
-   * <p>Prefer {@link #getStrings(Element, ClassName)}.
-   */
+  /// Shorthand for extracting a list of strings from the "value" element of a named annotation on
+  /// an element.
+  ///
+  /// Prefer [#getStrings(Element, ClassName)].
   public static ImmutableList<String> getStrings(Element sym, String annotationName) {
     return getStrings(sym, ClassName.of(annotationName));
   }
 
-  /**
-   * Shorthand for extracting a list of strings from the "value" element of a named annotation on an
-   * element.
-   */
+  /// Shorthand for extracting a list of strings from the "value" element of a named annotation on
+  /// an element.
   public static ImmutableList<String> getStrings(Element sym, ClassName annotationName) {
     return getAnnotation(sym, annotationName)
         .map(a -> getStrings(a, "value"))
         .orElseGet(ImmutableList::of);
   }
 
-  /** Shorthand for extracting a list of types for a named element (e.g. Class[] or Class). */
+  /// Shorthand for extracting a list of types for a named element (e.g. Class[] or Class).
   public static ImmutableList<TypeMirror> getTypes(AnnotationMirror attribute, String name) {
     return getValue(attribute, name)
         .map(v -> asTypes(v).collect(toImmutableList()))
         .orElseGet(ImmutableList::of);
   }
 
-  /**
-   * Shorthand for extracting a list of types from the "value" element of a named annotation on an
-   * element.
-   *
-   * <p>Prefer {@link #getTypes(Element, ClassName)}.
-   */
+  /// Shorthand for extracting a list of types from the "value" element of a named annotation on an
+  /// element.
+  ///
+  /// Prefer [#getTypes(Element, ClassName)].
   public static ImmutableList<TypeMirror> getTypes(Element sym, String annotationName) {
     return getTypes(sym, ClassName.of(annotationName));
   }
 
-  /**
-   * Shorthand for extracting a list of types from the "value" element of a named annotation on an
-   * element.
-   */
+  /// Shorthand for extracting a list of types from the "value" element of a named annotation on an
+  /// element.
   public static ImmutableList<TypeMirror> getTypes(Element sym, ClassName annotationName) {
     return getAnnotation(sym, annotationName)
         .map(a -> getTypes(a, "value"))
         .orElseGet(ImmutableList::of);
   }
 
-  /** Shorthand for extracting a type value of a named element from an annotation mirror. */
+  /// Shorthand for extracting a type value of a named element from an annotation mirror.
   public static Optional<TypeMirror> getTypeValue(AnnotationMirror attribute, String name) {
     return getValue(attribute, name).flatMap(MoreAnnotations::asTypeValue);
   }
 
-  /**
-   * Shorthand for extracting the "value" type of a named annotation on an element.
-   *
-   * <p>Prefer {@link #getTypeValue(Element, ClassName)}.
-   */
+  /// Shorthand for extracting the "value" type of a named annotation on an element.
+  ///
+  /// Prefer [#getTypeValue(Element, ClassName)].
   public static Optional<TypeMirror> getTypeValue(Element sym, String annotationName) {
     return getTypeValue(sym, ClassName.of(annotationName));
   }
 
-  /** Shorthand for extracting the "value" type of a named annotation on an element. */
+  /// Shorthand for extracting the "value" type of a named annotation on an element.
   public static Optional<TypeMirror> getTypeValue(Element sym, ClassName annotationName) {
     return getAnnotation(sym, annotationName).flatMap(a -> getTypeValue(a, "value"));
   }
 
-  /** Converts the given attribute to a boolean value. */
+  /// Converts the given attribute to a boolean value.
   public static Optional<Boolean> asBooleanValue(AnnotationValue a) {
     class Visitor extends SimpleAnnotationValueVisitor8<Boolean, Void> {
       @Override
@@ -299,7 +273,7 @@ public final class MoreAnnotations {
     return Optional.ofNullable(a.accept(new Visitor(), null));
   }
 
-  /** Converts the given attribute to an integer value. */
+  /// Converts the given attribute to an integer value.
   public static Optional<Integer> asIntegerValue(AnnotationValue a) {
     class Visitor extends SimpleAnnotationValueVisitor8<Integer, Void> {
       @Override
@@ -310,7 +284,7 @@ public final class MoreAnnotations {
     return Optional.ofNullable(a.accept(new Visitor(), null));
   }
 
-  /** Converts the given attribute to a string value. */
+  /// Converts the given attribute to a string value.
   public static Optional<String> asStringValue(AnnotationValue a) {
     class Visitor extends SimpleAnnotationValueVisitor8<String, Void> {
       @Override
@@ -321,7 +295,7 @@ public final class MoreAnnotations {
     return Optional.ofNullable(a.accept(new Visitor(), null));
   }
 
-  /** Converts the given attribute to an enum value. */
+  /// Converts the given attribute to an enum value.
   public static Optional<VarSymbol> asEnumValue(AnnotationValue a) {
     class Visitor extends SimpleAnnotationValueVisitor8<VarSymbol, Void> {
       @Override
@@ -332,17 +306,15 @@ public final class MoreAnnotations {
     return Optional.ofNullable(a.accept(new Visitor(), null));
   }
 
-  /**
-   * Converts the given attribute to an enum value.
-   *
-   * @deprecated Prefer {@link #asEnumValue(AnnotationValue)}.
-   */
+  /// Converts the given attribute to an enum value.
+  ///
+  /// @deprecated Prefer [#asEnumValue(AnnotationValue)].
   @Deprecated
   public static <T extends Enum<T>> Optional<T> asEnumValue(Class<T> clazz, AnnotationValue a) {
     return asEnumValue(a).map(c -> Enum.valueOf(clazz, c.getSimpleName().toString()));
   }
 
-  /** Converts the given annotation value to one or more enum values. */
+  /// Converts the given annotation value to one or more enum values.
   public static Stream<VarSymbol> asEnumValues(AnnotationValue v) {
     return v.accept(
         new SimpleAnnotationValueVisitor8<Stream<VarSymbol>, Void>(Stream.empty()) {
@@ -359,11 +331,9 @@ public final class MoreAnnotations {
         null);
   }
 
-  /**
-   * Converts the given attribute to enum values.
-   *
-   * @deprecated Prefer {@link #asEnumValues(AnnotationValue)}.
-   */
+  /// Converts the given attribute to enum values.
+  ///
+  /// @deprecated Prefer [#asEnumValues(AnnotationValue)].
   @Deprecated
   public static <T extends Enum<T>> EnumSet<T> asEnumValues(Class<T> clazz, AnnotationValue a) {
     EnumSet<T> result = EnumSet.noneOf(clazz);
@@ -371,7 +341,7 @@ public final class MoreAnnotations {
     return result;
   }
 
-  /** Converts the given attribute to a type. */
+  /// Converts the given attribute to a type.
   public static Optional<TypeMirror> asTypeValue(AnnotationValue a) {
     class Visitor extends SimpleAnnotationValueVisitor8<TypeMirror, Void> {
       @Override
@@ -382,7 +352,7 @@ public final class MoreAnnotations {
     return Optional.ofNullable(a.accept(new Visitor(), null));
   }
 
-  /** Converts the given annotation value to one or more strings. */
+  /// Converts the given annotation value to one or more strings.
   public static Stream<String> asStrings(AnnotationValue v) {
     return MoreObjects.firstNonNull(
         v.accept(
@@ -401,7 +371,7 @@ public final class MoreAnnotations {
         Stream.empty());
   }
 
-  /** Converts the given attribute to an annotation mirror. */
+  /// Converts the given attribute to an annotation mirror.
   public static Optional<AnnotationMirror> asAnnotationValue(AnnotationValue a) {
     class Visitor extends SimpleAnnotationValueVisitor8<AnnotationMirror, Void> {
       @Override
@@ -412,7 +382,7 @@ public final class MoreAnnotations {
     return Optional.ofNullable(a.accept(new Visitor(), null));
   }
 
-  /** Converts the given annotation value to one or more annotations. */
+  /// Converts the given annotation value to one or more annotations.
   public static Stream<AnnotationMirror> asAnnotations(AnnotationValue v) {
     return v.accept(
         new SimpleAnnotationValueVisitor8<Stream<AnnotationMirror>, Void>(Stream.empty()) {
@@ -430,7 +400,7 @@ public final class MoreAnnotations {
         null);
   }
 
-  /** Converts the given annotation value to one or more types. */
+  /// Converts the given annotation value to one or more types.
   public static Stream<TypeMirror> asTypes(AnnotationValue v) {
     return v.accept(
         new SimpleAnnotationValueVisitor8<Stream<TypeMirror>, Void>(Stream.empty()) {
@@ -447,9 +417,7 @@ public final class MoreAnnotations {
         null);
   }
 
-  /**
-   * @deprecated Use {@link #getValue(AnnotationMirror, String)} instead.
-   */
+  /// @deprecated Use [#getValue(AnnotationMirror, String)] instead.
   @InlineMe(
       replacement = "MoreAnnotations.getValue(annotationMirror, name)",
       imports = "com.google.errorprone.util.MoreAnnotations")
@@ -459,9 +427,7 @@ public final class MoreAnnotations {
     return getValue(annotationMirror, name);
   }
 
-  /**
-   * @deprecated Prefer {@link #getValue(AnnotationMirror, String)}.
-   */
+  /// @deprecated Prefer [#getValue(AnnotationMirror, String)].
   @InlineMe(
       replacement = "MoreAnnotations.getValue((AnnotationMirror) attribute, name)",
       imports = {
@@ -474,15 +440,13 @@ public final class MoreAnnotations {
     return getValue((AnnotationMirror) attribute, name);
   }
 
-  /** Returns the {@link TypeSymbol} representing the declaration of the annotation mirror. */
+  /// Returns the [TypeSymbol] representing the declaration of the annotation mirror.
   public static TypeSymbol asElement(AnnotationMirror annotationMirror) {
     return (TypeSymbol) annotationMirror.getAnnotationType().asElement();
   }
 
-  /**
-   * Returns the set of {@link ElementType} targets specified in the annotation's {@code @Target}
-   * meta-annotation, or {@code null} if no {@code @Target} meta-annotation is present.
-   */
+  /// Returns the set of [ElementType] targets specified in the annotation's `@Target`
+  /// meta-annotation, or `null` if no `@Target` meta-annotation is present.
   public static @Nullable Set<ElementType> getTargetElementTypes(Element annotationSymbol) {
     if (annotationSymbol instanceof TypeSymbol typeSymbol) {
       var metadata = typeSymbol.getAnnotationTypeMetadata();
@@ -511,20 +475,16 @@ public final class MoreAnnotations {
     return result;
   }
 
-  /**
-   * Returns whether the annotation is a type annotation (i.e. its {@code @Target} includes {@link
-   * ElementType#TYPE_USE} or {@link ElementType#TYPE_PARAMETER}).
-   */
+  /// Returns whether the annotation is a type annotation (i.e. its `@Target` includes
+  /// [ElementType#TYPE_USE] or [ElementType#TYPE_PARAMETER]).
   public static boolean isTypeAnnotation(Element annotationSymbol) {
     Set<ElementType> targets = getTargetElementTypes(annotationSymbol);
     return targets != null
         && (targets.contains(ElementType.TYPE_USE) || targets.contains(ElementType.TYPE_PARAMETER));
   }
 
-  /**
-   * Returns the effective {@link RetentionPolicy} of the annotation symbol (defaulting to {@link
-   * RetentionPolicy#CLASS} per JLS 9.6.4.2 if omitted or not found).
-   */
+  /// Returns the effective [RetentionPolicy] of the annotation symbol (defaulting to
+  /// [RetentionPolicy#CLASS] per JLS 9.6.4.2 if omitted or not found).
   public static RetentionPolicy getRetentionPolicy(Element annotationSymbol) {
     return getEnumValue(annotationSymbol, RETENTION_ANNOTATION)
         .map(c -> asRetentionPolicy(c.getSimpleName().toString()))
@@ -539,12 +499,10 @@ public final class MoreAnnotations {
     }
   }
 
-  /**
-   * Returns whether the annotation applies to the given {@link ElementType}. If the annotation has
-   * no {@code @Target} meta-annotation, it is applicable in all declaration contexts (per JLS
-   * 9.6.4.1), which includes all element types except {@link ElementType#TYPE_USE} and {@link
-   * ElementType#TYPE_PARAMETER}.
-   */
+  /// Returns whether the annotation applies to the given [ElementType]. If the annotation has no
+  /// `@Target` meta-annotation, it is applicable in all declaration contexts (per JLS 9.6.4.1),
+  /// which includes all element types except [ElementType#TYPE_USE] and
+  /// [ElementType#TYPE_PARAMETER].
   public static boolean targetsElement(Element annotationSymbol, ElementType target) {
     Set<ElementType> targets = getTargetElementTypes(annotationSymbol);
     if (targets != null) {

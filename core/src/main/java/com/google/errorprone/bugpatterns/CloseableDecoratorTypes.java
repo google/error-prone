@@ -26,14 +26,12 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 
-/**
- * Common {@link AutoCloseable} decorator types that wrap around {@link AutoCloseable} resources,
- * which are always closed when the enclosing decorators are closed.
- *
- * <p>Each value in the map is the common supertype of some {@link AutoCloseable} decorator types,
- * with the key being the common {@link AutoCloseable} type that they decorate. The decorated type
- * is always assumed to be the first argument to the constructor of the decorator type.
- */
+/// Common [AutoCloseable] decorator types that wrap around [AutoCloseable] resources, which are
+/// always closed when the enclosing decorators are closed.
+///
+/// Each value in the map is the common supertype of some [AutoCloseable] decorator types, with the
+/// key being the common [AutoCloseable] type that they decorate. The decorated type is always
+/// assumed to be the first argument to the constructor of the decorator type.
 public final class CloseableDecoratorTypes {
   public static final ImmutableSetMultimap<String, String> CLOSEABLE_DECORATOR_TYPES =
       ImmutableSetMultimap.<String, String>builder()

@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Test for {@link com.google.errorprone.bugpatterns.UnnecessaryLongToIntConversion}. */
+/// Test for [com.google.errorprone.bugpatterns.UnnecessaryLongToIntConversion].
 @RunWith(JUnit4.class)
 public class UnnecessaryLongToIntConversionTest {
 

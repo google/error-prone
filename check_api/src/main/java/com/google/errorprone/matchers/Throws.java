@@ -21,19 +21,15 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.ThrowTree;
 
-/**
- * Matches a {@code throw} statement whose thrown expression is matched by the given matcher.
- *
- * @author schmitt@google.com (Peter Schmitt)
- */
+/// Matches a `throw` statement whose thrown expression is matched by the given matcher.
+///
+/// @author schmitt@google.com (Peter Schmitt)
 public class Throws implements Matcher<StatementTree> {
 
   private final Matcher<? super ExpressionTree> thrownMatcher;
 
-  /**
-   * New matcher for a {@code throw} statement where the thrown item is matched by the passed {@code
-   * thrownMatcher}.
-   */
+  /// New matcher for a `throw` statement where the thrown item is matched by the passed
+  /// `thrownMatcher`.
   public Throws(Matcher<? super ExpressionTree> thrownMatcher) {
     this.thrownMatcher = thrownMatcher;
   }

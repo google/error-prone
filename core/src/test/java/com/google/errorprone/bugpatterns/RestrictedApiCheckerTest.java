@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit test for {@link RestrictedApiChecker} */
+/// Unit test for [RestrictedApiChecker]
 @RunWith(JUnit4.class)
 public class RestrictedApiCheckerTest {
   private final CompilationTestHelper helper =

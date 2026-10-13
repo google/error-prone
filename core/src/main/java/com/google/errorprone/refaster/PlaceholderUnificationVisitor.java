@@ -106,22 +106,18 @@ import java.util.Map;
 import java.util.function.BiFunction;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Given a tree as input, returns all the ways this placeholder invocation could be matched with
- * that tree, represented as States, containing the {@code Unifier}, the list of all parameters of
- * the placeholder method that were unified with subtrees of the given tree, and a {@code
- * JCExpression} representing the implementation of the placeholder method, with references to the
- * placeholder parameters replaced with a corresponding {@code PlaceholderParamIdent}.
- */
+/// Given a tree as input, returns all the ways this placeholder invocation could be matched with
+/// that tree, represented as States, containing the `Unifier`, the list of all parameters of the
+/// placeholder method that were unified with subtrees of the given tree, and a `JCExpression`
+/// representing the implementation of the placeholder method, with references to the placeholder
+/// parameters replaced with a corresponding `PlaceholderParamIdent`.
 @AutoValue
 abstract class PlaceholderUnificationVisitor
     extends SimpleTreeVisitor<Choice<? extends State<? extends JCTree>>, State<?>> {
 
-  /**
-   * Represents the state of a placeholder unification in progress, including the current unifier
-   * state, the parameters of the placeholder method that have been bound, and a result used to
-   * store additional state.
-   */
+  /// Represents the state of a placeholder unification in progress, including the current unifier
+  /// state, the parameters of the placeholder method that have been bound, and a result used to
+  /// store additional state.
   record State<R>(List<UVariableDecl> seenParameters, Unifier unifier, @Nullable R result) {
     static <R> State<R> create(
         List<UVariableDecl> seenParameters, Unifier unifier, @Nullable R result) {
@@ -146,12 +142,10 @@ abstract class PlaceholderUnificationVisitor
 
   abstract ImmutableMap<UVariableDecl, UExpression> arguments();
 
-  /**
-   * Returns all the ways this tree might be unified with the arguments to this placeholder
-   * invocation. That is, if the placeholder invocation looks like {@code placeholder(arg1, arg2,
-   * ...)}, then the {@code Choice} will contain any ways this tree can be unified with {@code
-   * arg1}, {@code arg2}, or the other arguments.
-   */
+  /// Returns all the ways this tree might be unified with the arguments to this placeholder
+  /// invocation. That is, if the placeholder invocation looks like `placeholder(arg1, arg2, ...)`,
+  /// then the `Choice` will contain any ways this tree can be unified with `arg1`, `arg2`, or the
+  /// other arguments.
   Choice<State<PlaceholderParamIdent>> tryBindArguments(ExpressionTree node, State<?> state) {
     return Choice.from(arguments().entrySet())
         .flatMap((Map.Entry<UVariableDecl, UExpression> entry) ->
@@ -204,10 +198,8 @@ abstract class PlaceholderUnificationVisitor
         && expr2.toString().equals(expr1.toString());
   }
 
-  /**
-   * Verifies that the given tree does not directly conflict with an already-bound {@code
-   * UFreeIdent} or {@code ULocalVarIdent}.
-   */
+  /// Verifies that the given tree does not directly conflict with an already-bound `UFreeIdent` or
+  /// `ULocalVarIdent`.
   static final TreeVisitor<Boolean, Unifier> FORBIDDEN_REFERENCE_VISITOR =
       new SimpleTreeVisitor<Boolean, Unifier>() {
         @Override
@@ -227,11 +219,9 @@ abstract class PlaceholderUnificationVisitor
         }
       };
 
-  /**
-   * Returns all the ways this placeholder invocation might unify with the specified tree: either by
-   * unifying the entire tree with an argument to the placeholder invocation, or by recursing on the
-   * subtrees.
-   */
+  /// Returns all the ways this placeholder invocation might unify with the specified tree: either
+  /// by unifying the entire tree with an argument to the placeholder invocation, or by recursing on
+  /// the subtrees.
   @SuppressWarnings("unchecked")
   public Choice<? extends State<? extends JCExpression>> unifyExpression(
       @Nullable ExpressionTree node, State<?> state) {
@@ -247,9 +237,7 @@ abstract class PlaceholderUnificationVisitor
     }
   }
 
-  /**
-   * Returns all the ways this placeholder invocation might unify with the specified list of trees.
-   */
+  /// Returns all the ways this placeholder invocation might unify with the specified list of trees.
   public Choice<State<List<JCExpression>>> unifyExpressions(
       @Nullable Iterable<? extends ExpressionTree> nodes, State<?> state) {
     return unify(nodes, state).map(s -> s.withResult(List.convert(JCExpression.class, s.result())));
@@ -272,15 +260,11 @@ abstract class PlaceholderUnificationVisitor
     return Choice.of(state.withResult((JCTree) node));
   }
 
-  /**
-   * This method, and its overloads, take
-   *
-   * <ol>
-   *   <li>an initial state
-   *   <li>functions that, given one state, return a branch choosing a subtree
-   *   <li>a function that takes pieces of a tree type and recomposes them
-   * </ol>
-   */
+  /// This method, and its overloads, take
+  ///
+  /// 1. an initial state
+  /// 1. functions that, given one state, return a branch choosing a subtree
+  /// 1. a function that takes pieces of a tree type and recomposes them
   private static <T, R> Choice<State<R>> chooseSubtrees(
       State<?> state,
       Function<State<?>, Choice<? extends State<? extends T>>> choice1,

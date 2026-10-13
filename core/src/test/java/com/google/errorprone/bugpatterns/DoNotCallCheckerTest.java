@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link DoNotCallChecker}Test */
+/// [DoNotCallChecker]Test
 @SuppressWarnings("DoNotCall")
 @RunWith(JUnit4.class)
 public class DoNotCallCheckerTest {
@@ -310,7 +310,7 @@ public class DoNotCallCheckerTest {
         .doTest();
   }
 
-  /** Test class containing a method annotated with @DNC. */
+  /// Test class containing a method annotated with @DNC.
   public static final class DNCTest {
     @DoNotCall
     public static void f() {}

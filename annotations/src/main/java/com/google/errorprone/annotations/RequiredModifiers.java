@@ -22,34 +22,30 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation declaring that the target annotation requires all the specified modifiers. For
- * example, an annotation declared as:
- *
- * <pre>{@code
- * @RequiredModifiers(modifier = Modifier.PUBLIC)
- * @interface MyAnnotation {}
- * }</pre>
- *
- * <p>will be considered illegal when used on non-public elements such as:
- *
- * <pre>{@code
- * @MyAnnotation void foo() {}
- * }</pre>
- *
- * @author benyu@google.com (Jige Yu)
- */
+/// Annotation declaring that the target annotation requires all the specified modifiers. For
+/// example, an annotation declared as:
+///
+/// ```
+/// @RequiredModifiers(modifier = Modifier.PUBLIC)
+/// @interface MyAnnotation {}
+/// ```
+///
+/// will be considered illegal when used on non-public elements such as:
+///
+/// ```
+/// @MyAnnotation void foo() {}
+/// ```
+///
+/// @author benyu@google.com (Jige Yu)
 @Documented
 @Retention(RetentionPolicy.CLASS) // Element's source might not be available during analysis
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface RequiredModifiers {
 
-  /**
-   * The required modifiers. The annotated element is illegal if any one or more of these modifiers
-   * are absent.
-   *
-   * <p>Empty array has the same effect as not applying this annotation at all; duplicates are
-   * allowed but have no effect.
-   */
+  /// The required modifiers. The annotated element is illegal if any one or more of these modifiers
+  /// are absent.
+  ///
+  /// Empty array has the same effect as not applying this annotation at all; duplicates are allowed
+  /// but have no effect.
   Modifier[] modifier() default {};
 }

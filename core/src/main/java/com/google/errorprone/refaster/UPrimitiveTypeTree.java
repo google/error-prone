@@ -23,11 +23,9 @@ import com.sun.tools.javac.code.TypeTag;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import javax.lang.model.type.TypeKind;
 
-/**
- * {@link UTree} version of {@link UPrimitiveTypeTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] version of [UPrimitiveTypeTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UPrimitiveTypeTree extends UExpression implements PrimitiveTypeTree {
 

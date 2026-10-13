@@ -59,11 +59,9 @@ import javax.inject.Inject;
 import org.safere.Matcher;
 import org.safere.Pattern;
 
-/**
- * Matches invalid Javadoc tags, and tries to suggest fixes.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Matches invalid Javadoc tags, and tries to suggest fixes.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(summary = "This tag is invalid.", severity = WARNING, documentSuppression = false)
 public final class InvalidInlineTag extends BugChecker
     implements ClassTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
@@ -236,7 +234,7 @@ public final class InvalidInlineTag extends BugChecker
       }
     }
 
-    /** Looks for a matching closing brace, if one is found. */
+    /// Looks for a matching closing brace, if one is found.
     private Optional<Integer> findClosingBrace(String body, int startPos) {
       int parenDepth = 0;
       for (int pos = startPos; pos < body.length(); ++pos) {

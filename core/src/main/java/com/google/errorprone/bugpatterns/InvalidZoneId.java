@@ -31,11 +31,9 @@ import com.sun.source.tree.MethodInvocationTree;
 import java.time.DateTimeException;
 import java.time.ZoneId;
 
-/**
- * Validates ZoneId.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Validates ZoneId.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = "Invalid zone identifier. ZoneId.of(String) will throw exception at runtime.",
     severity = ERROR)

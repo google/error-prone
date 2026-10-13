@@ -22,11 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link AnnotationPosition} bugpattern.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Tests for [AnnotationPosition] bugpattern.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @RunWith(JUnit4.class)
 public final class AnnotationPositionTest {
 

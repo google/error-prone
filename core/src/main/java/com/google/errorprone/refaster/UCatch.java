@@ -24,11 +24,9 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCCatch;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@code UTree} representation of a {@code CatchTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of a `CatchTree`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UCatch extends UTree<JCCatch> implements CatchTree {
   static UCatch create(UVariableDecl parameter, UBlock block) {

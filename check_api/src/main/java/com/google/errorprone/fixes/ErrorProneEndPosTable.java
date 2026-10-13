@@ -32,7 +32,7 @@ import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
 import org.jspecify.annotations.Nullable;
 
-/** A compatibility wrapper around {@code EndPosTable}. */
+/// A compatibility wrapper around `EndPosTable`.
 public interface ErrorProneEndPosTable {
 
   @Nullable MethodHandle GET_END_POS_HANDLE = getEndPosMethodHandle();

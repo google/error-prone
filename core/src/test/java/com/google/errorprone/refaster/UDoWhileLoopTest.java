@@ -23,11 +23,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link UDoWhileLoop}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Tests for [UDoWhileLoop].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @RunWith(JUnit4.class)
 public class UDoWhileLoopTest extends AbstractUTreeTest {
   @Test

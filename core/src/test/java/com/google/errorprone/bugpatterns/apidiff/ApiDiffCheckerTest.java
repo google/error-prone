@@ -54,7 +54,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link ApiDiffChecker}Test. */
+/// [ApiDiffChecker]Test.
 @RunWith(JUnit4.class)
 public class ApiDiffCheckerTest {
 
@@ -69,7 +69,7 @@ public class ApiDiffCheckerTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(AnnotationOnlyApiDiffChecker.class, getClass());
 
-  /** An {@link ApiDiffChecker} for testing. */
+  /// An [ApiDiffChecker] for testing.
   @BugPattern(name = "SampleChecker", severity = SeverityLevel.ERROR, summary = "")
   private static class SampleApiDiffChecker extends ApiDiffChecker {
     SampleApiDiffChecker(ApiDiff apiDiff) {
@@ -77,7 +77,7 @@ public class ApiDiffCheckerTest {
     }
   }
 
-  /** An {@link ApiDiffChecker} that recognizes only {@link RequiresNewApiVersion} annotations. */
+  /// An [ApiDiffChecker] that recognizes only [RequiresNewApiVersion] annotations.
   @BugPattern(
       name = "AnnotationChecker",
       severity = SeverityLevel.ERROR,

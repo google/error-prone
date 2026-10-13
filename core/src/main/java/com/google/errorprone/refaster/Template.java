@@ -84,12 +84,10 @@ import java.util.Optional;
 import java.util.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Abstract superclass for templates that can be used to search and replace in a Java syntax tree.
- *
- * @author lowasser@google.com (Louis Wasserman)
- * @param <M> Type of a match for this template.
- */
+/// Abstract superclass for templates that can be used to search and replace in a Java syntax tree.
+///
+/// @author lowasser@google.com (Louis Wasserman)
+/// @param <M> Type of a match for this template.
 public abstract class Template<M extends TemplateMatch> implements Serializable {
   private static final Logger logger = Logger.getLogger(Template.class.toString());
 
@@ -116,13 +114,11 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     return !annotations().containsKey(NoAutoboxing.class);
   }
 
-  /**
-   * Returns a list of the expected types to be matched. This consists of the argument types from
-   * the @BeforeTemplate method, concatenated with the return types of expression placeholders,
-   * sorted by the name of the placeholder method.
-   *
-   * @throws CouldNotResolveImportException if a referenced type could not be resolved
-   */
+  /// Returns a list of the expected types to be matched. This consists of the argument types from
+  /// the @BeforeTemplate method, concatenated with the return types of expression placeholders,
+  /// sorted by the name of the placeholder method.
+  ///
+  /// @throws CouldNotResolveImportException if a referenced type could not be resolved
   protected List<Type> expectedTypes(Inliner inliner) throws CouldNotResolveImportException {
     ArrayList<Type> result = new ArrayList<>();
     ImmutableList<UType> types = expressionArgumentTypes().values().asList();
@@ -158,11 +154,9 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     return List.from(result);
   }
 
-  /**
-   * Returns a list of the actual types to be matched. This consists of the types of the expressions
-   * bound to the @BeforeTemplate method parameters, concatenated with the types of the expressions
-   * bound to expression placeholders, sorted by the name of the placeholder method.
-   */
+  /// Returns a list of the actual types to be matched. This consists of the types of the
+  /// expressions bound to the @BeforeTemplate method parameters, concatenated with the types of the
+  /// expressions bound to expression placeholders, sorted by the name of the placeholder method.
   protected List<Type> actualTypes(Inliner inliner) throws CouldNotResolveImportException {
     ArrayList<Type> result = new ArrayList<>();
     ImmutableList<String> argNames = expressionArgumentTypes().keySet().asList();
@@ -420,12 +414,10 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     }
   }
 
-  /**
-   * Returns the inferred method type of the template based on the given actual argument types.
-   *
-   * @throws InferException if no instances of the specified type variables would allow the {@code
-   *     actualArgTypes} to match the {@code expectedArgTypes}
-   */
+  /// Returns the inferred method type of the template based on the given actual argument types.
+  ///
+  /// @throws InferException if no instances of the specified type variables would allow the
+  ///   `actualArgTypes` to match the `expectedArgTypes`
   private Type infer(
       Warner warner,
       Inliner inliner,
@@ -490,7 +482,7 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     }
   }
 
-  /** Reflectively instantiate the package-private {@code MethodResolutionPhase} enum. */
+  /// Reflectively instantiate the package-private `MethodResolutionPhase` enum.
   private static @Nullable Object newMethodResolutionPhase(boolean autoboxing) {
     for (Class<?> c : Resolve.class.getDeclaredClasses()) {
       if (!c.getName().equals("com.sun.tools.javac.comp.Resolve$MethodResolutionPhase")) {
@@ -505,10 +497,8 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     return null;
   }
 
-  /**
-   * Reflectively invoke Resolve.checkMethod(), which despite being package-private is apparently
-   * the only useful entry-point into javac8's type inference implementation.
-   */
+  /// Reflectively invoke Resolve.checkMethod(), which despite being package-private is apparently
+  /// the only useful entry-point into javac8's type inference implementation.
   private Type.MethodType callCheckMethod(
       Warner warner,
       Inliner inliner,
@@ -554,10 +544,8 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     }
   }
 
-  /**
-   * Returns a list of the elements of {@code typeVariables} that are <em>not</em> bound in the
-   * specified {@link Unifier}.
-   */
+  /// Returns a list of the elements of `typeVariables` that are *not* bound in the specified
+  /// [Unifier].
   private ImmutableList<UTypeVar> freeTypeVars(Unifier unifier) {
     ImmutableList.Builder<UTypeVar> builder = ImmutableList.builder();
     for (UTypeVar var : typeVariables()) {
@@ -578,11 +566,9 @@ public abstract class Template<M extends TemplateMatch> implements Serializable 
     return fix.build();
   }
 
-  /**
-   * Note: we can't use {@code TreeInfo.getEndPos()} or {@code JCTree.getEndPosition()} here,
-   * because they will return the end position of an enclosing AST node for trees whose real end
-   * positions aren't stored.
-   */
+  /// Note: we can't use `TreeInfo.getEndPos()` or `JCTree.getEndPosition()` here, because they will
+  /// return the end position of an enclosing AST node for trees whose real end positions aren't
+  /// stored.
   private static int getEndPos(JCTree tree, JCCompilationUnit unit) {
     try {
       return (int) GET_END_POS_HANDLE.invokeExact(unit, tree);

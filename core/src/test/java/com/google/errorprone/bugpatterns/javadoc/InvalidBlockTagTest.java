@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link InvalidBlockTag} bug pattern. */
+/// Unit tests for [InvalidBlockTag] bug pattern.
 @RunWith(JUnit4.class)
 public final class InvalidBlockTagTest {
   private final BugCheckerRefactoringTestHelper refactoring =

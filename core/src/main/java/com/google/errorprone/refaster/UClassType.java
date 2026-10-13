@@ -26,11 +26,9 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Type.ClassType;
 import java.util.List;
 
-/**
- * A representation of a type with optional generic parameters.
- *
- * @author Louis Wasserman
- */
+/// A representation of a type with optional generic parameters.
+///
+/// @author Louis Wasserman
 @AutoValue
 public abstract class UClassType extends UType {
   public static UClassType create(CharSequence fullyQualifiedClass, List<UType> typeArguments) {

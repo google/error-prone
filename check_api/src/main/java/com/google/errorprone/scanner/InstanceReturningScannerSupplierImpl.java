@@ -23,11 +23,8 @@ import com.google.errorprone.BugCheckerInfo;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.ErrorProneFlags;
 
-/**
- * An implementation of a {@link ScannerSupplier} that just returns the {@link Scanner} that was
- * passed in. Used mostly for testing. Does not implement any method other than {@link
- * ScannerSupplier#get()}.
- */
+/// An implementation of a [ScannerSupplier] that just returns the [Scanner] that was passed in.
+/// Used mostly for testing. Does not implement any method other than [ScannerSupplier#get()].
 class InstanceReturningScannerSupplierImpl extends ScannerSupplier {
   private final Scanner scanner;
 

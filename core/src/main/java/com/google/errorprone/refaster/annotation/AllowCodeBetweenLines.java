@@ -21,13 +21,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation on a Refaster rule to allow code between every pair of consecutive top-level
- * statements in @BeforeTemplates that do not refer to variables Refaster knows about and do not
- * break or return, and moves that code to the beginning of the @AfterTemplate.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Annotation on a Refaster rule to allow code between every pair of consecutive top-level
+/// statements in @BeforeTemplates that do not refer to variables Refaster knows about and do not
+/// break or return, and moves that code to the beginning of the @AfterTemplate.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
 public @interface AllowCodeBetweenLines {}

@@ -131,7 +131,7 @@ import javax.lang.model.type.NullType;
 import javax.tools.JavaFileObject;
 import org.jspecify.annotations.Nullable;
 
-/** Bugpattern to detect unused declarations. */
+/// Bugpattern to detect unused declarations.
 @BugPattern(
     altNames = {"unused", "UnusedParameters"},
     summary = "Unused.",
@@ -160,10 +160,10 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
   private final ImmutableSet<String> methodAnnotationsExemptingParameters;
 
-  /** The set of types exempting a type that is extending or implementing them. */
+  /// The set of types exempting a type that is extending or implementing them.
   private static final ImmutableSet<ClassName> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
 
-  /** The set of types exempting a field of type extending them. */
+  /// The set of types exempting a field of type extending them.
   private static final ImmutableSet<ClassName> EXEMPTING_FIELD_SUPER_TYPES =
       ImmutableSet.of(ClassName.of("org.junit.rules.TestRule"));
 
@@ -793,7 +793,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       return (symbol.flags() & RECORD_FLAG) == RECORD_FLAG;
     }
 
-    /** Returns whether {@code sym} can be removed without updating call sites in other files. */
+    /// Returns whether `sym` can be removed without updating call sites in other files.
     private boolean isParameterSubjectToAnalysis(Symbol sym) {
       checkArgument(sym.getKind() == ElementKind.PARAMETER);
       Symbol enclosingMethod = sym.owner;
@@ -894,11 +894,9 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
     private final VisitorState state;
 
-    /**
-     * Methods which look up a field by name (via a class literal and a string constant) and return
-     * a handle through which it is subsequently read and written. A field whose only accesses go
-     * through such a handle has no direct references in source, but is nonetheless used.
-     */
+    /// Methods which look up a field by name (via a class literal and a string constant) and return
+    /// a handle through which it is subsequently read and written. A field whose only accesses go
+    /// through such a handle has no direct references in source, but is nonetheless used.
     private static final Matcher<ExpressionTree> REFLECTIVE_FIELD_LOOKUP =
         anyOf(
             instanceMethod()
@@ -1002,10 +1000,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       return null;
     }
 
-    /**
-     * Deals with assignment trees; works out if the assignment definitely overwrites the variable
-     * in all ways that could be observed as we scan forwards.
-     */
+    /// Deals with assignment trees; works out if the assignment definitely overwrites the variable
+    /// in all ways that could be observed as we scan forwards.
     private void handleReassignment(AssignmentTree tree) {
       Tree parent = getCurrentPath().getParentPath().getLeaf();
       if (!(parent instanceof StatementTree)) {
@@ -1148,10 +1144,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       return scan(tree.getErrorTrees(), null);
     }
 
-    /**
-     * Looks at method invocations and removes the invoked private methods from {@code
-     * #unusedElements}.
-     */
+    /// Looks at method invocations and removes the invoked private methods from `#unusedElements`.
     @Override
     public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
       inMethodCall++;
@@ -1163,11 +1156,9 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       return null;
     }
 
-    /**
-     * Given an invocation like {@code lookup.findVarHandle(Foo.class, "bar", int.class)} or {@code
-     * AtomicIntegerFieldUpdater.newUpdater(Foo.class, "bar")}, finds the field {@code Foo.bar} and
-     * treats it as used, since all subsequent reads and writes happen through the returned handle.
-     */
+    /// Given an invocation like `lookup.findVarHandle(Foo.class, "bar", int.class)` or
+    /// `AtomicIntegerFieldUpdater.newUpdater(Foo.class, "bar")`, finds the field `Foo.bar` and
+    /// treats it as used, since all subsequent reads and writes happen through the returned handle.
     private void markReflectivelyLookedUpFieldAsUsed(MethodInvocationTree tree) {
       List<? extends ExpressionTree> arguments = tree.getArguments();
       if (arguments.isEmpty()
@@ -1196,15 +1187,12 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     }
   }
 
-  /**
-   * @param symbol {@link Symbol} of the unused element.
-   * @param assignmentPath {@link VariableTree} or {@link AssignmentTree} for the original
-   *     assignment site.
-   * @param usageSites All the usage sites of this variable that we claim are unused (including the
-   *     initial declaration/assignment).
-   * @param terminatingAssignment If this usage chain was terminated by an unconditional
-   *     reassignment, the corresponding {@link AssignmentTree}.
-   */
+  /// @param symbol [Symbol] of the unused element.
+  /// @param assignmentPath [VariableTree] or [AssignmentTree] for the original assignment site.
+  /// @param usageSites All the usage sites of this variable that we claim are unused (including the
+  ///   initial declaration/assignment).
+  /// @param terminatingAssignment If this usage chain was terminated by an unconditional
+  ///   reassignment, the corresponding [AssignmentTree].
   private record UnusedSpec(
       Symbol symbol,
       TreePath assignmentPath,

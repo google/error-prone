@@ -34,7 +34,7 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** A {@link BugChecker} that detects use of the unsafe {@link java.io.Serializable} API. */
+/// A [BugChecker] that detects use of the unsafe [java.io.Serializable] API.
 @BugPattern(
     summary = "Deserializing user input via the `Serializable` API is extremely dangerous",
     severity = SeverityLevel.ERROR)
@@ -53,7 +53,7 @@ public final class BanSerializableRead extends AbstractBanUnsafeAPIChecker
               enclosingMethod((methodTree, state) ->
                   BANNED_OBJECT_INPUT_STREAM_METHODS.contains(methodTree.getName().toString()))));
 
-  /** Checks for unsafe deserialization calls on an ObjectInputStream in an ExpressionTree. */
+  /// Checks for unsafe deserialization calls on an ObjectInputStream in an ExpressionTree.
   private static final Matcher<MethodInvocationTree> OBJECT_INPUT_STREAM_DESERIALIZE_MATCHER =
       allOf(
           anyOf(
@@ -91,7 +91,7 @@ public final class BanSerializableRead extends AbstractBanUnsafeAPIChecker
           // be defined, but never called
           not(EXEMPT));
 
-  /** Checks for unsafe uses of the Java deserialization API. */
+  /// Checks for unsafe uses of the Java deserialization API.
   private static final Matcher<MethodInvocationTree> MATCHER =
       OBJECT_INPUT_STREAM_DESERIALIZE_MATCHER;
 

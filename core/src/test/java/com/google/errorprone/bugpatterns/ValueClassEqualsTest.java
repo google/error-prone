@@ -23,7 +23,7 @@ import com.google.errorprone.CompilationTestHelper;
 import javax.lang.model.element.Modifier;
 import org.junit.Test;
 
-/** Tests for {@link ValueClassEquals}. */
+/// Tests for [ValueClassEquals].
 public class ValueClassEqualsTest {
 
   private final CompilationTestHelper compilationHelper =

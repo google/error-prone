@@ -31,10 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * A {@link FileDestination} that writes a unix-patch file to {@code rootPath} containing the
- * suggested changes.
- */
+/// A [FileDestination] that writes a unix-patch file to `rootPath` containing the suggested
+/// changes.
 public final class PatchFileDestination implements FileDestination {
 
   // TODO(glorioso): This won't work for Windows, although getting unix patch on Windows is

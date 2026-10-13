@@ -49,7 +49,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Map;
 import java.util.stream.Stream;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary =
         "Prefer instanceof over getKind() checks where possible, as these work well with pattern"
@@ -62,11 +62,9 @@ public final class PreferInstanceofOverGetKind extends BugChecker
 
   private static final ClassName TREE_KIND = ClassName.of(Kind.class.getName());
 
-  /**
-   * A map from {@link Kind} to the {@link Class} of tree it denotes, iff that class unambiguously
-   * identifies the {@link Kind}. For example, {@link Kind#EQUAL_TO} and {@link Kind#NOT_EQUAL_TO}
-   * both map to {@link BinaryTree}, so are not represented here.
-   */
+  /// A map from [Kind] to the [Class] of tree it denotes, iff that class unambiguously identifies
+  /// the [Kind]. For example, [Kind#EQUAL_TO] and [Kind#NOT_EQUAL_TO] both map to [BinaryTree], so
+  /// are not represented here.
   private static final ImmutableMap<Kind, Class<?>> KIND_TO_CLASS =
       asMap(
               allOf(Kind.class).stream()

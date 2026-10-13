@@ -47,7 +47,7 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 
-/** Flags instances of non-API types from being accepted or returned in APIs. */
+/// Flags instances of non-API types from being accepted or returned in APIs.
 @BugPattern(
     summary = "Certain types should not be passed across API boundaries.",
     // something about reducing build visibility

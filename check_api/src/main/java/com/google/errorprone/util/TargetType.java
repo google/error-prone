@@ -82,18 +82,15 @@ import java.util.Set;
 import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
 
-/** An expression's target type, see {@link #targetType}. */
+/// An expression's target type, see [#targetType].
 public record TargetType(Type type, TreePath path) {
-  /**
-   * Returns the target type of the tree at the given {@link VisitorState}'s path, or else {@code
-   * null}.
-   *
-   * <p>For example, the target type of an assignment expression is the variable's type, and the
-   * target type of a return statement is the enclosing method's type.
-   *
-   * <p>A general mental model is that the target type of an expression where the value is used is
-   * the highest supertype that you could cast to and still have this compile.
-   */
+  /// Returns the target type of the tree at the given [VisitorState]'s path, or else `null`.
+  ///
+  /// For example, the target type of an assignment expression is the variable's type, and the
+  /// target type of a return statement is the enclosing method's type.
+  ///
+  /// A general mental model is that the target type of an expression where the value is used is the
+  /// highest supertype that you could cast to and still have this compile.
   public static @Nullable TargetType targetType(VisitorState state) {
     if (!canHaveTargetType(state.getPath().getLeaf())) {
       return null;
@@ -578,12 +575,9 @@ public record TargetType(Type type, TreePath path) {
     }
   }
 
-  /**
-   * Implementation of unary numeric promotion rules.
-   *
-   * <p><a href="https://docs.oracle.com/javase/specs/jls/se9/html/jls-5.html#jls-5.6.1">JLS
-   * §5.6.1</a>
-   */
+  /// Implementation of unary numeric promotion rules.
+  ///
+  /// [JLS §5.6.1](https://docs.oracle.com/javase/specs/jls/se9/html/jls-5.html#jls-5.6.1)
   private static @Nullable Type unaryNumericPromotion(Type type, VisitorState state) {
     Type unboxed = unboxAndEnsureNumeric(type, state);
     return switch (unboxed.getTag()) {
@@ -593,12 +587,9 @@ public record TargetType(Type type, TreePath path) {
     };
   }
 
-  /**
-   * Implementation of binary numeric promotion rules.
-   *
-   * <p><a href="https://docs.oracle.com/javase/specs/jls/se9/html/jls-5.html#jls-5.6.2">JLS
-   * §5.6.2</a>
-   */
+  /// Implementation of binary numeric promotion rules.
+  ///
+  /// [JLS §5.6.2](https://docs.oracle.com/javase/specs/jls/se9/html/jls-5.html#jls-5.6.2)
   private static @Nullable Type binaryNumericPromotion(
       Type leftType, Type rightType, VisitorState state) {
     Type unboxedLeft = unboxAndEnsureNumeric(leftType, state);

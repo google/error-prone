@@ -38,10 +38,8 @@ import com.sun.tools.javac.code.Types;
 import java.util.Optional;
 import javax.inject.Inject;
 
-/**
- * @author adgar@google.com (Mike Edgar)
- * @author cushon@google.com (Liam Miller-Cushon)
- */
+/// @author adgar@google.com (Mike Edgar)
+/// @author cushon@google.com (Liam Miller-Cushon)
 @BugPattern(
     summary = "Calling toString on an array does not provide useful information",
     severity = ERROR)

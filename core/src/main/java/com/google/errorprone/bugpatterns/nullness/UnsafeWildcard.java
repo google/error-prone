@@ -72,7 +72,7 @@ import java.util.Map;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 
-/** Check to detect unsafe upcasts of {@code null} values to wildcard types. */
+/// Check to detect unsafe upcasts of `null` values to wildcard types.
 @BugPattern(summary = "Certain wildcard types can confuse the compiler.", severity = ERROR)
 public class UnsafeWildcard extends BugChecker
     implements AssignmentTreeMatcher,
@@ -253,13 +253,10 @@ public class UnsafeWildcard extends BugChecker
     return Description.NO_MATCH;
   }
 
-  /**
-   * Checks for unsafe wildcards in {@code targetType} if the given expression is `null`.
-   *
-   * @return diagnostic for {@code tree} if unsafe wildcard is found, {@link Description#NO_MATCH}
-   *     otherwise.
-   * @see #checkForUnsafeWildcards
-   */
+  /// Checks for unsafe wildcards in `targetType` if the given expression is `null`.
+  ///
+  /// @return diagnostic for `tree` if unsafe wildcard is found, [Description#NO_MATCH] otherwise.
+  /// @see #checkForUnsafeWildcards
   private Description checkForUnsafeNullAssignment(
       Type targetType, ExpressionTree tree, VisitorState state) {
     if (!targetType.isReference() || ((JCExpression) tree).type.getKind() != TypeKind.NULL) {
@@ -268,13 +265,11 @@ public class UnsafeWildcard extends BugChecker
     return checkForUnsafeWildcards(tree, "Cast to wildcard type unsafe: ", targetType, state);
   }
 
-  /**
-   * Recursively looks through {@code targetType} for any wildcard whose lower bounds isn't known to
-   * be a subtype of the corresponding type parameter's upper bound.
-   *
-   * @return diagnostic for {@code tree} with given {@code messageHeader} if unsafe wildcard found,
-   *     {@link Description#NO_MATCH} otherwise.
-   */
+  /// Recursively looks through `targetType` for any wildcard whose lower bounds isn't known to be a
+  /// subtype of the corresponding type parameter's upper bound.
+  ///
+  /// @return diagnostic for `tree` with given `messageHeader` if unsafe wildcard found,
+  ///   [Description#NO_MATCH] otherwise.
   private Description checkForUnsafeWildcards(
       Tree tree, String messageHeader, Type targetType, VisitorState state) {
     while (targetType instanceof ArrayType) {

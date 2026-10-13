@@ -54,7 +54,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
-/** Whether an API can have {@code @InlineMe} applied to it or not. */
+/// Whether an API can have `@InlineMe` applied to it or not.
 record InlinabilityResult(
     @Nullable InlineValidationErrorReason error,
     @Nullable ExpressionTree body,

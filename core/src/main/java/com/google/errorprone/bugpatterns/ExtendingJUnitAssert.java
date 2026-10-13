@@ -38,9 +38,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 
-/**
- * @author kayco@google.com (Kayla Walker)
- */
+/// @author kayco@google.com (Kayla Walker)
 @BugPattern(
     summary =
         "When only using JUnit Assert's static methods, "

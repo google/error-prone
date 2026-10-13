@@ -29,11 +29,9 @@ import com.sun.tools.javac.code.BoundKind;
 import com.sun.tools.javac.tree.JCTree.JCWildcard;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@code UTree} representation of a {@code WildcardTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of a `WildcardTree`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UWildcard extends UExpression implements WildcardTree {
   private static final ImmutableBiMap<Kind, BoundKind> BOUND_KINDS;

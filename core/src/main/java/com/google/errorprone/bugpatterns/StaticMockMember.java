@@ -35,7 +35,7 @@ import com.sun.source.tree.VariableTree;
 import java.util.Optional;
 import javax.lang.model.element.Modifier;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "@Mock members of test classes shouldn't share state between tests and preferably be"

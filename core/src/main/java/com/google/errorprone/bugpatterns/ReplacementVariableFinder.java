@@ -43,18 +43,16 @@ import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-/** Utility methods to find replacement variables with similar names. */
+/// Utility methods to find replacement variables with similar names.
 public final class ReplacementVariableFinder {
   private ReplacementVariableFinder() {}
 
-  /**
-   * Suggest replacing {@code input} with a qualified reference to a locally declared field with a
-   * similar or the same name as the {@code input} expression.
-   *
-   * @param input a MEMBER_SELECT or IDENTIFIER expression which should be replaced.
-   * @param validFieldPredicate Predicate used to decide which locally declared fields are
-   *     appropriate candidates for replacement (e.g.: is the appropriate type)
-   */
+  /// Suggest replacing `input` with a qualified reference to a locally declared field with a
+  /// similar or the same name as the `input` expression.
+  ///
+  /// @param input a MEMBER_SELECT or IDENTIFIER expression which should be replaced.
+  /// @param validFieldPredicate Predicate used to decide which locally declared fields are
+  ///   appropriate candidates for replacement (e.g.: is the appropriate type)
   public static ImmutableList<Fix> fixesByReplacingExpressionWithLocallyDeclaredField(
       ExpressionTree input, Predicate<JCVariableDecl> validFieldPredicate, VisitorState state) {
     Preconditions.checkState(input instanceof IdentifierTree || input instanceof MemberSelectTree);
@@ -70,14 +68,12 @@ public final class ReplacementVariableFinder {
         potentialReplacements, var -> SuggestedFix.replace(input, "this." + var.sym));
   }
 
-  /**
-   * Suggest replacing {@code input} with a reference to a method parameter in the nearest enclosing
-   * method declaration with a similar or the same name as the {@code input} expression.
-   *
-   * @param input a MEMBER_SELECT or IDENTIFIER expression which should be replaced.
-   * @param validParameterPredicate Predicate used to decide which method parameters are appropriate
-   *     candidates for replacement (e.g.: is the appropriate type)
-   */
+  /// Suggest replacing `input` with a reference to a method parameter in the nearest enclosing
+  /// method declaration with a similar or the same name as the `input` expression.
+  ///
+  /// @param input a MEMBER_SELECT or IDENTIFIER expression which should be replaced.
+  /// @param validParameterPredicate Predicate used to decide which method parameters are
+  ///   appropriate candidates for replacement (e.g.: is the appropriate type)
   public static ImmutableList<Fix> fixesByReplacingExpressionWithMethodParameter(
       ExpressionTree input, Predicate<JCVariableDecl> validParameterPredicate, VisitorState state) {
     Preconditions.checkState(input instanceof IdentifierTree || input instanceof MemberSelectTree);

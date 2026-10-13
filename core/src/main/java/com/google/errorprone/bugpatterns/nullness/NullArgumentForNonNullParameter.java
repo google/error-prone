@@ -66,7 +66,7 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.type.TypeMirror;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Null is not permitted for this parameter.", severity = ERROR)
 public final class NullArgumentForNonNullParameter extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {

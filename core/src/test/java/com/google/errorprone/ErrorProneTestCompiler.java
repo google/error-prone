@@ -27,10 +27,10 @@ import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 
-/** Wraps {@link com.google.errorprone.ErrorProneJavaCompiler}. */
+/// Wraps [com.google.errorprone.ErrorProneJavaCompiler].
 public class ErrorProneTestCompiler {
 
-  /** {@link ErrorProneTestCompiler.Builder} */
+  /// [ErrorProneTestCompiler.Builder]
   public static class Builder {
 
     private DiagnosticListener<? super JavaFileObject> listener;

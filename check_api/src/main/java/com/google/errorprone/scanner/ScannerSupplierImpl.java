@@ -29,11 +29,9 @@ import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.bugpatterns.BugChecker;
 import java.io.Serializable;
 
-/**
- * An implementation of a {@link ScannerSupplier}, abstracted as a set of all known {@link
- * BugChecker}s and a set of enabled {@link BugChecker}s. The set of enabled suppliers must be a
- * subset of all known suppliers.
- */
+/// An implementation of a [ScannerSupplier], abstracted as a set of all known [BugChecker]s and a
+/// set of enabled [BugChecker]s. The set of enabled suppliers must be a subset of all known
+/// suppliers.
 class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
   private final ImmutableBiMap<String, BugCheckerInfo> checks;
   private final ImmutableMap<String, SeverityLevel> severities;
@@ -102,7 +100,7 @@ class ScannerSupplierImpl extends ScannerSupplier implements Serializable {
     return flags;
   }
 
-  /** Returns the name of the first check, or {@code ""}. */
+  /// Returns the name of the first check, or `""`.
   @Override
   public String toString() {
     return getFirst(getAllChecks().keySet(), "");

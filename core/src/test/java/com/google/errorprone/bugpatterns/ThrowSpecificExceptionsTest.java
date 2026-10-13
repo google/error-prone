@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link ThrowSpecificExceptions}. */
+/// Tests for [ThrowSpecificExceptions].
 @RunWith(JUnit4.class)
 public final class ThrowSpecificExceptionsTest {
   private final CompilationTestHelper helper =

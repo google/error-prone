@@ -21,7 +21,7 @@ import com.google.errorprone.scanner.BuiltInCheckerSuppliers;
 import com.sun.source.util.JavacTask;
 import com.sun.source.util.Plugin;
 
-/** A javac {@link Plugin} that runs Error Prone. */
+/// A javac [Plugin] that runs Error Prone.
 @AutoService(Plugin.class)
 public class ErrorProneJavacPlugin implements Plugin {
   @Override

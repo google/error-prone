@@ -29,7 +29,7 @@ import com.sun.source.tree.Tree;
 import java.util.Optional;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Calling toString on a Stream does not provide useful information",
     severity = ERROR)

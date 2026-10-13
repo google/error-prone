@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link JavaDurationWithNanos}. */
+/// Tests for [JavaDurationWithNanos].
 @RunWith(JUnit4.class)
 public class JavaDurationWithNanosTest {
   private final CompilationTestHelper helper =

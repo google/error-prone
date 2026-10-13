@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link JodaNewPeriod}. */
+/// Tests for [JodaNewPeriod].
 @RunWith(JUnit4.class)
 public final class JodaNewPeriodTest {
   private final CompilationTestHelper helper =

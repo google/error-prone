@@ -55,7 +55,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Class.newInstance() bypasses exception checking; prefer"
@@ -223,17 +223,13 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
     fix.addImport("java.lang.reflect.InvocationTargetException");
   }
 
-  /**
-   * @param unhandled Exceptions thrown by {@link Constructor#newInstance} that were unhandled.
-   * @param handles Handlers for reflective exceptions (e.g. a throws declaration or catch clause).
-   */
+  /// @param unhandled Exceptions thrown by [Constructor#newInstance] that were unhandled.
+  /// @param handles Handlers for reflective exceptions (e.g. a throws declaration or catch clause).
   record UnhandledResult<T>(ImmutableSet<Type> unhandled, ImmutableMap<Type, T> handles) {}
 
-  /**
-   * Given a map of handled exception types and the trees of those handlers (i.e. catch clauses or
-   * method throws clauses), determine which handlers are for reflective exceptions, and whether all
-   * exceptions thrown by {#link Constructor#newInstance} are handled.
-   */
+  /// Given a map of handled exception types and the trees of those handlers (i.e. catch clauses or
+  /// method throws clauses), determine which handlers are for reflective exceptions, and whether
+  /// all exceptions thrown by [Constructor#newInstance] are handled.
   private static <T> UnhandledResult<T> unhandled(
       ImmutableMap<Type, T> handles, VisitorState state) {
     LinkedHashSet<Type> toHandle = new LinkedHashSet<>();

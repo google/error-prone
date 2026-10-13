@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link ClassNamedLikeTypeParameter} */
+/// Tests for [ClassNamedLikeTypeParameter]
 @RunWith(JUnit4.class)
 public class ClassNamedLikeTypeParameterTest {
 

@@ -86,15 +86,15 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
-/** A helper class to find all identifiers in scope at a given program point. */
+/// A helper class to find all identifiers in scope at a given program point.
 public final class FindIdentifiers {
 
-  /** Finds a variable declaration with the given name that is in scope at the current location. */
+  /// Finds a variable declaration with the given name that is in scope at the current location.
   public static Symbol findIdent(String name, VisitorState state) {
     return findIdent(name, state, KindSelector.VAR);
   }
 
-  /** Finds a declaration with the given name and type that is in scope at the current location. */
+  /// Finds a declaration with the given name and type that is in scope at the current location.
   public static @Nullable Symbol findIdent(String name, VisitorState state, KindSelector kind) {
     ClassType enclosingClass = ASTHelpers.getType(getEnclosingClass(state.getPath()));
     Env<AttrContext> env;
@@ -147,16 +147,14 @@ public final class FindIdentifiers {
     }
   }
 
-  /**
-   * Finds the set of all bare variable identifiers in scope at the current location. Identifiers
-   * are ordered by ascending distance/scope count from the current location to match shadowing
-   * rules. That is, if two variables with the same simple names appear in the set, the one that
-   * appears first in iteration order is the one you get if you use the bare name in the source
-   * code.
-   *
-   * <p>We do not report variables that would require a qualified access. We also do not handle
-   * wildcard imports.
-   */
+  /// Finds the set of all bare variable identifiers in scope at the current location. Identifiers
+  /// are ordered by ascending distance/scope count from the current location to match shadowing
+  /// rules. That is, if two variables with the same simple names appear in the set, the one that
+  /// appears first in iteration order is the one you get if you use the bare name in the source
+  /// code.
+  ///
+  /// We do not report variables that would require a qualified access. We also do not handle
+  /// wildcard imports.
   public static ImmutableSet<VarSymbol> findAllIdents(VisitorState state) {
     ImmutableSet.Builder<VarSymbol> result = new ImmutableSet.Builder<>();
 
@@ -362,10 +360,8 @@ public final class FindIdentifiers {
     }.visit(tree, null);
   }
 
-  /**
-   * Finds all variable declarations which are unused at this point in the AST (i.e. they might be
-   * used further on).
-   */
+  /// Finds all variable declarations which are unused at this point in the AST (i.e. they might be
+  /// used further on).
   public static ImmutableSet<VarSymbol> findUnusedIdentifiers(VisitorState state) {
     ImmutableSet.Builder<VarSymbol> definedVariables = ImmutableSet.builder();
     ImmutableSet.Builder<Symbol> usedSymbols = ImmutableSet.builder();
@@ -395,14 +391,14 @@ public final class FindIdentifiers {
     return ImmutableSet.copyOf(Sets.difference(definedVariables.build(), usedSymbols.build()));
   }
 
-  /** Find the set of all identifiers referenced within this Tree */
+  /// Find the set of all identifiers referenced within this Tree
   public static ImmutableSet<Symbol> findReferencedIdentifiers(Tree tree) {
     ImmutableSet.Builder<Symbol> builder = ImmutableSet.builder();
     createFindIdentifiersScanner(builder, null).scan(tree, null);
     return builder.build();
   }
 
-  /** Finds all the visible fields declared or inherited in the target class */
+  /// Finds all the visible fields declared or inherited in the target class
   public static ImmutableList<VarSymbol> findAllFields(Type classType, VisitorState state) {
     return state.getTypes().closure(classType).stream()
         .flatMap(type -> {
@@ -423,10 +419,8 @@ public final class FindIdentifiers {
         .collect(toImmutableList());
   }
 
-  /**
-   * Finds all identifiers in a tree. Takes an optional stop point as its argument: the depth-first
-   * walk will stop if this node is encountered.
-   */
+  /// Finds all identifiers in a tree. Takes an optional stop point as its argument: the depth-first
+  /// walk will stop if this node is encountered.
   private static TreeScanner<Void, Void> createFindIdentifiersScanner(
       ImmutableSet.Builder<Symbol> builder, @Nullable Tree stoppingPoint) {
     return new TreeScanner<Void, Void>() {
@@ -533,7 +527,7 @@ public final class FindIdentifiers {
     };
   }
 
-  /** Returns true iff the leaf node of the {@code path} occurs in a JLS 8.3.1 static context. */
+  /// Returns true iff the leaf node of the `path` occurs in a JLS 8.3.1 static context.
   private static boolean inStaticContext(TreePath path) {
     ClassSymbol enclosingClass =
         ASTHelpers.getSymbol(ASTHelpers.findEnclosingNode(path, ClassTree.class));
@@ -589,14 +583,12 @@ public final class FindIdentifiers {
     }
   }
 
-  /**
-   * Walks up the given {@code path} and returns true iff the first node matching {@code predicate1}
-   * occurs lower in the AST than the first node node matching {@code predicate2}. Returns false if
-   * no node matches {@code predicate1} or if no node matches {@code predicate2}.
-   *
-   * @param predicate1 A {@link BiPredicate} that accepts the current node and its parent
-   * @param predicate2 A {@link BiPredicate} that accepts the current node and its parent
-   */
+  /// Walks up the given `path` and returns true iff the first node matching `predicate1` occurs
+  /// lower in the AST than the first node node matching `predicate2`. Returns false if no node
+  /// matches `predicate1` or if no node matches `predicate2`.
+  ///
+  /// @param predicate1 A [BiPredicate] that accepts the current node and its parent
+  /// @param predicate2 A [BiPredicate] that accepts the current node and its parent
   private static boolean lowerThan(
       TreePath path, BiPredicate<Tree, Tree> predicate1, BiPredicate<Tree, Tree> predicate2) {
     int index1 = -1;

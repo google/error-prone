@@ -23,27 +23,24 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Specify an error-prone {@link Matcher} to further restrict what expressions are matched by the
- * annotated parameter.
- *
- * <p><b>Note:</b> The {@code @Matches} annotation should <b>only</b> go on the
- * {@code @BeforeTemplate}. For example:
- *
- * <pre>{@code
- * class SingletonList {
- *   @BeforeTemplate
- *   public <E> List<E> before(@Matches(IsNonNullMatcher.class) E e) {
- *     return Collections.singletonList(e);
- *   }
- *
- *   @AfterTemplate
- *   public <E> List<E> after(E e) {
- *     return ImmutableList.of(e);
- *   }
- * }
- * }</pre>
- */
+/// Specify an error-prone [Matcher] to further restrict what expressions are matched by the
+/// annotated parameter.
+///
+/// **Note:** The `@Matches` annotation should **only** go on the `@BeforeTemplate`. For example:
+///
+/// ```
+/// class SingletonList {
+///   @BeforeTemplate
+///   public <E> List<E> before(@Matches(IsNonNullMatcher.class) E e) {
+///     return Collections.singletonList(e);
+///   }
+///
+///   @AfterTemplate
+///   public <E> List<E> after(E e) {
+///     return ImmutableList.of(e);
+///   }
+/// }
+/// ```
 @Target({ElementType.PARAMETER, ElementType.METHOD})
 @Retention(RetentionPolicy.SOURCE)
 public @interface Matches {

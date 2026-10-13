@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for the {@link UsingJsr305CheckReturnValue}. */
+/// Tests for the [UsingJsr305CheckReturnValue].
 @RunWith(JUnit4.class)
 public class UsingJsr305CheckReturnValueTest {
 

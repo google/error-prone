@@ -16,13 +16,11 @@
 
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
-/**
- * Represents a pair of a formal parameter and an actual parameter. Pairs can correspond to those in
- * the original method invocation but can also represent potential alternatives and suggested
- * changes.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Represents a pair of a formal parameter and an actual parameter. Pairs can correspond to those
+/// in the original method invocation but can also represent potential alternatives and suggested
+/// changes.
+///
+/// @author andrewrice@google.com (Andrew Rice)
 record ParameterPair(Parameter formal, Parameter actual) {
   static ParameterPair create(Parameter formal, Parameter actual) {
     return new ParameterPair(formal, actual);

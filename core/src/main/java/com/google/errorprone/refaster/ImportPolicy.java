@@ -45,22 +45,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
-/**
- * Policy specifying when and how to import classes when inlining types.
- *
- * @author Louis Wasserman
- */
+/// Policy specifying when and how to import classes when inlining types.
+///
+/// @author Louis Wasserman
 public enum ImportPolicy {
   // TODO(lowasser): add support for other policies, like "explicitly qualify everything"
 
-  /**
-   * Import the outermost class and explicitly qualify references below that. For example, to
-   * reference {@code com.google.Foo.Bar}, we import {@code com.google.Foo} and explicitly qualify
-   * {@code Foo.Bar}.
-   *
-   * <p><b>Note:</b> static methods named {@code assertThat}, {@code assertWithMessage} and {@code
-   * assertAbout} are always statically imported.
-   */
+  /// Import the outermost class and explicitly qualify references below that. For example, to
+  /// reference `com.google.Foo.Bar`, we import `com.google.Foo` and explicitly qualify `Foo.Bar`.
+  ///
+  /// **Note:** static methods named `assertThat`, `assertWithMessage` and `assertAbout` are always
+  /// statically imported.
   IMPORT_TOP_LEVEL {
 
     private static final ImmutableSet<String> METHOD_NAMES_TO_STATICALLY_IMPORT =
@@ -143,7 +138,7 @@ public enum ImportPolicy {
               classReference(inliner, topLevelClazz, fullyQualifiedClazz), inliner.asName(member));
     }
   },
-  /** Import nested classes directly, and qualify static references from the class level. */
+  /// Import nested classes directly, and qualify static references from the class level.
   IMPORT_CLASS_DIRECTLY {
     @Override
     public JCExpression classReference(
@@ -191,10 +186,8 @@ public enum ImportPolicy {
     }
   },
 
-  /**
-   * When inlining static methods, always static import the method. Non-static references to classes
-   * are imported from the top level as in {@code IMPORT_TOP_LEVEL}.
-   */
+  /// When inlining static methods, always static import the method. Non-static references to
+  /// classes are imported from the top level as in `IMPORT_TOP_LEVEL`.
   STATIC_IMPORT_ALWAYS {
     @Override
     public JCExpression classReference(
@@ -248,23 +241,20 @@ public enum ImportPolicy {
     return select;
   }
 
-  /**
-   * Returns true if, at the replacement site, {@code simpleName} refers to a type other than {@code
-   * qualifiedName} that a single-type import of {@code qualifiedName} would not override, so the
-   * reference has to be qualified instead. That covers member types (declared or inherited) and
-   * type variables in scope (JLS 6.4.1), and top-level types declared in the same compilation unit,
-   * which can't be imported over (JLS 7.5.1).
-   *
-   * <p>Top-level types from other files in the same package, or from on-demand imports (including
-   * {@code java.lang}), are overridden by a single-type import, so they don't count, unless {@code
-   * qualifiedName} is a {@code java.lang} type, which {@link Inliner#addImport} never imports.
-   * Existing single-type imports of other top-level types don't count either; callers check those
-   * against the import list.
-   *
-   * <p>Local classes declared in a method body aren't detected, because {@link
-   * FindIdentifiers#findIdent} doesn't see them. {@code SuggestedFixes.qualifyType} makes the same
-   * tradeoff.
-   */
+  /// Returns true if, at the replacement site, `simpleName` refers to a type other than
+  /// `qualifiedName` that a single-type import of `qualifiedName` would not override, so the
+  /// reference has to be qualified instead. That covers member types (declared or inherited) and
+  /// type variables in scope (JLS 6.4.1), and top-level types declared in the same compilation
+  /// unit, which can't be imported over (JLS 7.5.1).
+  ///
+  /// Top-level types from other files in the same package, or from on-demand imports (including
+  /// `java.lang`), are overridden by a single-type import, so they don't count, unless
+  /// `qualifiedName` is a `java.lang` type, which [Inliner#addImport] never imports. Existing
+  /// single-type imports of other top-level types don't count either; callers check those against
+  /// the import list.
+  ///
+  /// Local classes declared in a method body aren't detected, because [FindIdentifiers#findIdent]
+  /// doesn't see them. `SuggestedFixes.qualifyType` makes the same tradeoff.
   private static boolean isShadowedInScope(
       Inliner inliner, String simpleName, CharSequence qualifiedName) {
     TreePath path = inliner.path();
@@ -298,10 +288,8 @@ public enum ImportPolicy {
             .anyMatch(t -> t instanceof ClassTree c && sym.equals(ASTHelpers.getSymbol(c)));
   }
 
-  /**
-   * Returns true if a class other than {@code qualifiedName} with the same simple name is already
-   * imported, or is about to be.
-   */
+  /// Returns true if a class other than `qualifiedName` with the same simple name is already
+  /// imported, or is about to be.
   private static boolean hasConflictingImport(
       Inliner inliner, String simpleName, CharSequence qualifiedName) {
     return getAllImports(inliner, WhichImports.NON_STATIC).stream()
@@ -340,10 +328,8 @@ public enum ImportPolicy {
     abstract boolean existingImportMatches(JCImport jcImport);
   }
 
-  /**
-   * Returns the set of imports that already exist of the import type (both in the source file and
-   * in the pending list of imports to add).
-   */
+  /// Returns the set of imports that already exist of the import type (both in the source file and
+  /// in the pending list of imports to add).
   private static ImmutableSet<String> getAllImports(Inliner inliner, WhichImports whichImports) {
     return Streams.concat(
             whichImports.getExistingImports(inliner),

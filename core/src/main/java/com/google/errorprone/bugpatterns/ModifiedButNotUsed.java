@@ -77,11 +77,9 @@ import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 import org.safere.Pattern;
 
-/**
- * Matches creation of new collections/proto builders which are modified but never used.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Matches creation of new collections/proto builders which are modified but never used.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary = "A collection or proto builder was created, but its values were never accessed.",
     severity = WARNING)
@@ -305,9 +303,8 @@ public class ModifiedButNotUsed extends BugChecker
         .build();
   }
 
-  /**
-   * Whether this is a chain of method invocations terminating in a new proto or collection builder.
-   */
+  /// Whether this is a chain of method invocations terminating in a new proto or collection
+  /// builder.
   private static boolean newFluentChain(ExpressionTree tree, VisitorState state) {
     // getReceiver(cur) is only called when FLUENT_CHAIN matches, which guarantees cur is a method
     // invocation or member reference.

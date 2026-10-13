@@ -36,12 +36,10 @@ import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 
-/**
- * Flags methods with collection return types which return {@code null} in some cases but don't
- * annotate the method as @Nullable.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Flags methods with collection return types which return `null` in some cases but don't annotate
+/// the method as @Nullable.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary =
         "Method has a collection return type and returns {@code null} in some cases but does not"

@@ -22,11 +22,9 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCThrow;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UTree} representation of a {@link ThrowTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] representation of a [ThrowTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UThrow extends USimpleStatement implements ThrowTree {
   public static UThrow create(UExpression expression) {

@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Test for ByteBufferBackingArray bug checker */
+/// Test for ByteBufferBackingArray bug checker
 @RunWith(JUnit4.class)
 public class ByteBufferBackingArrayTest {
 

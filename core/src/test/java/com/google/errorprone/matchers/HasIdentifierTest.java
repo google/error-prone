@@ -32,9 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author cpovirk@google.com (Chris Povirk)
- */
+/// @author cpovirk@google.com (Chris Povirk)
 @RunWith(JUnit4.class)
 public class HasIdentifierTest extends CompilerBasedAbstractTest {
   final List<ScannerTest> tests = new ArrayList<>();
@@ -125,10 +123,8 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
             })));
   }
 
-  /**
-   * Tests that the matcher doesn't throw an exception when applied to a tree that doesn't contain
-   * any identifiers or classes. Here, we apply the matcher to every LiteralTree.
-   */
+  /// Tests that the matcher doesn't throw an exception when applied to a tree that doesn't contain
+  /// any identifiers or classes. Here, we apply the matcher to every LiteralTree.
   @Test
   public void doesNotThrowWhenMatcherIsAppliedDirectlyToLiteral() {
     writeFile(

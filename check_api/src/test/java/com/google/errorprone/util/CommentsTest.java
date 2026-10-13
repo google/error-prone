@@ -36,14 +36,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Test code for {@code Comments} */
+/// Test code for `Comments`
 @RunWith(JUnit4.class)
 public class CommentsTest {
 
-  /**
-   * A {@link BugChecker} that calls computeEndPosition for each invocation and prints the final
-   * line of source ending at that position
-   */
+  /// A [BugChecker] that calls computeEndPosition for each invocation and prints the final line of
+  /// source ending at that position
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary = "Calls computeEndPosition and prints results")
@@ -122,7 +120,7 @@ public class CommentsTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} that prints the contents of comments around arguments */
+  /// A [BugChecker] that prints the contents of comments around arguments
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary =
@@ -529,7 +527,7 @@ public class CommentsTest {
         .doTest();
   }
 
-  /** A {@link BugChecker} that prints the source code at comment positions */
+  /// A [BugChecker] that prints the source code at comment positions
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary =

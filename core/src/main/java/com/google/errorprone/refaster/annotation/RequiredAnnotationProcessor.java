@@ -36,11 +36,9 @@ import javax.lang.model.util.SimpleAnnotationValueVisitor7;
 import javax.tools.Diagnostic.Kind;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Enforces {@code @RequiredAnnotation} as an annotation processor.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Enforces `@RequiredAnnotation` as an annotation processor.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @SupportedAnnotationTypes("*")
 public final class RequiredAnnotationProcessor extends AbstractProcessor {
   @Override

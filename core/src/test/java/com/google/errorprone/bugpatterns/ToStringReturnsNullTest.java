@@ -20,12 +20,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link ToStringReturnsNull} bug pattern.
- *
- * @author eleanorh@google.com (Eleanor Harris)
- * @author siyuanl@google.com (Siyuan Liu)
- */
+/// Unit tests for [ToStringReturnsNull] bug pattern.
+///
+/// @author eleanorh@google.com (Eleanor Harris)
+/// @author siyuanl@google.com (Siyuan Liu)
 @RunWith(JUnit4.class)
 public final class ToStringReturnsNullTest {
   private final CompilationTestHelper compilationHelper =

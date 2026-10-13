@@ -20,12 +20,10 @@ import com.google.auto.value.AutoValue;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 
-/**
- * A simplistic representation of a template match; can be used for expecting certain results from a
- * scan.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// A simplistic representation of a template match; can be used for expecting certain results from
+/// a scan.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class Match {
   public static Match create(TemplateMatch match) {

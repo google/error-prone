@@ -55,7 +55,7 @@ import java.util.Set;
 import javax.tools.JavaFileObject;
 import org.safere.Pattern;
 
-/** A {@link TaskListener} that runs Error Prone over attributed compilation units. */
+/// A [TaskListener] that runs Error Prone over attributed compilation units.
 @Trusted
 public final class ErrorProneAnalyzer implements TaskListener {
 
@@ -100,7 +100,7 @@ public final class ErrorProneAnalyzer implements TaskListener {
         codeTransformer, epOptions, context, refactoringCollection[0]);
   }
 
-  /** A {@link TaskListener} that performs refactorings. */
+  /// A [TaskListener] that performs refactorings.
   public static class RefactoringTask implements TaskListener {
 
     private final Context context;
@@ -191,7 +191,7 @@ public final class ErrorProneAnalyzer implements TaskListener {
 
   private int errorProneErrors = 0;
 
-  /** Prints how long each check ran, slowest first. */
+  /// Prints how long each check ran, slowest first.
   private void printTimings() {
     ErrorProneTimings timings = ErrorProneTimings.instance(context);
     ImmutableMap<String, Duration> checkDurations = timings.timings();
@@ -286,14 +286,14 @@ public final class ErrorProneAnalyzer implements TaskListener {
     }
   }
 
-  /** Returns true if the given source file should be excluded from analysis. */
+  /// Returns true if the given source file should be excluded from analysis.
   private boolean shouldExcludeSourceFile(CompilationUnitTree tree) {
     Pattern excludedPattern = errorProneOptions.getExcludedPattern();
     return excludedPattern != null
         && excludedPattern.matcher(ASTHelpers.getFileName(tree)).matches();
   }
 
-  /** Returns true if all declarations inside the given compilation unit have been visited. */
+  /// Returns true if all declarations inside the given compilation unit have been visited.
   private boolean finishedCompilation(CompilationUnitTree tree) {
     OUTER:
     for (Tree decl : tree.getTypeDecls()) {

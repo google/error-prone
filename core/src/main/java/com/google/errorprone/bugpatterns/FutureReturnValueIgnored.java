@@ -39,7 +39,7 @@ import java.util.concurrent.CompletionService;
 import java.util.concurrent.ForkJoinTask;
 import javax.inject.Inject;
 
-/** See BugPattern annotation. */
+/// See BugPattern annotation.
 @BugPattern(
     summary =
         "Return value of methods returning Future must be checked. Ignoring returned Futures "

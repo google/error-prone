@@ -98,7 +98,7 @@ import javax.inject.Inject;
 import javax.lang.model.type.IntersectionType;
 import org.jspecify.annotations.Nullable;
 
-/** Checks for statement switches that can be converted into a new-style arrow (`->`) switch. */
+/// Checks for statement switches that can be converted into a new-style arrow (`->`) switch.
 @BugPattern(
     severity = WARNING,
     summary = "This statement switch can be converted to a new-style arrow switch")
@@ -107,10 +107,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
   private static final Pattern FALL_THROUGH_PATTERN =
       Pattern.compile("\\bfalls?.?(through|out)\\b", Pattern.CASE_INSENSITIVE);
 
-  /**
-   * Default (negative) result for assignment switch conversion analysis. Note that the value is
-   * immutable.
-   */
+  /// Default (negative) result for assignment switch conversion analysis. Note that the value is
+  /// immutable.
   private static final AssignmentSwitchAnalysisResult DEFAULT_ASSIGNMENT_SWITCH_ANALYSIS_RESULT =
       new AssignmentSwitchAnalysisResult(
           /* canConvertToAssignmentSwitch= */ false,
@@ -119,7 +117,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
           /* assignmentKindOptional= */ Optional.empty(),
           /* assignmentSourceCodeOptional= */ Optional.empty());
 
-  /** Default (negative) result for overall analysis. Note that the value is immutable. */
+  /// Default (negative) result for overall analysis. Note that the value is immutable.
   private static final AnalysisResult DEFAULT_ANALYSIS_RESULT =
       new AnalysisResult(
           false,
@@ -130,10 +128,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
           ImmutableBiMap.of(),
           /* mustSurroundWithBraces= */ false);
 
-  /**
-   * Tri-state to represent the fall-thru control flow of a particular case of a particular
-   * statement switch
-   */
+  /// Tri-state to represent the fall-thru control flow of a particular case of a particular
+  /// statement switch
   private enum CaseFallThru {
     DEFINITELY_DOES_NOT_FALL_THRU,
     MAYBE_FALLS_THRU,
@@ -208,11 +204,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         : buildDescription(switchTree).addAllFixes(suggestedFixes).build();
   }
 
-  /**
-   * Extracts all variable symbols defined in the given list of statements. Note that this includes
-   * only declarations in the top-level list, not those nested within any subtrees. Returns a
-   * bidirectional mapping from variable symbol to its original variable declaration tree.
-   */
+  /// Extracts all variable symbols defined in the given list of statements. Note that this includes
+  /// only declarations in the top-level list, not those nested within any subtrees. Returns a
+  /// bidirectional mapping from variable symbol to its original variable declaration tree.
   private static BiMap<VarSymbol, VariableTree> extractSymbolsDefinedInStatementBlock(
       List<? extends StatementTree> statements) {
     BiMap<VarSymbol, VariableTree> symbolsDefinedInStatementBlock = HashBiMap.create();
@@ -227,11 +221,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return symbolsDefinedInStatementBlock;
   }
 
-  /**
-   * Analyzes a {@code SwitchTree}, and determines any possible findings and suggested fixes related
-   * to expression switches that can be made. Does not report any findings or suggested fixes up to
-   * the Error Prone framework.
-   */
+  /// Analyzes a `SwitchTree`, and determines any possible findings and suggested fixes related to
+  /// expression switches that can be made. Does not report any findings or suggested fixes up to
+  /// the Error Prone framework.
   private static AnalysisResult analyzeSwitchTree(SwitchTree switchTree, VisitorState state) {
     // Don't convert switch within switch
     if (ASTHelpers.findEnclosingNode(state.getPath(), SwitchTree.class) != null) {
@@ -483,18 +475,14 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         mustSurroundWithBraces);
   }
 
-  /**
-   * Determines whether local variable {@code symbol} has reads or writes within the scope of the
-   * supplied {@code tree}.
-   */
+  /// Determines whether local variable `symbol` has reads or writes within the scope of the
+  /// supplied `tree`.
   private static boolean hasReadsOrWritesOfVariableInTree(VarSymbol symbol, Tree tree) {
     return getReferencedLocalVariablesInTree(tree).contains(symbol);
   }
 
-  /**
-   * Determines whether the switch statement has a case that declares a local variable with the same
-   * name as the supplied {@code symbol}.
-   */
+  /// Determines whether the switch statement has a case that declares a local variable with the
+  /// same name as the supplied `symbol`.
   private static boolean declaresAnotherVariableNamed(VarSymbol symbol, SwitchTree switchTree) {
     return new TreeScanner<Boolean, Void>() {
       @Override
@@ -517,10 +505,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }.scan(switchTree, null);
   }
 
-  /**
-   * Determines whether any statements in the enclosing block after the switch statement declare a
-   * local variable with the same name as the supplied {@code symbol}.
-   */
+  /// Determines whether any statements in the enclosing block after the switch statement declare a
+  /// local variable with the same name as the supplied `symbol`.
   private static boolean declaresVariableNamedAfterSwitch(
       VarSymbol symbol, SwitchTree switchTree, VisitorState state) {
     Tree parent = state.getPath().getParentPath().getLeaf();
@@ -564,11 +550,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return false;
   }
 
-  /**
-   * Analyze a single {@code case} of a single {@code switch} statement to determine whether it is
-   * convertible to a return switch. The supplied {@code previousCaseQualifications} is updated and
-   * returned based on this analysis.
-   */
+  /// Analyze a single `case` of a single `switch` statement to determine whether it is convertible
+  /// to a return switch. The supplied `previousCaseQualifications` is updated and returned based on
+  /// this analysis.
   private static CaseQualifications analyzeCaseForReturnSwitch(
       CaseQualifications previousCaseQualifications,
       List<? extends StatementTree> statements,
@@ -611,11 +595,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         : CaseQualifications.ALL_CASES_QUALIFY;
   }
 
-  /**
-   * Analyze a single {@code case} of a single {@code switch} statement to determine whether it is
-   * convertible to an assignment switch. The supplied {@code previousAssignmentSwitchAnalysisState}
-   * is updated and returned based on this analysis.
-   */
+  /// Analyze a single `case` of a single `switch` statement to determine whether it is convertible
+  /// to an assignment switch. The supplied `previousAssignmentSwitchAnalysisState` is updated and
+  /// returned based on this analysis.
   private static AssignmentSwitchAnalysisState analyzeCaseForAssignmentSwitch(
       AssignmentSwitchAnalysisState previousAssignmentSwitchAnalysisState,
       List<? extends StatementTree> statements,
@@ -717,12 +699,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         assignmentTreeOptional.isEmpty() ? caseAssignmentTreeOptional : assignmentTreeOptional);
   }
 
-  /**
-   * Determines whether the supplied case's {@code statements} are capable of being mapped to an
-   * equivalent expression switch case (without repeating code), returning {@code true} if so.
-   * Detection is based on an ad-hoc algorithm that is not guaranteed to detect every convertible
-   * instance (whether a given block can fall-thru is an undecidable proposition in general).
-   */
+  /// Determines whether the supplied case's `statements` are capable of being mapped to an
+  /// equivalent expression switch case (without repeating code), returning `true` if so. Detection
+  /// is based on an ad-hoc algorithm that is not guaranteed to detect every convertible instance
+  /// (whether a given block can fall-thru is an undecidable proposition in general).
   private static boolean areStatementsConvertibleToExpressionSwitch(
       List<? extends StatementTree> statements, boolean isLastCaseInSwitch) {
     // For the last case, we can always convert (fall through has no effect)
@@ -741,10 +721,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return !Reachability.canCompleteNormally(getLast(statements));
   }
 
-  /**
-   * Renders the variable declarations that need to be hoisted above the switch statement. Each
-   * variable declaration is rendered on its own line, with comments preserved where possible.
-   */
+  /// Renders the variable declarations that need to be hoisted above the switch statement. Each
+  /// variable declaration is rendered on its own line, with comments preserved where possible.
   private static void renderHoistedVariables(
       StringBuilder renderTo, AnalysisResult analysisResult, VisitorState state) {
 
@@ -773,12 +751,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
   }
 
-  /**
-   * Transforms the supplied statement switch into an expression switch directly. In this
-   * conversion, each nontrivial statement block is mapped one-to-one to a new {@code Expression} or
-   * {@code StatementBlock} on the right-hand side (the `default:` case is removed if {@code
-   * removeDefault} is true). Comments are preserved where possible.
-   */
+  /// Transforms the supplied statement switch into an expression switch directly. In this
+  /// conversion, each nontrivial statement block is mapped one-to-one to a new `Expression` or
+  /// `StatementBlock` on the right-hand side (the `default:` case is removed if `removeDefault` is
+  /// true). Comments are preserved where possible.
   private static SuggestedFix convertDirectlyToExpressionSwitch(
       SwitchTree switchTree,
       VisitorState state,
@@ -925,14 +901,11 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return suggestedFixBuilder.build();
   }
 
-  /**
-   * Transforms the supplied statement switch into a {@code return switch ...} style of expression
-   * switch. In this conversion, each nontrivial statement block is mapped one-to-one to a new
-   * expression on the right-hand side of the arrow. Comments are preserved where possible.
-   * Precondition: the {@code AnalysisResult} for the {@code SwitchTree} must have deduced that this
-   * conversion is possible. Returns empty if the code that the conversion makes dead cannot be
-   * deleted.
-   */
+  /// Transforms the supplied statement switch into a `return switch ...` style of expression
+  /// switch. In this conversion, each nontrivial statement block is mapped one-to-one to a new
+  /// expression on the right-hand side of the arrow. Comments are preserved where possible.
+  /// Precondition: the `AnalysisResult` for the `SwitchTree` must have deduced that this conversion
+  /// is possible. Returns empty if the code that the conversion makes dead cannot be deleted.
   private static Optional<SuggestedFix> convertToReturnSwitch(
       SwitchTree switchTree,
       VisitorState state,
@@ -1056,13 +1029,11 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return Optional.of(suggestedFixBuilder.build());
   }
 
-  /**
-   * Transforms the supplied statement switch into an assignment switch style of expression switch.
-   * In this conversion, each nontrivial statement block is mapped one-to-one to a new expression on
-   * the right-hand side of the arrow (if {@code removeDefault} is true, then the {@code default:}
-   * block is skipped). Comments are preserved where possible. Precondition: the {@code
-   * AnalysisResult} for the {@code SwitchTree} must have deduced that this conversion is possible.
-   */
+  /// Transforms the supplied statement switch into an assignment switch style of expression switch.
+  /// In this conversion, each nontrivial statement block is mapped one-to-one to a new expression
+  /// on the right-hand side of the arrow (if `removeDefault` is true, then the `default:` block is
+  /// skipped). Comments are preserved where possible. Precondition: the `AnalysisResult` for the
+  /// `SwitchTree` must have deduced that this conversion is possible.
   private static SuggestedFix convertToAssignmentSwitch(
       SwitchTree switchTree,
       VisitorState state,
@@ -1210,10 +1181,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return suggestedFixBuilder.build();
   }
 
-  /**
-   * Extracts comments after the last filtered statement but before a removed trailing break
-   * statement, if present.
-   */
+  /// Extracts comments after the last filtered statement but before a removed trailing break
+  /// statement, if present.
   private static Optional<String> extractCommentsBeforeRemovedBreak(
       CaseTree caseTree, VisitorState state, ImmutableList<StatementTree> filteredStatements) {
 
@@ -1237,10 +1206,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return Optional.empty();
   }
 
-  /**
-   * If the block for this {@code CaseTree} ends with a {@code break} statement that would be
-   * redundant after transformation, then filter out the relevant {@code break} statement.
-   */
+  /// If the block for this `CaseTree` ends with a `break` statement that would be redundant after
+  /// transformation, then filter out the relevant `break` statement.
   private static ImmutableList<StatementTree> filterOutRedundantBreak(CaseTree caseTree) {
     var statements = getStatements(caseTree);
     boolean caseEndsWithUnlabelledBreak =
@@ -1250,10 +1217,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return caseEndsWithUnlabelledBreak ? statements.subList(0, statements.size() - 1) : statements;
   }
 
-  /**
-   * Returns the statements of a {@link CaseTree}. If the only statement is a block statement,
-   * return the block's statements instead.
-   */
+  /// Returns the statements of a [CaseTree]. If the only statement is a block statement, return the
+  /// block's statements instead.
   private static @Nullable ImmutableList<StatementTree> getStatements(CaseTree caseTree) {
     List<? extends StatementTree> statements = caseTree.getStatements();
     if (statements == null) {
@@ -1267,7 +1232,7 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         : ImmutableList.copyOf(statements);
   }
 
-  /** Transforms code for this case into the code under an expression switch. */
+  /// Transforms code for this case into the code under an expression switch.
   private static String transformBlock(
       CaseTree caseTree,
       VisitorState state,
@@ -1326,11 +1291,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return transformedBlockBuilder.toString();
   }
 
-  /**
-   * Extracts comments to the left side of the colon for the provided {@code CaseTree} into the
-   * {@code StringBuilder}. Note that any whitespace between distinct comments is not necessarily
-   * preserved exactly.
-   */
+  /// Extracts comments to the left side of the colon for the provided `CaseTree` into the
+  /// `StringBuilder`. Note that any whitespace between distinct comments is not necessarily
+  /// preserved exactly.
   private static int extractLhsComments(
       CaseTree caseTree, VisitorState state, StringBuilder stringBuilder) {
 
@@ -1347,11 +1310,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return lhsEnd;
   }
 
-  /**
-   * Extracts any comments appearing within the switch tree before the first case. Comments are
-   * merged into a single string separated by newlines. Precondition: the switch tree has at least
-   * one case.
-   */
+  /// Extracts any comments appearing within the switch tree before the first case. Comments are
+  /// merged into a single string separated by newlines. Precondition: the switch tree has at least
+  /// one case.
   private static Optional<String> extractCommentsBeforeFirstCase(
       SwitchTree switchTree, ImmutableList<ErrorProneComment> allSwitchComments) {
     // Indexing relative to the start position of the switch statement
@@ -1362,11 +1323,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         allSwitchComments, comment -> comment.getPos() < firstCaseStartIndex);
   }
 
-  /**
-   * Extracts any comments appearing after the specified {@code caseIndex} but before the subsequent
-   * case or end of the {@code switchTree}. Comments are merged into a single string separated by
-   * newlines.
-   */
+  /// Extracts any comments appearing after the specified `caseIndex` but before the subsequent case
+  /// or end of the `switchTree`. Comments are merged into a single string separated by newlines.
   private static Optional<String> extractCommentsAfterCase(
       SwitchTree switchTree,
       ImmutableList<ErrorProneComment> allSwitchComments,
@@ -1388,11 +1346,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         comment -> comment.getPos() >= caseEndIndex && comment.getPos() < nextCaseStartIndex);
   }
 
-  /**
-   * Filters comments according to the supplied predicate ({@code commentFilter}), removes
-   * fall-through and empty comments, and renders them into a single optional string. If no comments
-   * remain, returns {@code Optional.empty()}.
-   */
+  /// Filters comments according to the supplied predicate (`commentFilter`), removes fall-through
+  /// and empty comments, and renders them into a single optional string. If no comments remain,
+  /// returns `Optional.empty()`.
   private static Optional<String> filterAndRenderComments(
       ImmutableList<ErrorProneComment> comments, Predicate<ErrorProneComment> commentFilter) {
 
@@ -1409,10 +1365,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return rendered.isEmpty() ? Optional.empty() : Optional.of(rendered);
   }
 
-  /**
-   * Finds the position in source corresponding to the end of the code block of the supplied {@code
-   * caseIndex} within all {@code cases}.
-   */
+  /// Finds the position in source corresponding to the end of the code block of the supplied
+  /// `caseIndex` within all `cases`.
   private static int getBlockEnd(VisitorState state, CaseTree caseTree) {
 
     List<? extends StatementTree> statements = caseTree.getStatements();
@@ -1433,10 +1387,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
         : state.getEndPosition(blockStatements.getLast());
   }
 
-  /**
-   * Determines whether the supplied {@code case}'s logic should be expressed on the right of the
-   * arrow symbol without braces, incorporating both language and readability considerations.
-   */
+  /// Determines whether the supplied `case`'s logic should be expressed on the right of the arrow
+  /// symbol without braces, incorporating both language and readability considerations.
   private static boolean shouldTransformCaseWithoutBraces(
       ImmutableList<StatementTree> statementTrees) {
 
@@ -1454,10 +1406,8 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return KINDS_CONVERTIBLE_WITHOUT_BRACES.contains(onlyStatementTree.getKind());
   }
 
-  /**
-   * Removes any comment lines containing language similar to "fall thru". Intermediate line
-   * delimiters are also changed to newline.
-   */
+  /// Removes any comment lines containing language similar to "fall thru". Intermediate line
+  /// delimiters are also changed to newline.
   private static String removeFallThruLines(String comments) {
     StringBuilder output = new StringBuilder();
     try (BufferedReader br = new BufferedReader(new CharArrayReader(comments.toCharArray()))) {
@@ -1474,11 +1424,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     }
   }
 
-  /**
-   * Ad-hoc algorithm to search for a surjective map from (non-null) values of a {@code switch}'s
-   * expression to a {@code CaseTree}. Note that this algorithm does not compute whether such a map
-   * exists, but rather only whether it can find such a map.
-   */
+  /// Ad-hoc algorithm to search for a surjective map from (non-null) values of a `switch`'s
+  /// expression to a `CaseTree`. Note that this algorithm does not compute whether such a map
+  /// exists, but rather only whether it can find such a map.
   private static boolean isSwitchExhaustive(
       boolean hasDefaultCase, Set<String> handledEnumValues, Type switchType) {
     if (hasDefaultCase) {
@@ -1489,11 +1437,9 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return isSwitchCoveringAllEnumValues(handledEnumValues, switchType);
   }
 
-  /**
-   * Transforms a return or throw block into an expression statement suitable for use on the
-   * right-hand-side of the arrow of a return switch. For example, {@code return x+1;} would be
-   * transformed to {@code x+1;}.
-   */
+  /// Transforms a return or throw block into an expression statement suitable for use on the
+  /// right-hand-side of the arrow of a return switch. For example, `return x+1;` would be
+  /// transformed to `x+1;`.
   private static String transformReturnOrThrowBlock(
       CaseTree caseTree, VisitorState state, List<? extends StatementTree> statements) {
 
@@ -1525,12 +1471,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return transformedBlockBuilder.toString();
   }
 
-  /**
-   * Transforms an assignment or throw into an expression statement suitable for use on the
-   * right-hand-side of the arrow of an assignment switch. For example, {@code x >>= 2;} would be
-   * transformed to {@code 2;}. Note that this method does not return the assignment operator (e.g.
-   * {@code >>=}).
-   */
+  /// Transforms an assignment or throw into an expression statement suitable for use on the
+  /// right-hand-side of the arrow of an assignment switch. For example, `x >>= 2;` would be
+  /// transformed to `2;`. Note that this method does not return the assignment operator (e.g.
+  /// `>>=`).
   private static String transformAssignOrThrowBlock(
       CaseTree caseTree, VisitorState state, List<? extends StatementTree> statements) {
 
@@ -1561,20 +1505,18 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
     return transformedBlockBuilder.toString();
   }
 
-  /**
-   * @param canConvertDirectlyToExpressionSwitch Whether the statement switch can be directly
-   *     converted to an expression switch
-   * @param canConvertToReturnSwitch Whether the statement switch can be converted to a return
-   *     switch
-   * @param canRemoveDefault Whether the assignment switch is exhaustive even in the absence of the
-   *     default case that exists in the original switch statement
-   * @param assignmentSwitchAnalysisResult Results of the analysis for conversion to an assignment
-   *     switch
-   * @param groupedWithNextCase List of whether each case tree can be grouped with its successor in
-   *     transformed source code
-   * @param symbolsToHoist Bidirectional map from symbols to hoist to the top of the switch
-   *     statement to their declaration trees
-   */
+  /// @param canConvertDirectlyToExpressionSwitch Whether the statement switch can be directly
+  ///   converted to an expression switch
+  /// @param canConvertToReturnSwitch Whether the statement switch can be converted to a return
+  ///   switch
+  /// @param canRemoveDefault Whether the assignment switch is exhaustive even in the absence of the
+  ///   default case that exists in the original switch statement
+  /// @param assignmentSwitchAnalysisResult Results of the analysis for conversion to an assignment
+  ///   switch
+  /// @param groupedWithNextCase List of whether each case tree can be grouped with its successor in
+  ///   transformed source code
+  /// @param symbolsToHoist Bidirectional map from symbols to hoist to the top of the switch
+  ///   statement to their declaration trees
   private record AnalysisResult(
       boolean canConvertDirectlyToExpressionSwitch,
       boolean canConvertToReturnSwitch,
@@ -1584,16 +1526,14 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       ImmutableBiMap<VarSymbol, VariableTree> symbolsToHoist,
       boolean mustSurroundWithBraces) {}
 
-  /**
-   * @param canConvertToAssignmentSwitch Whether the statement switch can be converted to an
-   *     assignment switch
-   * @param precedingVariableDeclaration The immediately preceding variable declaration if this
-   *     switch can be combined with it.
-   * @param assignmentTargetOptional Target of the assignment switch, if any
-   * @param assignmentKindOptional Kind of assignment made by the assignment switch, if any
-   * @param assignmentSourceCodeOptional Java source code of the assignment switch's operator, e.g.
-   *     "+="
-   */
+  /// @param canConvertToAssignmentSwitch Whether the statement switch can be converted to an
+  ///   assignment switch
+  /// @param precedingVariableDeclaration The immediately preceding variable declaration if this
+  ///   switch can be combined with it.
+  /// @param assignmentTargetOptional Target of the assignment switch, if any
+  /// @param assignmentKindOptional Kind of assignment made by the assignment switch, if any
+  /// @param assignmentSourceCodeOptional Java source code of the assignment switch's operator, e.g.
+  ///   "+="
   private record AssignmentSwitchAnalysisResult(
       boolean canConvertToAssignmentSwitch,
       Optional<VariableTree> precedingVariableDeclaration,
@@ -1601,13 +1541,11 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
       Optional<Tree.Kind> assignmentKindOptional,
       Optional<String> assignmentSourceCodeOptional) {}
 
-  /**
-   * @param assignmentSwitchCaseQualifications Overall qualification of the switch statement for
-   *     conversion to an assignment switch
-   * @param assignmentTargetOptional Target of the first assignment seen, if any
-   * @param assignmentExpressionKindOptional Kind of the first assignment seen, if any
-   * @param assignmentTreeOptional ExpressionTree of the first assignment seen, if any
-   */
+  /// @param assignmentSwitchCaseQualifications Overall qualification of the switch statement for
+  ///   conversion to an assignment switch
+  /// @param assignmentTargetOptional Target of the first assignment seen, if any
+  /// @param assignmentExpressionKindOptional Kind of the first assignment seen, if any
+  /// @param assignmentTreeOptional ExpressionTree of the first assignment seen, if any
   private record AssignmentSwitchAnalysisState(
       CaseQualifications assignmentSwitchCaseQualifications,
       Optional<ExpressionTree> assignmentTargetOptional,

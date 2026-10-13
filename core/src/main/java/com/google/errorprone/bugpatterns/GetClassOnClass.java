@@ -30,10 +30,8 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * @author chy@google.com (Christine Yang)
- * @author kmuhlrad@google.com (Katy Muhlrad)
- */
+/// @author chy@google.com (Christine Yang)
+/// @author kmuhlrad@google.com (Katy Muhlrad)
 @BugPattern(
     summary =
         "Calling getClass() on an object of type Class returns the Class object for "
@@ -44,7 +42,7 @@ public class GetClassOnClass extends BugChecker implements MethodInvocationTreeM
   private static final Matcher<ExpressionTree> getClassMethodMatcher =
       instanceMethod().onExactClass("java.lang.Class").named("getClass");
 
-  /** Suggests removing getClass() or changing to Class.class. */
+  /// Suggests removing getClass() or changing to Class.class.
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     if (getClassMethodMatcher.matches(tree, state)) {

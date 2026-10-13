@@ -21,11 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link ComplexBooleanConstantTest}.
- *
- * @author Sumit Bhagwani (bhagwani@google.com)
- */
+/// Unit tests for [ComplexBooleanConstantTest].
+///
+/// @author Sumit Bhagwani (bhagwani@google.com)
 @RunWith(JUnit4.class)
 public class ComplexBooleanConstantTest {
   private final BugCheckerRefactoringTestHelper refactoringHelper =

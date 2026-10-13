@@ -14,5 +14,5 @@
  * limitations under the License.
  */
 
-/** Bug patterns related to <a href="https://github.com/google/guice">Guice</a>. */
+/// Bug patterns related to [Guice](https://github.com/google/guice).
 package com.google.errorprone.bugpatterns.inject.guice;

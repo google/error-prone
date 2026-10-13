@@ -19,80 +19,75 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation to indicate a placeholder method.
- *
- * <p>A placeholder method is an abstract method in a Refaster template class which can represent an
- * arbitrary expression (if the return type is nonvoid), or zero or more statements (if the return
- * type is void), in terms of its arguments. For example,
- *
- * <pre>{@code
- * abstract class ComputeIfAbsent<K, V> {
- *  @Placeholder abstract V computeValue(K key);
- *
- *  @BeforeTemplate void getOrCompute(Map<K, V> map, K key) {
- *     V value = map.get(key);
- *     if (value == null) {
- *       map.put(key, value = computeValue(key));
- *     }
- *   }
- *
- *  @AfterTemplate void computeIfAbsent(Map<K, V> map, K key) {
- *     V value = map.computeIfAbsent(key, (K k) -> computeValue(k));
- *   }
- * }
- * }</pre>
- *
- * <p>Here, {@code computeValue} represents an arbitrary expression in terms of {@code key}, and the
- * {@code @AfterTemplate} rewrites that same expression in terms of the parameter of a lambda
- * expression.
- *
- * <p>For a multi-line example, consider
- *
- * <pre>{@code
- * abstract class TryWithResources<T extends AutoCloseable> {
- *  @Placeholder abstract T open();
- *  @Placeholder void process(T resource);
- *
- *  @BeforeTemplate void tryFinallyClose() {
- *     T resource = open();
- *     try {
- *       process(resource);
- *     } finally {
- *       resource.close();
- *     }
- *   }
- *
- *  @AfterTemplate void tryWithResource() {
- *     try (T resource = open()) {
- *       process(resource);
- *     }
- *   }
- * }
- * }</pre>
- *
- * <p>Here, {@code process} is any block, though it must refer to {@code resource} in some way; it
- * is not permitted to reassign the contents of {@code resource}.
- *
- * <p>Placeholder methods are not permitted to refer to any local variables or parameters of the
- * {@code @BeforeTemplate} that are not passed to them as arguments. Additionally, they
- * <em>must</em> contain references to all arguments that <em>are</em> passed to them -- except
- * those corresponding to parameters annotated with {@link MayOptionallyUse}.
- *
- * <p>Note that {@link Matches} and {@link NotMatches} can be applied to placeholder methods, but,
- * <strong>and this is a serious health warning</strong>, those predicates will only be matched if
- * the placeholder method is used as an <em>expression</em>, not a <em>statement</em>.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Annotation to indicate a placeholder method.
+///
+/// A placeholder method is an abstract method in a Refaster template class which can represent an
+/// arbitrary expression (if the return type is nonvoid), or zero or more statements (if the return
+/// type is void), in terms of its arguments. For example,
+///
+/// ```
+/// abstract class ComputeIfAbsent<K, V> {
+///  @Placeholder abstract V computeValue(K key);
+///
+///  @BeforeTemplate void getOrCompute(Map<K, V> map, K key) {
+///     V value = map.get(key);
+///     if (value == null) {
+///       map.put(key, value = computeValue(key));
+///     }
+///   }
+///
+///  @AfterTemplate void computeIfAbsent(Map<K, V> map, K key) {
+///     V value = map.computeIfAbsent(key, (K k) -> computeValue(k));
+///   }
+/// }
+/// ```
+///
+/// Here, `computeValue` represents an arbitrary expression in terms of `key`, and the
+/// `@AfterTemplate` rewrites that same expression in terms of the parameter of a lambda expression.
+///
+/// For a multi-line example, consider
+///
+/// ```
+/// abstract class TryWithResources<T extends AutoCloseable> {
+///  @Placeholder abstract T open();
+///  @Placeholder void process(T resource);
+///
+///  @BeforeTemplate void tryFinallyClose() {
+///     T resource = open();
+///     try {
+///       process(resource);
+///     } finally {
+///       resource.close();
+///     }
+///   }
+///
+///  @AfterTemplate void tryWithResource() {
+///     try (T resource = open()) {
+///       process(resource);
+///     }
+///   }
+/// }
+/// ```
+///
+/// Here, `process` is any block, though it must refer to `resource` in some way; it is not
+/// permitted to reassign the contents of `resource`.
+///
+/// Placeholder methods are not permitted to refer to any local variables or parameters of the
+/// `@BeforeTemplate` that are not passed to them as arguments. Additionally, they *must* contain
+/// references to all arguments that *are* passed to them -- except those corresponding to
+/// parameters annotated with [MayOptionallyUse].
+///
+/// Note that [Matches] and [NotMatches] can be applied to placeholder methods, but, **and this is a
+/// serious health warning**, those predicates will only be matched if the placeholder method is
+/// used as an *expression*, not a *statement*.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
 public @interface Placeholder {
   // TODO(lowasser): consider putting forbiddenKinds here as an annotation parameter
 
-  /**
-   * Identifies whether the placeholder is allowed to match an expression which simply returns one
-   * of the placeholder arguments unchanged.
-   */
+  /// Identifies whether the placeholder is allowed to match an expression which simply returns one
+  /// of the placeholder arguments unchanged.
   boolean allowsIdentity() default false;
 }

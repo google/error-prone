@@ -55,9 +55,7 @@ import com.sun.tools.javac.util.Name;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author epmjohnston@google.com (Emily P.M. Johnston)
- */
+/// @author epmjohnston@google.com (Emily P.M. Johnston)
 @BugPattern(
     summary =
         "Classes extending PreferenceActivity must implement isValidFragment such that it does not"

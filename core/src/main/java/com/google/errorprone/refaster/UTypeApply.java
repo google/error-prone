@@ -27,12 +27,9 @@ import com.sun.tools.javac.tree.JCTree.JCTypeApply;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UTree} version of {@link ParameterizedTypeTree}. This is the AST version of {@link
- * UClassType}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] version of [ParameterizedTypeTree]. This is the AST version of [UClassType].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UTypeApply extends UExpression implements ParameterizedTypeTree {
   public static UTypeApply create(UExpression type, List<UExpression> typeArguments) {

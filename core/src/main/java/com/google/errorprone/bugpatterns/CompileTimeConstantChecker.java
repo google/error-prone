@@ -53,7 +53,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/** A Bugpattern; see the accompanying Markdown documentation. */
+/// A Bugpattern; see the accompanying Markdown documentation.
 @BugPattern(
     name = "CompileTimeConstant",
     summary =
@@ -75,19 +75,16 @@ public class CompileTimeConstantChecker extends BugChecker
   private final Matcher<ExpressionTree> compileTimeConstExpressionMatcher =
       CompileTimeConstantExpressionMatcher.instance();
 
-  /**
-   * Matches formal parameters with {@link com.google.errorprone.annotations.CompileTimeConstant}
-   * annotations against corresponding actual parameters.
-   *
-   * @param state the visitor state
-   * @param calleeSymbol the method whose formal parameters to consider
-   * @param actualParams the list of actual parameters
-   * @return a {@code Description} of the match <i>iff</i> for any of the actual parameters that is
-   *     annotated with {@link com.google.errorprone.annotations.CompileTimeConstant}, the
-   *     corresponding formal parameter is not a compile-time-constant expression in the sense of
-   *     {@link CompileTimeConstantExpressionMatcher}. Otherwise returns {@code
-   *     Description.NO_MATCH}.
-   */
+  /// Matches formal parameters with [com.google.errorprone.annotations.CompileTimeConstant]
+  /// annotations against corresponding actual parameters.
+  ///
+  /// @param state the visitor state
+  /// @param calleeSymbol the method whose formal parameters to consider
+  /// @param actualParams the list of actual parameters
+  /// @return a `Description` of the match *iff* for any of the actual parameters that is annotated
+  ///   with [com.google.errorprone.annotations.CompileTimeConstant], the corresponding formal
+  ///   parameter is not a compile-time-constant expression in the sense of
+  ///   [CompileTimeConstantExpressionMatcher]. Otherwise returns `Description.NO_MATCH`.
   private Description matchArguments(
       VisitorState state,
       Symbol.MethodSymbol calleeSymbol,
@@ -132,10 +129,8 @@ public class CompileTimeConstantChecker extends BugChecker
     return Description.NO_MATCH;
   }
 
-  /**
-   * If the non-constant variable is annotated with @CompileTimeConstant, it must have been
-   * non-final. Suggest making it final in the error message.
-   */
+  /// If the non-constant variable is annotated with @CompileTimeConstant, it must have been
+  /// non-final. Suggest making it final in the error message.
   private Description handleMatch(ExpressionTree actualParam, VisitorState state) {
     if (!(ASTHelpers.getSymbol(actualParam) instanceof VarSymbol var)) {
       return describeMatch(actualParam);

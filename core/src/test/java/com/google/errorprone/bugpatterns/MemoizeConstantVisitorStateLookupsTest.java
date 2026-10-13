@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link com.google.errorprone.bugpatterns.MemoizeConstantVisitorStateLookups}. */
+/// Tests for [com.google.errorprone.bugpatterns.MemoizeConstantVisitorStateLookups].
 @RunWith(JUnit4.class)
 public class MemoizeConstantVisitorStateLookupsTest {
   private final CompilationTestHelper compilationTestHelper =

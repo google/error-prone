@@ -59,7 +59,7 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.type.TypeMirror;
 import org.jspecify.annotations.Nullable;
 
-/** Check for non-allowlisted callers to RestrictedApiChecker. */
+/// Check for non-allowlisted callers to RestrictedApiChecker.
 @BugPattern(
     name = "RestrictedApi",
     summary = "Check for non-allowlisted callers to RestrictedApiChecker.",
@@ -70,11 +70,9 @@ public class RestrictedApiChecker extends BugChecker
         AnnotationTreeMatcher,
         MemberReferenceTreeMatcher {
 
-  /**
-   * Validates a {@code @RestrictedApi} annotation and that the declared restriction makes sense.
-   *
-   * <p>The other match functions in this class check the <em>usages</em> of a restricted API.
-   */
+  /// Validates a `@RestrictedApi` annotation and that the declared restriction makes sense.
+  ///
+  /// The other match functions in this class check the *usages* of a restricted API.
   @Override
   public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
     // TODO(bangert): Validate all the fields
@@ -123,14 +121,12 @@ public class RestrictedApiChecker extends BugChecker
     return checkMethodUse(getSymbol(tree), tree, state);
   }
 
-  /**
-   * Returns the constructor type for the supplied constructor symbol of an anonymous class object
-   * that can be matched with a corresponding constructor in its direct superclass. If the anonymous
-   * object creation expression is qualified, i.e., is of the form {@code enclosingExpression.new
-   * identifier (arguments)} the constructor type includes an implicit first parameter with type
-   * matching enclosingExpression. In such a case a matching constructor type is created by dropping
-   * this implicit parameter.
-   */
+  /// Returns the constructor type for the supplied constructor symbol of an anonymous class object
+  /// that can be matched with a corresponding constructor in its direct superclass. If the
+  /// anonymous object creation expression is qualified, i.e., is of the form
+  /// `enclosingExpression.new identifier (arguments)` the constructor type includes an implicit
+  /// first parameter with type matching enclosingExpression. In such a case a matching constructor
+  /// type is created by dropping this implicit parameter.
   private static Type dropImplicitEnclosingInstanceParameter(
       NewClassTree tree, VisitorState state, MethodSymbol anonymousClassConstructor) {
     Type type = anonymousClassConstructor.asType();

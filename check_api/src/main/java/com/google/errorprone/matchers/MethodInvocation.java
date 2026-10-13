@@ -21,22 +21,18 @@ import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/**
- * Matches a method invocation based on a matcher for the method select (receiver + method
- * identifier) and one for the arguments.
- *
- * @author schmitt@google.com (Peter Schmitt)
- */
+/// Matches a method invocation based on a matcher for the method select (receiver + method
+/// identifier) and one for the arguments.
+///
+/// @author schmitt@google.com (Peter Schmitt)
 public class MethodInvocation implements Matcher<ExpressionTree> {
 
   private final Matcher<ExpressionTree> methodSelectMatcher;
   private final MethodArgumentMatcher methodArgumentMatcher;
 
-  /**
-   * Creates a new matcher for method invocations based on a method select and an argument matcher.
-   *
-   * @param matchType how to apply the argument matcher to the method's arguments
-   */
+  /// Creates a new matcher for method invocations based on a method select and an argument matcher.
+  ///
+  /// @param matchType how to apply the argument matcher to the method's arguments
   public MethodInvocation(
       Matcher<ExpressionTree> methodSelectMatcher,
       MatchType matchType,

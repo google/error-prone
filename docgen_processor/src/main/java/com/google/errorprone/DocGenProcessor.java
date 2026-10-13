@@ -40,13 +40,11 @@ import javax.lang.model.element.TypeElement;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 
-/**
- * Annotation processor which visits all classes that have a {@code BugPattern} annotation, and
- * writes a tab-delimited text file dumping the data found.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// Annotation processor which visits all classes that have a `BugPattern` annotation, and writes a
+/// tab-delimited text file dumping the data found.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
+/// @author alexeagle@google.com (Alex Eagle)
 @AutoService(Processor.class)
 @SupportedAnnotationTypes("com.google.errorprone.BugPattern")
 public class DocGenProcessor extends AbstractProcessor {
@@ -58,13 +56,13 @@ public class DocGenProcessor extends AbstractProcessor {
 
   private final Map<String, BugPatternInstance> bugPatterns = new HashMap<>();
 
-  /** {@inheritDoc} */
+  /// {@inheritDoc}
   @Override
   public synchronized void init(ProcessingEnvironment processingEnv) {
     super.init(processingEnv);
   }
 
-  /** {@inheritDoc} */
+  /// {@inheritDoc}
   @Override
   public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
     for (Element element : roundEnv.getElementsAnnotatedWith(BugPattern.class)) {

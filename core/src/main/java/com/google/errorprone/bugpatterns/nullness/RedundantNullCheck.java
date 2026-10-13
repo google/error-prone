@@ -48,7 +48,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 
-/** A bug checker; see the summary. */
+/// A bug checker; see the summary.
 @BugPattern(
     summary =
         "Null check on an expression that is statically determined to be non-null according to "

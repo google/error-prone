@@ -20,12 +20,10 @@ import com.google.errorprone.VisitorState;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 
-/**
- * A heuristic to apply to a suggested change. If the test method returns false then the change will
- * be abandoned.
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// A heuristic to apply to a suggested change. If the test method returns false then the change
+/// will be abandoned.
+///
+/// @author andrewrice@google.com (Andrew Rice)
 interface Heuristic {
 
   boolean isAcceptableChange(Changes changes, Tree node, MethodSymbol symbol, VisitorState state);

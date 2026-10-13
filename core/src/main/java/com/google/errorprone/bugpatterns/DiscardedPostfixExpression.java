@@ -32,7 +32,7 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree.JCLambda;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "The result of this unary operation on a lambda parameter is discarded",
     severity = SeverityLevel.ERROR)

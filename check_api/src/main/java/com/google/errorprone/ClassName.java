@@ -29,42 +29,35 @@ import com.sun.tools.javac.util.Name;
 import java.lang.ref.SoftReference;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Encapsulates a qualified class name and caches its resolved javac {@link ClassSymbol}, {@link
- * Type}, and {@link Name} across a compilation.
- */
+/// Encapsulates a qualified class name and caches its resolved javac [ClassSymbol], [Type], and
+/// [Name] across a compilation.
 @Immutable
 public final class ClassName {
 
-  /**
-   * Constructs a {@link ClassName} from a qualified canonical or binary class name (e.g. {@code
-   * "java.util.List"}, {@code "java.util.Map.Entry"}, or {@code "java.util.Map$Entry"}).
-   *
-   * @throws IllegalArgumentException if {@code name} is empty, has a leading/trailing/consecutive
-   *     {@code '.'}, contains invalid characters ({@code '*'}, {@code '/'}, {@code ';'}, or
-   *     whitespace), is primitive/void, is an array type ({@code "[...]"}), or is parameterized
-   *     ({@code "<...>"})
-   */
+  /// Constructs a [ClassName] from a qualified canonical or binary class name (e.g.
+  /// `"java.util.List"`, `"java.util.Map.Entry"`, or `"java.util.Map$Entry"`).
+  ///
+  /// @throws IllegalArgumentException if `name` is empty, has a leading/trailing/consecutive `'.'`,
+  ///   contains invalid characters (`'*'`, `'/'`, `';'`, or whitespace), is primitive/void, is an
+  ///   array type (`"[...]"`), or is parameterized (`"<...>"`)
   public static ClassName of(String name) {
     requireNonNull(name);
     validateClassName(name);
     return new ClassName(VisitorState.inferBinaryName(name));
   }
 
-  /**
-   * Per-compilation cached javac state for this class name.
-   *
-   * @param invocation the javac compilation instance that owns the interned {@link Name}s and
-   *     {@link ClassSymbol}
-   * @param binaryName the binary name of the class in this compilation's {@link Name} table
-   * @param enclosingCandidates candidate enclosing class names from {@link
-   *     Convert#enclosingCandidates(Name)} (for example, {@code ["pkg.Outer", "pkg.Outer$Middle"]}
-   *     for {@code "pkg.Outer$Middle$Inner"}), used to complete enclosing classes so that nested
-   *     class symbols are entered into the symbol table before looking up {@code binaryName};
-   *     computed lazily on the first {@link #symbol(VisitorState)} lookup
-   * @param symbol the resolved {@link ClassSymbol}, or {@code null} if it has not been resolved yet
-   *     (or was not found in the compilation)
-   */
+  /// Per-compilation cached javac state for this class name.
+  ///
+  /// @param invocation the javac compilation instance that owns the interned [Name]s and
+  ///   [ClassSymbol]
+  /// @param binaryName the binary name of the class in this compilation's [Name] table
+  /// @param enclosingCandidates candidate enclosing class names from
+  ///   [Convert#enclosingCandidates(Name)] (for example, `["pkg.Outer", "pkg.Outer$Middle"]` for
+  ///   `"pkg.Outer$Middle$Inner"`), used to complete enclosing classes so that nested class symbols
+  ///   are entered into the symbol table before looking up `binaryName`; computed lazily on the
+  ///   first [#symbol(VisitorState)] lookup
+  /// @param symbol the resolved [ClassSymbol], or `null` if it has not been resolved yet (or was
+  ///   not found in the compilation)
   private record CacheEntry(
       JavacInvocationInstance invocation,
       Name binaryName,
@@ -102,15 +95,13 @@ public final class ClassName {
     this.binaryNameString = binaryNameString;
   }
 
-  /** Returns the cached javac {@link Name} for the binary name. */
+  /// Returns the cached javac [Name] for the binary name.
   public Name binaryName(VisitorState state) {
     return getOrCreateCacheEntry(state).binaryName();
   }
 
-  /**
-   * Resolves and caches the {@link ClassSymbol} for this class in the current compilation, or
-   * returns {@code null} if the symbol is not available.
-   */
+  /// Resolves and caches the [ClassSymbol] for this class in the current compilation, or returns
+  /// `null` if the symbol is not available.
   public @Nullable ClassSymbol symbol(VisitorState state) {
     CacheEntry entry = getOrCreateCacheEntry(state);
     if (entry.symbol() != null) {
@@ -145,16 +136,14 @@ public final class ClassName {
     return entry;
   }
 
-  /**
-   * Resolves and caches the {@link Type} for this class in the current compilation, or returns
-   * {@code null} if the symbol is not available.
-   */
+  /// Resolves and caches the [Type] for this class in the current compilation, or returns `null` if
+  /// the symbol is not available.
   public @Nullable Type type(VisitorState state) {
     ClassSymbol sym = symbol(state);
     return sym == null ? null : sym.asType();
   }
 
-  /** Returns a {@link Supplier} view of {@link #type(VisitorState)}. */
+  /// Returns a [Supplier] view of [#type(VisitorState)].
   public Supplier<@Nullable Type> asTypeSupplier() {
     return typeSupplier;
   }

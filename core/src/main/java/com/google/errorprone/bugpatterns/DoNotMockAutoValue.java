@@ -21,7 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.BugPattern;
 
-/** Suggests not mocking AutoValue classes. */
+/// Suggests not mocking AutoValue classes.
 @BugPattern(
     summary =
         "AutoValue classes represent pure data classes, so mocking them should not be necessary."

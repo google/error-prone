@@ -35,7 +35,7 @@ import com.sun.tools.javac.parser.Tokens.TokenKind;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
-/** Removes {@code final} from non-field variables. */
+/// Removes `final` from non-field variables.
 @BugPattern(
     summary =
         "Since Java 8, it's been unnecessary to make local variables and parameters `final` for use"

@@ -52,7 +52,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.lang.model.element.Modifier;
 
-/** A bugpattern; see the associated summary. */
+/// A bugpattern; see the associated summary.
 @BugPattern(
     summary =
         "Test method will not be run; please correct method signature "
@@ -60,15 +60,13 @@ import javax.lang.model.element.Modifier;
     severity = ERROR)
 public final class JUnit3TestNotRun extends BugChecker implements CompilationUnitTreeMatcher {
 
-  /**
-   * Regular expression for test method name that is misspelled and should be replaced with "test".
-   * ".est" and "est" are omitted, because they catch real words like "restore", "destroy", "best",
-   * "establish". ".test" is omitted, because people use it on purpose, to disable the test.
-   * Otherwise, I haven't found any false positives; "tes" was most common typo. There are some
-   * ambiguities in this regex that lead to bad corrections (i.e. tets -> tests, tesst -> testst),
-   * but the error is still found (those could be improved with regex lookahead, but I prefer
-   * simpler regex). TODO(rburny): see if we can cleanup intentional ".test" misspellings
-   */
+  /// Regular expression for test method name that is misspelled and should be replaced with "test".
+  /// ".est" and "est" are omitted, because they catch real words like "restore", "destroy", "best",
+  /// "establish". ".test" is omitted, because people use it on purpose, to disable the test.
+  /// Otherwise, I haven't found any false positives; "tes" was most common typo. There are some
+  /// ambiguities in this regex that lead to bad corrections (i.e. tets -> tests, tesst -> testst),
+  /// but the error is still found (those could be improved with regex lookahead, but I prefer
+  /// simpler regex). TODO(rburny): see if we can cleanup intentional ".test" misspellings
   private static final Pattern MISSPELLED_NAME =
       Pattern.compile(
           "t.est|te.st|"
@@ -117,16 +115,12 @@ public final class JUnit3TestNotRun extends BugChecker implements CompilationUni
     return calledMethods.build();
   }
 
-  /**
-   * Matches iff:
-   *
-   * <ul>
-   *   <li>Method's name begins with misspelled variation of "test".
-   *   <li>Method is public, returns void, and has no parameters.
-   *   <li>Enclosing class is JUnit3 test (extends TestCase, has no {@code @RunWith} annotation, no
-   *       {@code @Test}-annotated methods, and is not abstract).
-   * </ul>
-   */
+  /// Matches iff:
+  ///
+  /// - Method's name begins with misspelled variation of "test".
+  /// - Method is public, returns void, and has no parameters.
+  /// - Enclosing class is JUnit3 test (extends TestCase, has no `@RunWith` annotation, no
+  ///   `@Test`-annotated methods, and is not abstract).
   public Optional<Description> checkMethod(
       MethodTree methodTree, ImmutableSet<MethodSymbol> calledMethods, VisitorState state) {
     if (!enclosingClass(isJUnit3TestClass).matches(methodTree, state)) {

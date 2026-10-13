@@ -22,11 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link ProtoTruthMixedDescriptors} bugpattern.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Tests for [ProtoTruthMixedDescriptors] bugpattern.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @RunWith(JUnit4.class)
 @Ignore("b/130672458")
 public final class ProtoTruthMixedDescriptorsTest {

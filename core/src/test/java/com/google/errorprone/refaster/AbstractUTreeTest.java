@@ -32,11 +32,9 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.mockito.hamcrest.MockitoHamcrest;
 
-/**
- * Basics for testing {@code UTree} implementations.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Basics for testing `UTree` implementations.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public abstract class AbstractUTreeTest {
   protected Context context;
   protected Unifier unifier;

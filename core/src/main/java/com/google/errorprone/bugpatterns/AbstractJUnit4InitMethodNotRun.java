@@ -40,47 +40,37 @@ import java.util.List;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Base class for JUnit4SetUp/TearDown not run. This will take care of the nitty-gritty about
- * replacing @After with @Before, adding @Before on unannotated methods, making them public if
- * necessary, fixing the imports of other @Before, etc.
- *
- * @author glorioso@google.com
- */
+/// Base class for JUnit4SetUp/TearDown not run. This will take care of the nitty-gritty about
+/// replacing @After with @Before, adding @Before on unannotated methods, making them public if
+/// necessary, fixing the imports of other @Before, etc.
+///
+/// @author glorioso@google.com
 abstract class AbstractJUnit4InitMethodNotRun extends BugChecker implements MethodTreeMatcher {
 
-  /**
-   * Returns a matcher that selects which methods this matcher applies to (e.g. public void setUp()
-   * without @Before/@BeforeClass annotation)
-   */
+  /// Returns a matcher that selects which methods this matcher applies to (e.g. public void setUp()
+  /// without @Before/@BeforeClass annotation)
   protected abstract Matcher<MethodTree> methodMatcher();
 
-  /**
-   * Returns the fully qualified class name of the annotation this bugpattern should apply to
-   * matched methods.
-   *
-   * <p>If another annotation is on the method that has the same name, the import will be replaced
-   * with the appropriate one (e.g.: com.example.Before becomes org.junit.Before)
-   */
+  /// Returns the fully qualified class name of the annotation this bugpattern should apply to
+  /// matched methods.
+  ///
+  /// If another annotation is on the method that has the same name, the import will be replaced
+  /// with the appropriate one (e.g.: com.example.Before becomes org.junit.Before)
   protected abstract ClassName correctAnnotation();
 
-  /**
-   * Returns a collection of 'before-and-after' pairs of annotations that should be replaced on
-   * these methods.
-   *
-   * <p>If this method matcher finds a method annotated with {@link
-   * AnnotationReplacements#badAnnotation}, instead of applying {@link #correctAnnotation()},
-   * instead replace it with {@link AnnotationReplacements#goodAnnotation}
-   */
+  /// Returns a collection of 'before-and-after' pairs of annotations that should be replaced on
+  /// these methods.
+  ///
+  /// If this method matcher finds a method annotated with [AnnotationReplacements#badAnnotation],
+  /// instead of applying [#correctAnnotation()], instead replace it with
+  /// [AnnotationReplacements#goodAnnotation]
   protected abstract List<AnnotationReplacements> annotationReplacements();
 
-  /**
-   * Matches if all of the following conditions are true: 1) The method matches {@link
-   * #methodMatcher()}, (looks like setUp() or tearDown(), and none of the overrides in the
-   * hierarchy of the method have the appropriate @Before or @After annotations) 2) The method is
-   * not annotated with @Test 3) The enclosing class has an @RunWith annotation and does not extend
-   * TestCase. This marks that the test is intended to run with JUnit 4.
-   */
+  /// Matches if all of the following conditions are true: 1) The method matches [#methodMatcher()],
+  /// (looks like setUp() or tearDown(), and none of the overrides in the hierarchy of the method
+  /// have the appropriate @Before or @After annotations) 2) The method is not annotated with @Test
+  /// 3) The enclosing class has an @RunWith annotation and does not extend TestCase. This marks
+  /// that the test is intended to run with JUnit 4.
   @Override
   public Description matchMethod(MethodTree methodTree, VisitorState state) {
     boolean matches =

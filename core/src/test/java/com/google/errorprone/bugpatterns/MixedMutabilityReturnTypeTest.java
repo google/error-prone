@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link MixedMutabilityReturnType} bugpattern. */
+/// Tests for [MixedMutabilityReturnType] bugpattern.
 @RunWith(JUnit4.class)
 public final class MixedMutabilityReturnTypeTest {
   private final CompilationTestHelper compilationHelper =
@@ -591,7 +591,7 @@ public final class MixedMutabilityReturnTypeTest {
         .doTest();
   }
 
-  /** Regression test for b/192399621 */
+  /// Regression test for b/192399621
   @Test
   public void biMap_doesNotCrash() {
     compilationHelper

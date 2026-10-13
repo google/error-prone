@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link SameNameButDifferent}. */
+/// Unit tests for [SameNameButDifferent].
 @RunWith(JUnit4.class)
 public final class SameNameButDifferentTest {
 

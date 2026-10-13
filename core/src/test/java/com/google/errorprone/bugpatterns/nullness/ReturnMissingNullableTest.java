@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link ReturnMissingNullable}Test */
+/// [ReturnMissingNullable]Test
 @RunWith(JUnit4.class)
 public class ReturnMissingNullableTest {
 
@@ -1395,10 +1395,8 @@ public class ReturnMissingNullableTest {
         .doTest();
   }
 
-  /**
-   * Makes sure the check never flags methods returning a primitive. Returning null from them is a
-   * bug, of course, but we're not trying to find those bugs in this check.
-   */
+  /// Makes sure the check never flags methods returning a primitive. Returning null from them is a
+  /// bug, of course, but we're not trying to find those bugs in this check.
   @Test
   public void negativeCases_primitiveReturnType() {
     createCompilationTestHelper()

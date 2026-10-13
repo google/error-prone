@@ -32,7 +32,7 @@ import com.sun.source.tree.LiteralTree;
 import com.sun.tools.javac.code.Type;
 import java.math.BigDecimal;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Floating point literal loses precision",
     severity = WARNING,

@@ -36,11 +36,9 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.TypeTag;
 import javax.lang.model.element.Element;
 
-/**
- * Matches errors in Javadoc {@literal @}throws tags.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Matches errors in Javadoc `@throws` tags.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary = "The documented method doesn't actually throw this checked exception.",
     severity = WARNING,

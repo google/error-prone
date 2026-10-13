@@ -105,53 +105,46 @@ import org.checkerframework.errorprone.dataflow.cfg.node.TypeCastNode;
 import org.checkerframework.errorprone.dataflow.cfg.node.VariableDeclarationNode;
 import org.jspecify.annotations.Nullable;
 
-/**
- * The {@code TransferFunction} for our nullability analysis. This analysis determines, for all
- * variables and parameters, whether they are definitely null ({@link Nullness#NULL}), definitely
- * non-null ({@link Nullness#NONNULL}), possibly null ({@link Nullness#NULLABLE}), or are on an
- * infeasible path ({@link Nullness#BOTTOM}). This analysis depends only on the code and does not
- * take nullness annotations into account.
- *
- * <p>Each {@code visit*()} implementation provides us with information about nullability that
- * applies <i>if the expression is successfully evaluated</i> (in other words, it did not throw an
- * exception). For example, if {@code foo.toString()} is successfully evaluated, we know two things:
- *
- * <ol>
- *   <li>The expression itself is non-null (because {@code toString()} is in our list of methods
- *       known to return non-null values)
- *   <li>{@code foo} is non-null (because it has been dereferenced without producing a {@code
- *       NullPointerException})
- * </ol>
- *
- * <p>These particular two pieces of data also demonstrate the two connected but distinct systems
- * that we use to track nullness:
- *
- * <ol>
- *   <li>We compute the nullability of each expression by applying rules that may reference only the
- *       nullability of <i>subexpressions</i>. We make the result available only to superexpressions
- *       (and to the {@linkplain Analysis#getValue final output of the analysis}).
- *   <li>We {@linkplain Updates update} and {@linkplain AccessPathValues read} the nullability of
- *       <i>variables</i> and <i>access paths</i> in a mapping that persists from node to node. This
- *       is the only exception to the rule that we propagate data from subexpression to
- *       superexpression only. The mapping is read only when visiting a {@link LocalVariableNode} or
- *       {@link FieldAccessNode}. That is enough to give the Node a value that is then available to
- *       superexpressions.
- * </ol>
- *
- * <p>A further complication is that sometimes we know the nullability of an expression only
- * conditionally based on its result. For example, {@code foo == null} proves that {@code foo} is
- * null in the true case (such as inside {@code if (foo == null) { ... }}) and non-null in the false
- * case (such an inside an accompanying {@code else} block). This is handled by methods that accept
- * multiple {@link Updates} instances, one for the true case and one for the false case.
- *
- * @author deminguyen@google.com (Demi Nguyen)
- */
+/// The `TransferFunction` for our nullability analysis. This analysis determines, for all variables
+/// and parameters, whether they are definitely null ([Nullness#NULL]), definitely non-null
+/// ([Nullness#NONNULL]), possibly null ([Nullness#NULLABLE]), or are on an infeasible path
+/// ([Nullness#BOTTOM]). This analysis depends only on the code and does not take nullness
+/// annotations into account.
+///
+/// Each `visit*()` implementation provides us with information about nullability that applies *if
+/// the expression is successfully evaluated* (in other words, it did not throw an exception). For
+/// example, if `foo.toString()` is successfully evaluated, we know two things:
+///
+/// 1. The expression itself is non-null (because `toString()` is in our list of methods known to
+///    return non-null values)
+/// 1. `foo` is non-null (because it has been dereferenced without producing a
+///    `NullPointerException`)
+///
+/// These particular two pieces of data also demonstrate the two connected but distinct systems that
+/// we use to track nullness:
+///
+/// 1. We compute the nullability of each expression by applying rules that may reference only the
+///    nullability of *subexpressions*. We make the result available only to superexpressions (and
+///    to the [final output of the analysis][Analysis#getValue]).
+/// 1. We [update][Updates] and [read][AccessPathValues] the nullability of *variables* and *access
+///    paths* in a mapping that persists from node to node. This is the only exception to the rule
+///    that we propagate data from subexpression to superexpression only. The mapping is read only
+///    when visiting a [LocalVariableNode] or [FieldAccessNode]. That is enough to give the Node a
+///    value that is then available to superexpressions.
+///
+/// A further complication is that sometimes we know the nullability of an expression only
+/// conditionally based on its result. For example, `foo == null` proves that `foo` is null in the
+/// true case (such as inside `if (foo == null) { ... }`) and non-null in the false case (such an
+/// inside an accompanying `else` block). This is handled by methods that accept multiple [Updates]
+/// instances, one for the true case and one for the false case.
+///
+/// @author deminguyen@google.com (Demi Nguyen)
 class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     implements Serializable {
 
   private static final long serialVersionUID = -2413953917354086984L;
 
-  /** Matches methods that are statically known never to return null. */
+  /// Matches methods that are statically known never to return null.
   private static class ReturnValueIsNonNull implements Predicate<MethodInfo>, Serializable {
 
     private static final long serialVersionUID = -6277529478866058532L;
@@ -231,16 +224,14 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
   protected final Nullness defaultAssumption;
   private final Predicate<MethodInfo> methodReturnsNonNull;
 
-  /**
-   * Javac context so we can {@link #fieldInitializerNullnessIfAvailable find and analyze field
-   * initializers}.
-   */
+  /// Javac context so we can [`find and analyze field
+  /// initializers`][#fieldInitializerNullnessIfAvailable].
   private transient Context context;
 
-  /** Compilation unit to limit evaluating field initializers to. */
+  /// Compilation unit to limit evaluating field initializers to.
   private transient CompilationUnitTree compilationUnit;
 
-  /** Cached local inference results for nullability annotations on type parameters */
+  /// Cached local inference results for nullability annotations on type parameters
   private transient @Nullable InferredNullability inferenceResults;
 
   @Override
@@ -290,40 +281,32 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return inferenceResults.getExprNullness(node.getTree());
   }
 
-  /**
-   * Constructs a {@link NullnessPropagationTransfer} instance with the built-in set of non-null
-   * returning methods.
-   */
+  /// Constructs a [NullnessPropagationTransfer] instance with the built-in set of non-null
+  /// returning methods.
   public NullnessPropagationTransfer() {
     this(NULLABLE, new ReturnValueIsNonNull());
   }
 
-  /**
-   * Constructs a {@link NullnessPropagationTransfer} instance with additional non-null returning
-   * methods. The additional predicate is or'ed with the predicate for the built-in set of non-null
-   * returning methods.
-   */
+  /// Constructs a [NullnessPropagationTransfer] instance with additional non-null returning
+  /// methods. The additional predicate is or'ed with the predicate for the built-in set of non-null
+  /// returning methods.
   public NullnessPropagationTransfer(Predicate<MethodInfo> additionalNonNullReturningMethods) {
     this(NULLABLE, new ReturnValueIsNonNull().or(additionalNonNullReturningMethods));
   }
 
-  /**
-   * Constructor for use by subclasses.
-   *
-   * @param defaultAssumption used if a field or method can't be resolved as well as as the default
-   *     for local variables, field and array reads in the absence of better information
-   * @param methodReturnsNonNull determines whether a method's return value is known to be non-null
-   */
+  /// Constructor for use by subclasses.
+  ///
+  /// @param defaultAssumption used if a field or method can't be resolved as well as as the default
+  ///   for local variables, field and array reads in the absence of better information
+  /// @param methodReturnsNonNull determines whether a method's return value is known to be non-null
   protected NullnessPropagationTransfer(
       Nullness defaultAssumption, Predicate<MethodInfo> methodReturnsNonNull) {
     this.defaultAssumption = defaultAssumption;
     this.methodReturnsNonNull = methodReturnsNonNull;
   }
 
-  /**
-   * Stores the given Javac context to find and analyze field initializers. Set before analyzing a
-   * method and reset after.
-   */
+  /// Stores the given Javac context to find and analyze field initializers. Set before analyzing a
+  /// method and reset after.
   @CanIgnoreReturnValue
   NullnessPropagationTransfer setContext(@Nullable Context context) {
     // This is a best-effort check (similar to ArrayList iterators, for instance), no guarantee
@@ -338,11 +321,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return this;
   }
 
-  /**
-   * Set compilation unit being analyzed, to limit analyzing field initializers to that compilation
-   * unit. Analyzing initializers from other compilation units tends to fail because type
-   * information is sometimes missing on nodes returned from {@link Trees}.
-   */
+  /// Set compilation unit being analyzed, to limit analyzing field initializers to that compilation
+  /// unit. Analyzing initializers from other compilation units tends to fail because type
+  /// information is sometimes missing on nodes returned from [Trees].
   @CanIgnoreReturnValue
   NullnessPropagationTransfer setCompilationUnit(@Nullable CompilationUnitTree compilationUnit) {
     this.compilationUnit = compilationUnit;
@@ -361,13 +342,11 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return NONNULL;
   }
 
-  /**
-   * Note: A short literal appears as an int to the compiler, and the compiler can perform a
-   * narrowing conversion on the literal to cast from int to short. For example, when assigning a
-   * literal to a short variable, the literal does not transfer its own non-null type to the
-   * variable. Instead, the variable receives the non-null type from the return value of the
-   * conversion call.
-   */
+  /// Note: A short literal appears as an int to the compiler, and the compiler can perform a
+  /// narrowing conversion on the literal to cast from int to short. For example, when assigning a
+  /// literal to a short variable, the literal does not transfer its own non-null type to the
+  /// variable. Instead, the variable receives the non-null type from the return value of the
+  /// conversion call.
   @Override
   Nullness visitValueLiteral() {
     return NONNULL;
@@ -408,11 +387,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
             () -> hasPrimitiveType(node) ? NONNULL : inputs.valueOfSubNode(node.getOperand()));
   }
 
-  /**
-   * The result of string concatenation is always non-null. If an operand is {@code null}, it is
-   * converted to {@code "null"}. For more information, see JLS 15.18.1 "String Concatenation
-   * Operator +", and 5.1.11, "String Conversion".
-   */
+  /// The result of string concatenation is always non-null. If an operand is `null`, it is
+  /// converted to `"null"`. For more information, see JLS 15.18.1 "String Concatenation Operator
+  /// +", and 5.1.11, "String Conversion".
   @Override
   Nullness visitStringConcatenate() {
     // TODO(b/158869538): Mark the inputs as dereferenced.
@@ -499,20 +476,18 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return value;
   }
 
-  /**
-   * Variables take their values from their past assignments (as far as they can be determined).
-   * Additionally, variables of primitive type are always refined to non-null.
-   *
-   * <p>(This second case is rarely of interest to us. Either the variable is being used as a
-   * primitive, in which case we probably wouldn't have bothered to run the nullness checker on it,
-   * or it's being used as an Object, in which case the compiler generates a call to {@code valueOf}
-   * (to autobox the value), which triggers {@link #visitMethodInvocation}.)
-   *
-   * <p>Edge case: {@code node} can be a captured local variable accessed from inside a local or
-   * anonymous inner class, or possibly from inside a lambda expression (even though these manifest
-   * as fields in bytecode). As of 7/2016 this analysis doesn't have any knowledge of captured local
-   * variables will essentially assume whatever default is used in {@code values}.
-   */
+  /// Variables take their values from their past assignments (as far as they can be determined).
+  /// Additionally, variables of primitive type are always refined to non-null.
+  ///
+  /// (This second case is rarely of interest to us. Either the variable is being used as a
+  /// primitive, in which case we probably wouldn't have bothered to run the nullness checker on it,
+  /// or it's being used as an Object, in which case the compiler generates a call to `valueOf` (to
+  /// autobox the value), which triggers [#visitMethodInvocation].)
+  ///
+  /// Edge case: `node` can be a captured local variable accessed from inside a local or anonymous
+  /// inner class, or possibly from inside a lambda expression (even though these manifest as fields
+  /// in bytecode). As of 7/2016 this analysis doesn't have any knowledge of captured local
+  /// variables will essentially assume whatever default is used in `values`.
   @Override
   Nullness visitLocalVariable(LocalVariableNode node, AccessPathValues<Nullness> values) {
     return hasPrimitiveType(node) || hasNonNullConstantValue(node)
@@ -520,14 +495,12 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
         : values.valueOfAccessPath(AccessPath.fromLocalVariable(node), defaultAssumption);
   }
 
-  /**
-   * Refines the receiver of a field access to type non-null after a successful field access, and
-   * refines the value of the expression as a whole to non-null if applicable (e.g., if the field
-   * has a primitive type or the {@code store}) has a non-null value for this access path.
-   *
-   * <p>Note: If the field access occurs when the node is an l-value, the analysis won't call this
-   * method. Instead, it will call {@link #visitAssignment}.
-   */
+  /// Refines the receiver of a field access to type non-null after a successful field access, and
+  /// refines the value of the expression as a whole to non-null if applicable (e.g., if the field
+  /// has a primitive type or the `store`) has a non-null value for this access path.
+  ///
+  /// Note: If the field access occurs when the node is an l-value, the analysis won't call this
+  /// method. Instead, it will call [#visitAssignment].
   @Override
   Nullness visitFieldAccess(
       FieldAccessNode node, Updates updates, AccessPathValues<Nullness> store) {
@@ -538,28 +511,24 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return fieldNullness(accessed, AccessPath.fromFieldAccess(node), store);
   }
 
-  /**
-   * Refines the accessed array to non-null after a successful array access.
-   *
-   * <p>Note: If the array access occurs when the node is an l-value, the analysis won't call this
-   * method. Instead, it will call {@link #visitAssignment}.
-   */
+  /// Refines the accessed array to non-null after a successful array access.
+  ///
+  /// Note: If the array access occurs when the node is an l-value, the analysis won't call this
+  /// method. Instead, it will call [#visitAssignment].
   @Override
   Nullness visitArrayAccess(ArrayAccessNode node, SubNodeValues inputs, Updates updates) {
     setNonnullIfTrackable(updates, node.getArray());
     return hasPrimitiveType(node) ? NONNULL : defaultAssumption;
   }
 
-  /**
-   * Refines the receiver of a method invocation to type non-null after successful invocation, and
-   * refines the value of the expression as a whole to non-null if applicable (e.g., if the method
-   * returns a primitive type).
-   *
-   * <p>NOTE: This transfer makes the unsound assumption that fields reachable via the actual params
-   * of this method invocation are not mutated by the callee. To be sound with respect to escaping
-   * mutable references in general, we would have to set to top (i.e. NULLABLE) any tracked access
-   * path that could contain an alias of an actual parameter of this invocation.
-   */
+  /// Refines the receiver of a method invocation to type non-null after successful invocation, and
+  /// refines the value of the expression as a whole to non-null if applicable (e.g., if the method
+  /// returns a primitive type).
+  ///
+  /// NOTE: This transfer makes the unsound assumption that fields reachable via the actual params
+  /// of this method invocation are not mutated by the callee. To be sound with respect to escaping
+  /// mutable references in general, we would have to set to top (i.e. NULLABLE) any tracked access
+  /// path that could contain an alias of an actual parameter of this invocation.
   @Override
   Nullness visitMethodInvocation(
       MethodInvocationNode node, Updates thenUpdates, Updates elseUpdates, Updates bothUpdates) {
@@ -621,19 +590,17 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return elementFromDeclaration(node.getTree()).getKind() == EXCEPTION_PARAMETER;
   }
 
-  /**
-   * Refines the {@code Nullness} of {@code LocalVariableNode}s used in an equality comparison using
-   * the greatest lower bound.
-   *
-   * @param equalTo whether the comparison is == (false for !=)
-   * @param leftNode the left-hand side of the comparison
-   * @param rightNode the right-hand side of the comparison
-   * @param inputs access to nullness values of the left and right nodes
-   * @param thenUpdates the local variables whose nullness values should be updated if the
-   *     comparison returns {@code true}
-   * @param elseUpdates the local variables whose nullness values should be updated if the
-   *     comparison returns {@code false}
-   */
+  /// Refines the `Nullness` of `LocalVariableNode`s used in an equality comparison using the
+  /// greatest lower bound.
+  ///
+  /// @param equalTo whether the comparison is == (false for !=)
+  /// @param leftNode the left-hand side of the comparison
+  /// @param rightNode the right-hand side of the comparison
+  /// @param inputs access to nullness values of the left and right nodes
+  /// @param thenUpdates the local variables whose nullness values should be updated if the
+  ///   comparison returns `true`
+  /// @param elseUpdates the local variables whose nullness values should be updated if the
+  ///   comparison returns `false`
   private static void handleEqualityComparison(
       boolean equalTo,
       Node leftNode,
@@ -737,7 +704,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     return standardFieldNullness(accessed, path, store);
   }
 
-  /** Determines field nullness based on store and annotations. */
+  /// Determines field nullness based on store and annotations.
   // TODO(kmb): Reverse subtyping between this class and TrustingNullnessPropagation to avoid this
   Nullness standardFieldNullness(
       ClassAndField accessed, @Nullable AccessPath path, AccessPathValues<Nullness> store) {
@@ -842,11 +809,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
   }
 
-  /**
-   * Records which arguments are guaranteed to be non-null if the method completes without
-   * exception. For example, if {@code checkNotNull(foo, message)} completes successfully, then
-   * {@code foo} is not null.
-   */
+  /// Records which arguments are guaranteed to be non-null if the method completes without
+  /// exception. For example, if `checkNotNull(foo, message)` completes successfully, then `foo` is
+  /// not null.
   private static void setUnconditionalArgumentNullness(
       Updates bothUpdates, List<Node> arguments, ClassAndMethod callee) {
     ImmutableSet<Integer> requiredNonNullParameters =
@@ -856,11 +821,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
   }
 
-  /**
-   * Records which arguments are guaranteed to be non-null only if the method completes by returning
-   * {@code true} or only if the method completes by returning {@code false}. For example, if {@code
-   * Strings.isNullOrEmpty(s)} returns {@code false}, then {@code s} is not null.
-   */
+  /// Records which arguments are guaranteed to be non-null only if the method completes by
+  /// returning `true` or only if the method completes by returning `false`. For example, if
+  /// `Strings.isNullOrEmpty(s)` returns `false`, then `s` is not null.
   private static void setConditionalArgumentNullness(
       Updates thenUpdates,
       Updates elseUpdates,
@@ -956,9 +919,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
       return new ClassAndMethod(methodSymbol, clazzSymbol, types);
     }
 
-    /**
-     * Returns {@code true} for {@link MethodSymbol}s whose result type is a generic type variable.
-     */
+    /// Returns `true` for [MethodSymbol]s whose result type is a generic type variable.
     private static boolean hasGenericResult(MethodSymbol methodSymbol) {
       return methodSymbol.getReturnType().tsym instanceof TypeVariableSymbol;
     }
@@ -1070,7 +1031,7 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
     }
   }
 
-  /** Classes where we know that all static final fields are non-null. */
+  /// Classes where we know that all static final fields are non-null.
   @VisibleForTesting
   static final ImmutableSet<String> CLASSES_WITH_NON_NULL_CONSTANTS =
       ImmutableSet.of(
@@ -1080,11 +1041,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
           UnsignedLong.class.getName(),
           StandardCharsets.class.getName());
 
-  /**
-   * Maps from the names of null-rejecting methods to the indexes of the arguments that aren't
-   * permitted to be null. Indexes may be negative to indicate a position relative to the end of the
-   * argument list. For example, "-1" means "the final parameter."
-   */
+  /// Maps from the names of null-rejecting methods to the indexes of the arguments that aren't
+  /// permitted to be null. Indexes may be negative to indicate a position relative to the end of
+  /// the argument list. For example, "-1" means "the final parameter."
   @VisibleForTesting
   static final ImmutableSetMultimap<MemberName, Integer> REQUIRED_NON_NULL_PARAMETERS =
       new ImmutableSetMultimap.Builder<MemberName, Integer>()
@@ -1095,11 +1054,9 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
           .put(member("org.junit.Assert", "assertNotNull"), -1)
           .build();
 
-  /**
-   * Maps from the names of null-querying methods to the indexes of the arguments that are compared
-   * against null. Indexes may be negative to indicate a position relative to the end of the
-   * argument list. For example, "-1" means "the final parameter."
-   */
+  /// Maps from the names of null-querying methods to the indexes of the arguments that are compared
+  /// against null. Indexes may be negative to indicate a position relative to the end of the
+  /// argument list. For example, "-1" means "the final parameter."
   @VisibleForTesting
   static final ImmutableSetMultimap<MemberName, Integer> NULL_IMPLIES_TRUE_PARAMETERS =
       new ImmutableSetMultimap.Builder<MemberName, Integer>()
@@ -1107,17 +1064,13 @@ class NullnessPropagationTransfer extends AbstractNullnessPropagationTransfer
           .put(member("android.text.TextUtils", "isEmpty"), 0)
           .build();
 
-  /**
-   * Maps from non-null test methods to indices of arguments that are compared against null. These
-   * methods must guarantee non-nullness if {@code true} <b>and nullness if {@code false}</b>.
-   */
+  /// Maps from non-null test methods to indices of arguments that are compared against null. These
+  /// methods must guarantee non-nullness if `true` **and nullness if `false`**.
   private static final ImmutableSetMultimap<MemberName, Integer> NONNULL_IFF_TRUE_PARAMETERS =
       ImmutableSetMultimap.of(member(Objects.class, "nonNull"), 0);
 
-  /**
-   * Maps from null test methods to indices of arguments that are compared against null. These
-   * methods must guarantee nullness if {@code true} <b>and non-nullness if {@code false}</b>.
-   */
+  /// Maps from null test methods to indices of arguments that are compared against null. These
+  /// methods must guarantee nullness if `true` **and non-nullness if `false`**.
   private static final ImmutableSetMultimap<MemberName, Integer> NULL_IFF_TRUE_PARAMETERS =
       ImmutableSetMultimap.of(member(Objects.class, "isNull"), 0);
 }

@@ -43,7 +43,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Objects;
 import javax.lang.model.element.ElementKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Always pass 'false' to 'Future.cancel()', unless you are propagating a"

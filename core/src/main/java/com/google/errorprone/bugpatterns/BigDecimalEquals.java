@@ -39,12 +39,10 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
 
-/**
- * Matches use of {@code BigDecimal#equals}, which compares scale as well (which is not likely to be
- * intended).
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Matches use of `BigDecimal#equals`, which compares scale as well (which is not likely to be
+/// intended).
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary = "BigDecimal#equals has surprising behavior: it also compares scale.",
     severity = WARNING)

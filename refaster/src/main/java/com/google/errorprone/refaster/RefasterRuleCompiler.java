@@ -24,11 +24,9 @@ import java.nio.file.FileSystems;
 import java.util.Arrays;
 import java.util.Iterator;
 
-/**
- * A javac plugin that compiles Refaster rules to a {@code .analyzer} file.
- *
- * @author lowasser@google.com
- */
+/// A javac plugin that compiles Refaster rules to a `.analyzer` file.
+///
+/// @author lowasser@google.com
 @AutoService(Plugin.class)
 public class RefasterRuleCompiler implements Plugin {
   @Override

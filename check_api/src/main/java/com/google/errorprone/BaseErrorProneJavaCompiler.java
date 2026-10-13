@@ -44,7 +44,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import org.jspecify.annotations.Nullable;
 
-/** An Error Prone compiler that implements {@link javax.tools.JavaCompiler}. */
+/// An Error Prone compiler that implements [javax.tools.JavaCompiler].
 public class BaseErrorProneJavaCompiler implements JavaCompiler {
 
   private final JavaCompiler javacTool;
@@ -132,11 +132,9 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     return filtered;
   }
 
-  /**
-   * Default to compiling with the same -source and -target as the host's javac.
-   *
-   * <p>This prevents, e.g., targeting Java 8 by default when using error-prone on JDK7.
-   */
+  /// Default to compiling with the same -source and -target as the host's javac.
+  ///
+  /// This prevents, e.g., targeting Java 8 by default when using error-prone on JDK7.
   private static ImmutableList<String> defaultToLatestSupportedLanguageLevel(
       ImmutableList<String> args) {
 
@@ -158,10 +156,8 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
         .build();
   }
 
-  /**
-   * Throws InvalidCommandLineOptionException if the {@code -XDcompilePolicy} flag is set to an
-   * unsupported value
-   */
+  /// Throws InvalidCommandLineOptionException if the `-XDcompilePolicy` flag is set to an
+  /// unsupported value
   static void checkCompilePolicy(@Nullable String compilePolicy) {
     if (compilePolicy == null) {
       throw new InvalidCommandLineOptionException(
@@ -179,11 +175,9 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     }
   }
 
-  /**
-   * Sets javac's {@code -XDcompilePolicy} flag to ensure that all classes in a file are attributed
-   * before any of them are lowered. Error Prone depends on this behavior when analyzing files that
-   * contain multiple top-level classes.
-   */
+  /// Sets javac's `-XDcompilePolicy` flag to ensure that all classes in a file are attributed
+  /// before any of them are lowered. Error Prone depends on this behavior when analyzing files that
+  /// contain multiple top-level classes.
   private static ImmutableList<String> setCompilePolicyToByFile(ImmutableList<String> args) {
     for (String arg : args) {
       if (arg.startsWith("-XDcompilePolicy")) {
@@ -251,7 +245,7 @@ public class BaseErrorProneJavaCompiler implements JavaCompiler {
     }
   }
 
-  /** Registers our message bundle. */
+  /// Registers our message bundle.
   public static void setupMessageBundle(Context context) {
     ResourceBundle bundle = ResourceBundle.getBundle("com.google.errorprone.errors");
     JavacMessages.instance(context).add(l -> bundle);

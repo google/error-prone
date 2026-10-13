@@ -60,11 +60,9 @@ import java.util.Optional;
 import java.util.logging.Logger;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Implementation of a template to match and replace an expression anywhere in an AST.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Implementation of a template to match and replace an expression anywhere in an AST.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatch>
     implements Unifiable<JCExpression> {
@@ -134,7 +132,7 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
         returnType());
   }
 
-  /** Returns the matches of this template against the specified target AST. */
+  /// Returns the matches of this template against the specified target AST.
   @Override
   public Iterable<ExpressionTemplateMatch> match(
       JCTree target, Context context, JCCompilationUnit compilationUnit) {
@@ -152,11 +150,9 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
     return b == null || b;
   }
 
-  /**
-   * Placeholders' verification step only checks that they use variables that haven't *yet* been
-   * matched to another local variable. This scanner reruns the verification step for the whole
-   * tree, returning false if a violation was found, and true or null otherwise.
-   */
+  /// Placeholders' verification step only checks that they use variables that haven't *yet* been
+  /// matched to another local variable. This scanner reruns the verification step for the whole
+  /// tree, returning false if a violation was found, and true or null otherwise.
   static final TreeScanner<Boolean, Unifier> PLACEHOLDER_VERIFIER =
       new TreeScanner<Boolean, Unifier>() {
         @Override
@@ -230,10 +226,8 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
             });
   }
 
-  /**
-   * Generates a {@link SuggestedFix} replacing the specified match (usually of another template)
-   * with this template.
-   */
+  /// Generates a [SuggestedFix] replacing the specified match (usually of another template) with
+  /// this template.
   @Override
   public Fix replace(ExpressionTemplateMatch match) {
     Inliner inliner = match.createInliner();
@@ -254,10 +248,8 @@ public abstract class ExpressionTemplate extends Template<ExpressionTemplateMatc
     return addImports(inliner, fix);
   }
 
-  /**
-   * Returns the precedence level appropriate for unambiguously printing leaf as a subexpression of
-   * its parent.
-   */
+  /// Returns the precedence level appropriate for unambiguously printing leaf as a subexpression of
+  /// its parent.
   private static int getPrecedence(JCTree leaf, Inliner inliner) {
     JCCompilationUnit comp = inliner.compilationUnit();
     JCTree parent =

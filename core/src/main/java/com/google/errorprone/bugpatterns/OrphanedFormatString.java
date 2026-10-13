@@ -49,13 +49,13 @@ import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.MissingFormatArgumentException;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "String literal contains format specifiers, but is not passed to a format method",
     severity = WARNING)
 public class OrphanedFormatString extends BugChecker implements LiteralTreeMatcher {
 
-  /** Method calls that developers commonly incorrectly assume to accept format arguments. */
+  /// Method calls that developers commonly incorrectly assume to accept format arguments.
   private static final Matcher<Tree> LIKELY_MISTAKE_METHOD_CALL =
       toType(
           ExpressionTree.class,
@@ -154,7 +154,7 @@ public class OrphanedFormatString extends BugChecker implements LiteralTreeMatch
     return indexOfFirstString;
   }
 
-  /** Returns true for strings that contain format specifiers. */
+  /// Returns true for strings that contain format specifiers.
   @SuppressWarnings("StringFormatWithoutAnyParams")
   private static boolean missingFormatArgs(String value) {
     try {

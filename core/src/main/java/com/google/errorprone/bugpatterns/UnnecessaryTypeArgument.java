@@ -35,7 +35,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.List;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Non-generic methods should not be invoked with type arguments",
     severity = ERROR)
@@ -76,7 +76,7 @@ public class UnnecessaryTypeArgument extends BugChecker
     return describeMatch(tree, buildFix(tree, arguments, state));
   }
 
-  /** Constructor a fix that deletes the set of type arguments. */
+  /// Constructor a fix that deletes the set of type arguments.
   private static Fix buildFix(Tree tree, List<? extends Tree> arguments, VisitorState state) {
 
     int startAbsolute = getStartPosition(tree);

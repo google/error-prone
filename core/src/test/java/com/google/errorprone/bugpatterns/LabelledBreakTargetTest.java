@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link LabelledBreakTarget}Test */
+/// [LabelledBreakTarget]Test
 @RunWith(JUnit4.class)
 public class LabelledBreakTargetTest {
   private final CompilationTestHelper compilationHelper =

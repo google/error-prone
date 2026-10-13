@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link InvalidInlineTag} bug pattern. */
+/// Unit tests for [InvalidInlineTag] bug pattern.
 @RunWith(JUnit4.class)
 public final class InvalidInlineTagTest {
   private final BugCheckerRefactoringTestHelper refactoring =

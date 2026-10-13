@@ -36,7 +36,7 @@ import com.google.errorprone.matchers.MultiMatcher;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 
-/** Flags uses of parameters in non-parameterized tests. */
+/// Flags uses of parameters in non-parameterized tests.
 @BugPattern(
     summary =
         "This test has @Parameters but is using the default JUnit4 runner. The parameters will"

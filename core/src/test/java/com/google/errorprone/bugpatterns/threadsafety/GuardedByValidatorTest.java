@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link GuardedByChecker} annotation syntax GuardedByValidationResult test */
+/// [GuardedByChecker] annotation syntax GuardedByValidationResult test
 @RunWith(JUnit4.class)
 public class GuardedByValidatorTest {
   private final CompilationTestHelper compilationHelper =

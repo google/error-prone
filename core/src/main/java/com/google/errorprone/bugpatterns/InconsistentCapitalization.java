@@ -42,7 +42,7 @@ import com.sun.tools.javac.code.Symbol;
 import java.util.Map;
 import javax.lang.model.element.ElementKind;
 
-/** Checker for variables under the same scope that only differ in capitalization. */
+/// Checker for variables under the same scope that only differ in capitalization.
 @BugPattern(
     summary =
         "It is confusing to have a field and a parameter under the same scope that differ only in "
@@ -113,10 +113,8 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
     return Description.NO_MATCH;
   }
 
-  /**
-   * Returns the qualification to access a field of the given class node from within the given tree
-   * path (which MUST be within the class node scope).
-   */
+  /// Returns the qualification to access a field of the given class node from within the given tree
+  /// path (which MUST be within the class node scope).
   private static String getExplicitQualification(
       TreePath path, ClassTree tree, VisitorState state) {
     for (Tree node : path) {
@@ -133,15 +131,13 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
     return "this.";
   }
 
-  /** Returns true if the given symbol has static modifier and is all upper case. */
+  /// Returns true if the given symbol has static modifier and is all upper case.
   private static boolean isUpperCaseAndStatic(Symbol symbol) {
     return isStatic(symbol) && symbol.name.contentEquals(Ascii.toUpperCase(symbol.name.toString()));
   }
 
-  /**
-   * Matcher for all fields of the given class node that are either instance members or not all
-   * upper case.
-   */
+  /// Matcher for all fields of the given class node that are either instance members or not all
+  /// upper case.
   private static final class FieldScanner extends TreeScanner<Void, Void> {
 
     static ImmutableSet<Symbol> findFields(ClassTree tree) {
@@ -173,10 +169,8 @@ public class InconsistentCapitalization extends BugChecker implements ClassTreeM
     }
   }
 
-  /**
-   * Matcher for all parameters (methods, constructors, lambda expressions) that have the same name
-   * as one of the provided fields but with different capitalization.
-   */
+  /// Matcher for all parameters (methods, constructors, lambda expressions) that have the same name
+  /// as one of the provided fields but with different capitalization.
   private static final class MatchingParametersScanner extends TreePathScanner<Void, Void> {
 
     static ImmutableMap<TreePath, Symbol> findMatchingParameters(

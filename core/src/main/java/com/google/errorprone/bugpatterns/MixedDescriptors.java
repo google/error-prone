@@ -42,12 +42,9 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Checks for calls to {@code Descriptor#findFieldByNumber} with field numbers from a different
- * proto.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Checks for calls to `Descriptor#findFieldByNumber` with field numbers from a different proto.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary =
         "The field number passed into #findFieldByNumber belongs to a different proto"
@@ -88,7 +85,7 @@ public final class MixedDescriptors extends BugChecker implements MethodInvocati
         : Description.NO_MATCH;
   }
 
-  /** Ignore packages specifically qualified as proto1 or proto2. */
+  /// Ignore packages specifically qualified as proto1 or proto2.
   private static boolean shouldConsider(TypeSymbol symbol) {
     String packge = enclosingPackage(symbol).toString();
     return !(packge.contains(".proto1api") || packge.contains(".proto2api"));

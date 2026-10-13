@@ -21,12 +21,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.sun.source.tree.Tree;
 
-/** Class to hold AST nodes annotated with the comments that are associated with them */
+/// Class to hold AST nodes annotated with the comments that are associated with them
 public record Commented(
     Tree tree,
     ImmutableList<ErrorProneComment> beforeComments,
     ImmutableList<ErrorProneComment> afterComments) {
-  /** Identifies the position of a comment relative to the associated treenode. */
+  /// Identifies the position of a comment relative to the associated treenode.
   public enum Position {
     BEFORE,
     AFTER,

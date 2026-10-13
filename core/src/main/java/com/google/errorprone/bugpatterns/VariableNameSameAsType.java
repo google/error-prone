@@ -29,7 +29,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.element.Name;
 
-/** Check for variables and types with the same name */
+/// Check for variables and types with the same name
 @BugPattern(
     summary =
         "variableName and type with the same name would refer to the static field instead of the"

@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link LocalDateTemporalAmount}. */
+/// Tests for [LocalDateTemporalAmount].
 @RunWith(JUnit4.class)
 public final class LocalDateTemporalAmountTest {
   private final CompilationTestHelper helper =

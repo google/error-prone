@@ -31,7 +31,7 @@ import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** Check for calls to {@code duration.withMillis(long)}. */
+/// Check for calls to `duration.withMillis(long)`.
 @BugPattern(
     summary =
         "Use of duration.withMillis(long) is not allowed. Please use Duration.millis(long) "

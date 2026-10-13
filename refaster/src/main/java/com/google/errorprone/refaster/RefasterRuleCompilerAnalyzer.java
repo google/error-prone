@@ -31,10 +31,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * TaskListener that receives compilation of a Refaster rule class and outputs a serialized analyzer
- * to the specified path.
- */
+/// TaskListener that receives compilation of a Refaster rule class and outputs a serialized
+/// analyzer to the specified path.
 public class RefasterRuleCompilerAnalyzer implements TaskListener {
   private final Context context;
   private final Path destinationPath;

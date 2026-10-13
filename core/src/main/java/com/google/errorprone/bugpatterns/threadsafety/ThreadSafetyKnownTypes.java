@@ -27,15 +27,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/** Information about known types and whether they're known to be safe or unsafe. */
+/// Information about known types and whether they're known to be safe or unsafe.
 public interface ThreadSafetyKnownTypes {
-  /** Types that are known to be safe even if they're not annotated with an expected annotation. */
+  /// Types that are known to be safe even if they're not annotated with an expected annotation.
   ImmutableMap<String, AnnotationInfo> getKnownSafeClasses();
 
-  /** Types that are known to be unsafe and don't need testing. */
+  /// Types that are known to be unsafe and don't need testing.
   ImmutableSet<String> getKnownUnsafeClasses();
 
-  /** Helper for building maps of classes to {@link AnnotationInfo}. */
+  /// Helper for building maps of classes to [AnnotationInfo].
   final class MapBuilder {
     final ImmutableMap.Builder<String, AnnotationInfo> mapBuilder = ImmutableMap.builder();
 

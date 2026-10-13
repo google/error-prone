@@ -33,7 +33,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "These parentheses are unnecessary; it is unlikely the code will be misinterpreted without"

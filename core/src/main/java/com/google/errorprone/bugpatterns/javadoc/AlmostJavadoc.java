@@ -40,10 +40,7 @@ import com.sun.source.util.TreePath;
 import java.util.Optional;
 import org.safere.Pattern;
 
-/**
- * Flags comments which appear to be intended to be Javadoc, but are not started with an extra
- * {@code *}.
- */
+/// Flags comments which appear to be intended to be Javadoc, but are not started with an extra `*`.
 @BugPattern(
     summary =
         "This comment contains Javadoc or HTML tags, but isn't started with a double asterisk"
@@ -97,14 +94,12 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
     return NO_MATCH;
   }
 
-  /**
-   * Returns false if {@code source} definitely doesn't contain any comment for which {@link
-   * #generateFix} would return a fix. This allows skipping tokenizing the file, which is relatively
-   * expensive.
-   *
-   * <p>This errs on the side of returning true: e.g. it doesn't distinguish comments from string
-   * literals. Comments written using unicode escapes aren't handled, so they make this return true.
-   */
+  /// Returns false if `source` definitely doesn't contain any comment for which [#generateFix]
+  /// would return a fix. This allows skipping tokenizing the file, which is relatively expensive.
+  ///
+  /// This errs on the side of returning true: e.g. it doesn't distinguish comments from string
+  /// literals. Comments written using unicode escapes aren't handled, so they make this return
+  /// true.
   private static boolean mayContainCandidateComment(String source) {
     if (source.contains("\\u")) {
       return true;

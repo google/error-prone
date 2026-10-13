@@ -38,12 +38,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.tools.StandardLocation;
 
-/**
- * Manages {@link JavacFileManager}s for use in Error Prone's test.
- *
- * <p>The file manager does some expensive IO to process the platform and user classpaths, so we
- * re-use the same filemanager instance across multiple tests to re-use that work.
- */
+/// Manages [JavacFileManager]s for use in Error Prone's test.
+///
+/// The file manager does some expensive IO to process the platform and user classpaths, so we
+/// re-use the same filemanager instance across multiple tests to re-use that work.
 public final class FileManagers {
 
   // The file manager isn't thread-safe, so keep one instance per thread instead of using static
@@ -61,7 +59,7 @@ public final class FileManagers {
     return new JavacFileManager(context, /* register= */ false, UTF_8);
   }
 
-  /** Returns a {@link JavacFileManager} for use in compiler-based tests. */
+  /// Returns a [JavacFileManager] for use in compiler-based tests.
   public static JavacFileManager testFileManager() {
     JavacFileManager fileManager = FILE_MANAGER.get();
 
@@ -88,7 +86,7 @@ public final class FileManagers {
     return fileManager;
   }
 
-  /** Returns the current runtime's classpath. */
+  /// Returns the current runtime's classpath.
   private static ImmutableList<Path> systemClassPath() {
     // splitToStream isn't available if Android guava is on the classpath
     return stream(Splitter.on(File.pathSeparatorChar).split(JAVA_CLASS_PATH.value()))

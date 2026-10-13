@@ -35,11 +35,9 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.function.Predicate;
 
-/**
- * Checker to prevent usages of comparison methods where both the operands undergo lossy widening.
- *
- * @author awturner@google.com (Andy Turner)
- */
+/// Checker to prevent usages of comparison methods where both the operands undergo lossy widening.
+///
+/// @author awturner@google.com (Andy Turner)
 @BugPattern(
     summary = "Using an unnecessarily-wide comparison method can lead to lossy comparison",
     explanation =

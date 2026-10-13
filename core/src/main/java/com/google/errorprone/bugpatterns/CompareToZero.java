@@ -49,7 +49,7 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreePath;
 
-/** Suggests comparing the result of {@code compareTo} to only {@code 0}. */
+/// Suggests comparing the result of `compareTo` to only `0`.
 @BugPattern(
     summary =
         """

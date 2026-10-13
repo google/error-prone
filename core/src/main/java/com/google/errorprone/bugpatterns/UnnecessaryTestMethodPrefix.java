@@ -35,7 +35,7 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import java.util.HashSet;
 
-/** See the summary. */
+/// See the summary.
 @BugPattern(
     severity = SeverityLevel.WARNING,
     summary =

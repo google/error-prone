@@ -22,11 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link BadInstanceof} bugpattern.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Tests for [BadInstanceof] bugpattern.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @RunWith(JUnit4.class)
 public final class BadInstanceofTest {
   private final CompilationTestHelper compilationHelper =

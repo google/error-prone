@@ -47,11 +47,9 @@ import java.util.stream.Stream;
 import javax.lang.model.element.AnnotationMirror;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Helper for enforcing Annotations that disallow mocking.
- *
- * @author amalloy@google.com (Alan Malloy)
- */
+/// Helper for enforcing Annotations that disallow mocking.
+///
+/// @author amalloy@google.com (Alan Malloy)
 public abstract class AbstractMockChecker<T extends Annotation> extends BugChecker
     implements MethodInvocationTreeMatcher, VariableTreeMatcher {
 
@@ -67,73 +65,59 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
     this.annotationName = annotationClass.getSimpleName();
   }
 
-  /**
-   * A policy for determining what classes should not be mocked.
-   *
-   * <p>This interface's intended use is to forbid mocking of classes you don't control, for example
-   * those in the JDK itself or in a library you use.
-   */
+  /// A policy for determining what classes should not be mocked.
+  ///
+  /// This interface's intended use is to forbid mocking of classes you don't control, for example
+  /// those in the JDK itself or in a library you use.
   public interface MockForbidder {
 
-    /**
-     * If the given type should not be mocked, provide an explanation why.
-     *
-     * @param type the type that is being mocked
-     * @return the reason it should not be mocked
-     */
+    /// If the given type should not be mocked, provide an explanation why.
+    ///
+    /// @param type the type that is being mocked
+    /// @return the reason it should not be mocked
     Optional<Reason> forbidReason(Type type, VisitorState state);
   }
 
-  /**
-   * An explanation of what type should not be mocked, and the reason why.
-   *
-   * @param unmockableClass A Type object representing the class that should not be mocked.
-   * @param reason The reason this class should not be mocked, which may be as simple as "it is
-   *     annotated to forbid mocking" but may also provide a suggested workaround.
-   */
+  /// An explanation of what type should not be mocked, and the reason why.
+  ///
+  /// @param unmockableClass A Type object representing the class that should not be mocked.
+  /// @param reason The reason this class should not be mocked, which may be as simple as "it is
+  ///   annotated to forbid mocking" but may also provide a suggested workaround.
   public record Reason(Type unmockableClass, String reason) {
     public static Reason of(Type t, String reason) {
       return new Reason(t, reason);
     }
   }
 
-  /**
-   * Produce a MockForbidder to use when looking for disallowed mocks, in addition to the built-in
-   * checks for Annotations of type {@code T}.
-   *
-   * <p>This method will be called at most once for each instance of AbstractMockChecker, but of
-   * course the returned object's {@link MockForbidder#forbidReason(Type, VisitorState)
-   * forbidReason} method may be called many times.
-   *
-   * <p>The default implementation forbids nothing.
-   */
+  /// Produce a MockForbidder to use when looking for disallowed mocks, in addition to the built-in
+  /// checks for Annotations of type `T`.
+  ///
+  /// This method will be called at most once for each instance of AbstractMockChecker, but of
+  /// course the returned object's [`forbidReason`][MockForbidder#forbidReason(Type, VisitorState)]
+  /// method may be called many times.
+  ///
+  /// The default implementation forbids nothing.
   protected MockForbidder forbidder() {
     return (type, state) -> Optional.empty();
   }
 
-  /**
-   * An extension of {@link Matcher} to return, not just a boolean `matches`, but also extract some
-   * type information about the Tree of interest.
-   *
-   * <p>This is used to identify what classes are being mocked in a Tree.
-   *
-   * @param <T> the type of Tree that this TypeExtractor operates on
-   */
+  /// An extension of [Matcher] to return, not just a boolean `matches`, but also extract some type
+  /// information about the Tree of interest.
+  ///
+  /// This is used to identify what classes are being mocked in a Tree.
+  ///
+  /// @param <T> the type of Tree that this TypeExtractor operates on
   public interface TypeExtractor<T extends Tree> {
 
-    /**
-     * Investigate the provided Tree, and return type information about it if it matches.
-     *
-     * @return the Type of the object being mocked, if any; Optional.empty() otherwise
-     */
+    /// Investigate the provided Tree, and return type information about it if it matches.
+    ///
+    /// @return the Type of the object being mocked, if any; Optional.empty() otherwise
     Optional<Type> extract(T tree, VisitorState state);
 
-    /**
-     * Enrich this TypeExtractor with fallback behavior.
-     *
-     * @return a TypeExtractor which first tries {@code this.extract(t, s)}, and if that does not
-     *     match, falls back to {@code other.extract(t, s)}.
-     */
+    /// Enrich this TypeExtractor with fallback behavior.
+    ///
+    /// @return a TypeExtractor which first tries `this.extract(t, s)`, and if that does not match,
+    ///   falls back to `other.extract(t, s)`.
     default TypeExtractor<T> or(TypeExtractor<T> other) {
       return (tree, state) ->
           TypeExtractor.this
@@ -143,10 +127,8 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
     }
   }
 
-  /**
-   * Produces an extractor which, if the tree matches, extracts the type of that tree, as given by
-   * {@link ASTHelpers#getType(Tree)}.
-   */
+  /// Produces an extractor which, if the tree matches, extracts the type of that tree, as given by
+  /// [ASTHelpers#getType(Tree)].
   public static <T extends Tree> TypeExtractor<T> extractType(Matcher<T> m) {
     return (tree, state) -> {
       if (m.matches(tree, state)) {
@@ -156,10 +138,8 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
     };
   }
 
-  /**
-   * Produces an extractor which, if the tree matches, extracts the type of the first argument to
-   * the method invocation.
-   */
+  /// Produces an extractor which, if the tree matches, extracts the type of the first argument to
+  /// the method invocation.
   public static TypeExtractor<MethodInvocationTree> extractFirstArg(
       Matcher<MethodInvocationTree> m) {
     return (tree, state) -> {
@@ -173,14 +153,12 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
     };
   }
 
-  /**
-   * Produces an extractor which, if the tree matches, extracts the type of the first argument whose
-   * type is {@link Class} (preserving its {@code <T>} type parameter, if it has one}.
-   *
-   * @param m the matcher to use. It is an error for this matcher to succeed on any Tree that does
-   *     not include at least one argument of type {@link Class}; if such a matcher is provided, the
-   *     behavior of the returned Extractor is undefined.
-   */
+  /// Produces an extractor which, if the tree matches, extracts the type of the first argument
+  /// whose type is [Class] (preserving its `<T>` type parameter, if it has one).
+  ///
+  /// @param m the matcher to use. It is an error for this matcher to succeed on any Tree that does
+  ///   not include at least one argument of type [Class]; if such a matcher is provided, the
+  ///   behavior of the returned Extractor is undefined.
   public static TypeExtractor<MethodInvocationTree> extractClassArg(
       Matcher<MethodInvocationTree> m) {
     return (tree, state) -> {
@@ -198,10 +176,8 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
     };
   }
 
-  /**
-   * Creates a TypeExtractor that extracts the type of a class field if that field is annotated with
-   * any one of the given annotations.
-   */
+  /// Creates a TypeExtractor that extracts the type of a class field if that field is annotated
+  /// with any one of the given annotations.
   public static TypeExtractor<VariableTree> fieldAnnotatedWithOneOf(
       Stream<String> annotationClasses) {
     return extractType(
@@ -211,20 +187,16 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
                 annotationClasses.map(Matchers::hasAnnotation).collect(Collectors.toList()))));
   }
 
-  /**
-   * A {@link TypeExtractor} that extracts the type being mocked for method invocations that use
-   * either {@code org.mockito.Mockito.mock(...)} or {@code org.mockito.Mockito.spy(...)}.
-   */
+  /// A [TypeExtractor] that extracts the type being mocked for method invocations that use either
+  /// `org.mockito.Mockito.mock(...)` or `org.mockito.Mockito.spy(...)`.
   public static final TypeExtractor<MethodInvocationTree> MOCKING_METHOD =
       extractFirstArg(
           Matchers.toType(
               MethodInvocationTree.class,
               Matchers.staticMethod().onClass("org.mockito.Mockito").namedAnyOf("mock", "spy")));
 
-  /**
-   * A {@link TypeExtractor} that extracts the type of a variable declaration that is annotated with
-   * either {@code @org.mockito.Mock} or {@code @org.mockito.Spy}.
-   */
+  /// A [TypeExtractor] that extracts the type of a variable declaration that is annotated with
+  /// either `@org.mockito.Mock` or `@org.mockito.Spy`.
   public static final TypeExtractor<VariableTree> MOCKED_VAR =
       fieldAnnotatedWithOneOf(Stream.of("org.mockito.Mock", "org.mockito.Spy"));
 
@@ -289,10 +261,8 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
         .orElse(NO_MATCH);
   }
 
-  /**
-   * If type is Class<T>, returns the erasure of T. Otherwise, returns type unmodified. Returns
-   * empty() when provided a raw Class as argument.
-   */
+  /// If type is `Class<T>`, returns the erasure of `T`. Otherwise, returns type unmodified. Returns
+  /// `empty()` when provided a raw `Class` as argument.
   private static Optional<Type> argFromClass(Type type, VisitorState state) {
     if (ASTHelpers.isSameType(type, state.getSymtab().classType, state)) {
       if (type.getTypeArguments().isEmpty()) {

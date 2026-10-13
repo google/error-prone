@@ -61,7 +61,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Ignoring exceptions and calling fail() is unnecessary, and makes test output less useful",
@@ -211,7 +211,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
     return Optional.of(fix.build());
   }
 
-  /** Returns true if the given method symbol has a {@code @Test(expected=...)} annotation. */
+  /// Returns true if the given method symbol has a `@Test(expected=...)` annotation.
   private static boolean isExpectedExceptionTest(MethodSymbol sym, VisitorState state) {
     Compound attribute = sym.attribute(JUnitMatchers.JUNIT4_TEST_ANNOTATION.symbol(state));
     if (attribute == null) {

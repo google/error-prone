@@ -31,7 +31,7 @@ import com.sun.tools.javac.tree.JCTree.JCNewArray;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/** {@link UTree} version of {@link NewArrayTree}, which represents an array instantiation. */
+/// [UTree] version of [NewArrayTree], which represents an array instantiation.
 @AutoValue
 abstract class UNewArray extends UExpression implements NewArrayTree {
 

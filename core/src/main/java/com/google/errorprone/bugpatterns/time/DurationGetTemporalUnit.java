@@ -37,10 +37,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.EnumSet;
 import java.util.Optional;
 
-/**
- * Bans calls to {@code Duration.get(temporalUnit)} where {@code temporalUnit} is not {@code
- * SECONDS} or {@code NANOS}.
- */
+/// Bans calls to `Duration.get(temporalUnit)` where `temporalUnit` is not `SECONDS` or `NANOS`.
 @BugPattern(
     summary = "Duration.get() only works with SECONDS or NANOS.",
     explanation =

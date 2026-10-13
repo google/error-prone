@@ -45,43 +45,34 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 
-/**
- * A matcher for compile-time-constant expressions.
- *
- * <p>For the purposes of this matcher, a compile-time constant expression is one of the following:
- *
- * <ol>
- *   <li>Any expression for which the Java compiler can determine a constant value at compile time.
- *   <li>The expression consisting of the literal {@code null}.
- *   <li>An enum constant.
- *   <li>A class literal (e.g. {@code String.class}).
- *   <li>A field of a class or record, which is declared {@code final} and is either:
- *       <ul>
- *         <li>Explicitly annotated with {@link CompileTimeConstant}.
- *         <li>A well-known compatible field, e.g. from the Java standard library. (See {@link
- *             #COMPATIBLE_FIELDS} below for the complete list.)
- *       </ul>
- *   <li>A formal parameter of a method or constructor, which is effectively {@code final} (either
- *       inferred or explicitly declared) and is annotated with {@link CompileTimeConstant}.
- *   <li>A {@link String} which is formed from the concatenation of other compile-time-constant
- *       {@link String}s.
- *   <li>A switch expression where all case bodies are compile-time constants.
- *   <li>A conditional expression (a ? b : c) where both branches are compile-time constants.
- *   <li>The result of an invocation of one of the following immutable collection factory methods,
- *       where all arguments are compile-time constants:
- *       <ul>
- *         <li>{@code ImmutableList.of(...)}
- *         <li>{@code ImmutableSet.of(...)}
- *         <li>{@code ImmutableMap.of(...)}
- *         <li>{@code ImmutableMultiset.of(...)}
- *         <li>{@code ImmutableSortedSet.of(...)}
- *         <li>{@code ImmutableSortedMap.of(...)}
- *         <li>{@code List.of(...)}
- *         <li>{@code Set.of(...)}
- *         <li>{@code Map.of(...)}
- *       </ul>
- * </ol>
- */
+/// A matcher for compile-time-constant expressions.
+///
+/// For the purposes of this matcher, a compile-time constant expression is one of the following:
+///
+/// 1. Any expression for which the Java compiler can determine a constant value at compile time.
+/// 1. The expression consisting of the literal `null`.
+/// 1. An enum constant.
+/// 1. A class literal (e.g. `String.class`).
+/// 1. A field of a class or record, which is declared `final` and is either:
+///    - Explicitly annotated with [CompileTimeConstant].
+///    - A well-known compatible field, e.g. from the Java standard library. (See
+///      [#COMPATIBLE_FIELDS] below for the complete list.)
+/// 1. A formal parameter of a method or constructor, which is effectively `final` (either inferred
+///    or explicitly declared) and is annotated with [CompileTimeConstant].
+/// 1. A [String] which is formed from the concatenation of other compile-time-constant [String]s.
+/// 1. A switch expression where all case bodies are compile-time constants.
+/// 1. A conditional expression (a ? b : c) where both branches are compile-time constants.
+/// 1. The result of an invocation of one of the following immutable collection factory methods,
+///    where all arguments are compile-time constants:
+///    - `ImmutableList.of(...)`
+///    - `ImmutableSet.of(...)`
+///    - `ImmutableMap.of(...)`
+///    - `ImmutableMultiset.of(...)`
+///    - `ImmutableSortedSet.of(...)`
+///    - `ImmutableSortedMap.of(...)`
+///    - `List.of(...)`
+///    - `Set.of(...)`
+///    - `Map.of(...)`
 public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionTree> {
 
   private static final ClassName COMPILE_TIME_CONSTANT_ANNOTATION =
@@ -123,10 +114,8 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
                   "java.util.Map")
               .named("of"));
 
-  /**
-   * A matcher for {@link ExpressionTree}s for which the java compiler can compute a constant value
-   * (except a literal {@code null}).
-   */
+  /// A matcher for [ExpressionTree]s for which the java compiler can compute a constant value
+  /// (except a literal `null`).
   private static final class ExpressionWithConstValueMatcher implements Matcher<ExpressionTree> {
 
     @Override
@@ -214,16 +203,14 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
         && COMPATIBLE_FIELDS.matches(expressionTree, state);
   }
 
-  /**
-   * Matches static final fields that are known to be compile-time constants, but are "upstream" of
-   * this check and therefore cannot be annotated {@code @CompileTimeConstant} themselves.
-   *
-   * <p>Note that {@code static final} fields of primitive or {@link String} type initialized with a
-   * constant expression (JLS §4.12.4 "constant variables", such as {@link Integer#MAX_VALUE} or
-   * {@link Math#PI}) already have their constant value computed by {@code javac} and are matched
-   * via {@link ASTHelpers#constValue}, so only non-primitive, non-{@link String} constant fields
-   * need to be listed here.
-   */
+  /// Matches static final fields that are known to be compile-time constants, but are "upstream" of
+  /// this check and therefore cannot be annotated `@CompileTimeConstant` themselves.
+  ///
+  /// Note that `static final` fields of primitive or [String] type initialized with a constant
+  /// expression (JLS §4.12.4 "constant variables", such as [Integer#MAX_VALUE] or [Math#PI])
+  /// already have their constant value computed by `javac` and are matched via
+  /// [ASTHelpers#constValue], so only non-primitive, non-[String] constant fields need to be listed
+  /// here.
   private static final Matcher<ExpressionTree> COMPATIBLE_FIELDS =
       anyOf(
           // java.lang

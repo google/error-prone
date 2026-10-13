@@ -38,9 +38,7 @@ import java.util.Set;
 import java.util.stream.Collector;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// @author alexeagle@google.com (Alex Eagle)
 @AutoValue
 public abstract class SuggestedFix implements Fix {
 
@@ -98,70 +96,66 @@ public abstract class SuggestedFix implements Fix {
     return replacements.ascending();
   }
 
-  /** {@link Builder#replace(Tree, String)} */
+  /// [Builder#replace(Tree, String)]
   public static SuggestedFix replace(Tree tree, String replaceWith) {
     return builder().replace(tree, replaceWith).build();
   }
 
-  /**
-   * Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
-   * string.
-   *
-   * @param startPos The position from which to start replacing, inclusive
-   * @param endPos The position at which to end replacing, exclusive
-   * @param replaceWith The string to replace with
-   */
+  /// Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
+  /// string.
+  ///
+  /// @param startPos The position from which to start replacing, inclusive
+  /// @param endPos The position at which to end replacing, exclusive
+  /// @param replaceWith The string to replace with
   public static SuggestedFix replace(int startPos, int endPos, String replaceWith) {
     return builder().replace(startPos, endPos, replaceWith).build();
   }
 
-  /**
-   * Replace a tree node with a string, but adjust the start and end positions as well. For example,
-   * if the tree node begins at index 10 and ends at index 30, this call will replace the characters
-   * at index 15 through 25 with "replacement":
-   *
-   * <pre>
-   * {@code fix.replace(node, "replacement", 5, -5)}
-   * </pre>
-   *
-   * @param node The tree node to replace
-   * @param replaceWith The string to replace with
-   * @param startPosAdjustment The adjustment to add to the start position (negative is OK)
-   * @param endPosAdjustment The adjustment to add to the end position (negative is OK)
-   */
+  /// Replace a tree node with a string, but adjust the start and end positions as well. For
+  /// example, if the tree node begins at index 10 and ends at index 30, this call will replace the
+  /// characters at index 15 through 25 with "replacement":
+  ///
+  /// ```
+  /// fix.replace(node, "replacement", 5, -5)
+  /// ```
+  ///
+  /// @param node The tree node to replace
+  /// @param replaceWith The string to replace with
+  /// @param startPosAdjustment The adjustment to add to the start position (negative is OK)
+  /// @param endPosAdjustment The adjustment to add to the end position (negative is OK)
   public static SuggestedFix replace(
       Tree node, String replaceWith, int startPosAdjustment, int endPosAdjustment) {
     return builder().replace(node, replaceWith, startPosAdjustment, endPosAdjustment).build();
   }
 
-  /** {@link Builder#prefixWith(Tree, String)} */
+  /// [Builder#prefixWith(Tree, String)]
   public static SuggestedFix prefixWith(Tree node, String prefix) {
     return builder().prefixWith(node, prefix).build();
   }
 
-  /** {@link Builder#postfixWith(Tree, String)} */
+  /// [Builder#postfixWith(Tree, String)]
   public static SuggestedFix postfixWith(Tree node, String postfix) {
     return builder().postfixWith(node, postfix).build();
   }
 
-  /** {@link Builder#delete(Tree)} */
+  /// [Builder#delete(Tree)]
   public static SuggestedFix delete(Tree node) {
     return delete(ErrorPronePosition.from(node));
   }
 
-  /** {@link Builder#delete(ErrorPronePosition)} */
+  /// [Builder#delete(ErrorPronePosition)]
   public static SuggestedFix delete(ErrorPronePosition position) {
     return builder().delete(position).build();
   }
 
-  /** {@link Builder#swap(Tree, Tree, VisitorState)} */
+  /// [Builder#swap(Tree, Tree, VisitorState)]
   public static SuggestedFix swap(Tree node1, Tree node2, VisitorState state) {
     return builder().swap(node1, node2, state).build();
   }
 
   private static final SuggestedFix EMPTY = builder().build();
 
-  /** Creates an empty {@link SuggestedFix}. */
+  /// Creates an empty [SuggestedFix].
   public static SuggestedFix emptyFix() {
     return EMPTY;
   }
@@ -187,7 +181,7 @@ public abstract class SuggestedFix implements Fix {
     return SuggestedFix.builder().merge(this);
   }
 
-  /** Builds {@link SuggestedFix}s. */
+  /// Builds [SuggestedFix]s.
   public static class Builder {
 
     private final List<FixOperation> fixes = new ArrayList<>();
@@ -212,12 +206,10 @@ public abstract class SuggestedFix implements Fix {
       return this;
     }
 
-    /**
-     * Sets a custom short description for this fix. This is useful for differentiating multiple
-     * fixes from the same finding.
-     *
-     * <p>Should be limited to one sentence.
-     */
+    /// Sets a custom short description for this fix. This is useful for differentiating multiple
+    /// fixes from the same finding.
+    ///
+    /// Should be limited to one sentence.
     @CanIgnoreReturnValue
     public Builder setShortDescription(String shortDescription) {
       this.shortDescription = shortDescription;
@@ -241,34 +233,30 @@ public abstract class SuggestedFix implements Fix {
       return with(ReplacementFix.create(position, replaceWith));
     }
 
-    /**
-     * Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
-     * string.
-     *
-     * @param startPos The position from which to start replacing, inclusive
-     * @param endPos The position at which to end replacing, exclusive
-     * @param replaceWith The string to replace with
-     */
+    /// Replace the characters from startPos, inclusive, until endPos, exclusive, with the given
+    /// string.
+    ///
+    /// @param startPos The position from which to start replacing, inclusive
+    /// @param endPos The position at which to end replacing, exclusive
+    /// @param replaceWith The string to replace with
     @CanIgnoreReturnValue
     public Builder replace(int startPos, int endPos, String replaceWith) {
       IndexedPosition pos = new IndexedPosition(startPos, endPos);
       return with(ReplacementFix.create(pos, replaceWith));
     }
 
-    /**
-     * Replace a tree node with a string, but adjust the start and end positions as well. For
-     * example, if the tree node begins at index 10 and ends at index 30, this call will replace the
-     * characters at index 15 through 25 with "replacement":
-     *
-     * <pre>
-     * {@code fix.replace(node, "replacement", 5, -5)}
-     * </pre>
-     *
-     * @param node The tree node to replace
-     * @param replaceWith The string to replace with
-     * @param startPosAdjustment The adjustment to add to the start position (negative is OK)
-     * @param endPosAdjustment The adjustment to add to the end position (negative is OK)
-     */
+    /// Replace a tree node with a string, but adjust the start and end positions as well. For
+    /// example, if the tree node begins at index 10 and ends at index 30, this call will replace
+    /// the characters at index 15 through 25 with "replacement":
+    ///
+    /// ```
+    /// fix.replace(node, "replacement", 5, -5)
+    /// ```
+    ///
+    /// @param node The tree node to replace
+    /// @param replaceWith The string to replace with
+    /// @param startPosAdjustment The adjustment to add to the start position (negative is OK)
+    /// @param endPosAdjustment The adjustment to add to the end position (negative is OK)
     @CanIgnoreReturnValue
     public Builder replace(
         Tree node, String replaceWith, int startPosAdjustment, int endPosAdjustment) {
@@ -323,61 +311,51 @@ public abstract class SuggestedFix implements Fix {
       return this;
     }
 
-    /**
-     * Add an import statement as part of this SuggestedFix. Import string should be of the form
-     * "foo.bar.SomeClass".
-     */
+    /// Add an import statement as part of this SuggestedFix. Import string should be of the form
+    /// "foo.bar.SomeClass".
     @CanIgnoreReturnValue
     public Builder addImport(String importString) {
       importsToAdd.add("import " + importString);
       return this;
     }
 
-    /** Add an import statement for {@code className} as part of this SuggestedFix. */
+    /// Add an import statement for `className` as part of this SuggestedFix.
     @CanIgnoreReturnValue
     public Builder addImport(ClassName className) {
       return addImport(className.toString().replace('$', '.'));
     }
 
-    /**
-     * Add a static import statement as part of this SuggestedFix. Import string should be of the
-     * form "foo.bar.SomeClass.someMethod" or "foo.bar.SomeClass.SOME_FIELD".
-     */
+    /// Add a static import statement as part of this SuggestedFix. Import string should be of the
+    /// form "foo.bar.SomeClass.someMethod" or "foo.bar.SomeClass.SOME_FIELD".
     @CanIgnoreReturnValue
     public Builder addStaticImport(String importString) {
       importsToAdd.add("import static " + importString);
       return this;
     }
 
-    /**
-     * Remove an import statement as part of this SuggestedFix. Import string should be of the form
-     * "foo.bar.SomeClass".
-     */
+    /// Remove an import statement as part of this SuggestedFix. Import string should be of the form
+    /// "foo.bar.SomeClass".
     @CanIgnoreReturnValue
     public Builder removeImport(String importString) {
       importsToRemove.add("import " + importString);
       return this;
     }
 
-    /** Remove an import statement for {@code className} as part of this SuggestedFix. */
+    /// Remove an import statement for `className` as part of this SuggestedFix.
     @CanIgnoreReturnValue
     public Builder removeImport(ClassName className) {
       return removeImport(className.toString().replace('$', '.'));
     }
 
-    /**
-     * Remove a static import statement as part of this SuggestedFix. Import string should be of the
-     * form "foo.bar.SomeClass.someMethod" or "foo.bar.SomeClass.SOME_FIELD".
-     */
+    /// Remove a static import statement as part of this SuggestedFix. Import string should be of
+    /// the form "foo.bar.SomeClass.someMethod" or "foo.bar.SomeClass.SOME_FIELD".
     @CanIgnoreReturnValue
     public Builder removeStaticImport(String importString) {
       importsToRemove.add("import static " + importString);
       return this;
     }
 
-    /**
-     * Merges all edits from {@code other} into {@code this}. If {@code other} is null, do nothing.
-     */
+    /// Merges all edits from `other` into `this`. If `other` is null, do nothing.
     @CanIgnoreReturnValue
     public Builder merge(@Nullable Builder other) {
       if (other == null) {
@@ -392,9 +370,7 @@ public abstract class SuggestedFix implements Fix {
       return this;
     }
 
-    /**
-     * Merges all edits from {@code other} into {@code this}. If {@code other} is null, do nothing.
-     */
+    /// Merges all edits from `other` into `this`. If `other` is null, do nothing.
     @CanIgnoreReturnValue
     public Builder merge(@Nullable SuggestedFix other) {
       if (other == null) {
@@ -409,10 +385,8 @@ public abstract class SuggestedFix implements Fix {
       return this;
     }
 
-    /**
-     * Prevent attempts to modify implicit default constructors, since they are one of the few
-     * synthetic constructs added to the AST early enough to be visible from Error Prone.
-     */
+    /// Prevent attempts to modify implicit default constructors, since they are one of the few
+    /// synthetic constructs added to the AST early enough to be visible from Error Prone.
     private static void checkNotSyntheticConstructor(Tree tree) {
       if (tree instanceof MethodTree methodTree && ASTHelpers.isGeneratedConstructor(methodTree)) {
         throw new IllegalArgumentException("Cannot edit synthetic AST nodes");
@@ -425,13 +399,13 @@ public abstract class SuggestedFix implements Fix {
     }
   }
 
-  /** Models a single fix operation. */
+  /// Models a single fix operation.
   interface FixOperation {
-    /** Calculate the replacement operation once end positions are available. */
+    /// Calculate the replacement operation once end positions are available.
     Replacement getReplacement(ErrorProneEndPosTable endPositions);
   }
 
-  /** Inserts new text at a specific insertion point (e.g. prefix or postfix). */
+  /// Inserts new text at a specific insertion point (e.g. prefix or postfix).
   abstract static class InsertionFix implements FixOperation {
     protected abstract int getInsertionIndex(ErrorProneEndPosTable endPositions);
 
@@ -474,7 +448,7 @@ public abstract class SuggestedFix implements Fix {
     }
   }
 
-  /** Replaces an entire diagnostic position (from start to end) with the given string. */
+  /// Replaces an entire diagnostic position (from start to end) with the given string.
   private record ReplacementFix(ErrorPronePosition original, String replacement)
       implements FixOperation {
     ReplacementFix {

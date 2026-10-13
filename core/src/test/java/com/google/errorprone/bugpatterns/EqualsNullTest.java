@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link EqualsNull} check. */
+/// Unit tests for [EqualsNull] check.
 @RunWith(JUnit4.class)
 public class EqualsNullTest {
 

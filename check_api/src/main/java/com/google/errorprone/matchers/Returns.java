@@ -21,19 +21,15 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 
-/**
- * Matches a {@code return} statement whose returned expression is matched by the given matcher.
- *
- * @author schmitt@google.com (Peter Schmitt)
- */
+/// Matches a `return` statement whose returned expression is matched by the given matcher.
+///
+/// @author schmitt@google.com (Peter Schmitt)
 public class Returns implements Matcher<StatementTree> {
 
   private final Matcher<? super ExpressionTree> returnedMatcher;
 
-  /**
-   * New matcher for a {@code return} statement where the returned expression is matched by the
-   * passed {@code returnedMatcher}.
-   */
+  /// New matcher for a `return` statement where the returned expression is matched by the passed
+  /// `returnedMatcher`.
   public Returns(Matcher<? super ExpressionTree> returnedMatcher) {
     this.returnedMatcher = returnedMatcher;
   }

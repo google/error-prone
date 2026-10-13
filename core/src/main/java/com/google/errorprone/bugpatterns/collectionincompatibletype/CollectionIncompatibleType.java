@@ -42,22 +42,18 @@ import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 
-/**
- * Checker for calling Object-accepting methods with types that don't match the type arguments of
- * their container types. Currently this checker detects problems with the following methods on all
- * their subtypes and subinterfaces:
- *
- * <ul>
- *   <li>{@link Collection#contains}
- *   <li>{@link Collection#remove}
- *   <li>{@link List#indexOf}
- *   <li>{@link List#lastIndexOf}
- *   <li>{@link Map#get}
- *   <li>{@link Map#containsKey}
- *   <li>{@link Map#remove}
- *   <li>{@link Map#containsValue}
- * </ul>
- */
+/// Checker for calling Object-accepting methods with types that don't match the type arguments of
+/// their container types. Currently this checker detects problems with the following methods on all
+/// their subtypes and subinterfaces:
+///
+/// - [Collection#contains]
+/// - [Collection#remove]
+/// - [List#indexOf]
+/// - [List#lastIndexOf]
+/// - [Map#get]
+/// - [Map#containsKey]
+/// - [Map#remove]
+/// - [Map#containsValue]
 @BugPattern(
     summary = "Incompatible type as argument to Object-accepting Java collections method",
     severity = ERROR)

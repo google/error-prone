@@ -45,7 +45,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Optional;
 import javax.inject.Inject;
 
-/** Flags ignored return values from pure getters. */
+/// Flags ignored return values from pure getters.
 @BugPattern(
     severity = WARNING,
     summary =

@@ -22,34 +22,30 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Annotation declaring that the target annotation is incompatible with any one of the provided
- * modifiers. For example, an annotation declared as:
- *
- * <pre>{@code
- * @IncompatibleModifiers(modifier = Modifier.PUBLIC)
- * @interface MyAnnotation {}
- * </pre>
- *
- * <p>will be considered illegal when used as:
- *
- * <pre>
- * @MyAnnotation public void foo() {}
- * }</pre>
- *
- * @author benyu@google.com (Jige Yu)
- */
+/// Annotation declaring that the target annotation is incompatible with any one of the provided
+/// modifiers. For example, an annotation declared as:
+///
+/// ```
+/// @IncompatibleModifiers(modifier = Modifier.PUBLIC)
+/// @interface MyAnnotation {}
+/// ```
+///
+/// will be considered illegal when used as:
+///
+/// ```
+/// @MyAnnotation public void foo() {}
+/// ```
+///
+/// @author benyu@google.com (Jige Yu)
 @Documented
 @Retention(RetentionPolicy.CLASS) // Element's source might not be available during analysis
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface IncompatibleModifiers {
 
-  /**
-   * The incompatible modifiers. The annotated element is illegal with the presence of any one or
-   * more of these modifiers.
-   *
-   * <p>Empty array has the same effect as not applying this annotation at all; duplicates are
-   * allowed but have no effect.
-   */
+  /// The incompatible modifiers. The annotated element is illegal with the presence of any one or
+  /// more of these modifiers.
+  ///
+  /// Empty array has the same effect as not applying this annotation at all; duplicates are allowed
+  /// but have no effect.
   Modifier[] modifier() default {};
 }

@@ -21,11 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link BigDecimalLiteralDouble}.
- *
- * @author endobson@google.com (Eric Dobson)
- */
+/// Tests for [BigDecimalLiteralDouble].
+///
+/// @author endobson@google.com (Eric Dobson)
 @RunWith(JUnit4.class)
 public class BigDecimalLiteralDoubleTest {
 

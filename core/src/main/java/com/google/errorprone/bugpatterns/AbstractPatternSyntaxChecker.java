@@ -30,7 +30,7 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** Finds calls to regex-accepting methods with literal strings. */
+/// Finds calls to regex-accepting methods with literal strings.
 @CheckReturnValue
 public abstract class AbstractPatternSyntaxChecker extends BugChecker
     implements MethodInvocationTreeMatcher {

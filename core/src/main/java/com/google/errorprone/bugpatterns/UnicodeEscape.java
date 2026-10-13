@@ -30,7 +30,7 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.CompilationUnitTree;
 import java.util.function.Supplier;
 
-/** Replaces printable ASCII unicode escapes with the literal version. */
+/// Replaces printable ASCII unicode escapes with the literal version.
 @BugPattern(
     summary =
         "Using unicode escape sequences for printable ASCII characters is obfuscated, and"
@@ -108,7 +108,7 @@ public final class UnicodeEscape extends BugChecker implements CompilationUnitTr
       }
     }
 
-    /** Returns the next character, or {@code 0} if we're at the end of the file. */
+    /// Returns the next character, or `0` if we're at the end of the file.
     private char peek() {
       return position + 1 < source.length() ? source.charAt(position + 1) : 0;
     }

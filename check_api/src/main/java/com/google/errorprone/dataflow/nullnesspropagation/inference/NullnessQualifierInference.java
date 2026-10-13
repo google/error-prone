@@ -64,13 +64,11 @@ import java.util.function.Consumer;
 import javax.lang.model.type.TypeVariable;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Eagerly traverse one {@code MethodTree} at a time and accumulate constraints between nullness
- * qualifiers. Those constraints are then solved as needed in {@code InferredNullability}. Based on
- * Java type inference as defined in JLS section 18.
- *
- * @author bennostein@google.com (Benno Stein)
- */
+/// Eagerly traverse one `MethodTree` at a time and accumulate constraints between nullness
+/// qualifiers. Those constraints are then solved as needed in `InferredNullability`. Based on Java
+/// type inference as defined in JLS section 18.
+///
+/// @author bennostein@google.com (Benno Stein)
 public final class NullnessQualifierInference extends TreeScanner<Void, Void> {
 
   private static final LoadingCache<Tree, InferredNullability> inferenceCache =
@@ -94,10 +92,8 @@ public final class NullnessQualifierInference extends TreeScanner<Void, Void> {
     return inferenceCache.get(methodOrInitializerOrLambda);
   }
 
-  /**
-   * &lt;= constraints between inference variables: an edge from A to B means A &lt;= B. In other
-   * words, edges point "upwards" in the lattice towards Top == Nullable.
-   */
+  /// `<=` constraints between inference variables: an edge from A to B means `A <= B`. In other
+  /// words, edges point "upwards" in the lattice towards Top == Nullable.
   private final MutableGraph<InferenceVariable> qualifierConstraints;
 
   private final Tree currentMethodOrInitializerOrLambda;
@@ -425,13 +421,11 @@ public final class NullnessQualifierInference extends TreeScanner<Void, Void> {
     return NullnessAnnotations.fromAnnotationsOn(type);
   }
 
-  /**
-   * Generate inference variable constraints derived from this write, including proper bounds from
-   * type annotations on the declared type {@code lType} of the r-val as well as relationships
-   * between type parameters of the l-val and r-val (if given). l-val is optional so this method is
-   * usable for method arguments, and note that the l-val is a statement in other cases (return and
-   * variable declarations); the l-val only appears useful when it's an assignment
-   */
+  /// Generate inference variable constraints derived from this write, including proper bounds from
+  /// type annotations on the declared type `lType` of the r-val as well as relationships between
+  /// type parameters of the l-val and r-val (if given). l-val is optional so this method is usable
+  /// for method arguments, and note that the l-val is a statement in other cases (return and
+  /// variable declarations); the l-val only appears useful when it's an assignment
   private void generateConstraintsForWrite(
       Type lType, @Nullable Symbol decl, ExpressionTree rVal, @Nullable Tree lVal) {
     // TODO(kmb): Consider just visiting these expression types
@@ -505,7 +499,7 @@ public final class NullnessQualifierInference extends TreeScanner<Void, Void> {
     }
   }
 
-  /** Pair of a {@link Type} and an optional {@link Symbol}. */
+  /// Pair of a [Type] and an optional [Symbol].
   private record TypeAndSymbol(Type type, @Nullable VarSymbol symbol) {
     static TypeAndSymbol create(Type type) {
       return create(type, /* symbol= */ null);

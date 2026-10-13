@@ -51,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.lang.model.element.ElementKind;
 
-/** Detects private member classes that are referenced in signatures of non-private members. */
+/// Detects private member classes that are referenced in signatures of non-private members.
 @BugPattern(
     summary =
         "Private member classes should not be referenced in signatures of non-private members.",

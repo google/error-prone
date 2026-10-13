@@ -30,17 +30,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-/**
- * An injector for ErrorProne.
- *
- * <p>This implements a very simplified subset of the functionality that Guice does. Specifically,
- * it allows injecting only non-generic classes, and treats everything as a singleton within a given
- * compilation.
- */
+/// An injector for ErrorProne.
+///
+/// This implements a very simplified subset of the functionality that Guice does. Specifically, it
+/// allows injecting only non-generic classes, and treats everything as a singleton within a given
+/// compilation.
 public final class ErrorProneInjector {
   private final ClassToInstanceMap<Object> instances = MutableClassToInstanceMap.create();
 
-  /** Indicates that there was a runtime failure while providing an instance. */
+  /// Indicates that there was a runtime failure while providing an instance.
   public static final class ProvisionException extends RuntimeException {
     public ProvisionException(String message) {
       super(message);

@@ -57,7 +57,7 @@ import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import org.jspecify.annotations.Nullable;
 
-/** Helps test Error Prone bug checkers and compilations. */
+/// Helps test Error Prone bug checkers and compilations.
 @CheckReturnValue
 public final class CompilationTestHelper {
   private static final ImmutableList<String> DEFAULT_ARGS =
@@ -97,22 +97,18 @@ public final class CompilationTestHelper {
     this.compiler = new BaseErrorProneJavaCompiler(JavacTool.create(), scannerSupplier);
   }
 
-  /**
-   * Returns a new {@link CompilationTestHelper}.
-   *
-   * @param scannerSupplier the {@link ScannerSupplier} to test
-   * @param clazz the class to use to locate file resources
-   */
+  /// Returns a new [CompilationTestHelper].
+  ///
+  /// @param scannerSupplier the [ScannerSupplier] to test
+  /// @param clazz the class to use to locate file resources
   public static CompilationTestHelper newInstance(ScannerSupplier scannerSupplier, Class<?> clazz) {
     return new CompilationTestHelper(scannerSupplier, null, clazz);
   }
 
-  /**
-   * Returns a new {@link CompilationTestHelper}.
-   *
-   * @param checker the {@link BugChecker} to test
-   * @param clazz the class to use to locate file resources
-   */
+  /// Returns a new [CompilationTestHelper].
+  ///
+  /// @param checker the [BugChecker] to test
+  /// @param clazz the class to use to locate file resources
   public static CompilationTestHelper newInstance(
       Class<? extends BugChecker> checker, Class<?> clazz) {
     ScannerSupplier scannerSupplier = ScannerSupplier.fromBugCheckerClasses(checker);
@@ -121,10 +117,8 @@ public final class CompilationTestHelper {
     return new CompilationTestHelper(scannerSupplier, checkName, clazz);
   }
 
-  /**
-   * Pass -proc:none unless annotation processing is explicitly enabled, to avoid picking up
-   * annotation processors via service loading.
-   */
+  /// Pass -proc:none unless annotation processing is explicitly enabled, to avoid picking up
+  /// annotation processors via service loading.
   // TODO(cushon): test compilations should be isolated so they can't pick things up from the
   // ambient classpath.
   static List<String> disableImplicitProcessing(List<String> args) {
@@ -134,10 +128,8 @@ public final class CompilationTestHelper {
     return ImmutableList.<String>builder().addAll(args).add("-proc:none").build();
   }
 
-  /**
-   * Creates a list of arguments to pass to the compiler. Uses DEFAULT_ARGS as the base and appends
-   * the overridden classpath, if provided, and any extraArgs that were provided.
-   */
+  /// Creates a list of arguments to pass to the compiler. Uses DEFAULT_ARGS as the base and appends
+  /// the overridden classpath, if provided, and any extraArgs that were provided.
   private static ImmutableList<String> buildArguments(
       @Nullable List<Class<?>> overrideClasspath, List<String> extraArgs, boolean testOnly) {
     ImmutableList.Builder<String> result = ImmutableList.<String>builder().addAll(DEFAULT_ARGS);
@@ -171,19 +163,17 @@ public final class CompilationTestHelper {
     }
   }
 
-  /**
-   * Adds a source file to the test compilation, from the string content of the file.
-   *
-   * <p>The diagnostics expected from compiling the file are inferred from the file contents. For
-   * each line of the test file that contains the bug marker pattern "// BUG: Diagnostic contains:
-   * foo", we expect to see a diagnostic on that line containing "foo". For each line of the test
-   * file that does <i>not</i> contain the bug marker pattern, we expect no diagnostic to be
-   * generated. You can also use "// BUG: Diagnostic matches: X" in tandem with {@code
-   * expectErrorMessage("X", "foo")} to allow you to programmatically construct the error message.
-   *
-   * @param path a path for the source file
-   * @param lines the content of the source file
-   */
+  /// Adds a source file to the test compilation, from the string content of the file.
+  ///
+  /// The diagnostics expected from compiling the file are inferred from the file contents. For each
+  /// line of the test file that contains the bug marker pattern "// BUG: Diagnostic contains: foo",
+  /// we expect to see a diagnostic on that line containing "foo". For each line of the test file
+  /// that does *not* contain the bug marker pattern, we expect no diagnostic to be generated. You
+  /// can also use "// BUG: Diagnostic matches: X" in tandem with `expectErrorMessage("X", "foo")`
+  /// to allow you to programmatically construct the error message.
+  ///
+  /// @param path a path for the source file
+  /// @param lines the content of the source file
   // TODO(eaftan): We could eliminate this path parameter and just infer the path from the
   // package and class name
   @CanIgnoreReturnValue
@@ -192,19 +182,17 @@ public final class CompilationTestHelper {
     return this;
   }
 
-  /**
-   * Adds a source file to the test compilation, from an existing resource file.
-   *
-   * <p>See {@link #addSourceLines} for how expected diagnostics should be specified.
-   *
-   * <p>For most uses, {@link #addSourceLines} is preferred. Using separate source files to denote
-   * positive/negative examples tends to bloat individual tests. Prefer writing smaller tests using
-   * {@link #addSourceLines} which test a single behaviour in isolation.
-   *
-   * @param path the path to the source file
-   * @deprecated prefer {@link #addSourceLines}. Declaring tests in the same file using text blocks
-   *     is more readable, as it encourages writing small, focussed tests.
-   */
+  /// Adds a source file to the test compilation, from an existing resource file.
+  ///
+  /// See [#addSourceLines] for how expected diagnostics should be specified.
+  ///
+  /// For most uses, [#addSourceLines] is preferred. Using separate source files to denote
+  /// positive/negative examples tends to bloat individual tests. Prefer writing smaller tests using
+  /// [#addSourceLines] which test a single behaviour in isolation.
+  ///
+  /// @param path the path to the source file
+  /// @deprecated prefer [#addSourceLines]. Declaring tests in the same file using text blocks is
+  ///   more readable, as it encourages writing small, focussed tests.
   @Deprecated
   @CanIgnoreReturnValue
   public CompilationTestHelper addSourceFile(String path) {
@@ -212,13 +200,11 @@ public final class CompilationTestHelper {
     return this;
   }
 
-  /**
-   * Sets the classpath for the test compilation, overriding the default of using the runtime
-   * classpath of the test execution. This is useful to verify correct behavior when the classpath
-   * is incomplete.
-   *
-   * @param classes the class(es) to use as the classpath
-   */
+  /// Sets the classpath for the test compilation, overriding the default of using the runtime
+  /// classpath of the test execution. This is useful to verify correct behavior when the classpath
+  /// is incomplete.
+  ///
+  /// @param classes the class(es) to use as the classpath
   @CanIgnoreReturnValue
   public CompilationTestHelper withClasspath(Class<?>... classes) {
     this.overrideClasspath = ImmutableList.copyOf(classes);
@@ -233,19 +219,15 @@ public final class CompilationTestHelper {
             .collect(toImmutableList()));
   }
 
-  /**
-   * Sets custom command-line arguments for the compilation. These will be appended to the default
-   * compilation arguments.
-   */
+  /// Sets custom command-line arguments for the compilation. These will be appended to the default
+  /// compilation arguments.
   @CanIgnoreReturnValue
   public CompilationTestHelper setArgs(String... args) {
     return setArgs(asList(args));
   }
 
-  /**
-   * Sets custom command-line arguments for the compilation. These will be appended to the default
-   * compilation arguments.
-   */
+  /// Sets custom command-line arguments for the compilation. These will be appended to the default
+  /// compilation arguments.
   @CanIgnoreReturnValue
   public CompilationTestHelper setArgs(List<String> args) {
     checkState(
@@ -257,66 +239,57 @@ public final class CompilationTestHelper {
     return this;
   }
 
-  /** Configures the compilation to treat the code as test-only. Off by default. */
+  /// Configures the compilation to treat the code as test-only. Off by default.
   @CanIgnoreReturnValue
   public CompilationTestHelper setTestOnly() {
     this.testOnly = true;
     return this;
   }
 
-  /**
-   * Tells the compilation helper to expect that no diagnostics will be generated, even if the
-   * source file contains bug markers. Useful for testing that a check is actually disabled when the
-   * proper command-line argument is passed.
-   */
+  /// Tells the compilation helper to expect that no diagnostics will be generated, even if the
+  /// source file contains bug markers. Useful for testing that a check is actually disabled when
+  /// the proper command-line argument is passed.
   @CanIgnoreReturnValue
   public CompilationTestHelper expectNoDiagnostics() {
     this.expectNoDiagnostics = true;
     return this;
   }
 
-  /**
-   * By default, the compilation helper will only inspect diagnostics generated by the check being
-   * tested. This behaviour can be disabled to test the interaction between Error Prone checks and
-   * javac diagnostics.
-   */
+  /// By default, the compilation helper will only inspect diagnostics generated by the check being
+  /// tested. This behaviour can be disabled to test the interaction between Error Prone checks and
+  /// javac diagnostics.
   @CanIgnoreReturnValue
   public CompilationTestHelper matchAllDiagnostics() {
     this.lookForCheckNameInDiagnostic = LookForCheckNameInDiagnostic.NO;
     return this;
   }
 
-  /**
-   * Tells the compilation helper to expect a specific result from the compilation, e.g. success or
-   * failure.
-   */
+  /// Tells the compilation helper to expect a specific result from the compilation, e.g. success or
+  /// failure.
   @CanIgnoreReturnValue
   public CompilationTestHelper expectResult(Result result) {
     expectedResult = Optional.of(result);
     return this;
   }
 
-  /**
-   * Expects an error message matching {@code matcher} at the line below a comment matching the key.
-   * For example, given the source
-   *
-   * <pre>
-   *   // BUG: Diagnostic matches: X
-   *   a = b + c;
-   * </pre>
-   *
-   * ... you can use {@code expectErrorMessage("X", Predicates.containsPattern("Can't add b to
-   * c"));}
-   *
-   * <p>Error message keys that don't match any diagnostics will cause test to fail.
-   */
+  /// Expects an error message matching `matcher` at the line below a comment matching the key. For
+  /// example, given the source
+  ///
+  /// ```
+  ///   // BUG: Diagnostic matches: X
+  ///   a = b + c;
+  /// ```
+  ///
+  /// ... you can use `expectErrorMessage("X", Predicates.containsPattern("Can't add b to c"));`
+  ///
+  /// Error message keys that don't match any diagnostics will cause test to fail.
   @CanIgnoreReturnValue
   public CompilationTestHelper expectErrorMessage(String key, Predicate<? super String> matcher) {
     diagnosticHelper.expectErrorMessage(key, matcher);
     return this;
   }
 
-  /** Performs a compilation and checks that the diagnostics and result match the expectations. */
+  /// Performs a compilation and checks that the diagnostics and result match the expectations.
   public void doTest() {
     checkState(!sources.isEmpty(), "No source files to compile");
     checkState(!run, "doTest should only be called once");

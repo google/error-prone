@@ -23,11 +23,9 @@ import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCSynchronized;
 
-/**
- * {@link UTree} representation of a {@link SynchronizedTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] representation of a [SynchronizedTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class USynchronized extends USimpleStatement implements SynchronizedTree {
   public static USynchronized create(UExpression expression, UBlock block) {

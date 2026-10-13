@@ -31,11 +31,9 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
 
-/**
- * Matches classes that have two or more constructors annotated with @Inject.
- *
- * @author sgoldfeder@google.com (Steven Goldfeder)
- */
+/// Matches classes that have two or more constructors annotated with @Inject.
+///
+/// @author sgoldfeder@google.com (Steven Goldfeder)
 @BugPattern(
     summary =
         "This class has more than one @Inject-annotated constructor. Please remove the @Inject"

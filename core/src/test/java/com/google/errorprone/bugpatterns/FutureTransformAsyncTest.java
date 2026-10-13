@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link FutureTransformAsync}. */
+/// Unit tests for [FutureTransformAsync].
 @RunWith(JUnit4.class)
 public class FutureTransformAsyncTest {
   private final CompilationTestHelper compilationHelper =

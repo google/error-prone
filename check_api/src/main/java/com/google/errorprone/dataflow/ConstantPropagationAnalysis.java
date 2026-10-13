@@ -22,17 +22,15 @@ import org.checkerframework.errorprone.dataflow.constantpropagation.Constant;
 import org.checkerframework.errorprone.dataflow.constantpropagation.ConstantPropagationTransfer;
 import org.jspecify.annotations.Nullable;
 
-/** An interface to the constant propagation analysis. */
+/// An interface to the constant propagation analysis.
 public final class ConstantPropagationAnalysis {
 
   private static final ConstantPropagationTransfer CONSTANT_PROPAGATION =
       new ConstantPropagationTransfer();
 
-  /**
-   * Returns the value of the leaf of {@code exprPath}, if it is determined to be a constant (always
-   * evaluates to the same numeric value), and null otherwise. Note that returning null does not
-   * necessarily mean the expression is *not* a constant.
-   */
+  /// Returns the value of the leaf of `exprPath`, if it is determined to be a constant (always
+  /// evaluates to the same numeric value), and null otherwise. Note that returning null does not
+  /// necessarily mean the expression is *not* a constant.
   public static @Nullable Number numberValue(TreePath exprPath, Context context) {
     Constant val = DataFlow.expressionDataflow(exprPath, context, CONSTANT_PROPAGATION);
     if (val == null || !val.isConstant()) {

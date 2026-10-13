@@ -23,11 +23,9 @@ import com.sun.tools.javac.tree.JCTree.JCLabeledStatement;
 import com.sun.tools.javac.util.Name;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@code UTree} representation of a {@code LabeledStatementTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of a `LabeledStatementTree`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class ULabeledStatement extends USimpleStatement implements LabeledStatementTree {
   static ULabeledStatement create(CharSequence label, UStatement statement) {
@@ -40,10 +38,8 @@ abstract class ULabeledStatement extends USimpleStatement implements LabeledStat
     }
   }
 
-  /**
-   * Returns either the {@code Name} bound to the specified label, or a {@code Name} representing
-   * the original label if none is already bound.
-   */
+  /// Returns either the `Name` bound to the specified label, or a `Name` representing the original
+  /// label if none is already bound.
   static @Nullable Name inlineLabel(@Nullable CharSequence label, Inliner inliner) {
     return (label == null)
         ? null

@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link MisusedDayOfYear}. */
+/// Tests for [MisusedDayOfYear].
 @RunWith(JUnit4.class)
 public final class MisusedDayOfYearTest {
   private final CompilationTestHelper helper =

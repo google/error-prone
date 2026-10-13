@@ -56,7 +56,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-/** This check suggests the use of {@code java.time}-based APIs, when available. */
+/// This check suggests the use of `java.time`-based APIs, when available.
 @BugPattern(
     altNames = {"PreferDurationOverload"},
     summary =

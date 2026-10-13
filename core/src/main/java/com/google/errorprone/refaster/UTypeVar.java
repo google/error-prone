@@ -26,22 +26,20 @@ import com.sun.tools.javac.code.Type.TypeVar;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@link UType} version of {@link TypeVar}.
- *
- * @author Louis Wasserman
- */
+/// [UType] version of [TypeVar].
+///
+/// @author Louis Wasserman
 public final class UTypeVar extends UType {
   // This can't be @AutoValue'd, since the fields are mutable.
 
-  /** Bindings key linked to a {@code UTypeVar}. */
+  /// Bindings key linked to a `UTypeVar`.
   public static final class Key extends Bindings.Key<TypeWithExpression> {
     public Key(CharSequence name) {
       super(name.toString());
     }
   }
 
-  /** Tuple of an expression with an associated type. */
+  /// Tuple of an expression with an associated type.
   @AutoValue
   public abstract static class TypeWithExpression implements Inlineable<JCExpression> {
     public static TypeWithExpression create(Type type, JCExpression expression) {
@@ -112,16 +110,12 @@ public final class UTypeVar extends UType {
     return upperBound;
   }
 
-  /**
-   * @param lowerBound the lowerBound to set
-   */
+  /// @param lowerBound the lowerBound to set
   public void setLowerBound(UType lowerBound) {
     this.lowerBound = checkNotNull(lowerBound);
   }
 
-  /**
-   * @param upperBound the upperBound to set
-   */
+  /// @param upperBound the upperBound to set
   public void setUpperBound(UType upperBound) {
     this.upperBound = checkNotNull(upperBound);
   }

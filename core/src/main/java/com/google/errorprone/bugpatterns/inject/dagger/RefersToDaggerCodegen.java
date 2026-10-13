@@ -34,9 +34,7 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 
-/**
- * Checks that the only code that refers to Dagger generated code is other Dagger generated code.
- */
+/// Checks that the only code that refers to Dagger generated code is other Dagger generated code.
 @BugPattern(
     summary = "Don't refer to Dagger's internal or generated code",
     severity = SeverityLevel.ERROR)
@@ -50,10 +48,8 @@ public final class RefersToDaggerCodegen extends BugChecker implements MethodInv
   private static final ImmutableSet<String> GENERATED_BASE_TYPES =
       ImmutableSet.of("dagger.internal.Factory", "dagger.producers.internal.AbstractProducer");
 
-  /**
-   * Dagger 1 does not add an @Generated annotation, but it's code should still be able to refer to
-   * {@code dagger.internal} APIs.
-   */
+  /// Dagger 1 does not add an @Generated annotation, but it's code should still be able to refer to
+  /// `dagger.internal` APIs.
   private static final ImmutableSet<String> DAGGER_1_GENERATED_BASE_TYPES =
       ImmutableSet.of("dagger.internal.Binding", "dagger.internal.ModuleAdapter");
 

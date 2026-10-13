@@ -23,11 +23,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link ProtoBuilderReturnValueIgnored} bugpattern.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Tests for [ProtoBuilderReturnValueIgnored] bugpattern.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @RunWith(JUnit4.class)
 public final class ProtoBuilderReturnValueIgnoredTest {
   private final CompilationTestHelper helper =

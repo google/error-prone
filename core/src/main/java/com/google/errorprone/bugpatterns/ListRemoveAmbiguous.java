@@ -46,7 +46,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Objects;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Ambiguous call to List.remove; clarify if index-based or value-based removal was intended"

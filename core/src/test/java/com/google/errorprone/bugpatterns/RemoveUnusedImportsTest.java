@@ -21,9 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author gak@google.com (Gregory Kick)
- */
+/// @author gak@google.com (Gregory Kick)
 @RunWith(JUnit4.class)
 @SuppressWarnings("MisformattedTestData") // some intentional unused imports in input data!
 public class RemoveUnusedImportsTest {

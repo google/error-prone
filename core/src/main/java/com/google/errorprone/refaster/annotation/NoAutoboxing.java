@@ -21,12 +21,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Indicates that a Refaster rule should not allow autoboxing or autounboxing when it is
- * typechecking a match.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Indicates that a Refaster rule should not allow autoboxing or autounboxing when it is
+/// typechecking a match.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.SOURCE)
 @RequiredAnnotation(BeforeTemplate.class)

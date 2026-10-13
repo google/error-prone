@@ -29,7 +29,7 @@ import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Avoid using `var` with primitive types. Explicit primitive type names are short and"

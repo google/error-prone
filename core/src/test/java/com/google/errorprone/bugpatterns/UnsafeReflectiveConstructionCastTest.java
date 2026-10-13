@@ -22,11 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link UnsafeReflectiveConstructionCast} bug pattern.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Unit tests for [UnsafeReflectiveConstructionCast] bug pattern.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @RunWith(JUnit4.class)
 public class UnsafeReflectiveConstructionCastTest {
   private final BugCheckerRefactoringTestHelper testHelper =

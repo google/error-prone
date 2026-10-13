@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Prefer calling overloads that accept a Charset over those that accept a String"
@@ -113,10 +113,8 @@ public final class PreferCharsetOverload extends BugChecker
     return fix != null ? describeMatch(tree, fix) : Description.NO_MATCH;
   }
 
-  /**
-   * Identifies indices of String parameters in the given method that are likely to represent a
-   * charset or encoding.
-   */
+  /// Identifies indices of String parameters in the given method that are likely to represent a
+  /// charset or encoding.
   private static ImmutableList<Integer> findCharsetCandidates(
       MethodSymbol methodSymbol, VisitorState state) {
     // Skip methods/constructors with synthetic parameter names (e.g. inner-class constructor
@@ -140,11 +138,9 @@ public final class PreferCharsetOverload extends BugChecker
     return candidateIndicesBuilder.build();
   }
 
-  /**
-   * Generates a {@link SuggestedFix} to call the {@code bestOverload} instead of the original
-   * method, by converting the string arguments at {@code candidateIndices} to Charset types.
-   * Returns null if no fix can be generated.
-   */
+  /// Generates a [SuggestedFix] to call the `bestOverload` instead of the original method, by
+  /// converting the string arguments at `candidateIndices` to Charset types. Returns null if no fix
+  /// can be generated.
   private static @Nullable SuggestedFix buildFix(
       List<? extends ExpressionTree> arguments,
       MethodSymbol bestOverload,
@@ -190,10 +186,8 @@ public final class PreferCharsetOverload extends BugChecker
         .orElse(null);
   }
 
-  /**
-   * Checks if the given {@code candidate} method is a valid {@code Charset}-based overload of the
-   * given {@code methodSymbol}.
-   */
+  /// Checks if the given `candidate` method is a valid `Charset`-based overload of the given
+  /// `methodSymbol`.
   private static boolean isValidCharsetOverload(
       MethodSymbol candidate,
       MethodSymbol methodSymbol,
@@ -244,7 +238,7 @@ public final class PreferCharsetOverload extends BugChecker
         && isSameType(candidate.getReturnType(), methodSymbol.getReturnType(), state);
   }
 
-  /** Counts the number of candidate parameters that are Charset types in the given method. */
+  /// Counts the number of candidate parameters that are Charset types in the given method.
   private static int countCharsetParams(
       MethodSymbol method, ImmutableList<Integer> indices, VisitorState state) {
     int count = 0;
@@ -258,22 +252,16 @@ public final class PreferCharsetOverload extends BugChecker
     return count;
   }
 
-  /**
-   * Suggests a replacement strategy for a String argument to convert it to a Charset.
-   *
-   * <p>The replacement strategy is as follows:
-   *
-   * <ol>
-   *   <li>static import {@code StandardCharsets} constants (e.g., {@code UTF_8}, {@code
-   *       ISO_8859_1}, etc.)
-   *   <li>unwrap decomposed {@code Charset} calls (e.g., {@code charset.name()}, {@code
-   *       charset.displayName()}, etc.)
-   *   <li>fallback to {@code Charset.forName()}
-   * </ol>
-   *
-   * @return true if a replacement was successfully added to the {@code fix} builder, or false if no
-   *     fix could be determined (e.g., for null literals).
-   */
+  /// Suggests a replacement strategy for a String argument to convert it to a Charset.
+  ///
+  /// The replacement strategy is as follows:
+  ///
+  /// 1. static import `StandardCharsets` constants (e.g., `UTF_8`, `ISO_8859_1`, etc.)
+  /// 1. unwrap decomposed `Charset` calls (e.g., `charset.name()`, `charset.displayName()`, etc.)
+  /// 1. fallback to `Charset.forName()`
+  ///
+  /// @return true if a replacement was successfully added to the `fix` builder, or false if no fix
+  ///   could be determined (e.g., for null literals).
   private static boolean suggestParamFix(
       ExpressionTree stringExpr, VisitorState state, SuggestedFix.Builder fix) {
     if (stringExpr.getKind() == Kind.NULL_LITERAL) {
@@ -297,10 +285,8 @@ public final class PreferCharsetOverload extends BugChecker
     return true;
   }
 
-  /**
-   * Returns the name of the {@link java.nio.charset.StandardCharsets} constant if the given charset
-   * name matches a known standard charset (otherwise returns {@code null}).
-   */
+  /// Returns the name of the [java.nio.charset.StandardCharsets] constant if the given charset name
+  /// matches a known standard charset (otherwise returns `null`).
   private static @Nullable String getStandardCharsetConstant(@Nullable String charsetName) {
     if (charsetName == null) {
       return null;

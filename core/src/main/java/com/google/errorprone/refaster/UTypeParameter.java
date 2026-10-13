@@ -26,11 +26,9 @@ import com.sun.source.tree.TypeParameterTree;
 import com.sun.tools.javac.tree.JCTree.JCTypeParameter;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@code UTree} representation of a {@code TypeParameterTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of a `TypeParameterTree`.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 abstract class UTypeParameter extends UTree<JCTypeParameter> implements TypeParameterTree {
   @VisibleForTesting

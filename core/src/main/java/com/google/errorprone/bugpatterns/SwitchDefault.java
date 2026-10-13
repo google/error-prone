@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "The default case of a switch should appear at the end of the last statement group",
     tags = BugPattern.StandardTags.STYLE,

@@ -41,61 +41,57 @@ import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
 import org.jspecify.annotations.Nullable;
 
-/** Shared constants and utility methods for {@code TestParameterInjector} checks. */
+/// Shared constants and utility methods for `TestParameterInjector` checks.
 final class TestParameterInjectorUtils {
 
-  /** Fully qualified name of {@code TestParameterInjector}. */
+  /// Fully qualified name of `TestParameterInjector`.
   static final String TEST_PARAMETER_INJECTOR =
       "com.google.testing.junit.testparameterinjector.TestParameterInjector";
 
-  /** Fully qualified name of {@code @TestParameter}. */
+  /// Fully qualified name of `@TestParameter`.
   static final String TEST_PARAMETER =
       "com.google.testing.junit.testparameterinjector.TestParameter";
 
-  /** Fully qualified name of {@code @TestParameters}. */
+  /// Fully qualified name of `@TestParameters`.
   static final String TEST_PARAMETERS =
       "com.google.testing.junit.testparameterinjector.TestParameters";
 
-  /** Binary name of {@code @TestParameters.RepeatedTestParameters}. */
+  /// Binary name of `@TestParameters.RepeatedTestParameters`.
   static final String REPEATED_TEST_PARAMETERS = TEST_PARAMETERS + "$RepeatedTestParameters";
 
-  /** Supplies the {@code @TestParameter} annotation {@link Type}. */
+  /// Supplies the `@TestParameter` annotation [Type].
   static final Supplier<Type> TEST_PARAMETER_TYPE = typeFromString(TEST_PARAMETER);
 
-  /** Supplies the {@code @TestParameters} annotation {@link Type}. */
+  /// Supplies the `@TestParameters` annotation [Type].
   static final Supplier<Type> TEST_PARAMETERS_TYPE = typeFromString(TEST_PARAMETERS);
 
-  /** Supplies the {@code @TestParameters.RepeatedTestParameters} annotation {@link Type}. */
+  /// Supplies the `@TestParameters.RepeatedTestParameters` annotation [Type].
   static final Supplier<Type> REPEATED_TEST_PARAMETERS_TYPE =
       typeFromString(TEST_PARAMETERS + ".RepeatedTestParameters");
 
-  /** Lowercase string representations of both boolean values. */
+  /// Lowercase string representations of both boolean values.
   static final ImmutableSet<String> BOOLEAN_VALUES = ImmutableSet.of("true", "false");
 
-  /** Returns {@code true} if {@code type} is primitive {@code boolean} or boxed {@code Boolean}. */
+  /// Returns `true` if `type` is primitive `boolean` or boxed `Boolean`.
   static boolean isBooleanType(@Nullable Type type, VisitorState state) {
     return type != null
         && isSameType(unboxedTypeOrType(type, state), state.getSymtab().booleanType, state);
   }
 
-  /** Returns {@code true} if {@code type} is an enum type. */
+  /// Returns `true` if `type` is an enum type.
   static boolean isEnumType(@Nullable Type type) {
     return type != null && type.tsym != null && type.tsym.isEnum();
   }
 
-  /**
-   * Returns {@code true} if {@code values} contains {@code "true"} and {@code "false"}
-   * (case-insensitively, in either order) and nothing else.
-   */
+  /// Returns `true` if `values` contains `"true"` and `"false"` (case-insensitively, in either
+  /// order) and nothing else.
   static boolean isExhaustiveBooleanValues(List<String> values) {
     return values.size() == 2
         && values.stream().map(Ascii::toLowerCase).collect(toImmutableSet()).equals(BOOLEAN_VALUES);
   }
 
-  /**
-   * Returns {@code true} if {@code values} exhaustively covers all values of {@code type} (for a
-   * {@code boolean}/{@code Boolean} or {@code Enum} type).
-   */
+  /// Returns `true` if `values` exhaustively covers all values of `type` (for a `boolean`/`Boolean`
+  /// or `Enum` type).
   static boolean isExhaustiveValues(@Nullable Type type, List<String> values, VisitorState state) {
     if (isBooleanType(type, state)) {
       return isExhaustiveBooleanValues(values);
@@ -107,20 +103,15 @@ final class TestParameterInjectorUtils {
     return false;
   }
 
-  /**
-   * Extracted {@code value} strings and annotation trees from one or more {@code @TestParameters}
-   * annotations on a method.
-   */
+  /// Extracted `value` strings and annotation trees from one or more `@TestParameters` annotations
+  /// on a method.
   record TestParametersAnnotations(
       ImmutableList<String> values, ImmutableList<AnnotationTree> annotationsToRemove) {}
 
-  /**
-   * Extracts all {@code value} strings and annotation trees from {@code @TestParameters}
-   * annotations on {@code methodTree}. Returns {@link Optional#empty()} if there are none, if any
-   * {@code @TestParameters.RepeatedTestParameters} annotation is present, or if any
-   * {@code @TestParameters} annotation specifies attributes other than {@code value} (such as
-   * {@code customName}).
-   */
+  /// Extracts all `value` strings and annotation trees from `@TestParameters` annotations on
+  /// `methodTree`. Returns [Optional#empty()] if there are none, if any
+  /// `@TestParameters.RepeatedTestParameters` annotation is present, or if any `@TestParameters`
+  /// annotation specifies attributes other than `value` (such as `customName`).
   static Optional<TestParametersAnnotations> extractTestParametersAnnotations(
       MethodTree methodTree, VisitorState state) {
     ImmutableList.Builder<String> values = ImmutableList.builder();
@@ -153,11 +144,9 @@ final class TestParameterInjectorUtils {
         : Optional.of(new TestParametersAnnotations(values.build(), toRemove));
   }
 
-  /**
-   * Returns the explicit string values if {@code tree} is a {@code @TestParameter} annotation with
-   * only the {@code value} attribute specified. Returns an empty list if no arguments are present,
-   * or if other attributes (like {@code valuesProvider}) are present.
-   */
+  /// Returns the explicit string values if `tree` is a `@TestParameter` annotation with only the
+  /// `value` attribute specified. Returns an empty list if no arguments are present, or if other
+  /// attributes (like `valuesProvider`) are present.
   static ImmutableList<String> getExplicitTestParameterValues(
       AnnotationTree tree, VisitorState state) {
     if (tree.getArguments().isEmpty()) {
@@ -173,7 +162,7 @@ final class TestParameterInjectorUtils {
     return MoreAnnotations.getStrings(attribute, "value");
   }
 
-  /** Returns the replacement source for an implicit {@code @TestParameter} without arguments. */
+  /// Returns the replacement source for an implicit `@TestParameter` without arguments.
   static String implicitTestParameterAnnotation(AnnotationTree tree, VisitorState state) {
     return "@" + state.getSourceForNode(tree.getAnnotationType());
   }

@@ -22,14 +22,12 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-/** Utilities for checks that work with regexes. */
+/// Utilities for checks that work with regexes.
 public final class Regexes {
 
-  /**
-   * A map of regex constructs to escape characters we can translate to a literal. Note that '\b'
-   * doesn't appear here because '\b' in a regex means wordbreak and '\b' a as literal means
-   * backspace.
-   */
+  /// A map of regex constructs to escape characters we can translate to a literal. Note that '\b'
+  /// doesn't appear here because '\b' in a regex means wordbreak and '\b' a as literal means
+  /// backspace.
   private static final ImmutableMap<Character, Character> REGEXCHAR_TO_LITERALCHAR =
       new ImmutableMap.Builder<Character, Character>()
           .put('t', '\t')
@@ -40,11 +38,9 @@ public final class Regexes {
 
   private static final CharMatcher UNESCAPED_CONSTRUCT = CharMatcher.anyOf("[].^$?*+{}()|");
 
-  /**
-   * If the given regexes matches exactly one string, returns that string. Otherwise returns {@code
-   * null}. This can be used to identify arguments to e.g. {@code String.replaceAll} that don't need
-   * to be regexes.
-   */
+  /// If the given regexes matches exactly one string, returns that string. Otherwise returns
+  /// `null`. This can be used to identify arguments to e.g. `String.replaceAll` that don't need to
+  /// be regexes.
   public static Optional<String> convertRegexToLiteral(String s) {
     try {
       Pattern.compile(s);

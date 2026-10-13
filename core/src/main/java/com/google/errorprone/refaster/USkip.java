@@ -20,11 +20,9 @@ import com.sun.source.tree.EmptyStatementTree;
 import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.tree.JCTree.JCSkip;
 
-/**
- * A {@link UTree} representation of an {@link EmptyStatementTree}
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// A [UTree] representation of an [EmptyStatementTree]
+///
+/// @author lowasser@google.com (Louis Wasserman)
 final class USkip extends USimpleStatement implements EmptyStatementTree {
   public static final USkip INSTANCE = new USkip();
 

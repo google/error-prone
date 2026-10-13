@@ -26,20 +26,16 @@ import com.sun.tools.javac.code.Symbol.PackageSymbol;
 import com.sun.tools.javac.util.Name;
 import java.util.Optional;
 
-/**
- * A rule that enables checking for methods belonging to a set of packages or any of their
- * subpackages.
- */
+/// A rule that enables checking for methods belonging to a set of packages or any of their
+/// subpackages.
 // TODO(chaorenl): Why does this have METHOD scope in addition to ENCLOSING_ELEMENTS, when it only
 // ever considers packages?
 public final class PackagesRule extends SymbolRule<VisitorState, Symbol> {
 
-  /**
-   * Returns a new rule using the given package {@code patterns}. Each pattern string must either be
-   * the fully qualified name of a package (to enable checking for methods in that package and its
-   * subpackages) or a {@code -} character followed by the fully qualified name of a package (to
-   * disable checking for methods in that package and its subpackages).
-   */
+  /// Returns a new rule using the given package `patterns`. Each pattern string must either be the
+  /// fully qualified name of a package (to enable checking for methods in that package and its
+  /// subpackages) or a `-` character followed by the fully qualified name of a package (to disable
+  /// checking for methods in that package and its subpackages).
   public static PackagesRule fromPatterns(Iterable<String> patterns) {
     return new PackagesRule(ImmutableList.copyOf(patterns));
   }

@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import javax.inject.Inject;
 
-/** Checks for uses of classes, fields, or methods that are not compatible with JDK 8 */
+/// Checks for uses of classes, fields, or methods that are not compatible with JDK 8
 @BugPattern(
     name = "Java8ApiChecker",
     summary = "Use of class, field, or method that is not compatible with JDK 8",

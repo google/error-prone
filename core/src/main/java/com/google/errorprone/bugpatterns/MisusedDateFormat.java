@@ -42,7 +42,7 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.Optional;
 import javax.lang.model.element.ElementKind;
 
-/** Base class for checks which find common errors in date format patterns. */
+/// Base class for checks which find common errors in date format patterns.
 public abstract class MisusedDateFormat extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
 
@@ -79,7 +79,7 @@ public abstract class MisusedDateFormat extends BugChecker
               .forClass(ICU_SIMPLE_DATE_FORMAT)
               .withParameters("java.lang.String", "com.ibm.icu.util.ULocale"));
 
-  /** Matches methods that take a pattern as the first argument. */
+  /// Matches methods that take a pattern as the first argument.
   private static final Matcher<ExpressionTree> PATTERN_MATCHER =
       anyOf(
           instanceMethod().onExactClass(JAVA_SIMPLE_DATE_FORMAT).named("applyPattern"),
@@ -108,10 +108,8 @@ public abstract class MisusedDateFormat extends BugChecker
     return constructDescription(tree, tree.getArguments().getFirst(), state);
   }
 
-  /**
-   * Override this method to provide a rewritten date format pattern from {@code pattern}. An empty
-   * optional indicates that {@code pattern} does not need rewriting.
-   */
+  /// Override this method to provide a rewritten date format pattern from `pattern`. An empty
+  /// optional indicates that `pattern` does not need rewriting.
   abstract Optional<String> rewriteTo(String pattern);
 
   Description constructDescription(Tree tree, ExpressionTree patternArg, VisitorState state) {
@@ -189,10 +187,10 @@ public abstract class MisusedDateFormat extends BugChecker
   }
 
   interface DateFormatConsumer {
-    /** Consumes a literal (escaped) character. */
+    /// Consumes a literal (escaped) character.
     void consumeLiteral(char literal);
 
-    /** Consumes a special (format) character. */
+    /// Consumes a special (format) character.
     void consumeSpecial(char special);
   }
 }

@@ -40,7 +40,7 @@ import com.sun.source.tree.VariableTree;
 import java.util.List;
 import javax.inject.Inject;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "The lambda passed to assertThrows should contain exactly one statement",
     severity = SeverityLevel.WARNING)

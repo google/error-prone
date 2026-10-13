@@ -30,7 +30,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-/** Utilities for working with TypeMirrors in bug checkers. */
+/// Utilities for working with TypeMirrors in bug checkers.
 final class ProcessingEnvUtils {
 
   static final Supplier<Type> TYPE_MIRROR_TYPE = typeFromString("javax.lang.model.type.TypeMirror");

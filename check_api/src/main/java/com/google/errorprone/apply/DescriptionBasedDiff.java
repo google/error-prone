@@ -32,14 +32,12 @@ import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
-/**
- * Implementation of a {@link Diff} that performs the modifications that are passed to its {@link
- * #onDescribed} method, with no formatting.
- *
- * <p>If imports are changed, they are resorted as per Google Java style.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Implementation of a [Diff] that performs the modifications that are passed to its [#onDescribed]
+/// method, with no formatting.
+///
+/// If imports are changed, they are resorted as per Google Java style.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 public final class DescriptionBasedDiff implements DescriptionListener, Diff {
 
   private final String sourcePath;

@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link RecordAccessorInCompactConstructor}Test */
+/// [RecordAccessorInCompactConstructor]Test
 @RunWith(JUnit4.class)
 public final class RecordAccessorInCompactConstructorTest {
 

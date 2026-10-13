@@ -24,11 +24,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link UForLoop}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// Tests for [UForLoop].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @RunWith(JUnit4.class)
 public class UForLoopTest extends AbstractUTreeTest {
   @Test

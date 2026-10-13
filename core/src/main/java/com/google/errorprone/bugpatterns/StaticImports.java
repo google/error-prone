@@ -36,34 +36,28 @@ import com.sun.tools.javac.util.Name;
 import java.util.Objects;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Logic for inspecting static imports used by {@link NonCanonicalStaticImport}, {@link
- * NonCanonicalStaticMemberImport}, and {@link UnnecessaryStaticImport}.
- */
+/// Logic for inspecting static imports used by [NonCanonicalStaticImport],
+/// [NonCanonicalStaticMemberImport], and [UnnecessaryStaticImport].
 public final class StaticImports {
 
-  /**
-   * Information about a static import.
-   *
-   * @param importedName The fully qualified name used to import the type (possibly non-canonical).
-   * @param canonicalName The fully-qualified canonical name of the type.
-   * @param simpleName The simple name of the imported member.
-   * @param members The field or variable symbol for a static non-type member import.
-   */
+  /// Information about a static import.
+  ///
+  /// @param importedName The fully qualified name used to import the type (possibly non-canonical).
+  /// @param canonicalName The fully-qualified canonical name of the type.
+  /// @param simpleName The simple name of the imported member.
+  /// @param members The field or variable symbol for a static non-type member import.
   public record StaticImportInfo(
       String importedName,
       String canonicalName,
       Optional<String> simpleName,
       ImmutableSet<Symbol> members) {
-    /**
-     * Returns whether the import is canonical, i.e. the fully qualified name used to import the
-     * type matches the scopes it was declared in.
-     */
+    /// Returns whether the import is canonical, i.e. the fully qualified name used to import the
+    /// type matches the scopes it was declared in.
     public boolean isCanonical() {
       return canonicalName().equals(importedName());
     }
 
-    /** Builds the canonical import statement for the type. */
+    /// Builds the canonical import statement for the type.
     public String importStatement() {
       if (members().isEmpty()) {
         return String.format("import %s;", canonicalName());
@@ -84,11 +78,9 @@ public final class StaticImports {
     }
   }
 
-  /**
-   * Returns a {@link StaticImportInfo} if the given import is a static single-type import. Returns
-   * {@code null} otherwise, e.g. because the import is non-static, or an on-demand import, or
-   * statically imports a field or method.
-   */
+  /// Returns a [StaticImportInfo] if the given import is a static single-type import. Returns
+  /// `null` otherwise, e.g. because the import is non-static, or an on-demand import, or statically
+  /// imports a field or method.
   public static @Nullable StaticImportInfo tryCreate(ImportTree tree, VisitorState state) {
     if (!tree.isStatic()) {
       return null;
@@ -152,10 +144,8 @@ public final class StaticImports {
         members);
   }
 
-  /**
-   * Finds the most canonical type that owns or inherits {@code member} from {@code baseType} and is
-   * accessible from {@code pkg}.
-   */
+  /// Finds the most canonical type that owns or inherits `member` from `baseType` and is accessible
+  /// from `pkg`.
   private static Type canonicalOwner(
       Symbol member, Symbol.TypeSymbol baseType, Types types, Symbol.PackageSymbol pkg) {
     Type memberOwner = types.erasure(member.owner.type);
@@ -170,10 +160,8 @@ public final class StaticImports {
     return owner;
   }
 
-  /**
-   * Looks for a field or method with the given {@code identifier}, in {@code typeSym} or one of its
-   * super-types or super-interfaces, and that is visible from the {@code start} symbol.
-   */
+  /// Looks for a field or method with the given `identifier`, in `typeSym` or one of its
+  /// super-types or super-interfaces, and that is visible from the `start` symbol.
   // TODO(cushon): does javac really not expose this anywhere?
   //
   // Resolve.resolveInternal{Method,Field} almost work, but we don't want

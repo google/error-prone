@@ -32,9 +32,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// @author eaftan@google.com (Eddie Aftandilian)
 @RunWith(JUnit4.class)
 public class CheckReturnValueTest {
 
@@ -761,7 +759,7 @@ class Test {
         .doTest();
   }
 
-  /** Test class containing a method annotated with @CRV. */
+  /// Test class containing a method annotated with @CRV.
   public static final class CRVTest {
     @com.google.errorprone.annotations.CheckReturnValue
     public static int f() {

@@ -38,7 +38,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.TypeTag;
 
-/** Simplifies Boolean.TRUE/FALSE to true/false. */
+/// Simplifies Boolean.TRUE/FALSE to true/false.
 @BugPattern(
     summary = "This expression can be written more clearly with a boolean literal.",
     severity = WARNING)

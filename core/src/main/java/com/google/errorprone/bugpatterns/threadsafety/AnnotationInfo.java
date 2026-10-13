@@ -21,13 +21,11 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.Immutable;
 import java.util.Set;
 
-/**
- * Specifies information about a type which may be a container specified by generic type arguments,
- * e.g. {@link com.google.errorprone.annotations.Immutable}.
- *
- * <p>Useful for providing information for immutable classes we can't easily annotate, e.g. those in
- * the JDK.
- */
+/// Specifies information about a type which may be a container specified by generic type arguments,
+/// e.g. [com.google.errorprone.annotations.Immutable].
+///
+/// Useful for providing information for immutable classes we can't easily annotate, e.g. those in
+/// the JDK.
 @AutoValue
 @Immutable
 public abstract class AnnotationInfo {

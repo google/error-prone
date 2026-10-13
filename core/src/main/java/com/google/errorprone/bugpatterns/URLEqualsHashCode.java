@@ -27,13 +27,11 @@ import com.google.errorprone.suppliers.Supplier;
 import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 
-/**
- * Points out on creation of Set and HashMap of type java.net.URL.
- *
- * <p>equals() and hashCode() of java.net.URL class make blocking internet connections.
- *
- * @author bhagwani@google.com (Sumit Bhagwani)
- */
+/// Points out on creation of Set and HashMap of type java.net.URL.
+///
+/// equals() and hashCode() of java.net.URL class make blocking internet connections.
+///
+/// @author bhagwani@google.com (Sumit Bhagwani)
 @BugPattern(
     summary = URLEqualsHashCode.MESSAGE,
     severity = WARNING,

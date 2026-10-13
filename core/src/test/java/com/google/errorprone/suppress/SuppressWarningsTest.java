@@ -33,11 +33,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for standard {@code @SuppressWarnings} suppression method.
- *
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// Tests for standard `@SuppressWarnings` suppression method.
+///
+/// @author alexeagle@google.com (Alex Eagle)
 @RunWith(JUnit4.class)
 public class SuppressWarningsTest {
   private ErrorProneTestCompiler compiler;

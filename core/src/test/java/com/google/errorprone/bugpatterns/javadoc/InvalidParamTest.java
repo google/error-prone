@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link InvalidParam} bug pattern. */
+/// Unit tests for [InvalidParam] bug pattern.
 @RunWith(JUnit4.class)
 public final class InvalidParamTest {
   private final BugCheckerRefactoringTestHelper refactoring =

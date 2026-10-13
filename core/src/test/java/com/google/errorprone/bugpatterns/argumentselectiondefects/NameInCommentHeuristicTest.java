@@ -36,15 +36,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for NameInCommentHeuristic
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Tests for NameInCommentHeuristic
+///
+/// @author andrewrice@google.com (Andrew Rice)
 @RunWith(JUnit4.class)
 public class NameInCommentHeuristicTest {
 
-  /** A {@link BugChecker} which runs the NameInCommentHeuristic and prints the result */
+  /// A [BugChecker] which runs the NameInCommentHeuristic and prints the result
   @BugPattern(
       severity = SeverityLevel.ERROR,
       summary = "Runs NameInCommentHeuristic and prints the result")

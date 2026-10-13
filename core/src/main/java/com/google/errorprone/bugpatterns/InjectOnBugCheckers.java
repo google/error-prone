@@ -36,7 +36,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.MethodTree;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(severity = WARNING, summary = "BugChecker constructors should be marked @Inject.")
 public final class InjectOnBugCheckers extends BugChecker implements MethodTreeMatcher {
   private static final ClassName BUG_CHECKER = ClassName.of(BugChecker.class.getName());

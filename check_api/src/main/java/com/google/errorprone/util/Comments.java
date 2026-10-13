@@ -40,11 +40,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-/**
- * Utilities for attaching comments to relevant AST nodes
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Utilities for attaching comments to relevant AST nodes
+///
+/// @author andrewrice@google.com (Andrew Rice)
 public final class Comments {
 
   private static final Pattern BLOCK_COMMENT = Pattern.compile("^\\s*/\\*\\s*(.*?)\\s*\\*/\\s*");
@@ -53,17 +51,15 @@ public final class Comments {
   private static final Pattern JAVADOC_BLOCK_COMMENT =
       Pattern.compile("^\\s*/\\*\\*\\s*(.*?)\\s*\\*/\\s*");
 
-  /**
-   * Attach comments to nodes on arguments of constructor calls. Calls such as {@code new Test(
-   * param1 /* c1 *&#47;, /* c2 *&#47; param2)} will attach the comment c1 to {@code param1} and the
-   * comment c2 to {@code param2}.
-   *
-   * <p>Warning: this is expensive to compute as it involves re-tokenizing the source for this node.
-   *
-   * <p>Currently this method will only tokenize the source code of the method call itself. However,
-   * the source positions in the returned {@code Comment} objects are adjusted so that they are
-   * relative to the whole file.
-   */
+  /// Attach comments to nodes on arguments of constructor calls. Calls such as `new Test(param1 /*
+  /// c1 */, /* c2 */ param2)` will attach the comment c1 to `param1` and the comment c2 to
+  /// `param2`.
+  ///
+  /// Warning: this is expensive to compute as it involves re-tokenizing the source for this node.
+  ///
+  /// Currently this method will only tokenize the source code of the method call itself. However,
+  /// the source positions in the returned `Comment` objects are adjusted so that they are relative
+  /// to the whole file.
   public static ImmutableList<Commented> findCommentsForArguments(
       NewClassTree newClassTree, VisitorState state) {
     int startPosition = getStartPosition(newClassTree);
@@ -71,17 +67,14 @@ public final class Comments {
         newClassTree, newClassTree.getArguments(), startPosition, state);
   }
 
-  /**
-   * Attach comments to nodes on arguments of method calls. Calls such as {@code test(param1 /* c1
-   * *&#47;, /* c2 *&#47; param2)} will attach the comment c1 to {@code param1} and the comment c2
-   * to {@code param2}.
-   *
-   * <p>Warning: this is expensive to compute as it involves re-tokenizing the source for this node
-   *
-   * <p>Currently this method will only tokenize the source code of the method call itself. However,
-   * the source positions in the returned {@code Comment} objects are adjusted so that they are
-   * relative to the whole file.
-   */
+  /// Attach comments to nodes on arguments of method calls. Calls such as `test(param1 /* c1 */, /*
+  /// c2 */ param2)` will attach the comment c1 to `param1` and the comment c2 to `param2`.
+  ///
+  /// Warning: this is expensive to compute as it involves re-tokenizing the source for this node
+  ///
+  /// Currently this method will only tokenize the source code of the method call itself. However,
+  /// the source positions in the returned `Comment` objects are adjusted so that they are relative
+  /// to the whole file.
   public static ImmutableList<Commented> findCommentsForArguments(
       MethodInvocationTree methodInvocationTree, VisitorState state) {
     int startPosition = state.getEndPosition(methodInvocationTree.getMethodSelect());
@@ -99,14 +92,12 @@ public final class Comments {
         state);
   }
 
-  /**
-   * Extract the text body from a comment.
-   *
-   * <p>This currently includes asterisks that start lines in the body of block comments. Do not
-   * rely on this behaviour.
-   *
-   * <p>TODO(andrewrice) Update this method to handle block comments properly if we find the need
-   */
+  /// Extract the text body from a comment.
+  ///
+  /// This currently includes asterisks that start lines in the body of block comments. Do not rely
+  /// on this behaviour.
+  ///
+  /// TODO(andrewrice) Update this method to handle block comments properly if we find the need
   public static String getTextFromComment(ErrorProneComment comment) {
     return switch (comment.getStyle()) {
       case BLOCK -> BLOCK_COMMENT.matcher(comment.getText()).replaceAll("$1");
@@ -212,31 +203,29 @@ public final class Comments {
         .collect(toImmutableList());
   }
 
-  /**
-   * Finds the end position of this MethodInvocationTree. This is complicated by the fact that
-   * sometimes a comment will fall outside of the bounds of the tree.
-   *
-   * <p>For example:
-   *
-   * <pre>
-   *   test(arg1,  // comment1
-   *        arg2); // comment2
-   *   int i;
-   * </pre>
-   *
-   * In this case {@code comment2} lies beyond the end of the invocation tree. In order to get the
-   * comment we need the tokenizer to lex the token which follows the invocation ({@code int} in the
-   * example).
-   *
-   * <p>We over-approximate this end position by looking for the next node in the AST and using the
-   * end position of this node.
-   *
-   * <p>As a heuristic we first scan for any {@code /} characters on the same line as the end of the
-   * method invocation. If we don't find any then we use the end of the method invocation as the end
-   * position.
-   *
-   * @return the end position of the tree or Optional.empty if we are unable to calculate it
-   */
+  /// Finds the end position of this MethodInvocationTree. This is complicated by the fact that
+  /// sometimes a comment will fall outside of the bounds of the tree.
+  ///
+  /// For example:
+  ///
+  /// ```
+  ///   test(arg1,  // comment1
+  ///        arg2); // comment2
+  ///   int i;
+  /// ```
+  ///
+  /// In this case `comment2` lies beyond the end of the invocation tree. In order to get the
+  /// comment we need the tokenizer to lex the token which follows the invocation (`int` in the
+  /// example).
+  ///
+  /// We over-approximate this end position by looking for the next node in the AST and using the
+  /// end position of this node.
+  ///
+  /// As a heuristic we first scan for any `/` characters on the same line as the end of the method
+  /// invocation. If we don't find any then we use the end of the method invocation as the end
+  /// position.
+  ///
+  /// @return the end position of the tree or Optional.empty if we are unable to calculate it
   @VisibleForTesting
   static Optional<Integer> computeEndPosition(
       Tree methodInvocationTree, CharSequence sourceCode, VisitorState state) {
@@ -292,12 +281,10 @@ public final class Comments {
     }
   }
 
-  /**
-   * Find the node which (approximately) follows this one in the tree. This works by walking upwards
-   * to find enclosing block (or class) and then looking for the node after the subtree we walked.
-   * If our subtree is the last of the block then we return the node for the block instead, if we
-   * can't find a suitable block we return the parent node.
-   */
+  /// Find the node which (approximately) follows this one in the tree. This works by walking
+  /// upwards to find enclosing block (or class) and then looking for the node after the subtree we
+  /// walked. If our subtree is the last of the block then we return the node for the block instead,
+  /// if we can't find a suitable block we return the parent node.
   private static Tree getNextNodeOrParent(Tree current, VisitorState state) {
     Tree predecessorNode = current;
     TreePath enclosingPath = state.getPath();
@@ -322,14 +309,12 @@ public final class Comments {
     return parent;
   }
 
-  /**
-   * Find the element in the iterable following the target
-   *
-   * @param target is the element to search for
-   * @param iterable is the iterable to search
-   * @param defaultValue will be returned if there is no item following the searched for item
-   * @return the item following {@code target} or {@code defaultValue} if not found
-   */
+  /// Find the element in the iterable following the target
+  ///
+  /// @param target is the element to search for
+  /// @param iterable is the iterable to search
+  /// @param defaultValue will be returned if there is no item following the searched for item
+  /// @return the item following `target` or `defaultValue` if not found
   private static <T> T after(T target, Iterable<? extends T> iterable, T defaultValue) {
     Iterator<? extends T> iterator = iterable.iterator();
     while (iterator.hasNext()) {
@@ -345,7 +330,7 @@ public final class Comments {
     return defaultValue;
   }
 
-  /** This class is used to keep track of state between lines of code when consuming tokens */
+  /// This class is used to keep track of state between lines of code when consuming tokens
   private static class TokenTracker {
 
     private final LineMap lineMap;
@@ -383,14 +368,12 @@ public final class Comments {
     }
   }
 
-  /**
-   * This class is used to keep track of the arguments we are processing. It keeps a window of the
-   * current and previous argument as builders so that more comments can be added to them as we find
-   * them. When we advance everything is shuffled down: the builder for the previous argument is
-   * built and put in the final results list, the builder for the current argument is moved to
-   * previous and a new builder is made for the next argument. We also track the positions of the
-   * current and previous argument so that we know whether a comment occurred before or after it
-   */
+  /// This class is used to keep track of the arguments we are processing. It keeps a window of the
+  /// current and previous argument as builders so that more comments can be added to them as we
+  /// find them. When we advance everything is shuffled down: the builder for the previous argument
+  /// is built and put in the final results list, the builder for the current argument is moved to
+  /// previous and a new builder is made for the next argument. We also track the positions of the
+  /// current and previous argument so that we know whether a comment occurred before or after it
   private static class ArgumentTracker {
 
     private final VisitorState state;
@@ -428,7 +411,7 @@ public final class Comments {
       currentCommentedResultBuilder = Commented.builder().setTree(nextArgument);
     }
 
-    /** Returns the final result. The object should not be used after calling this method */
+    /// Returns the final result. The object should not be used after calling this method
     ImmutableList<Commented> build() {
       if (previousCommentedResultBuilder != null) {
         resultBuilder.add(previousCommentedResultBuilder.build());

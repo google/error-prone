@@ -54,16 +54,12 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Map;
 
-/**
- * Bans calls to {@code javaTimeType.from(temporalAmount)} where the call is guaranteed to either:
- *
- * <ul>
- *   <li>throw a {@code DateTimeException} at runtime (e.g., {@code LocalDate.from(month)})
- *   <li>return the same parameter (e.g., {@code Instant.from(instant)})
- * </ul>
- *
- * @author kak@google.com (Kurt Alfred Kluever)
- */
+/// Bans calls to `javaTimeType.from(temporalAmount)` where the call is guaranteed to either:
+///
+/// - throw a `DateTimeException` at runtime (e.g., `LocalDate.from(month)`)
+/// - return the same parameter (e.g., `Instant.from(instant)`)
+///
+/// @author kak@google.com (Kurt Alfred Kluever)
 @BugPattern(
     summary =
         "Certain combinations of javaTimeType.from(TemporalAccessor) will always throw a"

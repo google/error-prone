@@ -31,7 +31,7 @@ import com.google.errorprone.matchers.Matchers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 
-/** Error prone checking for {@code Duration.getSeconds()} without {@code Duration.getNano()}. */
+/// Error prone checking for `Duration.getSeconds()` without `Duration.getNano()`.
 @BugPattern(
     summary = "Prefer duration.toSeconds() over duration.getSeconds()",
     explanation =

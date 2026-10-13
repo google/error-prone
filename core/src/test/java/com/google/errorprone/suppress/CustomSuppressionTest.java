@@ -29,13 +29,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// @author eaftan@google.com (Eddie Aftandilian)
 @RunWith(JUnit4.class)
 public class CustomSuppressionTest {
 
-  /** Custom suppression annotation for both checkers in this test. */
+  /// Custom suppression annotation for both checkers in this test.
   public @interface SuppressBothCheckers {}
 
   @BugPattern(
@@ -50,7 +48,7 @@ public class CustomSuppressionTest {
     }
   }
 
-  /** Custom suppression annotation for the second checker in this test. */
+  /// Custom suppression annotation for the second checker in this test.
   public @interface SuppressMyChecker2 {}
 
   @BugPattern(

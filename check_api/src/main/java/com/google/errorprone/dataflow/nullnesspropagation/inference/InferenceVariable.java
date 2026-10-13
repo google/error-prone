@@ -16,8 +16,6 @@
 
 package com.google.errorprone.dataflow.nullnesspropagation.inference;
 
-/**
- * Inference variable for nullness qualifier inference, including both proper variables (i.e.
- * constant nullness lattice elements) and variables whose value needs to be inferred.
- */
+/// Inference variable for nullness qualifier inference, including both proper variables (i.e.
+/// constant nullness lattice elements) and variables whose value needs to be inferred.
 interface InferenceVariable {}

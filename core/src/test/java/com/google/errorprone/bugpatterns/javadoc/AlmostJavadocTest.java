@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link AlmostJavadoc} bug pattern. */
+/// Unit tests for [AlmostJavadoc] bug pattern.
 @RunWith(JUnit4.class)
 public final class AlmostJavadocTest {
   private final BugCheckerRefactoringTestHelper refactoring =

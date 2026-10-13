@@ -41,11 +41,9 @@ import java.util.Objects;
 import java.util.function.BiFunction;
 import javax.tools.JavaFileObject;
 
-/**
- * Making our errors appear to the user and break their build.
- *
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// Making our errors appear to the user and break their build.
+///
+/// @author alexeagle@google.com (Alex Eagle)
 public final class JavacErrorDescriptionListener implements DescriptionListener {
   private final Log log;
   private final JavaFileObject sourceFile;

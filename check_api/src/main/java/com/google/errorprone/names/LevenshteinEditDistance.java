@@ -19,43 +19,35 @@ package com.google.errorprone.names;
 import com.google.common.base.Ascii;
 import com.google.common.primitives.Ints;
 
-/**
- * A utility class for finding the Levenshtein edit distance between strings. The edit distance
- * between two strings is the number of deletions, insertions, and substitutions required to
- * transform the source to the target. See <a
- * href="https://en.wikipedia.org/wiki/Levenshtein_distance">
- * https://en.wikipedia.org/wiki/Levenshtein_distance</a>.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// A utility class for finding the Levenshtein edit distance between strings. The edit distance
+/// between two strings is the number of deletions, insertions, and substitutions required to
+/// transform the source to the target. See <https://en.wikipedia.org/wiki/Levenshtein_distance>.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 public final class LevenshteinEditDistance {
 
   private LevenshteinEditDistance() {
     /* disallow instantiation */
   }
 
-  /**
-   * Returns the edit distance between two strings.
-   *
-   * @param source The source string.
-   * @param target The target distance.
-   * @return The edit distance between the source and target string.
-   * @see #getEditDistance(String, String, boolean)
-   */
+  /// Returns the edit distance between two strings.
+  ///
+  /// @param source The source string.
+  /// @param target The target distance.
+  /// @return The edit distance between the source and target string.
+  /// @see #getEditDistance(String, String, boolean)
   public static int getEditDistance(String source, String target) {
     return getEditDistance(source, target, /* caseSensitive= */ true);
   }
 
-  /**
-   * Returns the edit distance between two strings. The algorithm used to calculate this distance
-   * has space requirements of len(source)*len(target).
-   *
-   * @param source The source string.
-   * @param target The target string
-   * @param caseSensitive If true, case is used in comparisons and 'a' != 'A'.
-   * @return The edit distance between the source and target strings.
-   * @see #getEditDistance(String, String)
-   */
+  /// Returns the edit distance between two strings. The algorithm used to calculate this distance
+  /// has space requirements of len(source)*len(target).
+  ///
+  /// @param source The source string.
+  /// @param target The target string
+  /// @param caseSensitive If true, case is used in comparisons and 'a' != 'A'.
+  /// @return The edit distance between the source and target strings.
+  /// @see #getEditDistance(String, String)
   public static int getEditDistance(String source, String target, boolean caseSensitive) {
 
     // Levenshtein distance algorithm
@@ -106,17 +98,15 @@ public final class LevenshteinEditDistance {
     return levMatrix[sourceLength][targetLength];
   }
 
-  /** Calculate the worst case distance between two strings with the given lengths */
+  /// Calculate the worst case distance between two strings with the given lengths
   public static int getWorstCaseEditDistance(int sourceLength, int targetLength) {
     return Math.max(sourceLength, targetLength);
   }
 
-  /**
-   * Determines if a string is empty or consists only of whitespace
-   *
-   * @param source The string to check
-   * @return True if the string is empty or contains only whitespace, false otherwise
-   */
+  /// Determines if a string is empty or consists only of whitespace
+  ///
+  /// @param source The string to check
+  /// @return True if the string is empty or contains only whitespace, false otherwise
   private static boolean isEmptyOrWhitespace(String source) {
     return source == null || source.matches("\\s*");
   }

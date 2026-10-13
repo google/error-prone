@@ -83,7 +83,7 @@ import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.Name;
 
-/** Bugpattern to detect unused declarations. */
+/// Bugpattern to detect unused declarations.
 @BugPattern(
     altNames = {"Unused", "unused", "UnusedParameters"},
     summary = "Unused.",
@@ -97,23 +97,17 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
   private static final Supplier<Type> JUNIT_PARAMS_ANNOTATION_TYPE =
       Suppliers.typeFromString("junitparams.Parameters");
 
-  /**
-   * Class annotations which exempt methods within the annotated class from findings.
-   *
-   * <p>Try to avoid adding more annotations here. Annotating these annotations with {@code @Keep}
-   * has the same effect; this list is chiefly for third-party annotations which cannot be
-   * annotated.
-   */
+  /// Class annotations which exempt methods within the annotated class from findings.
+  ///
+  /// Try to avoid adding more annotations here. Annotating these annotations with `@Keep` has the
+  /// same effect; this list is chiefly for third-party annotations which cannot be annotated.
   private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS =
       ImmutableSet.of("com.google.auto.factory.AutoFactory.AnnotationsToApply");
 
-  /**
-   * The set of types exempting a type that is extending or implementing them.
-   *
-   * <p>Try to avoid adding more annotations here. Annotating these annotations with {@code @Keep}
-   * has the same effect; this list is chiefly for third-party annotations which cannot be
-   * annotated.
-   */
+  /// The set of types exempting a type that is extending or implementing them.
+  ///
+  /// Try to avoid adding more annotations here. Annotating these annotations with `@Keep` has the
+  /// same effect; this list is chiefly for third-party annotations which cannot be annotated.
   private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
 
   private final WellKnownKeep wellKnownKeep;
@@ -319,11 +313,9 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
         return super.visitMethod(tree, null);
       }
 
-      /**
-       * If a method is annotated with @MethodSource, the annotation value refers to another method
-       * that is used reflectively to supply test parameters, so that method should not be
-       * considered unused.
-       */
+      /// If a method is annotated with @MethodSource, the annotation value refers to another method
+      /// that is used reflectively to supply test parameters, so that method should not be
+      /// considered unused.
       private void handleMethodSource(MethodTree tree) {
         MethodSymbol sym = getSymbol(tree);
         var name = ORG_JUNIT_JUPITER_PARAMS_PROVIDER_METHODSOURCE.binaryName(state);

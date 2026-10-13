@@ -30,7 +30,7 @@ import com.sun.source.tree.MethodTree;
 import java.util.Set;
 import javax.lang.model.element.Modifier;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Do not override finalize", severity = WARNING, documentSuppression = false)
 public class Finalize extends BugChecker implements MethodTreeMatcher {
 

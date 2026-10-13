@@ -32,7 +32,7 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 
-/** Predicates for {@link Element} objects related to dependency injection. */
+/// Predicates for [Element] objects related to dependency injection.
 public final class ElementPredicates {
 
   public static boolean isFinalField(Element element) {

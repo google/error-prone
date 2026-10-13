@@ -47,7 +47,7 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Loop condition is never modified in loop body.", severity = ERROR)
 public class LoopConditionChecker extends BugChecker
     implements ForLoopTreeMatcher, DoWhileLoopTreeMatcher, WhileLoopTreeMatcher {
@@ -94,7 +94,7 @@ public class LoopConditionChecker extends BugChecker
         .build();
   }
 
-  /** Scan for loop conditions that are determined entirely by the state of local variables. */
+  /// Scan for loop conditions that are determined entirely by the state of local variables.
   private static class LoopConditionVisitor extends SimpleTreeVisitor<Boolean, Void> {
 
     static ImmutableSet<Symbol.VarSymbol> scan(Tree tree) {
@@ -148,7 +148,7 @@ public class LoopConditionChecker extends BugChecker
     }
   }
 
-  /** Scan for updates to the given variables. */
+  /// Scan for updates to the given variables.
   private static class UpdateScanner extends TreeScanner<Void, Void> {
 
     static boolean scan(Tree tree, ImmutableSet<Symbol.VarSymbol> variables) {

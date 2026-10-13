@@ -41,7 +41,7 @@ import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import javax.lang.model.type.TypeKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Use parentheses to make the precedence explicit", severity = WARNING)
 public class FloatCast extends BugChecker implements TypeCastTreeMatcher {
 

@@ -27,10 +27,7 @@ import com.sun.source.util.TreePath;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import org.jspecify.annotations.Nullable;
 
-/**
- * {@code UMatches} allows conditionally matching a {@code UExpression} predicated by an error-prone
- * {@code Matcher}.
- */
+/// `UMatches` allows conditionally matching a `UExpression` predicated by an error-prone `Matcher`.
 @AutoValue
 abstract class UMatches extends UExpression {
   public static UMatches create(

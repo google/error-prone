@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import com.google.common.collect.ImmutableSet;
 
-/** List of banned methods for {@link BanSerializableRead}. */
+/// List of banned methods for [BanSerializableRead].
 public final class SerializableReads {
   private SerializableReads() {}
 

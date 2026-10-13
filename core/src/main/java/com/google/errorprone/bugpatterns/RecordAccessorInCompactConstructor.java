@@ -34,20 +34,18 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.RecordComponent;
 
-/**
- * Detects when record accessors read uninitialized fields inside a compact constructor. Use the
- * component parameter instead.
- *
- * <p>Example:
- *
- * {@snippet :
- * record R(int x) {
- *   public R {
- *     int y = x(); // BUG: use `x` instead
- *   }
- * }
- * }
- */
+/// Detects when record accessors read uninitialized fields inside a compact constructor. Use the
+/// component parameter instead.
+///
+/// Example:
+///
+/// ```
+/// record R(int x) {
+///   public R {
+///     int y = x(); // BUG: use `x` instead
+///   }
+/// }
+/// ```
 @BugPattern(
     summary =
         "Record accessors read uninitialized fields inside a compact constructor. Use the"

@@ -37,11 +37,9 @@ import com.sun.tools.javac.util.Names;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * {@code UTree} representation of an invocation of a placeholder method.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// `UTree` representation of an invocation of a placeholder method.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class UPlaceholderExpression extends UExpression {
 

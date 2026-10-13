@@ -42,7 +42,7 @@ import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "ThreadLocals should be stored in static fields", severity = WARNING)
 public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher {
 
@@ -92,7 +92,7 @@ public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher 
           "java.lang.Float",
           "java.lang.Double");
 
-  /** Ignore some common ThreadLocal type arguments that are fine to have per-instance copies of. */
+  /// Ignore some common ThreadLocal type arguments that are fine to have per-instance copies of.
   private static boolean wellKnownTypeArgument(NewClassTree tree, VisitorState state) {
     Type type = getType(tree);
     if (type == null) {

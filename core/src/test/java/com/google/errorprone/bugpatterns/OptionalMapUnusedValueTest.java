@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link OptionalMapUnusedValue} bugpattern. */
+/// Tests for [OptionalMapUnusedValue] bugpattern.
 @RunWith(JUnit4.class)
 public final class OptionalMapUnusedValueTest {
   private final BugCheckerRefactoringTestHelper helper =

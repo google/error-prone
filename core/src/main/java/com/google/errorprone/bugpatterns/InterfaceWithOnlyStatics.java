@@ -43,11 +43,9 @@ import com.sun.tools.javac.parser.Tokens.TokenKind;
 import java.util.List;
 import javax.lang.model.element.Modifier;
 
-/**
- * Bugpattern to detect interfaces used only to store static fields/methods.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Bugpattern to detect interfaces used only to store static fields/methods.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary =
         "This interface only contains static fields and methods; consider making it a final class "

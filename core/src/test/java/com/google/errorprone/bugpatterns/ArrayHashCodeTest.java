@@ -21,9 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// @author eaftan@google.com (Eddie Aftandilian)
 @RunWith(JUnit4.class)
 public class ArrayHashCodeTest {
 
@@ -228,7 +226,7 @@ public class ArrayHashCodePositiveCases2 {
         .doTest();
   }
 
-  /** Tests java.util.Objects hashCode methods, which are only in JDK 7 and above. */
+  /// Tests java.util.Objects hashCode methods, which are only in JDK 7 and above.
   @Test
   public void java7NegativeCase() {
     compilationHelper

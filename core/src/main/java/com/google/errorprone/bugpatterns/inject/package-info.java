@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-/**
- * Bug patterns related to <a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency
- * injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>. See the various
- * subpackages for checks related to specific DI frameworks.
- */
+/// Bug patterns related to [dependency
+/// injection](https://en.wikipedia.org/wiki/Dependency_injection) and [JSR
+/// 330](https://jcp.org/en/jsr/detail?id=330). See the various subpackages for checks related to
+/// specific DI frameworks.
 package com.google.errorprone.bugpatterns.inject;

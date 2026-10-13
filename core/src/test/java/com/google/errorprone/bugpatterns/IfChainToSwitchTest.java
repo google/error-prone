@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link IfChainToSwitch}. */
+/// Tests for [IfChainToSwitch].
 @RunWith(JUnit4.class)
 public final class IfChainToSwitchTest {
   private static final String SUIT =
@@ -5860,7 +5860,7 @@ class Test {
         .doTest();
   }
 
-  /** Substitute underscore for {@code unused} variables, if supported. */
+  /// Substitute underscore for `unused` variables, if supported.
   private static String maybeChangeToUnnamedVariable(String s) {
     if (Runtime.version().feature() >= 22) {
       return s.replace(" unused", " _");
@@ -6024,11 +6024,9 @@ class Test {
         .doTest();
   }
 
-  /**
-   * Asserts that there is exactly one suggested fix and returns it.
-   *
-   * <p>Similar to {@code FixChoosers.FIRST}, but also asserts that there is exactly one fix.
-   */
+  /// Asserts that there is exactly one suggested fix and returns it.
+  ///
+  /// Similar to `FixChoosers.FIRST`, but also asserts that there is exactly one fix.
   public static Fix assertOneFixAndChoose(List<Fix> fixes) {
     assertThat(fixes).hasSize(1);
     return fixes.get(0);

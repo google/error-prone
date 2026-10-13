@@ -31,7 +31,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import java.util.Objects;
 
-/** Check for calls to String's {@code foo.substring(0)}. */
+/// Check for calls to String's `foo.substring(0)`.
 @BugPattern(
     summary = "String.substring(0) returns the original String",
     explanation =

@@ -22,11 +22,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link LockNotBeforeTry} bugpattern.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Tests for [LockNotBeforeTry] bugpattern.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @RunWith(JUnit4.class)
 public final class LockNotBeforeTryTest {
   private final CompilationTestHelper compilationHelper =

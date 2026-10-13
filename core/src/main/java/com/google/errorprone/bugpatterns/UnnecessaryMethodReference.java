@@ -44,7 +44,7 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
 
-/** Matches unnecessary uses of method references. */
+/// Matches unnecessary uses of method references.
 @BugPattern(
     severity = SeverityLevel.WARNING,
     summary = "This method reference is unnecessary, and can be replaced with the variable itself.")
@@ -95,13 +95,11 @@ public final class UnnecessaryMethodReference extends BugChecker
             k.matcher().matches(tree, state) && isSubtype(k.targetType().get(state), type, state));
   }
 
-  /**
-   * Methods that we know delegate directly to the abstract method on a functional interface that
-   * they implement.
-   *
-   * <p>That is: the method matched by {@code matcher} delegates to the abstract method on any
-   * supertype of {@code targetType}.
-   */
+  /// Methods that we know delegate directly to the abstract method on a functional interface that
+  /// they implement.
+  ///
+  /// That is: the method matched by `matcher` delegates to the abstract method on any supertype of
+  /// `targetType`.
   private static final ImmutableList<KnownAlias> KNOWN_ALIASES =
       ImmutableList.of(
           KnownAlias.create(

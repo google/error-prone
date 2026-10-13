@@ -36,14 +36,12 @@ import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Set;
 
-/**
- * A representation of an entire Refaster rule, corresponding to a class with @BeforeTemplates
- * and @AfterTemplates.
- *
- * @author lowasser@google.com (Louis Wasserman)
- * @param <M> The type of a match.
- * @param <T> The type of the template used to find matches and generate replacements.
- */
+/// A representation of an entire Refaster rule, corresponding to a class with @BeforeTemplates
+/// and @AfterTemplates.
+///
+/// @author lowasser@google.com (Louis Wasserman)
+/// @param <M> The type of a match.
+/// @param <T> The type of the template used to find matches and generate replacements.
 @AutoValue
 public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M>>
     implements CodeTransformer, Serializable {

@@ -42,7 +42,7 @@ import com.sun.tools.javac.code.Symbol.TypeVariableSymbol;
 import com.sun.tools.javac.parser.Tokens.TokenKind;
 import java.util.List;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     severity = SeverityLevel.WARNING,
     summary = "This type parameter is unused and can be removed.")

@@ -35,9 +35,7 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCMethodInvocation;
 import java.util.List;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// @author eaftan@google.com (Eddie Aftandilian)
 @BugPattern(
     summary = "Passing a primitive array to a varargs method is usually wrong",
     severity = WARNING)
@@ -49,18 +47,16 @@ public class PrimitiveArrayPassedToVarargsMethod extends BugChecker
     return isVarargs(t, state) ? describeMatch(t) : NO_MATCH;
   }
 
-  /**
-   * Assuming the argument in the varargs position is a single one of type {@code int[]}, here is
-   * the truth table:
-   *
-   * <pre>
-   *     Param type    Should return     Why
-   *     int...        false             Exact type match
-   *     int[]...      false             Exact type match for the array element type
-   *     T...          true              Will cause boxing
-   *     Object...     true              Will cause boxing
-   * </pre>
-   */
+  /// Assuming the argument in the varargs position is a single one of type `int[]`, here is the
+  /// truth table:
+  ///
+  /// ```
+  ///     Param type    Should return     Why
+  ///     int...        false             Exact type match
+  ///     int[]...      false             Exact type match for the array element type
+  ///     T...          true              Will cause boxing
+  ///     Object...     true              Will cause boxing
+  /// ```
   private static boolean isVarargs(MethodInvocationTree tree, VisitorState state) {
     MethodSymbol symbol = ASTHelpers.getSymbol(tree);
 

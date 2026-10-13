@@ -50,12 +50,10 @@ import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import org.jspecify.annotations.Nullable;
 
-/**
- * TODO(eaftan): Consider cases where the parent is not a statement or there is no parent?
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- * @author scottjohnson@google.com (Scott Johnson)
- */
+/// TODO(eaftan): Consider cases where the parent is not a statement or there is no parent?
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
+/// @author scottjohnson@google.com (Scott Johnson)
 @BugPattern(summary = "Variable assigned to itself", severity = ERROR)
 public class SelfAssignment extends BugChecker
     implements AssignmentTreeMatcher, VariableTreeMatcher {
@@ -124,10 +122,8 @@ public class SelfAssignment extends BugChecker
     }.visit(expression, null);
   }
 
-  /**
-   * If the given expression is a call to a method checking the nullity of its first parameter, and
-   * otherwise returns that parameter.
-   */
+  /// If the given expression is a call to a method checking the nullity of its first parameter, and
+  /// otherwise returns that parameter.
   private static ExpressionTree stripNullCheck(ExpressionTree expression, VisitorState state) {
     if (expression != null && expression instanceof MethodInvocationTree methodInvocation) {
       if (NON_NULL_MATCHER.matches(methodInvocation, state)) {
@@ -150,21 +146,19 @@ public class SelfAssignment extends BugChecker
     return describeMatch(tree, SuggestedFix.replace(tree, varDeclStr));
   }
 
-  /**
-   * We expect that the lhs is a field and the rhs is an identifier, specifically a parameter to the
-   * method. We base our suggested fixes on this expectation.
-   *
-   * <p>Case 1: If lhs is a field and rhs is an identifier, find a method parameter of the same type
-   * and similar name and suggest it as the rhs. (Guess that they have misspelled the identifier.)
-   *
-   * <p>Case 2: If lhs is a field and rhs is not an identifier, find a method parameter of the same
-   * type and similar name and suggest it as the rhs.
-   *
-   * <p>Case 3: If lhs is not a field and rhs is an identifier, find a class field of the same type
-   * and similar name and suggest it as the lhs.
-   *
-   * <p>Case 4: Otherwise suggest deleting the assignment.
-   */
+  /// We expect that the lhs is a field and the rhs is an identifier, specifically a parameter to
+  /// the method. We base our suggested fixes on this expectation.
+  ///
+  /// Case 1: If lhs is a field and rhs is an identifier, find a method parameter of the same type
+  /// and similar name and suggest it as the rhs. (Guess that they have misspelled the identifier.)
+  ///
+  /// Case 2: If lhs is a field and rhs is not an identifier, find a method parameter of the same
+  /// type and similar name and suggest it as the rhs.
+  ///
+  /// Case 3: If lhs is not a field and rhs is an identifier, find a class field of the same type
+  /// and similar name and suggest it as the lhs.
+  ///
+  /// Case 4: Otherwise suggest deleting the assignment.
   public Description describeForAssignment(AssignmentTree assignmentTree, VisitorState state) {
 
     // the statement that is the parent of the self-assignment expression

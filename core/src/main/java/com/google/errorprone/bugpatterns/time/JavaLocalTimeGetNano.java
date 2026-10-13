@@ -32,10 +32,8 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import java.time.LocalTime;
 
-/**
- * This checker warns about calls to {@link LocalTime#getNano} without a corresponding "nearby" call
- * to {@link LocalTime#getSecond}.
- */
+/// This checker warns about calls to [LocalTime#getNano] without a corresponding "nearby" call to
+/// [LocalTime#getSecond].
 @BugPattern(
     summary =
         "localTime.getNano() only accesses the nanos-of-second field."

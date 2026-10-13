@@ -41,10 +41,8 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol;
 import java.util.List;
 
-/**
- * Flags cases where there is an exception available that could be set as the cause in a log
- * message.
- */
+/// Flags cases where there is an exception available that could be set as the cause in a log
+/// message.
 @BugPattern(
     summary =
         "Setting the caught exception as the cause of the log message may provide more context for"

@@ -42,7 +42,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link CompilationTestHelper}. */
+/// Tests for [CompilationTestHelper].
 @RunWith(JUnit4.class)
 public class CompilationTestHelperTest {
 
@@ -582,7 +582,7 @@ public class CompilationTestHelperTest {
     }
   }
 
-  /** Test classes used for withClassPath tests */
+  /// Test classes used for withClassPath tests
   public static class WithClassPath extends WithClassPathSuper {}
 
   public static class WithClassPathSuper {}
@@ -641,7 +641,7 @@ public class CompilationTestHelperTest {
         .contains("An unhandled exception was thrown by the Error Prone static analysis plugin");
   }
 
-  /** A BugPattern that always throws. */
+  /// A BugPattern that always throws.
   @BugPattern(summary = "A really broken checker.", severity = ERROR)
   public static class AssertionFailingChecker extends BugChecker
       implements CompilationUnitTreeMatcher {

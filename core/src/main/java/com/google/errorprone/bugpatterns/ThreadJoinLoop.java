@@ -45,9 +45,7 @@ import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Type;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * @author mariasam@google.com (Maria Sam)
- */
+/// @author mariasam@google.com (Maria Sam)
 @BugPattern(
     summary =
         "Thread.join needs to be immediately surrounded by a loop until it succeeds. "

@@ -21,11 +21,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Unit tests for {@link SuppressWarningsDeprecated}.
- *
- * @author sjnickerson@google.com (Simon Nickerson)
- */
+/// Unit tests for [SuppressWarningsDeprecated].
+///
+/// @author sjnickerson@google.com (Simon Nickerson)
 @RunWith(JUnit4.class)
 public class SuppressWarningsDeprecatedTest {
 

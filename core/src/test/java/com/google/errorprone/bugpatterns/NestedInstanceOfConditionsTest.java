@@ -21,10 +21,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * @author mariasam@google.com (Maria Sam)
- * @author sulku@google.com (Marsela Sulku)
- */
+/// @author mariasam@google.com (Maria Sam)
+/// @author sulku@google.com (Marsela Sulku)
 @RunWith(JUnit4.class)
 public class NestedInstanceOfConditionsTest {
 

@@ -16,11 +16,9 @@
 
 package com.google.errorprone.dataflow;
 
-/**
- * Read-only access to {@link AccessPathStore} for convenience.
- *
- * @author bennostein@google.com (Benno Stein)
- */
+/// Read-only access to [AccessPathStore] for convenience.
+///
+/// @author bennostein@google.com (Benno Stein)
 public interface AccessPathValues<T> {
   T valueOfAccessPath(AccessPath path, T defaultValue);
 }

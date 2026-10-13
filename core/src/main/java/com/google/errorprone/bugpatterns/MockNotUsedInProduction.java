@@ -61,7 +61,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     severity = WARNING,
     summary =
@@ -122,11 +122,9 @@ public final class MockNotUsedInProduction extends BugChecker
     return NO_MATCH;
   }
 
-  /**
-   * Very crudely deletes every variable or expression statement which contains a reference to
-   * {@code sym}. This is inefficient insofar as we scan the entire file again, but only when
-   * generating a fix.
-   */
+  /// Very crudely deletes every variable or expression statement which contains a reference to
+  /// `sym`. This is inefficient insofar as we scan the entire file again, but only when generating
+  /// a fix.
   private static SuggestedFix generateFix(VarSymbol sym, VisitorState state) {
     ImmutableList.Builder<Range<Integer>> deletions = ImmutableList.builder();
     new TreePathScanner<Void, Void>() {

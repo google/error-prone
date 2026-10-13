@@ -42,16 +42,14 @@ import com.sun.tools.javac.code.Type;
 import java.util.List;
 import org.safere.Pattern;
 
-/**
- * Matchers for the various checkers in this package. They are factored out into this class so that
- * {@code ArgumentSelectionDefectChecker} can avoid reporting duplicate findings that the other
- * checkers would have found
- *
- * @author andrewrice@google.com (Andrew Rice)
- */
+/// Matchers for the various checkers in this package. They are factored out into this class so that
+/// `ArgumentSelectionDefectChecker` can avoid reporting duplicate findings that the other checkers
+/// would have found
+///
+/// @author andrewrice@google.com (Andrew Rice)
 final class Matchers {
 
-  /** Matches if the tree is a constructor for an AutoValue class. */
+  /// Matches if the tree is a constructor for an AutoValue class.
   static boolean isAutoValueConstructor(NewClassTree tree) {
     MethodSymbol sym = getSymbol(tree);
 
@@ -74,16 +72,13 @@ final class Matchers {
     return true;
   }
 
-  /**
-   * If any of the arguments are instances of throwable then abort - people like to use 'expected'
-   * as the name of the exception they are expecting.
-   */
+  /// If any of the arguments are instances of throwable then abort - people like to use 'expected'
+  /// as the name of the exception they are expecting.
   private static final Matcher<MethodInvocationTree> ARGUMENT_EXTENDS_THROWABLE =
       hasArguments(MatchType.AT_LEAST_ONE, isSubtypeOf(Throwable.class));
 
-  /**
-   * If the method is a refaster-before template then it might be explicitly matching bad behaviour.
-   */
+  /// If the method is a refaster-before template then it might be explicitly matching bad
+  /// behaviour.
   private static final Matcher<MethodInvocationTree> METHOD_ANNOTATED_WITH_BEFORETEMPLATE =
       enclosingMethod(hasAnnotation(BEFORE_TEMPLATE_ANNOTATION));
 
@@ -104,7 +99,7 @@ final class Matchers {
         && ASTHelpers.isSameType(parameters.get(1).asType(), parameters.get(2).asType(), state);
   }
 
-  /** Matches if the tree corresponds to an assertEquals-style method */
+  /// Matches if the tree corresponds to an assertEquals-style method
   static final Matcher<MethodInvocationTree> ASSERT_METHOD =
       allOf(
           staticMethod()

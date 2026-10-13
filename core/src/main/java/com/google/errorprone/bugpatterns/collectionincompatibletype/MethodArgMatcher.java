@@ -34,10 +34,8 @@ import java.util.Collection;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Matches an instance method like {@link Collection#contains}, for which we just need to compare
- * the method argument's type to the receiver's type argument. This is the common case.
- */
+/// Matches an instance method like [Collection#contains], for which we just need to compare the
+/// method argument's type to the receiver's type argument. This is the common case.
 final class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
 
   private final Matcher<ExpressionTree> methodMatcher;
@@ -45,14 +43,12 @@ final class MethodArgMatcher extends AbstractCollectionIncompatibleTypeMatcher {
   private final int typeArgIndex;
   private final int methodArgIndex;
 
-  /**
-   * @param typeName The fully-qualified name of the type whose descendants to match on
-   * @param typeArgIndex The index of the type argument that should match the method argument
-   * @param methodArgIndex The index of the method argument that should match the type argument
-   * @param name The name of the method to match on
-   * @param firstParam The type of the first parameter of the method
-   * @param otherParams The types of any additional parameters of the method
-   */
+  /// @param typeName The fully-qualified name of the type whose descendants to match on
+  /// @param typeArgIndex The index of the type argument that should match the method argument
+  /// @param methodArgIndex The index of the method argument that should match the type argument
+  /// @param name The name of the method to match on
+  /// @param firstParam The type of the first parameter of the method
+  /// @param otherParams The types of any additional parameters of the method
   MethodArgMatcher(
       String typeName,
       int typeArgIndex,

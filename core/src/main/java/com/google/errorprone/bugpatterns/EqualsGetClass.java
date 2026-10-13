@@ -56,12 +56,10 @@ import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import javax.lang.model.element.Modifier;
 
-/**
- * Discourages the use of {@link Object#getClass()} when implementing {@link Object#equals(Object)}
- * for non-final classes.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Discourages the use of [Object#getClass()] when implementing [Object#equals(Object)] for
+/// non-final classes.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary =
         "Prefer instanceof to getClass when implementing Object#equals. Note that this may be a"
@@ -148,10 +146,10 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
     private final Matcher<ExpressionTree> isParameter;
     private final Matcher<ExpressionTree> otherClass;
 
-    /** Whether we managed to rewrite a {@code getClass}. */
+    /// Whether we managed to rewrite a `getClass`.
     private boolean matchedGetClass = false;
 
-    /** Whether we failed to generate a satisfactory fix for a boolean replacement. */
+    /// Whether we failed to generate a satisfactory fix for a boolean replacement.
     private boolean failed = false;
 
     private EqualsFixer(Symbol parameter, ClassSymbol classSymbol, VisitorState visitorState) {

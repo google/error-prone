@@ -45,7 +45,7 @@ import java.util.Collection;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Using @Test(expected=...) is discouraged, since the test will pass if *any* statement in"
@@ -69,14 +69,12 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
     return handleStatements(tree, state, expectedException, baseFix);
   }
 
-  /**
-   * Handle a method annotated with {@code @Test(expected=...}.
-   *
-   * @param tree the method
-   * @param state the visitor state
-   * @param expectedException the type of expected exception
-   * @param baseFix the base fix
-   */
+  /// Handle a method annotated with `@Test(expected=...`.
+  ///
+  /// @param tree the method
+  /// @param state the visitor state
+  /// @param expectedException the type of expected exception
+  /// @param baseFix the base fix
   private Description handleStatements(
       MethodTree tree, VisitorState state, JCExpression expectedException, SuggestedFix baseFix) {
     return describeMatch(
@@ -109,10 +107,8 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
     return fix.build();
   }
 
-  /**
-   * Searches the annotation list for {@code @Test(expected=...)}. If found, deletes the exception
-   * attribute from the annotation, and returns its value.
-   */
+  /// Searches the annotation list for `@Test(expected=...)`. If found, deletes the exception
+  /// attribute from the annotation, and returns its value.
   private static @Nullable JCExpression deleteExpectedException(
       SuggestedFix.Builder fix, List<JCAnnotation> annotations, VisitorState state) {
     Type testAnnotation = JUnitMatchers.JUNIT4_TEST_ANNOTATION.type(state);
@@ -142,7 +138,7 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
     return null;
   }
 
-  /** Deletes an entry and its delimiter from a list. */
+  /// Deletes an entry and its delimiter from a list.
   private static void removeFromList(
       SuggestedFix.Builder fix, VisitorState state, List<? extends Tree> arguments, Tree tree) {
     int idx = arguments.indexOf(tree);

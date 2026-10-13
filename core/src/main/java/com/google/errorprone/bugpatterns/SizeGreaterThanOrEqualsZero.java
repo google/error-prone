@@ -52,13 +52,10 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import javax.inject.Inject;
 import org.safere.Pattern;
 
-/**
- * Finds instances where one uses {@code Collection#size() >= 0} or {@code T[].length > 0}. Those
- * comparisons are always true for non-null objects, where the user likely meant to compare size
- * {@literal >} 0 instead.
- *
- * @author glorioso@google.com (Nick Glorioso)
- */
+/// Finds instances where one uses `Collection#size() >= 0` or `T[].length > 0`. Those comparisons
+/// are always true for non-null objects, where the user likely meant to compare `size > 0` instead.
+///
+/// @author glorioso@google.com (Nick Glorioso)
 @BugPattern(
     summary =
         "Comparison of a size >= 0 is always true, did you intend to check for " + "non-emptiness?",

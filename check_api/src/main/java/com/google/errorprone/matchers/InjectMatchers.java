@@ -38,7 +38,7 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.util.Name;
 import java.util.stream.Stream;
 
-/** Utility constants and matchers related to dependency injection. */
+/// Utility constants and matchers related to dependency injection.
 public final class InjectMatchers {
 
   private static final ClassName GUICE_MODULE = ClassName.of("com.google.inject.Module");

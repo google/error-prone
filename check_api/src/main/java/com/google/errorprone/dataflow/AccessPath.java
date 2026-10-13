@@ -37,38 +37,32 @@ import org.checkerframework.errorprone.dataflow.cfg.node.VariableDeclarationNode
 import org.checkerframework.errorprone.javacutil.TreeUtils;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A sequence of field names or autovalue accessors, along with a receiver: either a variable or a
- * reference (explicit or implicit) to {@code this}. Fields and autovalue accessors are stored as
- * strings, with a "()" appended to accessor names to distinguish them from fields of the same name
- *
- * <p>For example:
- *
- * <p>{@code x.f.g}, the {@code g} field of the {@code f} field of the local variable {@code x} is
- * represented by {base = Some x, fields = "g" :: "f" :: nil}
- *
- * <p>{@code foo.bar}, the {@code bar} field of the {@code foo} field of the implicit {@code this}
- * is represented by {base = None, fields = "bar" :: "foo" :: nil}
- *
- * <p>{@code x.foo().foo}, the {@code foo} field of the {@code foo()} autovalue accessor of the
- * local variable {@code x} is represented by {base = Some x, fields = "foo" :: "foo()" :: nil}
- *
- * @author bennostein@google.com (Benno Stein)
- * @param base If present, base of access path is contained Element; if absent, base is `this`
- */
+/// A sequence of field names or autovalue accessors, along with a receiver: either a variable or a
+/// reference (explicit or implicit) to `this`. Fields and autovalue accessors are stored as
+/// strings, with a "()" appended to accessor names to distinguish them from fields of the same name
+///
+/// For example:
+///
+/// `x.f.g`, the `g` field of the `f` field of the local variable `x` is represented by {base = Some
+/// x, fields = "g" :: "f" :: nil}
+///
+/// `foo.bar`, the `bar` field of the `foo` field of the implicit `this` is represented by {base =
+/// None, fields = "bar" :: "foo" :: nil}
+///
+/// `x.foo().foo`, the `foo` field of the `foo()` autovalue accessor of the local variable `x` is
+/// represented by {base = Some x, fields = "foo" :: "foo()" :: nil}
+///
+/// @author bennostein@google.com (Benno Stein)
+/// @param base If present, base of access path is contained Element; if absent, base is `this`
 public record AccessPath(@Nullable Element base, ImmutableList<String> path) {
-  /**
-   * Check whether {@code tree} is an AutoValue accessor. A tree is an AutoValue accessor iff:
-   *
-   * <ul>
-   *   <li>it is a method invocation
-   *   <li>of an abstract method
-   *   <li>with 0 arguments
-   *   <li>defined on a class annotated @AutoValue
-   * </ul>
-   *
-   * <p>Public visibility for use in NullnessPropagationTransfer#returnValueNullness
-   */
+  /// Check whether `tree` is an AutoValue accessor. A tree is an AutoValue accessor iff:
+  ///
+  /// - it is a method invocation
+  /// - of an abstract method
+  /// - with 0 arguments
+  /// - defined on a class annotated @AutoValue
+  ///
+  /// Public visibility for use in NullnessPropagationTransfer#returnValueNullness
   public static boolean isAutoValueAccessor(Tree tree) {
     if (!(tree instanceof MethodInvocationTree)) {
       return false;
@@ -95,11 +89,9 @@ public record AccessPath(@Nullable Element base, ImmutableList<String> path) {
                     .contentEquals("com.google.auto.value.AutoValue"));
   }
 
-  /**
-   * Creates an AccessPath from field reads / AutoValue accessor we can track and returns null
-   * otherwise (for example, when the receiver of the field access contains an array access or
-   * non-AutoValue method call.
-   */
+  /// Creates an AccessPath from field reads / AutoValue accessor we can track and returns null
+  /// otherwise (for example, when the receiver of the field access contains an array access or
+  /// non-AutoValue method call.
   public static @Nullable AccessPath fromFieldAccess(FieldAccessNode fieldAccess) {
     ImmutableList.Builder<String> pathBuilder = ImmutableList.builder();
 
@@ -144,10 +136,8 @@ public record AccessPath(@Nullable Element base, ImmutableList<String> path) {
     return new AccessPath(TreeUtils.elementFromDeclaration(node.getTree()), ImmutableList.of());
   }
 
-  /**
-   * Returns an AccessPath representing {@code node} if {@code node} is representable as an access
-   * path and null otherwise
-   */
+  /// Returns an AccessPath representing `node` if `node` is representable as an access path and
+  /// null otherwise
   public static @Nullable AccessPath fromNodeIfTrackable(Node node) {
     return switch (node) {
       case LocalVariableNode localVariableNode -> fromLocalVariable(localVariableNode);

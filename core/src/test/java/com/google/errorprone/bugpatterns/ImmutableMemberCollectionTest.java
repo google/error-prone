@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link ImmutableMemberCollection}. */
+/// Unit tests for [ImmutableMemberCollection].
 @RunWith(JUnit4.class)
 public final class ImmutableMemberCollectionTest {
   private final BugCheckerRefactoringTestHelper refactoringHelper =

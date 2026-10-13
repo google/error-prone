@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link JodaDateTimeConstants}. */
+/// Tests for [JodaDateTimeConstants].
 @RunWith(JUnit4.class)
 public class JodaDateTimeConstantsTest {
   private final CompilationTestHelper helper =

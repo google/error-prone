@@ -56,7 +56,7 @@ import java.util.List;
 import javax.inject.Inject;
 import org.jspecify.annotations.Nullable;
 
-/** Bugpattern to find conditions which are checked more than once. */
+/// Bugpattern to find conditions which are checked more than once.
 @BugPattern(severity = WARNING, summary = "This condition has already been checked.")
 public final class AlreadyChecked extends BugChecker implements CompilationUnitTreeMatcher {
 
@@ -74,7 +74,7 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
     return NO_MATCH;
   }
 
-  /** Scans a compilation unit, keeping track of which things are known to be true and false. */
+  /// Scans a compilation unit, keeping track of which things are known to be true and false.
   private final class IfScanner extends SuppressibleTreePathScanner<Void, Void> {
     private final Deque<TreePath> enclosingMethod = new ArrayDeque<>();
     private final Deque<List<Condition>> conditionsInMethod = new ArrayDeque<>();
@@ -261,7 +261,7 @@ public final class AlreadyChecked extends BugChecker implements CompilationUnitT
     }
   }
 
-  /** A condition whose {@link Truthiness} is computed lazily when needed in its scope. */
+  /// A condition whose [Truthiness] is computed lazily when needed in its scope.
   private static final class Condition {
     final ExpressionTree tree;
     final boolean not;

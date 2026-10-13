@@ -27,7 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link UnnecessarySetDefault}Test */
+/// [UnnecessarySetDefault]Test
 @RunWith(JUnit4.class)
 public class UnnecessarySetDefaultTest {
 

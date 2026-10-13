@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link JUnit4TestsNotRunWithinEnclosed}. */
+/// Unit tests for [JUnit4TestsNotRunWithinEnclosed].
 @RunWith(JUnit4.class)
 public final class JUnit4TestsNotRunWithinEnclosedTest {
   private final CompilationTestHelper helper =

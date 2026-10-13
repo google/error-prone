@@ -24,12 +24,10 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreePath;
 
-/**
- * Adapt matchers to match against a parent node of a given type. For example, match a node if the
- * enclosing class matches a predicate.
- *
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// Adapt matchers to match against a parent node of a given type. For example, match a node if the
+/// enclosing class matches a predicate.
+///
+/// @author alexeagle@google.com (Alex Eagle)
 public final class Enclosing {
   private Enclosing() {}
 

@@ -33,17 +33,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests that {@link BugPattern.SeverityLevel}s map to appropriate {@link
- * javax.tools.Diagnostic.Kind}s and are displayed in some reasonable way on the command line.
- */
+/// Tests that [BugPattern.SeverityLevel]s map to appropriate [javax.tools.Diagnostic.Kind]s and are
+/// displayed in some reasonable way on the command line.
 @RunWith(JUnit4.class)
 public class DiagnosticKindTest {
 
-  /**
-   * The mock code we are going to analyze in our tests. Only needs a return for the matcher to
-   * match on.
-   */
+  /// The mock code we are going to analyze in our tests. Only needs a return for the matcher to
+  /// match on.
   private static final String[] TEST_CODE = {
     "class Test {", "  void doIt() {", "    return;", " }", "}"
   };

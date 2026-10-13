@@ -26,7 +26,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-/** A collection of timing data for the runtime of individual checks. */
+/// A collection of timing data for the runtime of individual checks.
 public final class ErrorProneTimings {
 
   private static final Context.Key<ErrorProneTimings> timingsKey = new Context.Key<>();
@@ -47,26 +47,26 @@ public final class ErrorProneTimings {
 
   private final Stopwatch initializationTime = Stopwatch.createUnstarted();
 
-  /** Creates a timing span for the given {@link Suppressible}. */
+  /// Creates a timing span for the given [Suppressible].
   public AutoCloseable span(Suppressible suppressible) {
     String key = suppressible.canonicalName();
     Stopwatch sw = timers.computeIfAbsent(key, k -> Stopwatch.createUnstarted()).start();
     return () -> sw.stop();
   }
 
-  /** Creates a timing span for initialization. */
+  /// Creates a timing span for initialization.
   public AutoCloseable initializationTimeSpan() {
     initializationTime.start();
     return () -> initializationTime.stop();
   }
 
-  /** Returns the elapsed durations of each timer. */
+  /// Returns the elapsed durations of each timer.
   public ImmutableMap<String, Duration> timings() {
     return timers.entrySet().stream()
         .collect(toImmutableMap(e -> e.getKey(), e -> e.getValue().elapsed()));
   }
 
-  /** Returns the elapsed initialization time. */
+  /// Returns the elapsed initialization time.
   public Duration initializationTime() {
     return initializationTime.elapsed();
   }

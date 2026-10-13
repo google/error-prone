@@ -25,7 +25,7 @@ import com.google.errorprone.bugpatterns.BugChecker.LabeledStatementTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.LabeledStatementTree;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(summary = "Labels should only be used on loops.", severity = ERROR)
 public class LabelledBreakTarget extends BugChecker implements LabeledStatementTreeMatcher {
   @Override

@@ -47,7 +47,7 @@ import java.util.Optional;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(summary = "Consider inlining this constant", severity = WARNING)
 public class InlineTrivialConstant extends BugChecker implements CompilationUnitTreeMatcher {
 

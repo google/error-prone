@@ -49,11 +49,9 @@ import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Matches test helpers which require a terminating method to be called.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Matches test helpers which require a terminating method to be called.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary = "A terminating method call is required for a test helper to have any effect.",
     severity = ERROR)

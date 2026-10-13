@@ -23,24 +23,23 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-/**
- * Annotation for method parameter declarations which denotes that actual parameters will be used as
- * a format string in printf-style formatting.
- *
- * <p>This is an optional annotation used along with the {@link FormatMethod} annotation to denote
- * which parameter in a format method is the format string. All parameters after the format string
- * are assumed to be printf-style arguments for the format string. For example, the following
- * snippet declares that {@code logMessage} will be used as a format string with {@code args} passed
- * as arguments to the format string:
- *
- * <pre>
- * public class Foo {
- *   &#064;FormatMethod void doBarAndLogFailure(&#064;FormatString String logMessage,
- *       Object... args) {...}
- * }</pre>
- *
- * <p>See {@link FormatMethod} for more information.
- */
+/// Annotation for method parameter declarations which denotes that actual parameters will be used
+/// as a format string in printf-style formatting.
+///
+/// This is an optional annotation used along with the [FormatMethod] annotation to denote which
+/// parameter in a format method is the format string. All parameters after the format string are
+/// assumed to be printf-style arguments for the format string. For example, the following snippet
+/// declares that `logMessage` will be used as a format string with `args` passed as arguments to
+/// the format string:
+///
+/// ```
+/// public class Foo {
+///   @FormatMethod void doBarAndLogFailure(@FormatString String logMessage,
+///       Object... args) {...}
+/// }
+/// ```
+///
+/// See [FormatMethod] for more information.
 @Documented
 @Retention(CLASS)
 @Target({ElementType.PARAMETER})

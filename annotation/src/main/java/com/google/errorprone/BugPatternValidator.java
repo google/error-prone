@@ -18,11 +18,9 @@ package com.google.errorprone;
 
 import com.google.common.base.CharMatcher;
 
-/**
- * Validates an {@code @BugPattern} annotation for wellformedness.
- *
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// Validates an `@BugPattern` annotation for wellformedness.
+///
+/// @author eaftan@google.com (Eddie Aftandilian)
 public final class BugPatternValidator {
 
   public static void validate(BugPattern pattern) throws ValidationException {

@@ -21,13 +21,11 @@ import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.tree.JCTree;
 import org.jspecify.annotations.Nullable;
 
-/**
- * A serializable representation of a template syntax tree which can be unified with a target AST
- * and inlined based on a set of substitutions.
- *
- * @param <T> The type this tree inlines to.
- * @author Louis Wasserman (lowasser@google.com)
- */
+/// A serializable representation of a template syntax tree which can be unified with a target AST
+/// and inlined based on a set of substitutions.
+///
+/// @param <T> The type this tree inlines to.
+/// @author Louis Wasserman (lowasser@google.com)
 public abstract class UTree<T extends JCTree> extends SimpleTreeVisitor<Choice<Unifier>, Unifier>
     implements Unifiable<Tree>, Inlineable<T>, Tree {
   @Override

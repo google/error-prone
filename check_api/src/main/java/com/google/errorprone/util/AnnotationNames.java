@@ -18,7 +18,7 @@ package com.google.errorprone.util;
 
 import com.google.errorprone.ClassName;
 
-/** Fully qualified names of common annotations used in ErrorProne checks. */
+/// Fully qualified names of common annotations used in ErrorProne checks.
 public final class AnnotationNames {
 
   // keep-sorted start

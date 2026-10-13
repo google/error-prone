@@ -36,14 +36,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link Matchers#enclosingNode}, {@link Matchers#parentNode}, {@link
- * Matchers#enclosingBlock}, {@link Enclosing.BlockOrCase}, and at least some of the code paths also
- * used by {@link Matchers#enclosingClass} and {@link Matchers#enclosingMethod}. The tests focus on
- * verifying that the {@link TreePath} is set correctly.
- *
- * @author cpovirk@google.com (Chris Povirk)
- */
+/// Tests for [Matchers#enclosingNode], [Matchers#parentNode], [Matchers#enclosingBlock],
+/// [Enclosing.BlockOrCase], and at least some of the code paths also used by
+/// [Matchers#enclosingClass] and [Matchers#enclosingMethod]. The tests focus on verifying that the
+/// [TreePath] is set correctly.
+///
+/// @author cpovirk@google.com (Chris Povirk)
 @RunWith(JUnit4.class)
 public class EnclosingTest extends CompilerBasedAbstractTest {
   private abstract static class IsInterestingLoopSubNode<T extends Tree> implements Matcher<T> {
@@ -89,7 +87,7 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
     }
   }
 
-  /** Tests that a node is not enclosed by itself. */
+  /// Tests that a node is not enclosed by itself.
   @Test
   public void usedDirectlyInLoopCondition() {
     writeFile(
@@ -108,7 +106,7 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
     assertCompiles(fooIsUsedUnderLoopStatementAccordingToBlockOrCase(false));
   }
 
-  /** Tests that a node is enclosed by its parent. */
+  /// Tests that a node is enclosed by its parent.
   @Test
   public void usedAsChildTreeOfLoopCondition() {
     writeFile(
@@ -127,7 +125,7 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
     assertCompiles(fooIsUsedUnderLoopStatementAccordingToBlockOrCase(false));
   }
 
-  /** Tests that a node is enclosed by a node many levels up the tree. */
+  /// Tests that a node is enclosed by a node many levels up the tree.
   @Test
   public void usedInSubTreeOfLoopCondition() {
     writeFile(
@@ -146,7 +144,7 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
     assertCompiles(fooIsUsedUnderLoopStatementAccordingToBlockOrCase(false));
   }
 
-  /** Tests enclosing blocks. */
+  /// Tests enclosing blocks.
   @Test
   public void usedInStatement() {
     writeFile(
@@ -167,7 +165,7 @@ public class EnclosingTest extends CompilerBasedAbstractTest {
     assertCompiles(fooIsUsedUnderLoopStatementAccordingToBlockOrCase(true));
   }
 
-  /** Make sure the scanners are doing what we expect. */
+  /// Make sure the scanners are doing what we expect.
   @Test
   public void usedElsewhereInLoop() {
     writeFile(

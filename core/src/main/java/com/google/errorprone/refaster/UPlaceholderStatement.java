@@ -32,11 +32,9 @@ import com.sun.tools.javac.tree.TreeMaker;
 import com.sun.tools.javac.util.List;
 import java.util.Optional;
 
-/**
- * A representation of a block placeholder.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// A representation of a block placeholder.
+///
+/// @author lowasser@google.com (Louis Wasserman)
 record UPlaceholderStatement(
     PlaceholderMethod placeholder,
     ImmutableMap<UVariableDecl, UExpression> arguments,

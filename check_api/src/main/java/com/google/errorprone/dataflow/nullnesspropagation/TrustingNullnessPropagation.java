@@ -22,28 +22,20 @@ import com.google.errorprone.dataflow.AccessPathValues;
 import java.util.List;
 import org.jspecify.annotations.Nullable;
 
-/**
- * Transfer function for {@link TrustingNullnessAnalysis}. It "trusts" annotations, meaning:
- *
- * <ul>
- *   <li>The parameters of the analyzed method are assumed non-null unless annotated {@code
- *       Nullable}.
- *   <li>Field reads and method calls are assumed to return non-null unless annotated.
- * </ul>
- *
- * <p>This transfer function also uses {@link Nullness#NONNULL} as its default, which means:
- *
- * <ul>
- *   <li>all array reads are assumed non-null. In the absence of Java 8 type annotations that
- *       matches what we'll do for the result of {@link List#get} etc. Will need to revisit with
- *       Java 8.
- *   <li>we'll assume non-null for local variables we don't have any information about. Since we
- *       seed {@link #initialStore} based on annotations on method parameters, the only known source
- *       of unknown locals would be "local variables" from outer scopes accessed in anonymous and
- *       local inner classes.
- *   <li>in the case of missing method or field symbols, non-null is assumed as well.
- * </ul>
- */
+/// Transfer function for [TrustingNullnessAnalysis]. It "trusts" annotations, meaning:
+///
+/// - The parameters of the analyzed method are assumed non-null unless annotated `Nullable`.
+/// - Field reads and method calls are assumed to return non-null unless annotated.
+///
+/// This transfer function also uses [Nullness#NONNULL] as its default, which means:
+///
+/// - all array reads are assumed non-null. In the absence of Java 8 type annotations that matches
+///   what we'll do for the result of [List#get] etc. Will need to revisit with Java 8.
+/// - we'll assume non-null for local variables we don't have any information about. Since we seed
+///   [#initialStore] based on annotations on method parameters, the only known source of unknown
+///   locals would be "local variables" from outer scopes accessed in anonymous and local inner
+///   classes.
+/// - in the case of missing method or field symbols, non-null is assumed as well.
 // TODO(b/71812955): Respect type annotations on arrays
 // TODO(kmb): Use annotations on captured locals from outer scopes
 class TrustingNullnessPropagation extends NullnessPropagationTransfer {
@@ -67,7 +59,7 @@ class TrustingNullnessPropagation extends NullnessPropagationTransfer {
     return standardFieldNullness(accessed, path, store);
   }
 
-  /** Return {@code true} for methods not explicitly annotated Nullable. */
+  /// Return `true` for methods not explicitly annotated Nullable.
   private enum TrustReturnAnnotation implements Predicate<MethodInfo> {
     INSTANCE;
 

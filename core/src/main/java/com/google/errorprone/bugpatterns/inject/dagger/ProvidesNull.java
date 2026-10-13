@@ -38,10 +38,7 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import javax.inject.Inject;
 
-/**
- * Bug checker for null-returning methods annotated with {@code @Provides} but not
- * {@code @Nullable}.
- */
+/// Bug checker for null-returning methods annotated with `@Provides` but not `@Nullable`.
 @BugPattern(
     name = "DaggerProvidesNull",
     summary = "Dagger @Provides methods may not return null unless annotated with @Nullable",
@@ -57,11 +54,9 @@ public class ProvidesNull extends BugChecker implements ReturnTreeMatcher {
         flags.getBoolean("ProvidesNull:CheckDefinitelyNullBranch").orElse(true);
   }
 
-  /**
-   * Matches explicit "return null" statements in methods annotated with {@code @Provides} but not
-   * {@code @Nullable}. Suggests either annotating the method with {@code @Nullable} or throwing a
-   * {@link RuntimeException} instead.
-   */
+  /// Matches explicit "return null" statements in methods annotated with `@Provides` but not
+  /// `@Nullable`. Suggests either annotating the method with `@Nullable` or throwing a
+  /// [RuntimeException] instead.
   // TODO(eaftan): Use nullness dataflow analysis when it's ready
   @Override
   public Description matchReturn(ReturnTree returnTree, VisitorState state) {

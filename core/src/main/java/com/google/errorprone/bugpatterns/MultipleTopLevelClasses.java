@@ -32,7 +32,7 @@ import com.sun.source.tree.Tree;
 import java.util.ArrayList;
 import java.util.List;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     altNames = {"TopLevel"},
     summary = "Source files should not contain multiple top-level class declarations",

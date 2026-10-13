@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Unit tests for {@link PeriodTimeMath} */
+/// Unit tests for [PeriodTimeMath]
 @RunWith(JUnit4.class)
 public class PeriodTimeMathTest {
   private final CompilationTestHelper helper =

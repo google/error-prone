@@ -23,11 +23,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
- * Tests for {@link ModifiedButNotUsed} bugpattern.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Tests for [ModifiedButNotUsed] bugpattern.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @RunWith(JUnit4.class)
 public final class ModifiedButNotUsedTest {
   private final CompilationTestHelper compilationHelper =

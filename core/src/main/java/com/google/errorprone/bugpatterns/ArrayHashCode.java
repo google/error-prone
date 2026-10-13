@@ -41,16 +41,12 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- */
+/// @author eaftan@google.com (Eddie Aftandilian)
 @BugPattern(summary = "hashcode method on array does not hash array contents", severity = ERROR)
 public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMatcher {
 
-  /**
-   * Matches calls to varargs hashcode methods {@link com.google.common.base.Objects#hashCode} and
-   * {@link java.util.Objects#hash} in which at least one argument is of array type.
-   */
+  /// Matches calls to varargs hashcode methods [com.google.common.base.Objects#hashCode] and
+  /// [java.util.Objects#hash] in which at least one argument is of array type.
   private static final Matcher<MethodInvocationTree> varargsHashCodeMethodMatcher =
       allOf(
           Matchers.anyOf(
@@ -58,28 +54,23 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
               staticMethod().onClass("java.util.Objects").named("hash")),
           hasArguments(MatchType.AT_LEAST_ONE, Matchers.<ExpressionTree>isArrayType()));
 
-  /**
-   * Matches calls to the JDK7 method {@link java.util.Objects#hashCode} with an argument of array
-   * type. This method is not varargs, so we don't need to check the number of arguments.
-   */
+  /// Matches calls to the JDK7 method [java.util.Objects#hashCode] with an argument of array type.
+  /// This method is not varargs, so we don't need to check the number of arguments.
   private static final Matcher<MethodInvocationTree> jdk7HashCodeMethodMatcher =
       allOf(
           staticMethod().onClass("java.util.Objects").named("hashCode"),
           argument(0, Matchers.<ExpressionTree>isArrayType()));
 
-  /** Matches calls to the hashCode instance method on an array. */
+  /// Matches calls to the hashCode instance method on an array.
   private static final Matcher<ExpressionTree> instanceHashCodeMethodMatcher =
       instanceMethod().onClass(isArray()).named("hashCode");
 
-  /**
-   * Wraps identity hashcode computations in calls to {@link java.util.Arrays#hashCode} if the array
-   * is single dimensional or {@link java.util.Arrays#deepHashCode} if the array is
-   * multidimensional.
-   *
-   * <p>If there is only one argument to the hashcode method or the instance hashcode method is
-   * used, replaces the whole method invocation. If there are multiple arguments, wraps any that are
-   * of array type with the appropriate {@link java.util.Arrays} hashcode method.
-   */
+  /// Wraps identity hashcode computations in calls to [java.util.Arrays#hashCode] if the array is
+  /// single dimensional or [java.util.Arrays#deepHashCode] if the array is multidimensional.
+  ///
+  /// If there is only one argument to the hashcode method or the instance hashcode method is used,
+  /// replaces the whole method invocation. If there are multiple arguments, wraps any that are of
+  /// array type with the appropriate [java.util.Arrays] hashcode method.
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     var fix = SuggestedFix.builder();
@@ -123,11 +114,9 @@ public class ArrayHashCode extends BugChecker implements MethodInvocationTreeMat
     return Description.NO_MATCH;
   }
 
-  /**
-   * Given an {@link ExpressionTree} that represents an argument of array type, rewrites it to wrap
-   * it in a call to either {@link java.util.Arrays#hashCode} if it is single dimensional, or {@link
-   * java.util.Arrays#deepHashCode} if it is multidimensional.
-   */
+  /// Given an [ExpressionTree] that represents an argument of array type, rewrites it to wrap it in
+  /// a call to either [java.util.Arrays#hashCode] if it is single dimensional, or
+  /// [java.util.Arrays#deepHashCode] if it is multidimensional.
   private static String rewriteArrayArgument(ExpressionTree arg, VisitorState state) {
     Types types = state.getTypes();
     Type argType = getType(arg);

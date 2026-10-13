@@ -62,10 +62,8 @@ import java.time.temporal.TemporalAccessor;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Bans calls to {@code TemporalAccessor.get(ChronoField)} where the implementation is guaranteed to
- * throw an {@code UnsupportedTemporalTypeException}.
- */
+/// Bans calls to `TemporalAccessor.get(ChronoField)` where the implementation is guaranteed to
+/// throw an `UnsupportedTemporalTypeException`.
 @BugPattern(
     summary = "TemporalAccessor.get() only works for certain values of ChronoField.",
     explanation =

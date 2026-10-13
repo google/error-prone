@@ -28,10 +28,10 @@ import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.code.Types.DefaultTypeVisitor;
 import com.sun.tools.javac.util.Name;
 
-/** Signature generation. */
+/// Signature generation.
 public final class Signatures {
 
-  /** Returns the binary names of the class. */
+  /// Returns the binary names of the class.
   public static String classDescriptor(Type type, VisitorState state) {
     Types types = state.getTypes();
     ErrorProneSignatureGenerator sig = new ErrorProneSignatureGenerator(types, state.getNames());
@@ -39,7 +39,7 @@ public final class Signatures {
     return sig.toString();
   }
 
-  /** Returns a JVMS 4.3.3 method descriptor. */
+  /// Returns a JVMS 4.3.3 method descriptor.
   public static String descriptor(Type type, VisitorState state) {
     Types types = state.getTypes();
     ErrorProneSignatureGenerator sig = new ErrorProneSignatureGenerator(types, state.getNames());
@@ -47,12 +47,10 @@ public final class Signatures {
     return sig.toString();
   }
 
-  /**
-   * Pretty-prints a method signature for use in diagnostics.
-   *
-   * <p>Uses simple names for declared types, and omitting formal type parameters and the return
-   * type since they do not affect overload resolution.
-   */
+  /// Pretty-prints a method signature for use in diagnostics.
+  ///
+  /// Uses simple names for declared types, and omitting formal type parameters and the return type
+  /// since they do not affect overload resolution.
   public static String prettyMethodSignature(ClassSymbol origin, MethodSymbol m) {
     StringBuilder sb = new StringBuilder();
     if (m.isConstructor()) {
@@ -75,7 +73,7 @@ public final class Signatures {
     return sb.toString();
   }
 
-  /** Pretty-prints a Type for use in diagnostics, using simple names for class types */
+  /// Pretty-prints a Type for use in diagnostics, using simple names for class types
   public static String prettyType(Type type) {
     return type.accept(PRETTY_TYPE_VISITOR, null);
   }

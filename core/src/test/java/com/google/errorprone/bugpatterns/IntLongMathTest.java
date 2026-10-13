@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** {@link IntLongMath}Test. */
+/// [IntLongMath]Test.
 @RunWith(JUnit4.class)
 public final class IntLongMathTest {
   private final CompilationTestHelper testHelper =

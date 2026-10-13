@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link MissingSuperCall}. */
+/// Tests for [MissingSuperCall].
 @RunWith(JUnit4.class)
 public class MissingSuperCallTest {
   private final CompilationTestHelper compilationHelper =

@@ -50,7 +50,7 @@ import java.util.Collections;
 import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "This declaration has public or protected modifiers, but is effectively private.",
     severity = WARNING)

@@ -25,20 +25,18 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
 
-/**
- * @author eaftan@google.com (Eddie Aftandilian)
- * @author pepstein@google.com (Peter Epstein)
- */
+/// @author eaftan@google.com (Eddie Aftandilian)
+/// @author pepstein@google.com (Peter Epstein)
 public class AnnotationType implements Matcher<AnnotationTree> {
 
   private final ClassName annotationClass;
 
-  /** Matches an {@link AnnotationTree} with the given annotation class name. */
+  /// Matches an [AnnotationTree] with the given annotation class name.
   public AnnotationType(String annotationClassName) {
     this(ClassName.of(annotationClassName));
   }
 
-  /** Matches an {@link AnnotationTree} with the given annotation {@link ClassName}. */
+  /// Matches an [AnnotationTree] with the given annotation [ClassName].
   public AnnotationType(ClassName annotationClass) {
     this.annotationClass = requireNonNull(annotationClass);
   }

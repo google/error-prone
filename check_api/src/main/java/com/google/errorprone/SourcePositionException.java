@@ -19,7 +19,7 @@ package com.google.errorprone;
 import com.sun.tools.javac.util.JCDiagnostic;
 import javax.tools.JavaFileObject;
 
-/** An invalid source position. */
+/// An invalid source position.
 public final class SourcePositionException extends RuntimeException {
   private final int startPosition;
 

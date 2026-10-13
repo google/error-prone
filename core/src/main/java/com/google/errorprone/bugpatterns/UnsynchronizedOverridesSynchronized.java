@@ -49,7 +49,7 @@ import com.sun.tools.javac.code.Type;
 import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary = "Unsynchronized method overrides a synchronized method.",
     severity = WARNING,
@@ -97,10 +97,8 @@ public class UnsynchronizedOverridesSynchronized extends BugChecker implements M
     return sym.getModifiers().contains(Modifier.SYNCHRONIZED);
   }
 
-  /**
-   * Don't flag methods that are empty, trivially delegate to a super-implementation, or return a
-   * constant.
-   */
+  /// Don't flag methods that are empty, trivially delegate to a super-implementation, or return a
+  /// constant.
   private boolean ignore(MethodTree method, VisitorState state) {
     return firstNonNull(
         new TreeScanner<Boolean, Void>() {

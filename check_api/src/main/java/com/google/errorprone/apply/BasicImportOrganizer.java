@@ -23,10 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Sorts imports according to a supplied {@link StaticOrder} and separates static and non-static
- * with a blank line.
- */
+/// Sorts imports according to a supplied [StaticOrder] and separates static and non-static with a
+/// blank line.
 class BasicImportOrganizer implements ImportOrganizer {
 
   private final StaticOrder order;

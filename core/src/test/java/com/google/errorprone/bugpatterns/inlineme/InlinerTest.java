@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for the {@link Inliner}. */
+/// Tests for the [Inliner].
 @RunWith(JUnit4.class)
 public class InlinerTest {
   /*

@@ -25,16 +25,12 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Type;
 
-/**
- * A utility for handling types in cast expressions, shared by {@link JUnitIncompatibleType} and
- * {@link TruthIncompatibleType}.
- */
+/// A utility for handling types in cast expressions, shared by [JUnitIncompatibleType] and
+/// [TruthIncompatibleType].
 final class IgnoringCasts {
 
-  /**
-   * Returns the most specific type of a cast or its operand, for example returns {@code byte[]} for
-   * both {@code (byte[]) someObject} and {@code (Object) someByteArray}.
-   */
+  /// Returns the most specific type of a cast or its operand, for example returns `byte[]` for both
+  /// `(byte[]) someObject` and `(Object) someByteArray`.
   static Type ignoringCasts(Tree tree, VisitorState state) {
     return new SimpleTreeVisitor<Type, Void>() {
       @Override

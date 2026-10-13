@@ -34,7 +34,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.util.TreePath;
 import javax.lang.model.type.TypeKind;
 
-/** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
+/// A [BugChecker]; see the associated [BugPattern] annotation for details.
 @BugPattern(
     summary =
         "Conversion from long to double may lose precision; use an explicit cast to double if this"

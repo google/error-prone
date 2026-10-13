@@ -26,17 +26,13 @@ import com.sun.source.tree.TreeVisitor;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 
-/**
- * {@link UTree} version of {@link MemberSelectTree}.
- *
- * @author lowasser@google.com (Louis Wasserman)
- */
+/// [UTree] version of [MemberSelectTree].
+///
+/// @author lowasser@google.com (Louis Wasserman)
 @AutoValue
 public abstract class UMemberSelect extends UExpression implements MemberSelectTree {
-  /**
-   * Use of this string as an expression in a member select will cause this method select to be
-   * inlined as an identifier. I.e., "".foo will be inlined as foo.
-   */
+  /// Use of this string as an expression in a member select will cause this method select to be
+  /// inlined as an identifier. I.e., "".foo will be inlined as foo.
   public static final String CONVERT_TO_IDENT = "";
 
   public static UMemberSelect create(UExpression expression, CharSequence identifier, UType type) {

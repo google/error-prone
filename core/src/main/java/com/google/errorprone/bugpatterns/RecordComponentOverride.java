@@ -33,7 +33,7 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.JCTree.JCAnnotation;
 import javax.lang.model.element.ElementKind;
 
-/** A BugPattern; see the summary. */
+/// A BugPattern; see the summary.
 @BugPattern(
     summary = "@Override annotations on record components don't do anything.",
     severity = WARNING)

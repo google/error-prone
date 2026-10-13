@@ -32,17 +32,17 @@ import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.SimpleJavaFileObject;
 
-/** Factories for in-memory {@link JavaFileObject}s, for testing. */
+/// Factories for in-memory [JavaFileObject]s, for testing.
 public final class FileObjects {
 
-  /** Loads resources of the provided class into {@link JavaFileObject}s. */
+  /// Loads resources of the provided class into [JavaFileObject]s.
   public static ImmutableList<JavaFileObject> forResources(Class<?> clazz, String... fileNames) {
     return stream(fileNames)
         .map(fileName -> forResource(clazz, fileName))
         .collect(toImmutableList());
   }
 
-  /** Loads a resource of the provided class into a {@link JavaFileObject}. */
+  /// Loads a resource of the provided class into a [JavaFileObject].
   public static JavaFileObject forResource(Class<?> clazz, String resourceName) {
     URI uri =
         URI.create(
@@ -70,7 +70,7 @@ public final class FileObjects {
     return is;
   }
 
-  /** Creates a {@link JavaFileObject} with the given name and content. */
+  /// Creates a [JavaFileObject] with the given name and content.
   public static JavaFileObject forSourceLines(String path, String... lines) {
     return new SimpleJavaFileObject(URI.create("file:///" + path), Kind.SOURCE) {
       @Override

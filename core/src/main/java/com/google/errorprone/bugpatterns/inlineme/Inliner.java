@@ -82,10 +82,8 @@ import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
 import javax.inject.Inject;
 
-/**
- * Checker that performs the inlining at call-sites (where the invoked APIs are annotated as
- * {@code @InlineMe}).
- */
+/// Checker that performs the inlining at call-sites (where the invoked APIs are annotated as
+/// `@InlineMe`).
 @BugPattern(
     name = "InlineMeInliner",
     summary = "Callers of this API should be inlined.",
@@ -404,26 +402,18 @@ public final class Inliner extends BugChecker
     };
   }
 
-  /**
-   * Substitutes type arguments from the call-site into type parameters present in the {@code
-   * replacementExpression}.
-   *
-   * <ul>
-   *   <li>If the caller explicitly provides type arguments (e.g. {@code Client.<String>before()}),
-   *       any occurrences of {@code T} in {@code replacementExpression} (such as {@code
-   *       Client.<T>after()} or {@code (T) obj}) are substituted with {@code String}.
-   *   <li>If the caller omits type arguments (e.g. {@code Client.before()}), unsubstituted type
-   *       parameters in the replacement are simplified so the inlined code compiles cleanly:
-   *       <ul>
-   *         <li>{@code Client.<T>after()} becomes {@code Client.after()} (allowing compiler type
-   *             inference).
-   *         <li>{@code new ArrayList<T>()} becomes {@code new ArrayList<>()} (using diamond
-   *             syntax).
-   *         <li>{@code (T) obj} becomes {@code obj} (allowing type inference if the cast is
-   *             unnecessary; checked by {@code maybeCheckFixCompiles}).
-   *       </ul>
-   * </ul>
-   */
+  /// Substitutes type arguments from the call-site into type parameters present in the
+  /// `replacementExpression`.
+  ///
+  /// - If the caller explicitly provides type arguments (e.g. `Client.<String>before()`), any
+  ///   occurrences of `T` in `replacementExpression` (such as `Client.<T>after()` or `(T) obj`) are
+  ///   substituted with `String`.
+  /// - If the caller omits type arguments (e.g. `Client.before()`), unsubstituted type parameters
+  ///   in the replacement are simplified so the inlined code compiles cleanly:
+  ///   - `Client.<T>after()` becomes `Client.after()` (allowing compiler type inference).
+  ///   - `new ArrayList<T>()` becomes `new ArrayList<>()` (using diamond syntax).
+  ///   - `(T) obj` becomes `obj` (allowing type inference if the cast is unnecessary; checked by
+  ///     `maybeCheckFixCompiles`).
   private static void substituteTypeArguments(
       ExpressionTree tree,
       MethodSymbol symbol,
@@ -478,11 +468,9 @@ public final class Inliner extends BugChecker
         });
   }
 
-  /**
-   * When type arguments are omitted at the call-site, type variables cannot be directly substituted
-   * with concrete types. This method cleans up unresolvable type variables within the replacement
-   * expression to allow standard compiler type inference to resolve the types instead.
-   */
+  /// When type arguments are omitted at the call-site, type variables cannot be directly
+  /// substituted with concrete types. This method cleans up unresolvable type variables within the
+  /// replacement expression to allow standard compiler type inference to resolve the types instead.
   private static void stripUnsubstitutedTypeParameters(
       ImmutableSet<String> typeParamNames,
       ExpressionTree replacementExpression,
@@ -546,15 +534,13 @@ public final class Inliner extends BugChecker
                     && typeParamNames.contains(it.getName().toString()));
   }
 
-  /**
-   * Checks whether an expression requires parentheses when substituting in.
-   *
-   * <p>{@code treePath} is the original path including the old tree at the tip; {@code replacement}
-   * is the proposed replacement tree.
-   *
-   * <p>This was originally from {@link com.google.errorprone.util.ASTHelpers#requiresParentheses}
-   * but is heavily specialised for this use case.
-   */
+  /// Checks whether an expression requires parentheses when substituting in.
+  ///
+  /// `treePath` is the original path including the old tree at the tip; `replacement` is the
+  /// proposed replacement tree.
+  ///
+  /// This was originally from [com.google.errorprone.util.ASTHelpers#requiresParentheses] but is
+  /// heavily specialised for this use case.
   private static boolean inliningRequiresParentheses(
       TreePath treePath, ExpressionTree replacement) {
     var originalExpression = treePath.getLeaf();
@@ -685,22 +671,20 @@ public final class Inliner extends BugChecker
           + extraMessage();
     }
 
-    /** Returns {@code FullyQualifiedClassName#methodName}. */
+    /// Returns `FullyQualifiedClassName#methodName`.
     final String methodId() {
       return format("%s#%s", className(), methodName());
     }
 
-    /**
-     * Returns a short, human readable description of this API in markdown format (e.g., {@code
-     * `ClassName.methodName()`}).
-     */
+    /// Returns a short, human-readable description of this API formatted as Markdown (for example,
+    /// `` `ClassName.methodName()` ``).
     final String shortName() {
       String humanReadableClassName =
           packageName().map(pn -> className().replaceFirst(pn + ".", "")).orElse(className());
       return format("`%s.%s()`", humanReadableClassName, methodName());
     }
 
-    /** Returns the simple class name (e.g., {@code ClassName}). */
+    /// Returns the simple class name (e.g., `ClassName`).
     final String simpleClassName() {
       return Iterables.getLast(CLASS_NAME_SPLITTER.split(className()));
     }

@@ -34,11 +34,9 @@ import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 
-/**
- * Matches instanceof checks where the expression is a subtype of the checked type.
- *
- * @author ghm@google.com (Graeme Morgan)
- */
+/// Matches instanceof checks where the expression is a subtype of the checked type.
+///
+/// @author ghm@google.com (Graeme Morgan)
 @BugPattern(
     summary = "instanceof used in a way that is equivalent to a null check.",
     severity = WARNING,

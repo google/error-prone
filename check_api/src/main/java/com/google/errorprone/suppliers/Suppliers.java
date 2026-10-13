@@ -31,20 +31,15 @@ import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import org.jspecify.annotations.Nullable;
 
-/**
- * @author alexeagle@google.com (Alex Eagle)
- */
+/// @author alexeagle@google.com (Alex Eagle)
 public final class Suppliers {
 
-  /**
-   * Supplies the n'th generic type of the given expression. For example, in {@code Map<A,B> c;} for
-   * the expression c and n=1, the result is the type of {@code B}. If there are an insufficient
-   * number of type arguments, this method will return the {@code java.lang.Object} type from symbol
-   * table.
-   *
-   * @param expressionSupplier a supplier of the expression which has a generic type
-   * @param n the position of the generic argument
-   */
+  /// Supplies the n'th generic type of the given expression. For example, in `Map<A,B> c;` for the
+  /// expression c and n=1, the result is the type of `B`. If there are an insufficient number of
+  /// type arguments, this method will return the `java.lang.Object` type from symbol table.
+  ///
+  /// @param expressionSupplier a supplier of the expression which has a generic type
+  /// @param n the position of the generic argument
   public static Supplier<Type> genericTypeOf(Supplier<ExpressionTree> expressionSupplier, int n) {
     return state -> {
       JCExpression jcExpression = (JCExpression) expressionSupplier.get(state);
@@ -55,14 +50,12 @@ public final class Suppliers {
     };
   }
 
-  /**
-   * Supplies the n'th generic type of the given expression. For example, in {@code Map<A,B> c;} for
-   * the type of c and n=1, the result is the type of {@code B}. If there are an insufficient number
-   * of type arguments, this method will return the {@code java.lang.Object} type from symbol table.
-   *
-   * @param typeSupplier a supplier of the expression which has a generic type
-   * @param n the position of the generic argument
-   */
+  /// Supplies the n'th generic type of the given expression. For example, in `Map<A,B> c;` for the
+  /// type of c and n=1, the result is the type of `B`. If there are an insufficient number of type
+  /// arguments, this method will return the `java.lang.Object` type from symbol table.
+  ///
+  /// @param typeSupplier a supplier of the expression which has a generic type
+  /// @param n the position of the generic argument
   public static Supplier<Type> genericTypeOfType(Supplier<Type> typeSupplier, int n) {
     return state -> {
       Type type = typeSupplier.get(state);
@@ -73,36 +66,30 @@ public final class Suppliers {
     };
   }
 
-  /**
-   * Supplies the expression which gives the instance of an object that will receive the method
-   * call. For example, in {@code a.getB().getC()} if the visitor is currently visiting the {@code
-   * getC()} method invocation, then this supplier gives the expression {@code a.getB()}.
-   */
+  /// Supplies the expression which gives the instance of an object that will receive the method
+  /// call. For example, in `a.getB().getC()` if the visitor is currently visiting the `getC()`
+  /// method invocation, then this supplier gives the expression `a.getB()`.
   public static Supplier<Type> receiverType() {
     return state ->
         ASTHelpers.getReceiverType(
             ((MethodInvocationTree) state.getPath().getLeaf()).getMethodSelect());
   }
 
-  /**
-   * Supplies the expression which gives the instance of an object that will receive the method
-   * call. For example, in {@code a.getB().getC()} if the visitor is currently visiting the {@code
-   * getC()} method invocation, then this supplier gives the expression {@code a.getB()}.
-   */
+  /// Supplies the expression which gives the instance of an object that will receive the method
+  /// call. For example, in `a.getB().getC()` if the visitor is currently visiting the `getC()`
+  /// method invocation, then this supplier gives the expression `a.getB()`.
   public static Supplier<ExpressionTree> receiverInstance() {
     return state ->
         ((JCFieldAccess) ((MethodInvocationTree) state.getPath().getLeaf()).getMethodSelect())
             .getExpression();
   }
 
-  /**
-   * Given the string representation of a type, supplies the corresponding type.
-   *
-   * <p>Prefer {@link ClassName#of(String)} for class and interface types, or the primitive and
-   * {@code void} constants on this class (e.g. {@link #INT_TYPE}, {@link #VOID_TYPE}).
-   *
-   * @param typeString a string representation of a type, e.g., "java.util.List"
-   */
+  /// Given the string representation of a type, supplies the corresponding type.
+  ///
+  /// Prefer [ClassName#of(String)] for class and interface types, or the primitive and `void`
+  /// constants on this class (e.g. [#INT_TYPE], [#VOID_TYPE]).
+  ///
+  /// @param typeString a string representation of a type, e.g., "java.util.List"
   public static Supplier<Type> typeFromString(String typeString) {
     requireNonNull(typeString);
     return switch (typeString) {
@@ -119,12 +106,10 @@ public final class Suppliers {
     };
   }
 
-  /**
-   * Given the class representation of a type, supplies the corresponding type.
-   *
-   * <p>Prefer {@link ClassName#of(String)} for class and interface types, or the primitive and
-   * {@code void} constants on this class (e.g. {@link #INT_TYPE}, {@link #VOID_TYPE}).
-   */
+  /// Given the class representation of a type, supplies the corresponding type.
+  ///
+  /// Prefer [ClassName#of(String)] for class and interface types, or the primitive and `void`
+  /// constants on this class (e.g. [#INT_TYPE], [#VOID_TYPE]).
   public static Supplier<Type> typeFromClass(Class<?> inputClass) {
     return typeFromString(inputClass.getName());
   }
@@ -171,11 +156,9 @@ public final class Suppliers {
 
   public static final Supplier<Type> ANNOTATION_TYPE = state -> state.getSymtab().annotationType;
 
-  /**
-   * Supplies what was given. Useful for adapting to methods that require a supplier.
-   *
-   * @param toSupply the item to supply
-   */
+  /// Supplies what was given. Useful for adapting to methods that require a supplier.
+  ///
+  /// @param toSupply the item to supply
   public static <T> Supplier<T> identitySupplier(T toSupply) {
     return state -> toSupply;
   }
@@ -187,10 +170,8 @@ public final class Suppliers {
     return state -> new Type.ArrayType(elementType.get(state), state.getSymtab().arraysType.tsym);
   }
 
-  /**
-   * Supplies the array type {@code elementType[]}, or {@code null} if {@code elementType} is not
-   * available in the current compilation.
-   */
+  /// Supplies the array type `elementType[]`, or `null` if `elementType` is not available in the
+  /// current compilation.
   public static Supplier<@Nullable Type> arrayOf(ClassName elementType) {
     requireNonNull(elementType);
     return VisitorState.memoize(state -> {
