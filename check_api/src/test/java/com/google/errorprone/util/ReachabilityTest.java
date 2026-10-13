@@ -158,16 +158,6 @@ public class ReachabilityTest {
    */
   private CompilationTestHelper containedStatementCanCompleteNormallyTest(
       boolean expected, String labeledStatement) {
-    return containedStatementCanCompleteNormallyTest(expected, expected, labeledStatement);
-  }
-
-  /**
-   * Like {@link #containedStatementCanCompleteNormallyTest(boolean, String)}, but documents a bug
-   * where {@link Reachability} disagrees with javac: {@code reachability} is what {@link
-   * Reachability} currently answers, and {@code javac} is what javac answers (the ground truth).
-   */
-  private CompilationTestHelper containedStatementCanCompleteNormallyTest(
-      boolean reachability, boolean javac, String labeledStatement) {
     String label = "l:\n";
     checkArgument(labeledStatement.startsWith(label), labeledStatement);
     String statement = labeledStatement.substring(label.length());
@@ -193,10 +183,10 @@ public class ReachabilityTest {
             }
             """
                 .formatted(
-                    reachability,
+                    expected,
                     labeledStatement,
                     statement,
-                    javac ? "String s = \"\";" : "s.length();"));
+                    expected ? "String s = \"\";" : "s.length();"));
   }
 
   @Test
@@ -615,11 +605,7 @@ public class ReachabilityTest {
         }
         """;
     canCompleteNormallyTest(/* expected= */ true, statement).doTest();
-    // BUG: Reachability credits `break l` to the statement contained in `l`, so it disagrees with
-    // javac, which says that statement can't complete normally.
-    containedStatementCanCompleteNormallyTest(
-            /* reachability= */ true, /* javac= */ false, statement)
-        .doTest();
+    containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
   }
 
   /**
@@ -636,11 +622,7 @@ public class ReachabilityTest {
         } while (true);
         """;
     canCompleteNormallyTest(/* expected= */ true, statement).doTest();
-    // BUG: Reachability credits `break l` to the statement contained in `l`, so it disagrees with
-    // javac, which says that statement can't complete normally.
-    containedStatementCanCompleteNormallyTest(
-            /* reachability= */ true, /* javac= */ false, statement)
-        .doTest();
+    containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
   }
 
   /**
@@ -657,11 +639,7 @@ public class ReachabilityTest {
         }
         """;
     canCompleteNormallyTest(/* expected= */ true, statement).doTest();
-    // BUG: Reachability credits `break l` to the statement contained in `l`, so it disagrees with
-    // javac, which says that statement can't complete normally.
-    containedStatementCanCompleteNormallyTest(
-            /* reachability= */ true, /* javac= */ false, statement)
-        .doTest();
+    containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
   }
 
   /**
@@ -681,11 +659,7 @@ public class ReachabilityTest {
         }
         """;
     canCompleteNormallyTest(/* expected= */ true, statement).doTest();
-    // BUG: Reachability credits `break l` to the statement contained in `l`, so it disagrees with
-    // javac, which says that statement can't complete normally.
-    containedStatementCanCompleteNormallyTest(
-            /* reachability= */ true, /* javac= */ false, statement)
-        .doTest();
+    containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
   }
 
   /** Like {@link #breakExitsLabeledStatement_switch}, but with switch rules. */
@@ -703,11 +677,7 @@ public class ReachabilityTest {
         }
         """;
     canCompleteNormallyTest(/* expected= */ true, statement).doTest();
-    // BUG: Reachability credits `break l` to the statement contained in `l`, so it disagrees with
-    // javac, which says that statement can't complete normally.
-    containedStatementCanCompleteNormallyTest(
-            /* reachability= */ true, /* javac= */ false, statement)
-        .doTest();
+    containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
   }
 
   /**
