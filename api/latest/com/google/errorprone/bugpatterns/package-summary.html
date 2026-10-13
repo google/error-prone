@@ -124,94 +124,94 @@ injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</d
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AbstractAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">AbstractAsKeyOfSetOrMap</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AbstractBanUnsafeAPIChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractBanUnsafeAPIChecker</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Check for usage of <code>Set&lt;T&gt;</code> or <code>Map&lt;T, E&gt;</code>.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AbstractBanUnsafeAPIChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractBanUnsafeAPIChecker</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">An abstract class that detects use of the unsafe APIs.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker</a>&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AbstractEqualsHashCodeUsageChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">A base class for checks that flag code relying on <code>equals</code> or <code>hashCode</code> of particular types.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab3"><a href="AbstractEqualsHashCodeUsageChecker.Usage.html" title="enum class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker.Usage</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab3">
+<div class="block">A way that code can rely on the <code>equals</code> or <code>hashCode</code> of a type.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker</a>&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Helper for enforcing Annotations that disallow mocking.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="AbstractMockChecker.MockForbidder.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.MockForbidder</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="AbstractMockChecker.MockForbidder.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.MockForbidder</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">A policy for determining what classes should not be mocked.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab4"><a href="AbstractMockChecker.Reason.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker.Reason</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab4">
+<div class="col-first odd-row-color class-summary class-summary-tab4"><a href="AbstractMockChecker.Reason.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker.Reason</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab4">
 <div class="block">An explanation of what type should not be mocked, and the reason why.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</div>
-<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="AbstractMockChecker.TypeExtractor.html" title="interface in com.google.errorprone.bugpatterns">AbstractMockChecker.TypeExtractor</a>&lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&gt;</div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">An extension of <a href="../matchers/Matcher.html" title="interface in com.google.errorprone.matchers"><code>Matcher</code></a> to return, not just a boolean `matches`, but also extract some
 type information about the Tree of interest.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">An abstract check for resources that must be closed; used by <a href="StreamResourceLeak.html" title="class in com.google.errorprone.bugpatterns"><code>StreamResourceLeak</code></a> and
 <a href="MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns"><code>MustBeClosedChecker</code></a>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AbstractMustBeClosedChecker.Change.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker.Change</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AbstractMustBeClosedChecker.Change.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker.Change</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Error Prone's fix application logic doesn't like it when a fix suggests multiple identical
 insertions at the same position.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AbstractPatternSyntaxChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractPatternSyntaxChecker</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AbstractPatternSyntaxChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractPatternSyntaxChecker</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Finds calls to regex-accepting methods with literal strings.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AbstractReferenceEquality.html" title="class in com.google.errorprone.bugpatterns">AbstractReferenceEquality</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AbstractReferenceEquality.html" title="class in com.google.errorprone.bugpatterns">AbstractReferenceEquality</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Abstract implementation of a BugPattern that detects the use of reference equality to compare
 classes with value semantics.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">An abstract base class to match API usages in which the return value is not used.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">An abstract matcher for implicit and explicit calls to <code>Object.toString()</code>, for use on
 types that do not have a human-readable <code>toString()</code> implementation.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AbstractUseSwitch.html" title="class in com.google.errorprone.bugpatterns">AbstractUseSwitch</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AbstractUseSwitch.html" title="class in com.google.errorprone.bugpatterns">AbstractUseSwitch</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Helper for refactoring from if-else chains to switches.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AddressSelection.html" title="class in com.google.errorprone.bugpatterns">AddressSelection</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AddressSelection.html" title="class in com.google.errorprone.bugpatterns">AddressSelection</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AlreadyChecked.html" title="class in com.google.errorprone.bugpatterns">AlreadyChecked</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AlreadyChecked.html" title="class in com.google.errorprone.bugpatterns">AlreadyChecked</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Bugpattern to find conditions which are checked more than once.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AlwaysThrows.html" title="class in com.google.errorprone.bugpatterns">AlwaysThrows</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">A <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AmbiguousMethodReference.html" title="class in com.google.errorprone.bugpatterns">AmbiguousMethodReference</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AlwaysThrows.html" title="class in com.google.errorprone.bugpatterns">AlwaysThrows</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AnnotationMirrorToString.html" title="class in com.google.errorprone.bugpatterns">AnnotationMirrorToString</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AmbiguousMethodReference.html" title="class in com.google.errorprone.bugpatterns">AmbiguousMethodReference</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">A <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AnnotationPosition.html" title="class in com.google.errorprone.bugpatterns">AnnotationPosition</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AnnotationMirrorToString.html" title="class in com.google.errorprone.bugpatterns">AnnotationMirrorToString</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="block">A <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AnnotationPosition.html" title="class in com.google.errorprone.bugpatterns">AnnotationPosition</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Checks annotation positioning, and orphaned Javadocs.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="AnnotationValueToString.html" title="class in com.google.errorprone.bugpatterns">AnnotationValueToString</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">A <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ArrayAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">ArrayAsKeyOfSetOrMap</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="AnnotationValueToString.html" title="class in com.google.errorprone.bugpatterns">AnnotationValueToString</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Warns that users should not have an array as a key to a Set or Map</div>
+<div class="block">A <a href="BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="../BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ArrayEquals.html" title="class in com.google.errorprone.bugpatterns">ArrayEquals</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">&nbsp;</div>

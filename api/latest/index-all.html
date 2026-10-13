@@ -61,12 +61,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/ProtobufMatchers.html#ABSTRACT_MESSAGE_LITE_CLASS" class="member-name-link">ABSTRACT_MESSAGE_LITE_CLASS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/ProtobufMatchers.html" title="class in com.google.errorprone.matchers">ProtobufMatchers</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">AbstractAsKeyOfSetOrMap</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>
-<div class="block">Check for usage of <code>Set&lt;T&gt;</code> or <code>Map&lt;T, E&gt;</code>.</div>
-</dd>
-<dt><a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html#%3Cinit%3E()" class="member-name-link">AbstractAsKeyOfSetOrMap()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">AbstractAsKeyOfSetOrMap</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractBanUnsafeAPIChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">AbstractBanUnsafeAPIChecker</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">An abstract class that detects use of the unsafe APIs.</div>
@@ -84,6 +78,16 @@ a method are using incompatible types and to emit a helpful error message.</div>
 <dd>
 <div class="block">Encapsulates the result of matching a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html#contains(java.lang.Object)" title="class or interface in java.util" class="external-link"><code>Collection.contains(Object)</code></a>-like call, including the
 source and target types.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">A base class for checks that flag code relying on <code>equals</code> or <code>hashCode</code> of particular types.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html#%3Cinit%3E()" class="member-name-link">AbstractEqualsHashCodeUsageChecker()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html" class="type-name-link" title="enum class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker.Usage</a> - Enum Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
+<dd>
+<div class="block">A way that code can rely on the <code>equals</code> or <code>hashCode</code> of a type.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker&lt;T&gt;</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -941,12 +945,6 @@ specified template expressions, in order, and succeed at the first match.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/argumentselectiondefects/ArgumentSelectionDefectChecker.html#%3Cinit%3E()" class="member-name-link">ArgumentSelectionDefectChecker()</a> - Constructor for class com.google.errorprone.bugpatterns.argumentselectiondefects.<a href="com/google/errorprone/bugpatterns/argumentselectiondefects/ArgumentSelectionDefectChecker.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">ArgumentSelectionDefectChecker</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/ArrayAsKeyOfSetOrMap.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ArrayAsKeyOfSetOrMap</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
-<dd>
-<div class="block">Warns that users should not have an array as a key to a Set or Map</div>
-</dd>
-<dt><a href="com/google/errorprone/bugpatterns/ArrayAsKeyOfSetOrMap.html#%3Cinit%3E()" class="member-name-link">ArrayAsKeyOfSetOrMap()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">ArrayAsKeyOfSetOrMap</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ArrayEquals.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ArrayEquals</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/ArrayEquals.html#%3Cinit%3E()" class="member-name-link">ArrayEquals()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayEquals.html" title="class in com.google.errorprone.bugpatterns">ArrayEquals</a></dt>
@@ -1059,6 +1057,10 @@ JUnit 3.x.</div>
 <dd>
 <div class="block">Asserts that the diagnostics contain a diagnostic on each line of the source file that matches
 our bug marker pattern.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html#ASSERTION" class="member-name-link">ASSERTION</a> - Enum constant in enum class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html" title="enum class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker.Usage</a></dt>
+<dd>
+<div class="block">An equality assertion, e.g.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/AssertionFailureIgnored.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">AssertionFailureIgnored</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -2257,13 +2259,6 @@ their container types.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/CollectionToArraySafeParameter.html#%3Cinit%3E()" class="member-name-link">CollectionToArraySafeParameter()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CollectionToArraySafeParameter.html" title="class in com.google.errorprone.bugpatterns">CollectionToArraySafeParameter</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionUndefinedEquality.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CollectionUndefinedEquality</a> - Class in <a href="com/google/errorprone/bugpatterns/collectionincompatibletype/package-summary.html">com.google.errorprone.bugpatterns.collectionincompatibletype</a></dt>
-<dd>
-<div class="block">Highlights use of <code>Collection#contains</code> (and others) with types that do not have
-well-defined equals.</div>
-</dd>
-<dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionUndefinedEquality.html#%3Cinit%3E()" class="member-name-link">CollectionUndefinedEquality()</a> - Constructor for class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionUndefinedEquality.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CollectionUndefinedEquality</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/DiagnosticTestHelper.html#collector" class="member-name-link">collector</a> - Variable in class com.google.errorprone.<a href="com/google/errorprone/DiagnosticTestHelper.html" title="class in com.google.errorprone">DiagnosticTestHelper</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/CollectorShouldNotUseState.html#COLLECTOR_OF_CALL" class="member-name-link">COLLECTOR_OF_CALL</a> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CollectorShouldNotUseState.html" title="class in com.google.errorprone.bugpatterns">CollectorShouldNotUseState</a></dt>
@@ -2671,6 +2666,10 @@ parameters must be instantiated with immutable types for the container to be dee
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html#containerOfAnnotation(java.lang.Iterable)" class="member-name-link">containerOfAnnotation(Iterable)</a> - Method in class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ThreadSafety.Builder.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ThreadSafety.Builder</a></dt>
 <dd>
 <div class="block">An annotation which marks a generic parameter as a container type.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html#CONTAINMENT" class="member-name-link">CONTAINMENT</a> - Enum constant in enum class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html" title="enum class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker.Usage</a></dt>
+<dd>
+<div class="block">A method that compares elements with <code>equals</code>, e.g.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/ContainmentMatchers.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">ContainmentMatchers</a> - Class in <a href="com/google/errorprone/bugpatterns/collectionincompatibletype/package-summary.html">com.google.errorprone.bugpatterns.collectionincompatibletype</a></dt>
 <dd>
@@ -3654,6 +3653,12 @@ chosen.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/OperatorPrecedence.html#EQUALITY" class="member-name-link">EQUALITY</a> - Enum constant in enum class com.google.errorprone.util.<a href="com/google/errorprone/util/OperatorPrecedence.html" title="enum class in com.google.errorprone.util">OperatorPrecedence</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html#equalityFix(com.sun.source.tree.MethodInvocationTree,com.sun.source.tree.Tree,com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">equalityFix(MethodInvocationTree, Tree, Tree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker</a></dt>
+<dd>
+<div class="block">Returns a fix for an <a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html#EQUALS"><code>AbstractEqualsHashCodeUsageChecker.Usage.EQUALS</code></a> or <a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html#ASSERTION"><code>AbstractEqualsHashCodeUsageChecker.Usage.ASSERTION</code></a> finding.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/UndefinedEquals.html#equalityFix(com.sun.source.tree.MethodInvocationTree,com.sun.source.tree.Tree,com.sun.source.tree.Tree,com.google.errorprone.VisitorState)" class="member-name-link">equalityFix(MethodInvocationTree, Tree, Tree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UndefinedEquals.html" title="class in com.google.errorprone.bugpatterns">UndefinedEquals</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.ConstantEquals.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/ConstantExpressions.ConstantExpression.ConstantEquals.html" title="class in com.google.errorprone.bugpatterns.threadsafety">ConstantExpressions.ConstantExpression.ConstantEquals</a></dt>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
@@ -3819,6 +3824,10 @@ chosen.</div>
 <dt><a href="com/google/errorprone/util/TargetType.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.google.errorprone.util.<a href="com/google/errorprone/util/TargetType.html" title="class in com.google.errorprone.util">TargetType</a></dt>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html#EQUALS" class="member-name-link">EQUALS</a> - Enum constant in enum class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html" title="enum class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker.Usage</a></dt>
+<dd>
+<div class="block">A direct call to <code>equals</code>, e.g.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/nullness/EqualsBrokenForNull.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.nullness">EqualsBrokenForNull</a> - Class in <a href="com/google/errorprone/bugpatterns/nullness/package-summary.html">com.google.errorprone.bugpatterns.nullness</a></dt>
 <dd>
@@ -6485,6 +6494,11 @@ its type.</div>
 </dd>
 <dt><a href="com/google/errorprone/refaster/Bindings.html#hasFreeIdentMatching(java.util.function.Predicate)" class="member-name-link">hasFreeIdentMatching(Predicate)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.html" title="class in com.google.errorprone.refaster">Bindings</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html#HASH_KEY" class="member-name-link">HASH_KEY</a> - Enum constant in enum class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html" title="enum class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker.Usage</a></dt>
+<dd>
+<div class="block">Creating a hash-based container, e.g. a <code>Set</code> element or a <code>Map</code>, <code>Multimap</code>, or <code>Multiset</code>
+key, or a <code>BiMap</code> value.</div>
+</dd>
 <dt><a href="com/google/errorprone/BugCheckerInfo.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/BugCheckerInfo.html" title="class in com.google.errorprone">BugCheckerInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.Reason.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.Reason.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker.Reason</a></dt>
@@ -7562,10 +7576,6 @@ its context.</div>
 <dd>
 <div class="block">Check whether <code>tree</code> is an AutoValue accessor.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html#isBadType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isBadType(Type, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">AbstractAsKeyOfSetOrMap</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/ArrayAsKeyOfSetOrMap.html#isBadType(com.sun.tools.javac.code.Type,com.google.errorprone.VisitorState)" class="member-name-link">isBadType(Type, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ArrayAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">ArrayAsKeyOfSetOrMap</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#isBoxedPrimitiveType()" class="member-name-link">isBoxedPrimitiveType()</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches an AST node if its type is a boxed primitive type.</div>
@@ -8698,8 +8708,6 @@ example, when testing a class for immutability, this should be @Immutable.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionIncompatibleType.html#match(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">match(ExpressionTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionIncompatibleType.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CollectionIncompatibleType</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionUndefinedEquality.html#match(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">match(ExpressionTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionUndefinedEquality.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CollectionUndefinedEquality</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/BlockTemplate.html#match(com.sun.tools.javac.tree.JCTree,com.sun.tools.javac.util.Context,com.sun.tools.javac.tree.JCTree.JCCompilationUnit)" class="member-name-link">match(JCTree, Context, JCTree.JCCompilationUnit)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/BlockTemplate.html" title="class in com.google.errorprone.refaster">BlockTemplate</a></dt>
 <dd>
 <div class="block">If the tree is a <code>JCTree.JCBlock</code>, returns a list of disjoint matches corresponding to the exact
@@ -9484,6 +9492,8 @@ match the given <code>predicate</code>.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/SwigMemoryLeak.html#matchLiteral(com.sun.source.tree.LiteralTree,com.google.errorprone.VisitorState)" class="member-name-link">matchLiteral(LiteralTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/SwigMemoryLeak.html" title="class in com.google.errorprone.bugpatterns">SwigMemoryLeak</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMemberReference(MemberReferenceTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMemberReference(MemberReferenceTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractToString.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMemberReference(MemberReferenceTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a></dt>
@@ -9491,8 +9501,6 @@ match the given <code>predicate</code>.</div>
 <dt><a href="com/google/errorprone/bugpatterns/BugChecker.MemberReferenceTreeMatcher.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMemberReference(MemberReferenceTree, VisitorState)</a> - Method in interface com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BugChecker.MemberReferenceTreeMatcher.html" title="interface in com.google.errorprone.bugpatterns">BugChecker.MemberReferenceTreeMatcher</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionIncompatibleType.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMemberReference(MemberReferenceTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionIncompatibleType.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CollectionIncompatibleType</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionUndefinedEquality.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMemberReference(MemberReferenceTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionUndefinedEquality.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CollectionUndefinedEquality</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html#matchMemberReference(com.sun.source.tree.MemberReferenceTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMemberReference(MemberReferenceTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/CompileTimeConstantChecker.html" title="class in com.google.errorprone.bugpatterns">CompileTimeConstantChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -9816,7 +9824,7 @@ and methods that return an AutoCloseable.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/UseCorrectAssertInTests.html#matchMethod(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethod(MethodTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UseCorrectAssertInTests.html" title="class in com.google.errorprone.bugpatterns">UseCorrectAssertInTests</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">AbstractAsKeyOfSetOrMap</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMockChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMockChecker</a></dt>
 <dd>&nbsp;</dd>
@@ -9895,8 +9903,6 @@ multidimensional.</div>
 <dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AssertSameIncompatible.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/AssertSameIncompatible.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">AssertSameIncompatible</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionIncompatibleType.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionIncompatibleType.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CollectionIncompatibleType</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionUndefinedEquality.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionUndefinedEquality.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">CollectionUndefinedEquality</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/collectionincompatibletype/IncompatibleArgumentType.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.collectionincompatibletype.<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/IncompatibleArgumentType.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">IncompatibleArgumentType</a></dt>
 <dd>&nbsp;</dd>
@@ -10286,8 +10292,6 @@ multidimensional.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/TypeEqualsChecker.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/TypeEqualsChecker.html" title="class in com.google.errorprone.bugpatterns">TypeEqualsChecker</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/UndefinedEquals.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UndefinedEquals.html" title="class in com.google.errorprone.bugpatterns">UndefinedEquals</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/UnnecessaryLongToIntConversion.html#matchMethodInvocation(com.sun.source.tree.MethodInvocationTree,com.google.errorprone.VisitorState)" class="member-name-link">matchMethodInvocation(MethodInvocationTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UnnecessaryLongToIntConversion.html" title="class in com.google.errorprone.bugpatterns">UnnecessaryLongToIntConversion</a></dt>
 <dd>
 <div class="block">Matches if a long or Long is converted to an int for a long parameter in a method invocation.</div>
@@ -10324,7 +10328,7 @@ multidimensional.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html#matchNewArray(com.sun.source.tree.NewArrayTree,com.google.errorprone.VisitorState)" class="member-name-link">matchNewArray(NewArrayTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/NoAllocationChecker.html" title="class in com.google.errorprone.bugpatterns">NoAllocationChecker</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchNewClass(NewClassTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">AbstractAsKeyOfSetOrMap</a></dt>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchNewClass(NewClassTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html#matchNewClass(com.sun.source.tree.NewClassTree,com.google.errorprone.VisitorState)" class="member-name-link">matchNewClass(NewClassTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">AbstractReturnValueIgnored</a></dt>
 <dd>&nbsp;</dd>
@@ -12735,6 +12739,13 @@ compilation finishes.</div>
 <div class="block">Check for disallowed access to private_do_not_access_or_else proto fields.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/PrivateSecurityContractProtoAccess.html#%3Cinit%3E()" class="member-name-link">PrivateSecurityContractProtoAccess()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PrivateSecurityContractProtoAccess.html" title="class in com.google.errorprone.bugpatterns">PrivateSecurityContractProtoAccess</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html#problem(com.sun.tools.javac.code.Type,com.google.errorprone.bugpatterns.AbstractEqualsHashCodeUsageChecker.Usage,com.google.errorprone.VisitorState)" class="member-name-link">problem(Type, AbstractEqualsHashCodeUsageChecker.Usage, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker</a></dt>
+<dd>
+<div class="block">Returns a diagnostic message if code should not rely on <code>type</code>'s <code>equals</code> or <code>hashCode</code> in the
+given way.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/UndefinedEquals.html#problem(com.sun.tools.javac.code.Type,com.google.errorprone.bugpatterns.AbstractEqualsHashCodeUsageChecker.Usage,com.google.errorprone.VisitorState)" class="member-name-link">problem(Type, AbstractEqualsHashCodeUsageChecker.Usage, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/UndefinedEquals.html" title="class in com.google.errorprone.bugpatterns">UndefinedEquals</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/DocGenProcessor.html#process(java.util.Set,javax.annotation.processing.RoundEnvironment)" class="member-name-link">process(Set, RoundEnvironment)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/DocGenProcessor.html" title="class in com.google.errorprone">DocGenProcessor</a></dt>
 <dt><a href="com/google/errorprone/refaster/annotation/RequiredAnnotationProcessor.html#process(java.util.Set,javax.annotation.processing.RoundEnvironment)" class="member-name-link">process(Set, RoundEnvironment)</a> - Method in class com.google.errorprone.refaster.annotation.<a href="com/google/errorprone/refaster/annotation/RequiredAnnotationProcessor.html" title="class in com.google.errorprone.refaster.annotation">RequiredAnnotationProcessor</a></dt>
@@ -16088,6 +16099,10 @@ isn't strictly an inlining).</div>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html" title="enum class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker.Usage</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this class with the specified name.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.DiffCase.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.ClassDiff.DiffCase.html" title="enum class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto.ClassDiff.DiffCase</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
@@ -16217,6 +16232,11 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><a href="com/google/errorprone/BugPattern.SeverityLevel.html#values()" class="member-name-link">values()</a> - Static method in enum class com.google.errorprone.<a href="com/google/errorprone/BugPattern.SeverityLevel.html" title="enum class in com.google.errorprone">BugPattern.SeverityLevel</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum class, in
+the order they are declared.</div>
+</dd>
+<dt><a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html#values()" class="member-name-link">values()</a> - Static method in enum class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.Usage.html" title="enum class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker.Usage</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>

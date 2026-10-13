@@ -236,15 +236,15 @@ link should be displayed.</div>
 <h2 title="Package">Package&nbsp;<a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></h2>
 <ul class="block-list">
 <li>
-<section class="serialized-class-details" id="com.google.errorprone.bugpatterns.AbstractAsKeyOfSetOrMap">
-<h3>Class&nbsp;<a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.AbstractAsKeyOfSetOrMap</a></h3>
-<div class="type-signature">class AbstractAsKeyOfSetOrMap extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
-</section>
-</li>
-<li>
 <section class="serialized-class-details" id="com.google.errorprone.bugpatterns.AbstractBanUnsafeAPIChecker">
 <h3>Class&nbsp;<a href="com/google/errorprone/bugpatterns/AbstractBanUnsafeAPIChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.AbstractBanUnsafeAPIChecker</a></h3>
 <div class="type-signature">class AbstractBanUnsafeAPIChecker extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
+</section>
+</li>
+<li>
+<section class="serialized-class-details" id="com.google.errorprone.bugpatterns.AbstractEqualsHashCodeUsageChecker">
+<h3>Class&nbsp;<a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.AbstractEqualsHashCodeUsageChecker</a></h3>
+<div class="type-signature">class AbstractEqualsHashCodeUsageChecker extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
 </section>
 </li>
 <li>
@@ -436,12 +436,6 @@ link should be displayed.</div>
 <section class="serialized-class-details" id="com.google.errorprone.bugpatterns.AnnotationValueToString">
 <h3>Class&nbsp;<a href="com/google/errorprone/bugpatterns/AnnotationValueToString.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.AnnotationValueToString</a></h3>
 <div class="type-signature">class AnnotationValueToString extends <a href="com/google/errorprone/bugpatterns/AbstractToString.html" title="class in com.google.errorprone.bugpatterns">AbstractToString</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
-</section>
-</li>
-<li>
-<section class="serialized-class-details" id="com.google.errorprone.bugpatterns.ArrayAsKeyOfSetOrMap">
-<h3>Class&nbsp;<a href="com/google/errorprone/bugpatterns/ArrayAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.ArrayAsKeyOfSetOrMap</a></h3>
-<div class="type-signature">class ArrayAsKeyOfSetOrMap extends <a href="com/google/errorprone/bugpatterns/AbstractAsKeyOfSetOrMap.html" title="class in com.google.errorprone.bugpatterns">AbstractAsKeyOfSetOrMap</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
 </section>
 </li>
 <li>
@@ -3576,7 +3570,7 @@ org.immutables.value.Value</code> and using <code>@Value.Immutable</code> is mor
 <li>
 <section class="serialized-class-details" id="com.google.errorprone.bugpatterns.UndefinedEquals">
 <h3>Class&nbsp;<a href="com/google/errorprone/bugpatterns/UndefinedEquals.html" title="class in com.google.errorprone.bugpatterns">com.google.errorprone.bugpatterns.UndefinedEquals</a></h3>
-<div class="type-signature">class UndefinedEquals extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
+<div class="type-signature">class UndefinedEquals extends <a href="com/google/errorprone/bugpatterns/AbstractEqualsHashCodeUsageChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractEqualsHashCodeUsageChecker</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
 </section>
 </li>
 <li>
@@ -4487,12 +4481,6 @@ org.immutables.value.Value</code> and using <code>@Value.Immutable</code> is mor
 </section>
 </li>
 </ul>
-</section>
-</li>
-<li>
-<section class="serialized-class-details" id="com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionUndefinedEquality">
-<h3>Class&nbsp;<a href="com/google/errorprone/bugpatterns/collectionincompatibletype/CollectionUndefinedEquality.html" title="class in com.google.errorprone.bugpatterns.collectionincompatibletype">com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionUndefinedEquality</a></h3>
-<div class="type-signature">class CollectionUndefinedEquality extends <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns">BugChecker</a> implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a></div>
 </section>
 </li>
 <li>

@@ -599,9 +599,6 @@ This method uses a pair of parameters as a format string and its arguments, but 
 __[ArgumentSelectionDefectChecker](bugpattern/ArgumentSelectionDefectChecker)__<br>
 Arguments are in the wrong order or could be commented for clarity.
 
-__[ArrayAsKeyOfSetOrMap](bugpattern/ArrayAsKeyOfSetOrMap)__<br>
-Arrays do not override equals() or hashCode, so comparisons will be done on reference equality only. If neither deduplication nor lookup are needed, consider using a List instead. Otherwise, use IdentityHashMap/Set, a Map from a library that handles object arrays, or an Iterable/List of pairs.
-
 __[ArrayRecordComponent](bugpattern/ArrayRecordComponent)__<br>
 Record components should not be arrays.
 
@@ -715,9 +712,6 @@ Providing Closeable resources makes their lifecycle unclear
 
 __[ClosingStandardOutputStreams](bugpattern/ClosingStandardOutputStreams)__<br>
 Don&#39;t use try-with-resources to manage standard output streams, closing the stream will cause subsequent output to standard output or standard error to be lost
-
-__[CollectionUndefinedEquality](bugpattern/CollectionUndefinedEquality)__<br>
-This type does not have well-defined equals behavior.
 
 __[CollectorShouldNotUseState](bugpattern/CollectorShouldNotUseState)__<br>
 Collector.of() should not use state
