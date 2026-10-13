@@ -188,6 +188,10 @@ public class ReferenceEquality extends AbstractReferenceEquality
     if (isSubtype(type, JAVA_LANG_THREAD.get(state), state)) {
       return false;
     }
+    // b/528325503
+    if (isSubtype(type, COM_SUN_SOURCE_TREE_TREE.get(state), state)) {
+      return false;
+    }
     if (definitelyUsesReferenceEquality(type, subclassMap, state)) {
       return false;
     }
@@ -417,4 +421,6 @@ public class ReferenceEquality extends AbstractReferenceEquality
 
   private static final Supplier<Name> EQUALS = memoize(state -> state.getName("equals"));
   private static final Supplier<Type> JAVA_LANG_THREAD = typeFromString("java.lang.Thread");
+  private static final Supplier<Type> COM_SUN_SOURCE_TREE_TREE =
+      typeFromString("com.sun.source.tree.Tree");
 }

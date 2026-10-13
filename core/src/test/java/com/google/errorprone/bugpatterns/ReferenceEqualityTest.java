@@ -1366,4 +1366,26 @@ public class ReferenceEqualityTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void negative_tree() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.sun.source.tree.ExpressionTree;
+            import com.sun.source.tree.Tree;
+
+            class Test {
+              boolean f(Tree a, Tree b) {
+                return a == b;
+              }
+
+              boolean g(ExpressionTree a, ExpressionTree b) {
+                return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
