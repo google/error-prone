@@ -304,6 +304,27 @@ public class VoidMissingNullableTest {
   }
 
   @Test
+  public void negativeTypeArgumentClassAndTypeToken() {
+    aggressiveCompilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.reflect.TypeToken;
+            import org.jspecify.annotations.Nullable;
+
+            class Test {
+              Class<Void> a;
+              Class<? extends Void> b;
+              Class<? super Void> c;
+              TypeToken<Void> d = new TypeToken<Void>() {};
+              TypeToken<? extends Void> e;
+              TypeToken<? super Void> f;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negativeTypeArgumentDeclarationNullable() {
     aggressiveCompilationHelper
         .addSourceLines(

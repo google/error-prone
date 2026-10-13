@@ -23,6 +23,9 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAnno
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isVoid;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
+import static com.google.errorprone.suppliers.Suppliers.CLASS_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
@@ -42,6 +45,7 @@ import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
@@ -61,6 +65,9 @@ import javax.inject.Inject;
 @BugPattern(summary = "The type Void is not annotated @Nullable", severity = SUGGESTION)
 public class VoidMissingNullable extends BugChecker
     implements ParameterizedTypeTreeMatcher, MethodTreeMatcher, VariableTreeMatcher {
+  private static final Matcher<Tree> CLASS_OR_TYPE_TOKEN =
+      anyOf(isSubtypeOf(CLASS_TYPE), isSubtypeOf("com.google.common.reflect.TypeToken"));
+
   private final boolean beingConservative;
 
   @Inject
@@ -92,6 +99,10 @@ public class VoidMissingNullable extends BugChecker
     }
 
     if (beingConservative && !isInNullMarkedScope(state)) {
+      return NO_MATCH;
+    }
+
+    if (CLASS_OR_TYPE_TOKEN.matches(parameterizedTypeTree, state)) {
       return NO_MATCH;
     }
 
