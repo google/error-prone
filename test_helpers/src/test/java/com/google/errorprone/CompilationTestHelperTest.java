@@ -197,8 +197,12 @@ public class CompilationTestHelperTest {
         .isEqualTo(
             """
             Did not see an error on line 3 matching foo.
+            /Test.java:3: no diagnostic was reported on this line
+                public void doIt() {}
+
             Did not see an error on line 6 matching bar.
-            There were no errors.\
+            /Test.java:6: no diagnostic was reported on this line
+                public void doItAgain() {}\
             """);
   }
 
@@ -220,14 +224,9 @@ public class CompilationTestHelperTest {
             """);
     AssertionError expected =
         assertThrows(AssertionError.class, () -> compilationTestHelper.doTest());
-    assertThat(expected)
-        .hasMessageThat()
-        .startsWith(
-            """
-            Saw unexpected error on line 3.
-            Saw unexpected error on line 7.
-            All errors:
-            """);
+    assertThat(expected).hasMessageThat().contains("Saw unexpected error on line 3.");
+    assertThat(expected).hasMessageThat().contains("Saw unexpected error on line 7.");
+    assertThat(expected).hasMessageThat().doesNotContain("All errors:");
   }
 
   @Test
@@ -247,15 +246,12 @@ public class CompilationTestHelperTest {
             """);
     AssertionError expected =
         assertThrows(AssertionError.class, () -> compilationTestHelper.doTest());
+    assertThat(expected).hasMessageThat().contains("Saw unexpected error on line 3.");
     assertThat(expected)
         .hasMessageThat()
-        .startsWith(
-            """
-            Saw unexpected error on line 3.
-            No expected error message with key [X] as expected from line [6] \
-            with diagnostic [// BUG: Diagnostic matches: X]
-            All errors:
-            """);
+        .contains(
+            "No expected error message with key [X] as expected from line [6] with diagnostic [// BUG: Diagnostic matches: X]");
+    assertThat(expected).hasMessageThat().doesNotContain("All errors:");
   }
 
   @Test
@@ -275,14 +271,12 @@ public class CompilationTestHelperTest {
             """);
     AssertionError expected =
         assertThrows(AssertionError.class, () -> compilationTestHelper.doTest());
+    assertThat(expected).hasMessageThat().contains("Saw unexpected error on line 3.");
+    assertThat(expected).hasMessageThat().contains("Did not see an error on line 7 matching foo.");
     assertThat(expected)
         .hasMessageThat()
-        .startsWith(
-            """
-            Saw unexpected error on line 3.
-            Did not see an error on line 7 matching foo.
-            All errors:
-            """);
+        .contains("/Test.java:7: no diagnostic was reported on this line\n    public void doItAgain() {}");
+    assertThat(expected).hasMessageThat().doesNotContain("All errors:");
   }
 
   @Test
@@ -308,14 +302,12 @@ public class CompilationTestHelperTest {
                 """);
     AssertionError expected =
         assertThrows(AssertionError.class, () -> compilationTestHelper.doTest());
+    assertThat(expected).hasMessageThat().contains("/A.java: Saw unexpected error on line 3.");
+    assertThat(expected).hasMessageThat().contains("/B.java: Did not see an error on line 3 matching foo.");
     assertThat(expected)
         .hasMessageThat()
-        .startsWith(
-            """
-            /A.java: Saw unexpected error on line 3.
-            /B.java: Did not see an error on line 3 matching foo.
-            All errors:
-            """);
+        .contains("/B.java:3: no diagnostic was reported on this line\n    public void doIt() {}");
+    assertThat(expected).hasMessageThat().doesNotContain("All errors:");
   }
 
   @Test
@@ -400,12 +392,51 @@ public class CompilationTestHelperTest {
         assertThrows(AssertionError.class, () -> compilationTestHelper.doTest());
     assertThat(expected)
         .hasMessageThat()
-        .startsWith(
-            """
-            Did not see an error on line 4 containing [ReturnTreeChecker].
-            All errors:
-            """);
+        .startsWith("Did not see an error on line 4 containing [ReturnTreeChecker].");
     assertThat(expected).hasMessageThat().contains("error: illegal start of expression");
+    assertThat(expected).hasMessageThat().doesNotContain("All errors:");
+  }
+
+  @Test
+  public void fourKindsOfLineGroupingExpectationAndReportedDiagnostics() {
+    var compilationTestHelper =
+        compilationHelper.addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              boolean passing() {
+                // BUG: Diagnostic contains: Method may return normally
+                return true;
+              }
+              void missing() {
+                // BUG: Diagnostic contains: Method may return normally
+                int a = 1;
+              }
+              boolean differentText() {
+                // BUG: Diagnostic contains: Nonexistent expectation text
+                return false;
+              }
+              boolean unexpected() {
+                return true;
+              }
+            }
+            """);
+    AssertionError expected =
+        assertThrows(AssertionError.class, () -> compilationTestHelper.doTest());
+    String message = expected.getMessage();
+    // Missing diagnostic line shows source line:
+    assertThat(message).contains("Did not see an error on line 8 matching Method may return normally.");
+    assertThat(message).contains("/Test.java:8: no diagnostic was reported on this line\n    int a = 1;");
+    // Different text shows both expectation and actual reported diagnostic:
+    assertThat(message).contains("Did not see an error on line 12 matching Nonexistent expectation text.");
+    assertThat(message).contains("/Test.java:12: error: [ReturnTreeChecker] Method may return normally.");
+    // Unexpected error line shows unexpected message followed by diagnostic:
+    assertThat(message).contains("Saw unexpected error on line 15.");
+    assertThat(message).contains("/Test.java:15: error: [ReturnTreeChecker] Method may return normally.");
+    // Passing line 4 diagnostic is omitted:
+    assertThat(message).doesNotContain("/Test.java:4:");
+    // No redundant "All errors:" section:
+    assertThat(message).doesNotContain("All errors:");
   }
 
   @Test
