@@ -27,9 +27,13 @@ import com.google.common.base.CharMatcher;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.CodeTransformer;
+import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.util.TreePath;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.tools.JavaFileObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -442,67 +446,29 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
 
   @Test
-  public void beforeTemplateAndPlaceholderSuppressed() throws IOException {
-    CodeTransformer transformer =
-        extractRefasterRule(
-            forResource(String.format("%s/SuppressWarningsTemplate.java", TEMPLATE_DIR)));
+  public void applyToSubtreeChecksEnclosingClass() {
+    JavaFileObject template =
+        forResource(String.format("%s/SuppressWarningsTemplate.java", TEMPLATE_DIR));
+    CodeTransformer transformer = extractRefasterRule(template);
 
-    JavaFileObject input =
-        forSourceString(
-            "OtherTemplate",
-            """
-            import com.google.errorprone.refaster.annotation.AfterTemplate;
-            import com.google.errorprone.refaster.annotation.BeforeTemplate;
-            import com.google.errorprone.refaster.annotation.Placeholder;
+    List<Description> descriptions = new ArrayList<>();
+    transformer.apply(
+        TreePath.getPath(compilationUnits.getFirst(), getMethodDeclaration("abs")),
+        context,
+        descriptions::add);
+    assertThat(descriptions).isEmpty();
 
-            abstract class OtherTemplate {
-              @Placeholder
-              abstract int placeholder(int x);
+    compile(forResource(String.format("%s/SuppressWarningsTemplateExample.java", INPUT_DIR)));
+    transformer.apply(
+        TreePath.getPath(compilationUnits.getFirst(), getMethodDeclaration("abs2")),
+        context,
+        descriptions::add);
+    assertThat(descriptions).isEmpty();
 
-              @BeforeTemplate
-              int before(int x) {
-                return x < 0 ? -x : x;
-              }
-
-              @AfterTemplate
-              int after(int x) {
-                return x < 0 ? -x : x;
-              }
-
-              int normalMethod(int x) {
-                return x < 0 ? -x : x;
-              }
-            }
-            """);
-
-    JavaFileObject expectedOutput =
-        forSourceString(
-            "OtherTemplate",
-            """
-            import com.google.errorprone.refaster.annotation.AfterTemplate;
-            import com.google.errorprone.refaster.annotation.BeforeTemplate;
-            import com.google.errorprone.refaster.annotation.Placeholder;
-
-            abstract class OtherTemplate {
-              @Placeholder
-              abstract int placeholder(int x);
-
-              @BeforeTemplate
-              int before(int x) {
-                return x < 0 ? -x : x;
-              }
-
-              @AfterTemplate
-              int after(int x) {
-                return Math.abs(x);
-              }
-
-              int normalMethod(int x) {
-                return Math.abs(x);
-              }
-            }
-            """);
-
-    expectTransforms(transformer, input, expectedOutput);
+    transformer.apply(
+        TreePath.getPath(compilationUnits.getFirst(), getMethodDeclaration("abs4")),
+        context,
+        descriptions::add);
+    assertThat(descriptions).hasSize(1);
   }
 }

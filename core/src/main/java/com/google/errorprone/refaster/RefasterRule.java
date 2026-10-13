@@ -141,7 +141,7 @@ public abstract class RefasterRule<M extends TemplateMatch, T extends Template<M
   @Override
   public void apply(TreePath path, Context context, DescriptionListener listener) {
     JCCompilationUnit compilationUnit = (JCCompilationUnit) path.getCompilationUnit();
-    RefasterScanner.create(this, listener, compilationUnit).scan(path.getLeaf(), context);
+    RefasterScanner.create(this, listener, compilationUnit).scan(path, context);
   }
 
   boolean rejectMatchesWithComments() {

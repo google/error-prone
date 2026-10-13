@@ -16,15 +16,11 @@
 
 package com.google.errorprone.refaster;
 
-import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.stringContainsComments;
-import static com.google.errorprone.util.AnnotationNames.BEFORE_TEMPLATE_ANNOTATION;
-import static com.google.errorprone.util.AnnotationNames.PLACEHOLDER_ANNOTATION;
 
 import com.google.auto.value.AutoValue;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.DescriptionListener;
-import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.ErrorPronePosition;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
@@ -39,8 +35,8 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WhileLoopTree;
 import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.JCTree.JCCompilationUnit;
 import com.sun.tools.javac.tree.JCTree.JCStatement;
@@ -67,33 +63,35 @@ abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
 
   abstract JCCompilationUnit compilationUnit();
 
+  public Void scan(TreePath path, Context context) {
+    for (TreePath parent = path.getParentPath(); parent != null; parent = parent.getParentPath()) {
+      if (isSuppressed(parent.getLeaf(), context)) {
+        return null;
+      }
+    }
+    return scan(path.getLeaf(), context);
+  }
+
   @Override
   public Void visitClass(ClassTree node, Context context) {
     if (isSuppressed(node, context)) {
       return null;
     }
-    Symbol sym = ASTHelpers.getSymbol(node);
-    if (!sym.getQualifiedName().contentEquals(rule().qualifiedTemplateClass())) {
-      ListBuffer<JCStatement> statements = new ListBuffer<>();
-      for (Tree tree : node.getMembers()) {
-        if (tree instanceof JCStatement jCStatement) {
-          statements.append(jCStatement);
-        } else {
-          tree.accept(this, context);
-        }
+    ListBuffer<JCStatement> statements = new ListBuffer<>();
+    for (Tree tree : node.getMembers()) {
+      if (tree instanceof JCStatement jCStatement) {
+        statements.append(jCStatement);
+      } else {
+        tree.accept(this, context);
       }
-      scan(TreeMaker.instance(context).Block(0, statements.toList()), context);
     }
+    scan(TreeMaker.instance(context).Block(0, statements.toList()), context);
     return null;
   }
 
   @Override
   public Void visitMethod(MethodTree node, Context context) {
-    VisitorState state = VisitorState.createForUtilityPurposes(context);
-    Symbol sym = ASTHelpers.getSymbol(node);
-    if (hasAnnotation(sym, BEFORE_TEMPLATE_ANNOTATION, state)
-        || hasAnnotation(sym, PLACEHOLDER_ANNOTATION, state)
-        || isSuppressed(node, context)) {
+    if (isSuppressed(node, context)) {
       return null;
     }
     return super.visitMethod(node, context);
@@ -191,6 +189,10 @@ abstract class RefasterScanner<M extends TemplateMatch, T extends Template<M>>
   }
 
   private boolean isSuppressed(Tree node, Context context) {
-    return RefasterSuppressionHelper.suppressed(rule(), node, context);
+    return (node instanceof ClassTree classTree
+            && ASTHelpers.getSymbol(classTree)
+                .getQualifiedName()
+                .contentEquals(rule().qualifiedTemplateClass()))
+        || RefasterSuppressionHelper.suppressed(rule(), node, context);
   }
 }
