@@ -16,38 +16,23 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getLast;
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.fixes.SuggestedFix.emptyFix;
-import static com.google.errorprone.matchers.Matchers.allOf;
-import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.Matchers.assertEqualsInvocation;
-import static com.google.errorprone.matchers.Matchers.assertNotEqualsInvocation;
-import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
-import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
-import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
-import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
-import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
-import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Type;
-import java.util.Arrays;
-import java.util.List;
+import com.sun.tools.javac.code.TypeTag;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
@@ -57,61 +42,40 @@ import java.util.function.BiFunction;
  * @author eleanorh@google.com (Eleanor Harris)
  */
 @BugPattern(
+    altNames = {"CollectionUndefinedEquality", "ArrayAsKeyOfSetOrMap"},
     summary = "This type is not guaranteed to implement a useful equals() method.",
     severity = WARNING)
-public final class UndefinedEquals extends BugChecker implements MethodInvocationTreeMatcher {
+public final class UndefinedEquals extends AbstractEqualsHashCodeUsageChecker {
+
+  private static final String ARRAY_MESSAGE =
+      """
+      Arrays do not override equals() or hashCode, so comparisons will be done on reference \
+      equality only. If neither deduplication nor lookup are needed, consider using a List \
+      instead. Otherwise, use IdentityHashMap/Set, a Map from a library that handles \
+      object arrays, or an Iterable/List of pairs.\
+      """;
 
   private static final Matcher<ExpressionTree> IS_EQUAL_TO =
       instanceMethod().onDescendantOf("com.google.common.truth.Subject").named("isEqualTo");
 
-  private static final Matcher<MethodInvocationTree> ASSERT_THAT_EQUALS =
-      allOf(
-          instanceMethod()
-              .onDescendantOf("com.google.common.truth.Subject")
-              .namedAnyOf("isEqualTo", "isNotEqualTo"),
-          receiverOfInvocation(
-              anyOf(
-                  staticMethod().onClass("com.google.common.truth.Truth").named("assertThat"),
-                  instanceMethod()
-                      .onDescendantOf("com.google.common.truth.StandardSubjectBuilder")
-                      .named("that"))));
-
   @Override
-  public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    Tree receiver;
-    Tree argument;
-    List<? extends ExpressionTree> arguments = tree.getArguments();
-
-    if (staticEqualsInvocation().matches(tree, state)
-        || assertEqualsInvocation().matches(tree, state)
-        || assertNotEqualsInvocation().matches(tree, state)) {
-      receiver = arguments.get(arguments.size() - 2);
-      argument = getLast(arguments);
-    } else if (instanceEqualsInvocation().matches(tree, state)) {
-      receiver = getReceiver(tree);
-      argument = arguments.getFirst();
-    } else if (ASSERT_THAT_EQUALS.matches(tree, state)) {
-      receiver = getOnlyElement(arguments);
-      argument = getOnlyElement(((MethodInvocationTree) getReceiver(tree)).getArguments());
-    } else {
-      return Description.NO_MATCH;
+  protected Optional<String> problem(Type type, Usage usage, VisitorState state) {
+    if (type.hasTag(TypeTag.ARRAY)) {
+      // Direct comparisons of arrays are handled by ArrayEquals, and Truth and JUnit assertions
+      // have special handling for arrays.
+      return usage == Usage.HASH_KEY ? Optional.of(ARRAY_MESSAGE) : Optional.empty();
     }
-
-    return Arrays.stream(TypesWithUndefinedEquality.values())
-        .filter(
-            b -> b.matchesType(getType(receiver), state) || b.matchesType(getType(argument), state))
-        .findFirst()
-        .map(
-            b ->
-                buildDescription(tree)
-                    .setMessage(b.shortName() + " does not have well-defined equality semantics")
-                    .addFix(generateFix(tree, state, receiver, argument).orElse(emptyFix()))
-                    .build())
-        .orElse(Description.NO_MATCH);
+    for (TypesWithUndefinedEquality badType : TypesWithUndefinedEquality.values()) {
+      if (badType.matchesType(type, state)) {
+        return Optional.of(badType.shortName() + " does not have well-defined equality semantics");
+      }
+    }
+    return Optional.empty();
   }
 
-  private static Optional<SuggestedFix> generateFix(
-      MethodInvocationTree tree, VisitorState state, Tree receiver, Tree argument) {
+  @Override
+  protected Optional<SuggestedFix> equalityFix(
+      MethodInvocationTree tree, Tree receiver, Tree argument, VisitorState state) {
     // Generate fix for certain Truth `isEqualTo` calls
     if (IS_EQUAL_TO.matches(tree, state)) {
       String methodText =
