@@ -24,8 +24,12 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
+import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
+import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -65,6 +69,7 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.InjectMatchers;
+import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
@@ -225,7 +230,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     // appropriate fixes for them.
     ListMultimap<Symbol, TreePath> usageSites = variableFinder.usageSites;
 
-    FilterUsedVariables filterUsedVariables = new FilterUsedVariables(unusedElements, usageSites);
+    FilterUsedVariables filterUsedVariables =
+        new FilterUsedVariables(unusedElements, usageSites, state);
     filterUsedVariables.scan(state.getPath(), null);
 
     // Keeps track of whether a symbol was _ever_ used (between reassignments).
@@ -886,11 +892,39 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
 
     private final ImmutableMap<Symbol, TreePath> declarationSites;
 
+    private final VisitorState state;
+
+    /**
+     * Methods which look up a field by name (via a class literal and a string constant) and return
+     * a handle through which it is subsequently read and written. A field whose only accesses go
+     * through such a handle has no direct references in source, but is nonetheless used.
+     */
+    private static final Matcher<ExpressionTree> REFLECTIVE_FIELD_LOOKUP =
+        anyOf(
+            instanceMethod()
+                .onDescendantOf("java.lang.invoke.MethodHandles.Lookup")
+                .namedAnyOf(
+                    "findVarHandle",
+                    "findStaticVarHandle",
+                    "findGetter",
+                    "findSetter",
+                    "findStaticGetter",
+                    "findStaticSetter"),
+            staticMethod()
+                .onClassAny(
+                    "java.util.concurrent.atomic.AtomicIntegerFieldUpdater",
+                    "java.util.concurrent.atomic.AtomicLongFieldUpdater",
+                    "java.util.concurrent.atomic.AtomicReferenceFieldUpdater")
+                .named("newUpdater"));
+
     private FilterUsedVariables(
-        Map<Symbol, TreePath> unusedElements, ListMultimap<Symbol, TreePath> usageSites) {
+        Map<Symbol, TreePath> unusedElements,
+        ListMultimap<Symbol, TreePath> usageSites,
+        VisitorState state) {
       this.unusedElements = unusedElements;
       this.usageSites = usageSites;
       this.declarationSites = ImmutableMap.copyOf(unusedElements);
+      this.state = state;
     }
 
     private boolean isInExpressionStatementTree() {
@@ -1123,7 +1157,44 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       inMethodCall++;
       super.visitMethodInvocation(tree, null);
       inMethodCall--;
+      if (REFLECTIVE_FIELD_LOOKUP.matches(tree, state)) {
+        markReflectivelyLookedUpFieldAsUsed(tree);
+      }
       return null;
+    }
+
+    /**
+     * Given an invocation like {@code lookup.findVarHandle(Foo.class, "bar", int.class)} or {@code
+     * AtomicIntegerFieldUpdater.newUpdater(Foo.class, "bar")}, finds the field {@code Foo.bar} and
+     * treats it as used, since all subsequent reads and writes happen through the returned handle.
+     */
+    private void markReflectivelyLookedUpFieldAsUsed(MethodInvocationTree tree) {
+      ClassSymbol owner = null;
+      String fieldName = null;
+      for (ExpressionTree argument : tree.getArguments()) {
+        if (owner == null
+            && argument instanceof MemberSelectTree memberSelect
+            && memberSelect.getIdentifier().contentEquals("class")) {
+          // The owning class is always the first class literal argument.
+          if (getSymbol(memberSelect.getExpression()) instanceof ClassSymbol classSymbol) {
+            owner = classSymbol;
+          }
+        } else if (fieldName == null) {
+          fieldName = constValue(argument, String.class);
+        }
+      }
+      if (owner == null || fieldName == null) {
+        return;
+      }
+      ClassSymbol finalOwner = owner;
+      String finalFieldName = fieldName;
+      unusedElements
+          .keySet()
+          .removeIf(
+              symbol ->
+                  symbol.getKind() == ElementKind.FIELD
+                      && symbol.owner.equals(finalOwner)
+                      && symbol.getSimpleName().contentEquals(finalFieldName));
     }
   }
 
