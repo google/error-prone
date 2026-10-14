@@ -186,4 +186,47 @@ public class EqualsMissingNullableTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void likelyPublicApiOnly() {
+    CompilationTestHelper.newInstance(EqualsMissingNullable.class, getClass())
+        .setArgs("-XepOpt:Nullness:Conservative=false", "-XepOpt:Nullness:LikelyPublicApiOnly=true")
+        .addSourceLines(
+            "PublicFoo.java",
+            """
+            public abstract class PublicFoo {
+              // BUG: Diagnostic contains: @Nullable
+              public abstract boolean equals(Object o);
+
+              protected abstract static class ProtectedInner {
+                // BUG: Diagnostic contains: @Nullable
+                public abstract boolean equals(Object o);
+              }
+
+              abstract static class PackagePrivateInner {
+                public abstract boolean equals(Object o);
+              }
+
+              public Object anonymous() {
+                return new Object() {
+                  public boolean equals(Object o) {
+                    return false;
+                  }
+                };
+              }
+            }
+            """)
+        .addSourceLines(
+            "PackagePrivateFoo.java",
+            """
+            abstract class PackagePrivateFoo {
+              public abstract boolean equals(Object o);
+
+              public abstract static class PublicInnerInPackagePrivateOuter {
+                public abstract boolean equals(Object o);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

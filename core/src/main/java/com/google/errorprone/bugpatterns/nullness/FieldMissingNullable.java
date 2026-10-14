@@ -22,7 +22,9 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddi
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.getNullCheck;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isAlreadyAnnotatedNullable;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isLikelyToBePublicApi;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.onlyLikelyPublicApi;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.varsProvenNullByParentIf;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -56,10 +58,12 @@ import javax.lang.model.element.Name;
 public class FieldMissingNullable extends BugChecker
     implements BinaryTreeMatcher, AssignmentTreeMatcher, VariableTreeMatcher {
   private final boolean beingConservative;
+  private final boolean onlyLikelyPublicApi;
 
   @Inject
   FieldMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
+    this.onlyLikelyPublicApi = onlyLikelyPublicApi(flags);
   }
 
   @Override
@@ -123,6 +127,9 @@ public class FieldMissingNullable extends BugChecker
   private Description matchIfLocallyDeclaredReferenceFieldWithoutNullable(
       Symbol assigned, ExpressionTree treeToReportOn, VisitorState state) {
     if (assigned == null || assigned.getKind() != FIELD || assigned.type.isPrimitive()) {
+      return NO_MATCH;
+    }
+    if (onlyLikelyPublicApi && !isLikelyToBePublicApi(assigned)) {
       return NO_MATCH;
     }
 

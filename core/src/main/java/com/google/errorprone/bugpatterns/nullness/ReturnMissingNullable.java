@@ -24,8 +24,10 @@ import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToReturnType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isAlreadyAnnotatedNullable;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isLikelyToBePublicApi;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isVoid;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.onlyLikelyPublicApi;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.varsProvenNullByParentIf;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyMethod;
@@ -200,10 +202,12 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
                   .collect(toImmutableSet()));
 
   private final boolean beingConservative;
+  private final boolean onlyLikelyPublicApi;
 
   @Inject
   ReturnMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
+    this.onlyLikelyPublicApi = onlyLikelyPublicApi(flags);
   }
 
   @Override
@@ -287,6 +291,9 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
         }
 
         MethodSymbol possibleOverride = getSymbol(tree);
+        if (onlyLikelyPublicApi && !isLikelyToBePublicApi(possibleOverride)) {
+          return;
+        }
 
         /*
          * TODO(cpovirk): Provide an option to shortcut if !hasAnnotation(possibleOverride,
@@ -358,6 +365,9 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
         }
 
         MethodSymbol method = getSymbol(methodTree);
+        if (onlyLikelyPublicApi && !isLikelyToBePublicApi(method)) {
+          return;
+        }
         List<? extends StatementTree> statements = methodTree.getBody().getStatements();
         if (beingConservative
             && statements.size() == 1

@@ -20,8 +20,10 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToReturnType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAnnotatingTypeUseOnlyLocationWithNullableAnnotation;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isLikelyToBePublicApi;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isVoid;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.onlyLikelyPublicApi;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
@@ -69,10 +71,12 @@ public class VoidMissingNullable extends BugChecker
       anyOf(isSubtypeOf(CLASS_TYPE), isSubtypeOf("com.google.common.reflect.TypeToken"));
 
   private final boolean beingConservative;
+  private final boolean onlyLikelyPublicApi;
 
   @Inject
   VoidMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
+    this.onlyLikelyPublicApi = onlyLikelyPublicApi(flags);
   }
 
   /*
@@ -103,6 +107,10 @@ public class VoidMissingNullable extends BugChecker
     }
 
     if (CLASS_OR_TYPE_TOKEN.matches(parameterizedTypeTree, state)) {
+      return NO_MATCH;
+    }
+
+    if (onlyLikelyPublicApi && !isLikelyToBePublicApi(state.getPath())) {
       return NO_MATCH;
     }
 
@@ -140,6 +148,9 @@ public class VoidMissingNullable extends BugChecker
     if (beingConservative && !NullnessUtils.isInNullMarkedScope(sym, state)) {
       return NO_MATCH;
     }
+    if (onlyLikelyPublicApi && !isLikelyToBePublicApi(sym)) {
+      return NO_MATCH;
+    }
     return describeMatch(tree, fixByAddingNullableAnnotationToReturnType(state, tree));
   }
 
@@ -162,6 +173,9 @@ public class VoidMissingNullable extends BugChecker
       return NO_MATCH;
     }
     if (beingConservative && !NullnessUtils.isInNullMarkedScope(sym, state)) {
+      return NO_MATCH;
+    }
+    if (onlyLikelyPublicApi && !isLikelyToBePublicApi(sym)) {
       return NO_MATCH;
     }
     SuggestedFix fix = fixByAddingNullableAnnotationToType(state, tree);
