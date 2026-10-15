@@ -173,12 +173,10 @@ public class Reachability {
     /* A continue statement cannot complete normally. */
     @Override
     public Boolean visitContinue(ContinueTree tree, Void unused) {
-      continues.add(skipLabel(requireNonNull(((JCTree.JCContinue) tree).target)));
+      // The target of a `continue` with a label is the loop that the label labels, not the labeled
+      // statement (JLS 21 §14.16); javac already resolves it to that loop.
+      continues.add(requireNonNull(((JCTree.JCContinue) tree).target));
       return false;
-    }
-
-    private static Tree skipLabel(JCTree tree) {
-      return tree.hasTag(JCTree.Tag.LABELLED) ? ((JCTree.JCLabeledStatement) tree).body : tree;
     }
 
     @Override
