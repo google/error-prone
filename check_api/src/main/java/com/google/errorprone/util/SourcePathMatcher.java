@@ -28,6 +28,8 @@ import com.google.errorprone.VisitorState;
 import java.util.Arrays;
 import java.util.Optional;
 import org.jspecify.annotations.Nullable;
+import org.safere.Matcher;
+import org.safere.Pattern;
 
 /// Matcher for canonical source file paths supporting exact source file paths and directory
 /// prefixes.
@@ -47,6 +49,13 @@ import org.jspecify.annotations.Nullable;
 /// `java/foo/|javatests/foo/`), allowing multiple paths to be combined into a single string
 /// constant.
 public final class SourcePathMatcher {
+
+  private static final Pattern BLAZE_OUT_PATTERN =
+      Pattern.compile(
+          "^(?:blaze|bazel)-out/(?:.+?\\.runfiles/[^/]+|[^/]+/(?:bin|genfiles))/(?<path>.*)");
+
+  private static final Pattern JAVAC_SRCJAR_PATTERN =
+      Pattern.compile("^(?<pkg>.+?)/_javac/[^/]+/[^/]+/(?<path>.+)");
 
   /// Normalizes a source path by stripping repository workspace roots and build output directories
   /// to produce a canonical repository-relative path.
@@ -84,21 +93,18 @@ public final class SourcePathMatcher {
     // Build output directories: `(blaze-out|bazel-out)/<config-spec>/(bin|genfiles)/...`
     // for generated files or test binaries (`.../<test>.runfiles/<workspace_name>/...`).
     if (path.startsWith("blaze-out/") || path.startsWith("bazel-out/")) {
-      String afterDotRunfiles = substringAfter(path, ".runfiles/");
-      if (afterDotRunfiles != null) {
-        String afterWorkspace = substringAfter(afterDotRunfiles, '/');
-        if (afterWorkspace != null) {
-          path = afterWorkspace;
-        }
-      } else {
-        int slash2 = nthIndexOf(path, '/', 2);
-        int slash3 = nthIndexOf(path, '/', 3);
-        if (slash2 >= 0 && slash3 >= 0) {
-          String dir = path.substring(slash2 + 1, slash3);
-          if (dir.equals("bin") || dir.equals("genfiles")) {
-            path = path.substring(slash3 + 1);
-          }
-        }
+      Matcher matcher = BLAZE_OUT_PATTERN.matcher(path);
+      if (matcher.matches()) {
+        path = matcher.group("path");
+      }
+    }
+
+    // Source jars with repository-relative entry paths extracted by JavaBuilder:
+    // `<pkg>/_javac/<target>/<dir>/<pkg>/<file>` -> `<pkg>/<file>`.
+    if (path.contains("/_javac/")) {
+      Matcher matcher = JAVAC_SRCJAR_PATTERN.matcher(path);
+      if (matcher.matches() && matcher.group("path").startsWith(matcher.group("pkg") + "/")) {
+        path = matcher.group("path");
       }
     }
 

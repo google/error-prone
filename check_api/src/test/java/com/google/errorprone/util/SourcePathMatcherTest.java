@@ -236,6 +236,26 @@ public class SourcePathMatcherTest {
         "bazel-out/k8-opt/genfiles/java/com/google/foo/BarProto.java",
         "java/com/google/foo/BarProto.java"),
 
+    // Source jars extracted under _javac/<target>/<dir>/:
+    // Repository-relative entry paths repeating <pkg>/ are collapsed to <pkg>/<file>, while
+    // Java-package-relative or bare-filename entry paths keep their <pkg>/_javac/... prefix and
+    // mismatched package prefixes are not collapsed.
+    JAVAC_SRCJAR_REPEATED_PKG(
+        "blaze-out/k8-opt/bin/java/com/google/foo/_javac/foo-j2cl/libfoo-j2cl_tmp/java/com/google/foo/Bar.java",
+        "java/com/google/foo/Bar.java"),
+    JAVAC_SRCJAR_REPEATED_PKG_SUBDIR(
+        "bazel-out/k8-fastbuild/bin/java/com/google/foo/_javac/foo-j2objc/libfoo-j2objc-ios_tmp/java/com/google/foo/sub/Bar.java",
+        "java/com/google/foo/sub/Bar.java"),
+    JAVAC_SRCJAR_JAVA_PKG_ENTRY(
+        "blaze-out/k8-opt/bin/java/com/google/foo/_javac/foo/libfoo_sources/com/google/foo/AutoValue_Bar.java",
+        "java/com/google/foo/_javac/foo/libfoo_sources/com/google/foo/AutoValue_Bar.java"),
+    JAVAC_SRCJAR_BARE_FILENAME(
+        "blaze-out/k8-opt/bin/java/com/google/foo/_javac/foo/libfoo_tmp/Bar.java",
+        "java/com/google/foo/_javac/foo/libfoo_tmp/Bar.java"),
+    JAVAC_SRCJAR_MISMATCHED_PKG(
+        "blaze-out/k8-opt/bin/java/com/google/disallowed/_javac/foo/libfoo_tmp/java/com/google/allowed/Bar.java",
+        "java/com/google/disallowed/_javac/foo/libfoo_tmp/java/com/google/allowed/Bar.java"),
+
     // Standard relative paths and leading-slash paths:
     LEADING_SLASH("/java/com/google/foo/Bar.java", "java/com/google/foo/Bar.java"),
     STANDARD_RELATIVE("java/com/google/foo/Bar.java", "java/com/google/foo/Bar.java"),
