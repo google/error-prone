@@ -33,6 +33,7 @@ import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.util.Name;
+import java.util.Objects;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -133,24 +134,40 @@ public final class StaticImports {
     // TODO(gak): we should instead find the most specific subtype with a member that is _used_
     Type canonicalOwner = null;
     for (Symbol member : members) {
-      Type owner = types.erasure(member.owner.type);
+      Type owner = canonicalOwner(member, baseType, types, pkgSym);
       if (canonicalOwner == null || types.isSubtype(owner, canonicalOwner)) {
         canonicalOwner = owner;
       }
     }
 
-    if (canonicalOwner == null) {
-      return null;
-    }
-
-    if (members.size() == 1 && getOnlyElement(members) instanceof ClassSymbol) {
-      return StaticImportInfo.create(access.toString(), getOnlyElement(members).toString());
+    if (members.size() == 1
+        && getOnlyElement(members) instanceof ClassSymbol classSymbol
+        && isTypeAccessibleFromPackage(classSymbol, pkgSym)) {
+      return StaticImportInfo.create(access.toString(), classSymbol.toString());
     }
     return StaticImportInfo.create(
         access.getExpression().toString(),
         canonicalOwner.toString(),
         identifier.toString(),
         members);
+  }
+
+  /**
+   * Finds the most canonical type that owns or inherits {@code member} from {@code baseType} and is
+   * accessible from {@code pkg}.
+   */
+  private static Type canonicalOwner(
+      Symbol member, Symbol.TypeSymbol baseType, Types types, Symbol.PackageSymbol pkg) {
+    Type memberOwner = types.erasure(member.owner.type);
+    Type owner = types.erasure(baseType.type);
+    for (Type superType : types.closure(baseType.type)) {
+      Type erasedSuperType = types.erasure(superType);
+      if (types.isSubtype(erasedSuperType, memberOwner)
+          && isTypeAccessibleFromPackage(erasedSuperType.tsym, pkg)) {
+        owner = erasedSuperType;
+      }
+    }
+    return owner;
   }
 
   /**
@@ -183,18 +200,8 @@ public final class StaticImports {
       if (!isStatic(member)) {
         continue;
       }
-      switch ((int) (member.flags() & Flags.AccessFlags)) {
-        case Flags.PRIVATE:
-          continue;
-        case 0:
-        case Flags.PROTECTED:
-          if (enclosingPackage(member).orElse(null) != pkg) {
-            continue;
-          }
-          break;
-        case Flags.PUBLIC:
-        default:
-          break;
+      if (!isAccessibleFromPackage(member, pkg)) {
+        continue;
       }
       if (member.isMemberOf(start, types)) {
         members.add(member);
@@ -202,6 +209,23 @@ public final class StaticImports {
     }
 
     return members.build();
+  }
+
+  private static boolean isTypeAccessibleFromPackage(Symbol type, Symbol.PackageSymbol pkg) {
+    for (Symbol curr = type; !(curr instanceof Symbol.PackageSymbol); curr = curr.owner) {
+      if (!isAccessibleFromPackage(curr, pkg)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static boolean isAccessibleFromPackage(Symbol sym, Symbol.PackageSymbol pkg) {
+    return switch ((int) (sym.flags() & Flags.AccessFlags)) {
+      case Flags.PRIVATE -> false;
+      case 0, Flags.PROTECTED -> Objects.equals(enclosingPackage(sym).orElse(null), pkg);
+      default -> true;
+    };
   }
 
   private StaticImports() {}

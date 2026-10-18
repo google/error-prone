@@ -68,6 +68,30 @@ Prefer calling `#get` and checking the result, or using
 `assertThat(...).isSameInstanceAs()` or `assertThat(...).isNotSameInstanceAs()`
 for cases where the same/different instance is expected.
 
+## In collections
+
+Methods like `Collection#contains` and `Map#get`, as well as hash-based
+containers like `HashSet`, `HashMap`, `ImmutableSet`, and `ImmutableMap`, rely
+on `equals` (and `hashCode`), so they are subject to the same problems when the
+element or key type does not have well-defined equality.
+
+```java
+ImmutableList<Collection<Integer>> collectionsOfIntegers =
+    ImmutableList.of(ImmutableSet.of(1, 2), ImmutableSet.of(3, 4));
+
+collectionsOfIntegers.contains(ImmutableSet.of(1, 2)); // true
+collectionsOfIntegers.contains(ImmutableList.of(1, 2)); // false
+```
+
+## For arrays
+
+Arrays do not override `equals` or `hashCode`, so using them as elements of a
+hash-based `Set`, or keys of a hash-based `Map`, `Multimap`, or `Multiset`,
+compares them by reference rather than by their contents. If neither
+deduplication nor lookup are needed, consider using a `List` instead. Otherwise,
+use `IdentityHashMap`/`Set`, a `Map` from a library that handles object arrays,
+or an `Iterable`/`List` of pairs.
+
 [`Collection`]: https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html
 [`Future`]: https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Future.html
 [`Iterable`]: https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html

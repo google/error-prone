@@ -19,6 +19,7 @@ package com.google.errorprone.util;
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
 
+import com.google.common.collect.ImmutableList;
 import com.google.testing.junit.testparameterinjector.TestParameter;
 import com.google.testing.junit.testparameterinjector.TestParameterInjector;
 import org.junit.Test;
@@ -104,49 +105,81 @@ public class SourcePathMatcherTest {
   }
 
   @Test
-  public void invalidPatterns_rejected() {
-    // Leading slash
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> SourcePathMatcher.create("/java/com/google/foo/Bar.java"));
-    assertThrows(
-        IllegalArgumentException.class, () -> SourcePathMatcher.create("/java/com/google/foo/"));
-    // Bare directory without trailing slash
-    assertThrows(
-        IllegalArgumentException.class, () -> SourcePathMatcher.create("java/com/google/foo"));
-    // Non-java/kt file
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> SourcePathMatcher.create("java/com/google/foo/Bar.proto"));
-    // Empty / slash only
-    assertThrows(IllegalArgumentException.class, () -> SourcePathMatcher.create(""));
-    assertThrows(IllegalArgumentException.class, () -> SourcePathMatcher.create("/"));
-    // Doubled slashes
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> SourcePathMatcher.create("java/com//google/foo/Bar.java"));
-    assertThrows(
-        IllegalArgumentException.class, () -> SourcePathMatcher.create("java/com//google/foo/"));
-    // Wildcards (* and ?) not supported
-    assertThrows(
-        IllegalArgumentException.class, () -> SourcePathMatcher.create("java/com/google/foo/**"));
-    assertThrows(
-        IllegalArgumentException.class, () -> SourcePathMatcher.create("java/com/google/foo/*"));
-    assertThrows(
-        IllegalArgumentException.class, () -> SourcePathMatcher.create("**/*Templates.java"));
-    assertThrows(
-        IllegalArgumentException.class, () -> SourcePathMatcher.create("java/com/*/Bar.java"));
-    assertThrows(
-        IllegalArgumentException.class,
-        () -> SourcePathMatcher.create("java/com/google/foo/Bar?.java"));
-    // Path traversal
-    assertThrows(
-        IllegalArgumentException.class, () -> SourcePathMatcher.create("java/com/../foo/Bar.java"));
-    assertThrows(IllegalArgumentException.class, () -> SourcePathMatcher.create("../foo/Bar.java"));
-    assertThrows(
-        IllegalArgumentException.class, () -> SourcePathMatcher.create("./java/com/foo/Bar.java"));
-    assertThrows(
-        IllegalArgumentException.class, () -> SourcePathMatcher.create("java/com/./foo/Bar.java"));
+  public void invalidPatterns_rejected(
+      @TestParameter({
+            // Leading slash
+            "/java/com/google/foo/Bar.java",
+            "/java/com/google/foo/",
+            // Bare directory without trailing slash
+            "java/com/google/foo",
+            // Non-java/kt file
+            "java/com/google/foo/Bar.proto",
+            // Empty / slash only
+            "",
+            "/",
+            // Doubled slashes
+            "java/com//google/foo/Bar.java",
+            "java/com//google/foo/",
+            // Wildcards (* and ?) not supported
+            "java/com/google/foo/**",
+            "java/com/google/foo/*",
+            "**/*Templates.java",
+            "java/com/*/Bar.java",
+            "java/com/google/foo/Bar?.java",
+            // Regex grouping not supported
+            "(java|javatests)/com/google/foo/",
+            // Pipe only / whitespace only
+            "|",
+            " | | ",
+            // Path traversal and leading dot
+            "java/com/../foo/Bar.java",
+            "../foo/Bar.java",
+            "./java/com/foo/Bar.java",
+            ".+java/com/foo/Bar.java",
+            ".Bar.kt",
+            "java/com/./foo/Bar.java",
+            // Regex syntax not supported
+            "^java/com/google/foo/Bar.java$",
+            "java/com/google/foo/Bar\\.java",
+            "java/com/google/[a-z]+/Bar.java",
+          })
+          String pattern) {
+    assertThrows(IllegalArgumentException.class, () -> SourcePathMatcher.create(pattern));
+  }
+
+  @Test
+  public void validate() {
+    assertThat(SourcePathMatcher.validate(ImmutableList.of())).isEmpty();
+    assertThat(
+            SourcePathMatcher.validate(
+                ImmutableList.of("java/com/google/foo/", "java/com/google/foo/Bar.java")))
+        .isEmpty();
+    assertThat(SourcePathMatcher.validate(ImmutableList.of("java/com/google/foo")))
+        .hasValue(
+            "Exact path pattern must end with '.java', '.kt', or '.kts' (use a trailing '/' for"
+                + " directory prefixes): java/com/google/foo");
+  }
+
+  @Test
+  public void pipeDelimitedPatterns() {
+    SourcePathMatcher matcher =
+        SourcePathMatcher.create(
+            "java/com/google/foo/|javatests/com/google/foo/|java/com/google/other/Specific.java");
+    assertThat(matcher.matches("java/com/google/foo/Bar.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/foo/bar/Baz.java")).isTrue();
+    assertThat(matcher.matches("javatests/com/google/foo/BarTest.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/other/Specific.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/other/Other.java")).isFalse();
+  }
+
+  @Test
+  public void pipeDelimitedPatterns_withWhitespaceAndLeadingTrailingPipes() {
+    SourcePathMatcher matcher =
+        SourcePathMatcher.create("| java/com/google/foo/ | javatests/com/google/foo/ |");
+    assertThat(matcher.matches("java/com/google/foo/Bar.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/foo/bar/Baz.java")).isTrue();
+    assertThat(matcher.matches("javatests/com/google/foo/BarTest.java")).isTrue();
+    assertThat(matcher.matches("java/com/google/other/Bar.java")).isFalse();
   }
 
   private enum CanonicalizeTestCase {
@@ -202,6 +235,26 @@ public class SourcePathMatcherTest {
     BAZEL_OUT_GENFILES(
         "bazel-out/k8-opt/genfiles/java/com/google/foo/BarProto.java",
         "java/com/google/foo/BarProto.java"),
+
+    // Source jars extracted under _javac/<target>/<dir>/:
+    // Repository-relative entry paths repeating <pkg>/ are collapsed to <pkg>/<file>, while
+    // Java-package-relative or bare-filename entry paths keep their <pkg>/_javac/... prefix and
+    // mismatched package prefixes are not collapsed.
+    JAVAC_SRCJAR_REPEATED_PKG(
+        "blaze-out/k8-opt/bin/java/com/google/foo/_javac/foo-j2cl/libfoo-j2cl_tmp/java/com/google/foo/Bar.java",
+        "java/com/google/foo/Bar.java"),
+    JAVAC_SRCJAR_REPEATED_PKG_SUBDIR(
+        "bazel-out/k8-fastbuild/bin/java/com/google/foo/_javac/foo-j2objc/libfoo-j2objc-ios_tmp/java/com/google/foo/sub/Bar.java",
+        "java/com/google/foo/sub/Bar.java"),
+    JAVAC_SRCJAR_JAVA_PKG_ENTRY(
+        "blaze-out/k8-opt/bin/java/com/google/foo/_javac/foo/libfoo_sources/com/google/foo/AutoValue_Bar.java",
+        "java/com/google/foo/_javac/foo/libfoo_sources/com/google/foo/AutoValue_Bar.java"),
+    JAVAC_SRCJAR_BARE_FILENAME(
+        "blaze-out/k8-opt/bin/java/com/google/foo/_javac/foo/libfoo_tmp/Bar.java",
+        "java/com/google/foo/_javac/foo/libfoo_tmp/Bar.java"),
+    JAVAC_SRCJAR_MISMATCHED_PKG(
+        "blaze-out/k8-opt/bin/java/com/google/disallowed/_javac/foo/libfoo_tmp/java/com/google/allowed/Bar.java",
+        "java/com/google/disallowed/_javac/foo/libfoo_tmp/java/com/google/allowed/Bar.java"),
 
     // Standard relative paths and leading-slash paths:
     LEADING_SLASH("/java/com/google/foo/Bar.java", "java/com/google/foo/Bar.java"),

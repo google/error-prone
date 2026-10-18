@@ -2573,6 +2573,107 @@ public class ReturnMissingNullableTest {
         .doTest();
   }
 
+  @Test
+  public void likelyPublicApiOnly() {
+    createCompilationTestHelper()
+        .setArgs("-XepOpt:Nullness:LikelyPublicApiOnly=true")
+        .addSourceLines(
+            "PublicFoo.java",
+            """
+            public class PublicFoo {
+              public String publicMethod(boolean b) {
+                if (b) {
+                  // BUG: Diagnostic contains: @Nullable
+                  return null;
+                }
+                return "";
+              }
+
+              protected String protectedMethod(boolean b) {
+                if (b) {
+                  // BUG: Diagnostic contains: @Nullable
+                  return null;
+                }
+                return "";
+              }
+
+              String packagePrivateMethod(boolean b) {
+                if (b) {
+                  return null;
+                }
+                return "";
+              }
+
+              private String privateMethod(boolean b) {
+                if (b) {
+                  return null;
+                }
+                return "";
+              }
+
+              protected static class ProtectedInner {
+                public String methodInProtectedInner(boolean b) {
+                  if (b) {
+                    // BUG: Diagnostic contains: @Nullable
+                    return null;
+                  }
+                  return "";
+                }
+              }
+
+              static class PackagePrivateInner {
+                public String methodInPackagePrivateInner(boolean b) {
+                  if (b) {
+                    return null;
+                  }
+                  return "";
+                }
+              }
+
+              public Object anonymousAndLocal() {
+                class Local {
+                  public String methodInLocal(boolean b) {
+                    if (b) {
+                      return null;
+                    }
+                    return "";
+                  }
+                }
+                return new Object() {
+                  public String methodInAnonymous(boolean b) {
+                    if (b) {
+                      return null;
+                    }
+                    return "";
+                  }
+                };
+              }
+            }
+            """)
+        .addSourceLines(
+            "PackagePrivateFoo.java",
+            """
+            class PackagePrivateFoo {
+              public String publicMethodInPackagePrivateOuter(boolean b) {
+                if (b) {
+                  return null;
+                }
+                return "";
+              }
+
+              public static class PublicInnerInPackagePrivateOuter {
+                public String publicMethod(boolean b) {
+                  if (b) {
+                    return null;
+                  }
+                  return "";
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
   private CompilationTestHelper createCompilationTestHelper() {
     return CompilationTestHelper.newInstance(ReturnMissingNullable.class, getClass());
   }

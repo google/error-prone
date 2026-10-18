@@ -29,15 +29,15 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <guava.version>33.7.1-jre</guava.version>
+    <guava.version>33.7.2-jre</guava.version>
     <truth.version>1.4.5</truth.version>
     <autoservice.version>1.1.1</autoservice.version>
     <autovalue.version>1.11.1</autovalue.version>
     <junit.version>4.13.2</junit.version>
     <dataflow.version>3.41.0-eisop1</dataflow.version>
-    <mockito.version>5.23.0</mockito.version>
+    <mockito.version>5.24.0</mockito.version>
     <compile.testing.version>0.23.0</compile.testing.version>
-    <caffeine.version>3.2.4</caffeine.version>
+    <caffeine.version>3.3.0</caffeine.version>
     <flogger.version>0.9</flogger.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
@@ -45,7 +45,7 @@
     <protobuf.version>4.36.2</protobuf.version>
     <grpc.version>1.43.3</grpc.version>
     <jspecify.version>1.0.1</jspecify.version>
-    <google-java-format.version>1.36.1</google-java-format.version>
+    <google-java-format.version>1.37.0</google-java-format.version>
   </properties>
 
   <organization>

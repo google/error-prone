@@ -24,7 +24,9 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.getNullCh
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefinitelyNullBranch;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasExtraParameterForEnclosingInstance;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isAlreadyAnnotatedNullable;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isLikelyToBePublicApi;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.onlyLikelyPublicApi;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -66,10 +68,12 @@ import javax.inject.Inject;
 public final class ParameterMissingNullable extends BugChecker
     implements BinaryTreeMatcher, MethodInvocationTreeMatcher, NewClassTreeMatcher {
   private final boolean beingConservative;
+  private final boolean onlyLikelyPublicApi;
 
   @Inject
   ParameterMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
+    this.onlyLikelyPublicApi = onlyLikelyPublicApi(flags);
   }
 
   @Override
@@ -111,6 +115,9 @@ public final class ParameterMissingNullable extends BugChecker
      */
     Symbol symbol = nullCheck.varSymbolButUsuallyPreferBareIdentifier();
     if (!isParameterWithoutNullable(symbol)) {
+      return NO_MATCH;
+    }
+    if (onlyLikelyPublicApi && !isLikelyToBePublicApi(symbol)) {
       return NO_MATCH;
     }
 
@@ -245,6 +252,10 @@ public final class ParameterMissingNullable extends BugChecker
 
   private Description matchCall(
       MethodSymbol methodSymbol, List<? extends ExpressionTree> arguments, VisitorState state) {
+    if (onlyLikelyPublicApi && !isLikelyToBePublicApi(methodSymbol)) {
+      return NO_MATCH;
+    }
+
     if (hasExtraParameterForEnclosingInstance(methodSymbol)) {
       // TODO(b/232103314): Figure out the right way to handle the implicit outer `this` parameter.
       return NO_MATCH;

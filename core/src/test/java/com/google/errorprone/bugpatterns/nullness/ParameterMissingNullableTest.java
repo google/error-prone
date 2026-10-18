@@ -585,4 +585,61 @@ public class ParameterMissingNullableTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void likelyPublicApiOnly() {
+    CompilationTestHelper.newInstance(ParameterMissingNullable.class, getClass())
+        .setArgs("-XepOpt:Nullness:Conservative=false", "-XepOpt:Nullness:LikelyPublicApiOnly=true")
+        .addSourceLines(
+            "PublicFoo.java",
+            """
+            import java.util.function.Consumer;
+
+            public class PublicFoo {
+              public void publicNullCheck(Integer i) {
+                // BUG: Diagnostic contains: @Nullable
+                if (i == null) {
+                  i = 0;
+                }
+              }
+
+              void packagePrivateNullCheck(Integer i) {
+                if (i == null) {
+                  i = 0;
+                }
+              }
+
+              public void lambdaNullCheck() {
+                Consumer<Integer> c =
+                    (Integer i) -> {
+                      if (i == null) {
+                        i = 0;
+                      }
+                    };
+              }
+
+              public void publicCalledWithNull(Integer i) {}
+
+              void packagePrivateCalledWithNull(Integer i) {}
+
+              void caller() {
+                // BUG: Diagnostic contains: @Nullable
+                publicCalledWithNull(null);
+                packagePrivateCalledWithNull(null);
+              }
+            }
+            """)
+        .addSourceLines(
+            "PackagePrivateFoo.java",
+            """
+            class PackagePrivateFoo {
+              public void publicMethodInPackagePrivateClass(Integer i) {
+                if (i == null) {
+                  i = 0;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }

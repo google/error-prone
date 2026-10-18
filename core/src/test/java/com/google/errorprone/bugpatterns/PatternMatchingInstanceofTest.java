@@ -1768,4 +1768,51 @@ public final class PatternMatchingInstanceofTest {
         .expectUnchanged()
         .doTest();
   }
+
+  @Test
+  public void existingPatternBinding_redundantCastReplaced() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String s) {
+                  System.out.println(((String) o).length() + s.length());
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String s) {
+                  System.out.println(s.length() + s.length());
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void existingPatternBinding_reassigned_noFinding() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              void test(Object o) {
+                if (o instanceof String s) {
+                  s = "reassigned";
+                  System.out.println(((String) o).length());
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }

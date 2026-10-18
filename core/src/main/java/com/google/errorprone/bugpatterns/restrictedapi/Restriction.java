@@ -69,8 +69,8 @@ public record Restriction(
   }
 
   /**
-   * Validates path restrictions on an annotation, returning an error message if both {@code
-   * allowedPaths} and {@code allowedOnPath} are specified.
+   * Validates path restrictions on an annotation, returning an error message if {@code
+   * allowedPaths} or {@code allowedOnPath} is invalid or if both are specified.
    */
   public static Optional<String> validateAnnotation(
       AnnotationMirror attribute, Symbol annotationSymbol) {
@@ -80,6 +80,23 @@ public record Restriction(
           String.format(
               "Do not specify both allowedPaths and allowedOnPath on @%s; prefer allowedPaths.",
               annotationSymbol.getSimpleName()));
+    }
+    Optional<String> invalidPaths = SourcePathMatcher.validate(paths.allowedPaths());
+    if (invalidPaths.isPresent()) {
+      return Optional.of(
+          String.format(
+              "Invalid allowedPaths on @%s: %s",
+              annotationSymbol.getSimpleName(), invalidPaths.get()));
+    }
+    if (!paths.allowedOnPath().isEmpty()) {
+      try {
+        var unused = Pattern.compile(paths.allowedOnPath());
+      } catch (PatternSyntaxException e) {
+        return Optional.of(
+            String.format(
+                "Invalid allowedOnPath regex on @%s: %s",
+                annotationSymbol.getSimpleName(), e.getMessage()));
+      }
     }
     return Optional.empty();
   }

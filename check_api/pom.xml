@@ -121,7 +121,7 @@
       <!-- Apache 2.0 -->
       <groupId>com.google.testparameterinjector</groupId>
       <artifactId>test-parameter-injector</artifactId>
-      <version>1.23</version>
+      <version>1.24</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -153,7 +153,7 @@
       <!-- BSD 3-Clause -->
       <groupId>org.safere</groupId>
       <artifactId>safere</artifactId>
-      <version>0.11.0</version>
+      <version>1.0.0</version>
     </dependency>
   </dependencies>
 

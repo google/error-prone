@@ -630,6 +630,32 @@ public class FieldMissingNullableTest {
         .doTest();
   }
 
+  @Test
+  public void likelyPublicApiOnly() {
+    createCompilationTestHelper()
+        .setArgs("-XepOpt:Nullness:LikelyPublicApiOnly=true")
+        .addSourceLines(
+            "PublicFoo.java",
+            """
+            public class PublicFoo {
+              // BUG: Diagnostic contains: @Nullable
+              public Object publicField = null;
+              // BUG: Diagnostic contains: @Nullable
+              protected Object protectedField = null;
+              Object packagePrivateField = null;
+              private Object privateField = null;
+            }
+            """)
+        .addSourceLines(
+            "PackagePrivateFoo.java",
+            """
+            class PackagePrivateFoo {
+              public Object publicFieldInPackagePrivateClass = null;
+            }
+            """)
+        .doTest();
+  }
+
   private CompilationTestHelper createCompilationTestHelper() {
     return CompilationTestHelper.newInstance(FieldMissingNullable.class, getClass());
   }

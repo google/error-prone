@@ -19,12 +19,17 @@ package com.google.errorprone.util;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import com.google.common.base.CharMatcher;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.errorprone.VisitorState;
 import java.util.Arrays;
+import java.util.Optional;
 import org.jspecify.annotations.Nullable;
+import org.safere.Matcher;
+import org.safere.Pattern;
 
 /// Matcher for canonical source file paths supporting exact source file paths and directory
 /// prefixes.
@@ -40,8 +45,17 @@ import org.jspecify.annotations.Nullable;
 ///   `java/com/google/foo/`).
 ///
 /// Patterns must be repository-relative and must not start with a leading `/`. Wildcards (`*`, `?`)
-/// are not supported.
+/// and regex grouping (`(`, `)`) are not supported. Multiple paths can be separated by `|` (e.g.,
+/// `java/foo/|javatests/foo/`), allowing multiple paths to be combined into a single string
+/// constant.
 public final class SourcePathMatcher {
+
+  private static final Pattern BLAZE_OUT_PATTERN =
+      Pattern.compile(
+          "^(?:blaze|bazel)-out/(?:.+?\\.runfiles/[^/]+|[^/]+/(?:bin|genfiles))/(?<path>.*)");
+
+  private static final Pattern JAVAC_SRCJAR_PATTERN =
+      Pattern.compile("^(?<pkg>.+?)/_javac/[^/]+/[^/]+/(?<path>.+)");
 
   /// Normalizes a source path by stripping repository workspace roots and build output directories
   /// to produce a canonical repository-relative path.
@@ -79,21 +93,18 @@ public final class SourcePathMatcher {
     // Build output directories: `(blaze-out|bazel-out)/<config-spec>/(bin|genfiles)/...`
     // for generated files or test binaries (`.../<test>.runfiles/<workspace_name>/...`).
     if (path.startsWith("blaze-out/") || path.startsWith("bazel-out/")) {
-      String afterDotRunfiles = substringAfter(path, ".runfiles/");
-      if (afterDotRunfiles != null) {
-        String afterWorkspace = substringAfter(afterDotRunfiles, '/');
-        if (afterWorkspace != null) {
-          path = afterWorkspace;
-        }
-      } else {
-        int slash2 = nthIndexOf(path, '/', 2);
-        int slash3 = nthIndexOf(path, '/', 3);
-        if (slash2 >= 0 && slash3 >= 0) {
-          String dir = path.substring(slash2 + 1, slash3);
-          if (dir.equals("bin") || dir.equals("genfiles")) {
-            path = path.substring(slash3 + 1);
-          }
-        }
+      Matcher matcher = BLAZE_OUT_PATTERN.matcher(path);
+      if (matcher.matches()) {
+        path = matcher.group("path");
+      }
+    }
+
+    // Source jars with repository-relative entry paths extracted by JavaBuilder:
+    // `<pkg>/_javac/<target>/<dir>/<pkg>/<file>` -> `<pkg>/<file>`.
+    if (path.contains("/_javac/")) {
+      Matcher matcher = JAVAC_SRCJAR_PATTERN.matcher(path);
+      if (matcher.matches() && matcher.group("path").startsWith(matcher.group("pkg") + "/")) {
+        path = matcher.group("path");
       }
     }
 
@@ -124,6 +135,8 @@ public final class SourcePathMatcher {
   private static final SourcePathMatcher EMPTY =
       new SourcePathMatcher(ImmutableSet.of(), ImmutableSortedSet.of());
 
+  private static final Splitter PIPE_SPLITTER = Splitter.on('|').trimResults().omitEmptyStrings();
+
   private final ImmutableSet<String> exactPaths;
   private final ImmutableSortedSet<String> prefixes;
 
@@ -150,7 +163,13 @@ public final class SourcePathMatcher {
     ImmutableList.Builder<String> prefixesBuilder = ImmutableList.builder();
 
     for (String pattern : pathPatterns) {
-      parsePath(pattern, exactBuilder, prefixesBuilder);
+      checkNotNull(pattern, "pattern");
+      checkArgument(!pattern.trim().isEmpty(), "Path pattern must not be empty");
+      ImmutableList<String> parts = ImmutableList.copyOf(PIPE_SPLITTER.split(pattern));
+      checkArgument(!parts.isEmpty(), "Path pattern must not be empty: %s", pattern);
+      for (String part : parts) {
+        parsePath(part, exactBuilder, prefixesBuilder);
+      }
     }
 
     ImmutableSet<String> exact = exactBuilder.build();
@@ -160,6 +179,17 @@ public final class SourcePathMatcher {
       return EMPTY;
     }
     return new SourcePathMatcher(exact, pref);
+  }
+
+  /// Validates the given path patterns, returning an error message if any pattern is invalid, or
+  /// [Optional#empty] if all patterns are valid.
+  public static Optional<String> validate(Iterable<String> pathPatterns) {
+    try {
+      var unused = create(pathPatterns);
+      return Optional.empty();
+    } catch (IllegalArgumentException e) {
+      return Optional.ofNullable(e.getMessage());
+    }
   }
 
   // Sorts directory prefixes and prunes subsumed descendant prefixes. Because directory prefixes
@@ -192,12 +222,16 @@ public final class SourcePathMatcher {
     checkArgument(!pattern.contains("//"), "Path patterns must not contain '//': %s", pattern);
     checkArgument(!pattern.contains(".."), "Path patterns must not contain '..': %s", pattern);
     checkArgument(
-        !pattern.startsWith("./") && !pattern.contains("/./"),
-        "Path patterns must not contain './': %s",
+        !pattern.startsWith(".") && !pattern.contains("/./"),
+        "Path patterns must not start with '.' or contain '/./': %s",
         pattern);
     checkArgument(
-        !pattern.contains("*") && !pattern.contains("?"),
-        "Wildcards are not supported: %s",
+        CharMatcher.anyOf("*?[]^$\\").matchesNoneOf(pattern),
+        "Wildcards and regular expression syntax are not supported: %s",
+        pattern);
+    checkArgument(
+        CharMatcher.anyOf("()").matchesNoneOf(pattern),
+        "Regex grouping is not supported; specify each full path separated by '|': %s",
         pattern);
 
     if (pattern.endsWith("/")) {

@@ -21,7 +21,9 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.fixByAddingNullableAnnotationToType;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isAlreadyAnnotatedNullable;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isInNullMarkedScope;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.isLikelyToBePublicApi;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
+import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.onlyLikelyPublicApi;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.equalsMethodDeclaration;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -44,10 +46,12 @@ import javax.inject.Inject;
     severity = SUGGESTION)
 public class EqualsMissingNullable extends BugChecker implements MethodTreeMatcher {
   private final boolean beingConservative;
+  private final boolean onlyLikelyPublicApi;
 
   @Inject
   EqualsMissingNullable(ErrorProneFlags flags) {
     this.beingConservative = nullnessChecksShouldBeConservative(flags);
+    this.onlyLikelyPublicApi = onlyLikelyPublicApi(flags);
   }
 
   @Override
@@ -62,6 +66,9 @@ public class EqualsMissingNullable extends BugChecker implements MethodTreeMatch
 
     VariableTree parameterTree = getOnlyElement(methodTree.getParameters());
     VarSymbol parameter = getSymbol(parameterTree);
+    if (onlyLikelyPublicApi && !isLikelyToBePublicApi(parameter)) {
+      return NO_MATCH;
+    }
     if (isAlreadyAnnotatedNullable(parameter)) {
       return NO_MATCH;
     }

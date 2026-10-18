@@ -16,11 +16,10 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.SwitchUtils.getHandledEnumValues;
 import static com.google.errorprone.bugpatterns.Switches.isDefaultCaseForSkew;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -125,14 +124,8 @@ public class MissingCasesInEnumSwitch extends BugChecker
 
   private static Set<String> getUnhandledEnumValues(
       Type switchType, List<? extends CaseTree> cases) {
-    ImmutableSet<String> handled =
-        cases.stream()
-            .flatMap(c -> c.getExpressions().stream())
-            .map(ASTHelpers::getSymbol)
-            .filter(x -> x != null)
-            .map(symbol -> symbol.getSimpleName().toString())
-            .collect(toImmutableSet());
-    return Sets.difference(ASTHelpers.enumValues(switchType.asElement()), handled);
+    return Sets.difference(
+        ASTHelpers.enumValues(switchType.asElement()), getHandledEnumValues(cases));
   }
 
   /**

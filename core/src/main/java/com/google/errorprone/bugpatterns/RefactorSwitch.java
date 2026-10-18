@@ -17,13 +17,13 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.bugpatterns.SwitchUtils.KINDS_RETURN_OR_THROW;
 import static com.google.errorprone.bugpatterns.SwitchUtils.REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION;
 import static com.google.errorprone.bugpatterns.SwitchUtils.analyzeCaseForNullAndDefault;
 import static com.google.errorprone.bugpatterns.SwitchUtils.findCombinableVariableTree;
+import static com.google.errorprone.bugpatterns.SwitchUtils.getHandledEnumValues;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getPrecedingStatementsInBlock;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getStatements;
 import static com.google.errorprone.bugpatterns.SwitchUtils.hasContinueOutOfTree;
@@ -38,6 +38,7 @@ import static com.google.errorprone.bugpatterns.SwitchUtils.renderVariableTreeFl
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
+import static com.google.errorprone.util.Reachability.CanCompleteNormallyPatch.CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
@@ -198,12 +199,7 @@ public final class RefactorSwitch extends BugChecker
       }
 
       // Accumulate enum values included in this case
-      handledEnumValues.addAll(
-          caseTree.getExpressions().stream()
-              .map(ASTHelpers::getSymbol)
-              .filter(x -> x != null)
-              .map(symbol -> symbol.getSimpleName().toString())
-              .collect(toImmutableSet()));
+      handledEnumValues.addAll(getHandledEnumValues(caseTree));
 
       returnSwitchCaseQualifications =
           analyzeCaseForReturnSwitch(returnSwitchCaseQualifications, statements);
@@ -357,12 +353,7 @@ public final class RefactorSwitch extends BugChecker
       ImmutableList<StatementTree> statements = getStatements(caseTree);
 
       // Accumulate enum values included in this case
-      handledEnumValues.addAll(
-          caseTree.getExpressions().stream()
-              .map(ASTHelpers::getSymbol)
-              .filter(x -> x != null)
-              .map(symbol -> symbol.getSimpleName().toString())
-              .collect(toImmutableSet()));
+      handledEnumValues.addAll(getHandledEnumValues(caseTree));
 
       canSimplify = canSimplify || analyzeCaseForSimplify(statements, caseTree);
     }
@@ -648,7 +639,8 @@ public final class RefactorSwitch extends BugChecker
         // analyze reachability here; deeper-nested statements are not relevant.
         boolean nextStatementReachable =
             Reachability.canCompleteNormally(
-                statements.get(indexInBlock), ImmutableMap.of(cannotCompleteNormallyTree, false));
+                statements.get(indexInBlock),
+                ImmutableMap.of(cannotCompleteNormallyTree, CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE));
         // If we continue to the ancestor statement block, it will be because the end of this
         // statement block is not reachable
         cannotCompleteNormallyTree = blockTree;

@@ -142,9 +142,10 @@ public final class Description {
   @RestrictedApi(
       explanation = "Use describeMatch or buildDescription on BugChecker instead.",
       link = "",
-      allowedOnPath =
-          ".*/third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/bugpatterns/BugChecker.java"
-              + "|.*/third_party/java_src/error_prone/project/core/src/main/java/com/google/errorprone/refaster/RefasterScanner.java")
+      allowedPaths = {
+        "third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/bugpatterns/BugChecker.java",
+        "third_party/java_src/error_prone/project/core/src/main/java/com/google/errorprone/refaster/RefasterScanner.java",
+      })
   public static Builder builder(
       ErrorPronePosition position, String name, @Nullable String link, String message) {
     return new Builder(position, name, link, message);
@@ -258,12 +259,13 @@ public final class Description {
                 + " individual Descriptions causes any command line options to be ignored, which is"
                 + " potentially very confusing.",
         link = "",
-        allowedOnPath =
-            ".*/third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/matchers/Description.java$|"
-                + ".*/java/com/google/devtools/javatools/staticanalysis/xlang/java/BugCheckerUsingXlang.java$|"
-                + ".*/java/com/google/devtools/staticanalysis/errorprone/RestrictedInheritanceChecker.java$|"
-                + ".*/third_party/java_src/error_prone/project/core/src/main/java/com/google/errorprone/bugpatterns/RestrictedApiChecker.java$|"
-                + ".*/third_party/java_src/error_prone/project/core/src/main/java/com/google/errorprone/refaster/RefasterScanner.java$")
+        allowedPaths = {
+          "third_party/java_src/error_prone/project/check_api/src/main/java/com/google/errorprone/matchers/Description.java",
+          "java/com/google/devtools/javatools/staticanalysis/xlang/java/BugCheckerUsingXlang.java",
+          "java/com/google/devtools/staticanalysis/errorprone/RestrictedInheritanceChecker.java",
+          "third_party/java_src/error_prone/project/core/src/main/java/com/google/errorprone/bugpatterns/RestrictedApiChecker.java",
+          "third_party/java_src/error_prone/project/core/src/main/java/com/google/errorprone/refaster/RefasterScanner.java",
+        })
     @CanIgnoreReturnValue
     public Builder overrideSeverity(SeverityLevel severity) {
       checkNotNull(severity, "severity must not be null");

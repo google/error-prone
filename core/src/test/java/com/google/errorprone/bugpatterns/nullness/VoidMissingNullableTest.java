@@ -40,8 +40,6 @@ public class VoidMissingNullableTest {
         .addSourceLines(
             "Test.java",
             """
-            import javax.annotation.Nullable;
-
             class Test {
               // BUG: Diagnostic contains: @Nullable
               Void v;
@@ -64,6 +62,8 @@ public class VoidMissingNullableTest {
             import javax.annotation.Nullable;
 
             abstract class Foo {
+              @Nullable Object existingDeclarationUsage;
+
               java.lang.Void v;
 
               final Void f() {
@@ -77,6 +77,8 @@ public class VoidMissingNullableTest {
             import javax.annotation.Nullable;
 
             abstract class Foo {
+              @Nullable Object existingDeclarationUsage;
+
               @Nullable java.lang.Void v;
 
               @Nullable
@@ -94,8 +96,6 @@ public class VoidMissingNullableTest {
         .addInputLines(
             "in/Foo.java",
             """
-            import org.checkerframework.checker.nullness.qual.Nullable;
-
             abstract class Foo {
               java.lang.Void v;
 
@@ -107,7 +107,7 @@ public class VoidMissingNullableTest {
         .addOutputLines(
             "out/Foo.java",
             """
-            import org.checkerframework.checker.nullness.qual.Nullable;
+            import org.jspecify.annotations.Nullable;
 
             abstract class Foo {
               java.lang.@Nullable Void v;
@@ -146,8 +146,6 @@ public class VoidMissingNullableTest {
         .addSourceLines(
             "Test.java",
             """
-            import javax.annotation.Nullable;
-
             class Test {
               String s;
 
@@ -166,7 +164,6 @@ public class VoidMissingNullableTest {
             "Test.java",
             """
             import java.util.List;
-            import org.checkerframework.checker.nullness.qual.Nullable;
 
             class Test {
               // BUG: Diagnostic contains: @Nullable
@@ -200,7 +197,6 @@ public class VoidMissingNullableTest {
             "Test.java",
             """
             import java.util.List;
-            import org.checkerframework.checker.nullness.qual.Nullable;
 
             class Test {
               // BUG: Diagnostic contains: @Nullable
@@ -304,6 +300,27 @@ public class VoidMissingNullableTest {
   }
 
   @Test
+  public void negativeTypeArgumentClassAndTypeToken() {
+    aggressiveCompilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.reflect.TypeToken;
+            import org.jspecify.annotations.Nullable;
+
+            class Test {
+              Class<Void> a;
+              Class<? extends Void> b;
+              Class<? super Void> c;
+              TypeToken<Void> d = new TypeToken<Void>() {};
+              TypeToken<? extends Void> e;
+              TypeToken<? super Void> f;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void negativeTypeArgumentDeclarationNullable() {
     aggressiveCompilationHelper
         .addSourceLines(
@@ -313,6 +330,8 @@ public class VoidMissingNullableTest {
             import javax.annotation.Nullable;
 
             class Test {
+              @Nullable Object existingDeclarationUsage;
+
               List<Void> a;
               List<? extends Void> b;
               List<? super Void> c;
@@ -420,7 +439,6 @@ public class VoidMissingNullableTest {
         .addSourceLines(
             "Test.java",
             """
-            import javax.annotation.Nullable;
             import org.jspecify.annotations.NullMarked;
 
             @NullMarked
@@ -438,10 +456,75 @@ public class VoidMissingNullableTest {
         .addSourceLines(
             "Test.java",
             """
-            import javax.annotation.Nullable;
-
             class Test {
               Void v;
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void likelyPublicApiOnly() {
+    CompilationTestHelper.newInstance(VoidMissingNullable.class, getClass())
+        .setArgs("-XepOpt:Nullness:Conservative=false", "-XepOpt:Nullness:LikelyPublicApiOnly=true")
+        .addSourceLines(
+            "PublicFoo.java",
+            """
+            import java.util.List;
+            import java.util.function.Consumer;
+            import java.util.function.Supplier;
+
+            // BUG: Diagnostic contains: @Nullable
+            public abstract class PublicFoo implements Iterable<Void> {
+              // BUG: Diagnostic contains: @Nullable
+              public Void publicField;
+              Void packagePrivateField;
+
+              // BUG: Diagnostic contains: @Nullable
+              public Void publicMethod() {
+                return null;
+              }
+
+              Void packagePrivateMethod() {
+                return null;
+              }
+
+              // BUG: Diagnostic contains: @Nullable
+              public void publicMethodWithVoidParam(Void v) {}
+
+              void packagePrivateMethodWithVoidParam(Void v) {}
+
+              // BUG: Diagnostic contains: @Nullable
+              public List<Void> publicTypeArgField;
+              List<Void> packagePrivateTypeArgField;
+
+              // BUG: Diagnostic contains: @Nullable
+              public List<Void> publicTypeArgMethod() {
+                return null;
+              }
+
+              List<Void> packagePrivateTypeArgMethod() {
+                return null;
+              }
+
+              public Object initializerTypeArg = (List<Void>) null;
+
+              public void localAndLambda() {
+                List<Void> local = null;
+                local = (List<Void>) null;
+                Consumer<Void> c = (Void v) -> {};
+                Supplier<Object> s = () -> (List<Void>) null;
+              }
+            }
+            """)
+        .addSourceLines(
+            "PackagePrivateFoo.java",
+            """
+            import java.util.List;
+
+            abstract class PackagePrivateFoo implements Iterable<Void> {
+              public Void publicField;
+              public List<Void> publicTypeArgField;
             }
             """)
         .doTest();

@@ -29,7 +29,6 @@ import com.google.errorprone.bugpatterns.AmbiguousMethodReference;
 import com.google.errorprone.bugpatterns.AnnotationMirrorToString;
 import com.google.errorprone.bugpatterns.AnnotationPosition;
 import com.google.errorprone.bugpatterns.AnnotationValueToString;
-import com.google.errorprone.bugpatterns.ArrayAsKeyOfSetOrMap;
 import com.google.errorprone.bugpatterns.ArrayEquals;
 import com.google.errorprone.bugpatterns.ArrayFillIncompatibleType;
 import com.google.errorprone.bugpatterns.ArrayHashCode;
@@ -244,7 +243,6 @@ import com.google.errorprone.bugpatterns.LongFloatConversion;
 import com.google.errorprone.bugpatterns.LongLiteralLowerCaseSuffix;
 import com.google.errorprone.bugpatterns.LoopConditionChecker;
 import com.google.errorprone.bugpatterns.LoopOverCharArray;
-import com.google.errorprone.bugpatterns.LoopToTestParameter;
 import com.google.errorprone.bugpatterns.LossyPrimitiveCompare;
 import com.google.errorprone.bugpatterns.MathAbsoluteNegative;
 import com.google.errorprone.bugpatterns.MathRoundIntLong;
@@ -334,7 +332,6 @@ import com.google.errorprone.bugpatterns.PreconditionsInvalidPlaceholder;
 import com.google.errorprone.bugpatterns.PreferCharsetOverload;
 import com.google.errorprone.bugpatterns.PreferInstanceofOverGetKind;
 import com.google.errorprone.bugpatterns.PreferPreconditions;
-import com.google.errorprone.bugpatterns.PreferTestParameter;
 import com.google.errorprone.bugpatterns.PreferredInterfaceType;
 import com.google.errorprone.bugpatterns.PrimitiveArrayPassedToVarargsMethod;
 import com.google.errorprone.bugpatterns.PrimitiveAtomicReference;
@@ -408,7 +405,6 @@ import com.google.errorprone.bugpatterns.SystemConsoleNull;
 import com.google.errorprone.bugpatterns.SystemExitOutsideMain;
 import com.google.errorprone.bugpatterns.SystemOut;
 import com.google.errorprone.bugpatterns.TestExceptionChecker;
-import com.google.errorprone.bugpatterns.TestParametersNotInitialized;
 import com.google.errorprone.bugpatterns.TheoryButNoTheories;
 import com.google.errorprone.bugpatterns.ThreadBuilderNameWithPlaceholder;
 import com.google.errorprone.bugpatterns.ThreadJoinLoop;
@@ -518,7 +514,6 @@ import com.google.errorprone.bugpatterns.checkreturnvalue.UnnecessarilyUsedValue
 import com.google.errorprone.bugpatterns.checkreturnvalue.UsingJsr305CheckReturnValue;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.AssertSameIncompatible;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionIncompatibleType;
-import com.google.errorprone.bugpatterns.collectionincompatibletype.CollectionUndefinedEquality;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.CompatibleWithMisuse;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.IncompatibleArgumentType;
 import com.google.errorprone.bugpatterns.collectionincompatibletype.JUnitIncompatibleType;
@@ -623,6 +618,10 @@ import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
 import com.google.errorprone.bugpatterns.nullness.UnsafeWildcard;
 import com.google.errorprone.bugpatterns.nullness.VoidMissingNullable;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
+import com.google.errorprone.bugpatterns.testparameterinjector.LoopToTestParameter;
+import com.google.errorprone.bugpatterns.testparameterinjector.PreferTestParameter;
+import com.google.errorprone.bugpatterns.testparameterinjector.SimplifyTestParameter;
+import com.google.errorprone.bugpatterns.testparameterinjector.TestParametersNotInitialized;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
 import com.google.errorprone.bugpatterns.threadsafety.ImmutableAnnotationChecker;
@@ -925,7 +924,6 @@ public final class BuiltInCheckerSuppliers {
           AmbiguousMethodReference.class,
           AnnotateFormatMethod.class,
           ArgumentSelectionDefectChecker.class,
-          ArrayAsKeyOfSetOrMap.class,
           ArrayRecordComponent.class,
           AssertEqualsArgumentOrderChecker.class,
           AssertSameIncompatible.class,
@@ -964,7 +962,6 @@ public final class BuiltInCheckerSuppliers {
           ClassNewInstance.class,
           CloseableProvides.class,
           ClosingStandardOutputStreams.class,
-          CollectionUndefinedEquality.class,
           CollectorShouldNotUseState.class,
           ComparableAndComparator.class,
           ComplexBooleanConstant.class,
@@ -1336,6 +1333,7 @@ public final class BuiltInCheckerSuppliers {
           ReturnMissingNullable.class,
           ReturnsNullCollection.class,
           ScopeOnModule.class,
+          SimplifyTestParameter.class,
           StaticOrDefaultInterfaceMethod.class,
           StaticQualifiedUsingExpression.class,
           StringFormatWithLiteral.class,

@@ -17,17 +17,22 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.hasJUnit4TestRunner;
+import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestRunnerOfType;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.matchers.MultiMatcher;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 
@@ -42,9 +47,23 @@ public final class ParametersButNotParameterized extends BugChecker implements C
   private static final String PARAMETER = "org.junit.runners.Parameterized.Parameter";
   private static final String PARAMETERS = "org.junit.runners.Parameterized.Parameters";
 
+  private static final MultiMatcher<com.sun.source.tree.Tree, com.sun.source.tree.AnnotationTree>
+      TEST_PARAMETER_INJECTOR =
+          Matchers.annotations(
+              AT_LEAST_ONE,
+              Matchers.hasArgumentWithValue(
+                  "value",
+                  isJUnit4TestRunnerOfType(
+                      ImmutableSet.of(
+                          "com.google.testing.junit.testparameterinjector."
+                              + "TestParameterInjector"))));
+
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
     if (!hasJUnit4TestRunner.matches(tree, state)) {
+      return NO_MATCH;
+    }
+    if (TEST_PARAMETER_INJECTOR.matches(tree, state)) {
       return NO_MATCH;
     }
     if (tree.getMembers().stream()

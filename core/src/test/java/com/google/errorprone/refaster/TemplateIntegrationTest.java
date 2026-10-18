@@ -27,9 +27,13 @@ import com.google.common.base.CharMatcher;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.CodeTransformer;
+import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.util.TreePath;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.tools.JavaFileObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -439,5 +443,32 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
             """);
 
     expectTransforms(transformer, input, expectedOutput);
+  }
+
+  @Test
+  public void applyToSubtreeChecksEnclosingClass() {
+    JavaFileObject template =
+        forResource(String.format("%s/SuppressWarningsTemplate.java", TEMPLATE_DIR));
+    CodeTransformer transformer = extractRefasterRule(template);
+
+    List<Description> descriptions = new ArrayList<>();
+    transformer.apply(
+        TreePath.getPath(compilationUnits.getFirst(), getMethodDeclaration("abs")),
+        context,
+        descriptions::add);
+    assertThat(descriptions).isEmpty();
+
+    compile(forResource(String.format("%s/SuppressWarningsTemplateExample.java", INPUT_DIR)));
+    transformer.apply(
+        TreePath.getPath(compilationUnits.getFirst(), getMethodDeclaration("abs2")),
+        context,
+        descriptions::add);
+    assertThat(descriptions).isEmpty();
+
+    transformer.apply(
+        TreePath.getPath(compilationUnits.getFirst(), getMethodDeclaration("abs4")),
+        context,
+        descriptions::add);
+    assertThat(descriptions).hasSize(1);
   }
 }

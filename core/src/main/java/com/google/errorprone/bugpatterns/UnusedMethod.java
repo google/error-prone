@@ -105,7 +105,8 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
    * has the same effect; this list is chiefly for third-party annotations which cannot be
    * annotated.
    */
-  private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS = ImmutableSet.of();
+  private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS =
+      ImmutableSet.of("com.google.auto.factory.AutoFactory.AnnotationsToApply");
 
   /**
    * The set of types exempting a type that is extending or implementing them.

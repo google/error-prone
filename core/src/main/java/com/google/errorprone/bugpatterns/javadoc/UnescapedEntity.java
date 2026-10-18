@@ -43,6 +43,7 @@ import com.sun.source.doctree.ErroneousTree;
 import com.sun.source.doctree.LinkTree;
 import com.sun.source.doctree.LiteralTree;
 import com.sun.source.doctree.SeeTree;
+import com.sun.source.doctree.SnippetTree;
 import com.sun.source.doctree.StartElementTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
@@ -226,6 +227,12 @@ public final class UnescapedEntity extends BugChecker
     public Void visitSee(SeeTree seeTree, Void unused) {
       excludeFromCodeFixes(seeTree);
       return super.visitSee(seeTree, null);
+    }
+
+    @Override
+    public Void visitSnippet(SnippetTree snippetTree, Void unused) {
+      excludeFromCodeFixes(snippetTree);
+      return super.visitSnippet(snippetTree, null);
     }
 
     private void excludeFromCodeFixes(DocTree tree) {

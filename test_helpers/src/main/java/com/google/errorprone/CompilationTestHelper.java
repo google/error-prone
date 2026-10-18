@@ -356,13 +356,20 @@ public final class CompilationTestHelper {
           .that(result)
           .isEqualTo(expectedResult.orElse(Result.OK));
     } else {
+      ImmutableList.Builder<String> mismatches = ImmutableList.builder();
       for (JavaFileObject source : sources) {
         try {
-          diagnosticHelper.assertHasDiagnosticOnAllMatchingLines(
-              source, lookForCheckNameInDiagnostic);
+          for (String mismatch :
+              diagnosticHelper.findMismatchedLines(source, lookForCheckNameInDiagnostic)) {
+            mismatches.add(sources.size() > 1 ? source.getName() + ": " + mismatch : mismatch);
+          }
         } catch (IOException e) {
           throw new UncheckedIOException(e);
         }
+      }
+      ImmutableList<String> allMismatches = mismatches.build();
+      if (!allMismatches.isEmpty()) {
+        fail(diagnosticHelper.describeMismatches(allMismatches));
       }
       assertWithMessage("Unused error keys: %s", diagnosticHelper.getUnusedLookupKeys())
           .that(diagnosticHelper.getUnusedLookupKeys().isEmpty())

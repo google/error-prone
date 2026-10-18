@@ -232,6 +232,7 @@ public final class UnnecessaryQualifier extends BugChecker
                   // keep-sorted start
                   "com.google.auto.factory.AutoFactory",
                   "com.google.common.inject.components.OtherRequiredBindings",
+                  "com.google.inject.assistedinject.AssistedInject",
                   "dagger.assisted.AssistedInject"
                   // keep-sorted end
                   ),

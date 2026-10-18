@@ -54,6 +54,7 @@ import com.sun.source.tree.YieldTree;
 import com.sun.source.util.SimpleTreeVisitor;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.tree.JCTree;
+import com.sun.tools.javac.tree.TreeInfo;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -61,6 +62,22 @@ import java.util.Set;
 
 /** An implementation of JLS 14.21 reachability. */
 public class Reachability {
+  /**
+   * A replacement for the completion result of one tree, for {@link
+   * #canCompleteNormally(StatementTree, ImmutableMap)}.
+   */
+  public enum CanCompleteNormallyPatch {
+    /**
+     * The tree cannot complete normally, and is not analyzed, so the targets of any {@code break}
+     * and {@code continue} statements it contains are not recorded.
+     */
+    CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE,
+    /**
+     * The tree cannot complete normally, but is still analyzed, so that the targets of any {@code
+     * break} and {@code continue} statements it contains are recorded.
+     */
+    CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE,
+  }
 
   /**
    * Returns true if the given statement can complete normally, as defined by JLS 14.21.
@@ -74,13 +91,13 @@ public class Reachability {
   /**
    * Returns whether the given statement can complete normally, as defined by JLS 14.21, when taking
    * into account the given {@code patches}. The patches are a (possibly empty) map from {@code
-   * Tree} to a boolean indicating whether that specific {@code Tree} can complete normally. All
-   * relevant tree(s) not present in the patches will be analyzed as per the JLS.
+   * Tree} to a {@link CanCompleteNormallyPatch}. All relevant tree(s) not present in the patches
+   * will be analyzed as per the JLS.
    *
    * <p>An exception is made for {@code System.exit}, which cannot complete normally in practice.
    */
   public static boolean canCompleteNormally(
-      StatementTree statement, ImmutableMap<Tree, Boolean> patches) {
+      StatementTree statement, ImmutableMap<Tree, CanCompleteNormallyPatch> patches) {
     return new CanCompleteNormallyVisitor(patches).scan(statement);
   }
 
@@ -115,10 +132,10 @@ public class Reachability {
     /** Trees that are the target of a reachable continue statement. */
     private final Set<Tree> continues = new HashSet<>();
 
-    /** Trees that are patched to have a specific completion result. */
-    private final ImmutableMap<Tree, Boolean> patches;
+    /** Trees whose completion result is replaced by a patch. */
+    private final ImmutableMap<Tree, CanCompleteNormallyPatch> patches;
 
-    CanCompleteNormallyVisitor(ImmutableMap<Tree, Boolean> patches) {
+    CanCompleteNormallyVisitor(ImmutableMap<Tree, CanCompleteNormallyPatch> patches) {
       this.patches = patches;
     }
 
@@ -134,16 +151,22 @@ public class Reachability {
     // don't otherwise affect the result of the reachability analysis.
     @CanIgnoreReturnValue
     private boolean scan(Tree tree) {
-      if (patches.containsKey(tree)) {
-        return patches.get(tree);
-      }
-      return tree.accept(this, null);
+      return switch (patches.get(tree)) {
+        case CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE -> false;
+        case CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE -> {
+          // Analyze even though the result is known, to record the targets of the jumps it contains
+          tree.accept(this, null);
+          yield false;
+        }
+        case null -> tree.accept(this, null);
+      };
     }
 
     /* A break statement cannot complete normally. */
     @Override
     public Boolean visitBreak(BreakTree tree, Void unused) {
-      breaks.add(skipLabel(requireNonNull(((JCTree.JCBreak) tree).target)));
+      // The target of a `break` with a label is the labeled statement
+      breaks.add(requireNonNull(((JCTree.JCBreak) tree).target));
       return false;
     }
 
@@ -181,11 +204,23 @@ public class Reachability {
       return true;
     }
 
+    /*
+     * A labeled statement can complete normally if at least one of the
+     * following is true:
+     *
+     *  1) The contained statement can complete normally.
+     *  2) There is a reachable break statement that exits the labeled
+     *     statement.
+     *
+     * The contained statement is reachable iff the labeled statement is
+     * reachable.
+     */
     @Override
     public Boolean visitLabeledStatement(LabeledStatementTree tree, Void unused) {
-      // break/continue targets have already been resolved by javac, so
-      // there's nothing to do here
-      return scan(tree.getStatement());
+      // (1)
+      boolean completes = scan(tree.getStatement());
+      // (2)
+      return completes || breaks.contains(tree);
     }
 
     /* An expression statement can complete normally iff it is reachable. */
@@ -238,7 +273,8 @@ public class Reachability {
      * A non-arrow switch statement can complete normally iff at least one of the
      * following is true:
      *
-     *  1) The switch block does not contain a default label.
+     *  1) The switch statement is not enhanced and its switch block
+     *     does not contain a default label.
      *  2) The switch block is empty or contains only switch labels.
      *  3) The last statement in the switch block can complete normally.
      *  4) There is at least one switch label after the last switch block
@@ -258,7 +294,7 @@ public class Reachability {
     @Override
     public Boolean visitSwitch(SwitchTree tree, Void unused) {
       // (1)
-      if (tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
+      if (!isEnhanced(tree) && tree.getCases().stream().noneMatch(c -> isSwitchDefault(c))) {
         return true;
       }
       // A switch statement whose switch block consists of switch rules can complete normally iff at
@@ -303,6 +339,15 @@ public class Reachability {
         return true;
       }
       return false;
+    }
+
+    /**
+     * Returns whether the switch statement is enhanced: either (i) the type of its selector
+     * expression is not in a designated set of types, or an enum type, or (ii) there is a case
+     * pattern or {@code case null}.
+     */
+    private static boolean isEnhanced(SwitchTree tree) {
+      return TreeInfo.expectedExhaustive((JCTree.JCSwitch) tree);
     }
 
     /*
@@ -455,14 +500,17 @@ public class Reachability {
      */
     @Override
     public Boolean visitTry(TryTree that, Void unused) {
+      if (that.getFinallyBlock() != null && !scan(that.getFinallyBlock())) {
+        // The finally block runs before control is transferred out of the try statement, and since
+        // it cannot complete normally, any jump out from try/catch never reaches its target.
+        // There is nothing to learn from scanning the try block or catch block(s).
+        return false;
+      }
       boolean completes = scan(that.getBlock());
       // assume all catch blocks are reachable; javac has already rejected unreachable
       // checked exception handlers
       for (CatchTree catchTree : that.getCatches()) {
         completes |= scan(catchTree.getBlock());
-      }
-      if (that.getFinallyBlock() != null && !scan(that.getFinallyBlock())) {
-        completes = false;
       }
       return completes;
     }

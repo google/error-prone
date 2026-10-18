@@ -283,6 +283,52 @@ public final class UnescapedEntityTest {
   }
 
   @Test
+  public void withinSnippet() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            /**
+             * {@snippet :
+             *    List<Foo>, Map<Foo, Bar>
+             *  }
+             */
+            interface Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void withinSnippet_missingColon_positives() {
+    // A missing colon means it's not interpreted as a proper @snippet tag, so the normal
+    // refactoring applies.
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            /**
+             * {@snippet
+             *    no colon
+             *    List<Foo>, Map<Foo, Bar>
+             *  }
+             */
+            interface Test {}
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            /**
+             * {@snippet
+             *    no colon
+             *    {@code List<Foo>}, {@code Map<Foo, Bar>}
+             *  }
+             */
+            interface Test {}
+            """)
+        .doTest();
+  }
+
+  @Test
   public void extraClosingTag() {
     refactoring
         .addInputLines(

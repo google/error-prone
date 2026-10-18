@@ -16,19 +16,30 @@
 
 package com.google.errorprone.util;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.Reachability.CanCompleteNormallyPatch.CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
+import com.google.errorprone.bugpatterns.BugChecker.DoWhileLoopTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.LabeledStatementTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.SwitchTreeMatcher;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.Reachability.CanCompleteNormallyPatch;
 import com.google.testing.junit.testparameterinjector.TestParameter;
 import com.google.testing.junit.testparameterinjector.TestParameterInjector;
+import com.sun.source.tree.DoWhileLoopTree;
+import com.sun.source.tree.LabeledStatementTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.SwitchTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.util.TreeScanner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -50,6 +61,132 @@ public class ReachabilityTest {
           ? describeMatch(tree.getCases().get(1))
           : NO_MATCH;
     }
+  }
+
+  /**
+   * Reports whether {@link Reachability} thinks that the statement contained in each labeled
+   * statement in a method named {@code f} can complete normally.
+   */
+  @BugPattern(summary = "", severity = ERROR)
+  public static class ContainedStatementCanCompleteNormally extends BugChecker
+      implements LabeledStatementTreeMatcher {
+
+    @Override
+    public Description matchLabeledStatement(LabeledStatementTree tree, VisitorState state) {
+      MethodTree method = state.findEnclosing(MethodTree.class);
+      if (method == null || !method.getName().contentEquals("f")) {
+        return NO_MATCH;
+      }
+      return buildDescription(tree)
+          .setMessage("Reachability: " + Reachability.canCompleteNormally(tree.getStatement()))
+          .build();
+    }
+  }
+
+  /**
+   * Returns a test that {@link Reachability} and javac agree on whether {@code statement} can
+   * complete normally. {@code expected} is the ground truth of whether the {@code statement} can
+   * complete normally.
+   *
+   * <p>The {@code statement} may use (but doesn't need to use) the parameters {@code x}, {@code o},
+   * {@code shape}, {@code paint} and {@code color}, of the types declared in the generated source.
+   */
+  private CompilationTestHelper canCompleteNormallyTest(boolean expected, String statement) {
+    return CompilationTestHelper.newInstance(FirstCaseFallsThrough.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              sealed interface Shape {}
+
+              record Circle() implements Shape {}
+
+              record Square() implements Shape {}
+
+              record Triangle() implements Shape {}
+
+              sealed interface Paint {}
+
+              enum Color implements Paint {
+                RED,
+                GREEN,
+                BLUE
+              }
+
+              void f(int x, Object o, Shape shape, Paint paint, Color color) {
+                switch (x) {
+                  case 1:
+            %s
+                  %s
+                  default:
+                    break;
+                }
+              }
+
+              %s javacAgrees(int x, Object o, Shape shape, Paint paint, Color color) {
+            %s
+                %s
+              }
+            }
+            """
+                .formatted(
+                    statement,
+                    expected ? "// BUG: Diagnostic contains:" : "",
+                    expected ? "void" : "int",
+                    statement,
+                    expected ? "System.out.println(\"reached\");" : ""));
+  }
+
+  /**
+   * Returns a test that {@link Reachability} and javac agree on whether the statement contained in
+   * {@code labeledStatement} (call it {@code S}) can complete normally. {@code expected} is the
+   * ground truth of whether {@code S} can complete normally per the JLS.
+   *
+   * <p>A unit test can't easily access the answer for {@code S}, because any code after {@code S}
+   * is also after {@code labeledStatement}. However, this can be addressed with a couple tricks,
+   * depending on the ground truth value:
+   *
+   * <p>Ground truth: the statement {@code S} can complete normally 1. We put {@code S} in {@code if
+   * (!(o instanceof String s)) S}, inside a block labeled {@code l}. 2. The pattern variable {@code
+   * s} is in scope after the {@code if} statement iff {@code S} cannot complete normally. 3.
+   * declare a new local variable {@code s}, which would clash with the pattern variable if it were
+   * in scope.
+   *
+   * <p>Ground truth: the statement {@code S} cannot complete normally 1.-2. as above, 3. code after
+   * the {@code if} references the pattern variable {@code s}, which would otherwise not be in
+   * scope.
+   */
+  private CompilationTestHelper containedStatementCanCompleteNormallyTest(
+      boolean expected, String labeledStatement) {
+    String label = "l:\n";
+    checkArgument(labeledStatement.startsWith(label), labeledStatement);
+    String statement = labeledStatement.substring(label.length());
+    return CompilationTestHelper.newInstance(
+            ContainedStatementCanCompleteNormally.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void f(int x) {
+                // BUG: Diagnostic contains: Reachability: %s
+            %s
+              }
+
+              void javacAgrees(int x, Object o) {
+                l:
+                {
+                  if (!(o instanceof String s))
+            %s
+                  %s
+                }
+              }
+            }
+            """
+                .formatted(
+                    expected,
+                    labeledStatement,
+                    statement,
+                    expected ? "String s = \"\";" : "s.length();"));
   }
 
   @Test
@@ -342,6 +479,740 @@ public class ReachabilityTest {
             "    }",
             "  }",
             "}")
+        .doTest();
+  }
+
+  /** A labeled block exited by a {@code break} can complete normally (JLS 21 §14.22). */
+  @Test
+  public void breakExitsLabeledStatement_block() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            l:
+            {
+              if (x == 1) {
+                break l;
+              }
+              return;
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A labeled {@code if} statement exited by a {@code break} can complete normally (JLS 21 §14.22).
+   */
+  @Test
+  public void breakExitsLabeledStatement_if() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            l:
+            if (x == 1) {
+              break l;
+            } else {
+              return;
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A labeled {@code try} statement exited by a {@code break} can complete normally (JLS 21
+   * §14.22).
+   */
+  @Test
+  public void breakExitsLabeledStatement_try() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            l:
+            try {
+              break l;
+            } catch (RuntimeException e) {
+              return;
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A labeled {@code synchronized} statement exited by a {@code break} can complete normally (JLS
+   * 21 §14.22).
+   */
+  @Test
+  public void breakExitsLabeledStatement_synchronized() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            l:
+            synchronized (this) {
+              break l;
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * With two labels on a loop, a {@code break} of the outer label exits the outer labeled
+   * statement, so that statement can complete normally (JLS 21 §14.22) even though the loop cannot.
+   */
+  @Test
+  public void breakExitsLabeledStatement_nestedLabelsOnLoop() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            outer:
+            inner:
+            while (true) {
+              break outer;
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * With two labels on a {@code switch}, a {@code break} of the outer label exits the outer labeled
+   * statement, so that statement can complete normally (JLS 21 §14.22) even though the {@code
+   * switch} cannot.
+   */
+  @Test
+  public void breakExitsLabeledStatement_nestedLabelsOnSwitch() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            outer:
+            inner:
+            switch (x) {
+              default:
+                break outer;
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code break l} exits the labeled statement, not the {@code while} statement it contains (JLS
+   * 21 §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
+   */
+  @Test
+  public void breakExitsLabeledStatement_while() {
+    String statement =
+        """
+        l:
+        while (true) {
+          break l;
+        }
+        """;
+    canCompleteNormallyTest(/* expected= */ true, statement).doTest();
+    containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
+  }
+
+  /**
+   * A {@code break l} exits the labeled statement, not the {@code do} statement it contains (JLS 21
+   * §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
+   */
+  @Test
+  public void breakExitsLabeledStatement_do() {
+    String statement =
+        """
+        l:
+        do {
+          break l;
+        } while (true);
+        """;
+    canCompleteNormallyTest(/* expected= */ true, statement).doTest();
+    containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
+  }
+
+  /**
+   * A {@code break l} exits the labeled statement, not the {@code for} statement it contains (JLS
+   * 21 §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
+   */
+  @Test
+  public void breakExitsLabeledStatement_for() {
+    String statement =
+        """
+        l:
+        for (;;) {
+          break l;
+        }
+        """;
+    canCompleteNormallyTest(/* expected= */ true, statement).doTest();
+    containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
+  }
+
+  /**
+   * A {@code break l} exits the labeled statement, not the {@code switch} statement it contains
+   * (JLS 21 §14.15), so only the labeled statement can complete normally (JLS 21 §14.22).
+   */
+  @Test
+  public void breakExitsLabeledStatement_switch() {
+    String statement =
+        """
+        l:
+        switch (x) {
+          case 1:
+            break l;
+          default:
+            throw new AssertionError();
+        }
+        """;
+    canCompleteNormallyTest(/* expected= */ true, statement).doTest();
+    containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
+  }
+
+  /** Like {@link #breakExitsLabeledStatement_switch}, but with switch rules. */
+  @Test
+  public void breakExitsLabeledStatement_arrowSwitch() {
+    String statement =
+        """
+        l:
+        switch (x) {
+          case 1 -> {
+            break l;
+          }
+          case 2 -> throw new AssertionError();
+          default -> throw new AssertionError();
+        }
+        """;
+    canCompleteNormallyTest(/* expected= */ true, statement).doTest();
+    containedStatementCanCompleteNormallyTest(/* expected= */ false, statement).doTest();
+  }
+
+  /**
+   * A {@code break} with no label exits the innermost {@code switch}, {@code while}, {@code do} or
+   * {@code for} statement around it (JLS 21 §14.15). So here the {@code while} statement can
+   * complete normally (JLS 21 §14.22), even though it has a label.
+   */
+  @Test
+  public void breakExitsContainedStatement_withoutLabel() {
+    String statement =
+        """
+        l:
+        while (true) {
+          break;
+        }
+        """;
+    canCompleteNormallyTest(/* expected= */ true, statement).doTest();
+    containedStatementCanCompleteNormallyTest(/* expected= */ true, statement).doTest();
+  }
+
+  /**
+   * An unlabeled {@code break} exits only the loop it is in, not the labeled block around it, which
+   * here cannot complete normally.
+   */
+  @Test
+  public void jumpDoesNotExitLabeledStatement_breakOutOfNestedLoop() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            l:
+            {
+              while (true) {
+                if (x == 1) {
+                  break;
+                }
+              }
+              throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * {@code break inner} exits only the inner labeled block, not the outer one, which here cannot
+   * complete normally.
+   */
+  @Test
+  public void jumpDoesNotExitLabeledStatement_breakOutOfInnerLabel() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            outer:
+            {
+              inner:
+              {
+                if (x == 1) {
+                  break inner;
+                }
+              }
+              throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /** {@code continue l} does not exit the labeled loop, which here cannot complete normally. */
+  @Test
+  public void jumpDoesNotExitLabeledStatement_continueOfLabeledLoop() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            l:
+            while (true) {
+              if (x == 1) {
+                continue l;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code break} in a {@code try} block does not exit the loop if the {@code finally} block
+   * cannot complete normally, because the {@code finally} block discards it (JLS 21 §14.20.2,
+   * §14.22).
+   */
+  @Test
+  public void jumpDiscardedByFinally_breakInTryBlock() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            while (true) {
+              try {
+                break;
+              } finally {
+                throw new AssertionError();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code break} in a {@code catch} block does not exit the loop if the {@code finally} block
+   * cannot complete normally, because the {@code finally} block discards it (JLS 21 §14.20.2).
+   */
+  @Test
+  public void jumpDiscardedByFinally_breakInCatchBlock() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            while (true) {
+              try {
+                x++;
+              } catch (RuntimeException e) {
+                break;
+              } finally {
+                throw new AssertionError();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code continue} in a {@code try} block does not continue the {@code do} statement if the
+   * {@code finally} block cannot complete normally, because the {@code finally} block discards it
+   * (JLS 21 §14.20.2, §14.22).
+   */
+  @Test
+  public void jumpDiscardedByFinally_continueInTryBlock() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            do {
+              try {
+                continue;
+              } finally {
+                throw new AssertionError();
+              }
+            } while (x == 0);
+            """)
+        .doTest();
+  }
+
+  /**
+   * Similar to {@link #continueInTryBlock}, but the {@code continue} is camouflaged as a larger try
+   * statement.
+   */
+  @Test
+  public void jumpDiscardedByFinally_camouflagedContinueInTryBlock() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            do {
+              try {
+                try {
+                  break;
+                } finally {
+                  continue;
+                }
+              } finally {
+                throw new AssertionError();
+              }
+            } while (x == 0);
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code break} in a {@code try} block does not exit the {@code switch} if the {@code finally}
+   * block cannot complete normally, because the {@code finally} block discards it (JLS 21 §14.20.2,
+   * §14.22).
+   */
+  @Test
+  public void jumpDiscardedByFinally_breakOutOfSwitch() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            switch (x) {
+              default:
+                try {
+                  break;
+                } finally {
+                  throw new AssertionError();
+                }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code break l} in a {@code try} block does not exit the labeled statement if the {@code
+   * finally} block cannot complete normally, because the {@code finally} block discards it (JLS 21
+   * §14.20.2, §14.22).
+   */
+  @Test
+  public void jumpDiscardedByFinally_breakOutOfLabeledStatement() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            l:
+            try {
+              break l;
+            } finally {
+              throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code break} does not exit the loop if the {@code finally} block of any enclosing {@code
+   * try} statement within the loop cannot complete normally, even if an inner one can (JLS 21
+   * §14.22).
+   */
+  @Test
+  public void jumpDiscardedByFinally_outerFinally() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            while (true) {
+              try {
+                try {
+                  break;
+                } finally {
+                  x++;
+                }
+              } finally {
+                throw new AssertionError();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code break} in a {@code try} block exits the loop if the {@code finally} block can complete
+   * normally.
+   */
+  @Test
+  public void jumpNotDiscardedByFinally_finallyCompletesNormally() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            while (true) {
+              try {
+                break;
+              } finally {
+                x++;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code break} in the {@code finally} block itself exits the loop, even though it means that
+   * the {@code finally} block cannot complete normally.
+   */
+  @Test
+  public void jumpNotDiscardedByFinally_breakInFinallyBlock() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            while (true) {
+              try {
+                x++;
+              } finally {
+                break;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code break} before the {@code try} statement still exits the loop, even though a {@code
+   * break} to the same loop inside the {@code try} block is discarded.
+   */
+  @Test
+  public void jumpNotDiscardedByFinally_breakBeforeTry() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            while (true) {
+              if (x == 1) {
+                break;
+              }
+              try {
+                break;
+              } finally {
+                throw new AssertionError();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code switch} over a sealed interface, with a pattern for each permitted subclass and no
+   * {@code default}, is enhanced, so it cannot complete normally when every case throws.
+   */
+  @Test
+  public void enhancedSwitchWithoutDefault_sealedPatterns() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            switch (shape) {
+              case Circle c -> throw new AssertionError();
+              case Square s -> throw new AssertionError();
+              case Triangle t -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /** Like {@link #enhancedSwitchWithoutDefault_sealedPatterns}, but with old-style colon switch. */
+  @Test
+  public void enhancedSwitchWithoutDefault_sealedPatternsInStatementGroups() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            switch (shape) {
+              case Circle c:
+                throw new AssertionError();
+              case Square s:
+                throw new AssertionError();
+              case Triangle t:
+                throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code switch} over an enum with a {@code case null} is enhanced, so without a {@code
+   * default} it cannot complete normally when every case throws (§14.22).
+   */
+  @Test
+  public void enhancedSwitchWithoutDefault_nullLabel() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            switch (color) {
+              case RED -> throw new AssertionError();
+              case GREEN, BLUE -> throw new AssertionError();
+              case null -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * An unconditional pattern is similar to but not the same as a {@code default}: a {@code switch}
+   * with patterns is enhanced, so it cannot complete normally when every case throws.
+   */
+  @Test
+  public void enhancedSwitchWithoutDefault_unconditionalPattern() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            switch (o) {
+              case String s -> throw new AssertionError();
+              case Integer i -> throw new AssertionError();
+              case Object other -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code switch} over a sealed interface is enhanced (JLS 21 §14.11.2) even if its only labels
+   * are constants of an enum that implements the interface, so it cannot complete normally when
+   * every case throws (§14.22).
+   */
+  @Test
+  public void enhancedSwitchWithoutDefault_enumConstantsOfSealedInterface() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            switch (paint) {
+              case Color.RED -> throw new AssertionError();
+              case Color.GREEN -> throw new AssertionError();
+              case Color.BLUE -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code switch} over an enum with only constant labels is not enhanced (JLS 21 §14.11.2), so
+   * without a {@code default} it can complete normally, even though it names every constant and
+   * every case throws (§14.22).
+   */
+  @Test
+  public void notEnhancedSwitchWithoutDefault_enum() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            switch (color) {
+              case RED -> throw new AssertionError();
+              case GREEN -> throw new AssertionError();
+              case BLUE -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * A {@code switch} with only constant labels is not enhanced if the type of the selector
+   * expression is in a designated set of types. So without a {@code default} it can complete
+   * normally even though every case throws.
+   */
+  @Test
+  public void notEnhancedSwitchWithoutDefault_selectorType(
+      @TestParameter({
+            "(char) x",
+            "(byte) x",
+            "(short) x",
+            "x",
+            "(Character) (char) x",
+            "(Byte) (byte) x",
+            "(Short) (short) x",
+            "(Integer) x"
+          })
+          String selector) {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            switch (%s) {
+              case 1 -> throw new AssertionError();
+              case 2 -> throw new AssertionError();
+              case 3 -> throw new AssertionError();
+            }
+            """
+                .formatted(selector))
+        .doTest();
+  }
+
+  /** Similar to {@link #notEnhancedSwitchWithoutDefault_selectorType}, but with {@code String}. */
+  @Test
+  public void notEnhancedSwitchWithoutDefault_string() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            switch (String.valueOf(x)) {
+              case "1" -> throw new AssertionError();
+              case "2" -> throw new AssertionError();
+              case "3" -> throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * An enhanced {@code switch} without a {@code default} can still complete normally if a {@code
+   * break} exits it.
+   */
+  @Test
+  public void enhancedSwitchWithoutDefault_breakExitsSwitch() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            switch (shape) {
+              case Circle c:
+                break;
+              case Square s:
+                throw new AssertionError();
+              case Triangle t:
+                throw new AssertionError();
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * Reports a {@code do} loop that can complete normally, where each statement in its body labeled
+   * {@code doesNotComplete} is patched with {@code CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE}.
+   */
+  @BugPattern(summary = "", severity = ERROR)
+  public static class DoWhileCompletesWithAnalyzedPatches extends BugChecker
+      implements DoWhileLoopTreeMatcher {
+
+    @Override
+    public Description matchDoWhileLoop(DoWhileLoopTree tree, VisitorState state) {
+      ImmutableMap.Builder<Tree, CanCompleteNormallyPatch> analyzedPatches = ImmutableMap.builder();
+      new TreeScanner<Void, Void>() {
+        @Override
+        public Void visitLabeledStatement(LabeledStatementTree labeled, Void unused) {
+          if (labeled.getLabel().contentEquals("doesNotComplete")) {
+            analyzedPatches.put(labeled, CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE);
+          }
+          return super.visitLabeledStatement(labeled, null);
+        }
+      }.scan(tree.getStatement(), null);
+      return Reachability.canCompleteNormally(tree, analyzedPatches.buildOrThrow())
+          ? describeMatch(tree)
+          : NO_MATCH;
+    }
+  }
+
+  /**
+   * A tree patched to be unable to complete normally is still analyzed, so a {@code continue}
+   * inside it is recorded and makes the enclosing {@code do} able to complete normally. (Patching
+   * the same tree with {@code CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE} would not descend into it, so
+   * the {@code continue} would be missed.)
+   */
+  @Test
+  public void analyzedPatches_doesNotComplete_recordsJumpsInside() {
+    CompilationTestHelper.newInstance(DoWhileCompletesWithAnalyzedPatches.class, getClass())
+        .addSourceLines(
+            "in/Test.java",
+            """
+            class Test {
+              void continues(boolean b) {
+                // BUG: Diagnostic contains:
+                do {
+                  doesNotComplete:
+                  if (b) {
+                    continue;
+                  }
+                } while (b);
+              }
+
+              void noJump(boolean b) {
+                do {
+                  doesNotComplete:
+                  if (b) {
+                    throw new AssertionError();
+                  }
+                } while (b);
+              }
+            }
+            """)
         .doTest();
   }
 }

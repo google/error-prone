@@ -136,6 +136,7 @@ import com.sun.tools.javac.util.Log;
 import com.sun.tools.javac.util.Name;
 import com.sun.tools.javac.util.Position;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.annotation.Annotation;
 import java.net.JarURLConnection;
 import java.net.URI;
@@ -545,14 +546,15 @@ public final class ASTHelpers {
    * <p>TODO(eaftan): Are there other places this could be used?
    */
   public static Type getReturnType(ExpressionTree expressionTree) {
-    return switch (expressionTree) {
-      case JCFieldAccess methodCall -> methodCall.type.getReturnType();
-      case JCIdent methodCall -> methodCall.type.getReturnType();
-      case JCMethodInvocation jCMethodInvocation ->
-          getReturnType(jCMethodInvocation.getMethodSelect());
-      case JCMemberReference jCMemberReference -> jCMemberReference.sym.type.getReturnType();
-      default -> throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
-    };
+    return checkNotNull(
+        switch (expressionTree) {
+          case JCFieldAccess methodCall -> methodCall.type.getReturnType();
+          case JCIdent methodCall -> methodCall.type.getReturnType();
+          case JCMethodInvocation jCMethodInvocation ->
+              getReturnType(jCMethodInvocation.getMethodSelect());
+          case JCMemberReference jCMemberReference -> jCMemberReference.sym.type.getReturnType();
+          default -> throw new IllegalArgumentException("Expected a JCFieldAccess or JCIdent");
+        });
   }
 
   /**
@@ -587,16 +589,18 @@ public final class ASTHelpers {
    * }</pre>
    */
   public static Type getReceiverType(ExpressionTree expressionTree) {
-    return switch (expressionTree) {
-      case JCFieldAccess methodSelectFieldAccess -> methodSelectFieldAccess.selected.type;
-      case JCIdent methodCall -> methodCall.sym.owner.type;
-      case JCMethodInvocation jCMethodInvocation ->
-          getReceiverType(jCMethodInvocation.getMethodSelect());
-      case JCMemberReference jCMemberReference -> jCMemberReference.getQualifierExpression().type;
-      default ->
-          throw new IllegalArgumentException(
-              "Expected a JCFieldAccess or JCIdent from expression " + expressionTree);
-    };
+    return checkNotNull(
+        switch (expressionTree) {
+          case JCFieldAccess methodSelectFieldAccess -> methodSelectFieldAccess.selected.type;
+          case JCIdent methodCall -> methodCall.sym.owner.type;
+          case JCMethodInvocation jCMethodInvocation ->
+              getReceiverType(jCMethodInvocation.getMethodSelect());
+          case JCMemberReference jCMemberReference ->
+              jCMemberReference.getQualifierExpression().type;
+          default ->
+              throw new IllegalArgumentException(
+                  "Expected a JCFieldAccess or JCIdent from expression " + expressionTree);
+        });
   }
 
   /**
@@ -1691,7 +1695,7 @@ public final class ASTHelpers {
    * The return value is normalized to always use '/' to separate elements of the path and to always
    * have a leading '/'.
    */
-  public static @Nullable String getFileName(CompilationUnitTree tree) {
+  public static String getFileName(CompilationUnitTree tree) {
     return getFileNameFromUri(tree.getSourceFile().toUri());
   }
 
@@ -1722,9 +1726,9 @@ public final class ASTHelpers {
    * Extract the filename from the URI, with special handling for jar files. The return value is
    * normalized to always use '/' to separate elements of the path and to always have a leading '/'.
    */
-  public static @Nullable String getFileNameFromUri(URI uri) {
+  public static String getFileNameFromUri(URI uri) {
     if (!uri.getScheme().equals("jar")) {
-      return uri.getPath();
+      return requireNonNull(uri.getPath());
     }
 
     try {
@@ -1737,7 +1741,7 @@ public final class ASTHelpers {
       }
       return jarEntryFileName;
     } catch (IOException e) {
-      return null;
+      throw new UncheckedIOException(e);
     }
   }
 
@@ -1885,7 +1889,7 @@ public final class ASTHelpers {
    * @return an {@code AnnotationMirror} for the annotation represented by {@code annotationTree}.
    */
   public static AnnotationMirror getAnnotationMirror(AnnotationTree annotationTree) {
-    return ((JCAnnotation) annotationTree).attribute;
+    return checkNotNull(((JCAnnotation) annotationTree).attribute);
   }
 
   /** Returns whether the given {@code tree} contains any comments in its source. */

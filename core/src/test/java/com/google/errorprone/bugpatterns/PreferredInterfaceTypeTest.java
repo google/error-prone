@@ -1070,6 +1070,23 @@ public final class PreferredInterfaceTypeTest {
   }
 
   @Test
+  public void ignoresBindFields() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.collect.ImmutableList;
+            import com.google.inject.testing.fieldbinder.Bind;
+            import java.util.List;
+
+            class Test {
+              @Bind List<Integer> xs = ImmutableList.of();
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void obeysKeep() {
     refactoringHelper
         .addInputLines(
