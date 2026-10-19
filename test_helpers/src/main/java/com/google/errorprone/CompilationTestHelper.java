@@ -367,6 +367,8 @@ public final class CompilationTestHelper {
           throw new UncheckedIOException(e);
         }
       }
+      mismatches.addAll(
+          diagnosticHelper.findDiagnosticsOutsideSources(sources, lookForCheckNameInDiagnostic));
       ImmutableList<String> allMismatches = mismatches.build();
       if (!allMismatches.isEmpty()) {
         fail(diagnosticHelper.describeMismatches(allMismatches));

@@ -232,7 +232,10 @@ public class DiagnosticTestHelper {
   /**
    * Returns one message for each line of {@code source} that fails, in source order, naming the
    * first expectation the line fails: a marker whose key has no expected message, a marked line
-   * without a matching diagnostic, or an unmarked line with a diagnostic.
+   * without a matching diagnostic, or an unmarked line with a diagnostic. A diagnostic on a line
+   * past the end of {@code source} gets a message too, if {@link #failsWhereUnreachable} selects
+   * it, because no marker can precede that line. javac puts a diagnostic there when its position is
+   * at or past the end of a file that ends with a newline.
    */
   ImmutableList<String> findMismatchedLines(
       JavaFileObject source, LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic)
@@ -241,6 +244,7 @@ public class DiagnosticTestHelper {
     ImmutableList.Builder<String> mismatches = ImmutableList.builder();
     LineNumberReader reader =
         new LineNumberReader(CharSource.wrap(source.getCharContent(false)).openStream());
+    int lastLineNumber = 0;
     do {
       String line = reader.readLine();
       if (line == null) {
@@ -313,9 +317,60 @@ public class DiagnosticTestHelper {
       if (mismatch != null) {
         mismatches.add(mismatch);
       }
+      lastLineNumber = reader.getLineNumber();
     } while (true);
     reader.close();
+    for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics) {
+      if (diagnostic.getSource() != null
+          && diagnostic.getSource().toUri().equals(source.toUri())
+          && diagnostic.getLineNumber() > lastLineNumber
+          && failsWhereUnreachable(diagnostic, lookForCheckNameInDiagnostic)) {
+        mismatches.add(
+            String.format(
+                "Saw unexpected error on line %s of a %s-line file.",
+                diagnostic.getLineNumber(), lastLineNumber));
+      }
+    }
     return mismatches.build();
+  }
+
+  /**
+   * Returns one message for each diagnostic that {@link #failsWhereUnreachable} selects in a file
+   * that is not one of {@code sources}, such as a source file that javac found on the source path
+   * or the class path and compiled implicitly. No marker can reach such a diagnostic. A diagnostic
+   * without a source or a line number, such as javac's note that a file uses unchecked operations,
+   * gets no message.
+   */
+  ImmutableList<String> findDiagnosticsOutsideSources(
+      List<JavaFileObject> sources, LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic) {
+    Set<URI> sourceUris = sources.stream().map(JavaFileObject::toUri).collect(Collectors.toSet());
+    ImmutableList.Builder<String> mismatches = ImmutableList.builder();
+    for (Diagnostic<? extends JavaFileObject> diagnostic : getDiagnostics()) {
+      if (diagnostic.getSource() != null
+          && diagnostic.getLineNumber() != Diagnostic.NOPOS
+          && !sourceUris.contains(diagnostic.getSource().toUri())
+          && failsWhereUnreachable(diagnostic, lookForCheckNameInDiagnostic)) {
+        mismatches.add(
+            String.format(
+                "Saw unexpected error on line %s of %s, which is not among the compiled sources.",
+                diagnostic.getLineNumber(), diagnostic.getSource().getName()));
+      }
+    }
+    return mismatches.build();
+  }
+
+  /**
+   * Returns whether {@code diagnostic} fails the test where no marker can reach it. Every
+   * diagnostic does, unless this helper tests one check and {@code lookForCheckNameInDiagnostic} is
+   * {@code YES}; then only a diagnostic whose message names the check does. An unmarked line, by
+   * contrast, fails on every diagnostic.
+   */
+  private boolean failsWhereUnreachable(
+      Diagnostic<? extends JavaFileObject> diagnostic,
+      LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic) {
+    return checkName == null
+        || lookForCheckNameInDiagnostic == LookForCheckNameInDiagnostic.NO
+        || diagnostic.getMessage(Locale.getDefault()).contains("[" + checkName + "]");
   }
 
   /**

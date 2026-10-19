@@ -38,13 +38,21 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.main.Main.Result;
+import com.sun.tools.javac.util.JCDiagnostic.SimpleDiagnosticPosition;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 /** Tests for {@link CompilationTestHelper}. */
 @RunWith(JUnit4.class)
 public class CompilationTestHelperTest {
+
+  @Rule public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(ReturnTreeChecker.class, getClass());
@@ -319,6 +327,79 @@ public class CompilationTestHelperTest {
   }
 
   @Test
+  public void diagnosticAtTheEndOfAFileWithoutATrailingNewlineIsOnTheLastLine() {
+    CompilationTestHelper.newInstance(EndOfFileChecker.class, getClass())
+        .addSourceLines(
+            "Test.java", "// BUG: Diagnostic contains: End of file reached", "class Test {}")
+        .doTest();
+  }
+
+  @Test
+  public void diagnosticAtTheEndOfAFileWithATrailingNewlineFailsPastTheLastLine() {
+    var compilationTestHelper =
+        CompilationTestHelper.newInstance(EndOfFileChecker.class, getClass())
+            .addSourceLines(
+                "Test.java",
+                """
+                class Test {}
+                """);
+    AssertionError expected =
+        assertThrows(AssertionError.class, () -> compilationTestHelper.doTest());
+    assertThat(expected)
+        .hasMessageThat()
+        .startsWith(
+            """
+            Saw unexpected error on line 2 of a 1-line file.
+            All errors:
+            """);
+  }
+
+  @Test
+  public void diagnosticInAnImplicitlyCompiledFileFails() throws IOException {
+    var compilationTestHelper =
+        compilationHelper
+            .addSourceLines("Test.java", "class Test extends Other {}")
+            .setArgs(
+                "-sourcepath",
+                sourcePathWithOther(
+                    """
+                    class Other {
+                      boolean doIt() {
+                        return true;
+                      }
+                    }
+                    """));
+    AssertionError expected =
+        assertThrows(AssertionError.class, () -> compilationTestHelper.doTest());
+    assertThat(expected).hasMessageThat().startsWith("Saw unexpected error on line 3 of ");
+    assertThat(expected)
+        .hasMessageThat()
+        .contains("Other.java, which is not among the compiled sources.\nAll errors:\n");
+  }
+
+  @Test
+  public void implicitlyCompiledFileWithoutDiagnosticsPasses() throws IOException {
+    compilationHelper
+        .addSourceLines("Test.java", "class Test extends Other {}")
+        .setArgs(
+            "-sourcepath",
+            sourcePathWithOther(
+                """
+                class Other {
+                  void doIt() {}
+                }
+                """))
+        .doTest();
+  }
+
+  /** Returns a source path on which javac finds {@code Other.java} with the given content. */
+  private String sourcePathWithOther(String content) throws IOException {
+    Path directory = temporaryFolder.newFolder().toPath();
+    Files.writeString(directory.resolve("Other.java"), content);
+    return directory.toString();
+  }
+
+  @Test
   public void fileWithMultipleBugMarkersAndMatchingErrorsSucceeds() {
     compilationHelper
         .addSourceLines(
@@ -579,6 +660,14 @@ public class CompilationTestHelperTest {
         return describeMatch(tree.getPackage());
       }
       return NO_MATCH;
+    }
+  }
+
+  @BugPattern(summary = "End of file reached", severity = ERROR)
+  public static class EndOfFileChecker extends BugChecker implements CompilationUnitTreeMatcher {
+    @Override
+    public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+      return describeMatch(new SimpleDiagnosticPosition(state.getSourceCode().length()));
     }
   }
 
