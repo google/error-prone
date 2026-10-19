@@ -2682,7 +2682,7 @@ public final class IfChainToSwitchTest {
                   } else if (suit == Suit.CLUB) {
                     return;
                   }
-                  System.out.println("this will become unreachable");
+                  System.out.println("this will remain reachable");
                   System.out.println("this will too");
                 }
                 System.out.println("this will too");
@@ -2710,7 +2710,10 @@ public final class IfChainToSwitchTest {
                       return;
                     }
                   }
+                  System.out.println("this will remain reachable");
+                  System.out.println("this will too");
                 }
+                System.out.println("this will too");
               }
             }
             """)
@@ -5273,8 +5276,8 @@ class Test {
                     } else if (s == Suit.CLUB) {
                       throw new AssertionError("club");
                     }
-                    System.out.println("Delete me");
-                    System.out.println("Delete me too");
+                    System.out.println("Don't delete me");
+                    System.out.println("Don't delete me too");
                   }
                 }
                 return new Bar().toString();
@@ -5294,6 +5297,8 @@ class Test {
                       case Suit.DIAMOND -> throw new AssertionError("diamond");
                       case Suit.CLUB -> throw new AssertionError("club");
                     }
+                    System.out.println("Don't delete me");
+                    System.out.println("Don't delete me too");
                   }
                 }
                 return new Bar().toString();
@@ -5305,18 +5310,10 @@ class Test {
         .doTest();
   }
 
-  // The tests from here to `maybeChangeToUnnamedVariable` document current behavior that is wrong.
-  // Each one's expected output is what the check emits today; the comment says what it should
-  // emit instead.  They are meant to be corrected, not kept.
-
   @Test
   public void ifChain_exhaustiveEnumInConstructor_keepsTrailingStatements() {
-    // WRONG: the trailing statements are deleted.  They discharge the definite-assignment
-    // obligation for the blank final field (JLS 16.9), so the output does not compile: "variable x
-    // might not have been initialized".  The check deletes them because the enclosing body is a
-    // constructor, which may complete normally, but that is the wrong question: javac does not
-    // require this old-style enum switch to be exhaustive (JLS 14.11.2), so the switch can complete
-    // normally (JLS 14.22) and the statements after it are reachable, and required.
+    // The trailing statements discharge the definite-assignment obligation for the blank final
+    // field (JLS 16.9), so they may not be deleted even though every case throws or returns.
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -5368,11 +5365,11 @@ class Test {
                     return;
                   }
                 }
+                System.out.println("not reached");
+                x = 0;
               }
             }
             """)
-        // The output does not compile; see above.
-        .allowBreakingChanges()
         .allowFormattingErrors()
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
@@ -5381,11 +5378,9 @@ class Test {
 
   @Test
   public void ifChain_exhaustiveEnumInSwitchExpressionArm_keepsTrailingStatements() {
-    // WRONG: the trailing `yield` is deleted.  It is the switch expression's only result
-    // expression (JLS 15.28.1), so the output does not compile.  The check deletes it because the
-    // enclosing method is `void`, but the statements end the switch expression's arm, not the
-    // method body, and javac does not require the inner old-style enum switch to be exhaustive
-    // (JLS 14.11.2), so it can complete normally and the `yield` after it is reachable.
+    // The trailing {@code yield} is the switch expression's only result expression (JLS
+    // 15.28.1), so it may not be deleted. The enclosing method is {@code void}, so its reachability
+    // says nothing about the reachability of the arm.
     refactoringHelper
         .addInputLines(
             "Test.java",
@@ -5426,14 +5421,14 @@ class Test {
                           case Suit.DIAMOND -> throw new AssertionError();
                           case Suit.CLUB -> throw new AssertionError();
                         }
+                        System.out.println("not reached");
+                        yield 0;
                       }
                     };
                 System.out.println(result);
               }
             }
             """)
-        // The output does not compile; see above.
-        .allowBreakingChanges()
         .allowFormattingErrors()
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
@@ -5442,10 +5437,9 @@ class Test {
 
   @Test
   public void ifChain_colonCaseTrailingDeadCode_error() {
-    // WRONG: the statement after the chain is kept.  It lives in a colon-style `case`, which holds
-    // its statements directly rather than in a block, and the check only looks for dead code in
-    // blocks.  The new pattern switch is exhaustive and no case completes normally, so the
-    // statement is unreachable (JLS 14.22) and the output does not compile.
+    // The statements following the chain live in a colon-style `case`, which holds them directly
+    // rather than in a block.  They are dead once the chain becomes an exhaustive switch, so they
+    // must be deleted; leaving them would not compile.
     assume().that(Runtime.version().feature()).isAtLeast(22);
     refactoringHelper
         .addInputLines(
@@ -5479,13 +5473,10 @@ class Test {
                       case String _ -> throw new AssertionError();
                       case Object _ -> throw new AssertionError();
                     }
-                    System.out.println("dead");
                 }
               }
             }
             """)
-        // The output does not compile; see above.
-        .allowBreakingChanges()
         .allowFormattingErrors()
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
@@ -5493,10 +5484,8 @@ class Test {
 
   @Test
   public void ifChain_colonCaseTrailingDeadCodeContainsIf_noError() {
-    // WRONG: the chain is converted.  As above, the statements after it in the colon-style `case`
-    // become unreachable and are kept, so the output does not compile.  Had they been in a block,
-    // the check would have declined to convert, because they contain an `if` that it may rewrite
-    // under a separate finding whose fix would overlap the deletion.
+    // As above, but the dead statements in the colon-style `case` contain an `if`, which this check
+    // may rewrite under a separate finding whose fix would overlap the deletion.
     assume().that(Runtime.version().feature()).isAtLeast(22);
     refactoringHelper
         .addInputLines(
@@ -5521,40 +5510,63 @@ class Test {
               }
             }
             """)
-        .addOutputLines(
-            "Test.java",
-            """
-            class Test {
-              public void foo(Object o, int k, int b) {
-                switch (k) {
-                  case 1:
-                    switch (o) {
-                      case Integer _ -> throw new AssertionError();
-                      case String _ -> throw new AssertionError();
-                      case Object _ -> throw new AssertionError();
-                    }
-                    System.out.println("dead");
-                    if (b == 1) {
-                      System.out.println("x");
-                    }
-                }
-              }
-            }
-            """)
-        // The output does not compile; see above.
-        .allowBreakingChanges()
-        .allowFormattingErrors()
+        .expectUnchanged()
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
   }
 
   @Test
+  public void ifChain_colonCaseTrailingDeadCodeSafe_error() {
+    // Safe mode injects `case null -> {}`, so the switch can still complete normally and the
+    // following statements stay reachable.  Nothing is deleted.
+    assume().that(Runtime.version().feature()).isAtLeast(22);
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int k) {
+                switch (k) {
+                  case 1:
+                    if (o instanceof Integer) {
+                      throw new AssertionError();
+                    } else if (o instanceof String) {
+                      throw new AssertionError();
+                    } else if (o instanceof Object) {
+                      throw new AssertionError();
+                    }
+                    System.out.println("dead");
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public void foo(Object o, int k) {
+                switch (k) {
+                  case 1:
+                    switch (o) {
+                      case Integer _ -> throw new AssertionError();
+                      case String _ -> throw new AssertionError();
+                      case Object _ -> throw new AssertionError();
+                      case null -> {}
+                    }
+                    System.out.println("dead");
+                }
+              }
+            }
+            """)
+        .allowFormattingErrors()
+        .setArgs(ENABLE_MAIN, ENABLE_SAFE_TRUE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
   public void ifChain_colonCaseDeadCodeCascadesPastSwitch_error() {
-    // WRONG: nothing is deleted.  The statement after the chain is unreachable (see
-    // `ifChain_colonCaseTrailingDeadCode_error`).  Without it, no case of the enclosing `switch`
-    // can complete normally and nothing breaks out of it, so that switch cannot complete normally
-    // either (JLS 14.22), and the statement after it is unreachable too.  The output does not
-    // compile.
+    // Deleting the dead statements in the colon-style `case` leaves the enclosing `switch` unable
+    // to complete normally, so the statement after it is dead too and must also be deleted.
     assume().that(Runtime.version().feature()).isAtLeast(22);
     refactoringHelper
         .addInputLines(
@@ -5593,14 +5605,10 @@ class Test {
                       case String _ -> throw new AssertionError();
                       case Object _ -> throw new AssertionError();
                     }
-                    System.out.println("dead");
                 }
-                System.out.println("afterSwitch");
               }
             }
             """)
-        // The output does not compile; see above.
-        .allowBreakingChanges()
         .allowFormattingErrors()
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
@@ -5608,10 +5616,8 @@ class Test {
 
   @Test
   public void ifChain_colonCaseDeadCodeWithBreak_error() {
-    // WRONG: nothing is deleted.  The statements after the chain are unreachable, and they hold
-    // the only `break` out of the enclosing `switch`.  Once they are gone, that switch cannot
-    // complete normally, so the statement after it is unreachable as well.  The output does not
-    // compile.
+    // The dead statements hold the only `break` out of the enclosing `switch`, so deleting them
+    // leaves that switch unable to complete normally and the statement after it dead as well.
     assume().that(Runtime.version().feature()).isAtLeast(22);
     refactoringHelper
         .addInputLines(
@@ -5655,17 +5661,10 @@ class Test {
                       case String _ -> throw new AssertionError();
                       case Object _ -> throw new AssertionError();
                     }
-                    while (flag) {
-                      break lbl;
-                    }
-                    System.out.println("dead");
                 }
-                System.out.println("afterSwitch");
               }
             }
             """)
-        // The output does not compile; see above.
-        .allowBreakingChanges()
         .allowFormattingErrors()
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
@@ -5673,9 +5672,8 @@ class Test {
 
   @Test
   public void ifChain_deadCodeLeavesSurvivingBreak_error() {
-    // WRONG: the unreachable statement after the chain is kept, so the output does not compile.
-    // The statement after the loop is correctly left alone: the `break l` in the other case
-    // survives the fix and still exits the loop, so that statement stays reachable.
+    // The `break l` in the other case survives the fix and still exits the loop, so the statement
+    // after the loop stays reachable and must be left alone.
     assume().that(Runtime.version().feature()).isAtLeast(22);
     refactoringHelper
         .addInputLines(
@@ -5719,15 +5717,12 @@ class Test {
                         case String _ -> throw new AssertionError();
                         case Object _ -> throw new AssertionError();
                       }
-                      System.out.println("remove me");
                   }
                 }
                 System.out.println("after");
               }
             }
             """)
-        // The output does not compile; see above.
-        .allowBreakingChanges()
         .allowFormattingErrors()
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
@@ -5735,9 +5730,8 @@ class Test {
 
   @Test
   public void ifChain_continueKeepsDoWhileCompletable_error() {
-    // WRONG: the statement after each `do` loop is deleted.  Each switch contains a `continue`,
-    // which reaches the condition of the enclosing `do`, so the loop can complete normally (JLS
-    // 14.22) and the statement after it is reachable.  The output does not compile.  In `foo` the
+    // Each switch contains a `continue`, which reaches the condition of the enclosing `do`, so the
+    // loop can still complete normally and the statement after it stays reachable.  In `foo` the
     // `continue` is in a branch of the chain; in `bar` it is pulled up into the `default` case.  In
     // `baz` and `qux` nothing follows the chain; in `baz` the `continue` is in the last branch,
     // whose `if` has no `else`, and in `qux` it is in an earlier branch.
@@ -5816,6 +5810,7 @@ class Test {
                     case Object _ -> throw new AssertionError();
                   }
                 } while (b);
+                System.out.println("after");
               }
 
               public void bar(Object o, boolean b) {
@@ -5830,6 +5825,7 @@ class Test {
                   }
 
                 } while (b);
+                System.out.println("after");
               }
 
               public void baz(Object o, boolean b) {
@@ -5842,6 +5838,7 @@ class Test {
                     }
                   }
                 } while (b);
+                System.out.println("after");
               }
 
               public void qux(Object o, boolean b) {
@@ -5854,11 +5851,10 @@ class Test {
                     case Object _ -> throw new AssertionError();
                   }
                 } while (b);
+                System.out.println("after");
               }
             }
             """)
-        // The output does not compile; see above.
-        .allowBreakingChanges()
         .allowFormattingErrors()
         .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
         .doTest();
@@ -5871,6 +5867,100 @@ class Test {
     } else {
       return s;
     }
+  }
+
+  @Test
+  public void ifChain_deletedDeclarationUsedInLaterCase_noError() {
+    // Converting would make the rest of `case 1` unreachable, so it would be deleted, but `y` is
+    // still used by `case 2`
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              int f(int x, Object o) {
+                switch (x) {
+                  case 1:
+                    if (o instanceof String s) {
+                      return 1;
+                    } else if (o instanceof Integer i) {
+                      return 2;
+                    } else if (o instanceof Object obj) {
+                      return 3;
+                    }
+                    int y = 5; // Used below!
+                    return y;
+                  case 2:
+                    y = 7;
+                    return y;
+                  default:
+                    return 0;
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .doTest();
+  }
+
+  @Test
+  public void ifChain_deletedDeclarationUnusedInLaterCase_error() {
+    // The rest of `case 1` becomes unreachable and is deleted, including the declaration of `y`,
+    // which is safe because no later case refers to it
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              int f(int x, Object o) {
+                switch (x) {
+                  case 1:
+                    if (o instanceof String s) {
+                      return 1;
+                    } else if (o instanceof Integer i) {
+                      return 2;
+                    } else if (o instanceof Object obj) {
+                      return 3;
+                    }
+                    int y = 5;
+                    return y;
+                  case 2:
+                    return 7;
+                  default:
+                    return 0;
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              int f(int x, Object o) {
+                switch (x) {
+                  case 1:
+                    switch (o) {
+                      case String s -> {
+                        return 1;
+                      }
+                      case Integer i -> {
+                        return 2;
+                      }
+                      case Object obj -> {
+                        return 3;
+                      }
+                    }
+                  case 2:
+                    return 7;
+                  default:
+                    return 0;
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
   }
 
   /**
