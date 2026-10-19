@@ -760,6 +760,44 @@ public class ReachabilityTest {
   }
 
   /**
+   * With two labels on a {@code do} statement, {@code continue inner} continues the {@code do}
+   * statement (JLS 21 §14.16), so the {@code do} statement can complete normally (JLS 21 §14.22).
+   * ({@code continue outer} is a compile-time error, because the statement that {@code outer}
+   * labels is a labeled statement, not a loop.)
+   */
+  @Test
+  public void continueContinuesLabeledLoop_nestedLabelsOnDo() {
+    canCompleteNormallyTest(
+            /* expected= */ true,
+            """
+            outer:
+            inner:
+            do {
+              continue inner;
+            } while (x == 1);
+            """)
+        .doTest();
+  }
+
+  /**
+   * Like {@link #continueContinuesLabeledLoop_nestedLabelsOnDo}, but the condition is the constant
+   * {@code true}, so the {@code do} statement can't complete normally (JLS 21 §14.22).
+   */
+  @Test
+  public void continueContinuesLabeledLoop_nestedLabelsOnDo_constantTrue() {
+    canCompleteNormallyTest(
+            /* expected= */ false,
+            """
+            outer:
+            inner:
+            do {
+              continue inner;
+            } while (true);
+            """)
+        .doTest();
+  }
+
+  /**
    * A {@code break} in a {@code try} block does not exit the loop if the {@code finally} block
    * cannot complete normally, because the {@code finally} block discards it (JLS 21 §14.20.2,
    * §14.22).
