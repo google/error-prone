@@ -5963,6 +5963,67 @@ class Test {
         .doTest();
   }
 
+  @Test
+  public void ifChain_notFirstCase_deletedDeclarationUnusedInLaterCase_error() {
+    // Like `ifChain_deletedDeclarationUnusedInLaterCase_error`, but the chain is not in the first
+    // case.  Only the cases after `case 2` matter: `case 2` itself refers to `y`, but it is the
+    // case from which `y` is deleted, along with that reference
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              int f(int x, Object o) {
+                switch (x) {
+                  case 1:
+                    return 9;
+                  case 2:
+                    if (o instanceof String s) {
+                      return 1;
+                    } else if (o instanceof Integer i) {
+                      return 2;
+                    } else if (o instanceof Object obj) {
+                      return 3;
+                    }
+                    int y = 5;
+                    return y;
+                  default:
+                    return 0;
+                }
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              int f(int x, Object o) {
+                switch (x) {
+                  case 1:
+                    return 9;
+                  case 2:
+                    switch (o) {
+                      case String s -> {
+                        return 1;
+                      }
+                      case Integer i -> {
+                        return 2;
+                      }
+                      case Object obj -> {
+                        return 3;
+                      }
+                    }
+                  default:
+                    return 0;
+                }
+              }
+            }
+            """)
+        .setArgs(ENABLE_MAIN, DISABLE_SAFE, MIN_CHAIN_LENGTH_3)
+        .setFixChooser(IfChainToSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
   /**
    * Asserts that there is exactly one suggested fix and returns it.
    *
