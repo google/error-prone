@@ -145,6 +145,112 @@ public final class UnusedMethodTest {
   }
 
   @Test
+  public void exemptedByBeamDoFnAnnotations() {
+    helper
+        .addSourceLines(
+            "org/apache/beam/sdk/transforms/DoFn.java",
+            """
+            package org.apache.beam.sdk.transforms;
+
+            public class DoFn {
+              public @interface OnTimer {
+                String value() default "";
+              }
+
+              public @interface OnTimerFamily {
+                String value() default "";
+              }
+
+              public @interface OnWindowExpiration {}
+
+              public @interface Setup {}
+
+              public @interface Teardown {}
+
+              public @interface GetInitialRestriction {}
+
+              public @interface SplitRestriction {}
+
+              public @interface TruncateRestriction {}
+
+              public @interface GetRestrictionCoder {}
+
+              public @interface NewTracker {}
+
+              public @interface GetSize {}
+
+              public @interface GetInitialWatermarkEstimatorState {}
+
+              public @interface GetWatermarkEstimatorStateCoder {}
+
+              public @interface NewWatermarkEstimator {}
+
+              public @interface RequiresStableInput {}
+
+              public @interface RequiresTimeSortedInput {}
+            }
+            """)
+        .addSourceLines(
+            "TestDoFn.java",
+            """
+            import org.apache.beam.sdk.transforms.DoFn;
+
+            public class TestDoFn {
+              private static class InnerDoFn {
+                @DoFn.OnTimer("t")
+                public void onTimer() {}
+
+                @DoFn.OnTimerFamily("tf")
+                public void onTimerFamily() {}
+
+                @DoFn.OnWindowExpiration
+                public void onWindowExpiration() {}
+
+                @DoFn.Setup
+                public void setup() {}
+
+                @DoFn.Teardown
+                public void teardown() {}
+
+                @DoFn.GetInitialRestriction
+                public void getInitialRestriction() {}
+
+                @DoFn.SplitRestriction
+                public void splitRestriction() {}
+
+                @DoFn.TruncateRestriction
+                public void truncateRestriction() {}
+
+                @DoFn.GetRestrictionCoder
+                public void getRestrictionCoder() {}
+
+                @DoFn.NewTracker
+                public void newTracker() {}
+
+                @DoFn.GetSize
+                public void getSize() {}
+
+                @DoFn.GetInitialWatermarkEstimatorState
+                public void getInitialWatermarkEstimatorState() {}
+
+                @DoFn.GetWatermarkEstimatorStateCoder
+                public void getWatermarkEstimatorStateCoder() {}
+
+                @DoFn.NewWatermarkEstimator
+                public void newWatermarkEstimator() {}
+
+                @DoFn.RequiresStableInput
+                public void requiresStableInput() {}
+
+                @DoFn.RequiresTimeSortedInput
+                public void requiresTimeSortedInput() {}
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void exemptedByName() {
     helper
         .addSourceLines(
