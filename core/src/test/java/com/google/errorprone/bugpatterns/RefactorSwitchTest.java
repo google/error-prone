@@ -1309,6 +1309,70 @@ public final class RefactorSwitchTest {
   }
 
   @Test
+  public void switchByEnum_returnSwitchFollowedByNestedSwitch_noError() {
+    // As in `switchByEnum_returnSwitchFollowedByConvertibleSwitch_convertsOnlyTheSecond`, the code
+    // that the conversion would delete contains a switch, so the switch is not converted.  Here
+    // that switch is nested inside the deleted statement, after other code, rather than being the
+    // deleted statement itself.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public int inBlock(Suit suit, Suit other) {
+                switch (suit) {
+                  case HEART, DIAMOND -> {
+                    return 1;
+                  }
+                  case SPADE -> {
+                    return 2;
+                  }
+                  case CLUB -> {
+                    return 3;
+                  }
+                }
+                {
+                  System.out.println("before");
+                  switch (other) {
+                    case HEART -> System.out.println("heart");
+                    default -> {}
+                  }
+                }
+                return 0;
+              }
+
+              public int inElse(Suit suit, Suit other, boolean b) {
+                switch (suit) {
+                  case HEART, DIAMOND -> {
+                    return 1;
+                  }
+                  case SPADE -> {
+                    return 2;
+                  }
+                  case CLUB -> {
+                    return 3;
+                  }
+                }
+                if (b) {
+                  System.out.println("b");
+                } else {
+                  switch (other) {
+                    case HEART -> System.out.println("heart");
+                    default -> {}
+                  }
+                }
+                return 0;
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
+            "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
+            "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+        .doTest();
+  }
+
+  @Test
   public void switchByEnum_returnSwitchFollowedBySwitchExpression_noError() {
     // Converting the switch would make the statement holding the switch expression unreachable
     // and delete it.  With `EnableSimplifySwitch`, the switch expression may get its own finding,
