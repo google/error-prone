@@ -25,6 +25,7 @@ import static com.google.errorprone.bugpatterns.SwitchUtils.KINDS_CONVERTIBLE_WI
 import static com.google.errorprone.bugpatterns.SwitchUtils.KINDS_RETURN_OR_THROW;
 import static com.google.errorprone.bugpatterns.SwitchUtils.REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION;
 import static com.google.errorprone.bugpatterns.SwitchUtils.analyzeCaseForNullAndDefault;
+import static com.google.errorprone.bugpatterns.SwitchUtils.deleteDeadCodeInAncestors;
 import static com.google.errorprone.bugpatterns.SwitchUtils.findCombinableVariableTree;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getHandledEnumValues;
 import static com.google.errorprone.bugpatterns.SwitchUtils.getPrecedingStatementsInBlock;
@@ -40,7 +41,6 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
-import static com.google.errorprone.util.Reachability.CanCompleteNormallyPatch.CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.base.Joiner;
@@ -48,7 +48,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
@@ -173,12 +172,12 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     List<SuggestedFix> suggestedFixes = new ArrayList<>();
     if (enableReturnSwitchConversion && analysisResult.canConvertToReturnSwitch()) {
-      suggestedFixes.add(
-          convertToReturnSwitch(switchTree, state, analysisResult, /* removeDefault= */ false));
+      convertToReturnSwitch(switchTree, state, analysisResult, /* removeDefault= */ false)
+          .ifPresent(suggestedFixes::add);
 
       if (analysisResult.canRemoveDefault()) {
-        suggestedFixes.add(
-            convertToReturnSwitch(switchTree, state, analysisResult, /* removeDefault= */ true));
+        convertToReturnSwitch(switchTree, state, analysisResult, /* removeDefault= */ true)
+            .ifPresent(suggestedFixes::add);
       }
     }
     if (enableAssignmentSwitchConversion
@@ -931,9 +930,10 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
    * switch. In this conversion, each nontrivial statement block is mapped one-to-one to a new
    * expression on the right-hand side of the arrow. Comments are preserved where possible.
    * Precondition: the {@code AnalysisResult} for the {@code SwitchTree} must have deduced that this
-   * conversion is possible.
+   * conversion is possible. Returns empty if the code that the conversion makes dead cannot be
+   * deleted.
    */
-  private static SuggestedFix convertToReturnSwitch(
+  private static Optional<SuggestedFix> convertToReturnSwitch(
       SwitchTree switchTree,
       VisitorState state,
       AnalysisResult analysisResult,
@@ -1034,62 +1034,26 @@ public final class StatementSwitchToExpressionSwitch extends BugChecker
 
     // The transformed code can cause other existing code to become dead code.  So, we must analyze
     // and delete such dead code, otherwise the suggested autofix could fail to compile.
-
-    // The `return switch ...` will always return or throw
-    Tree cannotCompleteNormallyTree = switchTree;
-    // Search up the AST for enclosing statement blocks, marking any newly-dead code for deletion
-    // along the way
-    Tree prev = state.getPath().getLeaf();
-    for (Tree tree : state.getPath().getParentPath()) {
-      if (tree instanceof BlockTree blockTree) {
-        var statements = blockTree.getStatements();
-        int indexInBlock = statements.indexOf(prev);
-        // A single mock of the immediate child statement block (or switch) is sufficient to
-        // analyze reachability here; deeper-nested statements are not relevant.
-        boolean nextStatementReachable =
-            Reachability.canCompleteNormally(
-                statements.get(indexInBlock),
-                ImmutableMap.of(cannotCompleteNormallyTree, CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE));
-        // If we continue to the ancestor statement block, it will be because the end of this
-        // statement block is not reachable
-        cannotCompleteNormallyTree = blockTree;
-        if (nextStatementReachable) {
-          break;
-        }
-
-        // If a next statement in this block exists, then it is not reachable.
-        if (indexInBlock < statements.size() - 1) {
-          String deletedRegion =
-              state
-                  .getSourceCode()
-                  .subSequence(
-                      state.getEndPosition(statements.get(indexInBlock)),
-                      state.getEndPosition(blockTree))
-                  .toString();
-          // If the region we would delete looks interesting, bail out and just delete the orphaned
-          // statements.
-          if (deletedRegion.contains("LINT.")) {
-            statements
-                .subList(indexInBlock + 1, statements.size())
-                .forEach(suggestedFixBuilder::delete);
-          } else {
-            // If the region doesn't seem to contain interesting comments, delete it along with
-            // comments: those comments are often just of the form "Unreachable code".
-            suggestedFixBuilder.replace(
-                state.getEndPosition(statements.get(indexInBlock)),
-                state.getEndPosition(blockTree),
-                "}");
-          }
-        }
-      }
-      prev = tree;
+    // A switch in the code that becomes dead may get a separate finding from this check, whose fix
+    // would overlap the deletion; then decline to convert.  (The only other reason to decline is
+    // dead code in an enclosing colon-style `case` that declares a variable a later case uses, but
+    // no colon-style `case` should enclose this switch: `analyzeSwitchTree` rejects a switch inside
+    // another switch statement, and a switch inside a switch expression cannot `return`, as a
+    // return switch must.)
+    if (!deleteDeadCodeInAncestors(
+        switchTree,
+        state,
+        suggestedFixBuilder,
+        /* numberPulledUp= */ 0,
+        /* declineIfDeleted= */ SwitchUtils::hasSwitchInTree)) {
+      return Optional.empty();
     }
 
     if (removeDefault) {
       suggestedFixBuilder.setShortDescription(REMOVE_DEFAULT_CASE_SHORT_DESCRIPTION);
     }
     suggestedFixBuilder.replace(switchTree, replacementCodeBuilder.toString());
-    return suggestedFixBuilder.build();
+    return Optional.of(suggestedFixBuilder.build());
   }
 
   /**
