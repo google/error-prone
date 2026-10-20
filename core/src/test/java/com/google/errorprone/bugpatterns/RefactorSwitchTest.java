@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertThrows;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
@@ -1055,6 +1056,140 @@ public final class RefactorSwitchTest {
             "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
         .setFixChooser(RefactorSwitchTest::assertOneFixAndChoose)
         .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnSwitchInLoopWithBreak_keepsReturnAfterLoop() {
+    // BUG: the `return` after the loop is deleted.  The statement after the switch becomes
+    // unreachable and is rightly deleted, but the `break` before the switch survives the fix and
+    // still exits the loop, so the loop can still complete normally and therefore the
+    // `return` after it stays reachable, and required.  The check misses the `break` because it
+    // analyzes the loop with the loop's body patched to be unable to complete normally, and
+    // `Reachability` does not scan inside such a patch.  The output does not compile, which the
+    // test helper reports by throwing.
+    BugCheckerRefactoringTestHelper bugCheckerRefactoringTestHelper =
+        refactoringHelper
+            .addInputLines(
+                "Test.java",
+                """
+                class Test {
+                  public int foo(Suit suit, boolean b) {
+                    while (true) {
+                      if (b) {
+                        break;
+                      }
+                      switch (suit) {
+                        case HEART, DIAMOND -> {
+                          return 1;
+                        }
+                        case SPADE -> {
+                          return 2;
+                        }
+                        case CLUB -> {
+                          return 3;
+                        }
+                      }
+                      System.out.println("unreachable after the fix");
+                    }
+                    return 0;
+                  }
+                }
+                """)
+            .addOutputLines(
+                "Test.java",
+                """
+                class Test {
+                  public int foo(Suit suit, boolean b) {
+                    while (true) {
+                      if (b) {
+                        break;
+                      }
+                      return switch (suit) {
+                        case HEART, DIAMOND -> 1;
+                        case SPADE -> 2;
+                        case CLUB -> 3;
+                      };
+                    }
+                  }
+                }
+                """)
+            .setArgs(
+                "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
+                "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
+                "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+            .setFixChooser(RefactorSwitchTest::assertOneFixAndChoose);
+
+    AssertionError e = assertThrows(AssertionError.class, bugCheckerRefactoringTestHelper::doTest);
+
+    assertThat(e).hasMessageThat().contains("compilation failed unexpectedly");
+    assertThat(e).hasMessageThat().contains("missing return statement");
+  }
+
+  @Test
+  public void switchByEnum_returnSwitchInDoWhileWithContinue_keepsReturnAfterLoop() {
+    // BUG: the `return` after the loop is deleted.  The statement after the switch becomes
+    // unreachable and is rightly deleted, but the `continue` before the switch survives the fix
+    // and still reaches the condition of the `do` loop, so the loop can still complete normally
+    // and therefore the `return` after it stays reachable, and required.  As in
+    // switchByEnum_returnSwitchInLoopWithBreak_keepsReturnAfterLoop, the
+    // check misses the `continue` because it does not scan inside the patched loop body.  The
+    // output does not compile, which the test helper reports by throwing.
+    BugCheckerRefactoringTestHelper bugCheckerRefactoringTestHelper =
+        refactoringHelper
+            .addInputLines(
+                "Test.java",
+                """
+                class Test {
+                  public int foo(Suit suit, boolean b) {
+                    do {
+                      if (b) {
+                        continue;
+                      }
+                      switch (suit) {
+                        case HEART, DIAMOND -> {
+                          return 1;
+                        }
+                        case SPADE -> {
+                          return 2;
+                        }
+                        case CLUB -> {
+                          return 3;
+                        }
+                      }
+                      System.out.println("unreachable after the fix");
+                    } while (b);
+                    return 0;
+                  }
+                }
+                """)
+            .addOutputLines(
+                "Test.java",
+                """
+                class Test {
+                  public int foo(Suit suit, boolean b) {
+                    do {
+                      if (b) {
+                        continue;
+                      }
+                      return switch (suit) {
+                        case HEART, DIAMOND -> 1;
+                        case SPADE -> 2;
+                        case CLUB -> 3;
+                      };
+                    } while (b);
+                  }
+                }
+                """)
+            .setArgs(
+                "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
+                "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
+                "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+            .setFixChooser(RefactorSwitchTest::assertOneFixAndChoose);
+
+    AssertionError e = assertThrows(AssertionError.class, bugCheckerRefactoringTestHelper::doTest);
+
+    assertThat(e).hasMessageThat().contains("compilation failed unexpectedly");
+    assertThat(e).hasMessageThat().contains("missing return statement");
   }
 
   @Test
