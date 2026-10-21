@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.errorprone.util.ASTHelpers.isStatic;
-import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
@@ -51,7 +50,7 @@ import java.util.Map;
 public class StaticGuardedByInstance extends BugChecker implements SynchronizedTreeMatcher {
   @Override
   public Description matchSynchronized(SynchronizedTree tree, VisitorState state) {
-    Symbol lock = ASTHelpers.getSymbol(stripParentheses(tree.getExpression()));
+    Symbol lock = ASTHelpers.getSymbol(tree.getExpression());
     if (!(lock instanceof VarSymbol)) {
       return Description.NO_MATCH;
     }

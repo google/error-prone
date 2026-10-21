@@ -363,7 +363,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
           public Void visitReturn(ReturnTree returnTree, Void unused) {
             // even for cases where getExpression() or getSymbol() returns null, we still want to
             // add those to the returnedSymbols set (that's important if there's > 1 returns)
-            returnedSymbols.add(getSymbol(stripParentheses(returnTree.getExpression())));
+            returnedSymbols.add(getSymbol(returnTree.getExpression()));
             return null;
           }
 

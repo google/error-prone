@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
-import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.google.errorprone.util.AnnotationNames.LAZY_INIT_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
@@ -48,7 +47,7 @@ public class SynchronizeOnNonFinalField extends BugChecker
 
   @Override
   public Description matchSynchronized(SynchronizedTree tree, VisitorState state) {
-    Symbol symbol = ASTHelpers.getSymbol(stripParentheses(tree.getExpression()));
+    Symbol symbol = ASTHelpers.getSymbol(tree.getExpression());
     if (!(symbol instanceof VarSymbol varSymbol)) {
       return NO_MATCH;
     }

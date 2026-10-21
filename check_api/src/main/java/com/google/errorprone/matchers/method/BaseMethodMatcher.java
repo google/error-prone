@@ -19,6 +19,7 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import org.jspecify.annotations.Nullable;
@@ -28,6 +29,10 @@ interface BaseMethodMatcher {
 
   BaseMethodMatcher METHOD =
       tree -> {
+        if (tree instanceof ParenthesizedTree) {
+          // A method matcher matches the call, not parentheses around it.
+          return null;
+        }
         Symbol sym = ASTHelpers.getSymbol(tree);
         if (!(sym instanceof MethodSymbol methodSymbol)) {
           return null;

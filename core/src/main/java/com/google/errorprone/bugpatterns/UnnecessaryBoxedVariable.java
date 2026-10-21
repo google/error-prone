@@ -469,8 +469,7 @@ public class UnnecessaryBoxedVariable extends BugChecker implements CompilationU
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, Void unused) {
       if (NULL_CHECK_MATCH.matches(node, state)) {
-        Symbol firstArgSymbol =
-            getSymbol(ASTHelpers.stripParentheses(node.getArguments().getFirst()));
+        Symbol firstArgSymbol = getSymbol(node.getArguments().getFirst());
         if (isBoxed(firstArgSymbol, state)) {
           dereferenced.add((VarSymbol) firstArgSymbol);
           fixableNullCheckInvocations.put((VarSymbol) firstArgSymbol, getCurrentPath());

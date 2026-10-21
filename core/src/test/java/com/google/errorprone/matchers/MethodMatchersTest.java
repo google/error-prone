@@ -18,6 +18,7 @@ package com.google.errorprone.matchers;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
@@ -28,6 +29,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.ParenthesizedTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
@@ -35,6 +37,7 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ParenthesizedTree;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -269,6 +272,50 @@ public class MethodMatchersTest {
                 // These ones are ok
                 this.anotherMethod();
                 Test.yetAnother();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /** Flags a call, and parentheses around a call, that a method matcher accepts. */
+  @BugPattern(summary = "", severity = ERROR)
+  public static class ParenthesizedCallChecker extends BugChecker
+      implements MethodInvocationTreeMatcher, ParenthesizedTreeMatcher {
+    private static final Matcher<ExpressionTree> MATCHER =
+        anyOf(
+            staticMethod().onClass("java.lang.Math").named("abs"),
+            instanceMethod().onDescendantOf("java.lang.String").named("length"));
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      return MATCHER.matches(tree, state)
+          ? buildDescription(tree).setMessage("call").build()
+          : NO_MATCH;
+    }
+
+    @Override
+    public Description matchParenthesized(ParenthesizedTree tree, VisitorState state) {
+      return MATCHER.matches(tree, state)
+          ? buildDescription(tree).setMessage("parentheses").build()
+          : NO_MATCH;
+    }
+  }
+
+  @Test
+  public void methodMatcher_doesNotMatchParenthesesAroundACall() {
+    CompilationTestHelper.newInstance(ParenthesizedCallChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              int f(String s) {
+                return (
+                    // BUG: Diagnostic contains: call
+                    Math.abs(-1))
+                    + (
+                    // BUG: Diagnostic contains: call
+                    s.length());
               }
             }
             """)
