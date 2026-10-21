@@ -235,8 +235,14 @@ public final class ASTHelpers {
    * Gets the symbol for a tree. Returns null if this tree does not have a symbol because it is of
    * the wrong type, if {@code tree} is null, or if the symbol cannot be found due to a compilation
    * error.
+   *
+   * <p>A parenthesized expression has the symbol of the expression inside the parentheses, so
+   * {@code (x)} and {@code x} return the same symbol.
    */
   public static @Nullable Symbol getSymbol(Tree tree) {
+    if (tree instanceof ParenthesizedTree parenthesizedTree) {
+      return getSymbol(parenthesizedTree.getExpression());
+    }
     if (tree instanceof AnnotationTree annotationTree) {
       return getSymbol(annotationTree.getAnnotationType());
     }

@@ -228,6 +228,11 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
   }
 
   @Test
+  public void parenthesizedPlaceholderInReturn() throws IOException {
+    runTest("ParenthesizedPlaceholderTemplate");
+  }
+
+  @Test
   public void expressionPlaceholderAllowsIdentity() throws IOException {
     runTest("PlaceholderAllowsIdentityTemplate");
   }

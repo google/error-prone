@@ -29,6 +29,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
@@ -50,6 +51,10 @@ public final class MethodInvocationMatcher {
 
   record Context(MethodSymbol sym, ExpressionTree tree) {
     static Optional<Context> create(ExpressionTree tree) {
+      if (tree instanceof ParenthesizedTree) {
+        // A method matcher matches the call, not parentheses around it.
+        return Optional.empty();
+      }
       Symbol sym = ASTHelpers.getSymbol(tree);
       if (!(sym instanceof MethodSymbol methodSymbol)) {
         return Optional.empty();

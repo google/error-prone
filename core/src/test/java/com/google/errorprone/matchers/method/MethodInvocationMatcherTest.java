@@ -22,16 +22,24 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
+import com.google.errorprone.bugpatterns.BugChecker.ParenthesizedTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
+import com.google.errorprone.matchers.method.MethodInvocationMatcher.Rule;
+import com.google.errorprone.matchers.method.MethodInvocationMatcher.Token;
+import com.google.errorprone.matchers.method.MethodInvocationMatcher.Token.ReceiverType;
+import com.google.errorprone.matchers.method.MethodInvocationMatcher.TokenType;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.ParenthesizedTree;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -84,5 +92,49 @@ public class MethodInvocationMatcherTest {
     public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
       return matcher.matches(tree, state) ? describeMatch(tree) : Description.NO_MATCH;
     }
+  }
+
+  /** Flags a call, and parentheses around a call, that a compiled receiver-type rule accepts. */
+  @BugPattern(summary = "", severity = ERROR)
+  public static class ParenthesizedCallChecker extends BugChecker
+      implements MethodInvocationTreeMatcher, ParenthesizedTreeMatcher {
+    private static final Matcher<ExpressionTree> MATCHER =
+        MethodInvocationMatcher.compile(
+            ImmutableList.of(
+                Rule.create(
+                    ImmutableMap.of(
+                        TokenType.RECEIVER_TYPE,
+                        ImmutableSet.<Token>of(ReceiverType.create("java.lang.String"))))));
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      return MATCHER.matches(tree, state)
+          ? buildDescription(tree).setMessage("call").build()
+          : Description.NO_MATCH;
+    }
+
+    @Override
+    public Description matchParenthesized(ParenthesizedTree tree, VisitorState state) {
+      return MATCHER.matches(tree, state)
+          ? buildDescription(tree).setMessage("parentheses").build()
+          : Description.NO_MATCH;
+    }
+  }
+
+  @Test
+  public void compiledMatcher_doesNotMatchParenthesesAroundACall() {
+    CompilationTestHelper.newInstance(ParenthesizedCallChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              int f(String s) {
+                return (
+                    // BUG: Diagnostic contains: call
+                    s.length());
+              }
+            }
+            """)
+        .doTest();
   }
 }
