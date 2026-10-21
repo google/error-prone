@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.instanceMetho
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.outermostParenthesized;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -236,10 +237,7 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
     }
 
     private void makeAlwaysFalse() {
-      TreePath enclosingPath = getCurrentPath().getParentPath();
-      while (enclosingPath.getLeaf() instanceof ParenthesizedTree) {
-        enclosingPath = enclosingPath.getParentPath();
-      }
+      TreePath enclosingPath = outermostParenthesized(getCurrentPath()).getParentPath();
       Tree enclosing = enclosingPath.getLeaf();
       if (enclosing instanceof IfTree ifTree) {
         if (ifTree.getElseStatement() == null) {
@@ -261,12 +259,8 @@ public final class EqualsGetClass extends BugChecker implements MethodInvocation
     }
 
     private void removeFromBinary(Kind ifKind) {
-      TreePath outsideParensPath = getCurrentPath().getParentPath();
-      TreePath justInsideBinaryPath = getCurrentPath();
-      while (outsideParensPath.getLeaf() instanceof ParenthesizedTree) {
-        justInsideBinaryPath = outsideParensPath;
-        outsideParensPath = outsideParensPath.getParentPath();
-      }
+      TreePath justInsideBinaryPath = outermostParenthesized(getCurrentPath());
+      TreePath outsideParensPath = justInsideBinaryPath.getParentPath();
       Tree superTree = outsideParensPath.getLeaf();
       if (superTree.getKind() != ifKind) {
         failed = true;

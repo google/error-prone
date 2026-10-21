@@ -433,6 +433,25 @@ public final class ASTHelpers {
   }
 
   /**
+   * Returns the path to the outermost {@link ParenthesizedTree} in the chain of parentheses that
+   * wraps the leaf of {@code path}, or {@code path} itself when its leaf is not wrapped in
+   * parentheses.
+   *
+   * <p>The parent of the returned path is the syntactic context of the expression, or {@code null}
+   * when {@code path} is the root. The returned leaf is a direct child of that context: for a
+   * method invocation, {@code getArguments().indexOf(leaf)} finds the argument position. To look
+   * down into an expression instead, use {@link #stripParentheses(ExpressionTree)}.
+   */
+  public static TreePath outermostParenthesized(TreePath path) {
+    TreePath parent = path.getParentPath();
+    while (parent != null && parent.getLeaf() instanceof ParenthesizedTree) {
+      path = parent;
+      parent = path.getParentPath();
+    }
+    return path;
+  }
+
+  /**
    * Given a TreePath, finds the first enclosing node of the given type and returns the path from
    * the enclosing node to the top-level {@code CompilationUnitTree}.
    *

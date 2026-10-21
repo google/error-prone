@@ -32,7 +32,6 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.TreePath;
@@ -60,10 +59,7 @@ public class RandomCast extends BugChecker implements MethodInvocationTreeMatche
     if (!MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }
-    TreePath parentPath = state.getPath().getParentPath();
-    while (parentPath.getLeaf() instanceof ParenthesizedTree) {
-      parentPath = parentPath.getParentPath();
-    }
+    TreePath parentPath = ASTHelpers.outermostParenthesized(state.getPath()).getParentPath();
     Tree parent = parentPath.getLeaf();
     if (!(parent instanceof TypeCastTree)) {
       return NO_MATCH;
