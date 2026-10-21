@@ -52,6 +52,34 @@ public class InlineTrivialConstantTest {
   }
 
   @Test
+  public void positiveWithParentheses()
+  {
+    BugCheckerRefactoringTestHelper.newInstance(InlineTrivialConstant.class, getClass())
+            .addInputLines(
+                    "Test.java",
+                    """
+                    class Test {
+                      private static final String EMPTY_STRING = ("");
+        
+                      void f() {
+                        System.err.println(EMPTY_STRING);
+                      }
+                    }
+                    """)
+            .addOutputLines(
+                    "Test.java",
+                    """
+                    class Test {
+        
+                      void f() {
+                        System.err.println("");
+                      }
+                    }
+                    """)
+            .doTest();
+  }
+
+  @Test
   public void negative() {
     CompilationTestHelper.newInstance(InlineTrivialConstant.class, getClass())
         .addSourceLines(
@@ -84,5 +112,40 @@ public class InlineTrivialConstantTest {
             }
             """)
         .doTest();
+  }
+
+  @Test
+  public void negativeWithParentheses() {
+    CompilationTestHelper.newInstance(InlineTrivialConstant.class, getClass())
+            .addSourceLines(
+                    "Test.java",
+                    """
+                    class Test {
+                      static class NonPrivate {
+                        static final String EMPTY_STRING = ("");
+                      }
+        
+                      static class NonStatic {
+                        private final String EMPTY_STRING = ("");
+                      }
+        
+                      static class NonFinal {
+                        private static String EMPTY_STRING = ("");
+                      }
+        
+                      static class NonString {
+                        private static final Object EMPTY_STRING = ("");
+                      }
+        
+                      static class WrongName {
+                        private static final String LAUNCH_CODES = ("");
+                      }
+        
+                      static class WrongValue {
+                        private static final String EMPTY_STRING = ("hello");
+                      }
+                    }
+                    """)
+            .doTest();
   }
 }
