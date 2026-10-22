@@ -49,16 +49,21 @@ public class OverridingMethodInconsistentArgumentNamesChecker extends BugChecker
       return Description.NO_MATCH;
     }
 
-    ImmutableBiMap<Name, Integer> params = getParams(methodSymbol);
-    ImmutableBiMap<Name, Integer> superParams = getParams(superMethod.get());
+    Optional<ImmutableBiMap<Name, Integer>> params = getParams(methodSymbol);
+    Optional<ImmutableBiMap<Name, Integer>> superParams = getParams(superMethod.get());
+    if (params.isEmpty() || superParams.isEmpty()) {
+      return Description.NO_MATCH;
+    }
+    ImmutableBiMap<Name, Integer> paramsMap = params.get();
+    ImmutableBiMap<Name, Integer> superParamsMap = superParams.get();
 
-    for (Name param : params.keySet()) {
-      int position = params.get(param);
-      if (!superParams.containsKey(param) || position == superParams.get(param)) {
+    for (Name param : paramsMap.keySet()) {
+      int position = paramsMap.get(param);
+      if (!superParamsMap.containsKey(param) || position == superParamsMap.get(param)) {
         continue;
       }
-      Name samePositionSuperParam = superParams.inverse().get(position);
-      if (params.containsKey(samePositionSuperParam)) {
+      Name samePositionSuperParam = superParamsMap.inverse().get(position);
+      if (paramsMap.containsKey(samePositionSuperParam)) {
         return buildDescription(methodTree).setMessage(getDescription(superMethod.get())).build();
       }
     }
@@ -66,10 +71,17 @@ public class OverridingMethodInconsistentArgumentNamesChecker extends BugChecker
     return Description.NO_MATCH;
   }
 
-  private static ImmutableBiMap<Name, Integer> getParams(MethodSymbol methodSymbol) {
-    return range(0, methodSymbol.getParameters().size())
-        .boxed()
-        .collect(toImmutableBiMap(i -> methodSymbol.getParameters().get(i).name, i -> i));
+  private static Optional<ImmutableBiMap<Name, Integer>> getParams(MethodSymbol methodSymbol) {
+    // Obfuscators sometimes rename all parameters of a method to the same name. A name-to-position
+    // map is not well-defined in that case, so there is nothing sensible to compare against.
+    if (methodSymbol.getParameters().stream().map(p -> p.name).distinct().count()
+        != methodSymbol.getParameters().size()) {
+      return Optional.empty();
+    }
+    return Optional.of(
+        range(0, methodSymbol.getParameters().size())
+            .boxed()
+            .collect(toImmutableBiMap(i -> methodSymbol.getParameters().get(i).name, i -> i)));
   }
 
   /**
