@@ -45,7 +45,18 @@ jobs:
           server-password: CI_DEPLOY_PASSWORD
           gpg-private-key: ${{ secrets.GPG_SIGNING_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
-     
+
+      - name: Set up Maven 3.9.16
+        run: |
+          set -euo pipefail
+          V=3.9.16
+          SHA512=831a8591fe20c8243b1dbe7d71e3244f31d1665b0804b2e825e38cbbe5ce0cafb8338851f90780735568773e0a6cd07bbec107cda0b896b008b861075358b6f6
+          URL=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/$V/apache-maven-$V-bin.tar.gz
+          curl -fsSL "$URL" -o /tmp/maven.tgz
+          echo "$SHA512  /tmp/maven.tgz" | sha512sum -c -
+          tar xzf /tmp/maven.tgz -C "$HOME"
+          echo "$HOME/apache-maven-$V/bin" >> "$GITHUB_PATH"
+
       - name: Bump Version Number
         run: |
           mvn --no-transfer-progress versions:set versions:commit -DnewVersion="${GITHUB_EVENT_INPUTS_VERSION}"
