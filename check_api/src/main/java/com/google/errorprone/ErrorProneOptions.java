@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
 import java.util.stream.Stream;
 import org.safere.Pattern;
 
@@ -73,6 +74,7 @@ public final class ErrorProneOptions {
   private static final String COMPILING_PUBLICLY_VISIBLE_CODE = "-XepCompilingPubliclyVisibleCode";
   private static final String PRINT_TIMINGS = "-XepPrintTimings";
   private static final String RECORD_TIMINGS = "-XepRecordTimings";
+  private static final String MAX_WARNINGS_PREFIX = "-XepMaxWarnings:";
   private static final String ARGUMENT_FILE_PREFIX = "@";
 
   /** see {@link javax.tools.OptionChecker#isSupportedOption(String)} */
@@ -83,6 +85,7 @@ public final class ErrorProneOptions {
             || option.startsWith(PATCH_OUTPUT_LOCATION)
             || option.startsWith(PATCH_CHECKS_PREFIX)
             || option.startsWith(EXCLUDED_PATHS_PREFIX)
+            || option.startsWith(MAX_WARNINGS_PREFIX)
             || option.equals(IGNORE_UNKNOWN_CHECKS_FLAG)
             || option.equals(DISABLE_WARNINGS_IN_GENERATED_CODE_FLAG)
             || option.equals(ERRORS_AS_WARNINGS_FLAG)
@@ -169,6 +172,7 @@ public final class ErrorProneOptions {
   private final boolean ignoreLargeCodeGenerators;
   private final boolean printTimings;
   private final boolean recordTimings;
+  private final OptionalInt maxWarnings;
 
   private ErrorProneOptions(
       ImmutableMap<String, Severity> severityMap,
@@ -188,7 +192,8 @@ public final class ErrorProneOptions {
       boolean ignoreSuppressionAnnotations,
       boolean ignoreLargeCodeGenerators,
       boolean printTimings,
-      boolean recordTimings) {
+      boolean recordTimings,
+      OptionalInt maxWarnings) {
     this.severityMap = severityMap;
     this.remainingArgs = remainingArgs;
     this.ignoreUnknownChecks = ignoreUnknownChecks;
@@ -207,6 +212,7 @@ public final class ErrorProneOptions {
     this.ignoreLargeCodeGenerators = ignoreLargeCodeGenerators;
     this.printTimings = printTimings;
     this.recordTimings = recordTimings;
+    this.maxWarnings = maxWarnings;
   }
 
   public ImmutableList<String> getRemainingArgs() {
@@ -266,6 +272,14 @@ public final class ErrorProneOptions {
     return recordTimings;
   }
 
+  /**
+   * The maximum number of Error Prone warnings a compilation may report before Error Prone fails
+   * it, or empty if the number of warnings is unbounded. Set with {@code -XepMaxWarnings:N}.
+   */
+  public OptionalInt maxWarnings() {
+    return maxWarnings;
+  }
+
   public ErrorProneFlags getFlags() {
     return flags;
   }
@@ -292,6 +306,7 @@ public final class ErrorProneOptions {
     private boolean ignoreLargeCodeGenerators = true;
     private boolean printTimings = false;
     private boolean recordTimings = false;
+    private OptionalInt maxWarnings = OptionalInt.empty();
     private final Map<String, Severity> severityMap = new LinkedHashMap<>();
     private final ErrorProneFlags.Builder flagsBuilder = ErrorProneFlags.builder();
     private final PatchingOptions.Builder patchingOptionsBuilder = PatchingOptions.builder();
@@ -374,6 +389,22 @@ public final class ErrorProneOptions {
       this.recordTimings = recordTimings;
     }
 
+    void parseMaxWarnings(String arg) {
+      String value = arg.substring(MAX_WARNINGS_PREFIX.length());
+      int max;
+      try {
+        max = Integer.parseInt(value);
+      } catch (NumberFormatException e) {
+        throw new InvalidCommandLineOptionException(
+            "invalid flag: " + arg + " (expected a non-negative integer)");
+      }
+      if (max < 0) {
+        throw new InvalidCommandLineOptionException(
+            "invalid flag: " + arg + " (expected a non-negative integer)");
+      }
+      this.maxWarnings = OptionalInt.of(max);
+    }
+
     void setDisableAllChecks(boolean disableAllChecks) {
       // Discard previously set severities so that the DisableAllChecks flag is position sensitive.
       severityMap.clear();
@@ -411,7 +442,8 @@ public final class ErrorProneOptions {
           ignoreSuppressionAnnotations,
           ignoreLargeCodeGenerators,
           printTimings,
-          recordTimings || printTimings);
+          recordTimings || printTimings,
+          maxWarnings);
     }
 
     void setExcludedPattern(Pattern excludedPattern) {
@@ -577,6 +609,8 @@ public final class ErrorProneOptions {
           } else if (arg.startsWith(EXCLUDED_PATHS_PREFIX)) {
             String pathRegex = arg.substring(EXCLUDED_PATHS_PREFIX.length());
             builder.setExcludedPattern(Pattern.compile(pathRegex));
+          } else if (arg.startsWith(MAX_WARNINGS_PREFIX)) {
+            builder.parseMaxWarnings(arg);
 
           } else {
             if (arg.startsWith(PREFIX)) {
