@@ -284,39 +284,4 @@ public class NonRuntimeAnnotationNegativeCases {
             """)
         .doTest();
   }
-
-  @Test
-  public void additionalApisDisabled() {
-    compilationHelper
-        .setArgs("-XepOpt:NonRuntimeAnnotation:AdditionalApis=false")
-        .addSourceLines(
-            "Test.java",
-            """
-            import java.lang.annotation.ElementType;
-            import java.lang.annotation.Retention;
-            import java.lang.annotation.RetentionPolicy;
-            import java.lang.annotation.Target;
-            import java.lang.reflect.AnnotatedType;
-            import java.lang.reflect.Method;
-
-            class Test {
-              @Target({ElementType.TYPE, ElementType.METHOD, ElementType.TYPE_USE})
-              @Retention(RetentionPolicy.CLASS)
-              @interface NonRuntime {}
-
-              void test(Class<?> clazz, Method method, AnnotatedType annotatedType) {
-                // BUG: Diagnostic contains:
-                clazz.getAnnotation(NonRuntime.class);
-
-                clazz.isAnnotationPresent(NonRuntime.class);
-                clazz.getAnnotationsByType(NonRuntime.class);
-                clazz.getDeclaredAnnotation(NonRuntime.class);
-                clazz.getDeclaredAnnotationsByType(NonRuntime.class);
-                method.getAnnotation(NonRuntime.class);
-                annotatedType.getAnnotation(NonRuntime.class);
-              }
-            }
-            """)
-        .doTest();
-  }
 }

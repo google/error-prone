@@ -26,7 +26,6 @@ import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
@@ -35,7 +34,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Attribute.RetentionPolicy;
 import com.sun.tools.javac.code.Type;
-import javax.inject.Inject;
 
 /**
  * @author scottjohnson@google.com (Scott Johnson)
@@ -45,13 +43,7 @@ import javax.inject.Inject;
     severity = ERROR)
 public class NonRuntimeAnnotation extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final Matcher<ExpressionTree> LEGACY_MATCHER =
-      instanceMethod()
-          .onExactClass("java.lang.Class")
-          .named("getAnnotation")
-          .withParameters("java.lang.Class");
-
-  private static final Matcher<ExpressionTree> ADDITIONAL_APIS_MATCHER =
+  private static final Matcher<ExpressionTree> MATCHER =
       instanceMethod()
           .onDescendantOf("java.lang.reflect.AnnotatedElement")
           .namedAnyOf(
@@ -62,19 +54,9 @@ public class NonRuntimeAnnotation extends BugChecker implements MethodInvocation
               "getDeclaredAnnotationsByType")
           .withParameters("java.lang.Class");
 
-  private final Matcher<ExpressionTree> matcher;
-
-  @Inject
-  NonRuntimeAnnotation(ErrorProneFlags flags) {
-    this.matcher =
-        flags.getBoolean("NonRuntimeAnnotation:AdditionalApis").orElse(true)
-            ? ADDITIONAL_APIS_MATCHER
-            : LEGACY_MATCHER;
-  }
-
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
-    if (!matcher.matches(tree, state)) {
+    if (!MATCHER.matches(tree, state)) {
       return NO_MATCH;
     }
     Type classType = getType(getOnlyElement(tree.getArguments()));
