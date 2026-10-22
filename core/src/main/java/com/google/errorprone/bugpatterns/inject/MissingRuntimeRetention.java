@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.InjectMatchers.SCOPE_ANNOTATIONS;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
 import static com.google.errorprone.util.ASTHelpers.getDeclaredSymbol;
+import static com.google.errorprone.util.AnnotationNames.RETENTION_ANNOTATION;
 import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
 
 import com.google.common.collect.ImmutableSet;
@@ -45,11 +46,9 @@ import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.util.Name;
-import java.lang.annotation.Retention;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;
-import org.jspecify.annotations.Nullable;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
@@ -60,8 +59,6 @@ import org.jspecify.annotations.Nullable;
     summary = "Scoping and qualifier annotations must have runtime retention.",
     severity = ERROR)
 public class MissingRuntimeRetention extends BugChecker implements ClassTreeMatcher {
-
-  private static final String RETENTION_ANNOTATION = "java.lang.annotation.Retention";
 
   private static final Supplier<ImmutableSet<Name>> INJECT_ANNOTATIONS =
       VisitorState.memoize(
@@ -100,7 +97,8 @@ public class MissingRuntimeRetention extends BugChecker implements ClassTreeMatc
         && exemptInjectAnnotation(state, classSymbol)) {
       return NO_MATCH;
     }
-    return describe(classTree, state, ASTHelpers.getAnnotation(classSymbol, Retention.class));
+    return describe(
+        classTree, state, ASTHelpers.hasAnnotation(classTree, RETENTION_ANNOTATION, state));
   }
 
   private static boolean exemptInjectAnnotation(VisitorState state, ClassSymbol classSymbol) {
@@ -122,14 +120,13 @@ public class MissingRuntimeRetention extends BugChecker implements ClassTreeMatc
     return false;
   }
 
-  private Description describe(
-      ClassTree classTree, VisitorState state, @Nullable Retention retention) {
-    if (retention == null) {
+  private Description describe(ClassTree classTree, VisitorState state, boolean hasRetention) {
+    if (!hasRetention) {
       AnnotationTree annotation = Iterables.getLast(classTree.getModifiers().getAnnotations());
       return describeMatch(
           classTree,
           SuggestedFix.builder()
-              .addImport("java.lang.annotation.Retention")
+              .addImport(RETENTION_ANNOTATION)
               .addStaticImport("java.lang.annotation.RetentionPolicy.RUNTIME")
               .postfixWith(annotation, "@Retention(RUNTIME)")
               .build());
@@ -143,7 +140,7 @@ public class MissingRuntimeRetention extends BugChecker implements ClassTreeMatc
     return describeMatch(
         retentionNode,
         SuggestedFix.builder()
-            .addImport("java.lang.annotation.Retention")
+            .addImport(RETENTION_ANNOTATION)
             .addStaticImport("java.lang.annotation.RetentionPolicy.RUNTIME")
             .replace(retentionNode, "@Retention(RUNTIME)")
             .build());

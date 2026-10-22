@@ -20,7 +20,9 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.InjectMatchers.hasProvidesAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.AnnotationNames.DEPRECATED_ANNOTATION;
 import static com.google.errorprone.util.AnnotationNames.DO_NOT_CALL_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.INLINE_ME_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -44,8 +46,6 @@ import javax.lang.model.element.Modifier;
             + " NOTE: the suggested fix makes the method final if it was not already.",
     severity = WARNING)
 public final class Suggester extends BugChecker implements MethodTreeMatcher {
-  private static final String INLINE_ME = "com.google.errorprone.annotations.InlineMe";
-
   private final WellKnownKeep wellKnownKeep;
 
   @Inject
@@ -56,7 +56,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     // only suggest @InlineMe on @Deprecated APIs
-    if (!hasAnnotation(tree, Deprecated.class.getName(), state)) {
+    if (!hasAnnotation(tree, DEPRECATED_ANNOTATION, state)) {
       return Description.NO_MATCH;
     }
 
@@ -84,7 +84,7 @@ public final class Suggester extends BugChecker implements MethodTreeMatcher {
     // We attempt to actually build the annotation as a SuggestedFix.
     SuggestedFix.Builder fixBuilder =
         SuggestedFix.builder()
-            .addImport(INLINE_ME)
+            .addImport(INLINE_ME_ANNOTATION)
             .prefixWith(
                 tree,
                 InlineMeData.buildExpectedInlineMeAnnotation(state, inlinabilityResult.body())

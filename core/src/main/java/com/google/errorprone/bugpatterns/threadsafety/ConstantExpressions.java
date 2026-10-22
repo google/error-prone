@@ -37,6 +37,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_ANNOTATION;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static javax.lang.model.element.Modifier.ABSTRACT;
@@ -438,7 +439,7 @@ public final class ConstantExpressions {
           Matchers.hasAnnotation("org.checkerframework.dataflow.qual.Pure"),
           (tree, state) -> {
             Symbol symbol = getSymbol(tree);
-            return hasAnnotation(symbol.owner, "com.google.auto.value.AutoValue", state)
+            return hasAnnotation(symbol.owner, AUTO_VALUE_ANNOTATION, state)
                 && symbol.getModifiers().contains(ABSTRACT);
           },
           staticMethod().onDescendantOf(MESSAGE_LITE_CLASS).named("getDefaultInstance"),

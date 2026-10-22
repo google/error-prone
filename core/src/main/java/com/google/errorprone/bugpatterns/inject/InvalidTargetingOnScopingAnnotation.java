@@ -22,7 +22,8 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.kindIs;
-import static com.google.errorprone.util.ASTHelpers.getAnnotation;
+import static com.google.errorprone.util.AnnotationNames.TARGET_ANNOTATION;
+import static com.google.errorprone.util.MoreAnnotations.getTargetElementTypes;
 import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -39,11 +40,10 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.MultiMatcher;
 import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -55,8 +55,6 @@ import java.util.Set;
     summary = "A scoping annotation's Target should include TYPE and METHOD.",
     severity = WARNING)
 public class InvalidTargetingOnScopingAnnotation extends BugChecker implements ClassTreeMatcher {
-
-  private static final String TARGET_ANNOTATION = "java.lang.annotation.Target";
 
   private static final MultiMatcher<ClassTree, AnnotationTree> HAS_TARGET_ANNOTATION =
       annotations(AT_LEAST_ONE, isType(TARGET_ANNOTATION));
@@ -74,11 +72,11 @@ public class InvalidTargetingOnScopingAnnotation extends BugChecker implements C
           HAS_TARGET_ANNOTATION.multiMatchResult(classTree, state);
       if (targetAnnotation.matches()) {
         AnnotationTree targetTree = targetAnnotation.onlyMatchingNode();
-        Target target = getAnnotation(classTree, Target.class);
-        if (target != null
-            && // Unlikely to occur, but just in case Target isn't on the classpath.
-            !Arrays.asList(target.value()).containsAll(REQUIRED_ELEMENT_TYPES)) {
-          return describeMatch(targetTree, replaceTargetAnnotation(target, targetTree));
+        Set<ElementType> targets = getTargetElementTypes(ASTHelpers.getSymbol(classTree));
+        if (targets == null || !targets.containsAll(REQUIRED_ELEMENT_TYPES)) {
+          return describeMatch(
+              targetTree,
+              replaceTargetAnnotation(targets != null ? targets : ImmutableSet.of(), targetTree));
         }
       }
     }
@@ -90,9 +88,9 @@ public class InvalidTargetingOnScopingAnnotation extends BugChecker implements C
    * value (and reordering them to their declaration order in ElementType).
    */
   private static Fix replaceTargetAnnotation(
-      Target annotation, AnnotationTree targetAnnotationTree) {
+      Set<ElementType> existingTargets, AnnotationTree targetAnnotationTree) {
     Set<ElementType> types = EnumSet.copyOf(REQUIRED_ELEMENT_TYPES);
-    types.addAll(Arrays.asList(annotation.value()));
+    types.addAll(existingTargets);
 
     return replaceTargetAnnotation(targetAnnotationTree, types);
   }

@@ -22,6 +22,8 @@ import static com.google.errorprone.matchers.Matchers.hasModifier;
 import static com.google.errorprone.matchers.Matchers.isArrayType;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_ANNOTATION;
 
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.errorprone.BugPattern;
@@ -29,7 +31,6 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
@@ -129,7 +130,7 @@ public class AutoValueImmutableFields extends BugChecker implements ClassTreeMat
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (ASTHelpers.hasAnnotation(tree, "com.google.auto.value.AutoValue", state)) {
+    if (hasAnnotation(tree, AUTO_VALUE_ANNOTATION, state)) {
       for (Tree memberTree : tree.getMembers()) {
         if (memberTree instanceof MethodTree methodTree
             && !isSuppressed(memberTree, state)

@@ -19,12 +19,13 @@ package com.google.errorprone.bugpatterns.collectionincompatibletype;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.extractTypeArgAsMemberOfSupertype;
+import static com.google.errorprone.util.AnnotationNames.COMPATIBLE_WITH_ANNOTATION;
+import static com.google.errorprone.util.MoreAnnotations.getStringValue;
 
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
-import com.google.errorprone.annotations.CompatibleWith;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.TypeCompatibility;
@@ -171,15 +172,15 @@ public class IncompatibleArgumentType extends BugChecker implements MethodInvoca
     List<VarSymbol> params = declaredMethod.params();
     for (int i = 0; i < params.size(); i++) {
       VarSymbol varSymbol = params.get(i);
-      CompatibleWith anno = ASTHelpers.getAnnotation(varSymbol, CompatibleWith.class);
-      if (anno != null) {
+      var anno = getStringValue(varSymbol, COMPATIBLE_WITH_ANNOTATION);
+      if (anno.isPresent()) {
         foundAnyTypeToEnforce = true;
 
         // Now we try and resolve the generic type argument in the annotation against the current
         // method call's projection of this generic type.
         RequiredType requiredType =
             resolveRequiredTypeForThisCall(
-                state, calledMethodType, calledReceiverType, declaredMethod, anno.value());
+                state, calledMethodType, calledReceiverType, declaredMethod, anno.get());
 
         // @CW is on the varags parameter
         if (declaredMethod.isVarArgs() && i == params.size() - 1) {

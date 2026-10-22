@@ -29,6 +29,10 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isVoidType;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_BUILDER_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.CAN_IGNORE_RETURN_VALUE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.CHECK_RETURN_VALUE_ANNOTATION;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.errorprone.BugPattern;
@@ -72,9 +76,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
     suppressionAnnotations = {},
     severity = ERROR)
 public final class NoCanIgnoreReturnValueOnClasses extends BugChecker implements ClassTreeMatcher {
-  private static final String CRV = "com.google.errorprone.annotations.CheckReturnValue";
-  private static final String CIRV = "com.google.errorprone.annotations.CanIgnoreReturnValue";
-
   private static final String EXTRA_SUFFIX = "";
 
   @VisibleForTesting
@@ -84,7 +85,7 @@ public final class NoCanIgnoreReturnValueOnClasses extends BugChecker implements
   static final String CTOR_COMMENT = " // pushed down from class to constructor;" + EXTRA_SUFFIX;
 
   private static final MultiMatcher<ClassTree, AnnotationTree> HAS_CIRV_ANNOTATION =
-      annotations(AT_LEAST_ONE, isType(CIRV));
+      annotations(AT_LEAST_ONE, isType(CAN_IGNORE_RETURN_VALUE_ANNOTATION));
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
@@ -96,7 +97,7 @@ public final class NoCanIgnoreReturnValueOnClasses extends BugChecker implements
     }
 
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    String cirvName = qualifyType(state, fix, CIRV);
+    String cirvName = qualifyType(state, fix, CAN_IGNORE_RETURN_VALUE_ANNOTATION);
 
     // remove @CIRV from the class
     fix.delete(cirvAnnotation.onlyMatchingNode());
@@ -111,7 +112,9 @@ public final class NoCanIgnoreReturnValueOnClasses extends BugChecker implements
       @Override
       public Void visitClass(ClassTree classTree, Void unused) {
         // stop descending when we reach a class that's marked @CRV
-        return hasAnnotation(classTree, CRV, state) ? null : super.visitClass(classTree, null);
+        return hasAnnotation(classTree, CHECK_RETURN_VALUE_ANNOTATION, state)
+            ? null
+            : super.visitClass(classTree, null);
       }
 
       @Override
@@ -214,10 +217,10 @@ public final class NoCanIgnoreReturnValueOnClasses extends BugChecker implements
         if (isVoidType(getType(methodTree.getReturnType()), state)) { // void return types
           return false;
         }
-        if (hasAnnotation(methodTree, CIRV, state)) {
+        if (hasAnnotation(methodTree, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)) {
           return false;
         }
-        if (hasAnnotation(methodTree, CRV, state)) {
+        if (hasAnnotation(methodTree, CHECK_RETURN_VALUE_ANNOTATION, state)) {
           return false;
         }
         // if the constructor is implicit, don't add CIRV (we can't annotate a synthetic node!)
@@ -226,8 +229,8 @@ public final class NoCanIgnoreReturnValueOnClasses extends BugChecker implements
         }
         // if the method is inside an AV or AV.Builder and is abstract (no body), don't add CIRV
         ClassSymbol enclosingClass = enclosingClass(getSymbol(methodTree));
-        if (hasAnnotation(enclosingClass, "com.google.auto.value.AutoValue", state)
-            || hasAnnotation(enclosingClass, "com.google.auto.value.AutoValue.Builder", state)) {
+        if (hasAnnotation(enclosingClass, AUTO_VALUE_ANNOTATION, state)
+            || hasAnnotation(enclosingClass, AUTO_VALUE_BUILDER_ANNOTATION, state)) {
           if (methodTree.getBody() == null) {
             return false;
           }

@@ -21,9 +21,10 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.stringLiteral;
+import static com.google.errorprone.util.AnnotationNames.SUPPRESS_WARNINGS_ANNOTATION;
+import static com.google.errorprone.util.MoreAnnotations.getStrings;
 import static java.util.stream.Collectors.toList;
 
-import com.google.auto.common.AnnotationMirrors;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
@@ -31,7 +32,6 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AnnotationTree;
 import java.util.List;
 import javax.lang.model.element.AnnotationMirror;
@@ -48,7 +48,7 @@ public class SuppressWarningsDeprecated extends BugChecker implements Annotation
 
   private static final Matcher<AnnotationTree> matcher =
       allOf(
-          isType("java.lang.SuppressWarnings"),
+          isType(SUPPRESS_WARNINGS_ANNOTATION),
           hasArgumentWithValue("value", stringLiteral("deprecated")));
 
   @Override
@@ -59,7 +59,7 @@ public class SuppressWarningsDeprecated extends BugChecker implements Annotation
 
     AnnotationMirror mirror = ASTHelpers.getAnnotationMirror(annotationTree);
     List<String> values =
-        MoreAnnotations.asStrings(AnnotationMirrors.getAnnotationValue(mirror, "value"))
+        getStrings(mirror, "value").stream()
             .map(v -> v.equals("deprecated") ? "deprecation" : v)
             .map(state::getConstantExpression)
             .collect(toList());

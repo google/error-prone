@@ -22,6 +22,7 @@ import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.AnnotationNames.OVERRIDE_ANNOTATION;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -91,7 +92,7 @@ public final class Validator extends BugChecker implements MethodTreeMatcher {
     // usages of the API before unilaterally deleting it.
     return hasDirectAnnotationWithSimpleName(tree, "InlineMe")
         && !wellKnownKeep.shouldKeep(tree)
-        && !hasAnnotation(tree, "java.lang.Override", state)
+        && !hasAnnotation(tree, OVERRIDE_ANNOTATION, state)
         && findSuperMethods(getSymbol(tree), state.getTypes()).isEmpty();
   }
 

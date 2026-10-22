@@ -21,9 +21,17 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.MoreAnnotations.getTargetElementTypes;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
@@ -33,24 +41,19 @@ import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotations;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
-import java.util.HashSet;
+import java.lang.annotation.ElementType;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeKind;
-import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -92,10 +95,9 @@ public class NullablePrimitiveArray extends BugChecker
     if (treeNullnessAnnos.isEmpty()) {
       return NO_MATCH;
     }
-    Symbol target = state.getSymtab().annotationTargetType.tsym;
     ImmutableList<AnnotationTree> typeNullnessAnnos =
         treeNullnessAnnos.stream()
-            .filter(annotation -> isTypeAnnotation(getSymbol(annotation).attribute(target)))
+            .filter(annotation -> isOnlyTypeAnnotation(getSymbol(annotation)))
             .collect(toImmutableList());
     if (typeNullnessAnnos.isEmpty()) {
       return NO_MATCH;
@@ -120,36 +122,13 @@ public class NullablePrimitiveArray extends BugChecker
     return describeMatch(typeNullnessAnnos.getFirst(), fix.build());
   }
 
-  private static boolean isTypeAnnotation(Attribute.Compound attribute) {
-    if (attribute == null) {
-      return false;
-    }
-    Set<String> targets = new HashSet<>();
-    Optional<Attribute> value = MoreAnnotations.getValue(attribute, "value");
-    if (value.isEmpty()) {
-      return false;
-    }
-    new SimpleAnnotationValueVisitor8<Void, Void>() {
-      @Override
-      public Void visitEnumConstant(VariableElement c, Void unused) {
-        targets.add(c.getSimpleName().toString());
-        return null;
-      }
+  private static final ImmutableSet<ElementType> DECLARATION_TARGETS =
+      Sets.immutableEnumSet(METHOD, FIELD, PARAMETER, LOCAL_VARIABLE);
 
-      @Override
-      public Void visitArray(List<? extends AnnotationValue> list, Void unused) {
-        list.forEach(x -> x.accept(this, null));
-        return null;
-      }
-    }.visit(value.get(), null);
-    for (String target : targets) {
-      switch (target) {
-        case "METHOD", "FIELD", "LOCAL_VARIABLE", "PARAMETER" -> {
-          return false;
-        }
-        default -> {}
-      }
-    }
-    return targets.contains("TYPE_USE");
+  private static boolean isOnlyTypeAnnotation(Symbol symbol) {
+    Set<ElementType> targets = getTargetElementTypes(symbol);
+    return targets != null
+        && targets.contains(TYPE_USE)
+        && Collections.disjoint(targets, DECLARATION_TARGETS);
   }
 }

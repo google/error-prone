@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.AnnotationNames.NULL_MARKED_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -48,7 +49,7 @@ public final class AddNullMarkedToPackageInfo extends BugChecker
         unit.getPackage(),
         SuggestedFix.builder()
             .prefixWith(unit.getPackage(), "@NullMarked ")
-            .addImport("org.jspecify.annotations.NullMarked")
+            .addImport(NULL_MARKED_ANNOTATION)
             .build());
   }
 

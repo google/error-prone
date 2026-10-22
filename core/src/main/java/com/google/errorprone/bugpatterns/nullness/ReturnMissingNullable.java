@@ -42,6 +42,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
+import static com.google.errorprone.util.AnnotationNames.DO_NOT_CALL_ANNOTATION;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 import static java.lang.Boolean.FALSE;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
@@ -315,8 +316,7 @@ public class ReturnMissingNullable extends BugChecker implements CompilationUnit
           return;
         }
 
-        if (hasAnnotation(
-            tree, "com.google.errorprone.annotations.DoNotCall", stateForCompilationUnit)) {
+        if (hasAnnotation(tree, DO_NOT_CALL_ANNOTATION, stateForCompilationUnit)) {
           return;
         }
 

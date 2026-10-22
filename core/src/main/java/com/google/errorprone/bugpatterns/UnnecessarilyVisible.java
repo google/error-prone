@@ -26,6 +26,8 @@ import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
+import static com.google.errorprone.util.AnnotationNames.AFTER_TEMPLATE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.BEFORE_TEMPLATE_ANNOTATION;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 
@@ -63,9 +65,7 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
                       InjectMatchers.INJECT_ANNOTATIONS.stream(),
                       InjectMatchers.PROVIDES_ANNOTATIONS.stream(),
                       InjectMatchers.MULTIBINDINGS_ANNOTATIONS.stream(),
-                      Stream.of(
-                          "com.google.errorprone.refaster.annotation.AfterTemplate",
-                          "com.google.errorprone.refaster.annotation.BeforeTemplate"))
+                      Stream.of(AFTER_TEMPLATE_ANNOTATION, BEFORE_TEMPLATE_ANNOTATION))
                   .map(s::getName)
                   .collect(toImmutableSet()));
 

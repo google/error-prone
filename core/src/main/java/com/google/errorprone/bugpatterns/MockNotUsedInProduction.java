@@ -27,6 +27,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.MoreAnnotations.asElement;
 import static java.util.stream.Stream.concat;
 import static javax.lang.model.element.ElementKind.FIELD;
 
@@ -187,7 +188,7 @@ public final class MockNotUsedInProduction extends BugChecker
 
       private boolean annotatedAtMostMock(Symbol symbol) {
         return symbol.getAnnotationMirrors().stream()
-            .allMatch(a -> a.getAnnotationType().asElement().getSimpleName().contentEquals("Mock"));
+            .allMatch(a -> asElement(a).getSimpleName().contentEquals("Mock"));
       }
     }.scan(state.getPath().getCompilationUnit(), null);
     // A bit hacky: but if we saw InjectMocks, just claim there are no potentially unused mocks.

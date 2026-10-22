@@ -37,6 +37,7 @@ import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.AnnotationNames.AFTER_TEMPLATE_ANNOTATION;
 import static com.google.errorprone.util.AnnotationNames.BEFORE_TEMPLATE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.CAN_IGNORE_RETURN_VALUE_ANNOTATION;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 import static com.sun.source.tree.Tree.Kind.POSTFIX_DECREMENT;
 import static com.sun.source.tree.Tree.Kind.POSTFIX_INCREMENT;
@@ -566,7 +567,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
   private static boolean isCallToCanIgnoreReturnValueMethod(
       ExpressionTree tree, VisitorState state) {
     return getSymbol(tree) instanceof MethodSymbol method
-        && hasAnnotation(method, "com.google.errorprone.annotations.CanIgnoreReturnValue", state);
+        && hasAnnotation(method, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state);
   }
 
   private static ImmutableList<SuggestedFix> buildUnusedParameterFixes(

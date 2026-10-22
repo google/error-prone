@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.IMMUTABLE_ANNOTATION;
 import static com.google.errorprone.util.AnnotationNames.THREAD_SAFE_ANNOTATION;
 
 import com.google.common.base.Joiner;
@@ -262,7 +263,7 @@ public class ThreadSafeChecker extends BugChecker
     if (superType == null) {
       return NO_MATCH;
     }
-    if (hasAnnotation(sym, "com.google.errorprone.annotations.Immutable", state)) {
+    if (hasAnnotation(sym, IMMUTABLE_ANNOTATION, state)) {
       // If the superclass is @ThreadSafe and the subclass is @Immutable, then the subclass is
       // effectively also @ThreadSafe, and we defer to the @Immutable plugin.
       return NO_MATCH;

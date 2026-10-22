@@ -22,6 +22,9 @@ import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAS
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isType;
+import static com.google.errorprone.util.AnnotationNames.AFTER_TEMPLATE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.BEFORE_TEMPLATE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.PLACEHOLDER_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -44,9 +47,9 @@ public final class MissingRefasterAnnotation extends BugChecker implements Class
       annotations(
           AT_LEAST_ONE,
           anyOf(
-              isType("com.google.errorprone.refaster.annotation.Placeholder"),
-              isType("com.google.errorprone.refaster.annotation.BeforeTemplate"),
-              isType("com.google.errorprone.refaster.annotation.AfterTemplate")));
+              isType(PLACEHOLDER_ANNOTATION),
+              isType(BEFORE_TEMPLATE_ANNOTATION),
+              isType(AFTER_TEMPLATE_ANNOTATION)));
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {

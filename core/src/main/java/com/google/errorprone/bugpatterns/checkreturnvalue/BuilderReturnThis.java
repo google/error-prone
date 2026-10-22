@@ -24,6 +24,7 @@ import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.AnnotationNames.CHECK_RETURN_VALUE_ANNOTATION;
 import static java.lang.Boolean.TRUE;
 
 import com.google.errorprone.BugPattern;
@@ -50,8 +51,6 @@ import com.sun.tools.javac.code.Type;
 @BugPattern(summary = "Builder instance method does not return 'this'", severity = WARNING)
 public class BuilderReturnThis extends BugChecker implements MethodTreeMatcher {
 
-  private static final String CRV = "com.google.errorprone.annotations.CheckReturnValue";
-
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol sym = getSymbol(tree);
@@ -65,7 +64,7 @@ public class BuilderReturnThis extends BugChecker implements MethodTreeMatcher {
       return NO_MATCH;
     }
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    String crvName = qualifyType(state, fix, CRV);
+    String crvName = qualifyType(state, fix, CHECK_RETURN_VALUE_ANNOTATION);
     fix.prefixWith(tree, "@" + crvName + "\n");
     return describeMatch(tree, fix.build());
   }

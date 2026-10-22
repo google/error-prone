@@ -32,6 +32,12 @@ import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
+import static com.google.errorprone.util.AnnotationNames.AFTER_TEMPLATE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.AUTO_BUILDER_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_BUILDER_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.CAN_IGNORE_RETURN_VALUE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.IMMUTABLE_ANNOTATION;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -77,22 +83,20 @@ import javax.inject.Inject;
     severity = WARNING)
 public final class CanIgnoreReturnValueSuggester extends BugChecker implements MethodTreeMatcher {
 
-  private static final String AUTO_VALUE = "com.google.auto.value.AutoValue";
-  private static final String IMMUTABLE = "com.google.errorprone.annotations.Immutable";
   private static final String CRV_SIMPLE_NAME = "CheckReturnValue";
   private static final String CIRV_SIMPLE_NAME = "CanIgnoreReturnValue";
   private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
-      ImmutableSet.of("com.google.errorprone.refaster.annotation.AfterTemplate");
+      ImmutableSet.of(AFTER_TEMPLATE_ANNOTATION);
 
   private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS =
       ImmutableSet.of(
           // keep-sorted start
-          "com.google.auto.value.AutoBuilder",
-          "com.google.auto.value.AutoValue.Builder",
           "dagger.Component.Builder",
           "dagger.Subcomponent.Builder",
           "dagger.producers.ProductionComponent.Builder",
-          "dagger.producers.ProductionSubcomponent.Builder"
+          "dagger.producers.ProductionSubcomponent.Builder",
+          AUTO_BUILDER_ANNOTATION,
+          AUTO_VALUE_BUILDER_ANNOTATION
           // keep-sorted end
           );
 
@@ -211,8 +215,8 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
     }
 
     // now annotate it with @CanIgnoreReturnValue
-    String cirv = "com.google.errorprone.annotations.CanIgnoreReturnValue";
-    fix.prefixWith(methodTree, "@" + qualifyType(state, fix, cirv) + "\n");
+    fix.prefixWith(
+        methodTree, "@" + qualifyType(state, fix, CAN_IGNORE_RETURN_VALUE_ANNOTATION) + "\n");
 
     return describeMatch(methodTree, fix.build());
   }
@@ -235,7 +239,8 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
   private static boolean classLooksLikeBuilder(Symbol owner, VisitorState state) {
     boolean classIsImmutable =
-        hasAnnotation(owner, IMMUTABLE, state) || hasAnnotation(owner, AUTO_VALUE, state);
+        hasAnnotation(owner, IMMUTABLE_ANNOTATION, state)
+            || hasAnnotation(owner, AUTO_VALUE_ANNOTATION, state);
     return owner.getSimpleName().toString().endsWith("Builder") && !classIsImmutable;
   }
 

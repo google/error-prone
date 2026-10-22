@@ -20,14 +20,14 @@ import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ErrorProneLog.deferredDiagnosticHandler;
+import static com.google.errorprone.util.MoreAnnotations.asElement;
+import static com.google.errorprone.util.MoreAnnotations.getStrings;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.util.ErrorProneParser;
-import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.tree.JCTree;
@@ -36,7 +36,6 @@ import com.sun.tools.javac.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
@@ -45,20 +44,9 @@ import org.jspecify.annotations.Nullable;
  */
 public final class GuardedByUtils {
   public static ImmutableSet<String> getGuardValues(Symbol sym) {
-    List<Attribute.Compound> rawAttributes = sym.getRawAttributes();
-    if (rawAttributes.isEmpty()) {
-      return ImmutableSet.of();
-    }
-    return rawAttributes.stream()
-        .filter(
-            a ->
-                ACCEPTED_GUARDED_BY_ANNOTATIONS.contains(
-                    a.getAnnotationType().asElement().toString()))
-        .flatMap(
-            a ->
-                MoreAnnotations.getValue(a, "value")
-                    .map(MoreAnnotations::asStrings)
-                    .orElse(Stream.empty()))
+    return sym.getAnnotationMirrors().stream()
+        .filter(a -> ACCEPTED_GUARDED_BY_ANNOTATIONS.contains(asElement(a).toString()))
+        .flatMap(a -> getStrings(a, "value").stream())
         .collect(toImmutableSet());
   }
 

@@ -22,6 +22,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_ANNOTATION;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -57,8 +58,6 @@ public final class AutoValueSubclassLeaked extends BugChecker
     implements CompilationUnitTreeMatcher {
 
   private static final Pattern AUTO_VALUE_PREFIX = Pattern.compile("\\$*AutoValue_.*");
-
-  private static final String AUTO_VALUE_ANNOTATION = "com.google.auto.value.AutoValue";
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {

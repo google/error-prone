@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.FindIdentifiers.findIdent;
+import static com.google.errorprone.util.MoreAnnotations.isTypeAnnotation;
 
 import com.google.common.base.Ascii;
 import com.google.common.base.Splitter;
@@ -56,10 +57,7 @@ import com.sun.tools.javac.code.Kinds.KindSelector;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -265,18 +263,5 @@ public final class DifferentNameButSame extends BugChecker implements Compilatio
   private static final Splitter DOT_SPLITTER = Splitter.on('.');
 
   private static final MultiMatcher<Tree, AnnotationTree> HAS_TYPE_USE_ANNOTATION =
-      annotations(AT_LEAST_ONE, (t, state) -> isTypeAnnotation(t));
-
-  private static boolean isTypeAnnotation(AnnotationTree t) {
-    Symbol annotationSymbol = getSymbol(t.getAnnotationType());
-    if (annotationSymbol == null) {
-      return false;
-    }
-    Target target = annotationSymbol.getAnnotation(Target.class);
-    if (target == null) {
-      return false;
-    }
-    List<ElementType> value = Arrays.asList(target.value());
-    return value.contains(ElementType.TYPE_USE) || value.contains(ElementType.TYPE_PARAMETER);
-  }
+      annotations(AT_LEAST_ONE, (t, state) -> isTypeAnnotation(getSymbol(t.getAnnotationType())));
 }

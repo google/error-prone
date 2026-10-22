@@ -23,6 +23,9 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_INJECT_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PRODUCES_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PROVIDES_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.TEST_CASE;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestRunnerOfType;
 import static com.google.errorprone.matchers.Matchers.annotations;
@@ -33,6 +36,7 @@ import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isCanonicalRecordConstructor;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.AnnotationNames.AUTO_FACTORY_ANNOTATION;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
@@ -216,9 +220,9 @@ public final class UnnecessaryQualifier extends BugChecker
           "dagger.Binds",
           "dagger.BindsInstance",
           "dagger.BindsOptionalOf",
-          "dagger.Provides",
           "dagger.multibindings.Multibinds",
-          "dagger.producers.Produces"
+          DAGGER_PRODUCES_ANNOTATION,
+          DAGGER_PROVIDES_ANNOTATION
           // keep-sorted end
           );
 
@@ -230,10 +234,10 @@ public final class UnnecessaryQualifier extends BugChecker
               InjectMatchers.INJECT_ANNOTATIONS.stream(),
               Stream.of(
                   // keep-sorted start
-                  "com.google.auto.factory.AutoFactory",
                   "com.google.common.inject.components.OtherRequiredBindings",
-                  "com.google.inject.assistedinject.AssistedInject",
-                  "dagger.assisted.AssistedInject"
+                  "dagger.assisted.AssistedInject",
+                  ASSISTED_INJECT_ANNOTATION,
+                  AUTO_FACTORY_ANNOTATION
                   // keep-sorted end
                   ),
               PROVIDER_METHODS.stream())
@@ -254,7 +258,6 @@ public final class UnnecessaryQualifier extends BugChecker
   private static final ImmutableSet<String> CLASS_ANNOTATIONS_EXEMPTING_METHODS =
       ImmutableSet.of(
           // keep-sorted start
-          "com.google.auto.factory.AutoFactory",
           "dagger.Component",
           "dagger.Component.Builder",
           "dagger.Component.Factory",
@@ -267,7 +270,8 @@ public final class UnnecessaryQualifier extends BugChecker
           "dagger.producers.ProductionComponent.Factory",
           "dagger.producers.ProductionSubcomponent",
           "dagger.producers.ProductionSubcomponent.Builder",
-          "dagger.producers.ProductionSubcomponent.Factory"
+          "dagger.producers.ProductionSubcomponent.Factory",
+          AUTO_FACTORY_ANNOTATION
           // keep-sorted end
           );
 

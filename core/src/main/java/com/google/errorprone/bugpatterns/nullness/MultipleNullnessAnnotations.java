@@ -22,6 +22,7 @@ import static com.google.errorprone.dataflow.nullnesspropagation.NullnessAnnotat
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.MoreAnnotations.asElement;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableSet;
@@ -83,7 +84,7 @@ public class MultipleNullnessAnnotations extends BugChecker
     return buildDescription(tree)
         .setMessage(
             annotationsRelevantToNullness(annotations).stream()
-                .map(a -> a.getAnnotationType().asElement().toString())
+                .map(a -> asElement(a).toString())
                 .collect(joining(", ", "This type use has conflicting nullness annotations: ", "")))
         .build();
   }

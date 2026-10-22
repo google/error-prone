@@ -24,6 +24,8 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.MoreAnnotations.getStrings;
+import static com.google.errorprone.util.MoreAnnotations.getValue;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -34,11 +36,9 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.suppliers.Suppliers;
-import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -46,6 +46,7 @@ import com.sun.tools.javac.code.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 
@@ -104,16 +105,16 @@ public final class PreferTestParameter extends BugChecker implements MethodTreeM
     List<AnnotationTree> annotationsToRemove = new ArrayList<>();
 
     for (AnnotationTree annotationTree : tree.getModifiers().getAnnotations()) {
-      Attribute.Compound attribute = (Attribute.Compound) getAnnotationMirror(annotationTree);
+      AnnotationMirror attribute = getAnnotationMirror(annotationTree);
       if (attribute == null) {
         continue;
       }
-      if (isSameType(attribute.type, TEST_PARAMETERS_TYPE.get(state), state)) {
-        if (MoreAnnotations.getValue(attribute, "customName").isPresent()) {
+      if (isSameType(
+          (Type) attribute.getAnnotationType(), TEST_PARAMETERS_TYPE.get(state), state)) {
+        if (getValue(attribute, "customName").isPresent()) {
           return NO_MATCH;
         }
-        MoreAnnotations.getValue(attribute, "value")
-            .ifPresent(v -> MoreAnnotations.asStrings(v).forEach(values::add));
+        values.addAll(getStrings(attribute, "value"));
         annotationsToRemove.add(annotationTree);
       }
     }

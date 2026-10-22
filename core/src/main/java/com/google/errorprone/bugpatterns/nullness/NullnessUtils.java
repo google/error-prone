@@ -31,6 +31,8 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
+import static com.google.errorprone.util.AnnotationNames.NULL_MARKED_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.NULL_UNMARKED_ANNOTATION;
 import static com.sun.source.tree.Tree.Kind.NULL_LITERAL;
 import static com.sun.tools.javac.parser.Tokens.TokenKind.DOT;
 import static java.lang.Boolean.TRUE;
@@ -198,8 +200,8 @@ public final class NullnessUtils {
     for (; sym != null; sym = sym.getEnclosingElement()) {
       // https://jspecify.dev/docs/spec/#null-marked-scope
       // TODO(cpovirk): Including handling of @kotlin.Metadata.
-      boolean marked = hasAnnotation(sym, "org.jspecify.annotations.NullMarked", state);
-      boolean unmarked = hasAnnotation(sym, "org.jspecify.annotations.NullUnmarked", state);
+      boolean marked = hasAnnotation(sym, NULL_MARKED_ANNOTATION, state);
+      boolean unmarked = hasAnnotation(sym, NULL_UNMARKED_ANNOTATION, state);
       if (marked && !unmarked) {
         return true;
       }

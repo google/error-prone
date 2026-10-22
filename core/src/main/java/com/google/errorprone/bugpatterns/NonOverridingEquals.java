@@ -32,6 +32,8 @@ import static com.google.errorprone.predicates.TypePredicates.isExactType;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.OVERRIDE_ANNOTATION;
 import static com.sun.tools.javac.code.Flags.ENUM;
 
 import com.google.errorprone.BugPattern;
@@ -43,7 +45,6 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.MethodVisibility.Visibility;
 import com.google.errorprone.predicates.TypePredicates;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
@@ -146,7 +147,7 @@ public class NonOverridingEquals extends BugChecker implements MethodTreeMatcher
       SuggestedFix.Builder fix = SuggestedFix.builder();
 
       // Add @Override annotation if not present.
-      if (ASTHelpers.getAnnotation(methodTree, Override.class) == null) {
+      if (!hasAnnotation(methodTree, OVERRIDE_ANNOTATION, state)) {
         fix.prefixWith(methodTree, "@Override\n");
       }
 

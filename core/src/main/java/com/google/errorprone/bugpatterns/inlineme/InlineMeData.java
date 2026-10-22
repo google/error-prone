@@ -16,18 +16,16 @@
 
 package com.google.errorprone.bugpatterns.inlineme;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
-import static com.google.errorprone.util.MoreAnnotations.getValue;
+import static com.google.errorprone.util.MoreAnnotations.getAnnotationWithSimpleName;
+import static com.google.errorprone.util.MoreAnnotations.getStringValue;
+import static com.google.errorprone.util.MoreAnnotations.getStrings;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.util.MoreAnnotations;
 import com.google.errorprone.util.SourceCodeEscapers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -41,7 +39,6 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -62,12 +59,10 @@ import java.util.IdentityHashMap;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Stream;
 
 record InlineMeData(
     // TODO(glorioso): be tolerant of trailing semicolon in replacement
     String replacement, ImmutableSet<String> imports, ImmutableSet<String> staticImports) {
-  private static final String INLINE_ME = "InlineMe";
 
   /** Builds the {@code @InlineMe} annotation as it would be found in source code. */
   static String buildAnnotation(
@@ -101,23 +96,19 @@ record InlineMeData(
 
   static Optional<InlineMeData> createFromSymbol(MethodSymbol symbol) {
     // if the API doesn't have the @InlineMe annotation, then return no match
-    if (!hasDirectAnnotationWithSimpleName(symbol, INLINE_ME)) {
+    var inlineMe = getAnnotationWithSimpleName(symbol, "InlineMe");
+    if (inlineMe.isEmpty()) {
       return Optional.empty();
     }
-
-    Attribute.Compound inlineMe =
-        symbol.getRawAttributes().stream()
-            .filter(a -> a.type.tsym.getSimpleName().contentEquals(INLINE_ME))
-            .collect(onlyElement());
 
     // TODO(kak): we should validate that the annotation doesn't contain any elements other than
     // `replacement` (required), `imports` and `staticImports`.
 
-    ImmutableSet<String> imports = getStrings(inlineMe, "imports");
-    ImmutableSet<String> staticImports = getStrings(inlineMe, "staticImports");
+    ImmutableSet<String> imports = ImmutableSet.copyOf(getStrings(inlineMe.get(), "imports"));
+    ImmutableSet<String> staticImports =
+        ImmutableSet.copyOf(getStrings(inlineMe.get(), "staticImports"));
 
-    return getValue(inlineMe, "replacement")
-        .flatMap(MoreAnnotations::asStringValue)
+    return getStringValue(inlineMe.get(), "replacement")
         .map(replacement -> create(replacement, imports, staticImports));
   }
 
@@ -343,12 +334,5 @@ record InlineMeData(
           || parentNode instanceof TypeCastTree
           || parentNode instanceof NewArrayTree;
     }
-  }
-
-  private static ImmutableSet<String> getStrings(Attribute.Compound attribute, String name) {
-    return getValue(attribute, name)
-        .map(MoreAnnotations::asStrings)
-        .orElse(Stream.empty())
-        .collect(toImmutableSet());
   }
 }

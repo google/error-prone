@@ -22,6 +22,8 @@ import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.Matchers.isType;
 import static com.google.errorprone.matchers.Matchers.kindIs;
+import static com.google.errorprone.util.AnnotationNames.TARGET_ANNOTATION;
+import static com.google.errorprone.util.MoreAnnotations.getTargetElementTypes;
 import static com.sun.source.tree.Tree.Kind.ANNOTATION_TYPE;
 
 import com.google.common.collect.ImmutableSet;
@@ -40,9 +42,8 @@ import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
+import com.sun.tools.javac.code.Symbol;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
@@ -59,7 +60,7 @@ import java.util.Set;
 public class QualifierWithTypeUse extends BugChecker implements ClassTreeMatcher {
 
   private static final MultiMatcher<ClassTree, AnnotationTree> HAS_TARGET_ANNOTATION =
-      annotations(AT_LEAST_ONE, isType("java.lang.annotation.Target"));
+      annotations(AT_LEAST_ONE, isType(TARGET_ANNOTATION));
 
   private static final Matcher<ClassTree> IS_QUALIFIER_WITH_TARGET =
       allOf(kindIs(ANNOTATION_TYPE), InjectMatchers.HAS_QUALIFIER_ANNOTATION);
@@ -74,23 +75,22 @@ public class QualifierWithTypeUse extends BugChecker implements ClassTreeMatcher
           HAS_TARGET_ANNOTATION.multiMatchResult(tree, state);
       if (targetAnnotation.matches()) {
         AnnotationTree annotationTree = targetAnnotation.onlyMatchingNode();
-        Target target = ASTHelpers.getAnnotation(tree, Target.class);
-        if (hasTypeUseOrTypeParameter(target)) {
-          return describeMatch(annotationTree, removeTypeUse(target, annotationTree));
+        Symbol symbol = ASTHelpers.getSymbol(tree);
+        if (hasTypeUseOrTypeParameter(symbol)) {
+          return describeMatch(annotationTree, removeTypeUse(symbol, annotationTree));
         }
       }
     }
     return Description.NO_MATCH;
   }
 
-  private static boolean hasTypeUseOrTypeParameter(Target targetAnnotation) {
-    // Should only be in cases where Target is not in the classpath
-    return targetAnnotation != null
-        && !Collections.disjoint(FORBIDDEN_ELEMENT_TYPES, Arrays.asList(targetAnnotation.value()));
+  private static boolean hasTypeUseOrTypeParameter(Symbol symbol) {
+    return symbol != null
+        && !Collections.disjoint(FORBIDDEN_ELEMENT_TYPES, getTargetElementTypes(symbol));
   }
 
-  private static Fix removeTypeUse(Target targetAnnotation, AnnotationTree tree) {
-    Set<ElementType> elements = EnumSet.copyOf(Arrays.asList(targetAnnotation.value()));
+  private static Fix removeTypeUse(Symbol symbol, AnnotationTree tree) {
+    Set<ElementType> elements = EnumSet.copyOf(getTargetElementTypes(symbol));
     elements.removeAll(FORBIDDEN_ELEMENT_TYPES);
     if (elements.isEmpty()) {
       return SuggestedFix.delete(tree);

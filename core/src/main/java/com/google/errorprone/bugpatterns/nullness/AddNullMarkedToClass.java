@@ -17,6 +17,7 @@ package com.google.errorprone.bugpatterns.nullness;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.AnnotationNames.NULL_MARKED_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -41,8 +42,7 @@ public final class AddNullMarkedToClass extends BugChecker implements Compilatio
       }
       if (!ASTHelpers.hasDirectAnnotationWithSimpleName(classTree, "NullMarked")) {
         SuggestedFix.Builder fix = SuggestedFix.builder();
-        String nullMarked =
-            SuggestedFixes.qualifyType(state, fix, "org.jspecify.annotations.NullMarked");
+        String nullMarked = SuggestedFixes.qualifyType(state, fix, NULL_MARKED_ANNOTATION);
         fix.prefixWith(classTree, "@" + nullMarked + " ");
         state.reportMatch(describeMatch(classTree, fix.build()));
       }

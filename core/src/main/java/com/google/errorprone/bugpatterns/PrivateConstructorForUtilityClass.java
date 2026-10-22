@@ -24,6 +24,7 @@ import static com.google.errorprone.util.ASTHelpers.createPrivateConstructor;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_ANNOTATION;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.STATIC;
@@ -60,7 +61,7 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
       ImmutableSet.of(
           "org.junit.runner.RunWith",
           "org.robolectric.annotation.Implements",
-          "com.google.auto.value.AutoValue");
+          AUTO_VALUE_ANNOTATION);
 
   @Override
   public Description matchClass(ClassTree classTree, VisitorState state) {

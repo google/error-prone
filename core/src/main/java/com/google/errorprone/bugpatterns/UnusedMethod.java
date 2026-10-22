@@ -35,8 +35,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
-import static com.google.errorprone.util.MoreAnnotations.asStrings;
-import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
+import static com.google.errorprone.util.MoreAnnotations.getStrings;
 import static java.lang.String.format;
 import static javax.lang.model.element.ElementKind.FIELD;
 import static javax.lang.model.element.Modifier.FINAL;
@@ -333,14 +332,10 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
             // normalizing unset value to the empty value
             .map(
                 a ->
-                    getAnnotationValue(a, "value")
-                        .map(
-                            y ->
-                                asStrings(y)
-                                    .map(state::getName)
-                                    .map(Name::toString)
-                                    .collect(toImmutableSet()))
-                        .orElse(ImmutableSet.of()))
+                    getStrings(a, "value").stream()
+                        .map(state::getName)
+                        .map(Name::toString)
+                        .collect(toImmutableSet()))
             // if no explicit method sources were specified, use method name instead
             .map(names -> names.isEmpty() ? ImmutableSet.of(sym.name.toString()) : names)
             // remove all potentially unused methods referenced by the @MethodSource

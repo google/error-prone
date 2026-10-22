@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getConstructors;
+import static com.google.errorprone.util.AnnotationNames.AUTO_FACTORY_ANNOTATION;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 
 import com.google.common.collect.ImmutableList;
@@ -46,7 +47,7 @@ import com.sun.source.tree.Tree;
 public class AutoFactoryAtInject extends BugChecker implements AnnotationTreeMatcher {
 
   private static final Matcher<Tree> HAS_AUTO_FACTORY_ANNOTATION =
-      hasAnnotation("com.google.auto.factory.AutoFactory");
+      hasAnnotation(AUTO_FACTORY_ANNOTATION);
 
   @Override
   public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {

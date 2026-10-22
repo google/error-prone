@@ -18,6 +18,10 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.util.ASTHelpers.annotationsAmong;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.AnnotationNames.AUTO_BUILDER_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.AUTO_ONE_OF_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_BUILDER_ANNOTATION;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -43,18 +47,16 @@ public final class ExtendsAutoValue extends BugChecker implements ClassTreeMatch
   private static final Supplier<ImmutableSet<Name>> AUTOS =
       VisitorState.memoize(
           s ->
-              ImmutableSet.of(
-                  s.getName("com.google.auto.value.AutoOneOf"),
-                  s.getName("com.google.auto.value.AutoValue")));
+              ImmutableSet.of(s.getName(AUTO_ONE_OF_ANNOTATION), s.getName(AUTO_VALUE_ANNOTATION)));
 
   private static final Supplier<ImmutableSet<Name>> AUTOS_AND_BUILDERS =
       VisitorState.memoize(
           s ->
               ImmutableSet.of(
-                  s.getName("com.google.auto.value.AutoBuilder"),
-                  s.getName("com.google.auto.value.AutoOneOf"),
-                  s.getName("com.google.auto.value.AutoValue"),
-                  s.getName("com.google.auto.value.AutoValue$Builder")));
+                  s.getName(AUTO_BUILDER_ANNOTATION),
+                  s.getName(AUTO_ONE_OF_ANNOTATION),
+                  s.getName(AUTO_VALUE_ANNOTATION),
+                  s.binaryNameFromClassname(AUTO_VALUE_BUILDER_ANNOTATION)));
 
   private final boolean testBuilders;
   private final Supplier<ImmutableSet<Name>> autos;

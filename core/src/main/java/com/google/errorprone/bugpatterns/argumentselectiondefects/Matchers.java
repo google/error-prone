@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
+import static com.google.errorprone.util.AnnotationNames.BEFORE_TEMPLATE_ANNOTATION;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
@@ -84,7 +85,7 @@ final class Matchers {
    * If the method is a refaster-before template then it might be explicitly matching bad behaviour.
    */
   private static final Matcher<MethodInvocationTree> METHOD_ANNOTATED_WITH_BEFORETEMPLATE =
-      enclosingMethod(hasAnnotation("com.google.errorprone.refaster.annotation.BeforeTemplate"));
+      enclosingMethod(hasAnnotation(BEFORE_TEMPLATE_ANNOTATION));
 
   private static boolean isTwoParameterAssert(MethodInvocationTree tree, VisitorState state) {
     List<VarSymbol> parameters = getSymbol(tree).getParameters();

@@ -29,7 +29,7 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE_ARRAY;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.MoreAnnotations.getAnnotationValue;
+import static com.google.errorprone.util.MoreAnnotations.getValue;
 import static java.lang.String.format;
 
 import com.google.common.collect.ImmutableSet;
@@ -53,6 +53,7 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.HashSet;
 import java.util.Set;
+import javax.lang.model.element.AnnotationMirror;
 
 /** A bugpattern; see the description. */
 @BugPattern(
@@ -135,7 +136,7 @@ public final class DirectInvocationOnMock extends BugChecker implements Compilat
                 || symbol.getAnnotationMirrors().stream()
                     .filter(am -> am.type.tsym.getQualifiedName().contentEquals("org.mockito.Mock"))
                     .findFirst()
-                    .filter(am -> getAnnotationValue(am, "answer").isEmpty())
+                    .filter(am -> getValue((AnnotationMirror) am, "answer").isEmpty())
                     .isPresent());
       }
     }.scan(state.getPath(), null);

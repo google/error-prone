@@ -30,6 +30,8 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.AnnotationNames.DO_NOT_CALL_ANNOTATION;
+import static com.google.errorprone.util.MoreAnnotations.getStringValue;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
@@ -43,7 +45,6 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
@@ -55,7 +56,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
@@ -248,12 +248,10 @@ public class DoNotCallChecker extends BugChecker
                   + " probably meant to call start")
           .buildOrThrow();
 
-  static final String DO_NOT_CALL = "com.google.errorprone.annotations.DoNotCall";
-
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     MethodSymbol symbol = getSymbol(tree);
-    if (hasAnnotation(tree, DO_NOT_CALL, state)) {
+    if (hasAnnotation(tree, DO_NOT_CALL_ANNOTATION, state)) {
       if (symbol.getModifiers().contains(Modifier.PRIVATE)) {
         return buildDescription(tree)
             .setMessage("A private method that should not be called should simply be removed.")
@@ -273,7 +271,7 @@ public class DoNotCallChecker extends BugChecker
           .build();
     }
     return findSuperMethods(symbol, state.getTypes()).stream()
-        .filter(s -> hasAnnotation(s, DO_NOT_CALL, state))
+        .filter(s -> hasAnnotation(s, DO_NOT_CALL_ANNOTATION, state))
         .findAny()
         .map(
             s -> {
@@ -286,7 +284,7 @@ public class DoNotCallChecker extends BugChecker
                   .setMessage(message)
                   .addFix(
                       SuggestedFix.builder()
-                          .addImport(DO_NOT_CALL)
+                          .addImport(DO_NOT_CALL_ANNOTATION)
                           .prefixWith(tree, "@DoNotCall ")
                           .build())
                   .build();
@@ -342,7 +340,7 @@ public class DoNotCallChecker extends BugChecker
 
       private Optional<Symbol> mustNotCall(
           ExpressionTree tree, MethodSymbol sym, VisitorState state) {
-        if (hasAnnotation(sym, DO_NOT_CALL, state)) {
+        if (hasAnnotation(sym, DO_NOT_CALL_ANNOTATION, state)) {
           return Optional.of(sym);
         }
         if (!(getSymbol(getReceiver(tree)) instanceof VarSymbol receiverSymbol)) {
@@ -366,7 +364,7 @@ public class DoNotCallChecker extends BugChecker
                             symbol ->
                                 !sym.isStatic()
                                     && (sym.flags() & Flags.SYNTHETIC) == 0
-                                    && hasAnnotation(symbol, DO_NOT_CALL, state)
+                                    && hasAnnotation(symbol, DO_NOT_CALL_ANNOTATION, state)
                                     && symbol.overrides(
                                         sym,
                                         types.erasure(typeSeen).tsym,
@@ -409,15 +407,7 @@ public class DoNotCallChecker extends BugChecker
   }
 
   private static String getDoNotCallValue(Symbol symbol) {
-    for (Attribute.Compound a : symbol.getRawAttributes()) {
-      if (!a.type.tsym.getQualifiedName().contentEquals(DO_NOT_CALL)) {
-        continue;
-      }
-      return MoreAnnotations.getAnnotationValue(a, "value")
-          .flatMap(MoreAnnotations::asStringValue)
-          .orElse("");
-    }
-    throw new IllegalStateException();
+    return getStringValue(symbol, DO_NOT_CALL_ANNOTATION).orElse("");
   }
 
   private static final Matcher<ExpressionTree> TRUTH_LITE_PROTO_EQUALITY_MATCHER =

@@ -22,6 +22,8 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.not;
+import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.AUTO_VALUE_ANNOTATION;
 import static java.util.stream.Collectors.joining;
 
 import com.google.errorprone.BugPattern;
@@ -32,7 +34,6 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import javax.lang.model.element.Modifier;
@@ -65,7 +66,7 @@ public class AutoValueFinalMethods extends BugChecker implements ClassTreeMatche
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (!ASTHelpers.hasAnnotation(tree, "com.google.auto.value.AutoValue", state)) {
+    if (!hasAnnotation(tree, AUTO_VALUE_ANNOTATION, state)) {
       return NO_MATCH;
     }
     var candidateMethods =

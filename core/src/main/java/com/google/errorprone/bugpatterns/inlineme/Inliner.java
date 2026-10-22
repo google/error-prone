@@ -19,7 +19,6 @@ package com.google.errorprone.bugpatterns.inlineme;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableMap.toImmutableMap;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
-import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
@@ -29,7 +28,10 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.requiresParentheses;
 import static com.google.errorprone.util.ASTHelpers.stringContainsComments;
-import static com.google.errorprone.util.MoreAnnotations.getValue;
+import static com.google.errorprone.util.AnnotationNames.DEPRECATED_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.INLINE_ME_VALIDATION_DISABLED_ANNOTATION;
+import static com.google.errorprone.util.MoreAnnotations.getAnnotation;
+import static com.google.errorprone.util.MoreAnnotations.getStringValue;
 import static com.google.errorprone.util.SideEffectAnalysis.hasSideEffect;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
@@ -53,7 +55,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ErrorProneParser;
-import com.google.errorprone.util.MoreAnnotations;
 import com.google.errorprone.util.OperatorPrecedence;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -70,7 +71,6 @@ import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.tree.JCTree;
@@ -80,7 +80,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import javax.inject.Inject;
 
 /**
@@ -105,7 +104,6 @@ public final class Inliner extends BugChecker
   private static final String CHECK_FIX_COMPILES = "InlineMe:CheckFixCompiles";
 
   private static final String INLINE_ME = "InlineMe";
-  private static final String VALIDATION_DISABLED = "InlineMeValidationDisabled";
 
   private final ImmutableSet<String> apiPrefixes;
   private final boolean skipCallsitesWithComments;
@@ -652,13 +650,6 @@ public final class Inliner extends BugChecker
     }.scan(tree, null);
   }
 
-  private static ImmutableList<String> getStrings(Attribute.Compound attribute, String name) {
-    return getValue(attribute, name)
-        .map(MoreAnnotations::asStrings)
-        .orElse(Stream.empty())
-        .collect(toImmutableList());
-  }
-
   private Description describe(Tree tree, SuggestedFix fix, Api api) {
     return buildDescription(tree).setMessage(api.message()).addFix(fix).build();
   }
@@ -673,21 +664,17 @@ public final class Inliner extends BugChecker
     private static final Splitter CLASS_NAME_SPLITTER = Splitter.on('.');
 
     static Api create(MethodSymbol method, VisitorState state) {
-      String extraMessage = "";
-      if (hasDirectAnnotationWithSimpleName(method, VALIDATION_DISABLED)) {
-        Attribute.Compound inlineMeValidationDisabled =
-            method.getRawAttributes().stream()
-                .filter(a -> a.type.tsym.getSimpleName().contentEquals(VALIDATION_DISABLED))
-                .collect(onlyElement());
-        String reason = Iterables.getOnlyElement(getStrings(inlineMeValidationDisabled, "value"));
-        extraMessage = " NOTE: this is an unvalidated inlining! Reasoning: " + reason;
-      }
+      String extraMessage =
+          getAnnotation(method, INLINE_ME_VALIDATION_DISABLED_ANNOTATION)
+              .flatMap(a -> getStringValue(a, "value"))
+              .map(reason -> " NOTE: this is an unvalidated inlining! Reasoning: " + reason)
+              .orElse("");
       return new Api(
           method.owner.getQualifiedName().toString(),
           method.getSimpleName().toString(),
           enclosingPackage(method).map(p -> p.getQualifiedName().toString()),
           method.isConstructor(),
-          hasAnnotation(method, "java.lang.Deprecated", state),
+          hasAnnotation(method, DEPRECATED_ANNOTATION, state),
           extraMessage);
     }
 

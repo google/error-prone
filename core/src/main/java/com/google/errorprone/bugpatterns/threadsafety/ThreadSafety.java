@@ -19,6 +19,8 @@ package com.google.errorprone.bugpatterns.threadsafety;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
+import static com.google.errorprone.util.MoreAnnotations.asElement;
+import static com.google.errorprone.util.MoreAnnotations.getStrings;
 
 import com.google.auto.value.AutoBuilder;
 import com.google.common.base.Joiner;
@@ -36,10 +38,7 @@ import com.google.errorprone.annotations.ThreadSafeTypeParameter;
 import com.google.errorprone.bugpatterns.CanBeStaticAnalyzer;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
-import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ClassTree;
-import com.sun.tools.javac.code.Attribute;
-import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -58,6 +57,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.type.TypeKind;
 import org.jspecify.annotations.Nullable;
@@ -304,12 +304,7 @@ public final class ThreadSafety {
         }
         if (suppressAnnotation != null
             && tyarg.getAnnotationMirrors().stream()
-                .anyMatch(
-                    a ->
-                        suppressAnnotation.contains(
-                            ((ClassSymbol) a.getAnnotationType().asElement())
-                                .flatName()
-                                .toString()))) {
+                .anyMatch(a -> suppressAnnotation.contains(asElement(a).flatName().toString()))) {
           continue;
         }
         Violation info =
@@ -692,9 +687,9 @@ public final class ThreadSafety {
     if (sym == null) {
       return null;
     }
-    Optional<Compound> attr =
-        sym.getRawAttributes().stream()
-            .filter(a -> annotationsToCheck.contains(a.type.tsym.getQualifiedName().toString()))
+    Optional<? extends AnnotationMirror> attr =
+        sym.getAnnotationMirrors().stream()
+            .filter(a -> annotationsToCheck.contains(asElement(a).getQualifiedName().toString()))
             .findAny();
     if (attr.isPresent()) {
       ImmutableList<String> containerElements = containerOf(state, attr.get());
@@ -707,7 +702,7 @@ public final class ThreadSafety {
                             .anyMatch(
                                 a ->
                                     containerOfAnnotation.contains(
-                                        a.type.tsym.flatName().toString())))
+                                        asElement(a).flatName().toString())))
                 .map(p -> p.getSimpleName().toString())
                 .collect(toImmutableList());
       }
@@ -761,12 +756,8 @@ public final class ThreadSafety {
     return getAnnotation(sym, markerAnnotations, state);
   }
 
-  private static ImmutableList<String> containerOf(VisitorState state, Compound attr) {
-    Attribute m = attr.member(CONTAINEROF.get(state));
-    if (m == null) {
-      return ImmutableList.of();
-    }
-    return MoreAnnotations.asStrings(m).collect(toImmutableList());
+  private static ImmutableList<String> containerOf(VisitorState state, AnnotationMirror attr) {
+    return getStrings(attr, CONTAINEROF.get(state).toString());
   }
 
   /** Gets a human-friendly name for the given {@link Symbol} to use in diagnostics. */

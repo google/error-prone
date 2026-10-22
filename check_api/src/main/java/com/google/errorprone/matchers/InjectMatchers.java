@@ -48,6 +48,7 @@ public final class InjectMatchers {
 
   public static final String GUICE_PROVIDES_ANNOTATION = "com.google.inject.Provides";
   public static final String DAGGER_PROVIDES_ANNOTATION = "dagger.Provides";
+  public static final String DAGGER_PRODUCES_ANNOTATION = "dagger.producers.Produces";
 
   public static final ImmutableSet<String> PROVIDES_ANNOTATIONS =
       ImmutableSet.of(GUICE_PROVIDES_ANNOTATION, DAGGER_PROVIDES_ANNOTATION);
@@ -67,7 +68,7 @@ public final class InjectMatchers {
                       MULTIBINDINGS_ANNOTATIONS.stream(),
                       Stream.of(
                           "com.google.inject.throwingproviders.CheckedProvides",
-                          "dagger.producers.Produces"))
+                          DAGGER_PRODUCES_ANNOTATION))
                   .map(annotation -> isType(annotation))
                   .collect(toImmutableSet())));
 

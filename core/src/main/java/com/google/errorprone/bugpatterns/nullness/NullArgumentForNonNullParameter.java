@@ -30,6 +30,9 @@ import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.AnnotationNames.NULL_MARKED_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.NULL_UNMARKED_ANNOTATION;
+import static com.google.errorprone.util.MoreAnnotations.asElement;
 import static java.util.Arrays.stream;
 import static javax.lang.model.type.TypeKind.TYPEVAR;
 
@@ -77,9 +80,9 @@ public final class NullArgumentForNonNullParameter extends BugChecker
   private static final Supplier<Name> PROTO_NONNULL_API_NAME =
       memoize(state -> state.getName("com.google.protobuf.Internal$ProtoNonnullApi"));
   private static final Supplier<Name> NULL_MARKED_NAME =
-      memoize(state -> state.getName("org.jspecify.annotations.NullMarked"));
+      memoize(state -> state.getName(NULL_MARKED_ANNOTATION));
   private static final Supplier<Name> NULL_UNMARKED_NAME =
-      memoize(state -> state.getName("org.jspecify.annotations.NullUnmarked"));
+      memoize(state -> state.getName(NULL_UNMARKED_ANNOTATION));
   private static final Supplier<ImmutableSet<Name>> NULL_MARKED_PACKAGES_WE_TRUST =
       memoize(
           state ->
@@ -330,8 +333,7 @@ public final class NullArgumentForNonNullParameter extends BugChecker
    */
   private static boolean hasDirectAnnotation(Symbol sym, Name name) {
     return sym.getAnnotationMirrors().stream()
-        .anyMatch(
-            a -> ((Symbol) a.getAnnotationType().asElement()).getQualifiedName().equals(name));
+        .anyMatch(a -> asElement(a).getQualifiedName().contentEquals(name));
   }
 
   private boolean weTrustNullMarkedOn(Symbol sym, VisitorState state) {

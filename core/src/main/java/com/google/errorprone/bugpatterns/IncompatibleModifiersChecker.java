@@ -19,7 +19,9 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.LinkType.NONE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.MoreAnnotations.getValue;
+import static com.google.errorprone.util.AnnotationNames.INCOMPATIBLE_MODIFIERS_ANNOTATION;
+import static com.google.errorprone.util.MoreAnnotations.getAnnotation;
+import static com.google.errorprone.util.MoreAnnotations.getEnumValues;
 
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
@@ -32,16 +34,10 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
-import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
-import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.util.SimpleAnnotationValueVisitor8;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
@@ -55,26 +51,23 @@ import javax.lang.model.util.SimpleAnnotationValueVisitor8;
     severity = ERROR)
 public class IncompatibleModifiersChecker extends BugChecker implements AnnotationTreeMatcher {
 
-  private static final String INCOMPATIBLE_MODIFIERS =
-      "com.google.errorprone.annotations.IncompatibleModifiers";
-
   @Override
   public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
     Symbol sym = ASTHelpers.getSymbol(tree);
     if (sym == null) {
       return NO_MATCH;
     }
-    Attribute.Compound annotation =
-        sym.getRawAttributes().stream()
-            .filter(a -> a.type.tsym.getQualifiedName().contentEquals(INCOMPATIBLE_MODIFIERS))
-            .findAny()
-            .orElse(null);
-    if (annotation == null) {
+    var anno = getAnnotation(sym, INCOMPATIBLE_MODIFIERS_ANNOTATION);
+    if (anno.isEmpty()) {
       return NO_MATCH;
     }
     Set<Modifier> incompatibleModifiers = new LinkedHashSet<>();
-    getValue(annotation, "value").ifPresent(a -> getModifiers(incompatibleModifiers, a));
-    getValue(annotation, "modifier").ifPresent(a -> getModifiers(incompatibleModifiers, a));
+    getEnumValues(anno.get(), "value").stream()
+        .map(e -> Modifier.valueOf(e.getSimpleName().toString()))
+        .forEach(incompatibleModifiers::add);
+    getEnumValues(anno.get(), "modifier").stream()
+        .map(e -> Modifier.valueOf(e.getSimpleName().toString()))
+        .forEach(incompatibleModifiers::add);
     if (incompatibleModifiers.isEmpty()) {
       return NO_MATCH;
     }
@@ -106,22 +99,5 @@ public class IncompatibleModifiersChecker extends BugChecker implements Annotati
                 .orElse(SuggestedFix.emptyFix()))
         .setMessage(message)
         .build();
-  }
-
-  private static void getModifiers(Collection<Modifier> modifiers, Attribute attribute) {
-    class Visitor extends SimpleAnnotationValueVisitor8<Void, Void> {
-      @Override
-      public Void visitEnumConstant(VariableElement c, Void unused) {
-        modifiers.add(Modifier.valueOf(c.getSimpleName().toString()));
-        return null;
-      }
-
-      @Override
-      public Void visitArray(List<? extends AnnotationValue> vals, Void unused) {
-        vals.forEach(val -> val.accept(this, null));
-        return null;
-      }
-    }
-    attribute.accept(new Visitor(), null);
   }
 }

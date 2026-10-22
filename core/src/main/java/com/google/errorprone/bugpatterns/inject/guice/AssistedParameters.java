@@ -23,12 +23,12 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
+import static com.google.errorprone.util.MoreAnnotations.asElement;
+import static com.google.errorprone.util.MoreAnnotations.getStringValue;
 
-import com.google.auto.common.MoreElements;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Lists;
@@ -47,14 +47,13 @@ import com.google.errorprone.matchers.MultiMatcher.MultiMatchResult;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Attribute;
-import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import javax.lang.model.element.AnnotationMirror;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
@@ -126,15 +125,10 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
   }
 
   private static String valueFromAssistedAnnotation(VariableTree variableTree) {
-    for (Compound c : ASTHelpers.getSymbol(variableTree).getAnnotationMirrors()) {
-      if (MoreElements.asType(c.getAnnotationType().asElement())
-          .getQualifiedName()
-          .contentEquals(ASSISTED_ANNOTATION)) {
+    for (AnnotationMirror c : ASTHelpers.getSymbol(variableTree).getAnnotationMirrors()) {
+      if (asElement(c).getQualifiedName().contentEquals(ASSISTED_ANNOTATION)) {
         // Assisted only has 'value', and value can only contain 1 element.
-        Collection<Attribute> valueEntries = c.getElementValues().values();
-        if (!valueEntries.isEmpty()) {
-          return Iterables.getOnlyElement(valueEntries).getValue().toString();
-        }
+        return getStringValue(c, "value").orElse("");
       }
     }
     return "";

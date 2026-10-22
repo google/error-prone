@@ -19,10 +19,17 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PRODUCES_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PROVIDES_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_PROVIDES_ANNOTATION;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_TEST_ANNOTATION;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
 import static com.google.errorprone.util.ASTHelpers.methodIsPublicAndNotAnOverride;
+import static com.google.errorprone.util.AnnotationNames.AUTO_FACTORY_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.DEPRECATED_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.OVERRIDE_ANNOTATION;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -50,22 +57,22 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
 
   private static final ImmutableSet<String> METHOD_ANNOTATIONS_TO_IGNORE =
       ImmutableSet.of(
-          "java.lang.Deprecated",
-          "java.lang.Override",
+          DEPRECATED_ANNOTATION,
+          OVERRIDE_ANNOTATION,
           // dependency injection annotations
-          "com.google.inject.Provides",
+          GUICE_PROVIDES_ANNOTATION,
           // JUnit @Test methods are never directly invoked (most of the time they don't even have
           // parameters, unless it's a parameterized test --- which still are not directly
           // invoked!); see b/303486200
-          "org.junit.Test",
+          JUNIT4_TEST_ANNOTATION,
           // dagger provider / producers
-          "dagger.Provides",
-          "dagger.producers.Produces",
+          DAGGER_PROVIDES_ANNOTATION,
+          DAGGER_PRODUCES_ANNOTATION,
           // AutoFactory can be put on a constructor.
-          "com.google.auto.factory.AutoFactory");
+          AUTO_FACTORY_ANNOTATION);
 
   private static final ImmutableSet<String> CLASS_ANNOTATIONS_TO_IGNORE =
-      ImmutableSet.of("com.google.auto.factory.AutoFactory");
+      ImmutableSet.of(AUTO_FACTORY_ANNOTATION);
 
   private final int limit;
 

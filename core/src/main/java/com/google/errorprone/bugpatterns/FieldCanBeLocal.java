@@ -18,15 +18,13 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
-import static com.google.errorprone.util.ASTHelpers.getAnnotation;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.MoreAnnotations.targetsElement;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.SetMultimap;
-import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -50,7 +48,6 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -67,9 +64,6 @@ import javax.lang.model.element.ElementKind;
     severity = SUGGESTION,
     documentSuppression = false)
 public final class FieldCanBeLocal extends BugChecker implements CompilationUnitTreeMatcher {
-  private static final ImmutableSet<ElementType> VALID_ON_LOCAL_VARIABLES =
-      Sets.immutableEnumSet(ElementType.LOCAL_VARIABLE, ElementType.TYPE_USE);
-
   private final WellKnownKeep wellKnownKeep;
 
   @Inject
@@ -108,15 +102,9 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
       }
 
       private boolean canBeUsedOnLocalVariable(AnnotationTree annotationTree) {
-        // TODO(b/137842683): Should this (and all other places using getAnnotation with Target) be
-        // replaced with annotation mirror traversals?
-        // This is safe given we know that Target does not have Class fields.
-        Target target = getAnnotation(annotationTree, Target.class);
-        if (target == null) {
-          return true;
-        }
-        return !Sets.intersection(VALID_ON_LOCAL_VARIABLES, ImmutableSet.copyOf(target.value()))
-            .isEmpty();
+        Symbol symbol = getSymbol(annotationTree);
+        return targetsElement(symbol, ElementType.LOCAL_VARIABLE)
+            || targetsElement(symbol, ElementType.TYPE_USE);
       }
     }.scan(state.getPath(), null);
 

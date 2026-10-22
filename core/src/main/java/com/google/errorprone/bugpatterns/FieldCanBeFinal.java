@@ -19,6 +19,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.VAR_ANNOTATION;
+import static com.google.errorprone.util.MoreAnnotations.asElement;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -43,19 +45,19 @@ import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
+import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.inject.Inject;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
 
 /**
  * @author Liam Miller-Cushon (cushon@google.com)
@@ -74,7 +76,6 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
               // keep-sorted start
               "com.beust.jcommander.Parameter",
               "com.google.common.annotations.NonFinalForGwt",
-              "com.google.errorprone.annotations.Var",
               "com.google.gwt.uibinder.client.UiField",
               "com.google.inject.testing.fieldbinder.Bind",
               "com.google.testing.junit.testparameterinjector.TestParameter",
@@ -87,7 +88,8 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
               "org.kohsuke.args4j.Argument",
               "org.kohsuke.args4j.Option",
               "org.mockito.Spy",
-              "picocli.CommandLine.Option"
+              "picocli.CommandLine.Option",
+              VAR_ANNOTATION
               // keep-sorted end
               )
           .build();
@@ -235,8 +237,8 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       if (IMPLICIT_VAR_ANNOTATIONS.stream().anyMatch(a -> hasAnnotation(var.sym, a, state))) {
         continue;
       }
-      for (Attribute.Compound anno : var.sym.getAnnotationMirrors()) {
-        TypeElement annoElement = (TypeElement) anno.getAnnotationType().asElement();
+      for (AnnotationMirror anno : var.sym.getAnnotationMirrors()) {
+        TypeSymbol annoElement = asElement(anno);
         if (IMPLICIT_VAR_ANNOTATION_SIMPLE_NAMES.contains(annoElement.getSimpleName().toString())) {
           return Description.NO_MATCH;
         }
@@ -324,8 +326,8 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
         return null;
       }
 
-      for (Attribute.Compound anno : getSymbol(node).getAnnotationMirrors()) {
-        TypeElement annoElement = (TypeElement) anno.getAnnotationType().asElement();
+      for (AnnotationMirror anno : getSymbol(node).getAnnotationMirrors()) {
+        TypeSymbol annoElement = asElement(anno);
         if (annoElement.getQualifiedName().toString().startsWith(OBJECTIFY_PREFIX)) {
           return null;
         }

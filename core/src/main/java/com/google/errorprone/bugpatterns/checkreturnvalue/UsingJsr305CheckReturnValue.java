@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.AnnotationNames.CHECK_RETURN_VALUE_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -39,7 +40,6 @@ import com.sun.tools.javac.code.Type;
     summary = "Prefer ErrorProne's @CheckReturnValue over JSR305's version.",
     severity = WARNING)
 public final class UsingJsr305CheckReturnValue extends BugChecker implements ImportTreeMatcher {
-  private static final String EP_CRV = "com.google.errorprone.annotations.CheckReturnValue";
   private static final String JSR305_CRV = "javax.annotation.CheckReturnValue";
 
   private static final Supplier<Type> JSR305_TYPE = typeFromString(JSR305_CRV);
@@ -51,7 +51,11 @@ public final class UsingJsr305CheckReturnValue extends BugChecker implements Imp
       // TODO(kak): the JSR305 version of @CheckReturnValue has an element named `when` and the
       // ErrorProne version does not. Technically, this means the import swap is not 100% safe,
       // but we have never actually seen `when` get used in practice.
-      SuggestedFix fix = SuggestedFix.builder().removeImport(JSR305_CRV).addImport(EP_CRV).build();
+      SuggestedFix fix =
+          SuggestedFix.builder()
+              .removeImport(JSR305_CRV)
+              .addImport(CHECK_RETURN_VALUE_ANNOTATION)
+              .build();
       return describeMatch(tree, fix);
     }
     return Description.NO_MATCH;

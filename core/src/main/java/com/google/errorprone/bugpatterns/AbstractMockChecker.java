@@ -18,6 +18,7 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.MoreAnnotations.asElement;
 
 import com.google.common.base.Strings;
 import com.google.common.base.Suppliers;
@@ -34,7 +35,6 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol.CompletionFailure;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Type;
@@ -44,6 +44,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.lang.model.element.AnnotationMirror;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -260,8 +261,8 @@ public abstract class AbstractMockChecker<T extends Annotation> extends BugCheck
             .build();
       }
 
-      for (Compound compound : currentSymbol.getAnnotationMirrors()) {
-        TypeSymbol metaAnnotationType = (TypeSymbol) compound.getAnnotationType().asElement();
+      for (AnnotationMirror annotation : currentSymbol.getAnnotationMirrors()) {
+        TypeSymbol metaAnnotationType = asElement(annotation);
         try {
           metaAnnotationType.complete();
         } catch (CompletionFailure e) {

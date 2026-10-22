@@ -24,6 +24,7 @@ import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.AnnotationNames.OVERRIDE_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -42,7 +43,7 @@ import com.sun.source.tree.MethodTree;
 public class MissingImplementsComparable extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<MethodTree> COMPARABLE_WITHOUT_OVERRIDE =
-      allOf(compareToMethodDeclaration(), not(hasAnnotation("java.lang.Override")));
+      allOf(compareToMethodDeclaration(), not(hasAnnotation(OVERRIDE_ANNOTATION)));
 
   private static final Matcher<ClassTree> IS_COMPARABLE =
       Matchers.isSubtypeOf("java.lang.Comparable");

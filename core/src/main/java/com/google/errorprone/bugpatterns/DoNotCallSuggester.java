@@ -18,8 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.bugpatterns.DoNotCallChecker.DO_NOT_CALL;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PRODUCES_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PROVIDES_ANNOTATION;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.findClass;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
@@ -28,6 +29,8 @@ import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
+import static com.google.errorprone.util.AnnotationNames.DO_NOT_CALL_ANNOTATION;
+import static com.google.errorprone.util.AnnotationNames.OVERRIDE_ANNOTATION;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -67,14 +70,14 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
   private static final ImmutableSet<String> ANNOTATIONS_TO_IGNORE =
       ImmutableSet.of(
           // ignore methods that are already annotated w/ @DoNotCall
-          DO_NOT_CALL,
+          DO_NOT_CALL_ANNOTATION,
           // We exclude methods that are overrides; at call sites, rarely is the variable reference
           // statically typed as the subclass (often it's typed as the interface type), so adding
           // @DoNotCall won't actually help any callers.
-          "java.lang.Override",
+          OVERRIDE_ANNOTATION,
           // dagger provider / producers
-          "dagger.Provides",
-          "dagger.producers.Produces",
+          DAGGER_PROVIDES_ANNOTATION,
+          DAGGER_PRODUCES_ANNOTATION,
           // starlark API boundary
           "net.starlark.java.annot.StarlarkMethod");
 
@@ -169,7 +172,7 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
     // TODO(kak): Consider possibly stripping "java.lang" (users should be familiar with those!)
     SuggestedFix fix =
         SuggestedFix.builder()
-            .addImport(DO_NOT_CALL)
+            .addImport(DO_NOT_CALL_ANNOTATION)
             .prefixWith(tree, "@DoNotCall(\"Always throws " + thrownType + "\") ")
             .build();
     return buildDescription(tree)

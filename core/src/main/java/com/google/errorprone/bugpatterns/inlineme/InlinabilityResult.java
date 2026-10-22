@@ -22,6 +22,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isSuper;
 import static com.google.errorprone.util.ASTHelpers.methodCanBeOverridden;
+import static com.google.errorprone.util.AnnotationNames.DEPRECATED_ANNOTATION;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
@@ -344,7 +345,7 @@ record InlinabilityResult(
           usesDeprecatedOrLessVisibleApis.set(tree);
           return true;
         }
-        if (hasAnnotation(sym, "java.lang.Deprecated", state)) {
+        if (hasAnnotation(sym, DEPRECATED_ANNOTATION, state)) {
           usesDeprecatedOrLessVisibleApis.set(tree);
           return true;
         }

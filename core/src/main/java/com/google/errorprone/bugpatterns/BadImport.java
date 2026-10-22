@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Matchers.annotations;
 import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_TYPE;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static com.google.errorprone.util.MoreAnnotations.isTypeAnnotation;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -44,10 +45,6 @@ import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.PackageSymbol;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.lang.model.element.Name;
@@ -105,7 +102,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
           );
 
   private static final MultiMatcher<Tree, AnnotationTree> HAS_TYPE_USE_ANNOTATION =
-      annotations(AT_LEAST_ONE, (t, state) -> isTypeAnnotation(t));
+      annotations(AT_LEAST_ONE, (t, state) -> isTypeAnnotation(getSymbol(t.getAnnotationType())));
 
   /**
    * Enclosing types that their nested type imports are vague.
@@ -286,18 +283,5 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
       return Description.NO_MATCH;
     }
     return buildDescription(firstFound).setMessage(message).addFix(builder.build()).build();
-  }
-
-  private static boolean isTypeAnnotation(AnnotationTree t) {
-    Symbol annotationSymbol = getSymbol(t.getAnnotationType());
-    if (annotationSymbol == null) {
-      return false;
-    }
-    Target target = annotationSymbol.getAnnotation(Target.class);
-    if (target == null) {
-      return false;
-    }
-    List<ElementType> value = Arrays.asList(target.value());
-    return value.contains(ElementType.TYPE_USE) || value.contains(ElementType.TYPE_PARAMETER);
   }
 }

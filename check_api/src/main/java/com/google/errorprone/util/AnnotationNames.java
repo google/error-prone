@@ -25,7 +25,10 @@ public final class AnnotationNames {
       "com.google.errorprone.refaster.annotation.AfterTemplate";
   public static final String AUTO_BUILDER_ANNOTATION = "com.google.auto.value.AutoBuilder";
   public static final String AUTO_FACTORY_ANNOTATION = "com.google.auto.factory.AutoFactory";
+  public static final String AUTO_ONE_OF_ANNOTATION = "com.google.auto.value.AutoOneOf";
   public static final String AUTO_VALUE_ANNOTATION = "com.google.auto.value.AutoValue";
+  public static final String AUTO_VALUE_BUILDER_ANNOTATION =
+      "com.google.auto.value.AutoValue.Builder";
   public static final String BEFORE_TEMPLATE_ANNOTATION =
       "com.google.errorprone.refaster.annotation.BeforeTemplate";
   public static final String BUG_PATTERN_ANNOTATION = "com.google.errorprone.BugPattern";

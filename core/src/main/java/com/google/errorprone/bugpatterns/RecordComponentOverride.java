@@ -19,13 +19,14 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.AnnotationNames.OVERRIDE_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
@@ -40,14 +41,14 @@ public class RecordComponentOverride extends BugChecker implements BugChecker.Cl
 
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    Symbol.ClassSymbol sym = ASTHelpers.getSymbol(tree);
+    Symbol.ClassSymbol sym = getSymbol(tree);
     if (!sym.getKind().equals(ElementKind.RECORD)) {
       return NO_MATCH;
     }
     for (Symbol.RecordComponent rc : sym.getRecordComponents()) {
       for (JCAnnotation annotation : rc.getOriginalAnnos()) {
         TypeSymbol annotationElement = getType(annotation).tsym;
-        if (annotationElement.getQualifiedName().contentEquals("java.lang.Override")) {
+        if (annotationElement.getQualifiedName().contentEquals(OVERRIDE_ANNOTATION)) {
           Description.Builder description = buildDescription(rc.declarationFor());
           int pos = getStartPosition(annotation);
           // The annotation doesn't have an end position, see also JDK-8383786

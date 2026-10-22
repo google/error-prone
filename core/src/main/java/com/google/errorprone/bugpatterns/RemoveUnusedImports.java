@@ -22,6 +22,7 @@ import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.MoreAnnotations.asElement;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableSet;
@@ -224,7 +225,7 @@ public final class RemoveUnusedImports extends BugChecker implements Compilation
     }
 
     private static void scanAnnotation(AnnotationMirror annotation, SymbolSink sink) {
-      sink.accept((Symbol) annotation.getAnnotationType().asElement());
+      sink.accept(asElement(annotation));
       for (AnnotationValue value : annotation.getElementValues().values()) {
         value.accept(ANNOTATION_VALUE_VISITOR, sink);
       }

@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isCanonicalRecordConstructor;
 import static com.google.errorprone.util.ASTHelpers.isEffectivelyPrivate;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
+import static com.google.errorprone.util.AnnotationNames.OVERRIDE_ANNOTATION;
 import static javax.lang.model.element.Modifier.PROTECTED;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
@@ -102,7 +103,7 @@ public final class EffectivelyPrivate extends BugChecker implements CompilationU
       return;
     }
     if (sym instanceof MethodSymbol methodSymbol) {
-      if (hasAnnotation(methodSymbol, "java.lang.Override", state)) {
+      if (hasAnnotation(methodSymbol, OVERRIDE_ANNOTATION, state)) {
         return;
       }
       if (methodSymbol.isConstructor()) {

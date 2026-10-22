@@ -21,6 +21,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
+import static com.google.errorprone.util.MoreAnnotations.getTargetElementTypes;
 import static java.lang.annotation.ElementType.TYPE_PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
 
@@ -40,8 +41,8 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
 import java.util.List;
+import java.util.Set;
 
 /** A bugpattern; see the summary. */
 @BugPattern(
@@ -80,21 +81,18 @@ public final class NullableOnContainingClass extends BugChecker
     int endOfOuterType = state.getEndPosition(memberSelectTree.getExpression());
 
     for (AnnotationTree annotation : annotations) {
-      if (!isOnlyTypeAnnotation(getSymbol(annotation))) {
-        continue;
-      }
-      if (NULLABLE_ANNOTATION_NAMES.contains(getType(annotation).tsym.getSimpleName().toString())) {
-        if (state.getEndPosition(annotation) < endOfOuterType) {
-          return describeMatch(
-              annotation,
-              SuggestedFix.builder()
-                  .delete(annotation)
-                  .replace(
-                      endOfOuterType + 1,
-                      endOfOuterType + 1,
-                      state.getSourceForNode(annotation) + " ")
-                  .build());
-        }
+      if (NULLABLE_ANNOTATION_NAMES.contains(getType(annotation).tsym.getSimpleName().toString())
+          && isOnlyTypeAnnotation(getSymbol(annotation))
+          && state.getEndPosition(annotation) < endOfOuterType) {
+        return describeMatch(
+            annotation,
+            SuggestedFix.builder()
+                .delete(annotation)
+                .replace(
+                    endOfOuterType + 1,
+                    endOfOuterType + 1,
+                    state.getSourceForNode(annotation) + " ")
+                .build());
       }
     }
     return NO_MATCH;
@@ -105,10 +103,10 @@ public final class NullableOnContainingClass extends BugChecker
    * TYPE_PARAMETER}.
    */
   private static boolean isOnlyTypeAnnotation(Symbol anno) {
-    Target target = anno.getAnnotation(Target.class);
-    ImmutableSet<ElementType> elementTypes =
-        target == null ? ImmutableSet.of() : ImmutableSet.copyOf(target.value());
-    return elementTypes.contains(TYPE_USE) && TYPE_USE_OR_TYPE_PARAMETER.containsAll(elementTypes);
+    Set<ElementType> elementTypes = getTargetElementTypes(anno);
+    return elementTypes != null
+        && elementTypes.contains(TYPE_USE)
+        && TYPE_USE_OR_TYPE_PARAMETER.containsAll(elementTypes);
   }
 
   private static final ImmutableSet<String> NULLABLE_ANNOTATION_NAMES =

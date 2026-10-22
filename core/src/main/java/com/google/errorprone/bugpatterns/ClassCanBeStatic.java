@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.AnnotationNames.BEFORE_TEMPLATE_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -47,10 +48,6 @@ import javax.lang.model.element.NestingKind;
     // https://www.jetbrains.com/help/inspectopedia/InnerClassMayBeStatic.html
     altNames = {"InnerClassMayBeStatic"})
 public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
-
-  private static final String REFASTER_ANNOTATION =
-      "com.google.errorprone.refaster.annotation.BeforeTemplate";
-
   private final WellKnownKeep wellKnownKeep;
 
   @Inject
@@ -97,7 +94,8 @@ public class ClassCanBeStatic extends BugChecker implements ClassTreeMatcher {
     if (wellKnownKeep.shouldKeep(tree)) {
       return NO_MATCH;
     }
-    if (tree.getMembers().stream().anyMatch(m -> hasAnnotation(m, REFASTER_ANNOTATION, state))) {
+    if (tree.getMembers().stream()
+        .anyMatch(m -> hasAnnotation(m, BEFORE_TEMPLATE_ANNOTATION, state))) {
       return NO_MATCH;
     }
     return describeMatch(

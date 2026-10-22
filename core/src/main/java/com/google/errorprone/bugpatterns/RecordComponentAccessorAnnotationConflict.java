@@ -22,8 +22,8 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasExplicitSource;
 import static com.google.errorprone.util.ASTHelpers.isRecord;
-import static com.google.errorprone.util.MoreAnnotations.asEnumValues;
-import static com.google.errorprone.util.MoreAnnotations.getValue;
+import static com.google.errorprone.util.MoreAnnotations.asElement;
+import static com.google.errorprone.util.MoreAnnotations.getTargetElementTypes;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
@@ -35,7 +35,6 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.RecordComponent;
@@ -43,6 +42,7 @@ import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.tree.JCTree;
 import java.lang.annotation.ElementType;
 import java.util.EnumSet;
+import java.util.Set;
 import javax.lang.model.element.Name;
 
 /** A BugPattern; see the summary. */
@@ -95,7 +95,7 @@ public class RecordComponentAccessorAnnotationConflict extends BugChecker
         continue;
       }
       if (symbol.getAnnotationMirrors().stream()
-          .anyMatch(a -> a.getAnnotationType().asElement().equals(annotationElement))) {
+          .anyMatch(a -> asElement(a).equals(annotationElement))) {
         continue;
       }
       // The annotation doesn't have an end position, so we can't use
@@ -125,13 +125,7 @@ public class RecordComponentAccessorAnnotationConflict extends BugChecker
   }
 
   private static boolean targetsOnly(TypeSymbol annotation, ElementType elementType) {
-    Attribute.Compound target = annotation.getAnnotationTypeMetadata().getTarget();
-    if (target == null) {
-      // If there's no explicit @Target, the annotation implicitly targets all declaration contexts
-      return false;
-    }
-    return getValue(target, "value")
-        .map(v -> asEnumValues(ElementType.class, v).equals(EnumSet.of(elementType)))
-        .orElse(false);
+    Set<ElementType> targets = getTargetElementTypes(annotation);
+    return targets != null && targets.equals(EnumSet.of(elementType));
   }
 }
