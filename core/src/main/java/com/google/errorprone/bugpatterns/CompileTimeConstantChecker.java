@@ -20,6 +20,7 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.LinkType.NONE;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher.hasCompileTimeConstantAnnotation;
+import static javax.lang.model.element.ElementKind.FIELD;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -51,7 +52,6 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.lang.model.element.ElementKind;
 
 /** A Bugpattern; see the accompanying Markdown documentation. */
 @BugPattern(
@@ -234,11 +234,7 @@ public class CompileTimeConstantChecker extends BugChecker
     ExpressionTree variable = node.getVariable();
     ExpressionTree expression = node.getExpression();
     Symbol assignedSymbol = ASTHelpers.getSymbol(variable);
-    if (assignedSymbol == null || assignedSymbol.owner == null) {
-      return Description.NO_MATCH;
-    }
-    if (assignedSymbol.owner.getKind() != ElementKind.CLASS
-        && assignedSymbol.owner.getKind() != ElementKind.ENUM) {
+    if (assignedSymbol == null || assignedSymbol.getKind() != FIELD) {
       return Description.NO_MATCH;
     }
     if (!hasCompileTimeConstantAnnotation(state, assignedSymbol)) {

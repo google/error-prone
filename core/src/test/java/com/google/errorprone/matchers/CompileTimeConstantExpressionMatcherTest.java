@@ -263,6 +263,52 @@ public class CompileTimeConstantExpressionMatcherTest {
         .doTest();
   }
 
+  @Test
+  public void qualifiedAndRecordAndInterfaceFields() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            package test;
+
+            import com.google.common.collect.ImmutableList;
+            import com.google.errorprone.annotations.CompileTimeConstant;
+
+            public class Test {
+              interface HolderInterface {
+                @CompileTimeConstant ImmutableList<String> LIST = ImmutableList.of("a");
+              }
+
+              record HolderRecord(@CompileTimeConstant String s) {
+                void m(HolderRecord other) {
+                  // BUG: Diagnostic contains: true
+                  String s1 = s;
+                  // BUG: Diagnostic contains: true
+                  String s2 = this.s;
+                  // BUG: Diagnostic contains: true
+                  String s3 = other.s;
+                }
+              }
+
+              @CompileTimeConstant final String s;
+
+              public Test(@CompileTimeConstant String s) {
+                this.s = s;
+              }
+
+              public void m(Test other) {
+                // BUG: Diagnostic contains: true
+                String s1 = this.s;
+                // BUG: Diagnostic contains: true
+                String s2 = other.s;
+                // BUG: Diagnostic contains: true
+                ImmutableList<String> list = HolderInterface.LIST;
+              }
+            }
+            """)
+        .doTest();
+  }
+
   /** A test-only bugpattern for testing {@link CompileTimeConstantExpressionMatcher}. */
   @BugPattern(severity = WARNING, summary = "")
   public static final class CompileTimeConstantExpressionMatcherTester extends BugChecker
