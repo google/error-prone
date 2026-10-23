@@ -17,6 +17,8 @@
 package com.google.errorprone.bugpatterns.testparameterinjector;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETER;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETER_INJECTOR;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestRunnerOfType;
@@ -49,16 +51,11 @@ public final class TestParametersNotInitialized extends BugChecker implements Cl
   // TestParameterInjector also exposes a @TestParameters annotation, but it's not possible to
   // accidentally forget the runner when using this: it's used to initialise method or constructor
   // parameters, and the default JUnit4 runner would throw if there are parameters in either.
-  private static final String TEST_PARAMETER =
-      "com.google.testing.junit.testparameterinjector.TestParameter";
-
-  private static final String RUNNER =
-      "com.google.testing.junit.testparameterinjector.TestParameterInjector";
-
-  private static final MultiMatcher<Tree, AnnotationTree> TEST_PARAMETER_INJECTOR =
+  private static final MultiMatcher<Tree, AnnotationTree> HAS_TEST_PARAMETER_INJECTOR_RUNNER =
       annotations(
           AT_LEAST_ONE,
-          hasArgumentWithValue("value", isJUnit4TestRunnerOfType(ImmutableSet.of(RUNNER))));
+          hasArgumentWithValue(
+              "value", isJUnit4TestRunnerOfType(ImmutableSet.of(TEST_PARAMETER_INJECTOR))));
 
   private static final MultiMatcher<ClassTree, AnnotationTree> NON_PARAMETERIZED_RUNNER =
       annotations(
@@ -81,7 +78,7 @@ public final class TestParametersNotInitialized extends BugChecker implements Cl
     if (!NON_PARAMETERIZED_RUNNER.matches(tree, state)) {
       return NO_MATCH;
     }
-    if (TEST_PARAMETER_INJECTOR.matches(tree, state)) {
+    if (HAS_TEST_PARAMETER_INJECTOR_RUNNER.matches(tree, state)) {
       return NO_MATCH;
     }
     if (tree.getMembers().stream().noneMatch(m -> hasAnnotation(m, TEST_PARAMETER, state))) {
@@ -92,7 +89,8 @@ public final class TestParametersNotInitialized extends BugChecker implements Cl
     SuggestedFix.Builder fix = SuggestedFix.builder();
     fix.replace(
         annotation,
-        String.format("@RunWith(%s.class)", SuggestedFixes.qualifyType(state, fix, RUNNER)));
+        String.format(
+            "@RunWith(%s.class)", SuggestedFixes.qualifyType(state, fix, TEST_PARAMETER_INJECTOR)));
     return describeMatch(tree, fix.build());
   }
 }

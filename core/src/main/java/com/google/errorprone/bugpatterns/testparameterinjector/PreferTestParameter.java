@@ -18,7 +18,13 @@ package com.google.errorprone.bugpatterns.testparameterinjector;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.BOOLEAN_VALUES;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETER;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETERS_TYPE;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isBooleanType;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isEnumType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.enumValues;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationMirror;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -34,21 +40,16 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.suppliers.Suppliers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.type.TypeKind;
 
 /** Recommends using @TestParameter for enums and booleans instead of exhaustive @TestParameters. */
 @BugPattern(
@@ -57,11 +58,6 @@ import javax.lang.model.type.TypeKind;
             + " @TestParameter over @TestParameters.",
     severity = WARNING)
 public final class PreferTestParameter extends BugChecker implements MethodTreeMatcher {
-
-  private static final String TEST_PARAMETER =
-      "com.google.testing.junit.testparameterinjector.TestParameter";
-  private static final Supplier<Type> TEST_PARAMETERS_TYPE =
-      Suppliers.typeFromString("com.google.testing.junit.testparameterinjector.TestParameters");
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -82,17 +78,11 @@ public final class PreferTestParameter extends BugChecker implements MethodTreeM
       return NO_MATCH;
     }
 
-    List<String> expectedConstants = new ArrayList<>();
-    if (paramType.tsym != null && paramType.tsym.getKind() == ElementKind.ENUM) {
-      ClassSymbol enumSym = (ClassSymbol) paramType.tsym;
-      for (Symbol sym : enumSym.members().getSymbols()) {
-        if (sym.getKind() == ElementKind.ENUM_CONSTANT) {
-          expectedConstants.add(sym.getSimpleName().toString());
-        }
-      }
-    } else if (state.getTypes().unboxedTypeOrType(paramType).getKind() == TypeKind.BOOLEAN) {
-      expectedConstants.add("true");
-      expectedConstants.add("false");
+    Set<String> expectedConstants;
+    if (isEnumType(paramType)) {
+      expectedConstants = enumValues(paramType.tsym);
+    } else if (isBooleanType(paramType, state)) {
+      expectedConstants = BOOLEAN_VALUES;
     } else {
       return NO_MATCH;
     }

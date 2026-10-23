@@ -16,17 +16,16 @@
 
 package com.google.errorprone.bugpatterns.testparameterinjector;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.getExplicitTestParameterValues;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.implicitTestParameterAnnotation;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isBooleanType;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isEnumType;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isExhaustiveBooleanValues;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.enumValues;
-import static com.google.errorprone.util.ASTHelpers.getAnnotationMirror;
 import static com.google.errorprone.util.ASTHelpers.getType;
-import static com.google.errorprone.util.ASTHelpers.isSameType;
-import static com.google.errorprone.util.ASTHelpers.unboxedTypeOrType;
 
-import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
@@ -35,13 +34,10 @@ import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Type;
 import java.util.Set;
-import javax.lang.model.element.AnnotationMirror;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -49,24 +45,9 @@ import javax.lang.model.element.AnnotationMirror;
     severity = WARNING)
 public final class SimplifyTestParameter extends BugChecker implements AnnotationTreeMatcher {
 
-  private static final Supplier<Type> TEST_PARAMETER =
-      typeFromString("com.google.testing.junit.testparameterinjector.TestParameter");
-
-  private static final ImmutableSet<String> BOOLEAN_VALUES = ImmutableSet.of("true", "false");
-
   @Override
   public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
-    if (tree.getArguments().isEmpty()) {
-      return NO_MATCH;
-    }
-    if (!isSameType(getType(tree), TEST_PARAMETER.get(state), state)) {
-      return NO_MATCH;
-    }
-    AnnotationMirror attribute = getAnnotationMirror(tree);
-    if (attribute.getElementValues().size() != 1) {
-      return NO_MATCH;
-    }
-    ImmutableList<String> values = MoreAnnotations.getStrings(attribute, "value");
+    ImmutableList<String> values = getExplicitTestParameterValues(tree, state);
     if (values.isEmpty()) {
       return NO_MATCH;
     }
@@ -75,15 +56,10 @@ public final class SimplifyTestParameter extends BugChecker implements Annotatio
       return NO_MATCH;
     }
     Type type = getType(variableTree);
-    if (isSameType(unboxedTypeOrType(type, state), state.getSymtab().booleanType, state)
-        && values.size() == 2
-        && values.stream()
-            .map(Ascii::toLowerCase)
-            .collect(toImmutableSet())
-            .equals(BOOLEAN_VALUES)) {
+    if (isBooleanType(type, state) && isExhaustiveBooleanValues(values)) {
       return describe(tree, state);
     }
-    if (type.tsym != null && type.tsym.isEnum()) {
+    if (isEnumType(type)) {
       Set<String> enumValues = enumValues(type.tsym);
       if (values.size() == enumValues.size() && ImmutableSet.copyOf(values).equals(enumValues)) {
         return describe(tree, state);
@@ -94,6 +70,6 @@ public final class SimplifyTestParameter extends BugChecker implements Annotatio
 
   private Description describe(AnnotationTree tree, VisitorState state) {
     return describeMatch(
-        tree, SuggestedFix.replace(tree, "@" + state.getSourceForNode(tree.getAnnotationType())));
+        tree, SuggestedFix.replace(tree, implicitTestParameterAnnotation(tree, state)));
   }
 }
