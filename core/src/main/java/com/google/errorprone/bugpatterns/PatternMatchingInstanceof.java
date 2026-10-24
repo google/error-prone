@@ -17,12 +17,12 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.Ascii.toLowerCase;
-import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.outermostParenthesized;
 import static com.google.errorprone.util.SourceVersion.supportsPatternMatchingInstanceof;
 import static com.google.errorprone.util.TargetType.targetType;
 import static java.util.Collections.nCopies;
@@ -201,12 +201,8 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
 
   private static @Nullable VariableTree isVariableAssignedFromCast(
       TreePath treePath, InstanceOfTree instanceOfTree, VisitorState state) {
-    var parent =
-        stream(treePath.getParentPath())
-            .dropWhile(t -> t.getKind() == Kind.PARENTHESIZED)
-            .findFirst()
-            .orElse(null);
-    if (!(parent instanceof VariableTree variableTree)) {
+    TreePath parentPath = outermostParenthesized(treePath).getParentPath();
+    if (parentPath == null || !(parentPath.getLeaf() instanceof VariableTree variableTree)) {
       return null;
     }
     // Check that the type is exactly the same (not a subtypes), since refactoring cases where the

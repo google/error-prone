@@ -25,6 +25,7 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.isSuper;
+import static com.google.errorprone.util.ASTHelpers.outermostParenthesized;
 import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.collect.ImmutableList;
@@ -38,7 +39,6 @@ import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.util.TreePath;
 import java.util.ArrayList;
 import java.util.List;
@@ -137,10 +137,7 @@ public final class HashCodeInObjectsHash extends BugChecker implements MethodInv
 
   /** Checks if this call is a direct argument (modulo parens) of an outer Objects.hash. */
   private static boolean isDirectArgumentOfObjectsHash(VisitorState state) {
-    TreePath path = state.getPath().getParentPath();
-    while (path != null && path.getLeaf() instanceof ParenthesizedTree) {
-      path = path.getParentPath();
-    }
+    TreePath path = outermostParenthesized(state.getPath()).getParentPath();
     return path != null
         && path.getLeaf() instanceof MethodInvocationTree methodInvocationTree
         && OBJECTS_HASH.matches(methodInvocationTree, state);
