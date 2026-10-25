@@ -36,12 +36,12 @@
     <junit.version>4.13.2</junit.version>
     <dataflow.version>3.41.0-eisop1</dataflow.version>
     <mockito.version>5.24.0</mockito.version>
-    <compile.testing.version>0.23.0</compile.testing.version>
-    <caffeine.version>3.3.0</caffeine.version>
+    <compile.testing.version>0.24.0</compile.testing.version>
+    <caffeine.version>3.3.1</caffeine.version>
     <flogger.version>0.9</flogger.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
     <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
-    <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
+    <central-publishing-maven-plugin.version>0.12.0</central-publishing-maven-plugin.version>
     <protobuf.version>4.36.2</protobuf.version>
     <grpc.version>1.43.3</grpc.version>
     <jspecify.version>1.0.1</jspecify.version>
