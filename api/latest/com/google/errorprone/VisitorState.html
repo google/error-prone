@@ -157,7 +157,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Type</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#arrayTypeForType(com.sun.tools.javac.code.Type)" class="member-name-link">arrayTypeForType</a><wbr>(com.sun.tools.javac.code.Type&nbsp;baseType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Build an Array Type from another Type</div>
+<div class="block">Build an array type from another type.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.util.Name</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#binaryNameFromClassname(java.lang.String)" class="member-name-link">binaryNameFromClassname</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className)</code></div>
@@ -631,7 +631,9 @@ some string that is not a class name, see the more general <a href="#getName(jav
 <h3>arrayTypeForType</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">arrayTypeForType</span><wbr><span class="parameters">(com.sun.tools.javac.code.Type&nbsp;baseType)</span></div>
-<div class="block">Build an Array Type from another Type</div>
+<div class="block">Build an array type from another type.
+
+<p>For constant types, prefer not to use this method. Instead, save the result of <a href="suppliers/Suppliers.html#arrayOf(com.google.errorprone.suppliers.Supplier)"><code>Suppliers.arrayOf(Supplier)</code></a> as a class constant.</div>
 </div>
 </section>
 </li>
