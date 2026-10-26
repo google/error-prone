@@ -83,7 +83,6 @@ public final class DistinctVarargsChecker extends BugChecker
           staticMethod().onClass("com.google.common.base.Objects").named("hashCode"),
           staticMethod().onClass("com.google.common.base.Predicates").namedAnyOf("and", "or"),
           staticMethod().onClass("com.google.common.collect.Comparators").namedAnyOf("min", "max"),
-          staticMethod().onClass("com.google.common.collect.Iterables").named("concat"),
           staticMethod().onClass("com.google.common.collect.Maps").named("difference"),
           staticMethod()
               .onClass("com.google.common.collect.Ordering")

@@ -99,7 +99,6 @@ public class DistinctVarargsCheckerTest {
             import com.google.common.collect.ImmutableSet;
             import com.google.common.collect.ImmutableSortedMap;
             import com.google.common.collect.ImmutableSortedSet;
-            import com.google.common.collect.Iterables;
             import com.google.common.collect.Maps;
             import com.google.common.collect.Ordering;
             import com.google.common.collect.Sets;
@@ -204,8 +203,6 @@ public class DistinctVarargsCheckerTest {
                 // BUG: Diagnostic contains: DistinctVarargsChecker
                 IntStream.concat(istr1, istr1);
                 // BUG: Diagnostic contains: DistinctVarargsChecker
-                Iterables.concat(list1, list1);
-                // BUG: Diagnostic contains: DistinctVarargsChecker
                 Math.max(first, first);
                 // BUG: Diagnostic contains: DistinctVarargsChecker
                 Math.min(first, first);
@@ -260,7 +257,6 @@ public class DistinctVarargsCheckerTest {
             import com.google.common.collect.ImmutableSet;
             import com.google.common.collect.ImmutableSortedMap;
             import com.google.common.collect.ImmutableSortedSet;
-            import com.google.common.collect.Iterables;
             import com.google.common.collect.Maps;
             import com.google.common.collect.Ordering;
             import com.google.common.collect.Sets;
@@ -332,7 +328,6 @@ public class DistinctVarargsCheckerTest {
                 Sets.symmetricDifference(set1, set2);
                 Stream.concat(str1, str2);
                 IntStream.concat(istr1, istr2);
-                Iterables.concat(list1, list2);
                 Math.max(first, second);
                 Math.min(first, second);
                 StrictMath.max(first, second);
