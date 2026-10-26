@@ -346,7 +346,7 @@
     <dependency>
       <groupId>org.threeten</groupId>
       <artifactId>threeten-extra</artifactId>
-      <version>1.10.0</version>
+      <version>1.11.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
