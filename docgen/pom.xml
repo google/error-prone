@@ -89,7 +89,7 @@
     <dependency>
       <groupId>org.yaml</groupId>
       <artifactId>snakeyaml</artifactId>
-      <version>2.7</version>
+      <version>${snakeyaml.version}</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

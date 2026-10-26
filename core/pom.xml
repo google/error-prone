@@ -76,6 +76,12 @@
     </dependency>
     <dependency>
       <!-- Apache 2.0 -->
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>${snakeyaml.version}</version>
+    </dependency>
+    <dependency>
+      <!-- Apache 2.0 -->
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>${guava.version}</version>
@@ -433,6 +439,7 @@
                   <include>com.google.googlejavaformat:google-java-format</include>
                   <include>org.jspecify:jspecify</include>
                   <include>org.safere:safere</include>
+                  <include>org.yaml:snakeyaml</include>
                 </includes>
               </artifactSet>
             </configuration>
