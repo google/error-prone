@@ -23,7 +23,9 @@ import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.methodHasArity;
 import static com.google.errorprone.matchers.Matchers.methodIsNamed;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
+import static com.google.errorprone.suppliers.Suppliers.BYTE_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.arrayOf;
 
 import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
@@ -85,7 +87,7 @@ public class InputStreamSlowMultibyteRead extends BugChecker implements ClassTre
       return Description.NO_MATCH;
     }
 
-    Type byteArrayType = state.arrayTypeForType(state.getSymtab().byteType);
+    Type byteArrayType = BYTE_ARRAY_TYPE.get(state);
     Type intType = state.getSymtab().intType;
     MethodSymbol multiByteReadMethod =
         ASTHelpers.resolveExistingMethod(
@@ -128,4 +130,6 @@ public class InputStreamSlowMultibyteRead extends BugChecker implements ClassTre
   }
 
   private static final Supplier<Name> READ = VisitorState.memoize(state -> state.getName("read"));
+
+  private static final Supplier<Type> BYTE_ARRAY_TYPE = arrayOf(BYTE_TYPE);
 }

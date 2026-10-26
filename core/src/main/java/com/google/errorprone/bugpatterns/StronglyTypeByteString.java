@@ -19,15 +19,18 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.suppliers.Suppliers.BYTE_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.arrayOf;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Suppliers;
+import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.tools.javac.code.Type;
 
 /**
  * Flags fields which would be better expressed as ByteStrings rather than primitive byte arrays.
@@ -38,18 +41,19 @@ import com.sun.source.tree.ExpressionTree;
             + " clearer to strongly type the field instead.",
     severity = WARNING)
 public final class StronglyTypeByteString extends BugChecker implements CompilationUnitTreeMatcher {
+  private static final Supplier<Type> BYTE_ARRAY_TYPE = arrayOf(BYTE_TYPE);
 
   private static final Matcher<ExpressionTree> BYTE_STRING_FACTORY =
       anyOf(
           staticMethod()
               .onClass("com.google.protobuf.ByteString")
               .namedAnyOf("copyFrom")
-              .withParametersOfType(Suppliers.arrayOf(Suppliers.BYTE_TYPE)));
+              .withParametersOfType(BYTE_ARRAY_TYPE));
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     return StronglyType.forCheck(this)
-        .addType(state.arrayTypeForType(state.getSymtab().byteType))
+        .addType(BYTE_ARRAY_TYPE.get(state))
         .setFactoryMatcher(BYTE_STRING_FACTORY)
         .build()
         .match(tree, state);

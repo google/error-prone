@@ -441,7 +441,12 @@ public final class VisitorState {
     }
   }
 
-  /** Build an Array Type from another Type */
+  /**
+   * Build an array type from another type.
+   *
+   * <p>For constant types, prefer not to use this method. Instead, save the result of {@link
+   * com.google.errorprone.suppliers.Suppliers#arrayOf} as a class constant.
+   */
   public Type arrayTypeForType(Type baseType) {
     return new ArrayType(baseType, getSymtab().arrayClass);
   }
