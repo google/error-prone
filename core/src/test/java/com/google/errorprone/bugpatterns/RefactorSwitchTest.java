@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertThrows;
 
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugCheckerRefactoringTestHelper.FixChoosers;
@@ -40,6 +39,8 @@ public final class RefactorSwitchTest {
         CLUB
       };
       """;
+  private static final String REMOVE_DEFAULT_DESCRIPTION =
+      "Remove default case because all enum values handled";
   private final CompilationTestHelper helper =
       CompilationTestHelper.newInstance(RefactorSwitch.class, getClass())
           .addSourceLines("Suit.java", SUIT);
@@ -581,7 +582,7 @@ public final class RefactorSwitchTest {
             "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
             "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
             "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
-        .setFixChooser(RefactorSwitchTest::assertSecondAndLastFixAndChoose)
+        .setFixChooser(RefactorSwitchTest::assertSecondAndLastFixRemovesDefaultAndChoose)
         .doTest();
   }
 
@@ -1060,136 +1061,542 @@ public final class RefactorSwitchTest {
 
   @Test
   public void switchByEnum_returnSwitchInLoopWithBreak_keepsReturnAfterLoop() {
-    // BUG: the `return` after the loop is deleted.  The statement after the switch becomes
-    // unreachable and is rightly deleted, but the `break` before the switch survives the fix and
-    // still exits the loop, so the loop can still complete normally and therefore the
-    // `return` after it stays reachable, and required.  The check misses the `break` because it
-    // analyzes the loop with the loop's body patched to be unable to complete normally, and
-    // `Reachability` does not scan inside such a patch.  The output does not compile, which the
-    // test helper reports by throwing.
-    BugCheckerRefactoringTestHelper bugCheckerRefactoringTestHelper =
-        refactoringHelper
-            .addInputLines(
-                "Test.java",
-                """
-                class Test {
-                  public int foo(Suit suit, boolean b) {
-                    while (true) {
-                      if (b) {
-                        break;
-                      }
-                      switch (suit) {
-                        case HEART, DIAMOND -> {
-                          return 1;
-                        }
-                        case SPADE -> {
-                          return 2;
-                        }
-                        case CLUB -> {
-                          return 3;
-                        }
-                      }
-                      System.out.println("unreachable after the fix");
-                    }
-                    return 0;
+    // The statement after the switch becomes unreachable and is deleted.  The `break` before the
+    // switch survives the fix and still exits the loop, so the loop can still complete normally
+    // and the `return` after it stays reachable, and required.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean b) {
+                while (true) {
+                  if (b) {
+                    break;
                   }
-                }
-                """)
-            .addOutputLines(
-                "Test.java",
-                """
-                class Test {
-                  public int foo(Suit suit, boolean b) {
-                    while (true) {
-                      if (b) {
-                        break;
-                      }
-                      return switch (suit) {
-                        case HEART, DIAMOND -> 1;
-                        case SPADE -> 2;
-                        case CLUB -> 3;
-                      };
+                  switch (suit) {
+                    case HEART, DIAMOND -> {
+                      return 1;
+                    }
+                    case SPADE -> {
+                      return 2;
+                    }
+                    case CLUB -> {
+                      return 3;
                     }
                   }
+                  System.out.println("unreachable after the fix");
                 }
-                """)
-            .setArgs(
-                "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
-                "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
-                "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
-            .setFixChooser(RefactorSwitchTest::assertOneFixAndChoose);
-
-    AssertionError e = assertThrows(AssertionError.class, bugCheckerRefactoringTestHelper::doTest);
-
-    assertThat(e).hasMessageThat().contains("compilation failed unexpectedly");
-    assertThat(e).hasMessageThat().contains("missing return statement");
+                return 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean b) {
+                while (true) {
+                  if (b) {
+                    break;
+                  }
+                  return switch (suit) {
+                    case HEART, DIAMOND -> 1;
+                    case SPADE -> 2;
+                    case CLUB -> 3;
+                  };
+                }
+                return 0;
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
+            "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
+            "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+        .setFixChooser(RefactorSwitchTest::assertOneFixAndChoose)
+        .doTest();
   }
 
   @Test
   public void switchByEnum_returnSwitchInDoWhileWithContinue_keepsReturnAfterLoop() {
-    // BUG: the `return` after the loop is deleted.  The statement after the switch becomes
-    // unreachable and is rightly deleted, but the `continue` before the switch survives the fix
-    // and still reaches the condition of the `do` loop, so the loop can still complete normally
-    // and therefore the `return` after it stays reachable, and required.  As in
-    // switchByEnum_returnSwitchInLoopWithBreak_keepsReturnAfterLoop, the
-    // check misses the `continue` because it does not scan inside the patched loop body.  The
-    // output does not compile, which the test helper reports by throwing.
-    BugCheckerRefactoringTestHelper bugCheckerRefactoringTestHelper =
-        refactoringHelper
-            .addInputLines(
-                "Test.java",
-                """
-                class Test {
-                  public int foo(Suit suit, boolean b) {
-                    do {
+    // The statement after the switch becomes unreachable and is deleted.  The `continue` before
+    // the switch survives the fix and still reaches the condition of the `do` loop, so the loop
+    // can still complete normally and the `return` after it stays reachable, and required.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean b) {
+                do {
+                  if (b) {
+                    continue;
+                  }
+                  switch (suit) {
+                    case HEART, DIAMOND -> {
+                      return 1;
+                    }
+                    case SPADE -> {
+                      return 2;
+                    }
+                    case CLUB -> {
+                      return 3;
+                    }
+                  }
+                  System.out.println("unreachable after the fix");
+                } while (b);
+                return 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean b) {
+                do {
+                  if (b) {
+                    continue;
+                  }
+                  return switch (suit) {
+                    case HEART, DIAMOND -> 1;
+                    case SPADE -> 2;
+                    case CLUB -> 3;
+                  };
+                } while (b);
+                return 0;
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
+            "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
+            "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+        .setFixChooser(RefactorSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnSwitchWithBreakOut_noError() {
+    // A `break` cannot exit a switch expression (JLS 21 §14.15), so a switch with a case that
+    // breaks out of it, or out of an enclosing statement, cannot become a `return switch`.
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public int breakOutOfLoop(Suit suit, boolean b) {
+                outer:
+                while (true) {
+                  switch (suit) {
+                    case HEART -> {
                       if (b) {
-                        continue;
+                        break outer;
                       }
-                      switch (suit) {
-                        case HEART, DIAMOND -> {
-                          return 1;
-                        }
-                        case SPADE -> {
-                          return 2;
-                        }
-                        case CLUB -> {
-                          return 3;
-                        }
-                      }
-                      System.out.println("unreachable after the fix");
-                    } while (b);
-                    return 0;
+                      return 1;
+                    }
+                    case DIAMOND -> {
+                      return 2;
+                    }
+                    case SPADE -> {
+                      return 3;
+                    }
+                    case CLUB -> {
+                      return 4;
+                    }
                   }
                 }
-                """)
-            .addOutputLines(
-                "Test.java",
-                """
-                class Test {
-                  public int foo(Suit suit, boolean b) {
-                    do {
-                      if (b) {
-                        continue;
-                      }
-                      return switch (suit) {
-                        case HEART, DIAMOND -> 1;
-                        case SPADE -> 2;
-                        case CLUB -> 3;
-                      };
-                    } while (b);
+                return 0;
+              }
+
+              public int breakOutOfSwitch(Suit suit, boolean b) {
+                switch (suit) {
+                  case HEART -> {
+                    if (b) {
+                      break;
+                    }
+                    return 1;
+                  }
+                  case DIAMOND -> {
+                    return 2;
+                  }
+                  case SPADE -> {
+                    return 3;
+                  }
+                  case CLUB -> {
+                    return 4;
                   }
                 }
-                """)
-            .setArgs(
-                "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
-                "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
-                "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
-            .setFixChooser(RefactorSwitchTest::assertOneFixAndChoose);
+                return 0;
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
+            "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
+            "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+        .doTest();
+  }
 
-    AssertionError e = assertThrows(AssertionError.class, bugCheckerRefactoringTestHelper::doTest);
+  @Test
+  public void switchByEnum_returnSwitchFollowedByConvertibleSwitch_convertsOnlyTheSecond() {
+    // Converting the first switch would make the second one unreachable and delete it, but the
+    // second switch gets its own finding, whose fix rewrites it.  Fixes that overlap like that
+    // cannot both be applied, so the first switch is not converted.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, Suit other) {
+                switch (suit) {
+                  case HEART, DIAMOND -> {
+                    return 1;
+                  }
+                  case SPADE -> {
+                    return 2;
+                  }
+                  case CLUB -> {
+                    return 3;
+                  }
+                }
+                switch (other) {
+                  case HEART, DIAMOND -> {
+                    return 4;
+                  }
+                  case SPADE -> {
+                    return 5;
+                  }
+                  case CLUB -> {
+                    return 6;
+                  }
+                }
+                return 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, Suit other) {
+                switch (suit) {
+                  case HEART, DIAMOND -> {
+                    return 1;
+                  }
+                  case SPADE -> {
+                    return 2;
+                  }
+                  case CLUB -> {
+                    return 3;
+                  }
+                }
+                return switch (other) {
+                  case HEART, DIAMOND -> 4;
+                  case SPADE -> 5;
+                  case CLUB -> 6;
+                };
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
+            "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
+            "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+        .setFixChooser(RefactorSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
 
-    assertThat(e).hasMessageThat().contains("compilation failed unexpectedly");
-    assertThat(e).hasMessageThat().contains("missing return statement");
+  @Test
+  public void switchByEnum_returnSwitchFollowedBySwitchExpression_noError() {
+    // Converting the switch would make the statement holding the switch expression unreachable
+    // and delete it.  With `EnableSimplifySwitch`, the switch expression may get its own finding,
+    // whose fix would overlap that deletion, so the switch is not converted (whatever the flag).
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, Suit other) {
+                switch (suit) {
+                  case HEART, DIAMOND -> {
+                    return 1;
+                  }
+                  case SPADE -> {
+                    return 2;
+                  }
+                  case CLUB -> {
+                    return 3;
+                  }
+                }
+                return switch (other) {
+                  case HEART -> 4;
+                  default -> 5;
+                };
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
+            "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
+            "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnSwitchInNestedBlockWithLabeledBreak_keepsReturnAfterLoop() {
+    // Dead code is deleted at two levels: after the switch in the inner block, and then after the
+    // inner block in the loop body, which can no longer complete normally.  The deleted code at the
+    // second level holds a `break outer`, which must not count, but the `break outer` before the
+    // switch survives the fix and still exits the loop two levels up, so the `return` after the
+    // loop stays reachable, and required.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean b, boolean c) {
+                outer:
+                while (true) {
+                  {
+                    if (b) {
+                      break outer;
+                    }
+                    switch (suit) {
+                      case HEART, DIAMOND -> {
+                        return 1;
+                      }
+                      case SPADE -> {
+                        return 2;
+                      }
+                      case CLUB -> {
+                        return 3;
+                      }
+                    }
+                    System.out.println("unreachable after the fix");
+                  }
+                  System.out.println("unreachable after the fix, too");
+                  if (c) {
+                    break outer;
+                  }
+                }
+                return 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean b, boolean c) {
+                outer:
+                while (true) {
+                  {
+                    if (b) {
+                      break outer;
+                    }
+                    return switch (suit) {
+                      case HEART, DIAMOND -> 1;
+                      case SPADE -> 2;
+                      case CLUB -> 3;
+                    };
+                  }
+                }
+                return 0;
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
+            "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
+            "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+        .setFixChooser(RefactorSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void
+      switchByEnum_returnSwitchInNestedBlock_deadCodeHoldsOnlyBreak_deletesReturnAfterLoop() {
+    // As above, but without the `break outer` before the switch.  The only `break outer` is in the
+    // code deleted at the first level (after the switch), so it must still not count two levels
+    // up, when analyzing the method body: the loop then cannot complete normally, and the `return`
+    // after it is deleted too.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean c) {
+                outer:
+                while (true) {
+                  {
+                    switch (suit) {
+                      case HEART, DIAMOND -> {
+                        return 1;
+                      }
+                      case SPADE -> {
+                        return 2;
+                      }
+                      case CLUB -> {
+                        return 3;
+                      }
+                    }
+                    if (c) {
+                      break outer;
+                    }
+                  }
+                  System.out.println("unreachable after the fix");
+                }
+                return 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean c) {
+                outer:
+                while (true) {
+                  {
+                    return switch (suit) {
+                      case HEART, DIAMOND -> 1;
+                      case SPADE -> 2;
+                      case CLUB -> 3;
+                    };
+                  }
+                }
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
+            "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
+            "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+        .setFixChooser(RefactorSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnSwitchInNestedBlockWithLabeledContinue_keepsReturnAfterLoop() {
+    // Like `switchByEnum_returnSwitchInNestedBlockWithLabeledBreak_keepsReturnAfterLoop`, but
+    // with a `continue outer` before the switch, which still reaches the condition of the `do`
+    // loop two levels up.  So the loop can still complete normally, and the `return` after it
+    // stays.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean b, boolean c) {
+                outer:
+                do {
+                  {
+                    if (b) {
+                      continue outer;
+                    }
+                    switch (suit) {
+                      case HEART, DIAMOND -> {
+                        return 1;
+                      }
+                      case SPADE -> {
+                        return 2;
+                      }
+                      case CLUB -> {
+                        return 3;
+                      }
+                    }
+                    System.out.println("unreachable after the fix");
+                  }
+                  System.out.println("unreachable after the fix, too");
+                } while (c);
+                return 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean b, boolean c) {
+                outer:
+                do {
+                  {
+                    if (b) {
+                      continue outer;
+                    }
+                    return switch (suit) {
+                      case HEART, DIAMOND -> 1;
+                      case SPADE -> 2;
+                      case CLUB -> 3;
+                    };
+                  }
+                } while (c);
+                return 0;
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
+            "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
+            "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+        .setFixChooser(RefactorSwitchTest::assertOneFixAndChoose)
+        .doTest();
+  }
+
+  @Test
+  public void switchByEnum_returnSwitchInLoop_deadCodeHoldsOnlyBreak_deletesReturnAfterLoop() {
+    // The statements after the switch become unreachable and are deleted.  They hold the only
+    // `break` out of the loop, so once they are gone the loop cannot complete normally, and the
+    // `return` after it is unreachable too and must also be deleted.
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean b) {
+                while (true) {
+                  switch (suit) {
+                    case HEART, DIAMOND -> {
+                      return 1;
+                    }
+                    case SPADE -> {
+                      return 2;
+                    }
+                    case CLUB -> {
+                      return 3;
+                    }
+                  }
+                  if (b) {
+                    break;
+                  }
+                }
+                return 0;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              public int foo(Suit suit, boolean b) {
+                while (true) {
+                  return switch (suit) {
+                    case HEART, DIAMOND -> 1;
+                    case SPADE -> 2;
+                    case CLUB -> 3;
+                  };
+                }
+              }
+            }
+            """)
+        .setArgs(
+            "-XepOpt:RefactorSwitch:EnableReturnSwitch=true",
+            "-XepOpt:RefactorSwitch:EnableAssignmentSwitch=false",
+            "-XepOpt:RefactorSwitch:EnableSimplifySwitch=false")
+        .setFixChooser(RefactorSwitchTest::assertOneFixAndChoose)
+        .doTest();
   }
 
   @Test
@@ -3886,6 +4293,17 @@ public final class RefactorSwitchTest {
   /** Asserts that there are exactly two suggested fixes and returns the second one. */
   public static Fix assertSecondAndLastFixAndChoose(List<Fix> fixes) {
     assertThat(fixes).hasSize(2);
+    return fixes.get(1);
+  }
+
+  /**
+   * Asserts that there are exactly two suggested fixes, of which only the second is described as
+   * removing the {@code default} case, and returns the second one.
+   */
+  public static Fix assertSecondAndLastFixRemovesDefaultAndChoose(List<Fix> fixes) {
+    assertThat(fixes).hasSize(2);
+    assertThat(fixes.get(0).getShortDescription()).isNotEqualTo(REMOVE_DEFAULT_DESCRIPTION);
+    assertThat(fixes.get(1).getShortDescription()).isEqualTo(REMOVE_DEFAULT_DESCRIPTION);
     return fixes.get(1);
   }
 }

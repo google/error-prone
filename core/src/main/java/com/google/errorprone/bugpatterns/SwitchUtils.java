@@ -22,20 +22,27 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSwitchDefault;
+import static com.google.errorprone.util.Reachability.CanCompleteNormallyPatch.CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE;
+import static com.google.errorprone.util.Reachability.CanCompleteNormallyPatch.CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE;
 import static com.sun.source.tree.Tree.Kind.EXPRESSION_STATEMENT;
 import static com.sun.source.tree.Tree.Kind.RETURN;
 import static com.sun.source.tree.Tree.Kind.THROW;
+import static java.util.Collections.disjoint;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.VisitorState;
+import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.CompileTimeConstantExpressionMatcher;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.ErrorProneComment;
+import com.google.errorprone.util.Reachability;
+import com.google.errorprone.util.Reachability.CanCompleteNormallyPatch;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.BreakTree;
@@ -46,6 +53,8 @@ import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.PatternCaseLabelTree;
 import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.SwitchExpressionTree;
+import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.VariableTree;
@@ -65,6 +74,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
@@ -517,6 +527,190 @@ public final class SwitchUtils {
   /** Returns the names of enum constants handled across all {@code cases}. */
   static ImmutableSet<String> getHandledEnumValues(List<? extends CaseTree> cases) {
     return cases.stream().flatMap(c -> getHandledEnumValues(c).stream()).collect(toImmutableSet());
+  }
+
+  /**
+   * Deletes the code that becomes dead once {@code replacedTree}, the statement at {@code
+   * state.getPath()}, is replaced by a statement that cannot complete normally: the statements
+   * after it in its statement list, and in turn those after each enclosing statement that can then
+   * no longer complete normally either. Returns {@code true} if successful, or {@code false} if the
+   * refactoring should be abandoned (in which case {@code suggestedFixBuilder} may hold some of the
+   * deletions and should be discarded).
+   *
+   * @param numberPulledUp the number of statements right after {@code replacedTree}, in its own
+   *     statement list, that move into the replacement and so are not deleted
+   * @param declineIfDeleted returns {@code true} for a statement whose deletion should instead
+   *     abandon the refactoring, for example because a separate finding may rewrite it with a fix
+   *     that would overlap the deletion
+   */
+  static boolean deleteDeadCodeInAncestors(
+      Tree replacedTree,
+      VisitorState state,
+      SuggestedFix.Builder suggestedFixBuilder,
+      int numberPulledUp,
+      Predicate<? super StatementTree> declineIfDeleted) {
+    // `Reachability` sees only the original code, so the replacement is represented by the tree it
+    // will be built from.  That tree is given to `Reachability` as a patch that cannot complete
+    // normally, because the replacement cannot, but that is still analyzed inside, so that the
+    // jumps it contains are recorded.  Statements that are to be deleted are not analyzed inside,
+    // so that any jumps they contain are not recorded.  Every other statement is analyzed as
+    // written, so that a jump that survives the fix (such as a `break` before the replaced tree,
+    // which still exits an enclosing loop) is recorded.
+    Set<Tree> deletedTrees = new HashSet<>();
+    // Search up the AST for enclosing statement lists, marking any newly-dead code for deletion
+    // along the way
+    Tree childTree = state.getPath().getLeaf();
+    for (TreePath path = state.getPath().getParentPath();
+        path != null;
+        path = path.getParentPath()) {
+      Tree tree = path.getLeaf();
+      List<? extends StatementTree> statements =
+          getEnclosedStatements(tree).orElse(ImmutableList.of());
+      int indexInStatements = statements.indexOf(childTree);
+      if (indexInStatements >= 0) {
+        ImmutableMap.Builder<Tree, CanCompleteNormallyPatch> patches = ImmutableMap.builder();
+        patches.put(replacedTree, CANNOT_COMPLETE_NORMALLY_ANALYZE_INSIDE);
+        deletedTrees.forEach(
+            deletedTree -> patches.put(deletedTree, CANNOT_COMPLETE_NORMALLY_SKIP_INSIDE));
+        boolean nextStatementReachable =
+            Reachability.canCompleteNormally(
+                statements.get(indexInStatements), patches.buildOrThrow());
+        // Everything after this statement in this list (other than any pulled-up statements,
+        // which move into the replacement) is about to be deleted, so accumulate it for the
+        // ancestors' analyses.  Only deleted statements are patched this way: a statement that
+        // survives must still be analyzed inside.
+        int firstDeletedIndex = indexInStatements + 1 + numberPulledUp;
+        List<? extends StatementTree> deletedStatements =
+            statements.subList(firstDeletedIndex, statements.size());
+        deletedTrees.addAll(deletedStatements);
+        if (nextStatementReachable) {
+          break;
+        }
+        // If a next statement in this statement list exists, then it is not reachable.
+        if (!deletedStatements.isEmpty()) {
+          if (deletedStatements.stream().anyMatch(declineIfDeleted)) {
+            return false;
+          }
+          // A block is deleted up to and including its closing brace, which is then written
+          // back.  A colon-style `case` has no block nor closing brace, so its dead statements
+          // are deleted up to the last of them.
+          int deletionEndPosition;
+          String replacement;
+          switch (tree) {
+            case BlockTree blockTree -> {
+              deletionEndPosition = state.getEndPosition(blockTree);
+              replacement = "}";
+            }
+            case CaseTree caseTree -> {
+              // A local variable declared in a colon-style `case` remains in scope in the later
+              // case groups of the same switch block.  If any of them refers to it, then
+              // deleting it would break them.  Nor can it be kept, because it is now
+              // unreachable.  Decline to produce a finding instead
+              if (isDeletedVariableReferencedLater(
+                  path.getParentPath().getLeaf(), caseTree, deletedStatements)) {
+                return false;
+              }
+              deletionEndPosition = state.getEndPosition(statements.getLast());
+              replacement = "";
+            }
+            // Only a block or a colon-style `case` holds statements (see
+            // `getEnclosedStatements`)
+            default -> throw new AssertionError("Unexpected tree type: " + tree.getKind());
+          }
+          int deletionStartPosition = state.getEndPosition(statements.get(firstDeletedIndex - 1));
+          String deletedRegion =
+              state
+                  .getSourceCode()
+                  .subSequence(deletionStartPosition, deletionEndPosition)
+                  .toString();
+          // If the region we would delete looks interesting, bail out and just delete the
+          // orphaned statements.
+          if (deletedRegion.contains("LINT.")) {
+            deletedStatements.forEach(suggestedFixBuilder::delete);
+          } else {
+            // If the region doesn't seem to contain interesting comments, delete it along with
+            // comments: those comments are often just of the form "Unreachable code".
+            suggestedFixBuilder.replace(deletionStartPosition, deletionEndPosition, replacement);
+          }
+        }
+      }
+      // Only applies in lowest statement list
+      numberPulledUp = 0;
+      childTree = tree;
+    }
+    return true;
+  }
+
+  /**
+   * Returns whether {@code tree} contains a switch statement or switch expression. A check that
+   * rewrites switches can pass this as the {@code declineIfDeleted} argument of {@link
+   * #deleteDeadCodeInAncestors}: deleting such a switch would overlap the fix of any separate
+   * finding that the check reports on it.
+   */
+  static boolean hasSwitchInTree(Tree tree) {
+    return Objects.equals(
+        new TreeScanner<Boolean, Void>() {
+          @Override
+          public Boolean visitSwitch(SwitchTree switchTree, Void unused) {
+            return true;
+          }
+
+          @Override
+          public Boolean visitSwitchExpression(
+              SwitchExpressionTree switchExpressionTree, Void unused) {
+            return true;
+          }
+
+          @Override
+          public Boolean reduce(@Nullable Boolean left, @Nullable Boolean right) {
+            return Objects.equals(left, true) || Objects.equals(right, true);
+          }
+        }.scan(tree, null),
+        true);
+  }
+
+  /**
+   * Returns the statements that {@code tree} holds directly, or empty if it holds none. Statements
+   * can only be held by a block or a colon-style {@code case}.
+   */
+  private static Optional<List<? extends StatementTree>> getEnclosedStatements(Tree tree) {
+    return switch (tree) {
+      case BlockTree blockTree -> Optional.of(blockTree.getStatements());
+      // Empty for an arrow-style `case`, whose body is a single statement rather than a list
+      case CaseTree caseTree -> Optional.ofNullable(caseTree.getStatements());
+      default -> Optional.empty();
+    };
+  }
+
+  /** Returns the cases that follow {@code caseTree} in {@code switchTree}, its enclosing switch. */
+  private static List<? extends CaseTree> getSubsequentCases(Tree switchTree, CaseTree caseTree) {
+    List<? extends CaseTree> cases =
+        switch (switchTree) {
+          case SwitchTree s -> s.getCases();
+          case SwitchExpressionTree s -> s.getCases();
+          default -> throw new IllegalArgumentException("not a switch: " + switchTree.getKind());
+        };
+    return cases.subList(cases.indexOf(caseTree) + 1, cases.size());
+  }
+
+  /**
+   * Returns whether a local variable declared by {@code deletedStatements}, which are deleted from
+   * {@code caseTree}, is referred to by a later case of {@code switchTree} (its enclosing
+   * `switch`).
+   */
+  private static boolean isDeletedVariableReferencedLater(
+      Tree switchTree, CaseTree caseTree, List<? extends StatementTree> deletedStatements) {
+    ImmutableSet<Symbol> deletedVariableSymbols =
+        deletedStatements.stream()
+            .filter(VariableTree.class::isInstance)
+            .map(s -> getSymbol((VariableTree) s))
+            .collect(toImmutableSet());
+    return !deletedVariableSymbols.isEmpty()
+        && getSubsequentCases(switchTree, caseTree).stream()
+            .anyMatch(
+                laterCase ->
+                    !disjoint(
+                        getReferencedLocalVariablesInTree(laterCase), deletedVariableSymbols));
   }
 
   private SwitchUtils() {}
