@@ -1322,6 +1322,9 @@ This setter seems to be invoked with a value from its own getter. Is it redundan
 __[ShortCircuitBoolean](bugpattern/ShortCircuitBoolean)__<br>
 Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.
 
+__[SingleTestParameter](bugpattern/SingleTestParameter)__<br>
+@TestParameter on the parameter is simpler than @TestParameters if there&#39;s only one test parameter.
+
 __[StatementSwitchToExpressionSwitch](bugpattern/StatementSwitchToExpressionSwitch)__<br>
 This statement switch can be converted to a new-style arrow switch
 
