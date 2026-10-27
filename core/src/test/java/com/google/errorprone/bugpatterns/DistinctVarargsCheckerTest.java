@@ -451,4 +451,33 @@ public class DistinctVarargsCheckerTest {
             "}")
         .doTest();
   }
+
+  @Test
+  public void mockitoMatchers_shouldNotFlag() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static org.mockito.ArgumentMatchers.any;
+            import static org.mockito.Mockito.mockStatic;
+
+            import java.io.IOException;
+            import java.nio.file.Files;
+            import java.nio.file.Path;
+            import org.mockito.ArgumentCaptor;
+
+            public class Test {
+              void testFunction(ArgumentCaptor<Path> captor) {
+                try (var staticFilesMock = mockStatic(Files.class)) {
+                  staticFilesMock
+                      .when(() -> Files.copy(any(Path.class), any(Path.class), any()))
+                      .thenThrow(new IOException("Error"));
+                  staticFilesMock.verify(
+                      () -> Files.copy(captor.capture(), captor.capture(), any()));
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }

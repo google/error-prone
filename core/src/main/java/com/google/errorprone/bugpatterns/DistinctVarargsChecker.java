@@ -149,6 +149,14 @@ public final class DistinctVarargsChecker extends BugChecker
               .named("containsExactly"));
   private static final Matcher<ExpressionTree> EVEN_AND_ODD_PARITY_DISTINCT_ARG_MATCHER =
       staticMethod().onClass("com.google.common.collect.ImmutableBiMap").named("of");
+  private static final Matcher<ExpressionTree> MOCKITO_MATCHERS =
+      anyOf(
+          staticMethod()
+              .onClassAny(
+                  "org.mockito.Matchers",
+                  "org.mockito.ArgumentMatchers",
+                  "org.mockito.AdditionalMatchers"),
+          instanceMethod().onDescendantOf("org.mockito.ArgumentCaptor").named("capture"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -191,7 +199,11 @@ public final class DistinctVarargsChecker extends BugChecker
       VisitorState state, List<? extends ExpressionTree> arguments) {
     ImmutableListMultimap.Builder<String, Integer> result = ImmutableListMultimap.builder();
     for (int i = 0; i < arguments.size(); i++) {
-      result.put(state.getSourceForNode(arguments.get(i)), i);
+      ExpressionTree argument = arguments.get(i);
+      if (MOCKITO_MATCHERS.matches(argument, state)) {
+        continue;
+      }
+      result.put(state.getSourceForNode(argument), i);
     }
     return result.build();
   }
