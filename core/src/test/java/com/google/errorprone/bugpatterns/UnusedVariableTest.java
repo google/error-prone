@@ -2372,4 +2372,156 @@ public class UnusedVariableTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void fieldOnlyAccessedViaVarHandle_notFlagged() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.invoke.MethodHandles;
+            import java.lang.invoke.VarHandle;
+
+            class Test {
+              private final class Worker {
+                static final VarHandle RUN_NEXT;
+
+                static {
+                  try {
+                    RUN_NEXT =
+                        MethodHandles.lookup().findVarHandle(Test.Worker.class, "runNext", Runnable.class);
+                  } catch (ReflectiveOperationException e) {
+                    throw new ExceptionInInitializerError(e);
+                  }
+                }
+
+                volatile Runnable runNext;
+
+                Runnable take() {
+                  return (Runnable) RUN_NEXT.getAndSet(this, null);
+                }
+              }
+
+              Runnable take(Worker w) {
+                return w.take();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void staticFieldOnlyAccessedViaStaticVarHandle_notFlagged() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.invoke.MethodHandles;
+            import java.lang.invoke.VarHandle;
+
+            class Test {
+              private static final VarHandle COUNT;
+
+              static {
+                try {
+                  COUNT = MethodHandles.lookup().findStaticVarHandle(Test.class, "count", int.class);
+                } catch (ReflectiveOperationException e) {
+                  throw new ExceptionInInitializerError(e);
+                }
+              }
+
+              private static volatile int count;
+
+              int increment() {
+                return (int) COUNT.getAndAdd(1);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void fieldOnlyAccessedViaAtomicFieldUpdater_notFlagged() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
+            import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
+
+            class Test {
+              private static final AtomicIntegerFieldUpdater<Test> COUNT =
+                  AtomicIntegerFieldUpdater.newUpdater(Test.class, "count");
+              private static final AtomicReferenceFieldUpdater<Test, String> NAME =
+                  AtomicReferenceFieldUpdater.newUpdater(Test.class, String.class, "name");
+
+              private volatile int count;
+              private volatile String name;
+
+              int increment() {
+                return COUNT.incrementAndGet(this);
+              }
+
+              String getName() {
+                return NAME.get(this);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void varHandleForDifferentField_unrelatedFieldStillFlagged() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.lang.invoke.MethodHandles;
+            import java.lang.invoke.VarHandle;
+
+            class Test {
+              private static final VarHandle COUNT;
+
+              static {
+                try {
+                  COUNT = MethodHandles.lookup().findVarHandle(Test.class, "count", int.class);
+                } catch (ReflectiveOperationException e) {
+                  throw new ExceptionInInitializerError(e);
+                }
+              }
+
+              private volatile int count;
+
+              // BUG: Diagnostic contains: The field 'other' is never read
+              private volatile int other;
+
+              int increment() {
+                return (int) COUNT.getAndAdd(this, 1);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nonLiteralOwnerWithLiteralFieldType_fieldTypeClassNotTreatedAsOwner() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
+
+            class Test {
+              private static final class Foo {
+                // BUG: Diagnostic contains: The field 'value' is never read
+                private volatile String value;
+              }
+
+              static <T> AtomicReferenceFieldUpdater<T, Foo> updater(Class<T> ownerClass) {
+                return AtomicReferenceFieldUpdater.newUpdater(ownerClass, Foo.class, "value");
+              }
+            }
+            """)
+        .doTest();
+  }
 }
