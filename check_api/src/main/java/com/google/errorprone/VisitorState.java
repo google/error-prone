@@ -228,6 +228,14 @@ public final class VisitorState {
     return sharedState.severityMap;
   }
 
+  SharedState sharedState() {
+    return sharedState;
+  }
+
+  JavacInvocationInstance javacInvocationInstance() {
+    return sharedState.javacInvocationInstance;
+  }
+
   public void reportMatch(Description description) {
     checkNotNull(description, "Use Description.NO_MATCH to denote an absent finding.");
     if (description == Description.NO_MATCH) {
@@ -291,10 +299,10 @@ public final class VisitorState {
   /**
    * Given the binary name of a class, returns the {@link Type}.
    *
-   * <p>Prefer not to use this method for constant strings, or strings otherwise known at compile
-   * time. Instead, save the result of {@link
-   * com.google.errorprone.suppliers.Suppliers#typeFromString} as a class constant, and use its
-   * {@link Supplier#get} method to look up the Type when needed. This lookup will be faster,
+   * <p>Prefer not to use this method for constant class or interface name strings, or strings
+   * otherwise known at compile time. Instead, save the result of {@link ClassName#of} as a class
+   * constant, and use its {@link ClassName#type} method to look up the Type when needed (or use
+   * {@link #getSymtab()} for primitive and {@code void} types). This lookup will be faster,
    * improving Error Prone's analysis time.
    *
    * <p>If this method returns null, the compiler doesn't have access to this type, which means that
@@ -329,6 +337,10 @@ public final class VisitorState {
   }
 
   /**
+   * Looks up the {@link Symbol} for a class name.
+   *
+   * <p>Prefer {@link ClassName#of} and {@link ClassName#symbol} for constant class names.
+   *
    * @param symStr the string representation of a symbol
    * @return the Symbol object, or null if it cannot be found
    */
@@ -341,6 +353,8 @@ public final class VisitorState {
    * Returns the Name object corresponding to the named class, converting it to binary form along
    * the way if necessary (i.e., replacing Foo.Bar with Foo$Bar). To get the Name corresponding to
    * some string that is not a class name, see the more general {@link #getName(String)}.
+   *
+   * <p>Prefer {@link ClassName#of} and {@link ClassName#binaryName} for constant class names.
    */
   public Name binaryNameFromClassname(String className) {
     return getName(inferBinaryName(className));
@@ -352,6 +366,36 @@ public final class VisitorState {
    * @param name the name to look up, which must be in binary form (i.e. with $ for nested classes).
    */
   public @Nullable ClassSymbol getSymbolFromName(Name name) {
+    Optional<ClassSymbol> cached = sharedState.symbolCache.get(name);
+    if (cached != null) {
+      return cached.orElse(null);
+    }
+    ClassSymbol sym = getSymbolFromNameInternal(name);
+    sharedState.symbolCache.put(name, Optional.ofNullable(sym));
+    return sym;
+  }
+
+  private @Nullable ClassSymbol getSymbolFromNameInternal(Name name) {
+    ClassSymbol result = lookupSymbolFromName(name);
+    if (result != null) {
+      return result;
+    }
+    String nameStr = name.toString();
+    int firstDollar = nameStr.indexOf('$');
+    if (firstDollar == -1) {
+      return null;
+    }
+    boolean completedEnclosing = false;
+    int startIdx = firstDollar == 0 ? nameStr.indexOf('$', 1) : firstDollar;
+    for (int idx = startIdx; idx != -1; idx = nameStr.indexOf('$', idx + 1)) {
+      if (getSymbolFromName(getName(nameStr.substring(0, idx))) != null) {
+        completedEnclosing = true;
+      }
+    }
+    return completedEnclosing ? lookupSymbolFromName(name) : null;
+  }
+
+  private @Nullable ClassSymbol lookupSymbolFromName(Name name) {
     boolean modular = sharedState.modules.getDefaultModule() != getSymtab().noModule;
     if (!modular) {
       return getSymbolFromString(getSymtab().noModule, name);
@@ -689,7 +733,7 @@ public final class VisitorState {
    * <p>For the types that are typically stored in {@link Context}, caching the references over
    * {@code SomeClass.instance(context)} has sizable performance improvements in aggregate.
    */
-  private static final class SharedState {
+  static final class SharedState {
     private final Modules modules;
     private final Names names;
     private final Symtab symtab;
@@ -708,6 +752,7 @@ public final class VisitorState {
     // smallest build and see how many types are loaded and use that. Or perhaps a heuristic
     // based on number of files?
     private final Map<String, Optional<Type>> typeCache = new HashMap<>();
+    private final Map<Name, Optional<ClassSymbol>> symbolCache = new HashMap<>();
 
     SharedState(
         Context context,
