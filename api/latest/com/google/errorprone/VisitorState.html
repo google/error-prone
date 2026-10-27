@@ -266,7 +266,9 @@ of the tree within the overall source.</div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable com.sun.tools.javac.code.Symbol</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymbolFromString(java.lang.String)" class="member-name-link">getSymbolFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;symStr)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Looks up the <code>Symbol</code> for a class name.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.sun.tools.javac.code.Symtab</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSymtab()" class="member-name-link">getSymtab</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -550,9 +552,10 @@ by <code>count</code>.
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Type</span>&nbsp;<span class="element-name">getTypeFromString</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeStr)</span></div>
 <div class="block">Given the binary name of a class, returns the <code>Type</code>.
 
-<p>Prefer not to use this method for constant strings, or strings otherwise known at compile
-time. Instead, save the result of <a href="suppliers/Suppliers.html#typeFromString(java.lang.String)"><code>Suppliers.typeFromString(String)</code></a> as a class constant, and use its
-<a href="suppliers/Supplier.html#get(com.google.errorprone.VisitorState)"><code>Supplier.get(VisitorState)</code></a> method to look up the Type when needed. This lookup will be faster,
+<p>Prefer not to use this method for constant class or interface name strings, or strings
+otherwise known at compile time. Instead, save the result of <a href="ClassName.html#of(java.lang.String)"><code>ClassName.of(String)</code></a> as a class
+constant, and use its <a href="ClassName.html#type(com.google.errorprone.VisitorState)"><code>ClassName.type(VisitorState)</code></a> method to look up the Type when needed (or use
+<a href="#getSymtab()"><code>getSymtab()</code></a> for primitive and <code>void</code> types). This lookup will be faster,
 improving Error Prone's analysis time.
 
 <p>If this method returns null, the compiler doesn't have access to this type, which means that
@@ -573,6 +576,9 @@ in your matcher if this method returns null on your type of interest.</div>
 <h3>getSymbolFromString</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="element-name">getSymbolFromString</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;symStr)</span></div>
+<div class="block">Looks up the <code>Symbol</code> for a class name.
+
+<p>Prefer <a href="ClassName.html#of(java.lang.String)"><code>ClassName.of(String)</code></a> and <a href="ClassName.html#symbol(com.google.errorprone.VisitorState)"><code>ClassName.symbol(VisitorState)</code></a> for constant class names.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>symStr</code> - the string representation of a symbol</dd>
@@ -589,7 +595,9 @@ in your matcher if this method returns null on your type of interest.</div>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.sun.tools.javac.util.Name</span>&nbsp;<span class="element-name">binaryNameFromClassname</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className)</span></div>
 <div class="block">Returns the Name object corresponding to the named class, converting it to binary form along
 the way if necessary (i.e., replacing Foo.Bar with Foo$Bar). To get the Name corresponding to
-some string that is not a class name, see the more general <a href="#getName(java.lang.String)"><code>getName(String)</code></a>.</div>
+some string that is not a class name, see the more general <a href="#getName(java.lang.String)"><code>getName(String)</code></a>.
+
+<p>Prefer <a href="ClassName.html#of(java.lang.String)"><code>ClassName.of(String)</code></a> and <a href="ClassName.html#binaryName(com.google.errorprone.VisitorState)"><code>ClassName.binaryName(VisitorState)</code></a> for constant class names.</div>
 </div>
 </section>
 </li>

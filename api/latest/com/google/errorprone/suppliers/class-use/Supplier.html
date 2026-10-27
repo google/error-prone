@@ -85,9 +85,14 @@ individual AST nodes, a supplier gives contextual information from the traversal
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static &lt;T&gt;&nbsp;<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">VisitorState.</span><code><a href="../../VisitorState.html#memoize(com.google.errorprone.suppliers.Supplier)" class="member-name-link">memoize</a><wbr>(<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;T&gt;&nbsp;f)</code></div>
+<div class="col-first even-row-color"><code><a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;@Nullable com.sun.tools.javac.code.Type&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ClassName.</span><code><a href="../../ClassName.html#asTypeSupplier()" class="member-name-link">asTypeSupplier</a>()</code></div>
 <div class="col-last even-row-color">
+<div class="block">Returns a <a href="../Supplier.html" title="interface in com.google.errorprone.suppliers"><code>Supplier</code></a> view of <a href="../../ClassName.html#type(com.google.errorprone.VisitorState)"><code>ClassName.type(VisitorState)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static &lt;T&gt;&nbsp;<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">VisitorState.</span><code><a href="../../VisitorState.html#memoize(com.google.errorprone.suppliers.Supplier)" class="member-name-link">memoize</a><wbr>(<a href="../Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;T&gt;&nbsp;f)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Produces a cache for a function that is expected to return the same result throughout a
 compilation, but requires a <a href="../../VisitorState.html" title="class in com.google.errorprone"><code>VisitorState</code></a> to compute that result.</div>
 </div>

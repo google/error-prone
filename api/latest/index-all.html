@@ -1184,6 +1184,10 @@ class, and the annotation is itself annotated with <code>@ScopeAnnotation</code>
 <dd>
 <div class="block">Converts the given annotation value to one or more types.</div>
 </dd>
+<dt><a href="com/google/errorprone/ClassName.html#asTypeSupplier()" class="member-name-link">asTypeSupplier()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ClassName.html" title="class in com.google.errorprone">ClassName</a></dt>
+<dd>
+<div class="block">Returns a <a href="com/google/errorprone/suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers"><code>Supplier</code></a> view of <a href="com/google/errorprone/ClassName.html#type(com.google.errorprone.VisitorState)"><code>ClassName.type(VisitorState)</code></a>.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#asTypeValue(javax.lang.model.element.AnnotationValue)" class="member-name-link">asTypeValue(AnnotationValue)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
 <div class="block">Converts the given attribute to a type.</div>
@@ -1396,6 +1400,10 @@ intended).</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/BadShiftAmount.html#BINARY_TREE_MATCHER" class="member-name-link">BINARY_TREE_MATCHER</a> - Static variable in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/BadShiftAmount.html" title="class in com.google.errorprone.bugpatterns">BadShiftAmount</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/ClassName.html#binaryName(com.google.errorprone.VisitorState)" class="member-name-link">binaryName(VisitorState)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ClassName.html" title="class in com.google.errorprone">ClassName</a></dt>
+<dd>
+<div class="block">Returns the cached javac <code>Name</code> for the binary name.</div>
+</dd>
 <dt><a href="com/google/errorprone/VisitorState.html#binaryNameFromClassname(java.lang.String)" class="member-name-link">binaryNameFromClassname(String)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>
 <div class="block">Returns the Name object corresponding to the named class, converting it to binary form along
@@ -2153,6 +2161,10 @@ strictly.</div>
 <dt><a href="com/google/errorprone/bugpatterns/ClassName.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">ClassName</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
+</dd>
+<dt><a href="com/google/errorprone/ClassName.html" class="type-name-link" title="class in com.google.errorprone">ClassName</a> - Class in <a href="com/google/errorprone/package-summary.html">com.google.errorprone</a></dt>
+<dd>
+<div class="block">Encapsulates a qualified class name and caches its resolved javac <code>Symbol.ClassSymbol</code>, <code>Type</code>, and <code>Name</code> across a compilation.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/ClassName.html#%3Cinit%3E()" class="member-name-link">ClassName()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/ClassName.html" title="class in com.google.errorprone.bugpatterns">ClassName</a></dt>
 <dd>&nbsp;</dd>
@@ -3669,6 +3681,8 @@ chosen.</div>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
+<dt><a href="com/google/errorprone/ClassName.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ClassName.html" title="class in com.google.errorprone">ClassName</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/Bindings.Key.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Bindings.Key.html" title="class in com.google.errorprone.refaster">Bindings.Key</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UTypeVar.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UTypeVar.html" title="class in com.google.errorprone.refaster">UTypeVar</a></dt>
@@ -6113,7 +6127,9 @@ element.</div>
 <dt><a href="com/google/errorprone/VisitorState.html#getSymbolFromString(com.sun.tools.javac.code.Symbol.ModuleSymbol,com.sun.tools.javac.util.Name)" class="member-name-link">getSymbolFromString(Symbol.ModuleSymbol, Name)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/VisitorState.html#getSymbolFromString(java.lang.String)" class="member-name-link">getSymbolFromString(String)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Looks up the <code>Symbol</code> for a class name.</div>
+</dd>
 <dt><a href="com/google/errorprone/VisitorState.html#getSymtab()" class="member-name-link">getSymtab()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/VisitorState.html" title="class in com.google.errorprone">VisitorState</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html#getTag()" class="member-name-link">getTag()</a> - Method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/UPlaceholderExpression.PlaceholderParamIdent.html" title="class in com.google.errorprone.refaster">UPlaceholderExpression.PlaceholderParamIdent</a></dt>
@@ -6579,6 +6595,8 @@ key, or a <code>BiMap</code> value.</div>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
+<dt><a href="com/google/errorprone/ClassName.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ClassName.html" title="class in com.google.errorprone">ClassName</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/CompositeCodeTransformer.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.google.errorprone.<a href="com/google/errorprone/CompositeCodeTransformer.html" title="class in com.google.errorprone">CompositeCodeTransformer</a></dt>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
@@ -12004,6 +12022,10 @@ won't produce meaningful output.</div>
 <dd>
 <div class="block">Creates an explanation with one step.</div>
 </dd>
+<dt><a href="com/google/errorprone/ClassName.html#of(java.lang.String)" class="member-name-link">of(String)</a> - Static method in class com.google.errorprone.<a href="com/google/errorprone/ClassName.html" title="class in com.google.errorprone">ClassName</a></dt>
+<dd>
+<div class="block">Constructs a <a href="com/google/errorprone/ClassName.html" title="class in com.google.errorprone"><code>ClassName</code></a> from a qualified canonical or binary class name (e.g.</div>
+</dd>
 <dt><a href="com/google/errorprone/refaster/Choice.html#of(T)" class="member-name-link">of(T)</a> - Static method in class com.google.errorprone.refaster.<a href="com/google/errorprone/refaster/Choice.html" title="class in com.google.errorprone.refaster">Choice</a></dt>
 <dd>
 <div class="block">Returns a <code>Choice</code> with only one option, <code>t</code>.</div>
@@ -14595,6 +14617,11 @@ it is safe.</div>
 <dd>
 <div class="block">Returns the value of the <code>symbol</code> record component.</div>
 </dd>
+<dt><a href="com/google/errorprone/ClassName.html#symbol(com.google.errorprone.VisitorState)" class="member-name-link">symbol(VisitorState)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ClassName.html" title="class in com.google.errorprone">ClassName</a></dt>
+<dd>
+<div class="block">Resolves and caches the <code>Symbol.ClassSymbol</code> for this class in the current compilation, or
+returns <code>null</code> if the symbol is not available.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#symbolHasAnnotation(java.lang.Class)" class="member-name-link">symbolHasAnnotation(Class)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Determines whether an expression refers to a symbol that has an annotation of the given type.</div>
@@ -15038,6 +15065,8 @@ thrownMatcher</code>.</div>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
+<dt><a href="com/google/errorprone/ClassName.html#toString()" class="member-name-link">toString()</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ClassName.html" title="class in com.google.errorprone">ClassName</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/CompositeCodeTransformer.html#toString()" class="member-name-link">toString()</a> - Method in record class com.google.errorprone.<a href="com/google/errorprone/CompositeCodeTransformer.html" title="class in com.google.errorprone">CompositeCodeTransformer</a></dt>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
@@ -15330,6 +15359,11 @@ assigning the thrown exception to a variable, if it is used within the <code>cat
 <dt><a href="com/google/errorprone/util/TargetType.html#type()" class="member-name-link">type()</a> - Method in record class com.google.errorprone.util.<a href="com/google/errorprone/util/TargetType.html" title="class in com.google.errorprone.util">TargetType</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>type</code> record component.</div>
+</dd>
+<dt><a href="com/google/errorprone/ClassName.html#type(com.google.errorprone.VisitorState)" class="member-name-link">type(VisitorState)</a> - Method in class com.google.errorprone.<a href="com/google/errorprone/ClassName.html" title="class in com.google.errorprone">ClassName</a></dt>
+<dd>
+<div class="block">Resolves and caches the <code>Type</code> for this class in the current compilation, or returns
+<code>null</code> if the symbol is not available.</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Kind.html#TYPE_LITERAL" class="member-name-link">TYPE_LITERAL</a> - Enum constant in enum class com.google.errorprone.bugpatterns.threadsafety.<a href="com/google/errorprone/bugpatterns/threadsafety/GuardedByExpression.Kind.html" title="enum class in com.google.errorprone.bugpatterns.threadsafety">GuardedByExpression.Kind</a></dt>
 <dd>&nbsp;</dd>
