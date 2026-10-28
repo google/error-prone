@@ -623,6 +623,7 @@ import com.google.errorprone.bugpatterns.testparameterinjector.LoopToTestParamet
 import com.google.errorprone.bugpatterns.testparameterinjector.PreferTestParameter;
 import com.google.errorprone.bugpatterns.testparameterinjector.SimplifyTestParameter;
 import com.google.errorprone.bugpatterns.testparameterinjector.SingleTestParameter;
+import com.google.errorprone.bugpatterns.testparameterinjector.SingleValueTestParameter;
 import com.google.errorprone.bugpatterns.testparameterinjector.TestParametersNotInitialized;
 import com.google.errorprone.bugpatterns.threadsafety.DoubleCheckedLocking;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByChecker;
@@ -1167,6 +1168,7 @@ public final class BuiltInCheckerSuppliers {
           SelfSet.class,
           ShortCircuitBoolean.class,
           SingleTestParameter.class,
+          SingleValueTestParameter.class,
           StatementSwitchToExpressionSwitch.class,
           StaticAssignmentInConstructor.class,
           StaticAssignmentOfThrowable.class,

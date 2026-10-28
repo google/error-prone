@@ -653,16 +653,19 @@ public final class SingleTestParameterTest {
   // double) around values as part of its YAML-like syntax, whereas @TestParameter treats quotes as
   // literal parts of the string value.
 
+  @SuppressWarnings("SingleValueTestParameter")
   @Test
   public void testParameter_withSingleQuotedValues(@TestParameter({"'kurt'"}) String name) {
     assertThat(name).isEqualTo("'kurt'");
   }
 
+  @SuppressWarnings("SingleValueTestParameter")
   @Test
   public void testParameter_withDoubleQuotedValues(@TestParameter({"\"kurt\""}) String name) {
     assertThat(name).isEqualTo("\"kurt\"");
   }
 
+  @SuppressWarnings("SingleValueTestParameter")
   @Test
   public void testParameter_withUnquotedValues(@TestParameter({"kurt"}) String name) {
     assertThat(name).isEqualTo("kurt");
