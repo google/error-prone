@@ -1326,7 +1326,7 @@ __[SingleTestParameter](bugpattern/SingleTestParameter)__<br>
 @TestParameter on the parameter is simpler than @TestParameters if there&#39;s only one test parameter.
 
 __[SingleValueTestParameter](bugpattern/SingleValueTestParameter)__<br>
-A test parameter with only a single value should be a local variable in the test method
+&quot;A test parameter with only a single value can be a local variable in the test method. You may prefer to leave it as it is, if you expect there will be further values later, or if you want to preserve a format similar to other test methods in this class.
 
 __[StatementSwitchToExpressionSwitch](bugpattern/StatementSwitchToExpressionSwitch)__<br>
 This statement switch can be converted to a new-style arrow switch

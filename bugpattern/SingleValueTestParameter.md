@@ -1,7 +1,9 @@
 ---
 title: SingleValueTestParameter
-summary: A test parameter with only a single value should be a local variable in the
-  test method
+summary: '"A test parameter with only a single value can be a local variable in the
+  test method. You may prefer to leave it as it is, if you expect there will be further
+  values later, or if you want to preserve a format similar to other test methods
+  in this class.'
 layout: bugpattern
 tags: ''
 severity: WARNING
