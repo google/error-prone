@@ -1587,6 +1587,9 @@ Value-based classes do not have identity; relying on identity semantics (such as
 
 ## Experimental : WARNING
 
+__[AlmostExhaustiveTestParameter](bugpattern/AlmostExhaustiveTestParameter)__<br>
+Prefer an exhaustive @TestParameter with an assumption to filter out specific enum values, so newly added enum values are automatically tested
+
 __[AnnotationPosition](bugpattern/AnnotationPosition)__<br>
 Annotations should be positioned after Javadocs, but before modifiers.
 
