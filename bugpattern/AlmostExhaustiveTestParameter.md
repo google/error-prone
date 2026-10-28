@@ -4,7 +4,7 @@ summary: Prefer an exhaustive @TestParameter with an assumption to filter out sp
   enum values, so newly added enum values are automatically tested
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: SUGGESTION
 ---
 
 <!--

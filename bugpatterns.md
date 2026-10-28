@@ -1079,9 +1079,6 @@ Conversion from long to float may lose precision; use an explicit cast to float 
 __[LoopOverCharArray](bugpattern/LoopOverCharArray)__<br>
 toCharArray allocates a new array, using charAt is more efficient
 
-__[LoopToTestParameter](bugpattern/LoopToTestParameter)__<br>
-Migrate loops in tests to use github.com/google/TestParameterInjector. Test parameterization executes each input case in strict isolation, ensuring that a single failure doesn&#39;t halt the rest of your test case while providing clear, per-case reporting without the need for manual loops.
-
 __[MalformedInlineTag](bugpattern/MalformedInlineTag)__<br>
 This Javadoc tag is malformed. The correct syntax is {@tag and not @{tag.
 
@@ -1253,9 +1250,6 @@ Prefer calling overloads that accept a Charset over those that accept a String e
 __[PreferInstanceofOverGetKind](bugpattern/PreferInstanceofOverGetKind)__<br>
 Prefer instanceof over getKind() checks where possible, as these work well with pattern matching instanceofs
 
-__[PreferTestParameter](bugpattern/PreferTestParameter)__<br>
-When exhaustively testing all values of a single enum or boolean parameter, prefer @TestParameter over @TestParameters.
-
 __[PreferThrowsTag](bugpattern/PreferThrowsTag)__<br>
 Prefer the @throws javadoc tag instead of @exception.
 
@@ -1321,12 +1315,6 @@ This setter seems to be invoked with a value from its own getter. Is it redundan
 
 __[ShortCircuitBoolean](bugpattern/ShortCircuitBoolean)__<br>
 Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.
-
-__[SingleTestParameter](bugpattern/SingleTestParameter)__<br>
-@TestParameter on the parameter is simpler than @TestParameters if there&#39;s only one test parameter.
-
-__[SingleValueTestParameter](bugpattern/SingleValueTestParameter)__<br>
-&quot;A test parameter with only a single value can be a local variable in the test method. You may prefer to leave it as it is, if you expect there will be further values later, or if you want to preserve a format similar to other test methods in this class.
 
 __[StatementSwitchToExpressionSwitch](bugpattern/StatementSwitchToExpressionSwitch)__<br>
 This statement switch can be converted to a new-style arrow switch
@@ -1590,9 +1578,6 @@ Value-based classes do not have identity; relying on identity semantics (such as
 
 ## Experimental : WARNING
 
-__[AlmostExhaustiveTestParameter](bugpattern/AlmostExhaustiveTestParameter)__<br>
-Prefer an exhaustive @TestParameter with an assumption to filter out specific enum values, so newly added enum values are automatically tested
-
 __[AnnotationPosition](bugpattern/AnnotationPosition)__<br>
 Annotations should be positioned after Javadocs, but before modifiers.
 
@@ -1737,9 +1722,6 @@ This overriding method is redundant, and can be removed.
 __[RedundantThrows](bugpattern/RedundantThrows)__<br>
 Thrown exception is a subtype of another
 
-__[SimplifyTestParameter](bugpattern/SimplifyTestParameter)__<br>
-Explicitly specifying all values on a boolean or enum @TestParameter is unnecessary
-
 __[StringFormatWithLiteral](bugpattern/StringFormatWithLiteral)__<br>
 There is no need to use String.format() when all the arguments are literals.
 
@@ -1835,6 +1817,9 @@ Apply @NullMarked to this class
 __[AddNullMarkedToPackageInfo](bugpattern/AddNullMarkedToPackageInfo)__<br>
 Apply @NullMarked to this package
 
+__[AlmostExhaustiveTestParameter](bugpattern/AlmostExhaustiveTestParameter)__<br>
+Prefer an exhaustive @TestParameter with an assumption to filter out specific enum values, so newly added enum values are automatically tested
+
 __[AnnotationMirrorToString](bugpattern/AnnotationMirrorToString)__<br>
 AnnotationMirror#toString doesn&#39;t use fully qualified type names, prefer auto-common&#39;s AnnotationMirrors#toString
 
@@ -1883,6 +1868,9 @@ Prefer check(...), which usually generates more readable failure messages.
 __[LambdaFunctionalInterface](bugpattern/LambdaFunctionalInterface)__<br>
 Use Java&#39;s utility functional interfaces instead of Function&lt;A, B&gt; for primitive types.
 
+__[LoopToTestParameter](bugpattern/LoopToTestParameter)__<br>
+Migrate loops in tests to use github.com/google/TestParameterInjector. Test parameterization executes each input case in strict isolation, ensuring that a single failure doesn&#39;t halt the rest of your test case while providing clear, per-case reporting without the need for manual loops.
+
 __[MethodCanBeStatic](bugpattern/MethodCanBeStatic)__<br>
 This method does not reference the enclosing instance and can be static
 
@@ -1907,6 +1895,9 @@ Non-standard parameter comment; prefer &#96;/* paramName&#61; */ arg&#96;
 __[ParameterMissingNullable](bugpattern/ParameterMissingNullable)__<br>
 Parameter has handling for null but is not annotated @Nullable
 
+__[PreferTestParameter](bugpattern/PreferTestParameter)__<br>
+When exhaustively testing all values of a single enum or boolean parameter, prefer @TestParameter over @TestParameters.
+
 __[PrivateConstructorForNoninstantiableModule](bugpattern/PrivateConstructorForNoninstantiableModule)__<br>
 Add a private constructor to modules that will not be instantiated by Dagger.
 
@@ -1930,6 +1921,15 @@ Method has a collection return type and returns {@code null} in some cases but d
 
 __[ScopeOnModule](bugpattern/ScopeOnModule)__<br>
 Scopes on modules have no function and will soon be an error.
+
+__[SimplifyTestParameter](bugpattern/SimplifyTestParameter)__<br>
+Explicitly specifying all values on a boolean or enum @TestParameter is unnecessary
+
+__[SingleTestParameter](bugpattern/SingleTestParameter)__<br>
+@TestParameter on the parameter is simpler than @TestParameters if there&#39;s only one test parameter.
+
+__[SingleValueTestParameter](bugpattern/SingleValueTestParameter)__<br>
+&quot;A test parameter with only a single value can be a local variable in the test method. You may prefer to leave it as it is, if you expect there will be further values later, or if you want to preserve a format similar to other test methods in this class.
 
 __[SwitchDefault](bugpattern/SwitchDefault)__<br>
 The default case of a switch should appear at the end of the last statement group

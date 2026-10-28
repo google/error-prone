@@ -3,7 +3,7 @@ title: SimplifyTestParameter
 summary: Explicitly specifying all values on a boolean or enum @TestParameter is unnecessary
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: SUGGESTION
 ---
 
 <!--

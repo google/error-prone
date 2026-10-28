@@ -4,7 +4,7 @@ summary: When exhaustively testing all values of a single enum or boolean parame
   prefer @TestParameter over @TestParameters.
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: SUGGESTION
 ---
 
 <!--

@@ -4,7 +4,7 @@ summary: '@TestParameter on the parameter is simpler than @TestParameters if the
   only one test parameter.'
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: SUGGESTION
 ---
 
 <!--

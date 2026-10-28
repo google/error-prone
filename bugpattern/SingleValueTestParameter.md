@@ -6,7 +6,7 @@ summary: '"A test parameter with only a single value can be a local variable in 
   in this class.'
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: SUGGESTION
 ---
 
 <!--

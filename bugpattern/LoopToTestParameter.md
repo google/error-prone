@@ -6,7 +6,7 @@ summary: Migrate loops in tests to use github.com/google/TestParameterInjector. 
   reporting without the need for manual loops.
 layout: bugpattern
 tags: ''
-severity: WARNING
+severity: SUGGESTION
 ---
 
 <!--
