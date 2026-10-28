@@ -618,6 +618,7 @@ import com.google.errorprone.bugpatterns.nullness.UnnecessaryCheckNotNull;
 import com.google.errorprone.bugpatterns.nullness.UnsafeWildcard;
 import com.google.errorprone.bugpatterns.nullness.VoidMissingNullable;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
+import com.google.errorprone.bugpatterns.testparameterinjector.AlmostExhaustiveTestParameter;
 import com.google.errorprone.bugpatterns.testparameterinjector.LoopToTestParameter;
 import com.google.errorprone.bugpatterns.testparameterinjector.PreferTestParameter;
 import com.google.errorprone.bugpatterns.testparameterinjector.SimplifyTestParameter;
@@ -1238,6 +1239,7 @@ public final class BuiltInCheckerSuppliers {
           // keep-sorted start
           AddNullMarkedToClass.class,
           AddNullMarkedToPackageInfo.class,
+          AlmostExhaustiveTestParameter.class,
           AnnotationMirrorToString.class,
           AnnotationPosition.class,
           AnnotationValueToString.class,
