@@ -17,8 +17,9 @@
 package com.google.errorprone.bugpatterns.testparameterinjector;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.BOOLEAN_VALUES;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.REPEATED_TEST_PARAMETERS;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETERS;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETER_TYPE;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.getExplicitTestParameterValues;
@@ -70,7 +71,7 @@ import java.util.Optional;
         You may prefer to leave it as it is, if you expect there will be further values later, or \
         if you want to preserve a format similar to other test methods in this class.\
         """,
-    severity = WARNING)
+    severity = SUGGESTION)
 public final class SingleValueTestParameter extends BugChecker implements MethodTreeMatcher {
 
   private static final Matcher<AnnotationTree> HAS_STRING_LITERAL_VALUE =
@@ -92,7 +93,7 @@ public final class SingleValueTestParameter extends BugChecker implements Method
         || TEST_PARAMETER_TYPE.get(state) == null
         || !hasAnnotation(methodSymbol, JUNIT4_TEST_ANNOTATION, state)
         || hasAnnotation(methodSymbol, TEST_PARAMETERS, state)
-        || hasAnnotation(methodSymbol, TEST_PARAMETERS + "$RepeatedTestParameters", state)
+        || hasAnnotation(methodSymbol, REPEATED_TEST_PARAMETERS, state)
         || !findSuperMethods(methodSymbol, state.getTypes()).isEmpty()) {
       return NO_MATCH;
     }

@@ -16,18 +16,14 @@
 
 package com.google.errorprone.bugpatterns.testparameterinjector;
 
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.getExplicitTestParameterValues;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.implicitTestParameterAnnotation;
-import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isBooleanType;
-import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isEnumType;
-import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isExhaustiveBooleanValues;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isExhaustiveValues;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.util.ASTHelpers.enumValues;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -36,13 +32,11 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Type;
-import java.util.Set;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     summary = "Explicitly specifying all values on a boolean or enum @TestParameter is unnecessary",
-    severity = WARNING)
+    severity = SUGGESTION)
 public final class SimplifyTestParameter extends BugChecker implements AnnotationTreeMatcher {
 
   @Override
@@ -55,21 +49,10 @@ public final class SimplifyTestParameter extends BugChecker implements Annotatio
     if (variableTree == null) {
       return NO_MATCH;
     }
-    Type type = getType(variableTree);
-    if (isBooleanType(type, state) && isExhaustiveBooleanValues(values)) {
-      return describe(tree, state);
-    }
-    if (isEnumType(type)) {
-      Set<String> enumValues = enumValues(type.tsym);
-      if (values.size() == enumValues.size() && ImmutableSet.copyOf(values).equals(enumValues)) {
-        return describe(tree, state);
-      }
+    if (isExhaustiveValues(getType(variableTree), values, state)) {
+      return describeMatch(
+          tree, SuggestedFix.replace(tree, implicitTestParameterAnnotation(tree, state)));
     }
     return NO_MATCH;
-  }
-
-  private Description describe(AnnotationTree tree, VisitorState state) {
-    return describeMatch(
-        tree, SuggestedFix.replace(tree, implicitTestParameterAnnotation(tree, state)));
   }
 }

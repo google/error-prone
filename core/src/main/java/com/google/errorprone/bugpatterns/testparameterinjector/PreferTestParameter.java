@@ -17,26 +17,24 @@
 package com.google.errorprone.bugpatterns.testparameterinjector;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.BOOLEAN_VALUES;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETER;
-import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETERS_TYPE;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.extractTestParametersAnnotations;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isBooleanType;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isEnumType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.enumValues;
-import static com.google.errorprone.util.ASTHelpers.getAnnotationMirror;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
-import static com.google.errorprone.util.ASTHelpers.isSameType;
-import static com.google.errorprone.util.MoreAnnotations.getStrings;
-import static com.google.errorprone.util.MoreAnnotations.getValue;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
+import com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TestParametersAnnotations;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
@@ -45,18 +43,15 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-import javax.lang.model.element.AnnotationMirror;
 
 /** Recommends using @TestParameter for enums and booleans instead of exhaustive @TestParameters. */
 @BugPattern(
     summary =
         "When exhaustively testing all values of a single enum or boolean parameter, prefer"
             + " @TestParameter over @TestParameters.",
-    severity = WARNING)
+    severity = SUGGESTION)
 public final class PreferTestParameter extends BugChecker implements MethodTreeMatcher {
 
   @Override
@@ -91,23 +86,12 @@ public final class PreferTestParameter extends BugChecker implements MethodTreeM
       return NO_MATCH;
     }
 
-    List<String> values = new ArrayList<>();
-    List<AnnotationTree> annotationsToRemove = new ArrayList<>();
-
-    for (AnnotationTree annotationTree : tree.getModifiers().getAnnotations()) {
-      AnnotationMirror attribute = getAnnotationMirror(annotationTree);
-      if (attribute == null) {
-        continue;
-      }
-      if (isSameType(
-          (Type) attribute.getAnnotationType(), TEST_PARAMETERS_TYPE.get(state), state)) {
-        if (getValue(attribute, "customName").isPresent()) {
-          return NO_MATCH;
-        }
-        values.addAll(getStrings(attribute, "value"));
-        annotationsToRemove.add(annotationTree);
-      }
+    TestParametersAnnotations annotations =
+        extractTestParametersAnnotations(tree, state).orElse(null);
+    if (annotations == null) {
+      return NO_MATCH;
     }
+    ImmutableList<String> values = annotations.values();
 
     // Values may be {mode: FOO} so we just check if every enum constant is mentioned in the values.
     // Ensure all enum constants are represented.
@@ -128,7 +112,7 @@ public final class PreferTestParameter extends BugChecker implements MethodTreeM
     }
 
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    for (AnnotationTree annotationToRemove : annotationsToRemove) {
+    for (AnnotationTree annotationToRemove : annotations.annotationsToRemove()) {
       fix.delete(annotationToRemove);
     }
 

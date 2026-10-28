@@ -17,12 +17,11 @@
 package com.google.errorprone.bugpatterns.testparameterinjector;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETER;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETER_INJECTOR;
-import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isBooleanType;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isEnumType;
-import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isExhaustiveBooleanValues;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isExhaustiveValues;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUNNER_CLASS;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
@@ -96,7 +95,7 @@ import javax.lang.model.type.TypeKind;
             + " parameterization executes each input case in strict isolation, ensuring that a"
             + " single failure doesn't halt the rest of your test case while providing clear,"
             + " per-case reporting without the need for manual loops.",
-    severity = WARNING)
+    severity = SUGGESTION)
 public final class LoopToTestParameter extends BugChecker implements ClassTreeMatcher {
 
   private static final Matcher<ExpressionTree> ENUM_VALUES =
@@ -266,7 +265,7 @@ public final class LoopToTestParameter extends BugChecker implements ClassTreeMa
       values.add(value.get());
     }
     ImmutableList<String> result = values.build();
-    if (isBooleanType(varType, state) && isExhaustiveBooleanValues(result)) {
+    if (isExhaustiveValues(varType, result, state)) {
       return Optional.of(ImmutableList.of());
     }
     return Optional.of(result);

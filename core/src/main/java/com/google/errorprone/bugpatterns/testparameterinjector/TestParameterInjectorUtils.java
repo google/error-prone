@@ -17,11 +17,14 @@
 package com.google.errorprone.bugpatterns.testparameterinjector;
 
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
+import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
+import static com.google.errorprone.util.ASTHelpers.enumValues;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationMirror;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.ASTHelpers.unboxedTypeOrType;
+import static com.google.errorprone.util.MoreAnnotations.getStrings;
 
 import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableList;
@@ -30,8 +33,11 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.AnnotationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
 import org.jspecify.annotations.Nullable;
 
@@ -50,11 +56,18 @@ final class TestParameterInjectorUtils {
   static final String TEST_PARAMETERS =
       "com.google.testing.junit.testparameterinjector.TestParameters";
 
+  /** Binary name of {@code @TestParameters.RepeatedTestParameters}. */
+  static final String REPEATED_TEST_PARAMETERS = TEST_PARAMETERS + "$RepeatedTestParameters";
+
   /** Supplies the {@code @TestParameter} annotation {@link Type}. */
   static final Supplier<Type> TEST_PARAMETER_TYPE = typeFromString(TEST_PARAMETER);
 
   /** Supplies the {@code @TestParameters} annotation {@link Type}. */
   static final Supplier<Type> TEST_PARAMETERS_TYPE = typeFromString(TEST_PARAMETERS);
+
+  /** Supplies the {@code @TestParameters.RepeatedTestParameters} annotation {@link Type}. */
+  static final Supplier<Type> REPEATED_TEST_PARAMETERS_TYPE =
+      typeFromString(TEST_PARAMETERS + ".RepeatedTestParameters");
 
   /** Lowercase string representations of both boolean values. */
   static final ImmutableSet<String> BOOLEAN_VALUES = ImmutableSet.of("true", "false");
@@ -77,6 +90,67 @@ final class TestParameterInjectorUtils {
   static boolean isExhaustiveBooleanValues(List<String> values) {
     return values.size() == 2
         && values.stream().map(Ascii::toLowerCase).collect(toImmutableSet()).equals(BOOLEAN_VALUES);
+  }
+
+  /**
+   * Returns {@code true} if {@code values} exhaustively covers all values of {@code type} (for a
+   * {@code boolean}/{@code Boolean} or {@code Enum} type).
+   */
+  static boolean isExhaustiveValues(@Nullable Type type, List<String> values, VisitorState state) {
+    if (isBooleanType(type, state)) {
+      return isExhaustiveBooleanValues(values);
+    }
+    if (isEnumType(type)) {
+      Set<String> constants = enumValues(type.tsym);
+      return values.size() == constants.size() && ImmutableSet.copyOf(values).equals(constants);
+    }
+    return false;
+  }
+
+  /**
+   * Extracted {@code value} strings and annotation trees from one or more {@code @TestParameters}
+   * annotations on a method.
+   */
+  record TestParametersAnnotations(
+      ImmutableList<String> values, ImmutableList<AnnotationTree> annotationsToRemove) {}
+
+  /**
+   * Extracts all {@code value} strings and annotation trees from {@code @TestParameters}
+   * annotations on {@code methodTree}. Returns {@link Optional#empty()} if there are none, if any
+   * {@code @TestParameters.RepeatedTestParameters} annotation is present, or if any
+   * {@code @TestParameters} annotation specifies attributes other than {@code value} (such as
+   * {@code customName}).
+   */
+  static Optional<TestParametersAnnotations> extractTestParametersAnnotations(
+      MethodTree methodTree, VisitorState state) {
+    ImmutableList.Builder<String> values = ImmutableList.builder();
+    ImmutableList.Builder<AnnotationTree> annotationsToRemove = ImmutableList.builder();
+    Type repeatedType = REPEATED_TEST_PARAMETERS_TYPE.get(state);
+    Type testParametersType = TEST_PARAMETERS_TYPE.get(state);
+    for (AnnotationTree annotationTree : methodTree.getModifiers().getAnnotations()) {
+      AnnotationMirror attribute = getAnnotationMirror(annotationTree);
+      if (attribute == null) {
+        continue;
+      }
+      Type annotationType = (Type) attribute.getAnnotationType();
+      if (isSameType(annotationType, repeatedType, state)) {
+        return Optional.empty();
+      }
+      if (isSameType(annotationType, testParametersType, state)) {
+        if (attribute.getElementValues().size() != 1
+            || !getOnlyElement(attribute.getElementValues().keySet())
+                .getSimpleName()
+                .contentEquals("value")) {
+          return Optional.empty();
+        }
+        values.addAll(getStrings(attribute, "value"));
+        annotationsToRemove.add(annotationTree);
+      }
+    }
+    ImmutableList<AnnotationTree> toRemove = annotationsToRemove.build();
+    return toRemove.isEmpty()
+        ? Optional.empty()
+        : Optional.of(new TestParametersAnnotations(values.build(), toRemove));
   }
 
   /**

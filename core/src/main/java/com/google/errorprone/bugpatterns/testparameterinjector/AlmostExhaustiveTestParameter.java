@@ -17,7 +17,7 @@
 package com.google.errorprone.bugpatterns.testparameterinjector;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.getExplicitTestParameterValues;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.implicitTestParameterAnnotation;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isEnumType;
@@ -56,7 +56,7 @@ import org.jspecify.annotations.Nullable;
     summary =
         "Prefer an exhaustive @TestParameter with an assumption to filter out specific enum values,"
             + " so newly added enum values are automatically tested",
-    severity = WARNING)
+    severity = SUGGESTION)
 public final class AlmostExhaustiveTestParameter extends BugChecker implements MethodTreeMatcher {
 
   // TODO(kak): Consider lowering this threshold (e.g., to 3).
