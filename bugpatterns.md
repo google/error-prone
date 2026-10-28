@@ -1325,6 +1325,9 @@ Prefer the short-circuiting boolean operators &amp;&amp; and || to &amp; and |.
 __[SingleTestParameter](bugpattern/SingleTestParameter)__<br>
 @TestParameter on the parameter is simpler than @TestParameters if there&#39;s only one test parameter.
 
+__[SingleValueTestParameter](bugpattern/SingleValueTestParameter)__<br>
+A test parameter with only a single value should be a local variable in the test method
+
 __[StatementSwitchToExpressionSwitch](bugpattern/StatementSwitchToExpressionSwitch)__<br>
 This statement switch can be converted to a new-style arrow switch
 
