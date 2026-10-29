@@ -96,6 +96,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#hasJUnitAnnotation(com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" tabindex="0">hasJUnitAnnotation(MethodTree, VisitorState)</a></li>
 <li><a href="#isJUnit4TestRunnerOfType(java.lang.Iterable)" tabindex="0">isJUnit4TestRunnerOfType(Iterable)</a></li>
+<li><a href="#isJUnit4TestRunnerOfClasses(java.lang.Iterable)" tabindex="0">isJUnit4TestRunnerOfClasses(Iterable)</a></li>
 </ol>
 </li>
 </ol>
@@ -116,7 +117,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Matchers for code patterns which appear to be JUnit-based tests.</div>
 <dl class="notes">
 <dt>Author:</dt>
-<dd>alexeagle@google.com (Alex Eagle), eaftan@google.com (Eddie Aftandillian)</dd>
+<dd>alexeagle@google.com (Alex Eagle), eaftan@google.com (Eddie Aftandilian)</dd>
 </dl>
 </div>
 </section>
@@ -278,8 +279,14 @@ loadScripts(document, 'script');</script>
 org.junit package.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isJUnit4TestRunnerOfType(java.lang.Iterable)" class="member-name-link">isJUnit4TestRunnerOfType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;runnerTypes)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isJUnit4TestRunnerOfClasses(java.lang.Iterable)" class="member-name-link">isJUnit4TestRunnerOfClasses</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&gt;&nbsp;runnerTypes)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Matches an argument of type <code>Class&lt;T&gt;</code>, where <code>T</code> is a subtype of one of the given
+<code>runnerTypes</code>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#isJUnit4TestRunnerOfType(java.lang.Iterable)" class="member-name-link">isJUnit4TestRunnerOfType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;runnerTypes)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Matches an argument of type <code>Class&lt;T&gt;</code>, where T is a subtype of one of the test runners
 listed in the TEST_RUNNERS field.</div>
 </div>
@@ -778,6 +785,16 @@ listed in the TEST_RUNNERS field.
 
 <p>TODO(eaftan): Support checking for an annotation that tells us whether this test runner
 expects tests to be annotated with @Test.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isJUnit4TestRunnerOfClasses(java.lang.Iterable)">
+<h3>isJUnit4TestRunnerOfClasses</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</span>&nbsp;<span class="element-name">isJUnit4TestRunnerOfClasses</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&gt;&nbsp;runnerTypes)</span></div>
+<div class="block">Matches an argument of type <code>Class&lt;T&gt;</code>, where <code>T</code> is a subtype of one of the given
+<code>runnerTypes</code>.</div>
 </div>
 </section>
 </li>

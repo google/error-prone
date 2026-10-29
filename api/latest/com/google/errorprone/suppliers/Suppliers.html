@@ -92,6 +92,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#typeFromClass(java.lang.Class)" tabindex="0">typeFromClass(Class)</a></li>
 <li><a href="#identitySupplier(T)" tabindex="0">identitySupplier(T)</a></li>
 <li><a href="#arrayOf(com.google.errorprone.suppliers.Supplier)" tabindex="0">arrayOf(Supplier)</a></li>
+<li><a href="#arrayOf(com.google.errorprone.ClassName)" tabindex="0">arrayOf(ClassName)</a></li>
 <li><a href="#fromStrings(java.lang.Iterable)" tabindex="0">fromStrings(Iterable)</a></li>
 </ol>
 </li>
@@ -204,49 +205,55 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#arrayOf(com.google.errorprone.suppliers.Supplier)" class="member-name-link">arrayOf</a><wbr>(<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;elementType)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromStrings(java.lang.Iterable)" class="member-name-link">fromStrings</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#genericTypeOf(com.google.errorprone.suppliers.Supplier,int)" class="member-name-link">genericTypeOf</a><wbr>(<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;expressionSupplier,
- int&nbsp;n)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;@Nullable com.sun.tools.javac.code.Type&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#arrayOf(com.google.errorprone.ClassName)" class="member-name-link">arrayOf</a><wbr>(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;elementType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Supplies the n'th generic type of the given expression.</div>
+<div class="block">Supplies the array type <code>elementType[]</code>, or <code>null</code> if <code>elementType</code> is not
+available in the current compilation.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#genericTypeOfType(com.google.errorprone.suppliers.Supplier,int)" class="member-name-link">genericTypeOfType</a><wbr>(<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeSupplier,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#arrayOf(com.google.errorprone.suppliers.Supplier)" class="member-name-link">arrayOf</a><wbr>(<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;elementType)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fromStrings(java.lang.Iterable)" class="member-name-link">fromStrings</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#genericTypeOf(com.google.errorprone.suppliers.Supplier,int)" class="member-name-link">genericTypeOf</a><wbr>(<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;&nbsp;expressionSupplier,
  int&nbsp;n)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Supplies the n'th generic type of the given expression.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#identitySupplier(T)" class="member-name-link">identitySupplier</a><wbr>(T&nbsp;toSupply)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#genericTypeOfType(com.google.errorprone.suppliers.Supplier,int)" class="member-name-link">genericTypeOfType</a><wbr>(<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;typeSupplier,
+ int&nbsp;n)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Supplies the n'th generic type of the given expression.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#identitySupplier(T)" class="member-name-link">identitySupplier</a><wbr>(T&nbsp;toSupply)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Supplies what was given.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#receiverInstance()" class="member-name-link">receiverInstance</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Supplies the expression which gives the instance of an object that will receive the method
-call.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#receiverType()" class="member-name-link">receiverType</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#receiverInstance()" class="member-name-link">receiverInstance</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Supplies the expression which gives the instance of an object that will receive the method
 call.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#typeFromClass(java.lang.Class)" class="member-name-link">typeFromClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;inputClass)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#receiverType()" class="member-name-link">receiverType</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Given the class representation of a type, supplies the corresponding type.</div>
+<div class="block">Supplies the expression which gives the instance of an object that will receive the method
+call.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#typeFromString(java.lang.String)" class="member-name-link">typeFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeString)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#typeFromClass(java.lang.Class)" class="member-name-link">typeFromClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;inputClass)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Given the class representation of a type, supplies the corresponding type.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a><wbr>&lt;com.sun.tools.javac.code.Type&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#typeFromString(java.lang.String)" class="member-name-link">typeFromString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeString)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Given the string representation of a type, supplies the corresponding type.</div>
 </div>
 </div>
@@ -504,7 +511,9 @@ getC()</code> method invocation, then this supplier gives the expression <code>a
 <h3>typeFromString</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="element-name">typeFromString</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeString)</span></div>
-<div class="block">Given the string representation of a type, supplies the corresponding type.</div>
+<div class="block">Given the string representation of a type, supplies the corresponding type.
+
+<p>Prefer <a href="../ClassName.html#of(java.lang.String)"><code>ClassName.of(String)</code></a> for class and interface types.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>typeString</code> - a string representation of a type, e.g., "java.util.List"</dd>
@@ -517,7 +526,9 @@ getC()</code> method invocation, then this supplier gives the expression <code>a
 <h3>typeFromClass</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="element-name">typeFromClass</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;inputClass)</span></div>
-<div class="block">Given the class representation of a type, supplies the corresponding type.</div>
+<div class="block">Given the class representation of a type, supplies the corresponding type.
+
+<p>Prefer <a href="../ClassName.html#of(java.lang.String)"><code>ClassName.of(String)</code></a> for class and interface types.</div>
 </div>
 </section>
 </li>
@@ -539,6 +550,16 @@ getC()</code> method invocation, then this supplier gives the expression <code>a
 <h3>arrayOf</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="element-name">arrayOf</span><wbr><span class="parameters">(<a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;elementType)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="arrayOf(com.google.errorprone.ClassName)">
+<h3>arrayOf</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;@Nullable com.sun.tools.javac.code.Type&gt;</span>&nbsp;<span class="element-name">arrayOf</span><wbr><span class="parameters">(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;elementType)</span></div>
+<div class="block">Supplies the array type <code>elementType[]</code>, or <code>null</code> if <code>elementType</code> is not
+available in the current compilation.</div>
 </div>
 </section>
 </li>

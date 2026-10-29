@@ -61,12 +61,16 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#onClass(com.google.errorprone.predicates.TypePredicate)" tabindex="0">onClass(TypePredicate)</a></li>
 <li><a href="#onExactClass(java.lang.String)" tabindex="0">onExactClass(String)</a></li>
+<li><a href="#onExactClass(com.google.errorprone.ClassName)" tabindex="0">onExactClass(ClassName)</a></li>
 <li><a href="#onExactClass(com.google.errorprone.suppliers.Supplier)" tabindex="0">onExactClass(Supplier)</a></li>
 <li><a href="#onExactClassAny(java.lang.Iterable)" tabindex="0">onExactClassAny(Iterable)</a></li>
 <li><a href="#onExactClassAny(java.lang.String...)" tabindex="0">onExactClassAny(String...)</a></li>
+<li><a href="#onExactClassAny(com.google.errorprone.ClassName...)" tabindex="0">onExactClassAny(ClassName...)</a></li>
 <li><a href="#onDescendantOf(java.lang.String)" tabindex="0">onDescendantOf(String)</a></li>
+<li><a href="#onDescendantOf(com.google.errorprone.ClassName)" tabindex="0">onDescendantOf(ClassName)</a></li>
 <li><a href="#onDescendantOf(com.google.errorprone.suppliers.Supplier)" tabindex="0">onDescendantOf(Supplier)</a></li>
 <li><a href="#onDescendantOfAny(java.lang.String...)" tabindex="0">onDescendantOfAny(String...)</a></li>
+<li><a href="#onDescendantOfAny(com.google.errorprone.ClassName...)" tabindex="0">onDescendantOfAny(ClassName...)</a></li>
 <li><a href="#onDescendantOfAny(java.lang.Iterable)" tabindex="0">onDescendantOfAny(Iterable)</a></li>
 <li><a href="#anyClass()" tabindex="0">anyClass()</a></li>
 </ol>
@@ -123,16 +127,28 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
 <div class="block">Match on types that satisfy the given predicate.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onDescendantOf(com.google.errorprone.suppliers.Supplier)" class="member-name-link">onDescendantOf</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;classType)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onDescendantOf(com.google.errorprone.ClassName)" class="member-name-link">onDescendantOf</a><wbr>(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match on descendants of the given class.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onDescendantOf(com.google.errorprone.suppliers.Supplier)" class="member-name-link">onDescendantOf</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;classType)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match on descendants of the given type.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onDescendantOf(java.lang.String)" class="member-name-link">onDescendantOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onDescendantOf(java.lang.String)" class="member-name-link">onDescendantOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match on descendants of the given fully-qualified type name.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onDescendantOfAny(com.google.errorprone.ClassName...)" class="member-name-link">onDescendantOfAny</a><wbr>(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>...&nbsp;classTypes)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match on types that are descendants of any of the given classes.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onDescendantOfAny(java.lang.Iterable)" class="member-name-link">onDescendantOfAny</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;classTypes)</code></div>
@@ -147,16 +163,28 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
 <div class="block">Match on types that are descendants of any of the given types.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onExactClass(com.google.errorprone.suppliers.Supplier)" class="member-name-link">onExactClass</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;classType)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onExactClass(com.google.errorprone.ClassName)" class="member-name-link">onExactClass</a><wbr>(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match on the given class exactly.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onExactClass(com.google.errorprone.suppliers.Supplier)" class="member-name-link">onExactClass</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;classType)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match on the given type exactly.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onExactClass(java.lang.String)" class="member-name-link">onExactClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onExactClass(java.lang.String)" class="member-name-link">onExactClass</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match on types with the given fully-qualified name.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onExactClassAny(com.google.errorprone.ClassName...)" class="member-name-link">onExactClassAny</a><wbr>(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>...&nbsp;classTypes)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match on types that are exactly the same as any of the given classes.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#onExactClassAny(java.lang.Iterable)" class="member-name-link">onExactClassAny</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;classTypes)</code></div>
@@ -208,6 +236,16 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
 </section>
 </li>
 <li>
+<section class="detail" id="onExactClass(com.google.errorprone.ClassName)">
+<h3>onExactClass</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></span>&nbsp;<span class="element-name">onExactClass</span><wbr><span class="parameters">(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match on the given class exactly.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="onExactClass(com.google.errorprone.suppliers.Supplier)">
 <h3>onExactClass</h3>
 <div class="horizontal-scroll">
@@ -238,12 +276,32 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
 </section>
 </li>
 <li>
+<section class="detail" id="onExactClassAny(com.google.errorprone.ClassName...)">
+<h3>onExactClassAny</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></span>&nbsp;<span class="element-name">onExactClassAny</span><wbr><span class="parameters">(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>...&nbsp;classTypes)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match on types that are exactly the same as any of the given classes.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="onDescendantOf(java.lang.String)">
 <h3>onDescendantOf</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type"><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></span>&nbsp;<span class="element-name">onDescendantOf</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;className)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match on descendants of the given fully-qualified type name.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="onDescendantOf(com.google.errorprone.ClassName)">
+<h3>onDescendantOf</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></span>&nbsp;<span class="element-name">onDescendantOf</span><wbr><span class="parameters">(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match on descendants of the given class.</div>
 </div>
 </section>
 </li>
@@ -264,6 +322,16 @@ extends <a href="MethodMatchers.MethodMatcher.html" title="interface in com.goog
 <div class="member-signature"><span class="return-type"><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></span>&nbsp;<span class="element-name">onDescendantOfAny</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;classTypes)</span></div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Match on types that are descendants of any of the given types.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="onDescendantOfAny(com.google.errorprone.ClassName...)">
+<h3>onDescendantOfAny</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="MethodMatchers.MethodClassMatcher.html" title="interface in com.google.errorprone.matchers.method">MethodMatchers.MethodClassMatcher</a></span>&nbsp;<span class="element-name">onDescendantOfAny</span><wbr><span class="parameters">(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>...&nbsp;classTypes)</span></div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+<div class="block">Match on types that are descendants of any of the given classes.</div>
 </div>
 </section>
 </li>

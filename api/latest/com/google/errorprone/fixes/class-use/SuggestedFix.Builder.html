@@ -301,40 +301,47 @@ closest suppressible node, or add <code>warningToSuppress</code> to that node if
 trying to static import it if possible.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.tools.javac.code.Symbol)" class="member-name-link">qualifyType</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.ClassName)" class="member-name-link">qualifyType</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
- com.sun.tools.javac.code.Symbol&nbsp;sym)</code></div>
+ <a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;typeName)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns a human-friendly name of the given <code>Symbol</code> for use in fixes.</div>
-</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,java.lang.String)" class="member-name-link">qualifyType</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
- <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeName)</code></div>
-<div class="col-last even-row-color">
 <div class="block">Returns a human-friendly name of the given <code>typeName</code> for use in fixes.</div>
 </div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.tools.javac.code.Symbol)" class="member-name-link">qualifyType</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
+ com.sun.tools.javac.code.Symbol&nbsp;sym)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Returns a human-friendly name of the given <code>Symbol</code> for use in fixes.</div>
+</div>
 <div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,javax.lang.model.type.TypeMirror)" class="member-name-link">qualifyType</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,java.lang.String)" class="member-name-link">qualifyType</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+ <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;typeName)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Returns a human-friendly name of the given <code>typeName</code> for use in fixes.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,javax.lang.model.type.TypeMirror)" class="member-name-link">qualifyType</a><wbr>(<a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&nbsp;type)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Returns a human-friendly name of the given type for use in fixes.</div>
 </div>
-<div class="col-first even-row-color"><code>static void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#removeSuppressWarnings(com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState,java.lang.String)" class="member-name-link">removeSuppressWarnings</a><wbr>(<a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fixBuilder,
+<div class="col-first odd-row-color"><code>static void</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#removeSuppressWarnings(com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.VisitorState,java.lang.String)" class="member-name-link">removeSuppressWarnings</a><wbr>(<a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fixBuilder,
  <a href="../../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;warningToRemove)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Modifies <code>fixBuilder</code> to either remove a <code>warningToRemove</code> warning from the closest
 <code>SuppressWarning</code> node or remove the entire <code>SuppressWarning</code> node if <code>
 warningToRemove</code> is the only warning in that node.</div>
 </div>
-<div class="col-first odd-row-color"><code>static void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#replaceDocTree(com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.source.util.DocTreePath,java.lang.String)" class="member-name-link">replaceDocTree</a><wbr>(<a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
+<div class="col-first even-row-color"><code>static void</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../SuggestedFixes.html#replaceDocTree(com.google.errorprone.fixes.SuggestedFix.Builder,com.sun.source.util.DocTreePath,java.lang.String)" class="member-name-link">replaceDocTree</a><wbr>(<a href="../SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/util/DocTreePath.html" title="class or interface in com.sun.source.util" class="external-link">DocTreePath</a>&nbsp;docPath,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;replacement)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Replaces the leaf doctree in the given path with <code>replacement</code>.</div>
 </div>
 </div>

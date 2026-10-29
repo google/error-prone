@@ -117,21 +117,23 @@ injection</a> and <a href="https://jcp.org/en/jsr/detail?id=330">JSR 330</a>.</d
 <div class="col-last even-row-color">
 <div class="block">A predicate DSL for matching javac AST nodes.</div>
 </div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.matchers.method">com.google.errorprone.matchers.method</a></div>
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.matchers.field">com.google.errorprone.matchers.field</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.predicates">com.google.errorprone.predicates</a></div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.matchers.method">com.google.errorprone.matchers.method</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.refaster">com.google.errorprone.refaster</a></div>
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.predicates">com.google.errorprone.predicates</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.refaster">com.google.errorprone.refaster</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#com.google.errorprone.suppliers">com.google.errorprone.suppliers</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.scanner">com.google.errorprone.scanner</a></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="#com.google.errorprone.suppliers">com.google.errorprone.suppliers</a></div>
+<div class="col-last even-row-color">
 <div class="block">Supports matchers, but rather than giving Matcher implementations which are predicates on
 individual AST nodes, a supplier gives contextual information from the traversal of the AST.</div>
 </div>
-<div class="col-first even-row-color"><a href="#com.google.errorprone.util">com.google.errorprone.util</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="#com.google.errorprone.util">com.google.errorprone.util</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Utility code.</div>
 </div>
 </div>
@@ -579,8 +581,12 @@ considered suppressed.</div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><a href="class-use/VisitorState.html#com.google.errorprone.fixes">VisitorState</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="class-use/ClassName.html#com.google.errorprone.fixes">ClassName</a></div>
+<div class="col-last even-row-color">
+<div class="block">Encapsulates a qualified class name and caches its resolved javac <code>Symbol.ClassSymbol</code>, <code>Type</code>, and <code>Name</code> across a compilation.</div>
+</div>
+<div class="col-first odd-row-color"><a href="class-use/VisitorState.html#com.google.errorprone.fixes">VisitorState</a></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -594,8 +600,25 @@ considered suppressed.</div>
 <div class="col-last even-row-color">
 <div class="block">The severity of the diagnostic.</div>
 </div>
-<div class="col-first odd-row-color"><a href="class-use/VisitorState.html#com.google.errorprone.matchers">VisitorState</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><a href="class-use/ClassName.html#com.google.errorprone.matchers">ClassName</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Encapsulates a qualified class name and caches its resolved javac <code>Symbol.ClassSymbol</code>, <code>Type</code>, and <code>Name</code> across a compilation.</div>
+</div>
+<div class="col-first even-row-color"><a href="class-use/VisitorState.html#com.google.errorprone.matchers">VisitorState</a></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="com.google.errorprone.matchers.field">
+<div class="caption"><span>Classes in <a href="package-summary.html">com.google.errorprone</a> used by <a href="matchers/field/package-summary.html">com.google.errorprone.matchers.field</a></span></div>
+<div class="summary-table two-column-summary">
+<div class="table-header col-first">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><a href="class-use/ClassName.html#com.google.errorprone.matchers.field">ClassName</a></div>
+<div class="col-last even-row-color">
+<div class="block">Encapsulates a qualified class name and caches its resolved javac <code>Symbol.ClassSymbol</code>, <code>Type</code>, and <code>Name</code> across a compilation.</div>
+</div>
 </div>
 </section>
 </li>
@@ -605,8 +628,12 @@ considered suppressed.</div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><a href="class-use/VisitorState.html#com.google.errorprone.matchers.method">VisitorState</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="class-use/ClassName.html#com.google.errorprone.matchers.method">ClassName</a></div>
+<div class="col-last even-row-color">
+<div class="block">Encapsulates a qualified class name and caches its resolved javac <code>Symbol.ClassSymbol</code>, <code>Type</code>, and <code>Name</code> across a compilation.</div>
+</div>
+<div class="col-first odd-row-color"><a href="class-use/VisitorState.html#com.google.errorprone.matchers.method">VisitorState</a></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -616,8 +643,12 @@ considered suppressed.</div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><a href="class-use/VisitorState.html#com.google.errorprone.predicates">VisitorState</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="class-use/ClassName.html#com.google.errorprone.predicates">ClassName</a></div>
+<div class="col-last even-row-color">
+<div class="block">Encapsulates a qualified class name and caches its resolved javac <code>Symbol.ClassSymbol</code>, <code>Type</code>, and <code>Name</code> across a compilation.</div>
+</div>
+<div class="col-first odd-row-color"><a href="class-use/VisitorState.html#com.google.errorprone.predicates">VisitorState</a></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -682,8 +713,12 @@ considered suppressed.</div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><a href="class-use/VisitorState.html#com.google.errorprone.suppliers">VisitorState</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="class-use/ClassName.html#com.google.errorprone.suppliers">ClassName</a></div>
+<div class="col-last even-row-color">
+<div class="block">Encapsulates a qualified class name and caches its resolved javac <code>Symbol.ClassSymbol</code>, <code>Type</code>, and <code>Name</code> across a compilation.</div>
+</div>
+<div class="col-first odd-row-color"><a href="class-use/VisitorState.html#com.google.errorprone.suppliers">VisitorState</a></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -693,8 +728,12 @@ considered suppressed.</div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><a href="class-use/VisitorState.html#com.google.errorprone.util">VisitorState</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><a href="class-use/ClassName.html#com.google.errorprone.util">ClassName</a></div>
+<div class="col-last even-row-color">
+<div class="block">Encapsulates a qualified class name and caches its resolved javac <code>Symbol.ClassSymbol</code>, <code>Type</code>, and <code>Name</code> across a compilation.</div>
+</div>
+<div class="col-first odd-row-color"><a href="class-use/VisitorState.html#com.google.errorprone.util">VisitorState</a></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
