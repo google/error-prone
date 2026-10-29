@@ -717,7 +717,9 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   }
 
   private @Nullable PlaceholderMethod placeholder(@Nullable ExpressionTree expr) {
-    return expr != null ? placeholderMethods.get(ASTHelpers.getSymbol(expr)) : null;
+    return expr instanceof MethodInvocationTree
+        ? placeholderMethods.get(ASTHelpers.getSymbol(expr))
+        : null;
   }
 
   @Override

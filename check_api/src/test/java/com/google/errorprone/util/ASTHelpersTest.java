@@ -76,6 +76,7 @@ import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
@@ -1453,6 +1454,43 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
         };
     tests.add(scanner);
     assertCompiles(scanner);
+  }
+
+  @Test
+  public void getSymbol_parenthesizedExpressionHasTheSymbolOfItsOperand() {
+    writeFile(
+        "A.java",
+        """
+        class A {
+          int x;
+          final Object lock = new Object();
+
+          int f() {
+            return ((x)) + (this.x) + (1 + 2);
+          }
+
+          void g() {
+            synchronized (lock) {
+            }
+          }
+        }
+        """);
+    List<String> symbols = new ArrayList<>();
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitParenthesized(ParenthesizedTree tree, VisitorState state) {
+            symbols.add(tree + " -> " + ASTHelpers.getSymbol(tree));
+            setAssertionsComplete();
+            return super.visitParenthesized(tree, state);
+          }
+        };
+    tests.add(scanner);
+    assertCompiles(scanner);
+    assertThat(symbols)
+        .containsExactly(
+            "((x)) -> x", "(x) -> x", "(this.x) -> x", "(1 + 2) -> null", "(lock) -> lock")
+        .inOrder();
   }
 
   @Test
