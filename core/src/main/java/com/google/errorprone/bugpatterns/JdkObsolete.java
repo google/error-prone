@@ -24,6 +24,9 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.constructor;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.RegexMatchers.ALL_MATCHER_CLASSES;
+import static com.google.errorprone.matchers.RegexMatchers.JDK_MATCHER_CLASS;
+import static com.google.errorprone.predicates.TypePredicates.isExactTypeAnyOf;
 import static com.google.errorprone.suppliers.Suppliers.BYTE_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.CHAR_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
@@ -35,7 +38,6 @@ import static com.google.errorprone.util.ASTHelpers.findEnclosingMethodPath;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -341,9 +343,7 @@ public class JdkObsolete extends BugChecker
                       "java.lang.String"),
               "Use IOUtils.writeLines(Collection, String, OutputStream, Charset) instead."),
           new ObsoleteApi(
-              instanceMethod()
-                  .onExactClass("java.util.regex.Matcher")
-                  .namedAnyOf("hitEnd", "requireEnd"),
+              instanceMethod().onExactClass(JDK_MATCHER_CLASS).namedAnyOf("hitEnd", "requireEnd"),
               "The hitEnd() and requireEnd() methods are mostly for implementing java.util.Scanner"
                   + " or similar streaming APIs. If you only want to know if a match extends to"
                   + " the end of the input, compare matcher.end() to the input length instead."));
@@ -459,30 +459,23 @@ public class JdkObsolete extends BugChecker
   static final Matcher<ExpressionTree> MATCHER_STRINGBUFFER =
       anyOf(
           instanceMethod()
-              .onExactClass("java.util.regex.Matcher")
+              .onExactClass(JDK_MATCHER_CLASS)
               .named("appendTail")
               .withParameters("java.lang.StringBuffer"),
           instanceMethod()
-              .onExactClass("java.util.regex.Matcher")
+              .onExactClass(JDK_MATCHER_CLASS)
               .named("appendReplacement")
               .withParameters("java.lang.StringBuffer", "java.lang.String"));
 
-  private static final ImmutableSet<String> REGEX_MATCHERS =
-      ImmutableSet.of(
-          "java.util.regex.Matcher",
-          "com.google.re2j.Matcher",
-          "org.safere.Matcher",
-          "org.safere.crosscheck.Matcher");
-
   private static final Matcher<ExpressionTree> MATCHER_APPEND_REPLACEMENT =
       instanceMethod()
-          .onExactClassAny(REGEX_MATCHERS)
+          .onClass(isExactTypeAnyOf(ALL_MATCHER_CLASSES))
           .named("appendReplacement")
           .withParameters("java.lang.StringBuffer", "java.lang.String");
 
   private static final Matcher<ExpressionTree> MATCHER_APPEND_TAIL =
       instanceMethod()
-          .onExactClassAny(REGEX_MATCHERS)
+          .onClass(isExactTypeAnyOf(ALL_MATCHER_CLASSES))
           .named("appendTail")
           .withParameters("java.lang.StringBuffer");
 
