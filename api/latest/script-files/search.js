@@ -425,7 +425,7 @@ $.widget("custom.catcomplete", $.ui.autocomplete, {
         return $("<li/>")
             .append($("<div/>")
                 .append($("<span/>").addClass("search-result-label").html(label))
-                .append($("<span/>").addClass("search-result-desc").html(resultDesc)))
+                .append($("<span/>").addClass("search-result-desc").text(resultDesc)))
             .appendTo(ul);
     },
     _resizeMenu: function () {

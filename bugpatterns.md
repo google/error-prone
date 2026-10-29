@@ -1895,9 +1895,6 @@ Non-standard parameter comment; prefer &#96;/* paramName&#61; */ arg&#96;
 __[ParameterMissingNullable](bugpattern/ParameterMissingNullable)__<br>
 Parameter has handling for null but is not annotated @Nullable
 
-__[PreferTestParameter](bugpattern/PreferTestParameter)__<br>
-When exhaustively testing all values of a single enum or boolean parameter, prefer @TestParameter over @TestParameters.
-
 __[PrivateConstructorForNoninstantiableModule](bugpattern/PrivateConstructorForNoninstantiableModule)__<br>
 Add a private constructor to modules that will not be instantiated by Dagger.
 
