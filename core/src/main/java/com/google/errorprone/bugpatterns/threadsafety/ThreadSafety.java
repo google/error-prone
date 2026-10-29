@@ -17,7 +17,6 @@
 package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.common.collect.ImmutableList.toImmutableList;
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.MoreAnnotations.asElement;
 import static com.google.errorprone.util.MoreAnnotations.getStrings;
@@ -687,6 +686,61 @@ public final class ThreadSafety {
     if (sym == null) {
       return null;
     }
+    AnnotationInfo direct = getDirectAnnotation(sym, annotationsToCheck, state);
+    if (direct != null) {
+      return direct;
+    }
+    // @ThreadSafe is inherited from supertypes
+    if (!(sym instanceof ClassSymbol classSymbol)) {
+      return null;
+    }
+
+    for (Type superClass : supertypes(classSymbol)) {
+      AnnotationInfo superAnnotation =
+          getDirectAnnotation(superClass.asElement(), markerAnnotations, state);
+      if (superAnnotation == null) {
+        continue;
+      }
+      // If an annotated super-type was found, look for any type arguments to the super-type that
+      // are in the super-type's containerOf spec, and where the arguments are type parameters
+      // of the current class.
+      // E.g. for `Foo<X> extends Super<X>` if `Super<Y>` is annotated
+      // `@ThreadSafeContainerAnnotation Y`
+      // then `Foo<X>` is has X implicitly annotated `@ThreadSafeContainerAnnotation X`
+      ImmutableList.Builder<String> containerOf = ImmutableList.builder();
+      for (int i = 0; i < superClass.getTypeArguments().size(); i++) {
+        Type arg = superClass.getTypeArguments().get(i);
+        TypeVariableSymbol formal = superClass.asElement().getTypeParameters().get(i);
+        if (!arg.hasTag(TypeTag.TYPEVAR)) {
+          continue;
+        }
+        TypeSymbol argSym = arg.asElement();
+        if (argSym.owner.equals(sym)
+            && superAnnotation.containerOf().contains(formal.getSimpleName().toString())) {
+          containerOf.add(argSym.getSimpleName().toString());
+        }
+      }
+      return AnnotationInfo.create(superAnnotation.typeName(), containerOf.build());
+    }
+    return null;
+  }
+
+  private Iterable<Type> supertypes(ClassSymbol classSymbol) {
+    if (markerAnnotationInherited) {
+      return Iterables.filter(
+          state.getTypes().closure(classSymbol.type), c -> !c.tsym.equals(classSymbol));
+    }
+    ImmutableList.Builder<Type> superclasses = ImmutableList.builder();
+    for (Type superClass = classSymbol.getSuperclass();
+        superClass.hasTag(TypeTag.CLASS);
+        superClass = state.getTypes().supertype(superClass)) {
+      superclasses.add(superClass);
+    }
+    return superclasses.build();
+  }
+
+  private @Nullable AnnotationInfo getDirectAnnotation(
+      Symbol sym, ImmutableSet<String> annotationsToCheck, VisitorState state) {
     Optional<? extends AnnotationMirror> attr =
         sym.getAnnotationMirrors().stream()
             .filter(a -> annotationsToCheck.contains(asElement(a).getQualifiedName().toString()))
@@ -707,43 +761,6 @@ public final class ThreadSafety {
                 .collect(toImmutableList());
       }
       return AnnotationInfo.create(sym.getQualifiedName().toString(), containerElements);
-    }
-    // @ThreadSafe is inherited from supertypes
-    if (!(sym instanceof ClassSymbol classSymbol)) {
-      return null;
-    }
-
-    ImmutableSet<Type> superclasses =
-        markerAnnotationInherited
-            ? state.getTypes().closure(classSymbol.type).stream()
-                .filter(c -> !c.tsym.equals(classSymbol))
-                .collect(toImmutableSet())
-            : ImmutableSet.of(classSymbol.getSuperclass());
-    for (Type superClass : superclasses) {
-      AnnotationInfo superAnnotation = getInheritedAnnotation(superClass.asElement(), state);
-      if (superAnnotation == null) {
-        continue;
-      }
-      // If an annotated super-type was found, look for any type arguments to the super-type that
-      // are in the super-type's containerOf spec, and where the arguments are type parameters
-      // of the current class.
-      // E.g. for `Foo<X> extends Super<X>` if `Super<Y>` is annotated
-      // `@ThreadSafeContainerAnnotation Y`
-      // then `Foo<X>` is has X implicitly annotated `@ThreadSafeContainerAnnotation X`
-      ImmutableList.Builder<String> containerOf = ImmutableList.builder();
-      for (int i = 0; i < superClass.getTypeArguments().size(); i++) {
-        Type arg = superClass.getTypeArguments().get(i);
-        TypeVariableSymbol formal = superClass.asElement().getTypeParameters().get(i);
-        if (!arg.hasTag(TypeTag.TYPEVAR)) {
-          continue;
-        }
-        TypeSymbol argSym = arg.asElement();
-        if (argSym.owner == sym
-            && superAnnotation.containerOf().contains(formal.getSimpleName().toString())) {
-          containerOf.add(argSym.getSimpleName().toString());
-        }
-      }
-      return AnnotationInfo.create(superAnnotation.typeName(), containerOf.build());
     }
     return null;
   }

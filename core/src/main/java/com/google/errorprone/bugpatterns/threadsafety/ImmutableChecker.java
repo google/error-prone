@@ -256,7 +256,7 @@ public class ImmutableChecker extends BugChecker
       return handleAnonymousClass(tree, state, analysis);
     }
 
-    AnnotationInfo annotation = getImmutableAnnotation(analysis, tree, state);
+    AnnotationInfo annotation = analysis.getImmutableAnnotation(tree, state);
     if (annotation == null) {
       // If the type isn't annotated, and doesn't extend anything annotated, there's nothing to do.
       // An earlier version of the check required an explicit annotation on classes that extended
@@ -537,25 +537,6 @@ public class ImmutableChecker extends BugChecker
   }
 
   // Strong behavioural subtyping
-
-  /**
-   * Check for classes with {@code @Immutable}, or that inherited it from a super class or
-   * interface.
-   */
-  private @Nullable AnnotationInfo getImmutableAnnotation(
-      ImmutableAnalysis analysis, ClassTree tree, VisitorState state) {
-    AnnotationInfo annotation = analysis.getImmutableAnnotation(tree, state);
-    if (annotation != null) {
-      return annotation;
-    }
-    // getImmutableAnnotation inherits annotations from classes, but not interfaces.
-    ClassSymbol sym = getSymbol(tree);
-    Type superType = immutableSupertype(sym, state);
-    if (superType != null) {
-      return analysis.getImmutableAnnotation(superType.tsym, state);
-    }
-    return null;
-  }
 
   /**
    * Returns the type of the first superclass or superinterface in the hierarchy annotated with

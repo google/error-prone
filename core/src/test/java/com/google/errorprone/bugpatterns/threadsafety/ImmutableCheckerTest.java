@@ -4199,4 +4199,73 @@ abstract class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void deepHierarchy() {
+    compilationHelper
+        .addSourceLines(
+            "DeepHierarchyTest.java",
+            """
+            interface I0 {}
+
+            interface I1 extends I0 {}
+
+            interface I2 extends I1 {}
+
+            interface I3 extends I2 {}
+
+            interface I4 extends I3 {}
+
+            interface I5 extends I4 {}
+
+            interface I6 extends I5 {}
+
+            interface I7 extends I6 {}
+
+            interface I8 extends I7 {}
+
+            interface I9 extends I8 {}
+
+            interface I10 extends I9 {}
+
+            interface I11 extends I10 {}
+
+            interface I12 extends I11 {}
+
+            interface I13 extends I12 {}
+
+            interface I14 extends I13 {}
+
+            interface I15 extends I14 {}
+
+            interface I16 extends I15 {}
+
+            interface I17 extends I16 {}
+
+            interface I18 extends I17 {}
+
+            interface I19 extends I18 {}
+
+            interface I20 extends I19 {}
+
+            interface I21 extends I20 {}
+
+            interface I22 extends I21 {}
+
+            interface I23 extends I22 {}
+
+            interface I24 extends I23 {}
+
+            interface I25 extends I24 {}
+
+            interface I26 extends I25 {}
+
+            interface I27 extends I26 {}
+
+            interface I28 extends I27 {}
+
+            interface I29 extends I28 {}
+            """)
+        .doTest();
+  }
 }
