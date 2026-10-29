@@ -620,7 +620,6 @@ import com.google.errorprone.bugpatterns.nullness.VoidMissingNullable;
 import com.google.errorprone.bugpatterns.overloading.InconsistentOverloads;
 import com.google.errorprone.bugpatterns.testparameterinjector.AlmostExhaustiveTestParameter;
 import com.google.errorprone.bugpatterns.testparameterinjector.LoopToTestParameter;
-import com.google.errorprone.bugpatterns.testparameterinjector.PreferTestParameter;
 import com.google.errorprone.bugpatterns.testparameterinjector.SimplifyTestParameter;
 import com.google.errorprone.bugpatterns.testparameterinjector.SingleTestParameter;
 import com.google.errorprone.bugpatterns.testparameterinjector.SingleValueTestParameter;
@@ -1320,7 +1319,6 @@ public final class BuiltInCheckerSuppliers {
           ParameterMissingNullable.class,
           PreferJavaTimeOverload.class,
           PreferPreconditions.class,
-          PreferTestParameter.class,
           PreferredInterfaceType.class,
           PrimitiveArrayPassedToVarargsMethod.class,
           PrivateConstructorForNoninstantiableModule.class,

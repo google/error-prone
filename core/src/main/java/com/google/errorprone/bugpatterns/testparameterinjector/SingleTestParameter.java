@@ -20,6 +20,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.TEST_PARAMETER;
 import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.extractTestParametersAnnotations;
+import static com.google.errorprone.bugpatterns.testparameterinjector.TestParameterInjectorUtils.isExhaustiveValues;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -94,13 +95,18 @@ public final class SingleTestParameter extends BugChecker implements MethodTreeM
     }
 
     SuggestedFix.Builder fix = SuggestedFix.builder();
-    String testParameterName = qualifyType(state, fix, TEST_PARAMETER);
     for (AnnotationTree anno : annotations.annotationsToRemove()) {
       fix.delete(anno);
     }
 
-    String valuesString = values.stream().map(state::getConstantExpression).collect(joining(", "));
-    String testParameterAnnotation = String.format("@%s({%s}) ", testParameterName, valuesString);
+    String testParameterName = qualifyType(state, fix, TEST_PARAMETER);
+    String testParameterAnnotation =
+        isExhaustiveValues(paramType, values, state)
+            ? String.format("@%s ", testParameterName)
+            : String.format(
+                "@%s({%s}) ",
+                testParameterName,
+                values.stream().map(state::getConstantExpression).collect(joining(", ")));
 
     return describeMatch(methodTree, fix.prefixWith(parameter, testParameterAnnotation).build());
   }

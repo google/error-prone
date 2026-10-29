@@ -158,8 +158,208 @@ public final class SingleTestParameterTest {
                 C
               }
 
-              public void test(@TestParameter({"A", "B", "C"}) E a) {
+              public void test(@TestParameter E a) {
                 System.out.println(a);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void singleBooleanParameterExhaustive_canBeSimplified() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameters;
+
+            class Test {
+              @TestParameters({"{b: true}", "{b: false}"})
+              public void test(boolean b) {
+                System.out.println(b);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+
+            class Test {
+
+              public void test(@TestParameter boolean b) {
+                System.out.println(b);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void singleBoxedBooleanParameterExhaustive_canBeSimplified() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameters;
+
+            class Test {
+              @TestParameters({"{b: true}", "{b: false}"})
+              public void test(Boolean b) {
+                System.out.println(b);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+
+            class Test {
+
+              public void test(@TestParameter Boolean b) {
+                System.out.println(b);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void singleBooleanParameterExhaustive_outOfOrderAndCaseInsensitive_canBeSimplified() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameters;
+
+            class Test {
+              @TestParameters({"{b: FALSE}", "{b: TRUE}"})
+              public void test(boolean b) {
+                System.out.println(b);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+
+            class Test {
+
+              public void test(@TestParameter boolean b) {
+                System.out.println(b);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void singleEnumParameterExhaustive_outOfOrder_canBeSimplified() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameters;
+
+            class Test {
+              enum E {
+                A,
+                B,
+                C
+              }
+
+              @TestParameters({"{e: C}", "{e: A}", "{e: B}"})
+              public void test(E e) {
+                System.out.println(e);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+
+            class Test {
+              enum E {
+                A,
+                B,
+                C
+              }
+
+              public void test(@TestParameter E e) {
+                System.out.println(e);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void singleBooleanWithNull_keepsExplicitValues() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameters;
+
+            class Test {
+              @TestParameters({"{b: true}", "{b: false}", "{b: null}"})
+              public void test(Boolean b) {
+                System.out.println(b);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+
+            class Test {
+
+              public void test(@TestParameter({"true", "false", "null"}) Boolean b) {
+                System.out.println(b);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void singleEnumWithNull_keepsExplicitValues() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameters;
+
+            class Test {
+              enum E {
+                A,
+                B
+              }
+
+              @TestParameters({"{e: A}", "{e: B}", "{e: null}"})
+              public void test(E e) {
+                System.out.println(e);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.google.testing.junit.testparameterinjector.TestParameter;
+
+            class Test {
+              enum E {
+                A,
+                B
+              }
+
+              public void test(@TestParameter({"A", "B", "null"}) E e) {
+                System.out.println(e);
               }
             }
             """)
