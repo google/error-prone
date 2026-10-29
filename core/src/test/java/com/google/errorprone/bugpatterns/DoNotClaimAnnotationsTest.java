@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
@@ -104,6 +105,26 @@ abstract class Test {
 }
 """)
         .expectUnchanged()
+        .doTest();
+  }
+
+  @Test
+  public void negative_notAProcessor_procNone() {
+    CompilationTestHelper.newInstance(DoNotClaimAnnotations.class, getClass())
+        .setArgs(ImmutableList.of("-proc:none"))
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.Set;
+            import javax.annotation.processing.RoundEnvironment;
+            import javax.lang.model.element.TypeElement;
+
+            abstract class Test {
+              public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+                return true;
+              }
+            }
+            """)
         .doTest();
   }
 

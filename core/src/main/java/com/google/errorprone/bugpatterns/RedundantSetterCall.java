@@ -25,7 +25,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.ProtobufMatchers.IS_ONEOF_ENUM;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE;
 import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_BUILDER_MUTATOR;
 import static com.google.errorprone.util.ASTHelpers.enumValues;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
@@ -103,7 +103,7 @@ public final class RedundantSetterCall extends BugChecker implements MethodInvoc
     }
 
     var owner = getUpperBound(getType(tree), state.getTypes()).tsym.owner;
-    boolean isProto = owner != null && isSubtype(owner.type, MESSAGE_LITE_TYPE.get(state), state);
+    boolean isProto = owner != null && isSubtype(owner.type, MESSAGE_LITE, state);
 
     ListMultimap<Field, FieldWithValue> setters = ArrayListMultimap.create();
     ImmutableMap<String, OneOfField> oneOfSetters =

@@ -17,14 +17,14 @@
 package com.google.errorprone.bugpatterns.formatstring;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static java.util.Arrays.asList;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Iterables;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionTree;
@@ -181,34 +181,34 @@ public final class FormatStringValidation {
         default -> throw new AssertionError(type.getKind());
       };
     }
-    if (isSubtype(types, type, state.getSymtab().stringType)) {
+    if (isSubtype(type, state.getSymtab().stringType, state)) {
       return "string";
     }
-    if (isSubtype(types, type, state.getTypeFromString(BigDecimal.class.getName()))) {
+    if (isSubtype(type, BIG_DECIMAL, state)) {
       return BigDecimal.valueOf(42.0d);
     }
-    if (isSubtype(types, type, state.getTypeFromString(BigInteger.class.getName()))) {
+    if (isSubtype(type, BIG_INTEGER, state)) {
       return BigInteger.valueOf(43L);
     }
-    if (isSameType(type, state.getTypeFromString(Number.class.getName()), state)) {
+    if (isSameType(type, NUMBER, state)) {
       // String.format only supports well-known subtypes of Number, but custom subtypes of Number
       // are rarer than using it as a union of Byte/Short/Integer/Long/BigInteger, so we allow
       // Number to avoid false positives.
       return 0;
     }
-    if (isSubtype(types, type, state.getTypeFromString(Date.class.getName()))) {
+    if (isSubtype(type, DATE, state)) {
       return new Date();
     }
-    if (isSubtype(types, type, state.getTypeFromString(Calendar.class.getName()))) {
+    if (isSubtype(type, CALENDAR, state)) {
       return new GregorianCalendar();
     }
-    if (isSubtype(types, type, state.getTypeFromString(Instant.class.getName()))) {
+    if (isSubtype(type, INSTANT, state)) {
       return Instant.now();
     }
-    if (isSubtype(types, type, state.getTypeFromString(TemporalAccessor.class.getName()))) {
+    if (isSubtype(type, TEMPORAL_ACCESSOR, state)) {
       return Instant.now().atZone(ZoneId.systemDefault());
     }
-    Type lazyArg = COM_GOOGLE_COMMON_FLOGGER_LAZYARG.get(state);
+    Type lazyArg = COM_GOOGLE_COMMON_FLOGGER_LAZYARG.type(state);
     if (lazyArg != null) {
       Type asLazyArg = types.asSuper(type, lazyArg.tsym);
       if (asLazyArg != null && !asLazyArg.getTypeArguments().isEmpty()) {
@@ -221,10 +221,6 @@ public final class FormatStringValidation {
         formatter.format("hello");
       }
     };
-  }
-
-  private static boolean isSubtype(Types types, Type t, Type s) {
-    return s != null && types.isSubtype(t, s);
   }
 
   private static ValidationResult validate(String formatString, Object[] arguments) {
@@ -305,6 +301,13 @@ public final class FormatStringValidation {
 
   private FormatStringValidation() {}
 
-  private static final Supplier<Type> COM_GOOGLE_COMMON_FLOGGER_LAZYARG =
-      typeFromString("com.google.common.flogger.LazyArg");
+  private static final ClassName BIG_DECIMAL = ClassName.of(BigDecimal.class.getName());
+  private static final ClassName BIG_INTEGER = ClassName.of(BigInteger.class.getName());
+  private static final ClassName NUMBER = ClassName.of(Number.class.getName());
+  private static final ClassName DATE = ClassName.of(Date.class.getName());
+  private static final ClassName CALENDAR = ClassName.of(Calendar.class.getName());
+  private static final ClassName INSTANT = ClassName.of(Instant.class.getName());
+  private static final ClassName TEMPORAL_ACCESSOR = ClassName.of(TemporalAccessor.class.getName());
+  private static final ClassName COM_GOOGLE_COMMON_FLOGGER_LAZYARG =
+      ClassName.of("com.google.common.flogger.LazyArg");
 }

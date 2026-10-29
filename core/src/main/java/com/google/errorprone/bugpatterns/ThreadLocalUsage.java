@@ -21,7 +21,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasDirectAnnotationWithSimpleName;
@@ -30,17 +29,16 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 
@@ -48,8 +46,10 @@ import com.sun.tools.javac.code.Type;
 @BugPattern(summary = "ThreadLocals should be stored in static fields", severity = WARNING)
 public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher {
 
+  private static final ClassName JAVA_LANG_THREADLOCAL = ClassName.of("java.lang.ThreadLocal");
+
   private static final Matcher<ExpressionTree> NEW_THREAD_LOCAL =
-      constructor().forClass(isDescendantOf("java.lang.ThreadLocal"));
+      constructor().forClass(isDescendantOf(JAVA_LANG_THREADLOCAL));
 
   @Override
   public Description matchNewClass(NewClassTree tree, VisitorState state) {
@@ -73,16 +73,9 @@ public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher 
         .filter(ClassTree.class::isInstance)
         .map(ClassTree.class::cast)
         .anyMatch(
-            c -> {
-              if (hasDirectAnnotationWithSimpleName(getSymbol(c), "Singleton")) {
-                return true;
-              }
-              Type scopeType = COM_GOOGLE_INJECT_SCOPE.get(state);
-              if (isSubtype(getType(c), scopeType, state)) {
-                return true;
-              }
-              return false;
-            })) {
+            c ->
+                hasDirectAnnotationWithSimpleName(getSymbol(c), "Singleton")
+                    || isSubtype(getType(c), COM_GOOGLE_INJECT_SCOPE, state))) {
       // The instance X thread issue doesn't apply if there's only one instance.
       return NO_MATCH;
     }
@@ -106,7 +99,7 @@ public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher 
     if (type == null) {
       return false;
     }
-    type = state.getTypes().asSuper(type, JAVA_LANG_THREADLOCAL.get(state));
+    type = state.getTypes().asSuper(type, JAVA_LANG_THREADLOCAL.symbol(state));
     if (type == null) {
       return false;
     }
@@ -117,17 +110,10 @@ public class ThreadLocalUsage extends BugChecker implements NewClassTreeMatcher 
     if (WELL_KNOWN_TYPES.contains(argType.asElement().getQualifiedName().toString())) {
       return true;
     }
-    if (isSubtype(argType, JAVA_TEXT_DATEFORMAT.get(state), state)) {
-      return true;
-    }
-    return false;
+    return isSubtype(argType, JAVA_TEXT_DATEFORMAT, state);
   }
 
-  private static final Supplier<Symbol> JAVA_LANG_THREADLOCAL =
-      VisitorState.memoize(state -> state.getSymbolFromString("java.lang.ThreadLocal"));
+  private static final ClassName COM_GOOGLE_INJECT_SCOPE = ClassName.of("com.google.inject.Scope");
 
-  private static final Supplier<Type> COM_GOOGLE_INJECT_SCOPE =
-      typeFromString("com.google.inject.Scope");
-
-  private static final Supplier<Type> JAVA_TEXT_DATEFORMAT = typeFromString("java.text.DateFormat");
+  private static final ClassName JAVA_TEXT_DATEFORMAT = ClassName.of("java.text.DateFormat");
 }

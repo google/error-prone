@@ -17,8 +17,8 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_TYPE;
-import static com.google.errorprone.matchers.ProtobufMatchers.MUTABLE_MESSAGE_LITE_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MUTABLE_MESSAGE_LITE;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -124,8 +124,8 @@ public final class IgnoredPureGetter extends AbstractReturnValueIgnored {
     }
 
     try {
-      if (isSubtype(owner.type, MESSAGE_LITE_TYPE.get(state), state)
-          && !isSubtype(owner.type, MUTABLE_MESSAGE_LITE_TYPE.get(state), state)) {
+      if (isSubtype(owner.type, MESSAGE_LITE, state)
+          && !isSubtype(owner.type, MUTABLE_MESSAGE_LITE, state)) {
         return Optional.of(PureGetterKind.PROTO);
       }
     } catch (Symbol.CompletionFailure ignore) {

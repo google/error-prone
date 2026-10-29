@@ -19,8 +19,8 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.ProtobufMatchers.DESCRIPTOR_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE;
 import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_CLASS;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_TYPE;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
@@ -103,7 +103,7 @@ public final class MixedDescriptors extends BugChecker implements MethodInvocati
     Symbol symbol = getSymbol(tree);
     if (symbol != null
         && symbol.owner instanceof ClassSymbol
-        && isSubtype(symbol.owner.type, MESSAGE_TYPE.get(state), state)) {
+        && isSubtype(symbol.owner.type, MESSAGE, state)) {
       return Optional.of(symbol.owner.type.tsym);
     }
     return Optional.empty();

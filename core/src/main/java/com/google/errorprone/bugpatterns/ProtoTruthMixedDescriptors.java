@@ -19,8 +19,8 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE_TYPE;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -96,9 +96,7 @@ public final class ProtoTruthMixedDescriptors extends BugChecker
   // Tries to resolve the proto which owns the symbol at `tree`, or absent if there isn't one.
   private static Optional<TypeSymbol> protoType(ExpressionTree tree, VisitorState state) {
     Symbol symbol = getSymbol(tree);
-    if (symbol != null
-        && symbol.owner != null
-        && isSubtype(symbol.owner.type, MESSAGE_TYPE.get(state), state)) {
+    if (symbol != null && symbol.owner != null && isSubtype(symbol.owner.type, MESSAGE, state)) {
       return Optional.of(symbol.owner.type.tsym);
     }
     return Optional.empty();
@@ -125,7 +123,7 @@ public final class ProtoTruthMixedDescriptors extends BugChecker
 
     return subjectType == null
             || subjectType.tsym.equals(type)
-            || !isSubtype(subjectType, GENERATED_MESSAGE_TYPE.get(state), state)
+            || !isSubtype(subjectType, GENERATED_MESSAGE, state)
         ? Description.NO_MATCH
         : describeMatch(tree);
   }

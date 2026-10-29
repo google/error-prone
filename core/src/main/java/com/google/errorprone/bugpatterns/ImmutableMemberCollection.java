@@ -43,6 +43,7 @@ import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -50,7 +51,6 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.MethodMatchers;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
@@ -143,14 +143,13 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
                       .orElse(false))
           .withNoParameters();
 
+  private static final ClassName JAVA_UTIL_MAP = ClassName.of("java.util.Map");
+
   private static final Matcher<ExpressionTree> MAP_OF_ENTRIES =
-      staticMethod().onDescendantOf("java.util.Map").named("ofEntries");
+      staticMethod().onDescendantOf(JAVA_UTIL_MAP).named("ofEntries");
 
   private static final Matcher<ExpressionTree> MAP_ENTRY =
-      staticMethod().onDescendantOf("java.util.Map").named("entry");
-
-  private static final Supplier<Symbol> JAVA_UTIL_MAP =
-      VisitorState.memoize(state -> state.getSymbolFromString("java.util.Map"));
+      staticMethod().onDescendantOf(JAVA_UTIL_MAP).named("entry");
 
   // TODO(ashishkedia) : Share this with ImmutableSetForContains.
   private static final Matcher<Tree> EXCLUSIONS =
@@ -296,7 +295,7 @@ public final class ImmutableMemberCollection extends BugChecker implements Class
                 arguments.stream()
                     .map(a -> argumentSource(((MethodInvocationTree) a).getArguments(), state))
                     .collect(toImmutableList());
-            Symbol mapSymbol = JAVA_UTIL_MAP.get(state);
+            Symbol mapSymbol = JAVA_UTIL_MAP.symbol(state);
             Type mapType = state.getTypes().asSuper(getType(methodInvocationTree), mapSymbol);
             var mapTypeTypeArguments = mapType.getTypeArguments();
             if (mapTypeTypeArguments.isEmpty()) {

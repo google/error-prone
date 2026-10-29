@@ -18,7 +18,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Matchers.annotations;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.MoreAnnotations.isTypeAnnotation;
@@ -166,7 +166,7 @@ public class BadImport extends BugChecker implements ImportTreeMatcher {
       return Description.NO_MATCH;
     }
 
-    if (isSubtype(symbol.type, MESSAGE_LITE_TYPE.get(state), state)) {
+    if (isSubtype(symbol.type, MESSAGE_LITE, state)) {
       return Description.NO_MATCH;
     }
 

@@ -24,14 +24,16 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.receiverOfInvocation;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.google.errorprone.matchers.ProtobufMatchers.EXTENDABLE_MESSAGE_CLASS;
-import static com.google.errorprone.matchers.ProtobufMatchers.EXTENDABLE_MESSAGE_LITE_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.EXTENDABLE_MESSAGE;
+import static com.google.errorprone.matchers.ProtobufMatchers.EXTENDABLE_MESSAGE_LITE;
+import static com.google.errorprone.matchers.ProtobufMatchers.EXTENSION_LITE;
 import static com.google.errorprone.matchers.ProtobufMatchers.EXTENSION_LITE_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.FIELD_DESCRIPTOR;
 import static com.google.errorprone.matchers.ProtobufMatchers.FIELD_DESCRIPTOR_CLASS;
-import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE_CLASS;
-import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE_LITE_CLASS;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_OR_BUILDER_CLASS;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_OR_BUILDER_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE;
+import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE_LITE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_OR_BUILDER;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_OR_BUILDER;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -53,7 +55,6 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CaseTree;
@@ -124,24 +125,24 @@ public final class ImpossibleNullComparison extends BugChecker
 
   private static final Matcher<ExpressionTree> EXTENSION_METHODS_WITH_FIX =
       instanceMethod()
-          .onDescendantOfAny(EXTENDABLE_MESSAGE_CLASS, EXTENDABLE_MESSAGE_LITE_CLASS)
+          .onDescendantOfAny(EXTENDABLE_MESSAGE, EXTENDABLE_MESSAGE_LITE)
           .named("getExtension")
-          .withParameters(EXTENSION_LITE_CLASS);
+          .withParametersOfType(EXTENSION_LITE);
 
   private static final Matcher<ExpressionTree> EXTENSION_METHODS_WITH_NO_FIX =
       anyOf(
           instanceMethod()
-              .onDescendantOf(MESSAGE_OR_BUILDER_CLASS)
+              .onDescendantOf(MESSAGE_OR_BUILDER)
               .named("getRepeatedField")
               .withParameters(FIELD_DESCRIPTOR_CLASS, "int"),
           instanceMethod()
-              .onDescendantOfAny(EXTENDABLE_MESSAGE_CLASS, EXTENDABLE_MESSAGE_LITE_CLASS)
+              .onDescendantOfAny(EXTENDABLE_MESSAGE, EXTENDABLE_MESSAGE_LITE)
               .named("getExtension")
               .withParameters(EXTENSION_LITE_CLASS, "int"),
           instanceMethod()
-              .onDescendantOf(MESSAGE_OR_BUILDER_CLASS)
+              .onDescendantOf(MESSAGE_OR_BUILDER)
               .named("getField")
-              .withParameters(FIELD_DESCRIPTOR_CLASS));
+              .withParametersOfType(FIELD_DESCRIPTOR));
 
   private static final Matcher<ExpressionTree> OF_NULLABLE =
       anyOf(
@@ -154,13 +155,12 @@ public final class ImpossibleNullComparison extends BugChecker
 
   /** Matcher for generated protobufs (legacy message-only behavior). */
   private static final Matcher<ExpressionTree> PROTO_RECEIVER_LEGACY =
-      instanceMethod().onDescendantOfAny(GENERATED_MESSAGE_LITE_CLASS, GENERATED_MESSAGE_CLASS);
+      instanceMethod().onDescendantOfAny(GENERATED_MESSAGE_LITE, GENERATED_MESSAGE);
 
   /** Matcher for generated protobufs and builders/OrBuilders. */
   private static final Matcher<ExpressionTree> PROTO_RECEIVER_OR_BUILDER =
       instanceMethod()
-          .onDescendantOfAny(
-              MESSAGE_LITE_OR_BUILDER_CLASS, GENERATED_MESSAGE_CLASS, GENERATED_MESSAGE_LITE_CLASS);
+          .onDescendantOfAny(MESSAGE_LITE_OR_BUILDER, GENERATED_MESSAGE, GENERATED_MESSAGE_LITE);
 
   private final boolean matchTestAssertions;
   private final boolean checkPrimitives;
@@ -602,7 +602,7 @@ public final class ImpossibleNullComparison extends BugChecker
           MethodInvocationTree methodInvocation = (MethodInvocationTree) tree;
           Type argumentType =
               ASTHelpers.getType(Iterables.getOnlyElement(methodInvocation.getArguments()));
-          Symbol extension = COM_GOOGLE_PROTOBUF_EXTENSIONLITE.get(state);
+          Symbol extension = EXTENSION_LITE.symbol(state);
           Type genericsArgument = state.getTypes().asSuper(argumentType, extension);
 
           // If there are not two arguments then it is a raw type
@@ -726,7 +726,4 @@ public final class ImpossibleNullComparison extends BugChecker
 
     abstract SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state);
   }
-
-  private static final Supplier<Symbol> COM_GOOGLE_PROTOBUF_EXTENSIONLITE =
-      VisitorState.memoize(state -> state.getSymbolFromString(EXTENSION_LITE_CLASS));
 }

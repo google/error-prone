@@ -31,6 +31,7 @@ import static java.util.EnumSet.allOf;
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.BinaryTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
@@ -58,6 +59,8 @@ public final class PreferInstanceofOverGetKind extends BugChecker
     implements BinaryTreeMatcher, MethodInvocationTreeMatcher {
   private static final Matcher<ExpressionTree> GET_KIND =
       Matchers.instanceMethod().onDescendantOf(Tree.class.getName()).named("getKind");
+
+  private static final ClassName TREE_KIND = ClassName.of(Kind.class.getName());
 
   /**
    * A map from {@link Kind} to the {@link Class} of tree it denotes, iff that class unambiguously
@@ -119,8 +122,7 @@ public final class PreferInstanceofOverGetKind extends BugChecker
       return NO_MATCH;
     }
     var rhsSymbol = getSymbol(right);
-    if (rhsSymbol == null
-        || !rhsSymbol.owner.equals(state.getSymbolFromString(Kind.class.getName()))) {
+    if (rhsSymbol == null || !rhsSymbol.owner.equals(TREE_KIND.symbol(state))) {
       return NO_MATCH;
     }
     Kind kind = getIfPresent(Kind.class, rhsSymbol.getSimpleName().toString()).orNull();

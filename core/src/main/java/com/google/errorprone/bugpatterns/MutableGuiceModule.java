@@ -24,12 +24,12 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.bugpatterns.threadsafety.WellKnownMutability;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
@@ -58,7 +58,7 @@ public class MutableGuiceModule extends BugChecker implements VariableTreeMatche
     if (!sym.getKind().equals(ElementKind.FIELD)) {
       return NO_MATCH;
     }
-    Symbol abstractModule = ABSTRACT_MODULE.get(state);
+    Symbol abstractModule = ABSTRACT_MODULE.symbol(state);
     if (abstractModule == null) {
       return NO_MATCH;
     }
@@ -89,6 +89,5 @@ public class MutableGuiceModule extends BugChecker implements VariableTreeMatche
     return NO_MATCH;
   }
 
-  private static final Supplier<Symbol> ABSTRACT_MODULE =
-      VisitorState.memoize(state -> state.getSymbolFromString("com.google.inject.AbstractModule"));
+  private static final ClassName ABSTRACT_MODULE = ClassName.of("com.google.inject.AbstractModule");
 }

@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
-import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.not;
@@ -31,12 +30,12 @@ import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Symbol;
@@ -52,10 +51,14 @@ import javax.lang.model.element.ElementKind;
     severity = WARNING)
 public class Interruption extends BugChecker implements MethodInvocationTreeMatcher {
 
+  private static final ClassName JAVA_UTIL_CONCURRENT_FUTURE =
+      ClassName.of("java.util.concurrent.Future");
+
   private static final Matcher<ExpressionTree> CANCEL =
       instanceMethod()
           .onDescendantOfAny(
-              "java.util.concurrent.Future", "com.google.common.util.concurrent.ClosingFuture")
+              JAVA_UTIL_CONCURRENT_FUTURE,
+              ClassName.of("com.google.common.util.concurrent.ClosingFuture"))
           .named("cancel")
           .withParameters("boolean");
 
@@ -79,9 +82,6 @@ public class Interruption extends BugChecker implements MethodInvocationTreeMatc
           .onDescendantOf("com.google.common.util.concurrent.AbstractFuture")
           .named("wasInterrupted")
           .withNoParameters();
-
-  private static final Supplier<Symbol> JAVA_UTIL_CONCURRENT_FUTURE =
-      memoize(state -> state.getSymbolFromString("java.util.concurrent.Future"));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -138,7 +138,8 @@ public class Interruption extends BugChecker implements MethodInvocationTreeMatc
       return false;
     }
     Symbol.ClassSymbol classSymbol = enclosingClass(methodSymbol);
-    if (!classSymbol.isSubClass(JAVA_UTIL_CONCURRENT_FUTURE.get(state), state.getTypes())) {
+    Symbol futureSymbol = JAVA_UTIL_CONCURRENT_FUTURE.symbol(state);
+    if (futureSymbol == null || !classSymbol.isSubClass(futureSymbol, state.getTypes())) {
       return false;
     }
     return true;

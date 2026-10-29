@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.MoreAnnotations.getValue;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -40,13 +41,17 @@ import java.util.Optional;
     summary = "Giving BugPatterns a name different to the enclosing class can be confusing",
     severity = WARNING)
 public final class BugPatternNaming extends BugChecker implements ClassTreeMatcher {
+
+  private static final ClassName BUG_CHECKER = ClassName.of(BugChecker.class.getName());
+  private static final ClassName BUG_PATTERN = ClassName.of(BugPattern.class.getName());
+
   @Override
   public Description matchClass(ClassTree tree, VisitorState state) {
-    if (!isSubtype(getType(tree), state.getTypeFromString(BugChecker.class.getName()), state)) {
+    if (!isSubtype(getType(tree), BUG_CHECKER, state)) {
       return NO_MATCH;
     }
     var classSymbol = getSymbol(tree);
-    var attribute = classSymbol.attribute(state.getSymbolFromString(BugPattern.class.getName()));
+    var attribute = classSymbol.attribute(BUG_PATTERN.symbol(state));
     if (attribute == null) {
       // e.g. abstract subtypes of BugChecker
       return NO_MATCH;
@@ -66,12 +71,7 @@ public final class BugPatternNaming extends BugChecker implements ClassTreeMatch
 
   private Optional<Description> removeName(ClassTree tree, VisitorState state) {
     return tree.getModifiers().getAnnotations().stream()
-        .filter(
-            anno ->
-                isSameType(
-                    getType(anno.getAnnotationType()),
-                    state.getTypeFromString(BugPattern.class.getName()),
-                    state))
+        .filter(anno -> isSameType(getType(anno.getAnnotationType()), BUG_PATTERN, state))
         .findFirst()
         .flatMap(
             anno ->

@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 
 import com.google.common.base.Joiner;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.LambdaExpressionTreeMatcher;
@@ -32,7 +33,6 @@ import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Kind;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByUtils.GuardedByValidationResult;
 import com.google.errorprone.matchers.Description;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
@@ -58,7 +58,8 @@ public class GuardedByChecker extends BugChecker
         LambdaExpressionTreeMatcher,
         MemberReferenceTreeMatcher {
 
-  private static final String JUC_READ_WRITE_LOCK = "java.util.concurrent.locks.ReadWriteLock";
+  private static final ClassName JUC_READ_WRITE_LOCK =
+      ClassName.of("java.util.concurrent.locks.ReadWriteLock");
 
   @Inject
   GuardedByChecker() {}
@@ -216,7 +217,7 @@ public class GuardedByChecker extends BugChecker
       return false;
     }
 
-    Symbol rwLockSymbol = JAVA_UTIL_CONCURRENT_LOCKS_READWRITELOCK.get(state);
+    Symbol rwLockSymbol = JUC_READ_WRITE_LOCK.symbol(state);
     if (rwLockSymbol == null) {
       return false;
     }
@@ -243,7 +244,4 @@ public class GuardedByChecker extends BugChecker
         .setMessage("Invalid @GuardedBy expression: %s", result.message())
         .build();
   }
-
-  private static final Supplier<Symbol> JAVA_UTIL_CONCURRENT_LOCKS_READWRITELOCK =
-      VisitorState.memoize(state -> state.getSymbolFromString(JUC_READ_WRITE_LOCK));
 }

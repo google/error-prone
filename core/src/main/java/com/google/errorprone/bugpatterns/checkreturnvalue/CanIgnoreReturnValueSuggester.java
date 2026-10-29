@@ -20,7 +20,7 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_BUILDER_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_BUILDER;
 import static com.google.errorprone.util.ASTHelpers.getAnnotationWithSimpleName;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getReturnType;
@@ -222,7 +222,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
   }
 
   private static boolean isMethodHandledByCrvLogic(MethodSymbol methodSymbol, VisitorState state) {
-    if (isSubtype(methodSymbol.owner.type, MESSAGE_LITE_BUILDER_TYPE.get(state), state)) {
+    if (isSubtype(methodSymbol.owner.type, MESSAGE_LITE_BUILDER, state)) {
       return true;
     }
 

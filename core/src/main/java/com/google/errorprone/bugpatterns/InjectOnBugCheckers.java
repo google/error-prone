@@ -28,6 +28,7 @@ import static com.google.errorprone.util.ASTHelpers.isSubtype;
 import static com.google.errorprone.util.AnnotationNames.BUG_PATTERN_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -38,6 +39,9 @@ import com.sun.source.tree.MethodTree;
 /** A BugPattern; see the summary. */
 @BugPattern(severity = WARNING, summary = "BugChecker constructors should be marked @Inject.")
 public final class InjectOnBugCheckers extends BugChecker implements MethodTreeMatcher {
+  private static final ClassName BUG_CHECKER = ClassName.of(BugChecker.class.getName());
+  private static final ClassName ERROR_PRONE_FLAGS = ClassName.of(ErrorProneFlags.class.getName());
+
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
     var symbol = getSymbol(tree);
@@ -50,19 +54,13 @@ public final class InjectOnBugCheckers extends BugChecker implements MethodTreeM
     if (hasDirectAnnotationWithSimpleName(tree, "Inject")) {
       return NO_MATCH;
     }
-    if (!isSubtype(
-            symbol.owner.type, state.getTypeFromString(BugChecker.class.getCanonicalName()), state)
+    if (!isSubtype(symbol.owner.type, BUG_CHECKER, state)
         || !hasAnnotation(symbol.owner, BUG_PATTERN_ANNOTATION, state)) {
       return NO_MATCH;
     }
     if (tree.getParameters().isEmpty()
         || !tree.getParameters().stream()
-            .allMatch(
-                p ->
-                    isSubtype(
-                        getType(p),
-                        state.getTypeFromString(ErrorProneFlags.class.getCanonicalName()),
-                        state))) {
+            .allMatch(p -> isSubtype(getType(p), ERROR_PRONE_FLAGS, state))) {
       return NO_MATCH;
     }
     var fix = SuggestedFix.builder();

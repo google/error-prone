@@ -24,13 +24,13 @@ import static com.google.errorprone.matchers.Matchers.not;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree;
@@ -57,9 +57,12 @@ public class ParcelableCreator extends BugChecker implements ClassTreeMatcher {
   private static final Matcher<ClassTree> PARCELABLE_MATCHER =
       allOf(isDirectImplementationOf("android.os.Parcelable"), not(hasModifier(Modifier.ABSTRACT)));
 
+  private static final ClassName ANDROID_OS_PARCELABLE_CREATOR =
+      ClassName.of("android.os.Parcelable$Creator");
+
   private static final Matcher<VariableTree> PARCELABLE_CREATOR_MATCHER =
       allOf(
-          Matchers.isSubtypeOf("android.os.Parcelable$Creator"),
+          Matchers.isSubtypeOf(ANDROID_OS_PARCELABLE_CREATOR),
           hasModifier(Modifier.STATIC),
           hasModifier(Modifier.PUBLIC));
 
@@ -72,7 +75,7 @@ public class ParcelableCreator extends BugChecker implements ClassTreeMatcher {
       return Description.NO_MATCH;
     }
 
-    Symbol parcelableCreatorSymbol = ANDROID_OS_PARCELABLE_CREATOR.get(state);
+    Symbol parcelableCreatorSymbol = ANDROID_OS_PARCELABLE_CREATOR.symbol(state);
     if (parcelableCreatorSymbol == null) {
       return Description.NO_MATCH;
     }
@@ -112,7 +115,4 @@ public class ParcelableCreator extends BugChecker implements ClassTreeMatcher {
     }
     return ASTHelpers.isSubtype(classType, Iterables.getOnlyElement(typeArguments), state);
   }
-
-  private static final Supplier<Symbol> ANDROID_OS_PARCELABLE_CREATOR =
-      VisitorState.memoize(state -> state.getSymbolFromString("android.os.Parcelable$Creator"));
 }

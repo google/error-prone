@@ -29,7 +29,6 @@ import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.CLASS_TYPE;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -40,6 +39,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import com.google.common.collect.PeekingIterator;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -47,7 +47,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -57,7 +56,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
@@ -191,9 +189,8 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
                         state.getTypes().asSuper(type, symtab.classType.tsym).getTypeArguments(),
                         symtab.throwableType),
                     state.getTypes());
-          } else if (isSubtype(type, ORG_HAMCREST_MATCHER_TYPE.get(state), state)) {
-            Type matcherType =
-                state.getTypes().asSuper(type, ORG_HAMCREST_MATCHER_SYMBOL.get(state));
+          } else if (isSubtype(type, ORG_HAMCREST_MATCHER, state)) {
+            Type matcherType = state.getTypes().asSuper(type, ORG_HAMCREST_MATCHER.symbol(state));
             if (!matcherType.getTypeArguments().isEmpty()) {
               Type matchType = getOnlyElement(matcherType.getTypeArguments());
               if (isSubtype(matchType, symtab.throwableType, state)) {
@@ -289,9 +286,5 @@ public class ExpectedExceptionChecker extends BugChecker implements MethodTreeMa
     return fix.build();
   }
 
-  private static final Supplier<Symbol> ORG_HAMCREST_MATCHER_SYMBOL =
-      VisitorState.memoize(state -> state.getSymbolFromString("org.hamcrest.Matcher"));
-
-  private static final Supplier<Type> ORG_HAMCREST_MATCHER_TYPE =
-      typeFromString("org.hamcrest.Matcher");
+  private static final ClassName ORG_HAMCREST_MATCHER = ClassName.of("org.hamcrest.Matcher");
 }

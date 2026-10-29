@@ -42,6 +42,7 @@ import static java.util.stream.Collectors.joining;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -49,14 +50,12 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.MultiMatcher;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ModifiersTree;
 import com.sun.source.tree.VariableTree;
-import com.sun.tools.javac.code.Type;
 import java.util.stream.Stream;
 
 /** A BugPattern; see the summary. */
@@ -135,7 +134,7 @@ public final class UnnecessaryQualifier extends BugChecker
                 anno -> getSymbol(anno).getSimpleName().toString().startsWith(PROVIDES_PREFIX))) {
           return NO_MATCH;
         }
-        if (SUPERTYPES_DENOTING_INJECTION_POINTS.get(state).stream()
+        if (SUPERTYPES_DENOTING_INJECTION_POINTS.stream()
             .anyMatch(st -> isSubtype(methodSymbol.owner.type, st, state))) {
           return NO_MATCH;
         }
@@ -202,12 +201,8 @@ public final class UnnecessaryQualifier extends BugChecker
   private static final ImmutableSet<String> QUALIFIERS =
       ImmutableSet.of("com.google.inject.BindingAnnotation", "javax.inject.Qualifier");
 
-  private static final Supplier<ImmutableSet<Type>> SUPERTYPES_DENOTING_INJECTION_POINTS =
-      VisitorState.memoize(
-          s ->
-              Stream.of(s.getTypeFromString("com.google.apps.framework.producers.GraphWrapper"))
-                  .filter(x -> x != null)
-                  .collect(toImmutableSet()));
+  private static final ImmutableSet<ClassName> SUPERTYPES_DENOTING_INJECTION_POINTS =
+      ImmutableSet.of(ClassName.of("com.google.apps.framework.producers.GraphWrapper"));
 
   /**
    * Method annotations denoting that the method provides bindings, so qualifiers on the return type

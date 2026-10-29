@@ -20,7 +20,7 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
-import static com.google.errorprone.matchers.ProtobufMatchers.ENUM_LITE_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.ENUM_LITE;
 import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_BUILDER_CLASS;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
@@ -57,7 +57,7 @@ public final class SetUnrecognized extends BugChecker implements MethodInvocatio
     if (!argSymbol.getSimpleName().contentEquals("UNRECOGNIZED")) {
       return NO_MATCH;
     }
-    if (!isSubtype(argSymbol.owner.type, ENUM_LITE_TYPE.get(state), state)) {
+    if (!isSubtype(argSymbol.owner.type, ENUM_LITE, state)) {
       return NO_MATCH;
     }
     if (argSymbol

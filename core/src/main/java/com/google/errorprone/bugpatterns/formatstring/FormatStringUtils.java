@@ -29,6 +29,7 @@ import static com.google.errorprone.util.AnnotationNames.FORMAT_METHOD_ANNOTATIO
 import static com.google.errorprone.util.AnnotationNames.FORMAT_STRING_ANNOTATION;
 
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.method.ParameterPredicates;
@@ -40,10 +41,11 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
-import java.util.Locale;
 
 /** Format string utilities. */
 public final class FormatStringUtils {
+
+  private static final ClassName LOCALE = ClassName.of("java.util.Locale");
 
   // TODO(cushon): add support for additional printf methods, maybe with an annotation
   private static final Matcher<ExpressionTree> FORMAT_METHOD =
@@ -131,10 +133,7 @@ public final class FormatStringUtils {
     if (FORMAT_METHOD.matches(tree, state)) {
       ImmutableList<ExpressionTree> args = ImmutableList.copyOf(tree.getArguments());
       // skip the first argument of printf(Locale,String,Object...)
-      if (ASTHelpers.isSameType(
-          ASTHelpers.getType(args.getFirst()),
-          state.getTypeFromString(Locale.class.getName()),
-          state)) {
+      if (ASTHelpers.isSameType(ASTHelpers.getType(args.getFirst()), LOCALE, state)) {
         args = args.subList(1, args.size());
       }
       return args;

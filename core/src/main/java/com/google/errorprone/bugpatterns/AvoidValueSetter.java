@@ -19,8 +19,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.fixes.SuggestedFixes.renameMethodInvocation;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_BUILDER_TYPE;
-import static com.google.errorprone.matchers.ProtobufMatchers.PROTOCOL_MESSAGE_ENUM_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_BUILDER;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTOCOL_MESSAGE_ENUM;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getEnclosedElements;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -52,8 +52,7 @@ public final class AvoidValueSetter extends BugChecker implements MethodInvocati
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
     var symbol = getSymbol(tree);
     String name = symbol.getSimpleName().toString();
-    if (!isSubtype(symbol.owner.type, MESSAGE_BUILDER_TYPE.get(state), state)
-        || !name.endsWith("Value")) {
+    if (!isSubtype(symbol.owner.type, MESSAGE_BUILDER, state) || !name.endsWith("Value")) {
       return NO_MATCH;
     }
     var matcher = PREFIX.matcher(name);
@@ -99,10 +98,7 @@ public final class AvoidValueSetter extends BugChecker implements MethodInvocati
       if (member instanceof MethodSymbol method
           && method.name.contentEquals(enumSetterName)
           && method.getParameters().size() == tree.getArguments().size()
-          && isSubtype(
-              method.getParameters().get(argIndex).type,
-              PROTOCOL_MESSAGE_ENUM_TYPE.get(state),
-              state)) {
+          && isSubtype(method.getParameters().get(argIndex).type, PROTOCOL_MESSAGE_ENUM, state)) {
         return fix(
             tree,
             arg,

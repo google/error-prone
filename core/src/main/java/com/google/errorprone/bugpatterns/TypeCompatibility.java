@@ -21,9 +21,9 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Streams.concat;
 import static com.google.errorprone.VisitorState.memoize;
-import static com.google.errorprone.matchers.ProtobufMatchers.DYNAMIC_MESSAGE_TYPE;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_TYPE;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_TYPE;
+import static com.google.errorprone.matchers.ProtobufMatchers.DYNAMIC_MESSAGE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.findMatchingMethods;
 import static com.google.errorprone.util.ASTHelpers.getUpperBound;
@@ -260,16 +260,14 @@ public final class TypeCompatibility {
     // proto2-immutable: p.GeneratedMessage < p.AbstractMessage < p.Message
 
     // DynamicMessage is comparable to all other proto types.
-    Type dynamicMessage = DYNAMIC_MESSAGE_TYPE.get(state);
-    if (isSameType(leftType, dynamicMessage, state)
-        || isSameType(rightType, dynamicMessage, state)) {
+    if (isSameType(leftType, DYNAMIC_MESSAGE, state)
+        || isSameType(rightType, DYNAMIC_MESSAGE, state)) {
       return false;
     }
 
-    Type protoBase = MESSAGE_TYPE.get(state);
-    if (isSameType(nearestCommonSupertype, protoBase, state)
-        && !isSameType(leftType, protoBase, state)
-        && !isSameType(rightType, protoBase, state)) {
+    if (isSameType(nearestCommonSupertype, MESSAGE, state)
+        && !isSameType(leftType, MESSAGE, state)
+        && !isSameType(rightType, MESSAGE, state)) {
       // In this situation, there's a mix of (immutable proto2, others) messages. Here, we want to
       // figure out if the other is a proto2-mutable representing the same message/type as the
       // immutable proto.
@@ -289,8 +287,7 @@ public final class TypeCompatibility {
 
     // Otherwise, if these two types are *concrete* proto classes, but not the same message, then
     // consider them incompatible with each other.
-    Type messageLite = MESSAGE_LITE_TYPE.get(state);
-    return isSubtype(nearestCommonSupertype, messageLite, state)
+    return isSubtype(nearestCommonSupertype, MESSAGE_LITE, state)
         && isConcrete(leftType, state.getTypes())
         && isConcrete(rightType, state.getTypes());
   }

@@ -24,15 +24,14 @@ import static com.google.errorprone.matchers.method.ParameterPredicates.onlyType
 import static com.google.errorprone.util.ASTHelpers.getType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
 import java.util.List;
@@ -48,9 +47,11 @@ import java.util.List;
 public class CollectionToArraySafeParameter extends BugChecker
     implements MethodInvocationTreeMatcher {
 
+  private static final ClassName JAVA_UTIL_COLLECTION = ClassName.of("java.util.Collection");
+
   private static final Matcher<ExpressionTree> TO_ARRAY_MATCHER =
       instanceMethod()
-          .onDescendantOf("java.util.Collection")
+          .onDescendantOf(JAVA_UTIL_COLLECTION)
           .named("toArray")
           .withParametersMatching(arrayOf(onlyTypeParameter()));
 
@@ -70,7 +71,7 @@ public class CollectionToArraySafeParameter extends BugChecker
     Type collectionType =
         types.asSuper(
             ASTHelpers.getReceiverType(methodInvocationTree),
-            JAVA_UTIL_COLLECTION.get(visitorState));
+            JAVA_UTIL_COLLECTION.symbol(visitorState));
     List<Type> typeArguments = collectionType.getTypeArguments();
 
     if (!typeArguments.isEmpty()
@@ -80,7 +81,4 @@ public class CollectionToArraySafeParameter extends BugChecker
     }
     return NO_MATCH;
   }
-
-  private static final Supplier<Symbol> JAVA_UTIL_COLLECTION =
-      VisitorState.memoize(state -> state.getSymbolFromString("java.util.Collection"));
 }

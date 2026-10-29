@@ -18,7 +18,6 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.Iterables.getOnlyElement;
-import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -30,6 +29,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
@@ -39,7 +39,6 @@ import com.google.errorprone.bugpatterns.restrictedapi.Restriction;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.matchers.Matchers;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.AssignmentTree;
@@ -204,7 +203,7 @@ public class RestrictedApiChecker extends BugChecker
     if (sym == null) {
       return null;
     }
-    return sym.attribute(RESTRICTED_API_TYPE.get(state));
+    return sym.attribute(RESTRICTED_API_TYPE.symbol(state));
   }
 
   private Description checkRestriction(
@@ -260,6 +259,5 @@ public class RestrictedApiChecker extends BugChecker
     return Matchers.hasAnyAnnotation(allowlistWithWarningAnnotations);
   }
 
-  private static final Supplier<Symbol> RESTRICTED_API_TYPE =
-      memoize(state -> state.getSymbolFromString(RESTRICTED_API_ANNOTATION));
+  private static final ClassName RESTRICTED_API_TYPE = ClassName.of(RESTRICTED_API_ANNOTATION);
 }

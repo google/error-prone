@@ -45,6 +45,7 @@ import com.google.auto.value.AutoValue;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.ForOverride;
 import com.google.errorprone.annotations.MustBeClosed;
@@ -288,7 +289,7 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
         }
         case MemberSelectTree memberSelectTree -> {
           if (memberSelectTree.getExpression().equals(prev.getLeaf())) {
-            Type streamType = state.getTypeFromString(Stream.class.getName());
+            Type streamType = STREAM.type(state);
             Type classType = enclosingClass(getSymbol(memberSelectTree)).asType();
             Type returnType = getReturnType(memberSelectTree);
             if (isSubtype(classType, streamType, state)
@@ -524,4 +525,6 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
         .flatMap(key -> CLOSEABLE_DECORATOR_TYPES.get(key).stream())
         .anyMatch(value -> isSubtype(decoratorType, state.getTypeFromString(value), state));
   }
+
+  private static final ClassName STREAM = ClassName.of(Stream.class.getName());
 }

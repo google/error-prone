@@ -20,11 +20,13 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -45,7 +47,6 @@ import com.sun.tools.javac.tree.TreeScanner;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -65,6 +66,16 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
 
   private static final Matcher<ExpressionTree> NEW_INSTANCE =
       instanceMethod().onExactClass(Class.class.getName()).named("newInstance");
+
+  private static final ClassName REFLECTIVE_OPERATION_EXCEPTION =
+      ClassName.of(ReflectiveOperationException.class.getName());
+
+  private static final ImmutableList<ClassName> CONSTRUCTOR_EXCEPTIONS =
+      ImmutableList.of(
+          ClassName.of(InstantiationException.class.getName()),
+          ClassName.of(IllegalAccessException.class.getName()),
+          ClassName.of(InvocationTargetException.class.getName()),
+          ClassName.of(NoSuchMethodException.class.getName()));
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
@@ -116,11 +127,11 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
       CatchTree last = Iterables.getLast(tryTree.getCatches());
       Tree lastType = last.getParameter().getType();
       if (lastType instanceof UnionTypeTree unionTypeTree) {
-        Type roe = state.getTypeFromString(ReflectiveOperationException.class.getName());
         Set<String> exceptions = new LinkedHashSet<>();
         boolean foundReflective = false;
         for (Tree alternate : unionTypeTree.getTypeAlternatives()) {
-          if (ASTHelpers.isSubtype(ASTHelpers.getType(alternate), roe, state)) {
+          if (ASTHelpers.isSubtype(
+              ASTHelpers.getType(alternate), REFLECTIVE_OPERATION_EXCEPTION, state)) {
             foundReflective = true;
             exceptions.add("ReflectiveOperationException");
           } else {
@@ -226,22 +237,16 @@ public class ClassNewInstance extends BugChecker implements MethodInvocationTree
   private static <T> UnhandledResult<T> unhandled(
       ImmutableMap<Type, T> handles, VisitorState state) {
     LinkedHashSet<Type> toHandle = new LinkedHashSet<>();
-    for (Class<?> e :
-        Arrays.asList(
-            InstantiationException.class,
-            IllegalAccessException.class,
-            InvocationTargetException.class,
-            NoSuchMethodException.class)) {
-      Type type = state.getTypeFromString(e.getName());
+    for (ClassName e : CONSTRUCTOR_EXCEPTIONS) {
+      Type type = e.type(state);
       if (type != null) {
         toHandle.add(type);
       }
     }
-    Type roe = state.getTypeFromString(ReflectiveOperationException.class.getName());
     ImmutableMap.Builder<Type, T> newHandles = ImmutableMap.builder();
     for (Map.Entry<Type, T> entry : handles.entrySet()) {
       Type type = entry.getKey();
-      if (ASTHelpers.isSubtype(type, roe, state)) {
+      if (ASTHelpers.isSubtype(type, REFLECTIVE_OPERATION_EXCEPTION, state)) {
         newHandles.put(type, entry.getValue());
       }
       for (Type precise :

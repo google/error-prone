@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
@@ -25,6 +24,7 @@ import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -36,13 +36,10 @@ import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.util.TreeScanner;
-import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 import javax.lang.model.element.Name;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -55,16 +52,12 @@ public class DoNotClaimAnnotations extends BugChecker implements MethodTreeMatch
 
   private static final Supplier<Name> PROCESS_NAME = memoize(s -> s.getName("process"));
 
-  private static final Supplier<ImmutableList<Type>> PARAMETER_TYPES =
-      memoize(
-          s ->
-              Stream.of("java.util.Set", "javax.annotation.processing.RoundEnvironment")
-                  .map(s::getTypeFromString)
-                  .filter(x -> x != null)
-                  .collect(toImmutableList()));
+  private static final ImmutableList<ClassName> PARAMETER_TYPES =
+      ImmutableList.of(
+          ClassName.of("java.util.Set"),
+          ClassName.of("javax.annotation.processing.RoundEnvironment"));
 
-  private static final Supplier<Symbol> PROCESSOR_SYMBOL =
-      memoize(s -> s.getSymbolFromString("javax.annotation.processing.Processor"));
+  private static final ClassName PROCESSOR = ClassName.of("javax.annotation.processing.Processor");
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -80,12 +73,12 @@ public class DoNotClaimAnnotations extends BugChecker implements MethodTreeMatch
     }
     if (!Streams.zip(
             sym.getParameters().stream(),
-            PARAMETER_TYPES.get(state).stream(),
+            PARAMETER_TYPES.stream(),
             (p, t) -> ASTHelpers.isSameType(p.asType(), t, state))
         .allMatch(x -> x)) {
       return NO_MATCH;
     }
-    if (!enclosingClass(sym).isSubClass(PROCESSOR_SYMBOL.get(state), state.getTypes())) {
+    if (!ASTHelpers.isSubtype(enclosingClass(sym).type, PROCESSOR, state)) {
       return NO_MATCH;
     }
     List<ReturnTree> returns = new ArrayList<>();

@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -44,6 +45,8 @@ import javax.lang.model.element.ElementKind;
     summary = "Path implements Iterable<Path>; prefer Collection<Path> for clarity",
     severity = ERROR)
 public class IterablePathParameter extends BugChecker implements VariableTreeMatcher {
+  private static final ClassName PATH = ClassName.of(Path.class.getName());
+
   @Override
   public Description matchVariable(VariableTree tree, VisitorState state) {
     Type type = ASTHelpers.getType(tree);
@@ -60,10 +63,7 @@ public class IterablePathParameter extends BugChecker implements VariableTreeMat
     if (type.getTypeArguments().isEmpty()) {
       return NO_MATCH;
     }
-    if (!isSameType(
-        wildBound(getOnlyElement(type.getTypeArguments())),
-        state.getTypeFromString(Path.class.getName()),
-        state)) {
+    if (!isSameType(wildBound(getOnlyElement(type.getTypeArguments())), PATH, state)) {
       return NO_MATCH;
     }
     Description.Builder description = buildDescription(tree);
