@@ -42,6 +42,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.InlineMe;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
@@ -900,10 +901,37 @@ public final class ASTHelpers {
   }
 
   /**
+   * Determines whether a symbol has an annotation of the given type. This includes annotations
+   * inherited from superclasses due to {@code @Inherited}.
+   *
+   * @return true if the symbol is annotated with given type.
+   */
+  public static boolean hasAnnotation(
+      @Nullable Symbol sym, ClassName annotationClass, VisitorState state) {
+    if (sym == null) {
+      return false;
+    }
+    Name binaryName = annotationClass.binaryName(state);
+    if (hasFlatAttribute(sym, binaryName)) {
+      return true;
+    }
+    if (sym instanceof ClassSymbol cs && isInherited(state, binaryName)) {
+      for (sym = cs.getSuperclass().tsym;
+          sym instanceof ClassSymbol cs2;
+          sym = cs2.getSuperclass().tsym) {
+        if (hasFlatAttribute(sym, binaryName)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
    * Check for the presence of an annotation, considering annotation inheritance.
    *
    * @return true if the symbol is annotated with given type.
-   * @deprecated prefer {@link #hasAnnotation(Symbol, String, VisitorState)} to avoid needing a
+   * @deprecated prefer {@link #hasAnnotation(Symbol, ClassName, VisitorState)} to avoid needing a
    *     runtime dependency on the annotation class, and to prevent issues if there is skew between
    *     the definition of the annotation on the runtime and compile-time classpaths
    */
@@ -932,7 +960,18 @@ public final class ASTHelpers {
    * Check for the presence of an annotation, considering annotation inheritance.
    *
    * @return true if the tree is annotated with given type.
-   * @deprecated prefer {@link #hasAnnotation(Symbol, String, VisitorState)} to avoid needing a
+   */
+  public static boolean hasAnnotation(
+      @Nullable Tree tree, ClassName annotationClass, VisitorState state) {
+    Symbol sym = getDeclaredSymbol(tree);
+    return hasAnnotation(sym, annotationClass, state);
+  }
+
+  /**
+   * Check for the presence of an annotation, considering annotation inheritance.
+   *
+   * @return true if the tree is annotated with given type.
+   * @deprecated prefer {@link #hasAnnotation(Symbol, ClassName, VisitorState)} to avoid needing a
    *     runtime dependency on the annotation class, and to prevent issues if there is skew between
    *     the definition of the annotation on the runtime and compile-time classpaths
    */
@@ -980,6 +1019,15 @@ public final class ASTHelpers {
   private static boolean hasAttribute(Symbol sym, Name annotationName) {
     for (Compound a : sym.getRawAttributes()) {
       if (a.type.tsym.getQualifiedName().equals(annotationName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static boolean hasFlatAttribute(Symbol sym, Name binaryAnnotationName) {
+    for (Compound a : sym.getRawAttributes()) {
+      if (a.type.tsym.flatName().equals(binaryAnnotationName)) {
         return true;
       }
     }
@@ -1397,6 +1445,11 @@ public final class ASTHelpers {
     return types.isSubtype(types.erasure(s), types.erasure(t));
   }
 
+  /** Returns true if {@code erasure(s) <: erasure(t)}. */
+  public static boolean isSubtype(Type s, ClassName t, VisitorState state) {
+    return isSubtype(s, t.type(state), state);
+  }
+
   /**
    * Returns true if {@code t} is a subtype of Throwable but not a subtype of RuntimeException or
    * Error.
@@ -1424,6 +1477,11 @@ public final class ASTHelpers {
     }
     Types types = state.getTypes();
     return types.isSameType(types.erasure(s), types.erasure(t));
+  }
+
+  /** Returns true if {@code erasure(s) == erasure(t)}. */
+  public static boolean isSameType(Type s, ClassName t, VisitorState state) {
+    return isSameType(s, t.type(state), state);
   }
 
   /**
@@ -2045,14 +2103,13 @@ public final class ASTHelpers {
       return null;
     }
 
-    private static final Supplier<Type> AUTOCLOSEABLE =
-        Suppliers.typeFromString("java.lang.AutoCloseable");
+    private static final ClassName AUTOCLOSEABLE = ClassName.of("java.lang.AutoCloseable");
     private static final Supplier<Name> CLOSE =
         VisitorState.memoize(state -> state.getName("close"));
 
     private static Optional<MethodSymbol> getCloseMethod(ClassSymbol symbol, VisitorState state) {
       Types types = state.getTypes();
-      if (!types.isAssignable(symbol.type, AUTOCLOSEABLE.get(state))) {
+      if (!types.isAssignable(symbol.type, AUTOCLOSEABLE.type(state))) {
         return Optional.empty();
       }
       Type voidType = state.getSymtab().voidType;

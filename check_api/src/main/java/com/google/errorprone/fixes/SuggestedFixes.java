@@ -49,6 +49,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Streams;
 import com.google.common.io.CharStreams;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.apply.DescriptionBasedDiff;
 import com.google.errorprone.apply.ImportOrganizer;
@@ -345,6 +346,8 @@ public final class SuggestedFixes {
     }
   }
 
+  private static final Splitter COMPONENT_SPLITTER = Splitter.on('.');
+
   /**
    * Returns a human-friendly name of the given {@link Symbol} for use in fixes.
    *
@@ -390,27 +393,6 @@ public final class SuggestedFixes {
       }
     }
     return Joiner.on('.').join(names);
-  }
-
-  private static boolean variableClashInScope(VisitorState state, Symbol sym) {
-    if (!sym.getKind().isField()) {
-      return false;
-    }
-    MethodTree method = state.findEnclosing(MethodTree.class);
-    if (method == null) {
-      return false;
-    }
-    boolean[] result = {false};
-    new TreeScanner<Void, Void>() {
-      @Override
-      public Void visitVariable(VariableTree tree, Void unused) {
-        if (tree.getName().contentEquals(sym.getSimpleName())) {
-          result[0] = true;
-        }
-        return super.visitVariable(tree, null);
-      }
-    }.scan(method, null);
-    return result[0];
   }
 
   /** Returns a human-friendly name of the given type for use in fixes. */
@@ -461,7 +443,19 @@ public final class SuggestedFixes {
         fix);
   }
 
-  private static final Splitter COMPONENT_SPLITTER = Splitter.on('.');
+  /**
+   * Returns a human-friendly name of the given {@code typeName} for use in fixes.
+   *
+   * <p>This should be used if the type may not be loaded.
+   */
+  public static String qualifyType(
+      VisitorState state, SuggestedFix.Builder fix, ClassName typeName) {
+    ClassSymbol sym = typeName.symbol(state);
+    if (sym != null) {
+      return qualifyType(state, fix, sym);
+    }
+    return qualifyType(state, fix, typeName.toString().replace('$', '.'));
+  }
 
   /**
    * Returns a human-friendly name of the given {@code typeName} for use in fixes.
@@ -505,6 +499,27 @@ public final class SuggestedFixes {
       }
     }
     return typeName;
+  }
+
+  private static boolean variableClashInScope(VisitorState state, Symbol sym) {
+    if (!sym.getKind().isField()) {
+      return false;
+    }
+    MethodTree method = state.findEnclosing(MethodTree.class);
+    if (method == null) {
+      return false;
+    }
+    boolean[] result = {false};
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitVariable(VariableTree tree, Void unused) {
+        if (tree.getName().contentEquals(sym.getSimpleName())) {
+          result[0] = true;
+        }
+        return super.visitVariable(tree, null);
+      }
+    }.scan(method, null);
+    return result[0];
   }
 
   /**

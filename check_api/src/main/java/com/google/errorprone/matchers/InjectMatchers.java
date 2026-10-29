@@ -30,6 +30,7 @@ import static com.google.errorprone.util.ASTHelpers.getDeclaredSymbol;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.AnnotationTree;
@@ -41,8 +42,9 @@ import java.util.stream.Stream;
 /** Utility constants and matchers related to dependency injection. */
 public final class InjectMatchers {
 
-  public static final Matcher<Tree> INSIDE_GUICE_MODULE =
-      enclosingClass(isSubtypeOf("com.google.inject.Module"));
+  private static final ClassName GUICE_MODULE = ClassName.of("com.google.inject.Module");
+
+  public static final Matcher<Tree> INSIDE_GUICE_MODULE = enclosingClass(isSubtypeOf(GUICE_MODULE));
 
   private InjectMatchers() {} // no instantiation
 
@@ -69,7 +71,7 @@ public final class InjectMatchers {
                       Stream.of(
                           "com.google.inject.throwingproviders.CheckedProvides",
                           DAGGER_PRODUCES_ANNOTATION))
-                  .map(annotation -> isType(annotation))
+                  .map(annotation -> isType(ClassName.of(annotation)))
                   .collect(toImmutableSet())));
 
   @SuppressWarnings("unchecked") // Safe contravariant cast
@@ -89,13 +91,13 @@ public final class InjectMatchers {
       ImmutableSet.of(GUICE_INJECT_ANNOTATION, JAVAX_INJECT_ANNOTATION, JAKARTA_INJECT_ANNOTATION);
 
   public static final Matcher<AnnotationTree> IS_APPLICATION_OF_GUICE_INJECT =
-      new AnnotationType(GUICE_INJECT_ANNOTATION);
+      new AnnotationType(ClassName.of(GUICE_INJECT_ANNOTATION));
 
   public static final Matcher<AnnotationTree> IS_APPLICATION_OF_JAVAX_INJECT =
-      new AnnotationType(JAVAX_INJECT_ANNOTATION);
+      new AnnotationType(ClassName.of(JAVAX_INJECT_ANNOTATION));
 
   public static final Matcher<AnnotationTree> IS_APPLICATION_OF_JAKARTA_INJECT =
-      new AnnotationType(JAKARTA_INJECT_ANNOTATION);
+      new AnnotationType(ClassName.of(JAKARTA_INJECT_ANNOTATION));
 
   public static final Matcher<AnnotationTree> IS_APPLICATION_OF_AT_INJECT =
       anyOf(
@@ -123,7 +125,7 @@ public final class InjectMatchers {
   public static final Matcher<AnnotationTree> IS_SCOPING_ANNOTATION =
       anyOf(
           SCOPE_ANNOTATIONS.stream()
-              .map(annotation -> symbolHasAnnotation(annotation))
+              .map(annotation -> symbolHasAnnotation(ClassName.of(annotation)))
               .collect(toImmutableSet()));
 
   public static final Matcher<ClassTree> HAS_SCOPE_ANNOTATION =
@@ -140,7 +142,7 @@ public final class InjectMatchers {
   public static final Matcher<AnnotationTree> IS_QUALIFIER_ANNOTATION =
       anyOf(
           QUALIFIER_ANNOTATIONS.stream()
-              .map(annotation -> symbolHasAnnotation(annotation))
+              .map(annotation -> symbolHasAnnotation(ClassName.of(annotation)))
               .collect(toImmutableSet()));
 
   public static final Matcher<ClassTree> HAS_QUALIFIER_ANNOTATION =
@@ -158,17 +160,18 @@ public final class InjectMatchers {
               "dagger.producers.ProductionSubcomponent",
               "dagger.hilt.DefineComponent"));
 
+  private static final ClassName DAGGER_MODULE = ClassName.of("dagger.Module");
+
   public static final Matcher<ClassTree> IS_DAGGER_COMPONENT_OR_MODULE =
-      anyOf(IS_DAGGER_COMPONENT, hasAnnotation("dagger.Module"));
+      anyOf(IS_DAGGER_COMPONENT, hasAnnotation(DAGGER_MODULE));
 
   private static <T extends Tree> Matcher<T> hasAnyOfAnnotations(
       ImmutableSet<String> annotationClasses) {
+    ImmutableSet<ClassName> classNames =
+        annotationClasses.stream().map(ClassName::of).collect(toImmutableSet());
     Supplier<ImmutableSet<Name>> name =
         VisitorState.memoize(
-            state ->
-                annotationClasses.stream()
-                    .map(state::binaryNameFromClassname)
-                    .collect(toImmutableSet()));
+            state -> classNames.stream().map(c -> c.binaryName(state)).collect(toImmutableSet()));
     return (T tree, VisitorState state) ->
         !annotationsAmong(getDeclaredSymbol(tree), name.get(state), state).isEmpty();
   }

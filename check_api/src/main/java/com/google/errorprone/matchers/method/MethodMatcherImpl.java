@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.method.MethodMatchers.AnyMethodMatcher;
 import com.google.errorprone.matchers.method.MethodMatchers.ConstructorClassMatcher;
@@ -122,6 +123,11 @@ final class MethodMatcherImpl
   }
 
   @Override
+  public MethodClassMatcher onClass(ClassName className) {
+    return onClass(TypePredicates.isExactType(className));
+  }
+
+  @Override
   public MethodClassMatcher onClass(Supplier<Type> classType) {
     return onClass(TypePredicates.isExactType(classType));
   }
@@ -138,7 +144,17 @@ final class MethodMatcherImpl
   }
 
   @Override
+  public MethodClassMatcher onClassAny(ClassName... classNames) {
+    return onClass(TypePredicates.isExactTypeAny(classNames));
+  }
+
+  @Override
   public MethodClassMatcher onExactClass(String className) {
+    return onClass(className);
+  }
+
+  @Override
+  public MethodClassMatcher onExactClass(ClassName className) {
     return onClass(className);
   }
 
@@ -158,9 +174,19 @@ final class MethodMatcherImpl
   }
 
   @Override
+  public MethodClassMatcher onExactClassAny(ClassName... classTypes) {
+    return onClassAny(classTypes);
+  }
+
+  @Override
   public MethodClassMatcher onDescendantOf(String className) {
     TypePredicate pred = TypePredicates.isDescendantOf(className);
     return append((m, s) -> pred.apply(m.ownerType(), s));
+  }
+
+  @Override
+  public MethodClassMatcher onDescendantOf(ClassName className) {
+    return onClass(TypePredicates.isDescendantOf(className));
   }
 
   @Override
@@ -171,6 +197,11 @@ final class MethodMatcherImpl
   @Override
   public MethodClassMatcher onDescendantOfAny(String... classTypes) {
     return onDescendantOfAny(ImmutableList.copyOf(classTypes));
+  }
+
+  @Override
+  public MethodClassMatcher onDescendantOfAny(ClassName... classTypes) {
+    return onClass(TypePredicates.isDescendantOfAny(classTypes));
   }
 
   @Override
@@ -267,6 +298,24 @@ final class MethodMatcherImpl
   }
 
   @Override
+  public ParameterMatcher withParametersOfType(ClassName first, ClassName... rest) {
+    ImmutableList<ClassName> expected = ImmutableList.copyOf(Lists.asList(first, rest));
+    return append(
+        (method, state) -> {
+          List<Type> actual = method.paramTypes();
+          if (actual.size() != expected.size()) {
+            return false;
+          }
+          for (int i = 0; i < expected.size(); i++) {
+            if (!ASTHelpers.isSameType(actual.get(i), expected.get(i), state)) {
+              return false;
+            }
+          }
+          return true;
+        });
+  }
+
+  @Override
   public ParameterMatcher withParametersMatching(
       ParameterPredicate first, ParameterPredicate... rest) {
     return withParametersMatching(Lists.asList(first, rest));
@@ -300,6 +349,11 @@ final class MethodMatcherImpl
   @Override
   public ConstructorClassMatcher forClass(String className) {
     return append((m, s) -> m.ownerType().asElement().getQualifiedName().contentEquals(className));
+  }
+
+  @Override
+  public ConstructorClassMatcher forClass(ClassName className) {
+    return forClass(TypePredicates.isExactType(className));
   }
 
   @Override

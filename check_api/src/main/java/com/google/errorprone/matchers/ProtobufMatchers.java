@@ -24,9 +24,9 @@ import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.predicates.TypePredicates.allOf;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.predicates.TypePredicates.isExactType;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static javax.lang.model.element.ElementKind.ENUM;
 
+import com.google.errorprone.ClassName;
 import com.google.errorprone.predicates.TypePredicate;
 import com.google.errorprone.predicates.TypePredicates;
 import com.google.errorprone.suppliers.Supplier;
@@ -92,61 +92,100 @@ public final class ProtobufMatchers {
   public static final String PROTO_TIMESTAMPS_UTIL_CLASS = "com.google.protobuf.util.Timestamps";
   public static final String PROTO_FIELD_MASK_UTIL_CLASS = "com.google.protobuf.util.FieldMaskUtil";
 
-  public static final Supplier<Type> MESSAGE_LITE_TYPE = typeFromString(MESSAGE_LITE_CLASS);
-  public static final Supplier<Type> MESSAGE_TYPE = typeFromString(MESSAGE_CLASS);
-  public static final Supplier<Type> GENERATED_MESSAGE_TYPE =
-      typeFromString(GENERATED_MESSAGE_CLASS);
+  public static final ClassName MESSAGE_LITE = ClassName.of(MESSAGE_LITE_CLASS);
+  public static final ClassName MESSAGE = ClassName.of(MESSAGE_CLASS);
+  public static final ClassName GENERATED_MESSAGE = ClassName.of(GENERATED_MESSAGE_CLASS);
+  public static final ClassName GENERATED_MESSAGE_LITE = ClassName.of(GENERATED_MESSAGE_LITE_CLASS);
+  public static final ClassName MUTABLE_MESSAGE_LITE = ClassName.of(MUTABLE_MESSAGE_LITE_CLASS);
+  public static final ClassName DYNAMIC_MESSAGE = ClassName.of(DYNAMIC_MESSAGE_CLASS);
+  public static final ClassName ABSTRACT_MESSAGE_LITE = ClassName.of(ABSTRACT_MESSAGE_LITE_CLASS);
+
+  public static final ClassName MESSAGE_LITE_BUILDER = ClassName.of(MESSAGE_LITE_BUILDER_CLASS);
+  public static final ClassName MESSAGE_BUILDER = ClassName.of(MESSAGE_BUILDER_CLASS);
+  public static final ClassName GENERATED_MESSAGE_BUILDER =
+      ClassName.of(GENERATED_MESSAGE_BUILDER_CLASS);
+  public static final ClassName GENERATED_MESSAGE_LITE_BUILDER =
+      ClassName.of(GENERATED_MESSAGE_LITE_BUILDER_CLASS);
+  public static final ClassName MESSAGE_LITE_OR_BUILDER =
+      ClassName.of(MESSAGE_LITE_OR_BUILDER_CLASS);
+  public static final ClassName MESSAGE_OR_BUILDER = ClassName.of(MESSAGE_OR_BUILDER_CLASS);
+  public static final ClassName EXTENDABLE_MESSAGE = ClassName.of(EXTENDABLE_MESSAGE_CLASS);
+  public static final ClassName EXTENDABLE_MESSAGE_LITE =
+      ClassName.of(EXTENDABLE_MESSAGE_LITE_CLASS);
+
+  public static final ClassName ENUM_LITE = ClassName.of(ENUM_LITE_CLASS);
+  public static final ClassName PROTOCOL_MESSAGE_ENUM = ClassName.of(PROTOCOL_MESSAGE_ENUM_CLASS);
+  public static final ClassName INTERNAL_ONE_OF_ENUM = ClassName.of(INTERNAL_ONE_OF_ENUM_CLASS);
+
+  public static final ClassName BYTE_STRING = ClassName.of(BYTE_STRING_CLASS);
+  public static final ClassName PROTOCOL_STRING_LIST = ClassName.of(PROTOCOL_STRING_LIST_CLASS);
+  public static final ClassName UNKNOWN_FIELD_SET = ClassName.of(UNKNOWN_FIELD_SET_CLASS);
+  public static final ClassName EXTENSION_LITE = ClassName.of(EXTENSION_LITE_CLASS);
+  public static final ClassName EXTENSION = ClassName.of(EXTENSION_CLASS);
+  public static final ClassName DESCRIPTOR = ClassName.of(DESCRIPTOR_CLASS);
+  public static final ClassName FIELD_DESCRIPTOR = ClassName.of(FIELD_DESCRIPTOR_CLASS);
+  public static final ClassName ENUM_DESCRIPTOR = ClassName.of(ENUM_DESCRIPTOR_CLASS);
+  public static final ClassName ENUM_VALUE_DESCRIPTOR = ClassName.of(ENUM_VALUE_DESCRIPTOR_CLASS);
+  public static final ClassName FILE_DESCRIPTOR = ClassName.of(FILE_DESCRIPTOR_CLASS);
+  public static final ClassName ONEOF_DESCRIPTOR = ClassName.of(ONEOF_DESCRIPTOR_CLASS);
+  public static final ClassName SERVICE_DESCRIPTOR = ClassName.of(SERVICE_DESCRIPTOR_CLASS);
+
+  public static final ClassName PROTO_DURATION = ClassName.of(PROTO_DURATION_CLASS);
+  public static final ClassName PROTO_TIMESTAMP = ClassName.of(PROTO_TIMESTAMP_CLASS);
+  public static final ClassName PROTO_DURATIONS_UTIL = ClassName.of(PROTO_DURATIONS_UTIL_CLASS);
+  public static final ClassName PROTO_TIMESTAMPS_UTIL = ClassName.of(PROTO_TIMESTAMPS_UTIL_CLASS);
+  public static final ClassName PROTO_FIELD_MASK_UTIL = ClassName.of(PROTO_FIELD_MASK_UTIL_CLASS);
+
+  public static final Supplier<Type> MESSAGE_LITE_TYPE = MESSAGE_LITE.asTypeSupplier();
+  public static final Supplier<Type> MESSAGE_TYPE = MESSAGE.asTypeSupplier();
+  public static final Supplier<Type> GENERATED_MESSAGE_TYPE = GENERATED_MESSAGE.asTypeSupplier();
   public static final Supplier<Type> GENERATED_MESSAGE_LITE_TYPE =
-      typeFromString(GENERATED_MESSAGE_LITE_CLASS);
+      GENERATED_MESSAGE_LITE.asTypeSupplier();
   public static final Supplier<Type> MUTABLE_MESSAGE_LITE_TYPE =
-      typeFromString(MUTABLE_MESSAGE_LITE_CLASS);
-  public static final Supplier<Type> DYNAMIC_MESSAGE_TYPE = typeFromString(DYNAMIC_MESSAGE_CLASS);
+      MUTABLE_MESSAGE_LITE.asTypeSupplier();
+  public static final Supplier<Type> DYNAMIC_MESSAGE_TYPE = DYNAMIC_MESSAGE.asTypeSupplier();
   public static final Supplier<Type> MESSAGE_LITE_BUILDER_TYPE =
-      typeFromString(MESSAGE_LITE_BUILDER_CLASS);
-  public static final Supplier<Type> MESSAGE_BUILDER_TYPE = typeFromString(MESSAGE_BUILDER_CLASS);
+      MESSAGE_LITE_BUILDER.asTypeSupplier();
+  public static final Supplier<Type> MESSAGE_BUILDER_TYPE = MESSAGE_BUILDER.asTypeSupplier();
   public static final Supplier<Type> MESSAGE_LITE_OR_BUILDER_TYPE =
-      typeFromString(MESSAGE_LITE_OR_BUILDER_CLASS);
-  public static final Supplier<Type> ENUM_LITE_TYPE = typeFromString(ENUM_LITE_CLASS);
+      MESSAGE_LITE_OR_BUILDER.asTypeSupplier();
+  public static final Supplier<Type> ENUM_LITE_TYPE = ENUM_LITE.asTypeSupplier();
   public static final Supplier<Type> PROTOCOL_MESSAGE_ENUM_TYPE =
-      typeFromString(PROTOCOL_MESSAGE_ENUM_CLASS);
-  public static final Supplier<Type> EXTENSION_LITE_TYPE = typeFromString(EXTENSION_LITE_CLASS);
+      PROTOCOL_MESSAGE_ENUM.asTypeSupplier();
+  public static final Supplier<Type> EXTENSION_LITE_TYPE = EXTENSION_LITE.asTypeSupplier();
 
   /** Matches specifically lite proto messages (excluding full Message and UnknownFieldSet). */
   public static final TypePredicate IS_LITE_PROTO =
       allOf(
-          isDescendantOf(MESSAGE_LITE_CLASS),
-          TypePredicates.not(isDescendantOf(MESSAGE_CLASS)),
-          TypePredicates.not(isExactType(UNKNOWN_FIELD_SET_CLASS)));
+          isDescendantOf(MESSAGE_LITE),
+          TypePredicates.not(isDescendantOf(MESSAGE)),
+          TypePredicates.not(isExactType(UNKNOWN_FIELD_SET)));
 
   /** Matches specifically lite proto enums (excluding full enum descriptors and oneof enums). */
   public static final TypePredicate IS_LITE_PROTO_ENUM =
       allOf(
-          isDescendantOf(ENUM_LITE_CLASS),
-          TypePredicates.not(isDescendantOf(PROTOCOL_MESSAGE_ENUM_CLASS)),
-          TypePredicates.not(isDescendantOf(ENUM_VALUE_DESCRIPTOR_CLASS)),
-          TypePredicates.not(isDescendantOf(INTERNAL_ONE_OF_ENUM_CLASS)));
+          isDescendantOf(ENUM_LITE),
+          TypePredicates.not(isDescendantOf(PROTOCOL_MESSAGE_ENUM)),
+          TypePredicates.not(isDescendantOf(ENUM_VALUE_DESCRIPTOR)),
+          TypePredicates.not(isDescendantOf(INTERNAL_ONE_OF_ENUM)));
 
   /** Matches a oneof enum (AbstractMessageLite.InternalOneOfEnum). */
   public static final TypePredicate IS_ONEOF_ENUM =
       allOf(
-          isDescendantOf(INTERNAL_ONE_OF_ENUM_CLASS),
+          isDescendantOf(INTERNAL_ONE_OF_ENUM),
           (type, state) -> type != null && type.tsym != null && type.tsym.getKind() == ENUM);
 
   /** Matches builder {@code build()} or {@code buildPartial()} invocations. */
   public static final Matcher<ExpressionTree> PROTO_BUILD_METHOD =
-      instanceMethod()
-          .onDescendantOf(MESSAGE_LITE_BUILDER_CLASS)
-          .namedAnyOf("build", "buildPartial");
+      instanceMethod().onDescendantOf(MESSAGE_LITE_BUILDER).namedAnyOf("build", "buildPartial");
 
   /** Matches static {@code newBuilder()} calls on proto messages. */
   public static final Matcher<ExpressionTree> PROTO_NEW_BUILDER_METHOD =
-      staticMethod().onDescendantOf(MESSAGE_LITE_CLASS).named("newBuilder");
+      staticMethod().onDescendantOf(MESSAGE_LITE).named("newBuilder");
 
   /** Matches {@code toBuilder()} or {@code newBuilderForType()} calls on proto messages. */
   public static final Matcher<ExpressionTree> PROTO_TO_BUILDER_METHOD =
-      instanceMethod()
-          .onDescendantOf(MESSAGE_LITE_CLASS)
-          .namedAnyOf("toBuilder", "newBuilderForType");
+      instanceMethod().onDescendantOf(MESSAGE_LITE).namedAnyOf("toBuilder", "newBuilderForType");
 
   private static final Pattern GETTER_PATTERN = Pattern.compile("get.+");
   private static final Pattern MUTATOR_PATTERN =
@@ -155,9 +194,7 @@ public final class ProtobufMatchers {
   /** Matches immutable proto getters, excluding size/serialization and framework methods. */
   public static final Matcher<ExpressionTree> PROTO_GETTER =
       allOf(
-          instanceMethod()
-              .onDescendantOf(MESSAGE_LITE_OR_BUILDER_CLASS)
-              .withNameMatching(GETTER_PATTERN),
+          instanceMethod().onDescendantOf(MESSAGE_LITE_OR_BUILDER).withNameMatching(GETTER_PATTERN),
           not(
               instanceMethod()
                   .anyClass()
@@ -174,7 +211,7 @@ public final class ProtobufMatchers {
    * {@code putFoo()}).
    */
   public static final Matcher<ExpressionTree> PROTO_BUILDER_MUTATOR =
-      instanceMethod().onDescendantOf(MESSAGE_LITE_BUILDER_CLASS).withNameMatching(MUTATOR_PATTERN);
+      instanceMethod().onDescendantOf(MESSAGE_LITE_BUILDER).withNameMatching(MUTATOR_PATTERN);
 
   /**
    * Matches static factory methods on {@code com.google.protobuf.util.Timestamps} and {@code
@@ -184,10 +221,10 @@ public final class ProtobufMatchers {
   public static final Matcher<ExpressionTree> PROTO_TIME_STATIC_FACTORIES =
       anyOf(
           staticMethod()
-              .onClass(PROTO_TIMESTAMPS_UTIL_CLASS)
+              .onClass(PROTO_TIMESTAMPS_UTIL)
               .namedAnyOf("fromNanos", "fromMicros", "fromMillis", "fromSeconds"),
           staticMethod()
-              .onClass(PROTO_DURATIONS_UTIL_CLASS)
+              .onClass(PROTO_DURATIONS_UTIL)
               .namedAnyOf(
                   "fromNanos",
                   "fromMicros",

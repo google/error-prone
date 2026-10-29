@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BaseErrorProneJavaCompiler;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.CompilationTestHelper;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -870,6 +871,113 @@ public class SuggestedFixesTest {
   @Test
   public void qualifyTypeString_deeplyNestedType() {
     qualifyDeeplyNestedType(new ReplaceReturnTypeString("pkg.Outer.Inner.Innermost"));
+  }
+
+  /** A test check that replaces all methods' return types with a given {@link ClassName}. */
+  @BugPattern(summary = "Change the method return type", severity = ERROR)
+  public static class ReplaceReturnTypeClassName extends BugChecker
+      implements BugChecker.MethodTreeMatcher {
+    private final ClassName newReturnType;
+
+    public ReplaceReturnTypeClassName(ClassName newReturnType) {
+      this.newReturnType = newReturnType;
+    }
+
+    @Override
+    public Description matchMethod(MethodTree tree, VisitorState state) {
+      SuggestedFix.Builder builder = SuggestedFix.builder();
+      String qualifiedName = SuggestedFixes.qualifyType(state, builder, newReturnType);
+      return describeMatch(
+          tree.getReturnType(), builder.replace(tree.getReturnType(), qualifiedName).build());
+    }
+  }
+
+  /** Test checker for {@link #qualifyTypeClassName_dollarPrefixedLoadedType}. */
+  @BugPattern(summary = "Change the method return type", severity = ERROR)
+  public static final class ReplaceReturnTypeDollarPrefixed extends ReplaceReturnTypeClassName {
+    public ReplaceReturnTypeDollarPrefixed() {
+      super(ClassName.of("com.example.$AutoValue_Foo"));
+    }
+  }
+
+  /** Test checker for {@link #qualifyTypeClassName_unloadedNestedType}. */
+  @BugPattern(summary = "Change the method return type", severity = ERROR)
+  public static final class ReplaceReturnTypeUnloadedNested extends ReplaceReturnTypeClassName {
+    public ReplaceReturnTypeUnloadedNested() {
+      super(ClassName.of("com.example.Unloaded.Nested"));
+    }
+  }
+
+  @Test
+  public void qualifyTypeClassName_nestedType() {
+    qualifyNestedType(new ReplaceReturnTypeClassName(ClassName.of("pkg.Outer.Inner")));
+  }
+
+  @Test
+  public void qualifyTypeClassName_deeplyNestedType() {
+    qualifyDeeplyNestedType(
+        new ReplaceReturnTypeClassName(ClassName.of("pkg.Outer.Inner.Innermost")));
+  }
+
+  @Test
+  public void qualifyTypeClassName_dollarPrefixedLoadedType() {
+    BugCheckerRefactoringTestHelper.newInstance(ReplaceReturnTypeDollarPrefixed.class, getClass())
+        .addInputLines(
+            "com/example/$AutoValue_Foo.java",
+            """
+            package com.example;
+
+            public class $AutoValue_Foo {}
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              Void foo() {
+                return null;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.example.$AutoValue_Foo;
+
+            class Test {
+              $AutoValue_Foo foo() {
+                return null;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void qualifyTypeClassName_unloadedNestedType() {
+    BugCheckerRefactoringTestHelper.newInstance(ReplaceReturnTypeUnloadedNested.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              Void foo() {
+                return null;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import com.example.Unloaded;
+
+            class Test {
+              Unloaded.Nested foo() {
+                return null;
+              }
+            }
+            """)
+        .allowBreakingChanges()
+        .doTest();
   }
 
   @Test

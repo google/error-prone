@@ -28,9 +28,9 @@ import static com.google.errorprone.util.ASTHelpers.isConsideredFinal;
 import static javax.lang.model.element.ElementKind.FIELD;
 import static javax.lang.model.element.ElementKind.PARAMETER;
 
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CompileTimeConstant;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CaseTree.CaseKind;
 import com.sun.source.tree.ConditionalExpressionTree;
@@ -61,8 +61,8 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
  */
 public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionTree> {
 
-  private static final Supplier<Symbol> COMPILE_TIME_CONSTANT_ANNOTATION =
-      VisitorState.memoize(state -> state.getSymbolFromString(CompileTimeConstant.class.getName()));
+  private static final ClassName COMPILE_TIME_CONSTANT_ANNOTATION =
+      ClassName.of(CompileTimeConstant.class.getName());
 
   private static final Matcher<ExpressionTree> INSTANCE =
       anyOf(
@@ -164,7 +164,7 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
   }
 
   public static boolean hasCompileTimeConstantAnnotation(VisitorState state, Symbol symbol) {
-    Symbol annotation = COMPILE_TIME_CONSTANT_ANNOTATION.get(state);
+    Symbol annotation = COMPILE_TIME_CONSTANT_ANNOTATION.symbol(state);
     // If we can't look up the annotation in the current VisitorState, then presumably it couldn't
     // be present on a Symbol we're inspecting.
     return annotation != null && symbol.attribute(annotation) != null;

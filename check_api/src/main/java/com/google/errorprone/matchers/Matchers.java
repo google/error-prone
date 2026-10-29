@@ -28,9 +28,9 @@ import static com.google.errorprone.predicates.TypePredicates.isExactType;
 import static com.google.errorprone.suppliers.Suppliers.BOOLEAN_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.INT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
+import static com.google.errorprone.suppliers.Suppliers.OBJECT_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.STRING_TYPE;
 import static com.google.errorprone.suppliers.Suppliers.typeFromClass;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -44,6 +44,7 @@ import com.google.common.base.VerifyException;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.dataflow.nullnesspropagation.Nullness;
 import com.google.errorprone.matchers.ChildMultiMatcher.MatchType;
@@ -101,11 +102,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
@@ -407,6 +406,15 @@ public final class Matchers {
   }
 
   /**
+   * Matches an AST node if its type is a subtype of the given class.
+   *
+   * @param className the class to check against
+   */
+  public static <T extends Tree> Matcher<T> isSubtypeOf(ClassName className) {
+    return typePredicateMatcher(isDescendantOf(className));
+  }
+
+  /**
    * Matches an AST node if its type is a subtype of the given type.
    *
    * @param type the type to check against
@@ -432,6 +440,11 @@ public final class Matchers {
   /** Matches an AST node if it has the same erased type as the given type. */
   public static <T extends Tree> Matcher<T> isSameType(String typeString) {
     return typePredicateMatcher(isExactType(typeString));
+  }
+
+  /** Matches an AST node if it has the same erased type as the given class. */
+  public static <T extends Tree> Matcher<T> isSameType(ClassName className) {
+    return typePredicateMatcher(isExactType(className));
   }
 
   /** Matches an AST node if it has the same erased type as the given class. */
@@ -703,7 +716,13 @@ public final class Matchers {
     return new AnnotationDoesNotHaveArgument(argumentName);
   }
 
+  /** Matches an {@link AnnotationTree} with the given qualified annotation class name. */
   public static Matcher<AnnotationTree> isType(String annotationClassName) {
+    return new AnnotationType(annotationClassName);
+  }
+
+  /** Matches an {@link AnnotationTree} with the given annotation {@link ClassName}. */
+  public static Matcher<AnnotationTree> isType(ClassName annotationClassName) {
     return new AnnotationType(annotationClassName);
   }
 
@@ -712,6 +731,14 @@ public final class Matchers {
    * meta-annotation.
    */
   public static Matcher<AnnotationTree> hasMetaAnnotation(String annotationClassName) {
+    return typePredicateMatcher(TypePredicates.hasAnnotation(annotationClassName));
+  }
+
+  /**
+   * Matches an annotation that is itself annotated with the given annotation, i.e. a
+   * meta-annotation.
+   */
+  public static Matcher<AnnotationTree> hasMetaAnnotation(ClassName annotationClassName) {
     return typePredicateMatcher(TypePredicates.hasAnnotation(annotationClassName));
   }
 
@@ -731,6 +758,18 @@ public final class Matchers {
   }
 
   /**
+   * Determines whether an expression has an annotation with the given simple name. This does not
+   * include annotations inherited from superclasses due to @Inherited.
+   *
+   * @param simpleName the simple name of the annotation (e.g. "Nullable")
+   */
+  public static <T extends Tree> Matcher<T> hasAnnotationWithSimpleName(String simpleName) {
+    return (tree, state) ->
+        ASTHelpers.hasDirectAnnotationWithSimpleName(
+            ASTHelpers.getDeclaredSymbol(tree), simpleName);
+  }
+
+  /**
    * Determines whether an expression has an annotation of the given type. This includes annotations
    * inherited from superclasses due to @Inherited.
    *
@@ -738,12 +777,16 @@ public final class Matchers {
    *     "javax.annotation.Nullable", or "some.package.OuterClassName$InnerClassName")
    */
   public static <T extends Tree> Matcher<T> hasAnnotation(String annotationClass) {
-    Supplier<Set<Name>> name =
-        VisitorState.memoize(
-            state -> ImmutableSet.of(state.binaryNameFromClassname(annotationClass)));
+    return hasAnnotation(ClassName.of(annotationClass));
+  }
+
+  /**
+   * Determines whether an expression has an annotation of the given type. This includes annotations
+   * inherited from superclasses due to @Inherited.
+   */
+  public static <T extends Tree> Matcher<T> hasAnnotation(ClassName annotationClass) {
     return (T tree, VisitorState state) ->
-        !ASTHelpers.annotationsAmong(ASTHelpers.getDeclaredSymbol(tree), name.get(state), state)
-            .isEmpty();
+        ASTHelpers.hasAnnotation(ASTHelpers.getDeclaredSymbol(tree), annotationClass, state);
   }
 
   /**
@@ -769,15 +812,13 @@ public final class Matchers {
   }
 
   /**
-   * Determines whether an expression has an annotation with the given simple name. This does not
-   * include annotations inherited from superclasses due to @Inherited.
+   * Determines whether an expression has an annotation of the given class. This includes
+   * annotations inherited from superclasses due to @Inherited.
    *
-   * @param simpleName the simple name of the annotation (e.g. "Nullable")
+   * @param inputClass the class of the annotation to look for (e.g, {@code Produces.class})
    */
-  public static <T extends Tree> Matcher<T> hasAnnotationWithSimpleName(String simpleName) {
-    return (tree, state) ->
-        ASTHelpers.hasDirectAnnotationWithSimpleName(
-            ASTHelpers.getDeclaredSymbol(tree), simpleName);
+  public static <T extends Tree> Matcher<T> hasAnnotation(Class<? extends Annotation> inputClass) {
+    return hasAnnotation(ClassName.of(inputClass.getName()));
   }
 
   /**
@@ -793,14 +834,12 @@ public final class Matchers {
   }
 
   /**
-   * Determines whether an expression has an annotation of the given class. This includes
-   * annotations inherited from superclasses due to @Inherited.
-   *
-   * @param inputClass The class of the annotation to look for (e.g, Produces.class).
+   * Determines whether an expression refers to a symbol that has an annotation of the given type.
+   * This includes annotations inherited from superclasses due to @Inherited.
    */
-  public static <T extends Tree> Matcher<T> hasAnnotation(Class<? extends Annotation> inputClass) {
-    return (tree, state) ->
-        ASTHelpers.hasAnnotation(ASTHelpers.getDeclaredSymbol(tree), inputClass, state);
+  public static <T extends Tree> Matcher<T> symbolHasAnnotation(ClassName annotationClass) {
+    return symbolMatcher(
+        (symbol, state) -> ASTHelpers.hasAnnotation(symbol, annotationClass, state));
   }
 
   /**
@@ -836,6 +875,25 @@ public final class Matchers {
     };
   }
 
+  /**
+   * Matches if a method or any method it overrides has an annotation of the given type. JUnit 4's
+   * {@code @Test}, {@code @Before}, and {@code @After} annotations behave this way.
+   */
+  public static Matcher<MethodTree> hasAnnotationOnAnyOverriddenMethod(ClassName annotationClass) {
+    return (tree, state) -> {
+      MethodSymbol methodSym = getSymbol(tree);
+      if (ASTHelpers.hasAnnotation(methodSym, annotationClass, state)) {
+        return true;
+      }
+      for (MethodSymbol method : ASTHelpers.findSuperMethods(methodSym, state.getTypes())) {
+        if (ASTHelpers.hasAnnotation(method, annotationClass, state)) {
+          return true;
+        }
+      }
+      return false;
+    };
+  }
+
   /** Matches a method invocation that is known to never return null. */
   public static Matcher<ExpressionTree> methodReturnsNonNull() {
     return anyOf(
@@ -853,7 +911,13 @@ public final class Matchers {
     };
   }
 
+  /** Match a method whose return type equals the given {@code returnType}. */
   public static Matcher<MethodTree> methodReturns(Supplier<Type> returnType) {
+    return methodReturns(isSameType(returnType));
+  }
+
+  /** Match a method whose return type equals the given {@code returnType}. */
+  public static Matcher<MethodTree> methodReturns(ClassName returnType) {
     return methodReturns(isSameType(returnType));
   }
 
@@ -891,6 +955,19 @@ public final class Matchers {
     return (methodTree, state) ->
         getSymbol(methodTree).getEnclosingElement().getQualifiedName().contentEquals(className)
             && methodTree.getName().contentEquals(methodName);
+  }
+
+  /**
+   * Match a method declaration with a specific enclosing class and method name.
+   *
+   * @param className The enclosing class
+   * @param methodName The name of the method to match, e.g., "checkNotNull"
+   */
+  public static Matcher<MethodTree> methodWithClassAndName(ClassName className, String methodName) {
+    return (methodTree, state) ->
+        methodTree.getName().contentEquals(methodName)
+            && getSymbol(methodTree).getEnclosingElement() instanceof ClassSymbol owner
+            && owner.flatName().equals(className.binaryName(state));
   }
 
   /**
@@ -964,6 +1041,20 @@ public final class Matchers {
       Symbol symbol = getSymbol(methodTree);
       return symbol.getEnclosingElement().getQualifiedName().contentEquals(className)
           && symbol.isConstructor();
+    };
+  }
+
+  /**
+   * Matches a constructor declaration in a specific enclosing class.
+   *
+   * @param className The enclosing class
+   */
+  public static Matcher<MethodTree> constructorOfClass(ClassName className) {
+    return (methodTree, state) -> {
+      Symbol symbol = getSymbol(methodTree);
+      return symbol.isConstructor()
+          && symbol.getEnclosingElement() instanceof ClassSymbol owner
+          && owner.flatName().equals(className.binaryName(state));
     };
   }
 
@@ -1317,8 +1408,20 @@ public final class Matchers {
     return new IsDirectImplementationOf(isProvidedType);
   }
 
+  /** Matches any node that is directly an implementation, but not extension, of the given Class. */
+  public static Matcher<ClassTree> isDirectImplementationOf(ClassName clazz) {
+    Matcher<Tree> isProvidedType = isSameType(clazz);
+    return new IsDirectImplementationOf(isProvidedType);
+  }
+
   /** Matches any node that is a direct extension of the given class. */
   public static Matcher<ClassTree> isExtensionOf(String clazz) {
+    Matcher<Tree> isProvidedType = isSameType(clazz);
+    return new IsExtensionOf(isProvidedType);
+  }
+
+  /** Matches any node that is a direct extension of the given class. */
+  public static Matcher<ClassTree> isExtensionOf(ClassName clazz) {
     Matcher<Tree> isProvidedType = isSameType(clazz);
     return new IsExtensionOf(isProvidedType);
   }
@@ -1330,6 +1433,20 @@ public final class Matchers {
       matchers.add(hasAnnotation(annotation));
     }
     return anyOf(matchers);
+  }
+
+  /**
+   * Determines whether a tree has any of the given annotations. This includes annotations inherited
+   * from superclasses due to {@code @Inherited}.
+   */
+  public static <T extends Tree> Matcher<T> hasAnyAnnotation(ClassName... annotations) {
+    ImmutableList<ClassName> classNames = ImmutableList.copyOf(annotations);
+    Supplier<ImmutableSet<Name>> names =
+        VisitorState.memoize(
+            state -> classNames.stream().map(a -> a.binaryName(state)).collect(toImmutableSet()));
+    return (T tree, VisitorState state) ->
+        !ASTHelpers.annotationsAmong(ASTHelpers.getDeclaredSymbol(tree), names.get(state), state)
+            .isEmpty();
   }
 
   public static Matcher<Tree> hasAnyAnnotation(List<? extends TypeMirror> mirrors) {
@@ -1351,8 +1468,12 @@ public final class Matchers {
   }
 
   public static boolean isThrowingFunctionalInterface(Type clazzType, VisitorState state) {
-    return CLASSES_CONSIDERED_THROWING.get(state).stream()
-        .anyMatch(t -> isSubtype(clazzType, t, state));
+    for (ClassName throwingClass : CLASSES_CONSIDERED_THROWING) {
+      if (isSubtype(clazzType, throwingClass, state)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -1363,22 +1484,17 @@ public final class Matchers {
    * errorCollector.checkThrows(FooException.class, () -> myCodeThatThrowsAnException()); }
    */
   // TODO(glorioso): Consider a meta-annotation like @LikelyToThrow instead/in addition?
-  private static final Supplier<ImmutableSet<Type>> CLASSES_CONSIDERED_THROWING =
-      VisitorState.memoize(
-          state ->
-              Stream.of(
-                      "org.junit.function.ThrowingRunnable",
-                      "org.junit.jupiter.api.function.Executable",
-                      "org.assertj.core.api.ThrowableAssert$ThrowingCallable",
-                      "com.google.common.truth.ExpectFailure.AssertionCallback",
-                      "com.google.common.truth.ExpectFailure.DelegatedAssertionCallback",
-                      "com.google.common.truth.ExpectFailure.StandardSubjectBuilderCallback",
-                      "com.google.common.truth.ExpectFailure.SimpleSubjectBuilderCallback",
-                      "com.google.devtools.build.lib.testutil.MoreAsserts$ThrowingRunnable",
-                      "com.google.gerrit.testing.GerritJUnit$ThrowingRunnable")
-                  .map(state::getTypeFromString)
-                  .filter(Objects::nonNull)
-                  .collect(toImmutableSet()));
+  private static final ImmutableList<ClassName> CLASSES_CONSIDERED_THROWING =
+      ImmutableList.of(
+          ClassName.of("org.junit.function.ThrowingRunnable"),
+          ClassName.of("org.junit.jupiter.api.function.Executable"),
+          ClassName.of("org.assertj.core.api.ThrowableAssert$ThrowingCallable"),
+          ClassName.of("com.google.common.truth.ExpectFailure.AssertionCallback"),
+          ClassName.of("com.google.common.truth.ExpectFailure.DelegatedAssertionCallback"),
+          ClassName.of("com.google.common.truth.ExpectFailure.StandardSubjectBuilderCallback"),
+          ClassName.of("com.google.common.truth.ExpectFailure.SimpleSubjectBuilderCallback"),
+          ClassName.of("com.google.devtools.build.lib.testutil.MoreAsserts$ThrowingRunnable"),
+          ClassName.of("com.google.gerrit.testing.GerritJUnit$ThrowingRunnable"));
 
   private static class IsDirectImplementationOf extends ChildMultiMatcher<ClassTree, Tree> {
     IsDirectImplementationOf(Matcher<Tree> classMatcher) {
@@ -1678,16 +1794,13 @@ public final class Matchers {
           anyOf(
               allOf(
                   methodIsNamed("readObject"),
-                  methodHasParameters(isSameType("java.io.ObjectInputStream"))),
+                  methodHasParameters(isSameType(ClassName.of("java.io.ObjectInputStream")))),
               allOf(
                   methodIsNamed("writeObject"),
-                  methodHasParameters(isSameType("java.io.ObjectOutputStream"))),
+                  methodHasParameters(isSameType(ClassName.of("java.io.ObjectOutputStream")))),
               allOf(methodIsNamed("readObjectNoData"), methodReturns(isVoidType())),
-              allOf(
-                  methodIsNamed("readResolve"), methodReturns(typeFromString("java.lang.Object"))),
-              allOf(
-                  methodIsNamed("writeReplace"),
-                  methodReturns(typeFromString("java.lang.Object")))));
+              allOf(methodIsNamed("readResolve"), methodReturns(OBJECT_TYPE)),
+              allOf(methodIsNamed("writeReplace"), methodReturns(OBJECT_TYPE))));
 
   public static final Matcher<Tree> IS_INTERFACE =
       (t, s) -> {

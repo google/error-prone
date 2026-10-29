@@ -21,11 +21,12 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.util.Name;
 import java.util.function.BiPredicate;
@@ -35,12 +36,20 @@ public final class FieldMatchers {
 
   /** Matches instance fields. */
   public interface InstanceFieldMatcher {
-    FieldClassMatcher onClass(String className);
+    default FieldClassMatcher onClass(String className) {
+      return onClass(ClassName.of(className));
+    }
+
+    FieldClassMatcher onClass(ClassName className);
   }
 
   /** Matches static fields. */
   public interface StaticFieldMatcher {
-    FieldClassMatcher onClass(String className);
+    default FieldClassMatcher onClass(String className) {
+      return onClass(ClassName.of(className));
+    }
+
+    FieldClassMatcher onClass(ClassName className);
   }
 
   /** Matches fields by declaring class. */
@@ -86,18 +95,28 @@ public final class FieldMatchers {
         getSymbol(expressionTree) instanceof VarSymbol symbol && predicate.test(symbol, state);
   }
 
+  private static final InstanceFieldMatcher INSTANCE_FIELD_MATCHER =
+      className ->
+          fieldClassMatcher(
+              (sym, state) ->
+                  !sym.isStatic()
+                      && sym.owner instanceof ClassSymbol owner
+                      && owner.flatName().equals(className.binaryName(state)));
+
   public static InstanceFieldMatcher instanceField() {
-    return (className) -> {
-      Supplier<Symbol> symbol = VisitorState.memoize(state -> state.getSymbolFromString(className));
-      return fieldClassMatcher((sym, state) -> !sym.isStatic() && sym.owner == symbol.get(state));
-    };
+    return INSTANCE_FIELD_MATCHER;
   }
 
+  private static final StaticFieldMatcher STATIC_FIELD_MATCHER =
+      className ->
+          fieldClassMatcher(
+              (sym, state) ->
+                  sym.isStatic()
+                      && sym.owner instanceof ClassSymbol owner
+                      && owner.flatName().equals(className.binaryName(state)));
+
   public static StaticFieldMatcher staticField() {
-    return className -> {
-      Supplier<Symbol> symbol = VisitorState.memoize(state -> state.getSymbolFromString(className));
-      return fieldClassMatcher((sym, state) -> sym.isStatic() && sym.owner == symbol.get(state));
-    };
+    return STATIC_FIELD_MATCHER;
   }
 
   private FieldMatchers() {}

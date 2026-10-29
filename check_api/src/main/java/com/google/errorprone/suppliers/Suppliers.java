@@ -20,6 +20,7 @@ import static java.util.Objects.requireNonNull;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Streams;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
@@ -28,6 +29,7 @@ import com.sun.source.tree.MethodInvocationTree;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.tree.JCTree.JCExpression;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author alexeagle@google.com (Alex Eagle)
@@ -96,6 +98,8 @@ public final class Suppliers {
   /**
    * Given the string representation of a type, supplies the corresponding type.
    *
+   * <p>Prefer {@link ClassName#of(String)} for class and interface types.
+   *
    * @param typeString a string representation of a type, e.g., "java.util.List"
    */
   public static Supplier<Type> typeFromString(String typeString) {
@@ -103,7 +107,11 @@ public final class Suppliers {
     return VisitorState.memoize(state -> state.getTypeFromString(typeString));
   }
 
-  /** Given the class representation of a type, supplies the corresponding type. */
+  /**
+   * Given the class representation of a type, supplies the corresponding type.
+   *
+   * <p>Prefer {@link ClassName#of(String)} for class and interface types.
+   */
   public static Supplier<Type> typeFromClass(Class<?> inputClass) {
     return typeFromString(inputClass.getName());
   }
@@ -160,6 +168,19 @@ public final class Suppliers {
 
   public static Supplier<Type> arrayOf(Supplier<Type> elementType) {
     return state -> new Type.ArrayType(elementType.get(state), state.getSymtab().arraysType.tsym);
+  }
+
+  /**
+   * Supplies the array type {@code elementType[]}, or {@code null} if {@code elementType} is not
+   * available in the current compilation.
+   */
+  public static Supplier<@Nullable Type> arrayOf(ClassName elementType) {
+    requireNonNull(elementType);
+    return VisitorState.memoize(
+        state -> {
+          Type elem = elementType.type(state);
+          return elem == null ? null : state.arrayTypeForType(elem);
+        });
   }
 
   public static final Supplier<Type> OBJECT_TYPE_ARRAY =

@@ -16,12 +16,15 @@
 
 package com.google.errorprone.matchers;
 
+import static java.util.Objects.requireNonNull;
+
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.sun.source.tree.AnnotationTree;
-import com.sun.source.tree.IdentifierTree;
-import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.tree.JCTree;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @author eaftan@google.com (Eddie Aftandilian)
@@ -29,22 +32,34 @@ import com.sun.tools.javac.tree.JCTree;
  */
 public class AnnotationType implements Matcher<AnnotationTree> {
 
-  private final String annotationClassName;
+  private final @Nullable String annotationClassName;
+  private final @Nullable ClassName annotationClass;
 
   public AnnotationType(String annotationClassName) {
-    this.annotationClassName = annotationClassName;
+    this.annotationClassName = requireNonNull(annotationClassName);
+    this.annotationClass = null;
+  }
+
+  public AnnotationType(ClassName annotationClass) {
+    this.annotationClassName = null;
+    this.annotationClass = requireNonNull(annotationClass);
   }
 
   @Override
   public boolean matches(AnnotationTree annotationTree, VisitorState state) {
     Tree type = annotationTree.getAnnotationType();
-    if (type instanceof IdentifierTree && type instanceof JCTree.JCIdent jcIdent) {
-      return jcIdent.sym.getQualifiedName().contentEquals(annotationClassName);
-    } else if (type instanceof MemberSelectTree
-        && type instanceof JCTree.JCFieldAccess jcFieldAccess) {
-      return jcFieldAccess.sym.getQualifiedName().contentEquals(annotationClassName);
-    } else {
+    Symbol sym =
+        switch (type) {
+          case JCTree.JCIdent jcIdent -> jcIdent.sym;
+          case JCTree.JCFieldAccess jcFieldAccess -> jcFieldAccess.sym;
+          default -> null;
+        };
+    if (sym == null) {
       return false;
     }
+    if (annotationClass != null) {
+      return sym.flatName().equals(annotationClass.binaryName(state));
+    }
+    return sym.getQualifiedName().contentEquals(annotationClassName);
   }
 }

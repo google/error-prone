@@ -20,6 +20,7 @@ import static com.google.errorprone.suppliers.Suppliers.fromStrings;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.tools.javac.code.Type;
@@ -55,9 +56,19 @@ public final class TypePredicates {
     return (type, state) -> ASTHelpers.hasAnnotation(type.tsym, annotationType, state);
   }
 
+  /** Match types that are annotated with the given annotation. */
+  public static TypePredicate hasAnnotation(ClassName annotationType) {
+    return (type, state) -> ASTHelpers.hasAnnotation(type.tsym, annotationType, state);
+  }
+
   /** Match types that are exactly equal. */
   public static TypePredicate isExactType(String type) {
     return isExactType(typeFromString(type));
+  }
+
+  /** Match types that are exactly equal. */
+  public static TypePredicate isExactType(ClassName type) {
+    return (actual, state) -> ASTHelpers.isSameType(actual, type, state);
   }
 
   /** Match types that are exactly equal. */
@@ -73,6 +84,13 @@ public final class TypePredicates {
             .anyMatch(supplier -> ASTHelpers.isSameType(actual, supplier.get(state), state));
   }
 
+  /** Match types that are exactly equal to any of the given types. */
+  public static TypePredicate isExactTypeAny(ClassName... types) {
+    ImmutableList<ClassName> classNames = ImmutableList.copyOf(types);
+    return (actual, state) ->
+        classNames.stream().anyMatch(className -> ASTHelpers.isSameType(actual, className, state));
+  }
+
   /** Match sub-types of the given type. */
   public static TypePredicate isDescendantOf(Supplier<Type> type) {
     return (actual, state) -> ASTHelpers.isSubtype(actual, type.get(state), state);
@@ -83,9 +101,21 @@ public final class TypePredicates {
     return isDescendantOf(typeFromString(type));
   }
 
+  /** Match sub-types of the given type. */
+  public static TypePredicate isDescendantOf(ClassName type) {
+    return (actual, state) -> ASTHelpers.isSubtype(actual, type, state);
+  }
+
   /** Match types that are a sub-type of one of the given types. */
   public static TypePredicate isDescendantOfAny(Iterable<String> types) {
     return isDescendantOfAny(fromStrings(types));
+  }
+
+  /** Match types that are a sub-type of one of the given types. */
+  public static TypePredicate isDescendantOfAny(ClassName... types) {
+    ImmutableList<ClassName> classNames = ImmutableList.copyOf(types);
+    return (actual, state) ->
+        classNames.stream().anyMatch(className -> ASTHelpers.isSubtype(actual, className, state));
   }
 
   public static TypePredicate isDescendantOfAny(ImmutableList<Supplier<Type>> types) {
