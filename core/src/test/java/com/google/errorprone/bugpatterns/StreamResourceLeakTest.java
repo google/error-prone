@@ -340,4 +340,31 @@ public class StreamResourceLeakTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void methodReference() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.io.IOException;
+            import java.nio.file.Files;
+            import java.nio.file.Path;
+            import java.util.stream.Stream;
+
+            class Test {
+              interface IOFunction<T, R> {
+                R apply(T t) throws IOException;
+              }
+
+              void f(IOFunction<Path, Stream<String>> lines) {}
+
+              void g() {
+                // BUG: Diagnostic contains: should be closed
+                f(Files::lines);
+              }
+            }
+            """)
+        .doTest();
+  }
 }
