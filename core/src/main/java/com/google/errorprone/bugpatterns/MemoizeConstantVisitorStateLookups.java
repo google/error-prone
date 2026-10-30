@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.errorprone.fixes.SuggestedFixes.qualifyStaticImport;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
@@ -25,13 +24,15 @@ import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.sun.source.tree.Tree.Kind.STRING_LITERAL;
 import static java.util.Comparator.comparingInt;
 import static java.util.Comparator.naturalOrder;
-import static java.util.stream.Collectors.groupingBy;
 
 import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Multimaps;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -40,27 +41,25 @@ import com.google.errorprone.fixes.SuggestedFixes.AdditionPosition;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodInvocationTree;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.tools.javac.tree.JCTree.JCFieldAccess;
 import com.sun.tools.javac.util.Name;
 import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
+import java.util.HashSet;
+import java.util.Set;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
     summary =
         "Anytime you need to look up a constant value from VisitorState, improve performance by"
-            + " creating a cache for it with VisitorState.memoize",
+            + " creating a cache for it with ClassName or VisitorState.memoize",
     severity = SeverityLevel.WARNING)
 public class MemoizeConstantVisitorStateLookups extends BugChecker
     implements CompilationUnitTreeMatcher {
@@ -68,7 +67,8 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
   private static final Matcher<ExpressionTree> CONSTANT_LOOKUP =
       instanceMethod()
           .onExactClass(VisitorState.class.getName())
-          .namedAnyOf("getName", "getTypeFromString", "getSymbolFromString")
+          .namedAnyOf(
+              "getName", "getTypeFromString", "getSymbolFromString", "binaryNameFromClassname")
           .withParameters(String.class.getName());
 
   private static final Matcher<ExpressionTree> MEMOIZE_CALL =
@@ -87,42 +87,31 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
     if (lookups.isEmpty()) {
       return NO_MATCH;
     }
-    Map<String, Map<Name, List<CallSite>>> groupedCallSites =
-        lookups.stream()
-            .collect(
-                groupingBy(
-                    callSite -> callSite.argumentValue, groupingBy(callSite -> callSite.method)));
+    ImmutableListMultimap<LookupKey, CallSite> callsByKey =
+        Multimaps.index(lookups, CallSite::lookupKey);
+    ImmutableListMultimap<String, LookupKey> keysByBaseName =
+        Multimaps.index(callsByKey.keySet(), LookupKey::baseConstantName);
+
+    Set<String> usedFieldNames = new HashSet<>();
+    for (Tree member : tree.getMembers()) {
+      if (member instanceof VariableTree variableTree) {
+        usedFieldNames.add(variableTree.getName().toString());
+      }
+    }
 
     // addMembers can only be called once per class, so we emit just one fix for all occurrences.
     SuggestedFix.Builder fix = SuggestedFix.builder();
     ImmutableSortedSet.Builder<String> membersToAdd =
         new ImmutableSortedSet.Builder<>(naturalOrder());
-    for (Map.Entry<String, Map<Name, List<CallSite>>> lookup : groupedCallSites.entrySet()) {
-      String argument = lookup.getKey();
-      Map<Name, List<CallSite>> usages = lookup.getValue();
-      if (usages.size() == 1) {
-        // The common case: we have state.foo(argument), and never state.bar(argument), so we can
-        // name the constant after just argument.
-        Map.Entry<Name, List<CallSite>> useSites = usages.entrySet().iterator().next();
-        Name methodName = useSites.getKey();
-        List<CallSite> instances = useSites.getValue();
-        memoizeSupplier(
-            state, fix, membersToAdd::add, argument, methodName, instances, (name, type) -> name);
-      } else {
-        // Sadly we have both state.foo(argument) and also state.bar(argument), so we need two
-        // constants based on argument and must disambiguate their names.
-        for (Map.Entry<Name, List<CallSite>> usage : usages.entrySet()) {
-          Name methodName = usage.getKey();
-          List<CallSite> instances = usage.getValue();
-          memoizeSupplier(
-              state,
-              fix,
-              membersToAdd::add,
-              argument,
-              methodName,
-              instances,
-              (name, type) -> name + "_" + type);
-        }
+    for (String baseName : keysByBaseName.keySet()) {
+      ImmutableList<LookupKey> keys = keysByBaseName.get(baseName);
+      boolean needsKindSuffix = keys.size() > 1;
+      for (LookupKey key : keys) {
+        ImmutableList<CallSite> instances = callsByKey.get(key);
+        String constantName =
+            chooseConstantName(baseName, key.kind(), needsKindSuffix, instances, usedFieldNames);
+        usedFieldNames.add(constantName);
+        membersToAdd.add(memoizeLookup(state, fix, constantName, key.kind(), instances));
       }
     }
 
@@ -138,16 +127,55 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
     return describeMatch(fixTree, fix.build());
   }
 
+  private static String chooseConstantName(
+      String baseName,
+      LookupKind kind,
+      boolean needsKindSuffix,
+      ImmutableList<CallSite> instances,
+      Set<String> usedFieldNames) {
+    CallSite prototype = bestCallsite(instances);
+    String referencedIdentifier =
+        prototype.argumentExpression() instanceof IdentifierTree id
+            ? id.getName().toString()
+            : null;
+    if (!needsKindSuffix
+        && !usedFieldNames.contains(baseName)
+        && !baseName.equals(referencedIdentifier)) {
+      return baseName;
+    }
+    String withKind = baseName + "_" + kind.name();
+    if (!usedFieldNames.contains(withKind) && !withKind.equals(referencedIdentifier)) {
+      return withKind;
+    }
+    for (int i = 2; ; i++) {
+      String numbered = withKind + "_" + i;
+      if (!usedFieldNames.contains(numbered) && !numbered.equals(referencedIdentifier)) {
+        return numbered;
+      }
+    }
+  }
+
+  private enum LookupKind {
+    NAME,
+    TYPE
+  }
+
+  private record LookupKey(LookupKind kind, String normalizedArgument) {
+    String baseConstantName() {
+      return Ascii.toUpperCase(normalizedArgument).replaceAll("\\W", "_");
+    }
+  }
+
   /**
    * @param method The method on VisitorState being called.
-   * @param argumentValue The compile-time constant value being passed to that method.
+   * @param lookupKey The normalized lookup key for grouping equivalent lookups.
    * @param argumentExpression The actual expression with that value: a string literal, or a
    *     constant with such a value.
    * @param entireTree The entire invocation of the VisitorState method.
    */
   private record CallSite(
       Name method,
-      String argumentValue,
+      LookupKey lookupKey,
       ExpressionTree argumentExpression,
       MethodInvocationTree entireTree) {}
 
@@ -169,15 +197,22 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
       private void handleConstantLookup(MethodInvocationTree tree) {
         ExpressionTree argumentExpr = tree.getArguments().getFirst();
         String argumentValue = ASTHelpers.constValue(argumentExpr, String.class);
-        if (argumentValue != null) {
-          ExpressionTree methodSelect = tree.getMethodSelect();
-          if (methodSelect instanceof JCFieldAccess fieldAccess) {
-            Name method = fieldAccess.name;
-            result.add(new CallSite(method, argumentValue, argumentExpr, tree));
-          } else {
-            // Just give up on calls we can't understand - maybe from inside VisitorState itself?
+        if (argumentValue == null
+            || !(tree.getMethodSelect() instanceof JCFieldAccess fieldAccess)) {
+          return;
+        }
+        Name method = fieldAccess.name;
+        LookupKey lookupKey;
+        if (method.contentEquals("getName")) {
+          lookupKey = new LookupKey(LookupKind.NAME, argumentValue);
+        } else {
+          try {
+            lookupKey = new LookupKey(LookupKind.TYPE, ClassName.of(argumentValue).toString());
+          } catch (IllegalArgumentException e) {
+            return;
           }
         }
+        result.add(new CallSite(method, lookupKey, argumentExpr, tree));
       }
     }.scan(state.getPath(), null);
     return result.build();
@@ -185,51 +220,61 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
 
   /**
    * Adds to {@code fix} the changes necessary to memoize all the callsites in {@code instances},
-   * and offers {@code memberConsumer} a new constant to which the fixed callsites will refer.
+   * and returns the new constant declaration to which the fixed callsites will refer.
    */
-  private static void memoizeSupplier(
+  private static String memoizeLookup(
       VisitorState state,
       SuggestedFix.Builder fix,
-      Consumer<String> memberConsumer,
-      String argument,
-      Name methodName,
-      List<CallSite> instances,
-      BiFunction<String, String, String> namingStrategy) {
+      String newConstantName,
+      LookupKind lookupKind,
+      ImmutableList<CallSite> instances) {
 
     CallSite prototype = bestCallsite(instances);
-    MethodSymbol sym = ASTHelpers.getSymbol(prototype.entireTree);
-    TypeSymbol returnType = sym.getReturnType().tsym;
-    String returnTypeName = returnType.getSimpleName().toString();
-    String newConstantPrefix = Ascii.toUpperCase(argument).replaceAll("\\W", "_");
-    String newConstantName =
-        namingStrategy.apply(newConstantPrefix, Ascii.toUpperCase(returnTypeName));
 
-    var rhs =
-        methodName.contentEquals("getTypeFromString")
-            ? "%s(%s)"
-                .formatted(
-                    qualifyStaticImport(
-                        Suppliers.class.getCanonicalName() + ".typeFromString", fix, state),
-                    state.getSourceForNode(prototype.argumentExpression))
-            : "%s.memoize(state -> state.%s(%s))"
+    return switch (lookupKind) {
+      case NAME -> {
+        for (CallSite instance : instances) {
+          var visitorStateExpr = getReceiver(instance.entireTree);
+          fix.replace(
+              instance.entireTree,
+              "%s.get(%s)".formatted(newConstantName, state.getSourceForNode(visitorStateExpr)));
+        }
+        String rhs =
+            "%s.memoize(state -> state.getName(%s))"
                 .formatted(
                     qualifyType(state, fix, VisitorState.class.getCanonicalName()),
-                    methodName,
                     state.getSourceForNode(prototype.argumentExpression));
-
-    memberConsumer.accept(
-        "private static final %s<%s> %s = %s;"
+        yield "private static final %s<%s> %s = %s;"
             .formatted(
                 qualifyType(state, fix, Supplier.class.getCanonicalName()),
-                qualifyType(state, fix, returnType.getQualifiedName().toString()),
+                qualifyType(state, fix, Name.class.getCanonicalName()),
                 newConstantName,
-                rhs));
-    for (CallSite instance : instances) {
-      var visitorStateExpr = getReceiver(instance.entireTree);
-      fix.replace(
-          instance.entireTree,
-          "%s.get(%s)".formatted(newConstantName, state.getSourceForNode(visitorStateExpr)));
-    }
+                rhs);
+      }
+      case TYPE -> {
+        for (CallSite instance : instances) {
+          var visitorStateExpr = getReceiver(instance.entireTree);
+          String accessor =
+              switch (instance.method.toString()) {
+                case "getTypeFromString" -> "type";
+                case "getSymbolFromString" -> "symbol";
+                case "binaryNameFromClassname" -> "binaryName";
+                default -> throw new AssertionError("Unexpected method: " + instance.method);
+              };
+          fix.replace(
+              instance.entireTree,
+              "%s.%s(%s)"
+                  .formatted(newConstantName, accessor, state.getSourceForNode(visitorStateExpr)));
+        }
+        String classNameType = qualifyType(state, fix, ClassName.class.getCanonicalName());
+        yield "private static final %s %s = %s.of(%s);"
+            .formatted(
+                classNameType,
+                newConstantName,
+                classNameType,
+                state.getSourceForNode(prototype.argumentExpression));
+      }
+    };
   }
 
   /**
@@ -239,7 +284,7 @@ public class MemoizeConstantVisitorStateLookups extends BugChecker
    * only define one constant for them. In case there are two callsites with different arguments, we
    * prefer defined constants rather than x-raying through to a string literal, i.e., getName(FOO).
    */
-  private static CallSite bestCallsite(List<CallSite> instances) {
+  private static CallSite bestCallsite(ImmutableList<CallSite> instances) {
     return instances.stream()
         .max(
             Comparator.comparingInt(
