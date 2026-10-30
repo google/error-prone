@@ -1086,7 +1086,7 @@ __[MathAbsoluteNegative](bugpattern/MathAbsoluteNegative)__<br>
 Math.abs() does not always give a non-negative result. Please consider other methods for positive numbers, such as IntMath.saturatedAbs() or Math.floorMod().
 
 __[MemoizeConstantVisitorStateLookups](bugpattern/MemoizeConstantVisitorStateLookups)__<br>
-Anytime you need to look up a constant value from VisitorState, improve performance by creating a cache for it with VisitorState.memoize
+Anytime you need to look up a constant value from VisitorState, improve performance by creating a cache for it with ClassName or VisitorState.memoize
 
 __[MisformattedTestData](bugpattern/MisformattedTestData)__<br>
 This test data will be more readable if correctly formatted.
