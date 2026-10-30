@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.RegexMatchers.JDK_PATTERN_CLASS;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.CLASS_TYPE;
@@ -192,7 +193,7 @@ public class UnnecessarySetDefault extends BugChecker implements MethodInvocatio
           .put("java.util.Currency", sourceMatcher("Currency.getInstance(Locale.US)"))
           .put("java.nio.charset.Charset", sourceMatcher("Charsets.UTF_8"))
           .put("java.util.concurrent.TimeUnit", sourceMatcher("TimeUnit.SECONDS"))
-          .put("java.util.regex.Pattern", sourceMatcher("Pattern.compile(\"\")"))
+          .put(JDK_PATTERN_CLASS.toString(), sourceMatcher("Pattern.compile(\"\")"))
           .put("java.lang.String", sourceMatcher("\"\""))
           .put("java.lang.CharSequence", sourceMatcher("\"\""))
           .put("java.math.BigDecimal", sourceMatcher("BigDecimal.ZERO"))

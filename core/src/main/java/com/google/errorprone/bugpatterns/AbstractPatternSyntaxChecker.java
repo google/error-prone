@@ -20,6 +20,11 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.RegexMatchers.JDK_PATTERN_CLASS;
+import static com.google.errorprone.matchers.RegexMatchers.SPLITTER_ON_PATTERN_METHOD;
+import static com.google.errorprone.matchers.RegexMatchers.STRING_MATCHES_METHOD;
+import static com.google.errorprone.matchers.RegexMatchers.STRING_REPLACE_METHODS;
+import static com.google.errorprone.matchers.RegexMatchers.STRING_SPLIT_METHOD;
 
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CheckReturnValue;
@@ -41,24 +46,15 @@ public abstract class AbstractPatternSyntaxChecker extends BugChecker
    */
   private static final Matcher<MethodInvocationTree> REGEX_USAGE =
       anyOf(
-          instanceMethod()
-              .onExactClass("java.lang.String")
-              .namedAnyOf("matches", "split")
-              .withParameters("java.lang.String"),
-          instanceMethod()
-              .onExactClass("java.lang.String")
-              .named("split")
-              .withParameters("java.lang.String", "int"),
-          instanceMethod()
-              .onExactClass("java.lang.String")
-              .namedAnyOf("replaceFirst", "replaceAll")
-              .withParameters("java.lang.String", "java.lang.String"),
-          staticMethod().onClass("java.util.regex.Pattern").named("matches"),
+          STRING_MATCHES_METHOD,
+          STRING_SPLIT_METHOD,
+          STRING_REPLACE_METHODS,
+          staticMethod().onClass(JDK_PATTERN_CLASS).named("matches"),
           staticMethod()
-              .onClass("java.util.regex.Pattern")
+              .onClass(JDK_PATTERN_CLASS)
               .named("compile")
               .withParameters("java.lang.String"),
-          staticMethod().onClass("com.google.common.base.Splitter").named("onPattern"),
+          SPLITTER_ON_PATTERN_METHOD,
           instanceMethod()
               .onDescendantOf("com.google.common.truth.StringSubject")
               .namedAnyOf("matches", "doesNotMatch", "containsMatch", "doesNotContainMatch")
@@ -67,7 +63,7 @@ public abstract class AbstractPatternSyntaxChecker extends BugChecker
   private static final Matcher<MethodInvocationTree> REGEX_USAGE_WITH_FLAGS =
       anyOf(
           staticMethod()
-              .onClass("java.util.regex.Pattern")
+              .onClass(JDK_PATTERN_CLASS)
               .named("compile")
               .withParameters("java.lang.String", "int"));
 

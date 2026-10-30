@@ -26,9 +26,11 @@ import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
 import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE_CLASS;
 import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_CLASS;
 import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIME_STATIC_FACTORIES;
+import static com.google.errorprone.matchers.RegexMatchers.NON_CLOSEABLE_PATTERN_CLASSES;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
+import static com.google.errorprone.predicates.TypePredicates.isExactTypeAnyOf;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -422,7 +424,7 @@ public final class ConstantExpressions {
                   "java.util.OptionalDouble",
                   "java.util.OptionalInt",
                   "java.util.OptionalLong"),
-          staticMethod().onClass("java.util.regex.Pattern"),
+          staticMethod().onClass(isExactTypeAnyOf(NON_CLOSEABLE_PATTERN_CLASSES)),
           staticMethod()
               .onClassAny(
                   "org.joda.time.DateTime",
