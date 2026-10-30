@@ -311,6 +311,10 @@ reference (explicit or implicit) to <code>this</code>.</div>
 <dd>
 <div class="block">Add groups of already sorted imports.</div>
 </dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#addImport(com.google.errorprone.ClassName)" class="member-name-link">addImport(ClassName)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
+<dd>
+<div class="block">Add an import statement for <code>className</code> as part of this SuggestedFix.</div>
+</dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#addImport(java.lang.String)" class="member-name-link">addImport(String)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>
 <div class="block">Add an import statement as part of this SuggestedFix.</div>
@@ -502,6 +506,14 @@ annotation</code>, regardless of whether there is already an argument.</div>
 <dt><a href="com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html#ALL" class="member-name-link">ALL</a> - Enum constant in enum class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/ChildMultiMatcher.MatchType.html" title="enum class in com.google.errorprone.matchers">ChildMultiMatcher.MatchType</a></dt>
 <dd>
 <div class="block">Matches if all of the child elements match the matcher.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#ALL_MATCHER_CLASSES" class="member-name-link">ALL_MATCHER_CLASSES</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">All supported regular expression <code>Matcher</code> classes.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#ALL_PATTERN_CLASSES" class="member-name-link">ALL_PATTERN_CLASSES</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">All supported regular expression <code>Pattern</code> classes.</div>
 </dd>
 <dt><a href="com/google/errorprone/scanner/BuiltInCheckerSuppliers.html#allChecks()" class="member-name-link">allChecks()</a> - Static method in class com.google.errorprone.scanner.<a href="com/google/errorprone/scanner/BuiltInCheckerSuppliers.html" title="class in com.google.errorprone.scanner">BuiltInCheckerSuppliers</a></dt>
 <dd>
@@ -7769,6 +7781,10 @@ return value should be used or not.</div>
 <dd>
 <div class="block">Match types that are a sub-type of one of the given types.</div>
 </dd>
+<dt><a href="com/google/errorprone/predicates/TypePredicates.html#isDescendantOfAnyOf(java.lang.Iterable)" class="member-name-link">isDescendantOfAnyOf(Iterable)</a> - Static method in class com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicates.html" title="class in com.google.errorprone.predicates">TypePredicates</a></dt>
+<dd>
+<div class="block">Match types that are a sub-type of one of the given classes.</div>
+</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#isDirectImplementationOf(com.google.errorprone.ClassName)" class="member-name-link">isDirectImplementationOf(ClassName)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches any node that is directly an implementation, but not extension, of the given Class.</div>
@@ -7832,6 +7848,10 @@ return value should be used or not.</div>
 <dt><a href="com/google/errorprone/predicates/TypePredicates.html#isExactTypeAny(java.lang.Iterable)" class="member-name-link">isExactTypeAny(Iterable)</a> - Static method in class com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicates.html" title="class in com.google.errorprone.predicates">TypePredicates</a></dt>
 <dd>
 <div class="block">Match types that are exactly equal to any of the given types.</div>
+</dd>
+<dt><a href="com/google/errorprone/predicates/TypePredicates.html#isExactTypeAnyOf(java.lang.Iterable)" class="member-name-link">isExactTypeAnyOf(Iterable)</a> - Static method in class com.google.errorprone.predicates.<a href="com/google/errorprone/predicates/TypePredicates.html" title="class in com.google.errorprone.predicates">TypePredicates</a></dt>
+<dd>
+<div class="block">Match types that are exactly equal to any of the given classes.</div>
 </dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#isExtensionOf(com.google.errorprone.ClassName)" class="member-name-link">isExtensionOf(ClassName)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
@@ -8091,6 +8111,10 @@ a constructor or non-<code>void</code> method for which the return value is cons
 <dd>
 <div class="block">Returns true if the symbol is static.</div>
 </dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#isStringSplitFastPath(java.lang.String)" class="member-name-link">isStringSplitFastPath(String)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">Returns true if <code>regex</code> takes the non-regex fast path in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#split(java.lang.String,int)" title="class or interface in java.lang" class="external-link"><code>String.split(String, int)</code></a> and <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#splitWithDelimiters(java.lang.String,int)" title="class or interface in java.lang" class="external-link"><code>String.splitWithDelimiters(String, int)</code></a> without compiling a <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/regex/Pattern.html" title="class or interface in java.util.regex" class="external-link"><code>Pattern</code></a>.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/ASTHelpers.html#isSubtype(com.sun.tools.javac.code.Type,com.google.errorprone.ClassName,com.google.errorprone.VisitorState)" class="member-name-link">isSubtype(Type, ClassName, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
 <dd>
 <div class="block">Returns true if <code>erasure(s) &lt;: erasure(t)</code>.</div>
@@ -8324,6 +8348,10 @@ to <code>period.getYears(), period.getMonths(), or period.getTotalMonths()</code
 <dt><a href="com/google/errorprone/bugpatterns/inject/JavaxInjectOnFinalField.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.inject">JavaxInjectOnFinalField</a> - Class in <a href="com/google/errorprone/bugpatterns/inject/package-summary.html">com.google.errorprone.bugpatterns.inject</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/JavaxInjectOnFinalField.html#%3Cinit%3E()" class="member-name-link">JavaxInjectOnFinalField()</a> - Constructor for class com.google.errorprone.bugpatterns.inject.<a href="com/google/errorprone/bugpatterns/inject/JavaxInjectOnFinalField.html" title="class in com.google.errorprone.bugpatterns.inject">JavaxInjectOnFinalField</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#JDK_MATCHER_CLASS" class="member-name-link">JDK_MATCHER_CLASS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#JDK_PATTERN_CLASS" class="member-name-link">JDK_PATTERN_CLASS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/JdkObsolete.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">JdkObsolete</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
@@ -11934,6 +11962,10 @@ that are visible from source code.</div>
 <div class="block">Names of the form which are not camel case, but nonetheless have a Capital T at the end and
 this shouldn't suggest to add more.</div>
 </dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#NON_CLOSEABLE_PATTERN_CLASSES" class="member-name-link">NON_CLOSEABLE_PATTERN_CLASSES</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">Immutable <code>Pattern</code> classes that do not hold closeable native resources.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/NonApiType.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">NonApiType</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Flags instances of non-API types from being accepted or returned in APIs.</div>
@@ -12796,6 +12828,22 @@ suggested changes.</div>
 <dd>
 <div class="block">Returns the value of the <code>path</code> record component.</div>
 </dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#PATTERN_COMPILE_METHODS" class="member-name-link">PATTERN_COMPILE_METHODS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">Matches static <code>compile</code> (and <code>compileUnsafe</code>) calls on <code>Pattern</code> types.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#PATTERN_MATCHER_METHODS" class="member-name-link">PATTERN_MATCHER_METHODS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">Matches instance <code>matcher</code> calls on <code>Pattern</code> types.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#PATTERN_MATCHES_METHODS" class="member-name-link">PATTERN_MATCHES_METHODS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">Matches static <code>matches</code> (and <code>matchesUnsafe</code>) calls on <code>Pattern</code> types.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#PATTERN_QUOTE_METHODS" class="member-name-link">PATTERN_QUOTE_METHODS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">Matches static <code>quote</code> calls on <code>Pattern</code> types.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/PatternMatchingInstanceof.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">PatternMatchingInstanceof</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A BugPattern; see the summary.</div>
@@ -12883,6 +12931,10 @@ together.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/PreconditionsInvalidPlaceholder.html#%3Cinit%3E()" class="member-name-link">PreconditionsInvalidPlaceholder()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/PreconditionsInvalidPlaceholder.html" title="class in com.google.errorprone.bugpatterns">PreconditionsInvalidPlaceholder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#PREDICATES_CONTAINS_PATTERN_METHOD" class="member-name-link">PREDICATES_CONTAINS_PATTERN_METHOD</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">Matches <code>com.google.common.base.Predicates.containsPattern(String)</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/PreferCharsetOverload.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">PreferCharsetOverload</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
@@ -13257,6 +13309,10 @@ trying to static import it if possible.</div>
 <dd>
 <div class="block">Returns the value of the <a href="./com/google/errorprone/fixes/Replacement.html#param-range"><code>range</code></a> record component.</div>
 </dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#RE2J_MATCHER_CLASS" class="member-name-link">RE2J_MATCHER_CLASS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#RE2J_PATTERN_CLASS" class="member-name-link">RE2J_PATTERN_CLASS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/util/Reachability.html" class="type-name-link" title="class in com.google.errorprone.util">Reachability</a> - Class in <a href="com/google/errorprone/util/package-summary.html">com.google.errorprone.util</a></dt>
 <dd>
 <div class="block">An implementation of JLS 14.21 reachability.</div>
@@ -13438,6 +13494,10 @@ to the specified path.</div>
 <dd>
 <div class="block">Utilities for checks that work with regexes.</div>
 </dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html" class="type-name-link" title="class in com.google.errorprone.matchers">RegexMatchers</a> - Class in <a href="com/google/errorprone/matchers/package-summary.html">com.google.errorprone.matchers</a></dt>
+<dd>
+<div class="block">Matchers and class name constants for regular expression APIs.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.html#registerAllExtensions(com.google.protobuf.ExtensionRegistry)" class="member-name-link">registerAllExtensions(ExtensionRegistry)</a> - Static method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.html#registerAllExtensions(com.google.protobuf.ExtensionRegistryLite)" class="member-name-link">registerAllExtensions(ExtensionRegistryLite)</a> - Static method in class com.google.errorprone.bugpatterns.apidiff.<a href="com/google/errorprone/bugpatterns/apidiff/ApiDiffProto.html" title="class in com.google.errorprone.bugpatterns.apidiff">ApiDiffProto</a></dt>
@@ -13464,6 +13524,10 @@ to the specified path.</div>
 <dd>
 <div class="block">Removes <code>tree</code> from <code>trees</code>, assuming that <code>trees</code> represents a
 comma-separated list of expressions containing <code>tree</code>.</div>
+</dd>
+<dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#removeImport(com.google.errorprone.ClassName)" class="member-name-link">removeImport(ClassName)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
+<dd>
+<div class="block">Remove an import statement for <code>className</code> as part of this SuggestedFix.</div>
 </dd>
 <dt><a href="com/google/errorprone/fixes/SuggestedFix.Builder.html#removeImport(java.lang.String)" class="member-name-link">removeImport(String)</a> - Method in class com.google.errorprone.fixes.<a href="com/google/errorprone/fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></dt>
 <dd>
@@ -13893,6 +13957,12 @@ annotate the method as @Nullable.</div>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#SAFERE_CROSSCHECK_MATCHER_CLASS" class="member-name-link">SAFERE_CROSSCHECK_MATCHER_CLASS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#SAFERE_MATCHER_CLASS" class="member-name-link">SAFERE_MATCHER_CLASS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#SAFERE_PATTERN_CLASS" class="member-name-link">SAFERE_PATTERN_CLASS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/Matchers.html#sameArgument(int,int)" class="member-name-link">sameArgument(int, int)</a> - Static method in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/Matchers.html" title="class in com.google.errorprone.matchers">Matchers</a></dt>
 <dd>
 <div class="block">Matches a <a href="com/google/errorprone/matchers/MethodInvocation.html" title="class in com.google.errorprone.matchers"><code>MethodInvocation</code></a> when the arguments at the two given indices are both the
@@ -14374,6 +14444,10 @@ must-be-used.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/RxReturnValueIgnored.html#specializedMatcher()" class="member-name-link">specializedMatcher()</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/RxReturnValueIgnored.html" title="class in com.google.errorprone.bugpatterns">RxReturnValueIgnored</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#SPLITTER_ON_PATTERN_METHOD" class="member-name-link">SPLITTER_ON_PATTERN_METHOD</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">Matches <code>com.google.common.base.Splitter.onPattern(String)</code>.</div>
+</dd>
 <dt><a href="com/google/errorprone/names/NamingConventions.html#splitToLowercaseTerms(java.lang.String)" class="member-name-link">splitToLowercaseTerms(String)</a> - Static method in class com.google.errorprone.names.<a href="com/google/errorprone/names/NamingConventions.html" title="class in com.google.errorprone.names">NamingConventions</a></dt>
 <dd>
 <div class="block">Split a Java name into terms based on either Camel Case or Underscores.</div>
@@ -14527,6 +14601,26 @@ enforce strict format string checking.</div>
 </dd>
 <dt><a href="com/google/errorprone/annotations/Modifier.html#STRICTFP" class="member-name-link">STRICTFP</a> - Enum constant in enum class com.google.errorprone.annotations.<a href="com/google/errorprone/annotations/Modifier.html" title="enum class in com.google.errorprone.annotations">Modifier</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#STRING_MATCHES_METHOD" class="member-name-link">STRING_MATCHES_METHOD</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">Matches <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#matches(java.lang.String)" title="class or interface in java.lang" class="external-link"><code>String.matches(String)</code></a>.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#STRING_REPLACE_METHODS" class="member-name-link">STRING_REPLACE_METHODS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">Matches <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#replaceFirst(java.lang.String,java.lang.String)" title="class or interface in java.lang" class="external-link"><code>String.replaceFirst(String, String)</code></a> and <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#replaceAll(java.lang.String,java.lang.String)" title="class or interface in java.lang" class="external-link"><code>String.replaceAll(String, String)</code></a>.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#STRING_SPLIT_METHOD" class="member-name-link">STRING_SPLIT_METHOD</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">Matches <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#split(java.lang.String)" title="class or interface in java.lang" class="external-link"><code>String.split(String)</code></a> and <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#split(java.lang.String,int)" title="class or interface in java.lang" class="external-link"><code>String.split(String, int)</code></a>.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#STRING_SPLIT_METHODS" class="member-name-link">STRING_SPLIT_METHODS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">Matches <code>String.split</code> and <code>String.splitWithDelimiters</code>.</div>
+</dd>
+<dt><a href="com/google/errorprone/matchers/RegexMatchers.html#STRING_SPLIT_WITH_DELIMITERS_METHOD" class="member-name-link">STRING_SPLIT_WITH_DELIMITERS_METHOD</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/RegexMatchers.html" title="class in com.google.errorprone.matchers">RegexMatchers</a></dt>
+<dd>
+<div class="block">Matches <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#splitWithDelimiters(java.lang.String,int)" title="class or interface in java.lang" class="external-link"><code>String.splitWithDelimiters(String, int)</code></a>.</div>
+</dd>
 <dt><a href="com/google/errorprone/suppliers/Suppliers.html#STRING_TYPE" class="member-name-link">STRING_TYPE</a> - Static variable in class com.google.errorprone.suppliers.<a href="com/google/errorprone/suppliers/Suppliers.html" title="class in com.google.errorprone.suppliers">Suppliers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/StringBuilderInitWithChar.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">StringBuilderInitWithChar</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>

@@ -269,29 +269,39 @@ loadScripts(document, 'script');</script>
 <div class="block">Match types that are a sub-type of one of the given types.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactType(com.google.errorprone.ClassName)" class="member-name-link">isExactType</a><wbr>(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;type)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isDescendantOfAnyOf(java.lang.Iterable)" class="member-name-link">isDescendantOfAnyOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>&gt;&nbsp;types)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Match types that are exactly equal.</div>
+<div class="block">Match types that are a sub-type of one of the given classes.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactType(com.google.errorprone.suppliers.Supplier)" class="member-name-link">isExactType</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactType(com.google.errorprone.ClassName)" class="member-name-link">isExactType</a><wbr>(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;type)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Match types that are exactly equal.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactType(java.lang.String)" class="member-name-link">isExactType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactType(com.google.errorprone.suppliers.Supplier)" class="member-name-link">isExactType</a><wbr>(<a href="../../suppliers/Supplier.html" title="interface in com.google.errorprone.suppliers">Supplier</a>&lt;com.sun.tools.javac.code.Type&gt;&nbsp;type)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Match types that are exactly equal.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactTypeAny(com.google.errorprone.ClassName...)" class="member-name-link">isExactTypeAny</a><wbr>(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>...&nbsp;types)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactType(java.lang.String)" class="member-name-link">isExactType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;type)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Match types that are exactly equal.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactTypeAny(com.google.errorprone.ClassName...)" class="member-name-link">isExactTypeAny</a><wbr>(<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>...&nbsp;types)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Match types that are exactly equal to any of the given types.</div>
+</div>
+<div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactTypeAny(java.lang.Iterable)" class="member-name-link">isExactTypeAny</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Match types that are exactly equal to any of the given types.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactTypeAny(java.lang.Iterable)" class="member-name-link">isExactTypeAny</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;types)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isExactTypeAnyOf(java.lang.Iterable)" class="member-name-link">isExactTypeAnyOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../../ClassName.html" title="class in com.google.errorprone">ClassName</a>&gt;&nbsp;types)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Match types that are exactly equal to any of the given types.</div>
+<div class="block">Match types that are exactly equal to any of the given classes.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../TypePredicates.html#isPrimitive()" class="member-name-link">isPrimitive</a>()</code></div>

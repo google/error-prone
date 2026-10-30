@@ -111,12 +111,22 @@ individual AST nodes, a supplier gives contextual information from the traversal
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.ClassName)" class="member-name-link">qualifyType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
+<div class="col-first even-row-color"><code><a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../fixes/SuggestedFix.Builder.html#addImport(com.google.errorprone.ClassName)" class="member-name-link">addImport</a><wbr>(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Add an import statement for <code>className</code> as part of this SuggestedFix.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">SuggestedFixes.</span><code><a href="../fixes/SuggestedFixes.html#qualifyType(com.google.errorprone.VisitorState,com.google.errorprone.fixes.SuggestedFix.Builder,com.google.errorprone.ClassName)" class="member-name-link">qualifyType</a><wbr>(<a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state,
  <a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a>&nbsp;fix,
  <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;typeName)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Returns a human-friendly name of the given <code>typeName</code> for use in fixes.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="../fixes/SuggestedFix.Builder.html" title="class in com.google.errorprone.fixes">SuggestedFix.Builder</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">SuggestedFix.Builder.</span><code><a href="../fixes/SuggestedFix.Builder.html#removeImport(com.google.errorprone.ClassName)" class="member-name-link">removeImport</a><wbr>(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;className)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Remove an import statement for <code>className</code> as part of this SuggestedFix.</div>
 </div>
 </div>
 </section>
@@ -184,6 +194,12 @@ individual AST nodes, a supplier gives contextual information from the traversal
 <div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#INTERNAL_ONE_OF_ENUM" class="member-name-link">INTERNAL_ONE_OF_ENUM</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#JDK_MATCHER_CLASS" class="member-name-link">JDK_MATCHER_CLASS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#JDK_PATTERN_CLASS" class="member-name-link">JDK_PATTERN_CLASS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#MESSAGE" class="member-name-link">MESSAGE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
@@ -229,11 +245,47 @@ individual AST nodes, a supplier gives contextual information from the traversal
 <div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#PROTOCOL_STRING_LIST" class="member-name-link">PROTOCOL_STRING_LIST</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#SERVICE_DESCRIPTOR" class="member-name-link">SERVICE_DESCRIPTOR</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#RE2J_MATCHER_CLASS" class="member-name-link">RE2J_MATCHER_CLASS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#UNKNOWN_FIELD_SET" class="member-name-link">UNKNOWN_FIELD_SET</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#RE2J_PATTERN_CLASS" class="member-name-link">RE2J_PATTERN_CLASS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#SAFERE_CROSSCHECK_MATCHER_CLASS" class="member-name-link">SAFERE_CROSSCHECK_MATCHER_CLASS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#SAFERE_MATCHER_CLASS" class="member-name-link">SAFERE_MATCHER_CLASS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#SAFERE_PATTERN_CLASS" class="member-name-link">SAFERE_PATTERN_CLASS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#SERVICE_DESCRIPTOR" class="member-name-link">SERVICE_DESCRIPTOR</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static final <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../matchers/ProtobufMatchers.html#UNKNOWN_FIELD_SET" class="member-name-link">UNKNOWN_FIELD_SET</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+</div>
+<div class="caption"><span>Fields in <a href="../matchers/package-summary.html">com.google.errorprone.matchers</a> with type parameters of type <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final com.google.common.collect.ImmutableSet<wbr>&lt;<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#ALL_MATCHER_CLASSES" class="member-name-link">ALL_MATCHER_CLASSES</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">All supported regular expression <code>Matcher</code> classes.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final com.google.common.collect.ImmutableSet<wbr>&lt;<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#ALL_PATTERN_CLASSES" class="member-name-link">ALL_PATTERN_CLASSES</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">All supported regular expression <code>Pattern</code> classes.</div>
+</div>
+<div class="col-first even-row-color"><code>static final com.google.common.collect.ImmutableSet<wbr>&lt;<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../matchers/RegexMatchers.html#NON_CLOSEABLE_PATTERN_CLASSES" class="member-name-link">NON_CLOSEABLE_PATTERN_CLASSES</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Immutable <code>Pattern</code> classes that do not hold closeable native resources.</div>
+</div>
 </div>
 <div class="caption"><span>Methods in <a href="../matchers/package-summary.html">com.google.errorprone.matchers</a> with parameters of type <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></span></div>
 <div class="summary-table three-column-summary">
@@ -477,6 +529,22 @@ meta-annotation.</div>
 <div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../predicates/TypePredicates.html#isExactTypeAny(com.google.errorprone.ClassName...)" class="member-name-link">isExactTypeAny</a><wbr>(<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>...&nbsp;types)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Match types that are exactly equal to any of the given types.</div>
+</div>
+</div>
+<div class="caption"><span>Method parameters in <a href="../predicates/package-summary.html">com.google.errorprone.predicates</a> with type arguments of type <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static <a href="../predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../predicates/TypePredicates.html#isDescendantOfAnyOf(java.lang.Iterable)" class="member-name-link">isDescendantOfAnyOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&gt;&nbsp;types)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Match types that are a sub-type of one of the given classes.</div>
+</div>
+<div class="col-first odd-row-color"><code>static <a href="../predicates/TypePredicate.html" title="interface in com.google.errorprone.predicates">TypePredicate</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TypePredicates.</span><code><a href="../predicates/TypePredicates.html#isExactTypeAnyOf(java.lang.Iterable)" class="member-name-link">isExactTypeAnyOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;<a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&gt;&nbsp;types)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Match types that are exactly equal to any of the given classes.</div>
 </div>
 </div>
 </section>

@@ -510,49 +510,104 @@ use their return value and are not in a context where non-use of the return valu
 <div class="block">The matcher to apply to the subnodes in question.</div>
 </div>
 <div class="col-first even-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../ProtobufMatchers.html#PROTO_BUILD_METHOD" class="member-name-link">PROTO_BUILD_METHOD</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../RegexMatchers.html#PATTERN_COMPILE_METHODS" class="member-name-link">PATTERN_COMPILE_METHODS</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Matches static <code>compile</code> (and <code>compileUnsafe</code>) calls on <code>Pattern</code> types.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../RegexMatchers.html#PATTERN_MATCHER_METHODS" class="member-name-link">PATTERN_MATCHER_METHODS</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Matches instance <code>matcher</code> calls on <code>Pattern</code> types.</div>
+</div>
+<div class="col-first even-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../RegexMatchers.html#PATTERN_MATCHES_METHODS" class="member-name-link">PATTERN_MATCHES_METHODS</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Matches static <code>matches</code> (and <code>matchesUnsafe</code>) calls on <code>Pattern</code> types.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../RegexMatchers.html#PATTERN_QUOTE_METHODS" class="member-name-link">PATTERN_QUOTE_METHODS</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Matches static <code>quote</code> calls on <code>Pattern</code> types.</div>
+</div>
+<div class="col-first even-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../RegexMatchers.html#PREDICATES_CONTAINS_PATTERN_METHOD" class="member-name-link">PREDICATES_CONTAINS_PATTERN_METHOD</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Matches <code>com.google.common.base.Predicates.containsPattern(String)</code>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../ProtobufMatchers.html#PROTO_BUILD_METHOD" class="member-name-link">PROTO_BUILD_METHOD</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches builder <code>build()</code> or <code>buildPartial()</code> invocations.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../ProtobufMatchers.html#PROTO_BUILDER_MUTATOR" class="member-name-link">PROTO_BUILDER_MUTATOR</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../ProtobufMatchers.html#PROTO_BUILDER_MUTATOR" class="member-name-link">PROTO_BUILDER_MUTATOR</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches proto builder mutators (e.g.</div>
 </div>
-<div class="col-first even-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../ProtobufMatchers.html#PROTO_GETTER" class="member-name-link">PROTO_GETTER</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../ProtobufMatchers.html#PROTO_GETTER" class="member-name-link">PROTO_GETTER</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches immutable proto getters, excluding size/serialization and framework methods.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../ProtobufMatchers.html#PROTO_NEW_BUILDER_METHOD" class="member-name-link">PROTO_NEW_BUILDER_METHOD</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../ProtobufMatchers.html#PROTO_NEW_BUILDER_METHOD" class="member-name-link">PROTO_NEW_BUILDER_METHOD</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches static <code>newBuilder()</code> calls on proto messages.</div>
 </div>
-<div class="col-first even-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../ProtobufMatchers.html#PROTO_TIME_STATIC_FACTORIES" class="member-name-link">PROTO_TIME_STATIC_FACTORIES</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../ProtobufMatchers.html#PROTO_TIME_STATIC_FACTORIES" class="member-name-link">PROTO_TIME_STATIC_FACTORIES</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches static factory methods on <code>com.google.protobuf.util.Timestamps</code> and <code>
 com.google.protobuf.util.Durations</code> that construct time protos from numeric quantities (e.g.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../ProtobufMatchers.html#PROTO_TO_BUILDER_METHOD" class="member-name-link">PROTO_TO_BUILDER_METHOD</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ProtobufMatchers.</span><code><a href="../ProtobufMatchers.html#PROTO_TO_BUILDER_METHOD" class="member-name-link">PROTO_TO_BUILDER_METHOD</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Matches <code>toBuilder()</code> or <code>newBuilderForType()</code> calls on proto messages.</div>
 </div>
-<div class="col-first even-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#SERIALIZATION_METHODS" class="member-name-link">SERIALIZATION_METHODS</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Matchers.</span><code><a href="../Matchers.html#SERIALIZATION_METHODS" class="member-name-link">SERIALIZATION_METHODS</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Method signature of serialization methods.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../JUnitMatchers.html#TEST_CASE" class="member-name-link">TEST_CASE</a></code></div>
+<div class="col-first even-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../RegexMatchers.html#SPLITTER_ON_PATTERN_METHOD" class="member-name-link">SPLITTER_ON_PATTERN_METHOD</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Matches <code>com.google.common.base.Splitter.onPattern(String)</code>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../RegexMatchers.html#STRING_MATCHES_METHOD" class="member-name-link">STRING_MATCHES_METHOD</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Matches a JUnit 3 or 4 test case.</div>
+<div class="block">Matches <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#matches(java.lang.String)" title="class or interface in java.lang" class="external-link"><code>String.matches(String)</code></a>.</div>
+</div>
+<div class="col-first even-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../RegexMatchers.html#STRING_REPLACE_METHODS" class="member-name-link">STRING_REPLACE_METHODS</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Matches <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#replaceFirst(java.lang.String,java.lang.String)" title="class or interface in java.lang" class="external-link"><code>String.replaceFirst(String, String)</code></a> and <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#replaceAll(java.lang.String,java.lang.String)" title="class or interface in java.lang" class="external-link"><code>String.replaceAll(String, String)</code></a>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../RegexMatchers.html#STRING_SPLIT_METHOD" class="member-name-link">STRING_SPLIT_METHOD</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Matches <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#split(java.lang.String)" title="class or interface in java.lang" class="external-link"><code>String.split(String)</code></a> and <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#split(java.lang.String,int)" title="class or interface in java.lang" class="external-link"><code>String.split(String, int)</code></a>.</div>
+</div>
+<div class="col-first even-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../RegexMatchers.html#STRING_SPLIT_METHODS" class="member-name-link">STRING_SPLIT_METHODS</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Matches <code>String.split</code> and <code>String.splitWithDelimiters</code>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">RegexMatchers.</span><code><a href="../RegexMatchers.html#STRING_SPLIT_WITH_DELIMITERS_METHOD" class="member-name-link">STRING_SPLIT_WITH_DELIMITERS_METHOD</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Matches <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html#splitWithDelimiters(java.lang.String,int)" title="class or interface in java.lang" class="external-link"><code>String.splitWithDelimiters(String, int)</code></a>.</div>
 </div>
 <div class="col-first even-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../JUnitMatchers.html#wouldRunInJUnit4" class="member-name-link">wouldRunInJUnit4</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../JUnitMatchers.html#TEST_CASE" class="member-name-link">TEST_CASE</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Matches a JUnit 3 or 4 test case.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final <a href="../Matcher.html" title="interface in com.google.errorprone.matchers">Matcher</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/MethodTree.html" title="class or interface in com.sun.source.tree" class="external-link">MethodTree</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">JUnitMatchers.</span><code><a href="../JUnitMatchers.html#wouldRunInJUnit4" class="member-name-link">wouldRunInJUnit4</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Matches a method annotated with @Test but not @Ignore.</div>
 </div>
 </div>
