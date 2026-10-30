@@ -1490,6 +1490,9 @@ Unused.
 __[UseBinds](bugpattern/UseBinds)__<br>
 @Binds is a more efficient and declarative mechanism for delegating a binding.
 
+__[ValueClassEquals](bugpattern/ValueClassEquals)__<br>
+Non-record concrete value classes should explicitly override equals and hashCode; prefer a value record, or delegate to super.equals and super.hashCode if state-wise identity comparison is intended
+
 __[VariableNameSameAsType](bugpattern/VariableNameSameAsType)__<br>
 variableName and type with the same name would refer to the static field instead of the class
 
