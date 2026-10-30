@@ -18,8 +18,10 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.truth.TruthJUnit.assume;
 
+import com.google.common.base.Enums;
 import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
+import javax.lang.model.element.Modifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -1383,6 +1385,87 @@ public class ReferenceEqualityTest {
 
               boolean g(ExpressionTree a, ExpressionTree b) {
                 return a == b;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void valueBasedFinalClassWithoutEquals() {
+    compilationHelper
+        .addSourceLines(
+            "jdk/internal/ValueBased.java",
+            """
+            package jdk.internal;
+
+            public @interface ValueBased {}
+            """)
+        .addSourceLines(
+            "MyValue.java",
+            """
+            @jdk.internal.ValueBased
+            final class MyValue {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              private static final Object SENTINEL = new MyValue();
+
+              boolean f(MyValue a, MyValue b) {
+                // BUG: Diagnostic contains: a.equals(b)
+                return a == b;
+              }
+
+              boolean sentinel(Object o) {
+                // BUG: Diagnostic contains: o.equals(SENTINEL)
+                return o == SENTINEL;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void valueClass() {
+    assume().that(Enums.getIfPresent(Modifier.class, "VALUE").isPresent()).isTrue();
+    compilationHelper
+        .setArgs(
+            "--enable-preview",
+            "--source",
+            String.valueOf(Runtime.version().feature()),
+            "-Xlint:-preview")
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static value class MyValue {
+                @Override
+                public boolean equals(Object o) {
+                  return this == o;
+                }
+              }
+
+              static value class MyValueWithoutEquals implements Sealed {}
+
+              sealed interface Sealed permits MyValueWithoutEquals {}
+
+              private static final Object SENTINEL = new MyValueWithoutEquals();
+
+              boolean f(MyValueWithoutEquals a, MyValueWithoutEquals b) {
+                // BUG: Diagnostic contains: a.equals(b)
+                return a == b;
+              }
+
+              boolean sealedComparison(Sealed a, Sealed b) {
+                // BUG: Diagnostic contains: a.equals(b)
+                return a == b;
+              }
+
+              boolean sentinel(Object o) {
+                // BUG: Diagnostic contains: o.equals(SENTINEL)
+                return o == SENTINEL;
               }
             }
             """)

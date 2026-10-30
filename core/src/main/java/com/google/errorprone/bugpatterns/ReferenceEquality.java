@@ -225,7 +225,9 @@ public class ReferenceEquality extends AbstractReferenceEquality
     initializer = ASTHelpers.stripParentheses(initializer);
     if (initializer instanceof NewClassTree newClassTree) {
       Type instantiatedType = ASTHelpers.getType(newClassTree);
-      if (instantiatedType != null && !implementsEquals(instantiatedType, state)) {
+      if (instantiatedType != null
+          && !implementsEquals(instantiatedType, state)
+          && !ValueClassIdentity.isValueClass(instantiatedType, state)) {
         return true;
       }
     }
@@ -285,8 +287,8 @@ public class ReferenceEquality extends AbstractReferenceEquality
    *
    * <ul>
    *   <li>enum classes
-   *   <li>{@code final} classes that inherit {@link Object#equals} instead of having a more
-   *       specific implementation
+   *   <li>{@code final} identity classes that inherit {@link Object#equals} instead of having a
+   *       more specific implementation
    *   <li>{@code sealed} classes whose permitted subclasses all definitely use reference equality
    *       according to this method
    *   <li>{@code private} classes (or classes whose constructors are all {@code private}) whose
@@ -330,7 +332,7 @@ public class ReferenceEquality extends AbstractReferenceEquality
     if (isSubtype(type, state.getSymtab().enumSym.type, state)) {
       return true;
     }
-    if (implementsEquals(type, state)) {
+    if (implementsEquals(type, state) || ValueClassIdentity.isValueClass(type, state)) {
       return false;
     }
     if (!(type.tsym instanceof ClassSymbol sym)) {

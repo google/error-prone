@@ -16,7 +16,11 @@
 
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.truth.TruthJUnit.assume;
+
+import com.google.common.base.Enums;
 import com.google.errorprone.CompilationTestHelper;
+import javax.lang.model.element.Modifier;
 import org.junit.Test;
 
 /**
@@ -508,6 +512,52 @@ public class ValueClassIdentityTest {
             class Test {
               void f() {
                 Cache<String, String> c = Caffeine.newBuilder().weakKeys().weakValues().build();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void valueClass() {
+    assume().that(Enums.getIfPresent(Modifier.class, "VALUE").isPresent()).isTrue();
+    compilationHelper
+        .setArgs(
+            "--enable-preview",
+            "--source",
+            String.valueOf(Runtime.version().feature()),
+            "-Xlint:-preview")
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.cache.Cache;
+            import com.google.common.cache.CacheBuilder;
+            import java.lang.ref.WeakReference;
+            import java.util.IdentityHashMap;
+            import java.util.WeakHashMap;
+
+            class Test {
+              static value class MyValue {}
+
+              static abstract value class MyAbstractValue {}
+
+              void positive(MyValue v) throws Exception {
+                // BUG: Diagnostic contains: ValueClassIdentity
+                new WeakReference<MyValue>(v);
+                // BUG: Diagnostic contains: ValueClassIdentity
+                new WeakHashMap<MyValue, String>();
+                // BUG: Diagnostic contains: ValueClassIdentity
+                new IdentityHashMap<MyValue, String>();
+                // BUG: Diagnostic contains: ValueClassIdentity
+                System.identityHashCode(v);
+                // BUG: Diagnostic contains: ValueClassIdentity
+                v.wait();
+                // BUG: Diagnostic contains: ValueClassIdentity
+                Cache<MyValue, String> c = CacheBuilder.newBuilder().weakKeys().build();
+              }
+
+              void negative(MyAbstractValue av) {
+                System.identityHashCode(av);
               }
             }
             """)

@@ -23,6 +23,7 @@ import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.suppliers.Suppliers.JAVA_LANG_BOOLEAN_TYPE;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
 
+import com.google.common.base.Enums;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
@@ -41,6 +42,8 @@ import com.sun.source.tree.SynchronizedTree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Type;
 import java.util.List;
+import javax.lang.model.element.Modifier;
+import org.jspecify.annotations.Nullable;
 
 /** Checks for reliance on identity semantics of value-based classes. */
 @BugPattern(
@@ -250,7 +253,10 @@ public class ValueClassIdentity extends BugChecker
     return String.format("Value-based classes do not have identity; " + format, args);
   }
 
-  private static boolean isValueClass(Type type, VisitorState state) {
+  private static final @Nullable Modifier VALUE_MODIFIER =
+      Enums.getIfPresent(Modifier.class, "VALUE").orNull();
+
+  static boolean isValueClass(Type type, VisitorState state) {
     if (type == null) {
       return false;
     }
@@ -259,7 +265,13 @@ public class ValueClassIdentity extends BugChecker
       return true;
     }
     Symbol sym = type.tsym;
-    return ASTHelpers.hasAnnotation(sym, "jdk.internal.ValueBased", state)
+    if (sym == null) {
+      return false;
+    }
+    return (VALUE_MODIFIER != null
+            && sym.getModifiers().contains(VALUE_MODIFIER)
+            && !sym.getModifiers().contains(Modifier.ABSTRACT))
+        || ASTHelpers.hasAnnotation(sym, "jdk.internal.ValueBased", state)
         || VALUE_CLASSES_BESIDES_PRIMITIVE_WRAPPERS.contains(sym.getQualifiedName().toString());
   }
 }
