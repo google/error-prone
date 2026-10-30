@@ -480,6 +480,7 @@ import com.google.errorprone.bugpatterns.UnusedTypeParameter;
 import com.google.errorprone.bugpatterns.UnusedVariable;
 import com.google.errorprone.bugpatterns.UseCorrectAssertInTests;
 import com.google.errorprone.bugpatterns.UseEnumSwitch;
+import com.google.errorprone.bugpatterns.ValueClassEquals;
 import com.google.errorprone.bugpatterns.ValueClassIdentity;
 import com.google.errorprone.bugpatterns.VarChecker;
 import com.google.errorprone.bugpatterns.VarTypeName;
@@ -1223,6 +1224,7 @@ public final class BuiltInCheckerSuppliers {
           UnusedTypeParameter.class,
           UnusedVariable.class,
           UseBinds.class,
+          ValueClassEquals.class,
           VariableNameSameAsType.class,
           VoidUsed.class,
           WaitNotInLoop.class,
