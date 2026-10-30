@@ -87,6 +87,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
       }
       if (EqualsHashCode.NON_TRIVIAL_EQUALS.matches(methodTree, state)) {
         requiredMethod = methodTree;
+        break;
       }
     }
     if (requiredMethod == null) {
