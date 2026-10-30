@@ -16,36 +16,27 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.suppliers.Suppliers.ANNOTATION_TYPE;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.overridesObjectEquals;
+import static com.google.errorprone.util.ASTHelpers.overridesObjectHashCode;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static com.sun.source.tree.Tree.Kind.ENUM;
 
-import com.google.common.base.Verify;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.Tree.Kind;
-import com.sun.tools.javac.code.Flags;
-import com.sun.tools.javac.code.Scope;
-import com.sun.tools.javac.code.Symbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.code.Types;
-import com.sun.tools.javac.util.Name;
+import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import java.lang.annotation.Annotation;
-import java.util.function.Predicate;
-import org.jspecify.annotations.Nullable;
 
 /**
  * Checker that ensures implementations of {@link Annotation} override equals and hashCode.
@@ -78,64 +69,11 @@ public class BadAnnotationImplementation extends BugChecker implements ClassTree
           .build();
     }
 
-    // Otherwise walk up type hierarchy looking for equals and hashcode methods
-    MethodSymbol equals = null;
-    MethodSymbol hashCode = null;
-    Types types = state.getTypes();
-    Name equalsName = EQUALS.get(state);
-    Predicate<MethodSymbol> equalsPredicate =
-        methodSymbol ->
-            !methodSymbol.isStatic()
-                && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
-                && ((methodSymbol.flags() & Flags.ABSTRACT) == 0)
-                && methodSymbol.getParameters().size() == 1
-                && types.isSameType(
-                    getOnlyElement(methodSymbol.getParameters()).type,
-                    state.getSymtab().objectType);
-    Name hashCodeName = HASHCODE.get(state);
-    Predicate<MethodSymbol> hashCodePredicate =
-        methodSymbol ->
-            !methodSymbol.isStatic()
-                && ((methodSymbol.flags() & Flags.SYNTHETIC) == 0)
-                && ((methodSymbol.flags() & Flags.ABSTRACT) == 0)
-                && methodSymbol.getParameters().isEmpty();
-
-    for (Type sup : types.closure(ASTHelpers.getSymbol(classTree).type)) {
-      if (equals == null) {
-        equals = getMatchingMethod(sup, equalsName, equalsPredicate);
-      }
-      if (hashCode == null) {
-        hashCode = getMatchingMethod(sup, hashCodeName, hashCodePredicate);
-      }
-    }
-    Verify.verifyNotNull(equals);
-    Verify.verifyNotNull(hashCode);
-
-    Symbol objectSymbol = state.getSymtab().objectType.tsym;
-    if (equals.owner.equals(objectSymbol) || hashCode.owner.equals(objectSymbol)) {
+    ClassSymbol symbol = getSymbol(classTree);
+    if (!overridesObjectEquals(symbol, state) || !overridesObjectHashCode(symbol, state)) {
       return describeMatch(classTree);
     }
 
     return Description.NO_MATCH;
   }
-
-  private static @Nullable MethodSymbol getMatchingMethod(
-      Type type, Name name, Predicate<MethodSymbol> predicate) {
-    Scope scope = type.tsym.members();
-    for (Symbol sym : scope.getSymbolsByName(name)) {
-      if (!(sym instanceof MethodSymbol methodSymbol)) {
-        continue;
-      }
-      if (predicate.test(methodSymbol)) {
-        return methodSymbol;
-      }
-    }
-    return null;
-  }
-
-  private static final Supplier<Name> EQUALS =
-      VisitorState.memoize(state -> state.getName("equals"));
-
-  private static final Supplier<Name> HASHCODE =
-      VisitorState.memoize(state -> state.getName("hashCode"));
 }

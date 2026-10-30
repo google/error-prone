@@ -19,10 +19,10 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
-import static com.google.errorprone.util.ASTHelpers.resolveExistingMethod;
+import static com.google.errorprone.util.ASTHelpers.overridesObjectEquals;
+import static com.google.errorprone.util.ASTHelpers.overridesObjectHashCode;
 
 import com.google.common.base.Enums;
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
@@ -30,10 +30,6 @@ import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.sun.source.tree.ClassTree;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Symbol.TypeSymbol;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.Name;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import org.jspecify.annotations.Nullable;
@@ -67,22 +63,9 @@ public final class ValueClassEquals extends BugChecker implements ClassTreeMatch
         || symbol.getModifiers().contains(Modifier.ABSTRACT)) {
       return NO_MATCH;
     }
-    boolean hasEquals =
-        overridesObjectMethod(
-            symbol, state.getNames().equals, ImmutableList.of(state.getSymtab().objectType), state);
-    boolean hasHashCode =
-        overridesObjectMethod(symbol, state.getNames().hashCode, ImmutableList.of(), state);
-    if (hasEquals && hasHashCode) {
+    if (overridesObjectEquals(symbol, state) && overridesObjectHashCode(symbol, state)) {
       return NO_MATCH;
     }
     return describeMatch(tree);
-  }
-
-  private static boolean overridesObjectMethod(
-      ClassSymbol symbol, Name name, ImmutableList<Type> argTypes, VisitorState state) {
-    TypeSymbol objectSym = state.getSymtab().objectType.tsym;
-    MethodSymbol methodSym =
-        resolveExistingMethod(state, symbol, name, argTypes, /* tyargTypes= */ ImmutableList.of());
-    return methodSym != null && methodSym.owner != objectSym;
   }
 }

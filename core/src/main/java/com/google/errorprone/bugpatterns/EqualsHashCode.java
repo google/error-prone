@@ -17,30 +17,25 @@
 package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.equalsMethodDeclaration;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.singleStatementReturnMatcher;
+import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.overridesObjectHashCode;
 
-import com.google.common.collect.ImmutableList;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.Tree;
-import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
-import com.sun.tools.javac.code.Type;
-import com.sun.tools.javac.util.Name;
 import javax.lang.model.element.ElementKind;
 import org.jspecify.annotations.Nullable;
 
@@ -77,7 +72,7 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
    * </ol>
    */
   private static @Nullable MethodTree checkMethodPresence(ClassTree classTree, VisitorState state) {
-    TypeSymbol symbol = ASTHelpers.getSymbol(classTree);
+    TypeSymbol symbol = getSymbol(classTree);
     if (symbol.getKind() != ElementKind.CLASS) {
       return null;
     }
@@ -97,19 +92,9 @@ public class EqualsHashCode extends BugChecker implements ClassTreeMatcher {
     if (requiredMethod == null) {
       return null;
     }
-    MethodSymbol expectedMethodSym =
-        ASTHelpers.resolveExistingMethod(
-            state,
-            symbol,
-            HASH_CODE.get(state),
-            ImmutableList.<Type>of(),
-            ImmutableList.<Type>of());
-
-    if (!expectedMethodSym.owner.equals(state.getSymtab().objectType.tsym)) {
+    if (overridesObjectHashCode(symbol, state)) {
       return null;
     }
     return requiredMethod;
   }
-
-  private static final Supplier<Name> HASH_CODE = memoize(state -> state.getName("hashCode"));
 }

@@ -1858,6 +1858,30 @@ public final class ASTHelpers {
   }
 
   /**
+   * Returns whether {@code symbol} declares or inherits an implementation of {@link Object#equals}
+   * other than the default implementation in {@link Object}.
+   */
+  public static boolean overridesObjectEquals(TypeSymbol symbol, VisitorState state) {
+    return overridesObjectMethod(
+        symbol, state.getNames().equals, ImmutableList.of(state.getSymtab().objectType), state);
+  }
+
+  /**
+   * Returns whether {@code symbol} declares or inherits an implementation of {@link
+   * Object#hashCode} other than the default implementation in {@link Object}.
+   */
+  public static boolean overridesObjectHashCode(TypeSymbol symbol, VisitorState state) {
+    return overridesObjectMethod(symbol, state.getNames().hashCode, ImmutableList.of(), state);
+  }
+
+  private static boolean overridesObjectMethod(
+      TypeSymbol symbol, Name name, ImmutableList<Type> argTypes, VisitorState state) {
+    MethodSymbol methodSym =
+        resolveExistingMethod(state, symbol, name, argTypes, /* tyargTypes= */ ImmutableList.of());
+    return methodSym != null && methodSym.owner != state.getSymtab().objectType.tsym;
+  }
+
+  /**
    * Returns the value of the {@code @Generated} annotation on enclosing classes, if present.
    *
    * <p>Although {@code @Generated} can be applied to non-class program elements, there are no known
