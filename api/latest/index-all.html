@@ -12541,6 +12541,15 @@ annotated with @com.google.inject.Inject</div>
 </dd>
 <dt><a href="com/google/errorprone/bugpatterns/inject/guice/OverridesJavaxInjectableMethod.html#%3Cinit%3E()" class="member-name-link">OverridesJavaxInjectableMethod()</a> - Constructor for class com.google.errorprone.bugpatterns.inject.guice.<a href="com/google/errorprone/bugpatterns/inject/guice/OverridesJavaxInjectableMethod.html" title="class in com.google.errorprone.bugpatterns.inject.guice">OverridesJavaxInjectableMethod</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#overridesObjectEquals(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)" class="member-name-link">overridesObjectEquals(Symbol.TypeSymbol, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a>
+other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/ASTHelpers.html#overridesObjectHashCode(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)" class="member-name-link">overridesObjectHashCode(Symbol.TypeSymbol, VisitorState)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/ASTHelpers.html" title="class in com.google.errorprone.util">ASTHelpers</a></dt>
+<dd>
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
+</dd>
 <dt><a href="com/google/errorprone/bugpatterns/OverrideThrowableToString.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns">OverrideThrowableToString</a> - Class in <a href="com/google/errorprone/bugpatterns/package-summary.html">com.google.errorprone.bugpatterns</a></dt>
 <dd>
 <div class="block">Warns against overriding toString() in a Throwable class and suggests getMessage()</div>

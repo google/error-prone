@@ -165,6 +165,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#getSourcePath(com.google.errorprone.VisitorState)" tabindex="0">getSourcePath(VisitorState)</a></li>
 <li><a href="#getFileNameFromUri(java.net.URI)" tabindex="0">getFileNameFromUri(URI)</a></li>
 <li><a href="#resolveExistingMethod(com.google.errorprone.VisitorState,com.sun.tools.javac.code.Symbol.TypeSymbol,com.sun.tools.javac.util.Name,java.lang.Iterable,java.lang.Iterable)" tabindex="0">resolveExistingMethod(VisitorState, Symbol.TypeSymbol, Name, Iterable, Iterable)</a></li>
+<li><a href="#overridesObjectEquals(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)" tabindex="0">overridesObjectEquals(Symbol.TypeSymbol, VisitorState)</a></li>
+<li><a href="#overridesObjectHashCode(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)" tabindex="0">overridesObjectHashCode(Symbol.TypeSymbol, VisitorState)</a></li>
 <li><a href="#getGeneratedBy(com.google.errorprone.VisitorState)" tabindex="0">getGeneratedBy(VisitorState)</a></li>
 <li><a href="#getGeneratedBy(com.sun.tools.javac.code.Symbol)" tabindex="0">getGeneratedBy(Symbol)</a></li>
 <li><a href="#getGeneratedBy(com.sun.tools.javac.code.Symbol,com.google.errorprone.VisitorState)" tabindex="0">getGeneratedBy(Symbol, VisitorState)</a></li>
@@ -940,6 +942,19 @@ does <i>not</i> have a super-method (i.e., it is not an <code>@Override</code>).
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#outermostClass(com.sun.tools.javac.code.Symbol)" class="member-name-link">outermostClass</a><wbr>(com.sun.tools.javac.code.Symbol&nbsp;symbol)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the outermost enclosing owning class, or <code>null</code>.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#overridesObjectEquals(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)" class="member-name-link">overridesObjectEquals</a><wbr>(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;symbol,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a>
+other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#overridesObjectHashCode(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)" class="member-name-link">overridesObjectHashCode</a><wbr>(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;symbol,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#requiresParentheses(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">requiresParentheses</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expression,
@@ -2316,6 +2331,27 @@ MethodSymbol meth =  ASTHelpers.resolveExistingMethod(
 <dd>a MethodSymbol representing the method symbol resolved from the context of this type,
     or <code>null</code> if the method could not be resolved.</dd>
 </dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="overridesObjectEquals(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)">
+<h3>overridesObjectEquals</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">overridesObjectEquals</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;symbol,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a>
+other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="overridesObjectHashCode(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)">
+<h3>overridesObjectHashCode</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">overridesObjectHashCode</span><wbr><span class="parameters">(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;symbol,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</span></div>
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
 </div>
 </section>
 </li>

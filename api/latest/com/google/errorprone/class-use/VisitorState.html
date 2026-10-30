@@ -6253,6 +6253,19 @@ operands in both orders.</div>
 does <i>not</i> have a super-method (i.e., it is not an <code>@Override</code>).</div>
 </div>
 <div class="col-first odd-row-color"><code>static boolean</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#overridesObjectEquals(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)" class="member-name-link">overridesObjectEquals</a><wbr>(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;symbol,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link"><code>Object.equals(Object)</code></a>
+other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
+</div>
+<div class="col-first even-row-color"><code>static boolean</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#overridesObjectHashCode(com.sun.tools.javac.code.Symbol.TypeSymbol,com.google.errorprone.VisitorState)" class="member-name-link">overridesObjectHashCode</a><wbr>(com.sun.tools.javac.code.Symbol.TypeSymbol&nbsp;symbol,
+ <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Returns whether <code>symbol</code> declares or inherits an implementation of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link"><code>Object.hashCode()</code></a> other than the default implementation in <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link"><code>Object</code></a>.</div>
+</div>
+<div class="col-first odd-row-color"><code>static boolean</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ASTHelpers.</span><code><a href="../util/ASTHelpers.html#requiresParentheses(com.sun.source.tree.ExpressionTree,com.google.errorprone.VisitorState)" class="member-name-link">requiresParentheses</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ExpressionTree.html" title="class or interface in com.sun.source.tree" class="external-link">ExpressionTree</a>&nbsp;expression,
  <a href="../VisitorState.html" title="class in com.google.errorprone">VisitorState</a>&nbsp;state)</code></div>
 <div class="col-last odd-row-color">
