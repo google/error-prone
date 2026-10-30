@@ -22,7 +22,6 @@ import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.MoreCollectors.onlyElement;
 import static com.google.common.collect.Streams.stream;
-import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.isSubtypeOf;
 import static com.google.errorprone.util.AnnotationNames.NULL_MARKED_ANNOTATION;
@@ -995,7 +994,7 @@ public final class ASTHelpers {
         .get(
             annotationName,
             name -> {
-              if (name.equals(NULL_MARKED_NAME.get(state))) {
+              if (name.equals(NULL_MARKED.binaryName(state))) {
                 /*
                  * We avoid searching for @Inherited on NullMarked not just because we already know
                  * the answer but also because the search would cause issues under --release 8 on
@@ -2443,8 +2442,7 @@ public final class ASTHelpers {
         || labels.stream().anyMatch(label -> label.getKind().name().equals("DEFAULT_CASE_LABEL"));
   }
 
-  private static final Supplier<Name> NULL_MARKED_NAME =
-      memoize(state -> state.getName(NULL_MARKED_ANNOTATION));
+  private static final ClassName NULL_MARKED = ClassName.of(NULL_MARKED_ANNOTATION);
 
   private ASTHelpers() {}
 }

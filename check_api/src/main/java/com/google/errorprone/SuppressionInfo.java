@@ -22,7 +22,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.matchers.Suppressible;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ClassTree;
@@ -51,8 +50,8 @@ public final class SuppressionInfo {
   public static final SuppressionInfo EMPTY =
       new SuppressionInfo(ImmutableSet.of(), ImmutableSet.of(), false);
 
-  private static final Supplier<Name> ANDROID_SUPPRESS_LINT =
-      VisitorState.memoize(state -> state.getName("android.annotation.SuppressLint"));
+  private static final ClassName ANDROID_SUPPRESS_LINT =
+      ClassName.of("android.annotation.SuppressLint");
   private final ImmutableSet<String> suppressWarningsStrings;
 
   @SuppressWarnings("Immutable") /* Name is javac's interned version of a string. */
@@ -150,13 +149,13 @@ public final class SuppressionInfo {
     }
 
     /* Handle {@code @SuppressWarnings} and {@code @SuppressLint}. */
-    Name suppressLint = ANDROID_SUPPRESS_LINT.get(state);
+    Name suppressLint = ANDROID_SUPPRESS_LINT.binaryName(state);
     Set<String> newSuppressions = null;
     // Iterate over annotations on this symbol, looking for SuppressWarnings
     for (AnnotationMirror attr : sym.getAnnotationMirrors()) {
       TypeSymbol tsym = MoreAnnotations.asElement(attr);
       if (tsym.equals(state.getSymtab().suppressWarningsType.tsym)
-          || tsym.getQualifiedName().equals(suppressLint)) {
+          || tsym.flatName().equals(suppressLint)) {
         for (String suppressedWarning : MoreAnnotations.getStrings(attr, "value")) {
           if (!suppressWarningsStrings.contains(suppressedWarning)) {
             anyModification = true;

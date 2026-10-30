@@ -44,6 +44,7 @@ import com.google.common.base.Ascii;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -324,9 +325,9 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
        */
       private void handleMethodSource(MethodTree tree) {
         MethodSymbol sym = getSymbol(tree);
-        Name name = ORG_JUNIT_JUPITER_PARAMS_PROVIDER_METHODSOURCE.get(state);
+        var name = ORG_JUNIT_JUPITER_PARAMS_PROVIDER_METHODSOURCE.binaryName(state);
         sym.getRawAttributes().stream()
-            .filter(a -> a.type.tsym.getQualifiedName().equals(name))
+            .filter(a -> a.type.tsym.flatName().equals(name))
             .findAny()
             // get the annotation value array as a set of Names,
             // normalizing unset value to the empty value
@@ -461,8 +462,6 @@ public final class UnusedMethod extends BugChecker implements CompilationUnitTre
     return Ascii.toLowerCase(name.toString()).startsWith(EXEMPT_PREFIX);
   }
 
-  private static final Supplier<com.sun.tools.javac.util.Name>
-      ORG_JUNIT_JUPITER_PARAMS_PROVIDER_METHODSOURCE =
-          VisitorState.memoize(
-              state -> state.getName("org.junit.jupiter.params.provider.MethodSource"));
+  private static final ClassName ORG_JUNIT_JUPITER_PARAMS_PROVIDER_METHODSOURCE =
+      ClassName.of("org.junit.jupiter.params.provider.MethodSource");
 }

@@ -24,7 +24,6 @@ import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasDefini
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.hasExtraParameterForEnclosingInstance;
 import static com.google.errorprone.bugpatterns.nullness.NullnessUtils.nullnessChecksShouldBeConservative;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.enclosingClass;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -38,6 +37,7 @@ import static javax.lang.model.type.TypeKind.TYPEVAR;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -70,19 +70,16 @@ import javax.lang.model.type.TypeMirror;
 @BugPattern(summary = "Null is not permitted for this parameter.", severity = ERROR)
 public final class NullArgumentForNonNullParameter extends BugChecker
     implements MethodInvocationTreeMatcher, NewClassTreeMatcher {
-  private static final Supplier<Type> JAVA_OPTIONAL_TYPE = typeFromString("java.util.Optional");
-  private static final Supplier<Type> ARGUMENT_CAPTOR_CLASS =
-      typeFromString("org.mockito.ArgumentCaptor");
-  private static final Supplier<Type> NULL_POINTER_EXCEPTION =
-      typeFromString("java.lang.NullPointerException");
+  private static final ClassName JAVA_OPTIONAL_TYPE = ClassName.of("java.util.Optional");
+  private static final ClassName ARGUMENT_CAPTOR_CLASS = ClassName.of("org.mockito.ArgumentCaptor");
+  private static final ClassName NULL_POINTER_EXCEPTION =
+      ClassName.of("java.lang.NullPointerException");
   private static final Supplier<Name> OF_NAME = memoize(state -> state.getName("of"));
   private static final Supplier<Name> FOR_CLASS_NAME = memoize(state -> state.getName("forClass"));
-  private static final Supplier<Name> PROTO_NONNULL_API_NAME =
-      memoize(state -> state.getName("com.google.protobuf.Internal$ProtoNonnullApi"));
-  private static final Supplier<Name> NULL_MARKED_NAME =
-      memoize(state -> state.getName(NULL_MARKED_ANNOTATION));
-  private static final Supplier<Name> NULL_UNMARKED_NAME =
-      memoize(state -> state.getName(NULL_UNMARKED_ANNOTATION));
+  private static final ClassName PROTO_NONNULL_API_NAME =
+      ClassName.of("com.google.protobuf.Internal$ProtoNonnullApi");
+  private static final ClassName NULL_MARKED_NAME = ClassName.of(NULL_MARKED_ANNOTATION);
+  private static final ClassName NULL_UNMARKED_NAME = ClassName.of(NULL_UNMARKED_ANNOTATION);
   private static final Supplier<ImmutableSet<Name>> NULL_MARKED_PACKAGES_WE_TRUST =
       memoize(
           state ->
@@ -221,7 +218,7 @@ public final class NullArgumentForNonNullParameter extends BugChecker
   }
 
   private static boolean isSupertypeOfNpe(Type type, VisitorState state) {
-    return state.getTypes().isSubtype(NULL_POINTER_EXCEPTION.get(state), type);
+    return state.getTypes().isSubtype(NULL_POINTER_EXCEPTION.type(state), type);
   }
 
   private boolean argumentMustBeNonNull(VarSymbol sym, VisitorState state) {
@@ -295,8 +292,8 @@ public final class NullArgumentForNonNullParameter extends BugChecker
   }
 
   private static boolean isParameterOfMethodOnType(
-      VarSymbol sym, Supplier<Type> typeSupplier, VisitorState state) {
-    Type target = typeSupplier.get(state);
+      VarSymbol sym, ClassName type, VisitorState state) {
+    Type target = type.type(state);
     return target != null && state.getTypes().isSameType(enclosingClass(sym).type, target);
   }
 
@@ -308,13 +305,13 @@ public final class NullArgumentForNonNullParameter extends BugChecker
   private boolean enclosingAnnotationDefaultsNonTypeVariablesToNonNull(
       Symbol sym, VisitorState state) {
     for (; sym != null; sym = sym.getEnclosingElement()) {
-      if (hasDirectAnnotation(sym, PROTO_NONNULL_API_NAME.get(state))) {
+      if (hasDirectAnnotation(sym, PROTO_NONNULL_API_NAME, state)) {
         return true;
       }
       // https://jspecify.dev/docs/spec/#null-marked-scope
       // TODO(cpovirk): Including handling of @kotlin.Metadata.
-      boolean marked = hasDirectAnnotation(sym, NULL_MARKED_NAME.get(state));
-      boolean unmarked = hasDirectAnnotation(sym, NULL_UNMARKED_NAME.get(state));
+      boolean marked = hasDirectAnnotation(sym, NULL_MARKED_NAME, state);
+      boolean unmarked = hasDirectAnnotation(sym, NULL_UNMARKED_NAME, state);
       if (marked && !unmarked && weTrustNullMarkedOn(sym, state)) {
         return true;
       }
@@ -331,9 +328,9 @@ public final class NullArgumentForNonNullParameter extends BugChecker
    * We avoid hasAnnotation not just because it's unnecessary but also because it would cause issues
    * under --release 8 on account of NullMarked's use of @Target(MODULE, ...).
    */
-  private static boolean hasDirectAnnotation(Symbol sym, Name name) {
+  private static boolean hasDirectAnnotation(Symbol sym, ClassName name, VisitorState state) {
     return sym.getAnnotationMirrors().stream()
-        .anyMatch(a -> asElement(a).getQualifiedName().contentEquals(name));
+        .anyMatch(a -> asElement(a).flatName().equals(name.binaryName(state)));
   }
 
   private boolean weTrustNullMarkedOn(Symbol sym, VisitorState state) {

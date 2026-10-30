@@ -29,13 +29,13 @@ import static com.google.errorprone.util.ASTHelpers.outermostClass;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
@@ -45,15 +45,14 @@ import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.model.JavacElements;
 
 /** A BugPattern; see the summary */
 @BugPattern(summary = "Prefer ASTHelpers instead of calling this API directly", severity = WARNING)
 public class ASTHelpersSuggestions extends BugChecker implements MethodInvocationTreeMatcher {
 
-  private static final Supplier<Type> MODULE_SYMBOL =
-      Suppliers.typeFromString("com.sun.tools.javac.code.Symbol.ModuleSymbol");
+  private static final ClassName MODULE_SYMBOL =
+      ClassName.of("com.sun.tools.javac.code.Symbol$ModuleSymbol");
 
   private static final Matcher<ExpressionTree> SYMBOL =
       anyOf(
@@ -61,7 +60,7 @@ public class ASTHelpersSuggestions extends BugChecker implements MethodInvocatio
               .onDescendantOf("com.sun.tools.javac.code.Symbol")
               .namedAnyOf("packge", "getEnclosedElements"),
           instanceMethod()
-              .onClass((t, s) -> isSubtype(MODULE_SYMBOL.get(s), t, s))
+              .onClass((t, s) -> isSubtype(MODULE_SYMBOL.type(s), t, s))
               .namedAnyOf("isStatic"));
 
   private static final Matcher<ExpressionTree> SYMBOL_ENCLCLASS =
