@@ -86,6 +86,11 @@ public final class TypePredicates {
 
   /** Match types that are exactly equal to any of the given types. */
   public static TypePredicate isExactTypeAny(ClassName... types) {
+    return isExactTypeAnyOf(ImmutableList.copyOf(types));
+  }
+
+  /** Match types that are exactly equal to any of the given classes. */
+  public static TypePredicate isExactTypeAnyOf(Iterable<ClassName> types) {
     ImmutableList<ClassName> classNames = ImmutableList.copyOf(types);
     return (actual, state) ->
         classNames.stream().anyMatch(className -> ASTHelpers.isSameType(actual, className, state));
@@ -113,14 +118,19 @@ public final class TypePredicates {
 
   /** Match types that are a sub-type of one of the given types. */
   public static TypePredicate isDescendantOfAny(ClassName... types) {
-    ImmutableList<ClassName> classNames = ImmutableList.copyOf(types);
-    return (actual, state) ->
-        classNames.stream().anyMatch(className -> ASTHelpers.isSubtype(actual, className, state));
+    return isDescendantOfAnyOf(ImmutableList.copyOf(types));
   }
 
   public static TypePredicate isDescendantOfAny(ImmutableList<Supplier<Type>> types) {
     return (actual, state) ->
         types.stream().anyMatch(type -> ASTHelpers.isSubtype(actual, type.get(state), state));
+  }
+
+  /** Match types that are a sub-type of one of the given classes. */
+  public static TypePredicate isDescendantOfAnyOf(Iterable<ClassName> types) {
+    ImmutableList<ClassName> classNames = ImmutableList.copyOf(types);
+    return (actual, state) ->
+        classNames.stream().anyMatch(className -> ASTHelpers.isSubtype(actual, className, state));
   }
 
   public static TypePredicate allOf(TypePredicate... predicates) {

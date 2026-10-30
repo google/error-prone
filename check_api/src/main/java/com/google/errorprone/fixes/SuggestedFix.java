@@ -22,6 +22,7 @@ import com.google.auto.value.AutoValue;
 import com.google.auto.value.extension.memoized.Memoized;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.fixes.Replacements.CoalescePolicy;
@@ -332,6 +333,12 @@ public abstract class SuggestedFix implements Fix {
       return this;
     }
 
+    /** Add an import statement for {@code className} as part of this SuggestedFix. */
+    @CanIgnoreReturnValue
+    public Builder addImport(ClassName className) {
+      return addImport(className.toString().replace('$', '.'));
+    }
+
     /**
      * Add a static import statement as part of this SuggestedFix. Import string should be of the
      * form "foo.bar.SomeClass.someMethod" or "foo.bar.SomeClass.SOME_FIELD".
@@ -350,6 +357,12 @@ public abstract class SuggestedFix implements Fix {
     public Builder removeImport(String importString) {
       importsToRemove.add("import " + importString);
       return this;
+    }
+
+    /** Remove an import statement for {@code className} as part of this SuggestedFix. */
+    @CanIgnoreReturnValue
+    public Builder removeImport(ClassName className) {
+      return removeImport(className.toString().replace('$', '.'));
     }
 
     /**
