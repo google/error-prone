@@ -21,6 +21,7 @@ import static com.google.errorprone.fixes.SuggestedFixes.prettyType;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
+import static com.google.errorprone.matchers.Matchers.isThrowingFunctionalInterface;
 import static com.google.errorprone.matchers.Matchers.symbolHasAnnotation;
 import static com.google.errorprone.matchers.Matchers.toType;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
@@ -59,6 +60,7 @@ import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
@@ -127,7 +129,8 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
   }
 
   /**
-   * Scans a method body for invocations matching {@code matcher}, emitting them as a single fix.
+   * Scans a method body for method invocations, constructor calls, and method or constructor
+   * references matching {@code matcher}, emitting them as a single fix.
    */
   protected Description scanEntireMethodFor(
       Matcher<? super ExpressionTree> matcher, MethodTree tree, VisitorState state) {
@@ -146,10 +149,10 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
         return null;
       }
 
-      private void visitNewClassOrMethodInvocation(ExpressionTree tree) {
+      private void visitResourceExpression(ExpressionTree tree) {
         VisitorState localState = state.withPath(getCurrentPath());
         if (matcher.matches(tree, localState)) {
-          matchNewClassOrMethodInvocation(tree, localState, suggester)
+          matchResourceExpression(tree, localState, suggester)
               .ifPresent(
                   change -> {
                     fixBuilder.merge(change.otherFixes());
@@ -163,14 +166,20 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
       }
 
       @Override
+      public Void visitMemberReference(MemberReferenceTree tree, Void unused) {
+        visitResourceExpression(tree);
+        return super.visitMemberReference(tree, null);
+      }
+
+      @Override
       public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
-        visitNewClassOrMethodInvocation(tree);
+        visitResourceExpression(tree);
         return super.visitMethodInvocation(tree, null);
       }
 
       @Override
       public Void visitNewClass(NewClassTree tree, Void unused) {
-        visitNewClassOrMethodInvocation(tree);
+        visitResourceExpression(tree);
         return super.visitNewClass(tree, null);
       }
     }.scan(new TreePath(state.getPath(), body), null);
@@ -225,10 +234,12 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
   }
 
   /**
-   * Check that the expression {@code tree} occurs within the resource variable initializer of a
-   * try-with-resources statement.
+   * Checks that the resource produced by {@code tree} is closed: a method invocation or constructor
+   * call must occur within the resource variable initializer of a try-with-resources statement (or
+   * another supported pattern), and a method or constructor reference must implement a functional
+   * interface method that is annotated {@code @MustBeClosed}.
    */
-  private Optional<Change> matchNewClassOrMethodInvocation(
+  private Optional<Change> matchResourceExpression(
       ExpressionTree tree, VisitorState state, NameSuggester suggester) {
     if (isInStaticInitializer(state)) {
       return Optional.empty();
@@ -236,10 +247,21 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
     return checkClosed(tree, state, suggester)
         .filter(
             unusedFix ->
-                !(UnusedReturnValueMatcher.expectedExceptionTest(state)
+                !(exceptionTesting(tree, state)
                     || UnusedReturnValueMatcher.mockitoInvocation(tree, state)
                     || MOCKITO_MATCHER.matches(state.getPath().getParentPath().getLeaf(), state)
                     || exemptChange(tree, state)));
+  }
+
+  /**
+   * Returns true if {@code tree} is probably being evaluated to test that it throws, e.g. {@code
+   * assertThrows(FooException.class, () -> createResource())} or {@code
+   * assertThrows(FooException.class, Resource::new)}.
+   */
+  private static boolean exceptionTesting(ExpressionTree tree, VisitorState state) {
+    return UnusedReturnValueMatcher.expectedExceptionTest(state)
+        || (tree instanceof MemberReferenceTree
+            && isThrowingFunctionalInterface(getType(tree), state));
   }
 
   @ForOverride
@@ -249,6 +271,11 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
 
   private Optional<Change> checkClosed(
       ExpressionTree tree, VisitorState state, NameSuggester suggester) {
+    if (tree instanceof MemberReferenceTree) {
+      // A method or constructor reference produces a new resource every time the functional
+      // interface method is invoked, so it is checked like a lambda that returns the resource.
+      return checkFunctionalExpression(tree, state);
+    }
     MethodTree callerMethodTree = findEnclosingMethod(state);
     TreePath path = state.getPath();
     OUTER:
@@ -341,8 +368,18 @@ public abstract class AbstractMustBeClosedChecker extends BugChecker {
       // Apparently we're not inside a lambda?!
       return findingWithNoFix();
     }
+    return checkFunctionalExpression(lambda, state);
+  }
+
+  /**
+   * Checks a lambda or method reference that produces a resource. This is only allowed if the
+   * functional interface method it implements is annotated {@code @MustBeClosed}, which makes the
+   * callers of that method responsible for closing the resource.
+   */
+  private static Optional<Change> checkFunctionalExpression(
+      ExpressionTree functionalExpression, VisitorState state) {
     if (hasAnnotation(
-        state.getTypes().findDescriptorSymbol(getType(lambda).tsym),
+        state.getTypes().findDescriptorSymbol(getType(functionalExpression).tsym),
         MUST_BE_CLOSED_ANNOTATION_NAME,
         state)) {
       return Optional.empty();
