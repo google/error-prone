@@ -139,6 +139,60 @@ public class CompilationTestHelperTest {
   }
 
   @Test
+  public void fileWithLabeledBugMarkerAndMatchingErrorSucceeds() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            public class Test {
+              public boolean doIt() {
+                // BUG[normal-return]: Diagnostic contains: Method may return normally
+                return true;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void fileWithLabeledBugMarkerAndNoErrorsReportsLabelInFailure() {
+    var compilationTestHelper =
+        compilationHelper.addSourceLines(
+            "Test.java",
+            """
+            public class Test {
+              // BUG[my-case-label]: Diagnostic contains: foo
+              public void doIt() {}
+            }
+            """);
+    AssertionError expected =
+        assertThrows(AssertionError.class, () -> compilationTestHelper.doTest());
+    assertThat(expected)
+        .hasMessageThat()
+        .contains("Did not see an error on line 3 [my-case-label] matching foo.");
+  }
+
+  @Test
+  public void fileWithLabeledBugMatcherAndNoErrorsReportsLabelInFailure() {
+    var compilationTestHelper =
+        compilationHelper
+            .addSourceLines(
+                "Test.java",
+                """
+                public class Test {
+                  // BUG[match-label]: Diagnostic matches: X
+                  public void doIt() {}
+                }
+                """)
+            .expectErrorMessage("X", Predicates.containsPattern("foo"));
+    AssertionError expected =
+        assertThrows(AssertionError.class, () -> compilationTestHelper.doTest());
+    assertThat(expected)
+        .hasMessageThat()
+        .contains("Did not see an error on line 3 [match-label] matching");
+  }
+
+  @Test
   public void fileWithBugMarkerAndErrorOnWrongLineFails() {
     var compilationTestHelper =
         compilationHelper.addSourceLines(
