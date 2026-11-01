@@ -21,8 +21,8 @@ import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
+import static com.google.errorprone.matchers.RegexMatchers.JDK_PATTERN_CLASS;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.hasImplicitType;
@@ -37,7 +37,6 @@ import com.google.errorprone.fixes.Fix;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.SourceCodeEscapers;
 import com.sun.source.tree.ArrayAccessTree;
@@ -70,7 +69,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
               .named("split")
               .withParameters("java.lang.String"),
           instanceMethod()
-              .onExactClass("java.util.regex.Pattern")
+              .onExactClass(JDK_PATTERN_CLASS)
               .named("split")
               .withParameters("java.lang.CharSequence"));
 
@@ -255,7 +254,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
   }
 
   private static String onPattern(SuggestedFix.Builder fix, String argSource) {
-    fix.addImport("java.util.regex.Pattern");
+    fix.addImport(JDK_PATTERN_CLASS);
     return String.format("on(Pattern.compile(%s))", argSource);
   }
 
@@ -284,7 +283,7 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
               state.getEndPosition(tree),
               (mutableList ? ")" : "") + ")");
     }
-    if (isSubtype(receiverType, JAVA_UTIL_REGEX_PATTERN.get(state), state)) {
+    if (isSubtype(receiverType, JDK_PATTERN_CLASS, state)) {
       return fix.prefixWith(
               receiver, String.format("%sSplitter.on(", (mutableList ? "new ArrayList<>(" : "")))
           .postfixWith(receiver, ")")
@@ -314,7 +313,4 @@ public class StringSplitter extends BugChecker implements MethodInvocationTreeMa
     }
     return null;
   }
-
-  private static final Supplier<Type> JAVA_UTIL_REGEX_PATTERN =
-      typeFromString("java.util.regex.Pattern");
 }

@@ -18,11 +18,13 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.errorprone.matchers.RegexMatchers.NON_CLOSEABLE_PATTERN_CLASSES;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Primitives;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
@@ -96,6 +98,10 @@ public final class WellKnownMutability implements ThreadSafetyKnownTypes {
       List<String> extraKnownImmutables) {
     return new MapBuilder()
         .addStrings(extraKnownImmutables)
+        .addStrings(
+            NON_CLOSEABLE_PATTERN_CLASSES.stream()
+                .map(ClassName::toString)
+                .collect(toImmutableList()))
         .addClasses(Primitives.allPrimitiveTypes())
         .addClasses(Primitives.allWrapperTypes())
         .add("com.github.zafarkhaja.semver.Version")
@@ -114,7 +120,6 @@ public final class WellKnownMutability implements ThreadSafetyKnownTypes {
         // using isProto2MessageClass from this class.
         .add("com.google.protobuf.GeneratedMessage")
         .add("com.google.protobuf.Parser")
-        .add("com.google.re2j.Pattern")
         .add("com.google.inject.TypeLiteral")
         .add("com.google.inject.Key")
         .add(com.google.common.base.CharMatcher.class)
@@ -173,7 +178,6 @@ public final class WellKnownMutability implements ThreadSafetyKnownTypes {
         .add(java.nio.file.attribute.FileTime.class)
         .add(java.util.UUID.class)
         .add(java.util.Locale.class)
-        .add(java.util.regex.Pattern.class)
         .add("android.net.Uri")
         .add("android.util.Size")
         .add("java.awt.Color")
