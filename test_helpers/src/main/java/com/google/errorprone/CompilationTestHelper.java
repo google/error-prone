@@ -35,6 +35,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.scanner.ScannerSupplier;
+import com.sun.tools.javac.api.JavacTaskImpl;
 import com.sun.tools.javac.api.JavacTool;
 import com.sun.tools.javac.main.Main.Result;
 import java.io.BufferedWriter;
@@ -340,8 +341,8 @@ public final class CompilationTestHelper {
     }
     String stringifiedOutput = outputStream.toString(UTF_8);
     assertWithMessage("ErrorProne suffered an internal crash: %s", stringifiedOutput)
-        .that(stringifiedOutput)
-        .doesNotContain("An exception has occurred in the compiler");
+        .that(result)
+        .isNotEqualTo(Result.ABNORMAL);
 
     if (expectNoDiagnostics) {
       List<Diagnostic<? extends JavaFileObject>> diagnostics = diagnosticHelper.getDiagnostics();
@@ -390,8 +391,9 @@ public final class CompilationTestHelper {
 
   private Result compile() {
     ImmutableList<String> processedArgs = buildArguments(overrideClasspath, extraArgs, testOnly);
-    return compiler
-            .getTask(
+    JavacTaskImpl task =
+        (JavacTaskImpl)
+            compiler.getTask(
                 new PrintWriter(
                     new BufferedWriter(new OutputStreamWriter(outputStream, UTF_8)),
                     /* autoFlush= */ true),
@@ -399,9 +401,13 @@ public final class CompilationTestHelper {
                 diagnosticHelper.collector,
                 /* options= */ processedArgs,
                 /* classes= */ ImmutableList.of(),
-                sources)
-            .call()
-        ? Result.OK
-        : Result.ERROR;
+                sources);
+    // call() collapses the result to a boolean; doCall() reports crashes as ABNORMAL, so detecting
+    // them doesn't depend on javac's localized crash banner. Keep OK/ERROR for everything else.
+    return switch (task.doCall()) {
+      case OK -> Result.OK;
+      case ABNORMAL -> Result.ABNORMAL;
+      default -> Result.ERROR;
+    };
   }
 }
