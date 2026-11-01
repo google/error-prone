@@ -596,6 +596,7 @@ import com.google.errorprone.bugpatterns.javadoc.UnescapedEntity;
 import com.google.errorprone.bugpatterns.javadoc.UnrecognisedJavadocTag;
 import com.google.errorprone.bugpatterns.javadoc.UrlInSee;
 import com.google.errorprone.bugpatterns.nullness.AddNullMarkedToClass;
+import com.google.errorprone.bugpatterns.nullness.AddNullMarkedToModuleInfo;
 import com.google.errorprone.bugpatterns.nullness.AddNullMarkedToPackageInfo;
 import com.google.errorprone.bugpatterns.nullness.AsyncCallableReturnsNull;
 import com.google.errorprone.bugpatterns.nullness.AsyncFunctionReturnsNull;
@@ -1237,6 +1238,7 @@ public final class BuiltInCheckerSuppliers {
       getSuppliers(
           // keep-sorted start
           AddNullMarkedToClass.class,
+          AddNullMarkedToModuleInfo.class,
           AddNullMarkedToPackageInfo.class,
           AlmostExhaustiveTestParameter.class,
           AnnotationMirrorToString.class,
