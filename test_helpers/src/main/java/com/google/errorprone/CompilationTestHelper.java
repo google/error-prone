@@ -356,6 +356,7 @@ public final class CompilationTestHelper {
           .that(result)
           .isEqualTo(expectedResult.orElse(Result.OK));
     } else {
+      diagnosticHelper.resetHandledDiagnostics();
       ImmutableList.Builder<String> mismatches = ImmutableList.builder();
       for (JavaFileObject source : sources) {
         try {
