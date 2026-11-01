@@ -29,6 +29,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
@@ -119,7 +120,8 @@ public class InlineTrivialConstant extends BugChecker implements CompilationUnit
     if (!isSameType(sym.asType(), state.getSymtab().stringType, state)) {
       return Optional.empty();
     }
-    ExpressionTree initializer = tree.getInitializer();
+    // remove parentheses from expression first
+    ExpressionTree initializer = ASTHelpers.stripParentheses(tree.getInitializer());
     if (initializer.getKind().equals(Tree.Kind.STRING_LITERAL)) {
       String value = (String) ((LiteralTree) initializer).getValue();
       if (Objects.equals(value, "")) {
