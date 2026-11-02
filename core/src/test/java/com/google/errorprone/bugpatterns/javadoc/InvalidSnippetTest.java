@@ -90,4 +90,44 @@ public final class InvalidSnippetTest {
             """)
         .doTest();
   }
+
+  @Test
+public void snippetWithoutBody_butWithClass() {
+  helper
+      .addSourceLines(
+          "Test.java",
+          """
+          /** {@snippet class=com.example.Snippets region=builder lang=java} */
+          interface Test {}
+          """)
+      .doTest();
+}
+
+@Test
+public void snippetWithoutBody_butWithClassAndTrailingSpace() {
+  helper
+      .addSourceLines(
+          "Test.java",
+          """
+          /** {@snippet class=HelloWorld } */
+          interface Test {}
+          """)
+      .doTest();
+}
+
+@Test
+public void snippetWithoutBody_andWithoutFileOrClass() {
+  helper
+      .addSourceLines(
+          "Test.java",
+          """
+          /**
+           * // BUG: Diagnostic contains: This @snippet has no body
+           * {@snippet region=builder lang=java}
+           */
+          interface Test {}
+          """)
+      .doTest();
+}
+
 }

@@ -96,9 +96,14 @@ public final class InvalidSnippet extends BugChecker
     @Override
     public Void visitSnippet(SnippetTree snippetTree, Void unused) {
       if (snippetTree.getBody() == null) {
+        // External snippets reference their content via a `file` or `class` attribute, in which
+        // case the colon, newline and body may be omitted.
         if (snippetTree.getAttributes().stream()
             .anyMatch(
-                a -> a instanceof AttributeTree attr && attr.getName().contentEquals("file"))) {
+                a ->
+                    a instanceof AttributeTree attr
+                        && (attr.getName().contentEquals("file")
+                            || attr.getName().contentEquals("class")))) {
           return super.visitSnippet(snippetTree, null);
         }
         String message =
