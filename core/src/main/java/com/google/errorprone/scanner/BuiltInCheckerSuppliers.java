@@ -116,6 +116,7 @@ import com.google.errorprone.bugpatterns.DeprecatedVariable;
 import com.google.errorprone.bugpatterns.DifferentNameButSame;
 import com.google.errorprone.bugpatterns.DirectInvocationOnMock;
 import com.google.errorprone.bugpatterns.DiscardedPostfixExpression;
+import com.google.errorprone.bugpatterns.DiscouragedHashKey;
 import com.google.errorprone.bugpatterns.DistinctVarargsChecker;
 import com.google.errorprone.bugpatterns.DoNotCallChecker;
 import com.google.errorprone.bugpatterns.DoNotCallSuggester;
@@ -975,6 +976,7 @@ public final class BuiltInCheckerSuppliers {
           DefaultPackage.class,
           DeprecatedVariable.class,
           DirectInvocationOnMock.class,
+          DiscouragedHashKey.class,
           DistinctVarargsChecker.class,
           DoNotCallSuggester.class,
           DoNotClaimAnnotations.class,
