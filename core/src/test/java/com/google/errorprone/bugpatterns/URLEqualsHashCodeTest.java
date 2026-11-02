@@ -203,4 +203,80 @@ public class URLEqualsHashCodeTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void checkEquality() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.net.URL;
+            import java.util.List;
+            import java.util.Objects;
+
+            class Test {
+              void f(URL a, URL b, List<URL> list) {
+                // BUG: Diagnostic contains: equals() makes blocking internet connections
+                boolean x = a.equals(b);
+                // BUG: Diagnostic contains: equals() makes blocking internet connections
+                boolean y = Objects.equals(a, b);
+                // BUG: Diagnostic contains: equals() makes blocking internet connections
+                boolean z = list.contains(a);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void hashKeysInMultimapsAndMultisets() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.collect.HashMultimap;
+            import com.google.common.collect.HashMultiset;
+            import com.google.common.collect.Multimap;
+            import com.google.common.collect.Multiset;
+            import java.net.URL;
+            import java.util.IdentityHashMap;
+            import java.util.Map;
+
+            class Test {
+              void f() {
+                // BUG: Diagnostic contains: java.net.URL
+                Multimap<URL, String> m = HashMultimap.create();
+                // BUG: Diagnostic contains: java.net.URL
+                Multiset<URL> s = HashMultiset.create();
+                Map<URL, String> identity = new IdentityHashMap<>();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void checkCollectors() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static java.util.stream.Collectors.toList;
+            import static java.util.stream.Collectors.toSet;
+
+            import java.net.URL;
+            import java.util.List;
+            import java.util.Set;
+            import java.util.stream.Stream;
+
+            class Test {
+              void f(Stream<URL> stream) {
+                // BUG: Diagnostic contains: java.net.URL
+                Set<URL> s = stream.collect(toSet());
+                List<URL> l = stream.collect(toList());
+              }
+            }
+            """)
+        .doTest();
+  }
 }
