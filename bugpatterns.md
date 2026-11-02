@@ -743,6 +743,9 @@ Applying the @Deprecated annotation to local variables or parameters has no effe
 __[DirectInvocationOnMock](bugpattern/DirectInvocationOnMock)__<br>
 Methods should not be directly invoked on mocks. Should this be part of a verify(..) call?
 
+__[DiscouragedHashKey](bugpattern/DiscouragedHashKey)__<br>
+This type should not be used as an element of a hash-based Set, or a key of a hash-based Map, Multimap, or Multiset
+
 __[DistinctVarargsChecker](bugpattern/DistinctVarargsChecker)__<br>
 Method expects distinct arguments at some/all positions
 
