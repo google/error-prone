@@ -19,6 +19,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import static com.google.errorprone.util.AnnotationNames.VAR_ANNOTATION;
 import static com.google.errorprone.util.MoreAnnotations.asElement;
 
@@ -30,29 +31,37 @@ import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.InjectMatchers;
-import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.tree.CompoundAssignmentTree;
+import com.sun.source.tree.ExpressionStatementTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberSelectTree;
+import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ReturnTree;
+import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TryTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePathScanner;
+import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Flags;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.lang.model.element.AnnotationMirror;
@@ -140,7 +149,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
 
     /** Records an assignment to a variable. */
     private void recordAssignment(Tree tree, InitializationContext init) {
-      Symbol sym = ASTHelpers.getSymbol(tree);
+      Symbol sym = getSymbol(tree);
       if (sym != null && sym.getKind() == ElementKind.FIELD) {
         recordAssignment((VarSymbol) sym, init);
       }
@@ -156,8 +165,8 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     }
 
     /** Records a variable declaration. */
-    private void recordDeclaration(VarSymbol sym, VariableTree tree) {
-      getDeclaration(sym).recordDeclaration(tree);
+    private void recordDeclaration(VarSymbol sym, VariableTree tree, ClassTree enclosingClass) {
+      getDeclaration(sym).recordDeclaration(tree, enclosingClass);
     }
   }
 
@@ -167,7 +176,9 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     private final VarSymbol sym;
     private final EnumSet<InitializationContext> writes =
         EnumSet.noneOf(InitializationContext.class);
+    private int totalWrites;
     private VariableTree declaration;
+    private ClassTree enclosingClass;
 
     VariableAssignments(VarSymbol sym) {
       this.sym = sym;
@@ -176,11 +187,13 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
     /** Records an assignment to the variable. */
     private void recordAssignment(InitializationContext init) {
       writes.add(init);
+      totalWrites++;
     }
 
     /** Records that a variable was declared in this compilation unit. */
-    private void recordDeclaration(VariableTree tree) {
-      declaration = tree;
+    private void recordDeclaration(VariableTree tree, ClassTree enclosingClass) {
+      this.declaration = tree;
+      this.enclosingClass = enclosingClass;
     }
 
     /** Returns true if the variable is effectively final. */
@@ -195,11 +208,11 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       if (writes.contains(InitializationContext.NONE)) {
         return false;
       }
-      // The unsound heuristic for effectively final fields is that they are initialized at least
+      // Fast pre-filter before definitelyCanBeFinal: check that the field is initialized at least
       // once in an initializer with the right static-ness. Multiple initializations are allowed
-      // because we don't consider control flow, and zero initializations are allowed to handle
-      // class and instance initializers, and delegating constructors that don't initialize the
-      // field directly.
+      // here because we don't consider control flow yet, and zero initializations are allowed to
+      // handle class and instance initializers, and delegating constructors that don't initialize
+      // the field directly.
       InitializationContext wanted;
       InitializationContext other;
       if (sym.isStatic()) {
@@ -246,12 +259,235 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
           return Description.NO_MATCH;
         }
       }
+      if (!definitelyCanBeFinal(var)) {
+        continue;
+      }
       VariableTree varDecl = var.declaration();
       SuggestedFixes.addModifiers(varDecl, state, Modifier.FINAL)
-          .filter(f -> SuggestedFixes.compilesWithFix(f, state))
           .ifPresent(f -> state.reportMatch(describeMatch(varDecl, f)));
     }
     return Description.NO_MATCH;
+  }
+
+  /**
+   * Returns true if adding {@code final} to the field is guaranteed to compile, checking that the
+   * field is either initialized at its declaration with no other writes, or initialized once in
+   * straight-line code before any reads or early returns.
+   */
+  private static boolean definitelyCanBeFinal(VariableAssignments var) {
+    VarSymbol sym = var.sym;
+    if (sym.getModifiers().contains(Modifier.VOLATILE)) {
+      return false;
+    }
+    boolean hasInitializer = var.declaration.getInitializer() != null;
+    if (hasInitializer && (var.totalWrites > 0 || mayRead(var.declaration.getInitializer(), sym))) {
+      return false;
+    }
+    boolean isStatic = sym.isStatic();
+    boolean seenDeclaration = false;
+    List<StatementTree> initializerStatements = new ArrayList<>();
+    List<BlockTree> constructorBodies = new ArrayList<>();
+    for (Tree member : var.enclosingClass.getMembers()) {
+      if (member == var.declaration) {
+        seenDeclaration = true;
+        continue;
+      }
+      switch (member) {
+        case BlockTree block when block.isStatic() == isStatic -> {
+          if (!hasInitializer) {
+            initializerStatements.addAll(block.getStatements());
+          } else if (!seenDeclaration && mayRead(block, sym)) {
+            return false;
+          }
+        }
+        case VariableTree variable -> {
+          if (variable.getModifiers() == var.declaration.getModifiers()) {
+            // javac shares a single JCModifiers instance across declarators in a multi-variable
+            // declaration (e.g. `int a, b;`), where adding `final` would affect all of them.
+            return false;
+          }
+          if ((!hasInitializer || !seenDeclaration)
+              && getSymbol(variable).isStatic() == isStatic
+              && variable.getInitializer() != null
+              && mayRead(variable.getInitializer(), sym)) {
+            return false;
+          }
+        }
+        case MethodTree method
+            when !hasInitializer
+                && !isStatic
+                && getSymbol(method).isConstructor()
+                && method.getBody() != null ->
+            constructorBodies.add(method.getBody());
+        default -> {}
+      }
+    }
+    if (hasInitializer) {
+      return true;
+    }
+    if (var.totalWrites == 1 && isInitializedInStraightLine(initializerStatements, sym)) {
+      return true;
+    }
+    if (initializerStatements.stream().anyMatch(s -> mayRead(s, sym))) {
+      return false;
+    }
+    int nonDelegatingConstructors = 0;
+    for (BlockTree body : constructorBodies) {
+      if (isDelegatingConstructor(body)) {
+        continue;
+      }
+      nonDelegatingConstructors++;
+      if (!isInitializedInStraightLine(body.getStatements(), sym)) {
+        return false;
+      }
+    }
+    return nonDelegatingConstructors > 0 && var.totalWrites == nonDelegatingConstructors;
+  }
+
+  /**
+   * Returns true if {@code statements} definitely initializes {@code sym} in straight-line code
+   * before any reads or early returns.
+   *
+   * <p>Note that {@link #mayRead} also visits the left-hand side of assignments, so any write to
+   * {@code sym} other than a top-level {@code sym = ...;} statement (such as {@code if (c) sym =
+   * 1;} or {@code foo(sym = 1)}) is treated as a read and causes this method to return {@code
+   * false}. Combined with checking {@code totalWrites == nonDelegatingConstructors}, this ensures
+   * the field is assigned on every path and never reassigned.
+   */
+  private static boolean isInitializedInStraightLine(
+      List<? extends StatementTree> statements, VarSymbol sym) {
+    for (StatementTree statement : statements) {
+      switch (statement) {
+        case ExpressionStatementTree exprStmt
+            when exprStmt.getExpression() instanceof AssignmentTree assignment
+                && sym.equals(getSymbol(assignment.getVariable())) -> {
+          return isSimpleFieldAccess(assignment.getVariable(), sym)
+              && !mayRead(assignment.getExpression(), sym);
+        }
+        case BlockTree block -> {
+          if (isInitializedInStraightLine(block.getStatements(), sym)) {
+            return true;
+          }
+        }
+        case TryTree tryTree
+            when tryTree.getCatches().isEmpty()
+                && tryTree.getResources().stream().noneMatch(r -> mayRead(r, sym))
+                && (tryTree.getFinallyBlock() == null
+                    || (!mayRead(tryTree.getFinallyBlock(), sym)
+                        && !containsReturn(tryTree.getFinallyBlock()))) -> {
+          if (isInitializedInStraightLine(tryTree.getBlock().getStatements(), sym)) {
+            return true;
+          }
+        }
+        default -> {}
+      }
+      if (mayRead(statement, sym) || containsReturn(statement)) {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  private static boolean isSimpleFieldAccess(ExpressionTree tree, VarSymbol sym) {
+    return sym.isStatic() ? tree instanceof IdentifierTree : isThisAccess(tree);
+  }
+
+  /**
+   * Returns true if {@code tree} is an unqualified identifier or a {@code this.x} member select.
+   * Callers are expected to check that {@code tree} resolves to the relevant field symbol.
+   */
+  private static boolean isThisAccess(Tree tree) {
+    return switch (tree) {
+      case IdentifierTree ident -> true;
+      case MemberSelectTree memberSelect ->
+          memberSelect.getExpression() instanceof IdentifierTree ident
+              && ident.getName().contentEquals("this");
+      default -> false;
+    };
+  }
+
+  private static boolean isDelegatingConstructor(BlockTree body) {
+    return body.getStatements().stream().anyMatch(FieldCanBeFinal::isThisCall);
+  }
+
+  private static boolean isThisCall(StatementTree statement) {
+    return statement instanceof ExpressionStatementTree exprStmt
+        && exprStmt.getExpression() instanceof MethodInvocationTree invocation
+        && invocation.getMethodSelect() instanceof IdentifierTree identifier
+        && identifier.getName().contentEquals("this");
+  }
+
+  /**
+   * Returns true if the tree may read the variable in a way that is subject to the definite
+   * assignment rules, i.e. using its simple name or qualified by {@code this}. Reads via other
+   * instances, and reads within the methods of nested classes, don't need the variable to be
+   * definitely assigned. (Field initializers and initializer blocks of nested classes are still
+   * scanned, since the compiler checks those in anonymous classes.)
+   */
+  private static boolean mayRead(Tree tree, VarSymbol sym) {
+    boolean[] result = {false};
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitIdentifier(IdentifierTree node, Void unused) {
+        if (sym.equals(getSymbol(node))) {
+          result[0] = true;
+        }
+        return super.visitIdentifier(node, null);
+      }
+
+      @Override
+      public Void visitMemberSelect(MemberSelectTree node, Void unused) {
+        if (sym.equals(getSymbol(node)) && isThis(node.getExpression())) {
+          result[0] = true;
+        }
+        return super.visitMemberSelect(node, null);
+      }
+
+      @Override
+      public Void visitClass(ClassTree node, Void unused) {
+        for (Tree member : node.getMembers()) {
+          switch (member) {
+            case VariableTree variable -> scan(variable.getInitializer(), null);
+            case BlockTree block -> scan(block, null);
+            case ClassTree nested -> scan(nested, null);
+            default -> {}
+          }
+        }
+        return null;
+      }
+    }.scan(tree, null);
+    return result[0];
+  }
+
+  /** Returns true for {@code this} and {@code Outer.this}, possibly parenthesized. */
+  private static boolean isThis(ExpressionTree tree) {
+    return switch (stripParentheses(tree)) {
+      case IdentifierTree identifier -> identifier.getName().contentEquals("this");
+      case MemberSelectTree memberSelect -> memberSelect.getIdentifier().contentEquals("this");
+      default -> false;
+    };
+  }
+
+  private static boolean containsReturn(Tree tree) {
+    boolean[] result = {false};
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitReturn(ReturnTree node, Void unused) {
+        result[0] = true;
+        return null;
+      }
+
+      @Override
+      public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
+        return null;
+      }
+
+      @Override
+      public Void visitClass(ClassTree node, Void unused) {
+        return null;
+      }
+    }.scan(tree, null);
+    return result[0];
   }
 
   /** Record assignments to possibly-final variables in a compilation unit. */
@@ -259,6 +495,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
 
     private final VariableAssignmentRecords writes;
     private final VisitorState compilationState;
+    private boolean classSuppressed;
 
     private FinalScanner(VariableAssignmentRecords writes, VisitorState compilationState) {
       this.writes = writes;
@@ -267,9 +504,11 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
 
     @Override
     public Void visitVariable(VariableTree node, InitializationContext init) {
-      VarSymbol sym = ASTHelpers.getSymbol(node);
-      if (sym.getKind() == ElementKind.FIELD && !isSuppressed(node, compilationState)) {
-        writes.recordDeclaration(sym, node);
+      VarSymbol sym = getSymbol(node);
+      if (!classSuppressed
+          && sym.getKind() == ElementKind.FIELD
+          && !isSuppressed(node, compilationState)) {
+        writes.recordDeclaration(sym, node, (ClassTree) getCurrentPath().getParentPath().getLeaf());
       }
       return super.visitVariable(node, InitializationContext.NONE);
     }
@@ -291,7 +530,7 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
 
     @Override
     public Void visitMethod(MethodTree node, InitializationContext init) {
-      MethodSymbol sym = ASTHelpers.getSymbol(node);
+      MethodSymbol sym = getSymbol(node);
       if (sym.isConstructor()) {
         init = InitializationContext.INSTANCE;
       }
@@ -309,32 +548,32 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
       return super.visitAssignment(node, init);
     }
 
-    private boolean isThisAccess(Tree tree) {
-      if (tree instanceof IdentifierTree) {
-        return true;
-      }
-      return tree instanceof MemberSelectTree memberSelectTree
-          && memberSelectTree.getExpression() instanceof IdentifierTree ident
-          && ident.getName().contentEquals("this");
-    }
-
     @Override
     public Void visitClass(ClassTree node, InitializationContext init) {
+      boolean prevSuppressed = classSuppressed;
+      classSuppressed = classSuppressed || isClassSuppressed(node);
+      try {
+        // reset the initialization context when entering a new declaration
+        return super.visitClass(node, InitializationContext.NONE);
+      } finally {
+        classSuppressed = prevSuppressed;
+      }
+    }
+
+    private boolean isClassSuppressed(ClassTree node) {
       VisitorState state = compilationState.withPath(getCurrentPath());
 
       if (isSuppressed(node, state)) {
-        return null;
+        return true;
       }
 
       for (AnnotationMirror anno : getSymbol(node).getAnnotationMirrors()) {
         TypeSymbol annoElement = asElement(anno);
         if (annoElement.getQualifiedName().toString().startsWith(OBJECTIFY_PREFIX)) {
-          return null;
+          return true;
         }
       }
-
-      // reset the initialization context when entering a new declaration
-      return super.visitClass(node, InitializationContext.NONE);
+      return false;
     }
 
     @Override
