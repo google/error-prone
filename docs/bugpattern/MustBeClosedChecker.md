@@ -31,3 +31,21 @@ try {
   resource.close();
 }
 ```
+
+Lambdas and method references that return such a resource are only allowed if
+the functional interface method they implement is also annotated with
+`@MustBeClosed`, which requires callers of that method to close the resource.
+For example, if the `MyResource` constructor is annotated with `@MustBeClosed`:
+
+```java
+interface ResourceFactory {
+  @MustBeClosed
+  AutoCloseable create();
+}
+
+// OK: callers of ResourceFactory.create() must close the resource.
+ResourceFactory factory = MyResource::new;
+
+// Error: callers of Supplier.get() are not required to close the resource.
+Supplier<AutoCloseable> supplier = MyResource::new;
+```

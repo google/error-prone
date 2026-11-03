@@ -173,8 +173,14 @@ class MustBeClosedCheckerPositiveCases {
 
   void methodReference() {
     Supplier<Closeable> supplier =
-        // TODO(b/218377318): BUG: Diagnostic contains:
+        // BUG: Diagnostic contains:
         new Foo()::mustBeClosedAnnotatedMethod;
+  }
+
+  void constructorReference() {
+    Supplier<Closeable> supplier =
+        // BUG: Diagnostic contains:
+        MustBeClosedAnnotatedConstructor::new;
   }
 
   void anonymousClass() {
@@ -677,8 +683,14 @@ class MustBeClosedCheckerPositiveCases {
 
   void methodReference() {
     Supplier<Closeable> supplier =
-        // TODO(b/218377318): BUG: Diagnostic contains:
+        // BUG: Diagnostic contains:
         new Foo()::mustBeClosedAnnotatedMethod;
+  }
+
+  void constructorReference() {
+    Supplier<Closeable> supplier =
+        // BUG: Diagnostic contains:
+        MustBeClosedAnnotatedConstructor::new;
   }
 
   void anonymousClass() {
@@ -835,6 +847,76 @@ class MustBeClosedCheckerPositiveCases {
 }
 """)
         .allowBreakingChanges() // The fix is best-effort, and some variable names may clash
+        .doTest();
+  }
+
+  @Test
+  public void exceptionTesting() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            import static org.junit.Assert.assertThrows;
+
+            import com.google.errorprone.annotations.MustBeClosed;
+
+            class Test {
+              static class Resource implements AutoCloseable {
+                @MustBeClosed
+                Resource() {}
+
+                @Override
+                public void close() {}
+              }
+
+              @MustBeClosed
+              static Resource open() {
+                return new Resource();
+              }
+
+              void lambdas() {
+                assertThrows(IllegalStateException.class, () -> open());
+                assertThrows(IllegalStateException.class, () -> new Resource());
+              }
+
+              void methodReferences() {
+                assertThrows(IllegalStateException.class, Test::open);
+                assertThrows(IllegalStateException.class, Resource::new);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodReference_flagDisabled() {
+    compilationHelper
+        .setArgs("-XepOpt:MustBeClosedChecker:MatchMethodReferences=false")
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.errorprone.annotations.MustBeClosed;
+            import java.util.function.Supplier;
+
+            class Test {
+              static class Resource implements AutoCloseable {
+                @MustBeClosed
+                Resource() {}
+
+                @Override
+                public void close() {}
+              }
+
+              void methodReference() {
+                Supplier<Resource> supplier = Resource::new;
+              }
+
+              void invocation() {
+                // BUG: Diagnostic contains:
+                new Resource();
+              }
+            }
+            """)
         .doTest();
   }
 

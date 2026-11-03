@@ -33,6 +33,7 @@ import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
 import static com.google.errorprone.util.AnnotationNames.MUST_BE_CLOSED_ANNOTATION;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -45,12 +46,14 @@ import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Type;
+import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -77,6 +80,14 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
   private static final Matcher<ExpressionTree> MUST_BE_CLOSED_ANNOTATION_OR_METHOD =
       anyOf(HAS_MUST_BE_CLOSED_ANNOTATION, HARDCODED_MUST_BE_CLOSED_METHODS);
 
+  private final boolean matchMethodReferences;
+
+  @Inject
+  MustBeClosedChecker(ErrorProneFlags flags) {
+    this.matchMethodReferences =
+        flags.getBoolean("MustBeClosedChecker:MatchMethodReferences").orElse(true);
+  }
+
   /**
    * Check that the {@code MustBeClosed} annotation is only used for constructors of AutoCloseables
    * and methods that return an AutoCloseable.
@@ -87,6 +98,9 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
     state.reportMatch(
         scanEntireMethodFor(
             (t, s) -> {
+              if (t instanceof MemberReferenceTree && !matchMethodReferences) {
+                return false;
+              }
               if (!MUST_BE_CLOSED_ANNOTATION_OR_METHOD.matches(t, s)) {
                 return false;
               }
