@@ -54,9 +54,23 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
  * <ol>
  *   <li>Any expression for which the Java compiler can determine a constant value at compile time.
  *   <li>The expression consisting of the literal {@code null}.
- *   <li>An expression consisting of a single identifier, where the identifier is a formal method
- *       parameter that is declared {@code final} and has the {@link CompileTimeConstant}
- *       annotation.
+ *   <li>An expression consisting of a single identifier, where the identifier has the {@link
+ *       CompileTimeConstant} annotation and is either:
+ *       <ul>
+ *         <li>A class field that is declared {@code final}.
+ *         <li>A formal parameter of a method or constructor, which is declared {@code final} or is
+ *             effectively final.
+ *       </ul>
+ *   <li>A {@link String} which is formed from the concatenation of other compile-time-constant
+ *       {@link String}s.
+ *   <li>A switch expression where all case bodies are compile-time constants.
+ *   <li>A conditional expression (a ? b : c) where both branches are compile-time constants.
+ *   <li>The result of an invocation of one of the following immutable collection factory methods,
+ *       where all arguments are compile-time constants:
+ *       <ul>
+ *         <li>{@code ImmutableList.of(...)}
+ *         <li>{@code ImmutableSet.of(...)}
+ *       </ul>
  * </ol>
  */
 public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionTree> {
