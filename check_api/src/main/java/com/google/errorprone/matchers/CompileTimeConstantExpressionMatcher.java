@@ -70,6 +70,13 @@ import com.sun.tools.javac.code.Symbol.VarSymbol;
  *       <ul>
  *         <li>{@code ImmutableList.of(...)}
  *         <li>{@code ImmutableSet.of(...)}
+ *         <li>{@code ImmutableMap.of(...)}
+ *         <li>{@code ImmutableMultiset.of(...)}
+ *         <li>{@code ImmutableSortedSet.of(...)}
+ *         <li>{@code ImmutableSortedMap.of(...)}
+ *         <li>{@code List.of(...)}
+ *         <li>{@code Set.of(...)}
+ *         <li>{@code Map.of(...)}
  *       </ul>
  * </ol>
  */
@@ -101,8 +108,18 @@ public class CompileTimeConstantExpressionMatcher implements Matcher<ExpressionT
 
   private static final Matcher<ExpressionTree> IMMUTABLE_FACTORY =
       anyOf(
-          staticMethod().onClass("com.google.common.collect.ImmutableList").named("of"),
-          staticMethod().onClass("com.google.common.collect.ImmutableSet").named("of"));
+          staticMethod()
+              .onClassAny(
+                  "com.google.common.collect.ImmutableList",
+                  "com.google.common.collect.ImmutableSet",
+                  "com.google.common.collect.ImmutableMap",
+                  "com.google.common.collect.ImmutableMultiset",
+                  "com.google.common.collect.ImmutableSortedSet",
+                  "com.google.common.collect.ImmutableSortedMap",
+                  "java.util.List",
+                  "java.util.Set",
+                  "java.util.Map")
+              .named("of"));
 
   /**
    * A matcher for {@link ExpressionTree}s for which the java compiler can compute a constant value

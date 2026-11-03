@@ -885,6 +885,89 @@ public class CompileTimeConstantCheckerTest {
   }
 
   @Test
+  public void constantField_collectionTypes() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            """
+            package test;
+
+            import com.google.common.collect.ImmutableMap;
+            import com.google.common.collect.ImmutableMultiset;
+            import com.google.common.collect.ImmutableSet;
+            import com.google.common.collect.ImmutableSortedMap;
+            import com.google.common.collect.ImmutableSortedSet;
+            import com.google.errorprone.annotations.CompileTimeConstant;
+            import java.util.List;
+            import java.util.Map;
+            import java.util.Set;
+
+            public abstract class CompileTimeConstantTestCase {
+              @CompileTimeConstant final ImmutableSet<String> immutableSet = ImmutableSet.of("a");
+              @CompileTimeConstant final ImmutableMap<String, Integer> immutableMap =
+                  ImmutableMap.of("a", 1);
+              @CompileTimeConstant final ImmutableMultiset<String> immutableMultiset =
+                  ImmutableMultiset.of("a");
+              @CompileTimeConstant final ImmutableSortedSet<String> immutableSortedSet =
+                  ImmutableSortedSet.of("a");
+              @CompileTimeConstant final ImmutableSortedMap<String, Integer> immutableSortedMap =
+                  ImmutableSortedMap.of("a", 1);
+              @CompileTimeConstant final List<String> jdkList = List.of("a");
+              @CompileTimeConstant final Set<String> jdkSet = Set.of("a");
+              @CompileTimeConstant final Map<String, Integer> jdkMap = Map.of("a", 1);
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void methodCall_collectionTypes() {
+    compilationHelper
+        .addSourceLines(
+            "test/CompileTimeConstantTestCase.java",
+            """
+            package test;
+
+            import com.google.common.collect.ImmutableMap;
+            import com.google.common.collect.ImmutableMultiset;
+            import com.google.common.collect.ImmutableSet;
+            import com.google.common.collect.ImmutableSortedMap;
+            import com.google.common.collect.ImmutableSortedSet;
+            import com.google.errorprone.annotations.CompileTimeConstant;
+            import java.util.List;
+            import java.util.Map;
+            import java.util.Set;
+
+            public class CompileTimeConstantTestCase {
+              public static void acceptObject(@CompileTimeConstant Object obj) {}
+
+              public static void testSuccess(@CompileTimeConstant final String constParam) {
+                acceptObject(ImmutableSet.of("a", constParam));
+                acceptObject(ImmutableMap.of("a", 1, "b", 2));
+                acceptObject(ImmutableMultiset.of("a", "b"));
+                acceptObject(ImmutableSortedSet.of("a", "b"));
+                acceptObject(ImmutableSortedMap.of("a", 1));
+                acceptObject(List.of("a", constParam));
+                acceptObject(Set.of("a", "b"));
+                acceptObject(Map.of("a", List.of(1, 2)));
+              }
+
+              public static void testFailure(String nonConst) {
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(ImmutableMap.of("a", nonConst));
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(List.of(nonConst));
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(Set.of("a", nonConst));
+                // BUG: Diagnostic contains: Non-compile-time constant expression passed
+                acceptObject(Map.of(nonConst, 1));
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
   public void switchExpression_allBranchesConstant() {
     compilationHelper
         .addSourceLines(
