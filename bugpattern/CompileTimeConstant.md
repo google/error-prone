@@ -23,13 +23,17 @@ expressions, specifically expressions that:
     [JLS §15.28](https://docs.oracle.com/javase/specs/jls/se11/html/jls-15.html#jls-15.28)),
     or
 *   consist of the literal {@code null}, or
-*   consist of a single identifier, where the identifier is a formal method
-    parameter or class field that is effectively final and has the
-    `@CompileTimeConstant` annotation, or
-*   are ternary expressions with both branches being compile-time constants, or
-*   are formed from the concatenation of other compile time constant `String`s,
+*   consist of a single identifier, where the identifier has the
+    `@CompileTimeConstant` annotation and is one of the following:
+    *   a class field that is declared {@code final}, or
+    *   a formal parameter of a method or constructor, which is declared {@code
+        final} or is effectively final, or
+*   are formed from the concatenation of other compile-time constant `String`s,
     or
-*   are Guava immutable collection factories with compile-time constant entries.
+*   are switch expressions where all case bodies are compile-time constants, or
+*   are ternary expressions with both branches being compile-time constants, or
+*   are calls to one of the known immutable collection factory methods, where
+    the provided elements are all compile-time constants.
 
 For example, the following are valid compile-time constants:
 

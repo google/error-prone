@@ -96,9 +96,22 @@ implements <a href="Matcher.html" title="interface in com.google.errorprone.matc
 <ol>
   <li>Any expression for which the Java compiler can determine a constant value at compile time.
   <li>The expression consisting of the literal <code>null</code>.
-  <li>An expression consisting of a single identifier, where the identifier is a formal method
-      parameter that is declared <code>final</code> and has the <a href="../annotations/CompileTimeConstant.html" title="annotation interface in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a>
-      annotation.
+  <li>An expression consisting of a single identifier, where the identifier has the <a href="../annotations/CompileTimeConstant.html" title="annotation interface in com.google.errorprone.annotations"><code>CompileTimeConstant</code></a> annotation and is either:
+      <ul>
+        <li>A class field that is declared <code>final</code>.
+        <li>A formal parameter of a method or constructor, which is declared <code>final</code> or is
+            effectively final.
+      </ul>
+  <li>A <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a> which is formed from the concatenation of other compile-time-constant
+      <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>s.
+  <li>A switch expression where all case bodies are compile-time constants.
+  <li>A conditional expression (a ? b : c) where both branches are compile-time constants.
+  <li>The result of an invocation of one of the following immutable collection factory methods,
+      where all arguments are compile-time constants:
+      <ul>
+        <li><code>ImmutableList.of(...)</code>
+        <li><code>ImmutableSet.of(...)</code>
+      </ul>
 </ol></div>
 <dl class="notes">
 <dt>See Also:</dt>
