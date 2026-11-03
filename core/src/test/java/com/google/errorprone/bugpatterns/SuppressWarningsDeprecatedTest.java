@@ -16,6 +16,7 @@
 
 package com.google.errorprone.bugpatterns;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -157,5 +158,75 @@ public class SuppressWarningsDeprecatedTest {
             }
             """)
         .doTest();
+  }
+
+  @Test
+  public void constantExpressions() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static final String BAD = "deprecated";
+              static final String PREFIX = "depre";
+              // BUG: Diagnostic contains: SuppressWarningsDeprecated
+              @SuppressWarnings(BAD)
+              void identifier() {}
+              // BUG: Diagnostic contains: SuppressWarningsDeprecated
+              @SuppressWarnings(value = {"unchecked", BAD})
+              void array() {}
+              // BUG: Diagnostic contains: SuppressWarningsDeprecated
+              @SuppressWarnings(PREFIX + "cated")
+              void concatenation() {}
+              // BUG: Diagnostic contains: SuppressWarningsDeprecated
+              @SuppressWarnings((BAD))
+              void parentheses() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void otherConstantValues() {
+    compilationHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static final String GOOD = "deprecation";
+              @SuppressWarnings(GOOD)
+              void correctSpelling() {}
+              @SuppressWarnings({})
+              void empty() {}
+              @Other("deprecated")
+              void otherAnnotation() {}
+            }
+            @interface Other { String value(); }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void fixConstantInArray() {
+    BugCheckerRefactoringTestHelper.newInstance(SuppressWarningsDeprecated.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            class Test {
+              static final String BAD = "deprecated";
+              @SuppressWarnings(value = {"unchecked", BAD})
+              void run() {}
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test {
+              static final String BAD = "deprecated";
+              @SuppressWarnings(value = {"unchecked", "deprecation"})
+              void run() {}
+            }
+            """)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
   }
 }
