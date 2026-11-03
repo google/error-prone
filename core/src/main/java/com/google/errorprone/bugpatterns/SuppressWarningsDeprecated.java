@@ -20,7 +20,6 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.hasArgumentWithValue;
 import static com.google.errorprone.matchers.Matchers.isType;
-import static com.google.errorprone.matchers.Matchers.stringLiteral;
 import static com.google.errorprone.util.AnnotationNames.SUPPRESS_WARNINGS_ANNOTATION;
 import static com.google.errorprone.util.MoreAnnotations.getStrings;
 import static java.util.stream.Collectors.toList;
@@ -49,7 +48,9 @@ public class SuppressWarningsDeprecated extends BugChecker implements Annotation
   private static final Matcher<AnnotationTree> matcher =
       allOf(
           isType(SUPPRESS_WARNINGS_ANNOTATION),
-          hasArgumentWithValue("value", stringLiteral("deprecated")));
+          hasArgumentWithValue(
+              "value",
+              (tree, state) -> "deprecated".equals(ASTHelpers.constValue(tree, String.class))));
 
   @Override
   public final Description matchAnnotation(AnnotationTree annotationTree, VisitorState state) {
