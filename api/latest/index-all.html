@@ -11708,8 +11708,6 @@ that the resource is closed.</div>
 <dd>
 <div class="block">A <a href="com/google/errorprone/bugpatterns/BugChecker.html" title="class in com.google.errorprone.bugpatterns"><code>BugChecker</code></a>; see the associated <a href="com/google/errorprone/BugPattern.html" title="annotation interface in com.google.errorprone"><code>BugPattern</code></a> annotation for details.</div>
 </dd>
-<dt><a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html#%3Cinit%3E()" class="member-name-link">MustBeClosedChecker()</a> - Constructor for class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/MustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">MustBeClosedChecker</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/ProtobufMatchers.html#MUTABLE_MESSAGE_LITE" class="member-name-link">MUTABLE_MESSAGE_LITE</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/ProtobufMatchers.html" title="class in com.google.errorprone.matchers">ProtobufMatchers</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/matchers/ProtobufMatchers.html#MUTABLE_MESSAGE_LITE_CLASS" class="member-name-link">MUTABLE_MESSAGE_LITE_CLASS</a> - Static variable in class com.google.errorprone.matchers.<a href="com/google/errorprone/matchers/ProtobufMatchers.html" title="class in com.google.errorprone.matchers">ProtobufMatchers</a></dt>
@@ -14013,7 +14011,8 @@ same variable, as determined by <a href="com/google/errorprone/util/ASTHelpers.h
 <dd>&nbsp;</dd>
 <dt><a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html#scanEntireMethodFor(com.google.errorprone.matchers.Matcher,com.sun.source.tree.MethodTree,com.google.errorprone.VisitorState)" class="member-name-link">scanEntireMethodFor(Matcher, MethodTree, VisitorState)</a> - Method in class com.google.errorprone.bugpatterns.<a href="com/google/errorprone/bugpatterns/AbstractMustBeClosedChecker.html" title="class in com.google.errorprone.bugpatterns">AbstractMustBeClosedChecker</a></dt>
 <dd>
-<div class="block">Scans a method body for invocations matching <code>matcher</code>, emitting them as a single fix.</div>
+<div class="block">Scans a method body for method invocations, constructor calls, and method or constructor
+references matching <code>matcher</code>, emitting them as a single fix.</div>
 </dd>
 <dt><a href="com/google/errorprone/scanner/Scanner.html" class="type-name-link" title="class in com.google.errorprone.scanner">Scanner</a> - Class in <a href="com/google/errorprone/scanner/package-summary.html">com.google.errorprone.scanner</a></dt>
 <dd>
