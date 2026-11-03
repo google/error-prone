@@ -20,7 +20,6 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
 import com.google.common.base.Enums;
 import com.google.common.base.Optional;
-import com.google.common.primitives.Longs;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -30,10 +29,13 @@ import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol;
 import java.util.concurrent.TimeUnit;
+import javax.lang.model.element.ElementKind;
 
 /** Check for problematic or suspicious TimeUnit conversion calls. */
 @BugPattern(
@@ -70,14 +72,19 @@ public final class TimeUnitConversionChecker extends BugChecker
       // Usage inside TimeUnit itself, no changes we can make here.
       return Description.NO_MATCH;
     }
-    // This trips up on code like:
-    // TimeUnit SECONDS = TimeUnit.MINUTES;
-    // long about2500 = SECONDS.toSeconds(42);
-    // but... I think that's bad enough to ignore here :)
     Symbol receiverOfConversionSymbol = ASTHelpers.getSymbol(receiverOfConversion);
-    if (receiverOfConversionSymbol == null) {
+    if (receiverOfConversionSymbol == null
+        || receiverOfConversionSymbol.getKind() != ElementKind.ENUM_CONSTANT
+        || !(receiverOfConversionSymbol.owner instanceof Symbol.ClassSymbol owner)
+        || !owner.getQualifiedName().contentEquals("java.util.concurrent.TimeUnit")) {
       return Description.NO_MATCH;
     }
+    // Accessing a static enum constant through an expression evaluates that expression.
+    // Replacing the whole call must not remove that evaluation.
+    boolean safeToReplace =
+        receiverOfConversion instanceof IdentifierTree
+            || (receiverOfConversion instanceof MemberSelectTree select
+                && ASTHelpers.getSymbol(select.getExpression()) instanceof Symbol.ClassSymbol);
     String timeUnitName = receiverOfConversionSymbol.getSimpleName().toString();
     Optional<TimeUnit> receiver = Enums.getIfPresent(TimeUnit.class, timeUnitName);
     if (!receiver.isPresent()) {
@@ -88,13 +95,19 @@ public final class TimeUnitConversionChecker extends BugChecker
     TimeUnit convertTo = methodNameToTimeUnit(methodName);
     ExpressionTree arg0 = tree.getArguments().getFirst();
 
-    // if we have a constant and can Long-parse it...
-    Long constant = Longs.tryParse(String.valueOf(state.getSourceForNode(arg0)));
-    if (constant != null) {
+    Object constantValue = ASTHelpers.constValue(arg0);
+    if (constantValue instanceof Number || constantValue instanceof Character) {
+      long constant =
+          constantValue instanceof Character character
+              ? character.charValue()
+              : ((Number) constantValue).longValue();
       long converted = invokeConversion(receiver.get(), methodName, constant);
 
       // ... and the conversion results in 0 or 1, just inline it!
       if (converted == 0 || converted == 1 || constant == converted) {
+        if (!safeToReplace) {
+          return describeMatch(tree);
+        }
         SuggestedFix fix = replaceTreeWith(tree, convertTo, converted + "L");
         return describeMatch(tree, fix);
       }
@@ -110,6 +123,9 @@ public final class TimeUnitConversionChecker extends BugChecker
 
     // if we're trying to convert the unit to itself, just return the arg
     if (receiver.get().equals(convertTo)) {
+      if (!safeToReplace) {
+        return describeMatch(tree);
+      }
       SuggestedFix fix = replaceTreeWith(tree, convertTo, state.getSourceForNode(arg0));
       return describeMatch(tree, fix);
     }

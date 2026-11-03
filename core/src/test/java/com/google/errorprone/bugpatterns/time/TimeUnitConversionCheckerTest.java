@@ -15,6 +15,7 @@
  */
 package com.google.errorprone.bugpatterns.time;
 
+import com.google.errorprone.BugCheckerRefactoringTestHelper;
 import com.google.errorprone.CompilationTestHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -215,4 +216,137 @@ public class TimeUnitConversionCheckerTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void integralConstantExpressions() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.concurrent.TimeUnit;
+            class Test {
+              static final int MILLIS = 4321;
+              // BUG: Diagnostic contains: TimeUnitConversionChecker
+              long expression = TimeUnit.MILLISECONDS.toSeconds(4320 + 1);
+              // BUG: Diagnostic contains: TimeUnitConversionChecker
+              long underscore = TimeUnit.MILLISECONDS.toSeconds(4_321);
+              // BUG: Diagnostic contains: TimeUnitConversionChecker
+              long longLiteral = TimeUnit.MILLISECONDS.toSeconds(4321L);
+              // BUG: Diagnostic contains: TimeUnitConversionChecker
+              long hex = TimeUnit.MILLISECONDS.toSeconds(0x10e1);
+              // BUG: Diagnostic contains: TimeUnitConversionChecker
+              long named = TimeUnit.MILLISECONDS.toSeconds(MILLIS);
+              // BUG: Diagnostic contains: TimeUnitConversionChecker
+              long shortCast = TimeUnit.MILLISECONDS.toSeconds((short) 4321);
+              // BUG: Diagnostic contains: TimeUnitConversionChecker
+              long charCast = TimeUnit.MILLISECONDS.toSeconds((char) 4321);
+              // BUG: Diagnostic contains: TimeUnitConversionChecker
+              long negative = TimeUnit.MILLISECONDS.toSeconds(-(4_320 + 1));
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void nonConstantsAndLargerUnits() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.concurrent.TimeUnit;
+            class Test {
+              static final Long BOXED = 4321L;
+              long run(long value) {
+                long variable = TimeUnit.MILLISECONDS.toSeconds(value);
+                long boxed = TimeUnit.MILLISECONDS.toSeconds(BOXED);
+                long method = TimeUnit.MILLISECONDS.toSeconds(readMillis());
+                long largerUnit = TimeUnit.SECONDS.toMillis(4_321);
+                return variable + boxed + method + largerUnit;
+              }
+              long readMillis() { return 4321L; }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void constantExpressionFixes() {
+    BugCheckerRefactoringTestHelper.newInstance(TimeUnitConversionChecker.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.TimeUnit;
+            class Test {
+              long zero = TimeUnit.MILLISECONDS.toSeconds(400 + 100);
+              long one = TimeUnit.MILLISECONDS.toSeconds(1_000L);
+              long octal = TimeUnit.MILLISECONDS.toSeconds(01234);
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.TimeUnit;
+            class Test {
+              long zero = 0L /* seconds */;
+              long one = 1L /* seconds */;
+              long octal = 0L /* seconds */;
+            }
+            """)
+        .doTest(BugCheckerRefactoringTestHelper.TestMode.TEXT_MATCH);
+  }
+  @Test
+  public void variableNamedLikeUnitIsNotConstantReceiver() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.concurrent.TimeUnit;
+            class Test {
+              long run() {
+                TimeUnit MILLISECONDS = TimeUnit.SECONDS;
+                return MILLISECONDS.toSeconds(1_000L);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void expressionQualifiedReceiverIsReported() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.util.concurrent.TimeUnit;
+            class Test {
+              TimeUnit effect() { return null; }
+              long run() {
+                // BUG: Diagnostic contains: TimeUnitConversionChecker
+                return effect().MILLISECONDS.toSeconds(1_000L);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void expressionQualifiedReceiverIsNotRemovedByFix() {
+    BugCheckerRefactoringTestHelper.newInstance(TimeUnitConversionChecker.class, getClass())
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.concurrent.TimeUnit;
+            class Test {
+              TimeUnit effect() { return null; }
+              long run(TimeUnit[] units, int index) {
+                long a = effect().MILLISECONDS.toSeconds(1_000L);
+                long b = units[index].SECONDS.toSeconds(1_000L);
+                return a + b;
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
 }
