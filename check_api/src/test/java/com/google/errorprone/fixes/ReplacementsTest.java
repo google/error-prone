@@ -18,7 +18,6 @@ package com.google.errorprone.fixes;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.fail;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
@@ -36,12 +35,11 @@ public class ReplacementsTest {
   public void duplicate() {
     Replacements replacements = new Replacements();
     replacements.add(Replacement.create(42, 43, "hello"));
-    try {
-      replacements.add(Replacement.create(42, 43, "goodbye"));
-      fail();
-    } catch (IllegalArgumentException expected) {
-      assertThat(expected).hasMessageThat().contains("conflicts with existing replacement");
-    }
+    IllegalArgumentException expected =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> replacements.add(Replacement.create(42, 43, "goodbye")));
+    assertThat(expected).hasMessageThat().contains("conflicts with existing replacement");
   }
 
   @Test
@@ -50,14 +48,11 @@ public class ReplacementsTest {
     Replacement hello = Replacement.create(2, 4, "hello");
     Replacement goodbye = Replacement.create(3, 5, "goodbye");
     replacements.add(hello);
-    try {
-      replacements.add(goodbye);
-      fail();
-    } catch (IllegalArgumentException expected) {
-      assertThat(expected)
-          .hasMessageThat()
-          .isEqualTo(String.format("%s overlaps with existing replacements: %s", goodbye, hello));
-    }
+    IllegalArgumentException expected =
+        assertThrows(IllegalArgumentException.class, () -> replacements.add(goodbye));
+    assertThat(expected)
+        .hasMessageThat()
+        .isEqualTo(String.format("%s overlaps with existing replacements: %s", goodbye, hello));
   }
 
   private static final Function<Replacement, Range<Integer>> AS_RANGES =
