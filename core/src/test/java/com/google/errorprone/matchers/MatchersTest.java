@@ -1208,4 +1208,50 @@ public class MatchersTest {
       return Description.NO_MATCH;
     }
   }
+
+  @Test
+  public void serializationMethods() {
+    assertMatcher(MethodTree.class, Matchers.SERIALIZATION_METHODS)
+        .addSourceLines(
+            "Test.java",
+            """
+            import java.io.ObjectInputStream;
+            import java.io.ObjectOutputStream;
+            import java.io.Serializable;
+
+            class Test {
+              static class Ser implements Serializable {
+                // BUG: Diagnostic contains:
+                private void readObject(ObjectInputStream in) {}
+
+                // BUG: Diagnostic contains:
+                private void writeObject(ObjectOutputStream out) {}
+
+                // BUG: Diagnostic contains:
+                private void readObjectNoData() {}
+
+                // BUG: Diagnostic contains:
+                private Object readResolve() {
+                  return this;
+                }
+
+                // BUG: Diagnostic contains:
+                private Object writeReplace() {
+                  return this;
+                }
+
+                private void helper() {}
+              }
+
+              static class NotSer {
+                private void readObject(ObjectInputStream in) {}
+
+                private Object writeReplace() {
+                  return this;
+                }
+              }
+            }
+            """)
+        .doTest();
+  }
 }
