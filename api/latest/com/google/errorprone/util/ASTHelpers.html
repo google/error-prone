@@ -626,7 +626,7 @@ normalizing away workspace roots (e.g.</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @Nullable com.sun.tools.javac.code.Symbol</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getSymbol(com.sun.source.tree.Tree)" class="member-name-link">getSymbol</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Gets the symbol for a tree.</div>
+<div class="block">Gets the symbol that a tree declares or refers to.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.sun.tools.javac.code.Symbol.VarSymbol</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getSymbol(com.sun.source.tree.VariableTree)" class="member-name-link">getSymbol</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/VariableTree.html" title="class or interface in com.sun.source.tree" class="external-link">VariableTree</a>&nbsp;tree)</code></div>
@@ -1105,9 +1105,12 @@ is null.</div>
 <h3>getSymbol</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">@Nullable com.sun.tools.javac.code.Symbol</span>&nbsp;<span class="element-name">getSymbol</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/Tree.html" title="class or interface in com.sun.source.tree" class="external-link">Tree</a>&nbsp;tree)</span></div>
-<div class="block">Gets the symbol for a tree. Returns null if this tree does not have a symbol because it is of
-the wrong type, if <code>tree</code> is null, or if the symbol cannot be found due to a compilation
-error.</div>
+<div class="block">Gets the symbol that a tree declares or refers to.
+
+<p>Returns null if <code>tree</code> is null, if it is a kind of tree that has no symbol, or if
+javac attached no symbol to an identifier or member select, as for some module names. A <a href="https://docs.oracle.com/en/java/javase/21/docs/api/jdk.compiler/com/sun/source/tree/ParenthesizedTree.html" title="class or interface in com.sun.source.tree" class="external-link"><code>ParenthesizedTree</code></a> has no symbol, so <code>getSymbol((x))</code> returns null where <code>
+getSymbol(x)</code> returns the symbol of <code>x</code>. Call <a href="#stripParentheses(com.sun.source.tree.Tree)"><code>stripParentheses(Tree)</code></a> first where
+the parentheses do not matter.</div>
 </div>
 </section>
 </li>
