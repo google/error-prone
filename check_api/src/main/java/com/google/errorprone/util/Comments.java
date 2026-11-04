@@ -38,6 +38,7 @@ import com.sun.tools.javac.util.Position.LineMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * Utilities for attaching comments to relevant AST nodes
@@ -45,6 +46,12 @@ import java.util.Optional;
  * @author andrewrice@google.com (Andrew Rice)
  */
 public final class Comments {
+
+  private static final Pattern BLOCK_COMMENT = Pattern.compile("^\\s*/\\*\\s*(.*?)\\s*\\*/\\s*");
+  private static final Pattern LINE_COMMENT = Pattern.compile("^\\s*//\\s*");
+  private static final Pattern JAVADOC_LINE_COMMENT = Pattern.compile("^\\s*///\\s*");
+  private static final Pattern JAVADOC_BLOCK_COMMENT =
+      Pattern.compile("^\\s*/\\*\\*\\s*(.*?)\\s*\\*/\\s*");
 
   /**
    * Attach comments to nodes on arguments of constructor calls. Calls such as {@code new Test(
@@ -102,10 +109,10 @@ public final class Comments {
    */
   public static String getTextFromComment(ErrorProneComment comment) {
     return switch (comment.getStyle()) {
-      case BLOCK -> comment.getText().replaceAll("^\\s*/\\*\\s*(.*?)\\s*\\*/\\s*", "$1");
-      case LINE -> comment.getText().replaceAll("^\\s*//\\s*", "");
-      case JAVADOC_LINE -> comment.getText().replaceAll("^\\s*///\\s*", "");
-      case JAVADOC_BLOCK -> comment.getText().replaceAll("^\\s*/\\*\\*\\s*(.*?)\\s*\\*/\\s*", "$1");
+      case BLOCK -> BLOCK_COMMENT.matcher(comment.getText()).replaceAll("$1");
+      case LINE -> LINE_COMMENT.matcher(comment.getText()).replaceAll("");
+      case JAVADOC_LINE -> JAVADOC_LINE_COMMENT.matcher(comment.getText()).replaceAll("");
+      case JAVADOC_BLOCK -> JAVADOC_BLOCK_COMMENT.matcher(comment.getText()).replaceAll("$1");
     };
   }
 

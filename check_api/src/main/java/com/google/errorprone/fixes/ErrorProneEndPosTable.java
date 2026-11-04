@@ -111,17 +111,8 @@ public interface ErrorProneEndPosTable {
   }
 
   static ErrorProneEndPosTable create(CompilationUnitTree unit) {
-    MethodHandle getEndPosition =
-        MethodHandles.insertArguments(GET_END_POS_WITH_UNIT_HANDLE, 1, unit);
-    return pos -> {
-      requireNonNull(pos);
-      try {
-        return (int) getEndPosition.invokeExact(pos);
-      } catch (Throwable e) {
-        Throwables.throwIfUnchecked(e);
-        throw new AssertionError(e);
-      }
-    };
+    JCCompilationUnit compilationUnit = (JCCompilationUnit) unit;
+    return pos -> getEndPosition(pos, compilationUnit);
   }
 
   default int getEndPosition(Tree tree) {
@@ -143,6 +134,12 @@ public interface ErrorProneEndPosTable {
   }
 
   static int getEndPosition(JCDiagnostic.DiagnosticPosition pos, CompilationUnitTree unit) {
-    return create(unit).getEndPosition(pos);
+    requireNonNull(pos);
+    try {
+      return (int) GET_END_POS_WITH_UNIT_HANDLE.invokeExact(pos, (JCCompilationUnit) unit);
+    } catch (Throwable e) {
+      Throwables.throwIfUnchecked(e);
+      throw new AssertionError(e);
+    }
   }
 }
