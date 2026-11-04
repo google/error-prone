@@ -332,11 +332,14 @@ public final class ASTHelpers {
    * also means that this symbol is not an override.
    */
   public static boolean canBeRemoved(Symbol symbol, VisitorState state) {
+    if (!isEffectivelyPrivate(symbol)) {
+      return false;
+    }
     if (symbol instanceof MethodSymbol methodSymbol
         && !findSuperMethods(methodSymbol, state.getTypes()).isEmpty()) {
       return false;
     }
-    return isEffectivelyPrivate(symbol);
+    return true;
   }
 
   /** See {@link #canBeRemoved(Symbol, VisitorState)}. */
