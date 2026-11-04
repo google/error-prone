@@ -19,6 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -38,7 +39,9 @@ import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.WhileLoopTree;
@@ -122,12 +125,22 @@ public class LoopConditionChecker extends BugChecker
           default -> {}
         }
       }
-      return false;
+      return ASTHelpers.constValue(tree) != null;
+    }
+
+    @Override
+    public Boolean visitMemberSelect(MemberSelectTree tree, Void unused) {
+      return ASTHelpers.constValue(tree) != null;
     }
 
     @Override
     public Boolean visitLiteral(LiteralTree tree, Void unused) {
       return true;
+    }
+
+    @Override
+    public Boolean visitParenthesized(ParenthesizedTree node, Void unused) {
+      return node.getExpression().accept(this, null);
     }
 
     @Override
@@ -187,7 +200,7 @@ public class LoopConditionChecker extends BugChecker
     }
 
     private void check(ExpressionTree expression) {
-      Symbol sym = ASTHelpers.getSymbol(expression);
+      Symbol sym = ASTHelpers.getSymbol(stripParentheses(expression));
       modified |= variables.contains(sym);
     }
   }
