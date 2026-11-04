@@ -283,4 +283,55 @@ public final class AlmostJavadocTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void lineCommentEndingInStarSlash() {
+    refactoring
+        .addInputLines(
+            "Test.java",
+            """
+            public class Test {
+              // Foo {@link Test}. */
+              void foo() {}
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            public class Test {
+              /** Foo {@link Test}. */
+              void foo() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void unicodeEscapedCommentEnd() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            public class Test {
+              // BUG: Diagnostic contains:
+              /* Foo {@link Test}. *\\u002f
+              void foo() {}
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void tagInStringLiteral() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            public class Test {
+              String s = "/* {@link Test} */";
+              void foo() {}
+            }
+            """)
+        .doTest();
+  }
 }

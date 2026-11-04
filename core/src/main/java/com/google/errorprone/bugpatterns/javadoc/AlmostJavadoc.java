@@ -67,12 +67,19 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
 
   @Override
   public Description matchCompilationUnit(CompilationUnitTree tree, VisitorState state) {
+    String source = state.getSourceCode().toString();
+    if (!mayContainCandidateComment(source)) {
+      return NO_MATCH;
+    }
     ImmutableMap<Integer, TreePath> javadoccableTrees = getJavadoccableTrees(tree);
-    for (ErrorProneToken token :
-        ErrorProneTokens.getTokens(state.getSourceCode().toString(), state.context)) {
+    for (ErrorProneToken token : ErrorProneTokens.getTokens(source, state.context)) {
       for (ErrorProneComment comment : token.comments()) {
         var path = javadoccableTrees.get(token.pos());
         if (path == null) {
+          continue;
+        }
+        Optional<SuggestedFix> fix = generateFix(comment);
+        if (fix.isEmpty()) {
           continue;
         }
         if (Utils.getDocTreePath(state.withPath(path)) != null) {
@@ -82,15 +89,78 @@ public final class AlmostJavadoc extends BugChecker implements CompilationUnitTr
         if (stream(path).anyMatch(node -> isSuppressed(node, state))) {
           continue;
         }
-        generateFix(comment)
-            .ifPresent(
-                fix ->
-                    state.reportMatch(
-                        describeMatch(
-                            getDiagnosticPosition(comment.getSourcePos(0), path.getLeaf()), fix)));
+        state.reportMatch(
+            describeMatch(
+                getDiagnosticPosition(comment.getSourcePos(0), path.getLeaf()), fix.get()));
       }
     }
     return NO_MATCH;
+  }
+
+  /**
+   * Returns false if {@code source} definitely doesn't contain any comment for which {@link
+   * #generateFix} would return a fix. This allows skipping tokenizing the file, which is relatively
+   * expensive.
+   *
+   * <p>This errs on the side of returning true: e.g. it doesn't distinguish comments from string
+   * literals. Comments written using unicode escapes aren't handled, so they make this return true.
+   */
+  private static boolean mayContainCandidateComment(String source) {
+    if (source.contains("\\u")) {
+      return true;
+    }
+    int blockEnd = -1;
+    int currentLineEnd = -1;
+    int checkedUntil = -1;
+    for (int start = source.indexOf('/'); start >= 0; start = source.indexOf('/', start + 1)) {
+      if (start + 2 >= source.length()) {
+        break;
+      }
+      char next = source.charAt(start + 1);
+      int end;
+      if (next == '*') {
+        // A block comment that isn't Javadoc.
+        if (source.charAt(start + 2) == '*') {
+          continue;
+        }
+        if (blockEnd < start + 2) {
+          blockEnd = source.indexOf("*/", start + 2);
+          if (blockEnd < 0) {
+            return false;
+          }
+        }
+        end = blockEnd + 2;
+      } else if (next == '/') {
+        // A line comment that ends with "*/".
+        if (currentLineEnd < start) {
+          currentLineEnd = lineEnd(source, start + 2);
+        }
+        end = currentLineEnd;
+        if (end - start < 4 || !source.startsWith("*/", end - 2)) {
+          continue;
+        }
+      } else {
+        continue;
+      }
+      if (end <= checkedUntil) {
+        continue;
+      }
+      if (HAS_TAG.matcher(source.substring(start, end)).find()) {
+        return true;
+      }
+      checkedUntil = end;
+    }
+    return false;
+  }
+
+  private static int lineEnd(String source, int start) {
+    for (int i = start; i < source.length(); i++) {
+      char c = source.charAt(i);
+      if (c == '\n' || c == '\r') {
+        return i;
+      }
+    }
+    return source.length();
   }
 
   private static Optional<SuggestedFix> generateFix(ErrorProneComment comment) {
