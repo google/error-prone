@@ -216,4 +216,25 @@ public class LoopConditionCheckerTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void constantLoopBound() {
+    compilationTestHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              static final int ONE = 1;
+
+              void foo() {
+                for (int i = 0; i < ONE; i++) {}
+                // BUG: Diagnostic contains: condition variable(s) never modified in loop body: i
+                for (int i = 0; i < ONE; foo()) {}
+                // BUG: Diagnostic contains: condition variable(s) never modified in loop body: i
+                for (int i = 0; i < Test.ONE; foo()) {}
+              }
+            }
+            """)
+        .doTest();
+  }
 }
