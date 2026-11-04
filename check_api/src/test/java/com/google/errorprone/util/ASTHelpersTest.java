@@ -76,6 +76,7 @@ import com.sun.source.tree.NewArrayTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.PackageTree;
 import com.sun.source.tree.ParameterizedTypeTree;
+import com.sun.source.tree.ParenthesizedTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
@@ -1476,6 +1477,38 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             assertThat(ASTHelpers.outermostClass(targetSymbol)).isNull();
             setAssertionsComplete();
             return super.visitMemberSelect(tree, state);
+          }
+        };
+    tests.add(scanner);
+
+    assertCompiles(scanner);
+  }
+
+  // Callers treat a non-null symbol as a sign that the tree itself is an identifier, member select,
+  // or invocation, and some cast it or pass it to getReceiver, which throws IllegalStateException
+  // when given a parenthesized expression. See https://github.com/google/error-prone/issues/6223.
+  @Test
+  public void getSymbol_parenthesizedExpressionHasNoSymbol() {
+    writeFile(
+        "Foo.java",
+        """
+        class Foo {
+          int x;
+
+          int f() {
+            return (x) + 1;
+          }
+        }
+        """);
+
+    TestScanner scanner =
+        new TestScanner() {
+          @Override
+          public Void visitParenthesized(ParenthesizedTree tree, VisitorState state) {
+            assertThat(getSymbol(tree)).isNull();
+            assertThat(String.valueOf(getSymbol(tree.getExpression()))).isEqualTo("x");
+            setAssertionsComplete();
+            return super.visitParenthesized(tree, state);
           }
         };
     tests.add(scanner);
