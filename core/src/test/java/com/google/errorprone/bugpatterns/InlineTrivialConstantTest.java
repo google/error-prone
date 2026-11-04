@@ -32,9 +32,11 @@ public class InlineTrivialConstantTest {
             """
             class Test {
               private static final String EMPTY_STRING = "";
+              private static final String EMPTY = ("");
 
               void f() {
                 System.err.println(EMPTY_STRING);
+                System.err.println(EMPTY);
               }
             }
             """)
@@ -44,6 +46,7 @@ public class InlineTrivialConstantTest {
             class Test {
 
               void f() {
+                System.err.println("");
                 System.err.println("");
               }
             }
