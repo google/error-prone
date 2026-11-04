@@ -35,7 +35,6 @@ import static com.google.errorprone.util.MoreAnnotations.getStringValue;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.ImmutableMap;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -62,7 +61,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 import javax.lang.model.element.Modifier;
@@ -81,145 +79,186 @@ public class DoNotCallChecker extends BugChecker
               && memberSelectTree.getExpression() instanceof IdentifierTree identifierTree
               && identifierTree.getName().contentEquals("super");
 
+  private record ThirdPartyMethod(Matcher<ExpressionTree> matcher, String message) {}
+
   // If your method cannot be annotated with @DoNotCall (e.g., it's a JDK or thirdparty method),
-  // then add it to this Map with an explanation.
-  private static final ImmutableMap<Matcher<ExpressionTree>, String> THIRD_PARTY_METHODS =
-      ImmutableMap.<Matcher<ExpressionTree>, String>builder()
+  // then add it to this Multimap with an explanation.
+  private static final ImmutableListMultimap<String, ThirdPartyMethod> THIRD_PARTY_METHODS =
+      ImmutableListMultimap.<ThirdPartyMethod, String>builder()
+          .putAll(
+              new ThirdPartyMethod(
+                  DoNotCallChecker::truthLiteProtoEqualityCheck,
+                  "A Builder can never compare equal to a MessageLite instance. Use `build()`, or"
+                      + " `buildPartial()` on the argument to get a `MessageLite` for comparison"
+                      + " instead. Or, if you are passing `null`, use `isNull()`."),
+              "isEqualTo",
+              "isNotEqualTo")
           .put(
-              DoNotCallChecker::truthLiteProtoEqualityCheck,
-              "A Builder can never compare equal to a MessageLite instance. Use `build()`, or"
-                  + " `buildPartial()` on the argument to get a `MessageLite` for comparison"
-                  + " instead. Or, if you are passing `null`, use `isNull()`.")
+              new ThirdPartyMethod(
+                  staticMethod()
+                      .onClass("org.junit.Assert")
+                      .named("assertEquals")
+                      .withParameters("double", "double"),
+                  "This method always throws java.lang.AssertionError. Use assertEquals("
+                      + "expected, actual, delta) to compare floating-point numbers"),
+              "assertEquals")
           .put(
-              staticMethod()
-                  .onClass("org.junit.Assert")
-                  .named("assertEquals")
-                  .withParameters("double", "double"),
-              "This method always throws java.lang.AssertionError. Use assertEquals("
-                  + "expected, actual, delta) to compare floating-point numbers")
+              new ThirdPartyMethod(
+                  staticMethod()
+                      .onClass("org.junit.Assert")
+                      .named("assertEquals")
+                      .withParameters("java.lang.String", "double", "double"),
+                  "This method always throws java.lang.AssertionError. Use assertEquals("
+                      + "String, expected, actual, delta) to compare floating-point numbers"),
+              "assertEquals")
           .put(
-              staticMethod()
-                  .onClass("org.junit.Assert")
-                  .named("assertEquals")
-                  .withParameters("java.lang.String", "double", "double"),
-              "This method always throws java.lang.AssertionError. Use assertEquals("
-                  + "String, expected, actual, delta) to compare floating-point numbers")
+              new ThirdPartyMethod(
+                  instanceMethod()
+                      .onExactClass("java.lang.Thread")
+                      .named("stop")
+                      .withParameters("java.lang.Throwable"),
+                  "Thread.stop(Throwable) always throws an UnsupportedOperationException"),
+              "stop")
+          .putAll(
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("java.sql.Date"),
+                  "The hour/minute/second getters and setters on java.sql.Date are guaranteed to"
+                      + " throw IllegalArgumentException because java.sql.Date does not have a time"
+                      + " component."),
+              "getHours",
+              "getMinutes",
+              "getSeconds",
+              "setHours",
+              "setMinutes",
+              "setSeconds")
           .put(
-              instanceMethod()
-                  .onExactClass("java.lang.Thread")
-                  .named("stop")
-                  .withParameters("java.lang.Throwable"),
-              "Thread.stop(Throwable) always throws an UnsupportedOperationException")
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("java.sql.Date"),
+                  "sqlDate.toInstant() is not supported. Did you mean to call toLocalDate()"
+                      + " instead?"),
+              "toInstant")
+          .putAll(
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("java.sql.Time"),
+                  "The year/month/day getters and setters on java.sql.Time are guaranteed to throw"
+                      + " IllegalArgumentException because java.sql.Time does not have a date"
+                      + " component."),
+              "getYear",
+              "getMonth",
+              "getDay",
+              "getDate",
+              "setYear",
+              "setMonth",
+              "setDate")
           .put(
-              instanceMethod()
-                  .onExactClass("java.sql.Date")
-                  .namedAnyOf(
-                      "getHours",
-                      "getMinutes",
-                      "getSeconds",
-                      "setHours",
-                      "setMinutes",
-                      "setSeconds"),
-              "The hour/minute/second getters and setters on java.sql.Date are guaranteed to throw"
-                  + " IllegalArgumentException because java.sql.Date does not have a time"
-                  + " component.")
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("java.sql.Time"),
+                  "sqlTime.toInstant() is not supported. Did you mean to call toLocalTime()"
+                      + " instead?"),
+              "toInstant")
+          .putAll(
+              new ThirdPartyMethod(
+                  instanceMethod().onDescendantOf("java.util.SortedMap"),
+                  "Sorted collections do not support insertions with explicit positioning"),
+              "putFirst",
+              "putLast")
+          .putAll(
+              new ThirdPartyMethod(
+                  instanceMethod().onDescendantOf("java.util.SortedSet"),
+                  "Sorted collections do not support insertions with explicit positioning"),
+              "addFirst",
+              "addLast")
           .put(
-              instanceMethod().onExactClass("java.sql.Date").named("toInstant"),
-              "sqlDate.toInstant() is not supported. Did you mean to call toLocalDate() instead?")
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("java.util.concurrent.ThreadLocalRandom"),
+                  "ThreadLocalRandom does not support setting a seed."),
+              "setSeed")
           .put(
-              instanceMethod()
-                  .onExactClass("java.sql.Time")
-                  .namedAnyOf(
-                      "getYear", "getMonth", "getDay", "getDate", "setYear", "setMonth", "setDate"),
-              "The year/month/day getters and setters on java.sql.Time are guaranteed to throw"
-                  + " IllegalArgumentException because java.sql.Time does not have a date"
-                  + " component.")
+              new ThirdPartyMethod(
+                  instanceMethod()
+                      .onExactClass("java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock"),
+                  "ReadLocks do not support conditions."),
+              "newCondition")
           .put(
-              instanceMethod().onExactClass("java.sql.Time").named("toInstant"),
-              "sqlTime.toInstant() is not supported. Did you mean to call toLocalTime() instead?")
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("java.lang.StackTraceElement"),
+                  "Calling getClass on StackTraceElement returns the Class object for"
+                      + " StackTraceElement, you probably meant to retrieve the class containing"
+                      + " the execution point represented by this stack trace element using"
+                      + " getClassName"),
+              "getClass")
           .put(
-              instanceMethod()
-                  .onDescendantOf("java.util.SortedMap")
-                  .namedAnyOf("putFirst", "putLast"),
-              "Sorted collections do not support insertions with explicit positioning")
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("java.lang.StackWalker"),
+                  "Calling getClass on StackWalker returns the Class object for StackWalker, you"
+                      + " probably meant to retrieve the class containing the execution point"
+                      + " represented by this StackWalker using getCallerClass"),
+              "getClass")
           .put(
-              instanceMethod()
-                  .onDescendantOf("java.util.SortedSet")
-                  .namedAnyOf("addFirst", "addLast"),
-              "Sorted collections do not support insertions with explicit positioning")
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("java.lang.StackWalker$StackFrame"),
+                  "Calling getClass on StackFrame returns the Class object for StackFrame, you"
+                      + " probably meant to retrieve the class containing the execution point"
+                      + " represented by this StackFrame using getClassName"),
+              "getClass")
           .put(
-              instanceMethod()
-                  .onExactClass("java.util.concurrent.ThreadLocalRandom")
-                  .named("setSeed"),
-              "ThreadLocalRandom does not support setting a seed.")
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("java.lang.reflect.Constructor"),
+                  "Calling getClass on Constructor returns the Class object for Constructor, you"
+                      + " probably meant to retrieve the class containing the constructor"
+                      + " represented by this Constructor using getDeclaringClass"),
+              "getClass")
           .put(
-              instanceMethod()
-                  .onExactClass("java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock")
-                  .named("newCondition"),
-              "ReadLocks do not support conditions.")
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("java.lang.reflect.Field"),
+                  "Calling getClass on Field returns the Class object for Field, you probably meant"
+                      + " to retrieve the class containing the field represented by this Field"
+                      + " using getDeclaringClass"),
+              "getClass")
           .put(
-              instanceMethod().onExactClass("java.lang.StackTraceElement").named("getClass"),
-              "Calling getClass on StackTraceElement returns the Class object for"
-                  + " StackTraceElement, you probably meant to retrieve the class containing the"
-                  + " execution point represented by this stack trace element using getClassName")
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("java.lang.reflect.Method"),
+                  "Calling getClass on Method returns the Class object for Method, you probably"
+                      + " meant to retrieve the class containing the method represented by this"
+                      + " Method using getDeclaringClass"),
+              "getClass")
           .put(
-              instanceMethod().onExactClass("java.lang.StackWalker").named("getClass"),
-              "Calling getClass on StackWalker returns the Class object for StackWalker, you"
-                  + " probably meant to retrieve the class containing the execution point"
-                  + " represented by this StackWalker using getCallerClass")
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("java.lang.reflect.ParameterizedType"),
+                  "Calling getClass on ParameterizedType returns the Class object for"
+                      + " ParameterizedType, you probably meant to retrieve the class containing"
+                      + " the method represented by this ParameterizedType using getRawType"),
+              "getClass")
           .put(
-              instanceMethod().onExactClass("java.lang.StackWalker$StackFrame").named("getClass"),
-              "Calling getClass on StackFrame returns the Class object for StackFrame, you probably"
-                  + " meant to retrieve the class containing the execution point represented by"
-                  + " this StackFrame using getClassName")
-          .put(
-              instanceMethod().onExactClass("java.lang.reflect.Constructor").named("getClass"),
-              "Calling getClass on Constructor returns the Class object for Constructor, you"
-                  + " probably meant to retrieve the class containing the constructor represented"
-                  + " by this Constructor using getDeclaringClass")
-          .put(
-              instanceMethod().onExactClass("java.lang.reflect.Field").named("getClass"),
-              "Calling getClass on Field returns the Class object for Field, you probably meant to"
-                  + " retrieve the class containing the field represented by this Field using"
-                  + " getDeclaringClass")
-          .put(
-              instanceMethod().onExactClass("java.lang.reflect.Method").named("getClass"),
-              "Calling getClass on Method returns the Class object for Method, you probably meant"
-                  + " to retrieve the class containing the method represented by this Method using"
-                  + " getDeclaringClass")
-          .put(
-              instanceMethod()
-                  .onExactClass("java.lang.reflect.ParameterizedType")
-                  .named("getClass"),
-              "Calling getClass on ParameterizedType returns the Class object for"
-                  + " ParameterizedType, you probably meant to retrieve the class containing the"
-                  + " method represented by this ParameterizedType using getRawType")
-          .put(
-              instanceMethod().onExactClass("java.beans.BeanDescriptor").named("getClass"),
-              "Calling getClass on BeanDescriptor returns the Class object for BeanDescriptor, you"
-                  + " probably meant to retrieve the class described by this BeanDescriptor using"
-                  + " getBeanClass")
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("java.beans.BeanDescriptor"),
+                  "Calling getClass on BeanDescriptor returns the Class object for BeanDescriptor,"
+                      + " you probably meant to retrieve the class described by this BeanDescriptor"
+                      + " using getBeanClass"),
+              "getClass")
           .put(
               /*
                * LockInfo has a publicly visible subclass, MonitorInfo. It seems unlikely that
                * anyone is using getClass() in an attempt to distinguish the two. (If anyone is,
                * then it would make more sense to use instanceof, anyway.)
                */
-              instanceMethod().onDescendantOf("java.lang.management.LockInfo").named("getClass"),
-              "Calling getClass on LockInfo returns the Class object for LockInfo, you probably"
-                  + " meant to retrieve the class of the object that is being locked using"
-                  + " getClassName")
+              new ThirdPartyMethod(
+                  instanceMethod().onDescendantOf("java.lang.management.LockInfo"),
+                  "Calling getClass on LockInfo returns the Class object for LockInfo, you probably"
+                      + " meant to retrieve the class of the object that is being locked using"
+                      + " getClassName"),
+              "getClass")
           /*
            * These methods are part of Guava, but we have to list them in this "thirdparty" section:
            * We can't annotate them with @DoNotCall because we can't override getClass.
            */
           .put(
-              instanceMethod()
-                  .onExactClass("com.google.common.reflect.ClassPath$ClassInfo")
-                  .named("getClass"),
-              "Calling getClass on ClassInfo returns the Class object for ClassInfo, you probably"
-                  + " meant to retrieve the class described by this ClassInfo using getName or"
-                  + " load")
+              new ThirdPartyMethod(
+                  instanceMethod().onExactClass("com.google.common.reflect.ClassPath$ClassInfo"),
+                  "Calling getClass on ClassInfo returns the Class object for ClassInfo, you"
+                      + " probably meant to retrieve the class described by this ClassInfo using"
+                      + " getName or load"),
+              "getClass")
           /*
            * Users of TypeToken have to create a subclass. The static type of their instance is
            * probably often still "TypeToken," but that may change as we see more usage of `var`. So
@@ -227,11 +266,12 @@ public class DoNotCallChecker extends BugChecker
            * subclass, this check will give that person a bad time in one additional way.
            */
           .put(
-              instanceMethod()
-                  .onDescendantOf("com.google.common.reflect.TypeToken")
-                  .named("getClass"),
-              "Calling getClass on TypeToken returns the Class object for TypeToken, you probably"
-                  + " meant to retrieve the class described by this TypeToken using getRawType")
+              new ThirdPartyMethod(
+                  instanceMethod().onDescendantOf("com.google.common.reflect.TypeToken"),
+                  "Calling getClass on TypeToken returns the Class object for TypeToken, you"
+                      + " probably meant to retrieve the class described by this TypeToken using"
+                      + " getRawType"),
+              "getClass")
           .put(
               /*
                * A call to super.run() from a direct subclass of Thread is a no-op. That could be
@@ -243,10 +283,13 @@ public class DoNotCallChecker extends BugChecker
                * and we wouldn't want to flag it. Still, *usually* it's likely to be useful to
                * report a warning even on subclasses of Thread, such as anonymous classes.)
                */
-              allOf(THREAD_RUN, not(CALL_ON_SUPER)),
-              "Calling run on Thread runs work on this thread, rather than the given thread, you"
-                  + " probably meant to call start")
-          .buildOrThrow();
+              new ThirdPartyMethod(
+                  allOf(THREAD_RUN, not(CALL_ON_SUPER)),
+                  "Calling run on Thread runs work on this thread, rather than the given thread,"
+                      + " you probably meant to call start"),
+              "run")
+          .build()
+          .inverse();
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -310,9 +353,9 @@ public class DoNotCallChecker extends BugChecker
       }
 
       private void handleTree(ExpressionTree tree, MethodSymbol symbol) {
-        for (Map.Entry<Matcher<ExpressionTree>, String> matcher : THIRD_PARTY_METHODS.entrySet()) {
-          if (matcher.getKey().matches(tree, state)) {
-            state.reportMatch(buildDescription(tree).setMessage(matcher.getValue()).build());
+        for (ThirdPartyMethod method : THIRD_PARTY_METHODS.get(symbol.getSimpleName().toString())) {
+          if (method.matcher().matches(tree, state)) {
+            state.reportMatch(buildDescription(tree).setMessage(method.message()).build());
             return;
           }
         }
