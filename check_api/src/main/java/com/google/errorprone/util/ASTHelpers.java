@@ -232,9 +232,13 @@ public final class ASTHelpers {
   }
 
   /**
-   * Gets the symbol for a tree. Returns null if this tree does not have a symbol because it is of
-   * the wrong type, if {@code tree} is null, or if the symbol cannot be found due to a compilation
-   * error.
+   * Gets the symbol that a tree declares or refers to.
+   *
+   * <p>Returns null if {@code tree} is null, if it is a kind of tree that has no symbol, or if
+   * javac attached no symbol to an identifier or member select, as for some module names. A {@link
+   * ParenthesizedTree} has no symbol, so {@code getSymbol((x))} returns null where {@code
+   * getSymbol(x)} returns the symbol of {@code x}. Call {@link #stripParentheses(Tree)} first where
+   * the parentheses do not matter.
    */
   public static @Nullable Symbol getSymbol(Tree tree) {
     if (tree instanceof AnnotationTree annotationTree) {
