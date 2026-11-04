@@ -23,10 +23,12 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.util.ASTHelpers.canonicalConstructor;
 import static com.google.errorprone.util.ASTHelpers.findEnclosingMethod;
+import static com.google.errorprone.util.ASTHelpers.findEnclosingNode;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isCanonicalRecordConstructor;
+import static com.google.errorprone.util.ASTHelpers.outermostParenthesized;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
 import static java.lang.annotation.ElementType.METHOD;
@@ -65,6 +67,7 @@ import com.sun.source.tree.AnnotationTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -80,6 +83,7 @@ import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeParameterTree;
 import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.ClassSymbol;
@@ -97,6 +101,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.lang.model.element.ElementKind;
@@ -172,6 +177,83 @@ public class ASTHelpersTest extends CompilerBasedAbstractTest {
             "}");
     writeFile("A.java", fileContent);
     assertCompiles(literalExpressionMatches(literalHasStartPosition(62)));
+  }
+
+  @Test
+  public void outermostParenthesizedReturnsTheArgumentOfTheCall() {
+    writeFileCallingSink("sink(x); sink((x)); sink(((x)));");
+    assertCompiles(
+        eachIdentifierX(
+            3,
+            path -> {
+              MethodInvocationTree call = findEnclosingNode(path, MethodInvocationTree.class);
+              TreePath outermost = outermostParenthesized(path);
+              assertWithMessage("parent in %s", call)
+                  .that(outermost.getParentPath().getLeaf())
+                  .isSameInstanceAs(call);
+              assertWithMessage("leaf in %s", call)
+                  .that(outermost.getLeaf())
+                  .isSameInstanceAs(call.getArguments().get(0));
+            }));
+  }
+
+  @Test
+  public void outermostParenthesizedReturnsTheLeafWhoseParentIsNotParenthesized() {
+    writeFileCallingSink("sink((x == null));");
+    assertCompiles(
+        eachIdentifierX(
+            1,
+            path ->
+                assertThat(outermostParenthesized(path).getLeaf())
+                    .isSameInstanceAs(path.getLeaf())));
+  }
+
+  @Test
+  public void outermostParenthesizedReturnsTheRootPathItself() {
+    writeFileCallingSink("sink(x);");
+    assertCompiles(
+        eachIdentifierX(
+            1,
+            path -> {
+              TreePath root = new TreePath(path.getCompilationUnit());
+              assertThat(outermostParenthesized(root)).isSameInstanceAs(root);
+            }));
+  }
+
+  private void writeFileCallingSink(String statements) {
+    writeFile(
+        "A.java",
+        UNIX_LINE_JOINER.join(
+            "class A {",
+            "  void sink(Object o) {}",
+            "  void f(Object x) {",
+            "    " + statements,
+            "  }",
+            "}"));
+  }
+
+  /**
+   * Runs {@code check} on the path to every use of {@code x}, and expects at least {@code uses} of
+   * them.
+   */
+  private Scanner eachIdentifierX(int uses, Consumer<TreePath> check) {
+    TestScanner scanner =
+        new TestScanner() {
+          private int seen;
+
+          @Override
+          public Void visitIdentifier(IdentifierTree node, VisitorState state) {
+            if (node.getName().contentEquals("x")) {
+              check.accept(getCurrentPath());
+              if (++seen == uses) {
+                setAssertionsComplete();
+              }
+            }
+            return super.visitIdentifier(node, state);
+          }
+        };
+    tests.add(scanner);
+    return scanner;
   }
 
   private Matcher<LiteralTree> literalHasStartPosition(int startPosition) {

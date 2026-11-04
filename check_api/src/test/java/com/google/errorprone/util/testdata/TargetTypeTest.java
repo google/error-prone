@@ -419,6 +419,9 @@ abstract class TargetTypeTest {
 
     // BUG: Diagnostic contains: java.lang.Iterable<? extends java.lang.Integer>
     for (int s : detectIntegerList()) {}
+
+    // BUG: Diagnostic contains: java.lang.Iterable<? extends java.lang.Integer>
+    for (int s : ((detectIntegerList()))) {}
   }
 
   void testAssert() {

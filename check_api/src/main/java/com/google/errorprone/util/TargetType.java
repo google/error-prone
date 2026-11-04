@@ -23,6 +23,7 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Streams.findLast;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSameType;
+import static com.google.errorprone.util.ASTHelpers.outermostParenthesized;
 import static com.google.errorprone.util.ASTHelpers.streamSuperMethods;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -57,7 +58,6 @@ import com.sun.source.tree.SwitchTree;
 import com.sun.source.tree.SynchronizedTree;
 import com.sun.source.tree.ThrowTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.VariableTree;
@@ -98,12 +98,9 @@ public record TargetType(Type type, TreePath path) {
     if (!canHaveTargetType(state.getPath().getLeaf())) {
       return null;
     }
-    ExpressionTree current;
-    TreePath parent = state.getPath();
-    do {
-      current = (ExpressionTree) parent.getLeaf();
-      parent = parent.getParentPath();
-    } while (parent != null && parent.getLeaf().getKind() == Kind.PARENTHESIZED);
+    TreePath outermost = outermostParenthesized(state.getPath());
+    ExpressionTree current = (ExpressionTree) outermost.getLeaf();
+    TreePath parent = outermost.getParentPath();
 
     if (parent == null) {
       return null;
