@@ -16,7 +16,10 @@ To make changes, edit the @BugPattern annotation or the explanation in docs/bugp
 The contract for `Object.hashCode` states that if two objects are equal, then
 calling the `hashCode()` method on each of the two objects must produce the same
 result. Implementing `equals()` but not `hashCode()` causes broken behaviour
-when trying to store the object in a collection.
+when trying to store the object in a collection. Conversely, implementing
+`hashCode()` without `equals()` is almost always a mistake: instances retain
+`Object.equals` reference equality, so distinct instances with equal hash codes
+are never considered equal when looked up in hash-based collections or caches.
 
 See [Effective Java 3rd Edition §11][ej3e-11] for more information and a
 discussion of how to correctly implement `hashCode()`.
