@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns.threadsafety;
 
-import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isStatic;
 import static com.google.errorprone.util.ErrorProneLog.deferredDiagnosticHandler;
@@ -28,6 +27,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.threadsafety.GuardedByExpression.Select;
 import com.google.errorprone.util.ErrorProneParser;
 import com.sun.source.tree.Tree;
+import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.tree.JCTree;
@@ -44,10 +44,19 @@ import org.jspecify.annotations.Nullable;
  */
 public final class GuardedByUtils {
   public static ImmutableSet<String> getGuardValues(Symbol sym) {
-    return sym.getAnnotationMirrors().stream()
-        .filter(a -> ACCEPTED_GUARDED_BY_ANNOTATIONS.contains(asElement(a).toString()))
-        .flatMap(a -> getStrings(a, "value").stream())
-        .collect(toImmutableSet());
+    // This is called for every identifier and member select in the analyzed code, and most symbols
+    // have no annotations, so avoid the overhead of a stream.
+    List<Attribute.Compound> annotations = sym.getAnnotationMirrors();
+    if (annotations.isEmpty()) {
+      return ImmutableSet.of();
+    }
+    ImmutableSet.Builder<String> guards = ImmutableSet.builder();
+    for (Attribute.Compound a : annotations) {
+      if (ACCEPTED_GUARDED_BY_ANNOTATIONS.contains(asElement(a).toString())) {
+        guards.addAll(getStrings(a, "value"));
+      }
+    }
+    return guards.build();
   }
 
   static ImmutableSet<String> getGuardValues(Tree tree) {
