@@ -995,4 +995,25 @@ public final class UnusedMethodTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void localClassInPublicMethodExtendingPrivateClass() {
+    helper
+        .addSourceLines(
+            "Test.java",
+            """
+            public class Test {
+              private static class Base {
+                // BUG: Diagnostic contains: 'neverCalled' is never used
+                void neverCalled() {}
+              }
+
+              public Object make() {
+                class Local extends Base {}
+                return new Local();
+              }
+            }
+            """)
+        .doTest();
+  }
 }
