@@ -20,7 +20,6 @@ import static com.google.errorprone.matchers.Matchers.instanceMethod;
 
 import com.google.common.base.Enums;
 import com.google.common.base.Optional;
-import com.google.common.primitives.Longs;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -88,13 +87,13 @@ public final class TimeUnitConversionChecker extends BugChecker
     TimeUnit convertTo = methodNameToTimeUnit(methodName);
     ExpressionTree arg0 = tree.getArguments().getFirst();
 
-    // if we have a constant and can Long-parse it...
-    Long constant = Longs.tryParse(String.valueOf(state.getSourceForNode(arg0)));
+    Number constant = ASTHelpers.constValue(arg0, Number.class);
     if (constant != null) {
-      long converted = invokeConversion(receiver.get(), methodName, constant);
+      long value = constant.longValue();
+      long converted = invokeConversion(receiver.get(), methodName, value);
 
       // ... and the conversion results in 0 or 1, just inline it!
-      if (converted == 0 || converted == 1 || constant == converted) {
+      if (converted == 0 || converted == 1 || value == converted) {
         SuggestedFix fix = replaceTreeWith(tree, convertTo, converted + "L");
         return describeMatch(tree, fix);
       }

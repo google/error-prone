@@ -160,6 +160,10 @@ public class TimeUnitConversionCheckerTest {
               private static final long VALUE1 = TimeUnit.MILLISECONDS.toSeconds(4321);
               // BUG: Diagnostic contains: TimeUnitConversionChecker
               private static final long VALUE2 = TimeUnit.MILLISECONDS.toSeconds(-4321);
+              // BUG: Diagnostic contains: TimeUnitConversionChecker
+              private static final long VALUE3 = TimeUnit.MILLISECONDS.toSeconds(4_321L);
+              // BUG: Diagnostic contains: TimeUnitConversionChecker
+              private static final long VALUE4 = TimeUnit.MILLISECONDS.toSeconds(4320 + 1);
             }
             """)
         .doTest();
