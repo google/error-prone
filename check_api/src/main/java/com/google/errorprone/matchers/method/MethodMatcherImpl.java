@@ -97,6 +97,15 @@ final class MethodMatcherImpl
         baseMatcher, ImmutableList.<Constraint>builder().addAll(this.constraints).add(c).build());
   }
 
+  /**
+   * Adds a constraint to the beginning of the list, for cheap, side-effect-free constraints (such
+   * as on the method's name) that should be tested before slower ones (such as subtyping checks).
+   */
+  private MethodMatcherImpl prepend(Constraint c) {
+    return new MethodMatcherImpl(
+        baseMatcher, ImmutableList.<Constraint>builder().add(c).addAll(this.constraints).build());
+  }
+
   @Override
   public boolean matches(ExpressionTree tree, VisitorState state) {
     MatchState method = baseMatcher.match(tree);
@@ -221,7 +230,7 @@ final class MethodMatcherImpl
         !name.contains("(") && !name.contains(")"),
         "method name (%s) cannot contain parentheses; use \"foo\" instead of \"foo()\"",
         name);
-    return append((m, s) -> m.sym().getSimpleName().contentEquals(name));
+    return prepend((m, s) -> m.sym().getSimpleName().contentEquals(name));
   }
 
   @Override
@@ -232,7 +241,7 @@ final class MethodMatcherImpl
   @Override
   public MethodNameMatcher namedAnyOf(Iterable<String> names) {
     ImmutableSet<String> expected = ImmutableSet.copyOf(names);
-    return append((m, s) -> expected.contains(m.sym().getSimpleName().toString()));
+    return prepend((m, s) -> expected.contains(m.sym().getSimpleName().toString()));
   }
 
   @Override
@@ -241,7 +250,7 @@ final class MethodMatcherImpl
   }
 
   private MethodNameMatcher stringConstraint(Predicate<String> constraint) {
-    return append((m, s) -> constraint.test(m.sym().getSimpleName().toString()));
+    return prepend((m, s) -> constraint.test(m.sym().getSimpleName().toString()));
   }
 
   @Override
