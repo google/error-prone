@@ -26,6 +26,7 @@ import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.sameVariable;
 import static com.google.errorprone.matchers.Matchers.toType;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.StandardTags;
@@ -54,25 +55,22 @@ public class NonAtomicVolatileUpdate extends BugChecker
 
   /** Extracts the expression from a UnaryTree and applies a matcher to it. */
   private static Matcher<UnaryTree> expressionFromUnaryTree(Matcher<ExpressionTree> exprMatcher) {
-    return (UnaryTree tree, VisitorState state) -> {
-      return exprMatcher.matches(tree.getExpression(), state);
-    };
+    return (UnaryTree tree, VisitorState state) ->
+        exprMatcher.matches(stripParentheses(tree.getExpression()), state);
   }
 
   /** Extracts the variable from a CompoundAssignmentTree and applies a matcher to it. */
   private static Matcher<CompoundAssignmentTree> variableFromCompoundAssignmentTree(
       Matcher<ExpressionTree> exprMatcher) {
-    return (CompoundAssignmentTree tree, VisitorState state) -> {
-      return exprMatcher.matches(tree.getVariable(), state);
-    };
+    return (CompoundAssignmentTree tree, VisitorState state) ->
+        exprMatcher.matches(stripParentheses(tree.getVariable()), state);
   }
 
   /** Extracts the variable from an AssignmentTree and applies a matcher to it. */
   private static Matcher<AssignmentTree> variableFromAssignmentTree(
       Matcher<ExpressionTree> exprMatcher) {
-    return (AssignmentTree tree, VisitorState state) -> {
-      return exprMatcher.matches(tree.getVariable(), state);
-    };
+    return (AssignmentTree tree, VisitorState state) ->
+        exprMatcher.matches(stripParentheses(tree.getVariable()), state);
   }
 
   /**
@@ -136,7 +134,8 @@ public class NonAtomicVolatileUpdate extends BugChecker
 
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {
-    if (assignmentIncrementDecrementMatcher(tree.getVariable()).matches(tree, state)) {
+    if (assignmentIncrementDecrementMatcher(stripParentheses(tree.getVariable()))
+        .matches(tree, state)) {
       return describeMatch(tree);
     }
     return Description.NO_MATCH;

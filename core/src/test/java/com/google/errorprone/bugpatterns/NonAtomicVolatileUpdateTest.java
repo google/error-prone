@@ -50,11 +50,19 @@ public class NonAtomicVolatileUpdateTest {
                 // BUG: Diagnostic contains:
                 myVolatileInt++;
                 // BUG: Diagnostic contains:
+                (myVolatileInt)++;
+                // BUG: Diagnostic contains:
                 ++myVolatileInt;
+                // BUG: Diagnostic contains:
+                ++(myVolatileInt);
                 // BUG: Diagnostic contains:
                 myVolatileInt += 1;
                 // BUG: Diagnostic contains:
+                (myVolatileInt) += 1;
+                // BUG: Diagnostic contains:
                 myVolatileInt = myVolatileInt + 1;
+                // BUG: Diagnostic contains:
+                (myVolatileInt) = myVolatileInt + 1;
                 // BUG: Diagnostic contains:
                 myVolatileInt = 1 + myVolatileInt;
 
