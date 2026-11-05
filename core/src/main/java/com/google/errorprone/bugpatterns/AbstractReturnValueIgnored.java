@@ -120,8 +120,16 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   private final Supplier<UnusedReturnValueMatcher> unusedReturnValueMatcher =
       memoize(() -> UnusedReturnValueMatcher.get(allowInExceptionThrowers()));
 
+  // Equivalent to allOf(unusedReturnValueMatcher.get(), this::isCheckReturnValue), but checks
+  // whether the return value is expected to be used before checking whether the context allows the
+  // value to be ignored, since the latter is relatively expensive and rarely relevant.
   private final Supplier<Matcher<ExpressionTree>> matcher =
-      memoize(() -> allOf(unusedReturnValueMatcher.get(), this::isCheckReturnValue));
+      memoize(
+          () ->
+              allOf(
+                  UnusedReturnValueMatcher::isReturnValueUnused,
+                  this::isCheckReturnValue,
+                  not(unusedReturnValueMatcher.get()::isAllowed)));
 
   private final Supplier<Matcher<MemberReferenceTree>> lostReferenceTreeMatcher =
       memoize(
