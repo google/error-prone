@@ -16,14 +16,12 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.google.errorprone.BugPattern;
@@ -32,6 +30,7 @@ import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.NewClassTreeMatcher;
 import com.google.errorprone.bugpatterns.argumentselectiondefects.NamedParameterComment;
+import com.google.errorprone.bugpatterns.argumentselectiondefects.NamedParameterComment.ParsedParameterComment;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.util.ASTHelpers;
@@ -55,7 +54,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import javax.inject.Inject;
-import org.safere.Matcher;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
 @BugPattern(
@@ -205,15 +203,14 @@ public class ParameterName extends BugChecker
         // happen to match the parameter comment format.
         continue;
       }
-      Matcher m =
-          NamedParameterComment.PARAMETER_COMMENT_PATTERN.matcher(
-              Comments.getTextFromComment(comment));
-      if (!m.matches()) {
+      Optional<ParsedParameterComment> parsed =
+          NamedParameterComment.parseParameterComment(Comments.getTextFromComment(comment));
+      if (parsed.isEmpty()) {
         continue;
       }
 
-      boolean isFormatCorrect = isVarargs(formal) ^ Strings.isNullOrEmpty(m.group(2));
-      String name = m.group(1);
+      boolean isFormatCorrect = isVarargs(formal) == parsed.get().varargs();
+      String name = parsed.get().name();
       boolean isNameCorrect = formal.getSimpleName().contentEquals(name);
 
       // If there are multiple parameter name comments, bail if any one of them is an exact match.
@@ -281,13 +278,14 @@ public class ParameterName extends BugChecker
   // complains on parameter name comments on varargs past the first one
   private void checkComment(ExpressionTree arg, ErrorProneToken token, VisitorState state) {
     for (ErrorProneComment comment : token.comments()) {
-      Matcher m =
-          NamedParameterComment.PARAMETER_COMMENT_PATTERN.matcher(
-              Comments.getTextFromComment(comment));
-      if (m.matches()) {
+      Optional<ParsedParameterComment> parsed =
+          NamedParameterComment.parseParameterComment(Comments.getTextFromComment(comment));
+      if (parsed.isPresent()) {
         SuggestedFix rewriteCommentFix =
             rewriteComment(
-                comment, String.format("/* %s%s */", m.group(1), firstNonNull(m.group(2), "")));
+                comment,
+                String.format(
+                    "/* %s%s */", parsed.get().name(), parsed.get().varargs() ? "..." : ""));
         state.reportMatch(
             buildDescription(arg)
                 .addFix(rewriteCommentFix)

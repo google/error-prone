@@ -1005,4 +1005,28 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void unicodeAndWhitespaceVariants() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(int $foo_1, int λ_2, int \uD835\uDCB0\uD835\uDFCE, int... args) {}
+
+              void test() {
+                f(
+                    /*\t$foo_1\f=\r*/ 1,
+                    /* λ_2 = */ 2,
+                    /* \uD835\uDCB0\uD835\uDFCE= */ 3,
+                    /* args...\t= */ 4,
+                    5);
+                // Non-ASCII whitespace (U+2000 EN QUAD) is not treated as a parameter comment.
+                f(/*\u2000wrong= */ 1, /* wrong\u2000= */ 2, /* wrong=\u2000*/ 3, /* args ...= */ 4);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

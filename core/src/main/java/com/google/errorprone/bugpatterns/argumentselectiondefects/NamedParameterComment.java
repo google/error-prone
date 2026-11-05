@@ -26,7 +26,6 @@ import com.sun.tools.javac.code.Symbol.MethodSymbol;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.safere.Matcher;
 import org.safere.Pattern;
 
 /**
@@ -38,9 +37,33 @@ import org.safere.Pattern;
  */
 public final class NamedParameterComment {
 
-  public static final Pattern PARAMETER_COMMENT_PATTERN =
-      Pattern.compile(
-          "\\s*(\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*)(\\Q...\\E)?\\s*=\\s*");
+  private static final CharMatcher ASCII_WHITESPACE = CharMatcher.anyOf(" \t\n\u000b\f\r");
+
+  /// A parsed `/* name= */` or `/* name...= */` parameter comment.
+  public record ParsedParameterComment(String name, boolean varargs) {}
+
+  /// Parses the text of a block comment (without the surrounding `/*` and `*/`) as a named
+  /// parameter comment of the form `\s*(identifier)(\Q...\E)?\s*=\s*`.
+  public static Optional<ParsedParameterComment> parseParameterComment(String s) {
+    s = ASCII_WHITESPACE.trimFrom(s);
+    if (!s.endsWith("=")) {
+      return Optional.empty();
+    }
+    s = ASCII_WHITESPACE.trimTrailingFrom(s.substring(0, s.length() - 1));
+    boolean varargs = s.endsWith("...");
+    if (varargs) {
+      s = s.substring(0, s.length() - 3);
+    }
+    return isJavaIdentifier(s)
+        ? Optional.of(new ParsedParameterComment(s, varargs))
+        : Optional.empty();
+  }
+
+  private static boolean isJavaIdentifier(String s) {
+    return !s.isEmpty()
+        && Character.isJavaIdentifierStart(s.codePointAt(0))
+        && s.codePoints().skip(1).allMatch(Character::isJavaIdentifierPart);
+  }
 
   private static final String PARAMETER_COMMENT_MARKER = "=";
 
@@ -101,12 +124,12 @@ public final class NamedParameterComment {
                 .filter(c -> c.getStyle() == ErrorProneCommentStyle.BLOCK));
 
     if (lastBlockComment.isPresent()) {
-      Matcher m =
-          PARAMETER_COMMENT_PATTERN.matcher(Comments.getTextFromComment(lastBlockComment.get()));
-      if (m.matches()) {
+      Optional<ParsedParameterComment> parsed =
+          parseParameterComment(Comments.getTextFromComment(lastBlockComment.get()));
+      if (parsed.isPresent()) {
         return MatchedComment.create(
             lastBlockComment,
-            m.group(1).equals(formal) ? MatchType.EXACT_MATCH : MatchType.BAD_MATCH);
+            parsed.get().name().equals(formal) ? MatchType.EXACT_MATCH : MatchType.BAD_MATCH);
       }
     }
 

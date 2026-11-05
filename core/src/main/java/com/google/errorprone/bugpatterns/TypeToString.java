@@ -25,6 +25,7 @@ import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
+import com.google.common.base.Splitter;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -42,7 +43,6 @@ import com.sun.tools.javac.code.Type;
 import java.util.Optional;
 import javax.inject.Inject;
 import javax.lang.model.type.TypeKind;
-import org.safere.Pattern;
 
 /**
  * Flags {@code javax.lang.model.type.TypeMirror#toString} usage in {@link BugChecker}s.
@@ -143,17 +143,23 @@ public class TypeToString extends AbstractToString {
     return Optional.empty();
   }
 
-  // Regex pattern for fully-qualified Java class or package names.
-  private static final String JAVA_CLASS_NAME_REGEX =
-      "(\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*\\.)*"
-          + "\\p{javaJavaIdentifierStart}\\p{javaJavaIdentifierPart}*";
-  private static final Pattern JAVA_CLASS_NAME_PATTERN = Pattern.compile(JAVA_CLASS_NAME_REGEX);
+  private static final Splitter DOT_SPLITTER = Splitter.on('.');
+
+  private static boolean isJavaClassName(String s) {
+    return DOT_SPLITTER.splitToStream(s).allMatch(TypeToString::isJavaIdentifier);
+  }
+
+  private static boolean isJavaIdentifier(String s) {
+    return !s.isEmpty()
+        && Character.isJavaIdentifierStart(s.codePointAt(0))
+        && s.codePoints().skip(1).allMatch(Character::isJavaIdentifierPart);
+  }
 
   static Optional<String> constantTypeNameFix(
       SuggestedFix.Builder fix, String lhs, Tree rhsTree, boolean negate, VisitorState state) {
     String prefix = negate ? "!" : "";
     String rhs = ASTHelpers.constValue(rhsTree, String.class);
-    if (rhs == null || !JAVA_CLASS_NAME_PATTERN.matcher(rhs).matches()) {
+    if (rhs == null || !isJavaClassName(rhs)) {
       // Only fix compile-time constant strings that look like class or primitive types, to avoid
       // incorrect fixes for generics
       return Optional.empty();

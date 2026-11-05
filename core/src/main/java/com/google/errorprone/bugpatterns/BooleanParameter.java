@@ -133,9 +133,8 @@ public class BooleanParameter extends BugChecker
         .filter(c -> c.getStyle() == ErrorProneCommentStyle.BLOCK)
         .anyMatch(
             c ->
-                NamedParameterComment.PARAMETER_COMMENT_PATTERN
-                    .matcher(Comments.getTextFromComment(c))
-                    .matches());
+                NamedParameterComment.parseParameterComment(Comments.getTextFromComment(c))
+                    .isPresent());
   }
 
   private static boolean isBooleanLiteral(ExpressionTree tree) {

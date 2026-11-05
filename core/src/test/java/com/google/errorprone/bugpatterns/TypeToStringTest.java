@@ -299,4 +299,83 @@ public class TypeToStringTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void classNameIdentifierVariants() {
+    BugCheckerRefactoringTestHelper.newInstance(TypeToString.class, getClass())
+        .addInputLines(
+            "Example.java",
+            """
+            import javax.lang.model.type.TypeMirror;
+            import javax.lang.model.util.Elements;
+            import javax.lang.model.util.Types;
+
+            class Example {
+              void valid(TypeMirror type, Types types, Elements elements) {
+                if (type.toString().equals("SingleSegment")) {}
+                if (type.toString().equals("a.b.$Foo._Bar$1")) {}
+                if (type.toString().equals("com.example.λ.α_1")) {}
+                if (type.toString().equals("com.example.𝒰.a𝟎")) {}
+                if (type.toString().equals("int")) {}
+                if (type.toString().equals("boolean")) {}
+                if (type.toString().equals("default")) {}
+              }
+
+              void invalid(TypeMirror type, Types types, Elements elements) {
+                if (type.toString().equals("")) {}
+                if (type.toString().equals(".")) {}
+                if (type.toString().equals("a..b")) {}
+                if (type.toString().equals(".a")) {}
+                if (type.toString().equals("a.")) {}
+                if (type.toString().equals("1a")) {}
+                if (type.toString().equals("a.1b")) {}
+                if (type.toString().equals("𝟎")) {}
+                if (type.toString().equals("a.𝟎")) {}
+                if (type.toString().equals("java.util.List<String>")) {}
+                if (type.toString().equals("java.lang.String[]")) {}
+                if (type.toString().equals(" java.lang.String")) {}
+                if (type.toString().equals("java.lang.String ")) {}
+              }
+            }
+            """)
+        .addOutputLines(
+            "Example.java",
+            """
+            import java.util.Objects;
+            import javax.lang.model.type.TypeKind;
+            import javax.lang.model.type.TypeMirror;
+            import javax.lang.model.util.Elements;
+            import javax.lang.model.util.Types;
+
+            class Example {
+              void valid(TypeMirror type, Types types, Elements elements) {
+                if (Objects.equals(types.asElement(type), elements.getTypeElement("SingleSegment"))) {}
+                if (Objects.equals(types.asElement(type), elements.getTypeElement("a.b.$Foo._Bar$1"))) {}
+                if (Objects.equals(types.asElement(type), elements.getTypeElement("com.example.λ.α_1"))) {}
+                if (Objects.equals(types.asElement(type), elements.getTypeElement("com.example.𝒰.a𝟎"))) {}
+                if (type.getKind() == TypeKind.INT) {}
+                if (type.getKind() == TypeKind.BOOLEAN) {}
+                if (Objects.equals(types.asElement(type), elements.getTypeElement("default"))) {}
+              }
+
+              void invalid(TypeMirror type, Types types, Elements elements) {
+                if (type.toString().equals("")) {}
+                if (type.toString().equals(".")) {}
+                if (type.toString().equals("a..b")) {}
+                if (type.toString().equals(".a")) {}
+                if (type.toString().equals("a.")) {}
+                if (type.toString().equals("1a")) {}
+                if (type.toString().equals("a.1b")) {}
+                if (type.toString().equals("𝟎")) {}
+                if (type.toString().equals("a.𝟎")) {}
+                if (type.toString().equals("java.util.List<String>")) {}
+                if (type.toString().equals("java.lang.String[]")) {}
+                if (type.toString().equals(" java.lang.String")) {}
+                if (type.toString().equals("java.lang.String ")) {}
+              }
+            }
+            """)
+        .addModules("jdk.compiler/com.sun.tools.javac.code")
+        .doTest();
+  }
 }
