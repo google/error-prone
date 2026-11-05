@@ -539,6 +539,7 @@ import com.google.errorprone.bugpatterns.formatstring.FormatStringAnnotationChec
 import com.google.errorprone.bugpatterns.formatstring.FormatStringShouldUsePlaceholders;
 import com.google.errorprone.bugpatterns.formatstring.InlineFormatString;
 import com.google.errorprone.bugpatterns.formatstring.LenientFormatStringValidation;
+import com.google.errorprone.bugpatterns.formatstring.PreferFormatMethod;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnConstructors;
 import com.google.errorprone.bugpatterns.inject.AssistedInjectAndInjectOnSameConstructor;
 import com.google.errorprone.bugpatterns.inject.AutoFactoryAtInject;
@@ -1321,6 +1322,7 @@ public final class BuiltInCheckerSuppliers {
           PackageLocation.class,
           ParameterComment.class,
           ParameterMissingNullable.class,
+          PreferFormatMethod.class,
           PreferJavaTimeOverload.class,
           PreferPreconditions.class,
           PreferredInterfaceType.class,
