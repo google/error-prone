@@ -55,15 +55,11 @@ loadScripts(document, 'script');</script>
 <div class="toc-header">Contents&nbsp;<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false"><input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset"></div>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
-<li><a href="#field-summary" tabindex="0">Field Summary</a></li>
+<li><a href="#nested-class-summary" tabindex="0">Nested Class Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
-<li><a href="#field-detail" tabindex="0">Field Details</a>
-<ol class="toc-list">
-<li><a href="#PARAMETER_COMMENT_PATTERN" tabindex="0">PARAMETER_COMMENT_PATTERN</a></li>
-</ol>
-</li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#parseParameterComment(java.lang.String)" tabindex="0">parseParameterComment(String)</a></li>
 <li><a href="#containsSyntheticParameterName(com.sun.tools.javac.code.Symbol.MethodSymbol)" tabindex="0">containsSyntheticParameterName(Symbol.MethodSymbol)</a></li>
 </ol>
 </li>
@@ -91,18 +87,20 @@ which ends with an equals sign.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- =========== FIELD SUMMARY =========== -->
+<!-- ======== NESTED CLASS SUMMARY ======== -->
 <li>
-<section class="field-summary" id="field-summary">
-<h2>Field Summary</h2>
-<div class="caption"><span>Fields</span></div>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Field</div>
+<div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final org.safere.Pattern</code></div>
-<div class="col-second even-row-color"><code><a href="#PARAMETER_COMMENT_PATTERN" class="member-name-link">PARAMETER_COMMENT_PATTERN</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="NamedParameterComment.ParsedParameterComment.html" class="type-name-link" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">NamedParameterComment.ParsedParameterComment</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">A parsed <code>/* name= */</code> or <code>/* name...= */</code> parameter comment.</div>
+</div>
 </div>
 </section>
 </li>
@@ -123,6 +121,12 @@ which ends with an equals sign.</div>
 <div class="block">Returns true if the method has synthetic parameter names, indicating the real names are not
 available.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="NamedParameterComment.ParsedParameterComment.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">NamedParameterComment.ParsedParameterComment</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#parseParameterComment(java.lang.String)" class="member-name-link">parseParameterComment</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Parses the text of a block comment (without the surrounding <code>/*</code> and <code>*/</code>) as a named
+parameter comment of the form `\s*(identifier)(\Q...\E)?</div>
+</div>
 </div>
 </div>
 </div>
@@ -135,27 +139,21 @@ available.</div>
 </section>
 <section class="details">
 <ul class="details-list">
-<!-- ============ FIELD DETAIL =========== -->
-<li>
-<section class="field-details" id="field-detail">
-<h2>Field Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="PARAMETER_COMMENT_PATTERN">
-<h3>PARAMETER_COMMENT_PATTERN</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type">org.safere.Pattern</span>&nbsp;<span class="element-name">PARAMETER_COMMENT_PATTERN</span></div>
-</div>
-</section>
-</li>
-</ul>
-</section>
-</li>
 <!-- ============ METHOD DETAIL ========== -->
 <li>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="parseParameterComment(java.lang.String)">
+<h3>parseParameterComment</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="NamedParameterComment.ParsedParameterComment.html" title="class in com.google.errorprone.bugpatterns.argumentselectiondefects">NamedParameterComment.ParsedParameterComment</a>&gt;</span>&nbsp;<span class="element-name">parseParameterComment</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</span></div>
+<div class="block">Parses the text of a block comment (without the surrounding <code>/*</code> and <code>*/</code>) as a named
+parameter comment of the form <code>\s*(identifier)(\Q...\E)?\s*=\s*</code>.</div>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="containsSyntheticParameterName(com.sun.tools.javac.code.Symbol.MethodSymbol)">
 <h3>containsSyntheticParameterName</h3>
