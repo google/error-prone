@@ -1029,4 +1029,23 @@ class Test {
             """)
         .doTest();
   }
+
+  @Test
+  public void commentAfterDivision() {
+    testHelper
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              void f(int a, int b) {}
+
+              void g(int x) {
+                f(x / 2, x);
+                // BUG: Diagnostic contains: does not match formal parameter name `b`
+                f(x / 2, /* c= */ x);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

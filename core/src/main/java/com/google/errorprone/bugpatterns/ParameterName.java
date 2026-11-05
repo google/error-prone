@@ -106,13 +106,16 @@ public class ParameterName extends BugChecker
     if (arguments.isEmpty()) {
       return;
     }
-    MethodSymbol sym = (MethodSymbol) ASTHelpers.getSymbol(tree);
-    if (NamedParameterComment.containsSyntheticParameterName(sym)) {
-      return;
-    }
     int start = argListStartPosition;
     if (start == Position.NOPOS) {
       // best effort work-around for https://github.com/google/error-prone/issues/780
+      return;
+    }
+    if (!mayContainComments(start, arguments.getLast(), state)) {
+      return;
+    }
+    MethodSymbol sym = (MethodSymbol) ASTHelpers.getSymbol(tree);
+    if (NamedParameterComment.containsSyntheticParameterName(sym)) {
       return;
     }
     String enclosingClass = ASTHelpers.enclosingClass(sym).toString();
@@ -148,6 +151,29 @@ public class ParameterName extends BugChecker
       start =
           processArgument(positions.get(), start, state, tok -> checkComment(argument, tok, state));
     }
+  }
+
+  /**
+   * Returns false if there are definitely no comments between {@code start} and the end of {@code
+   * lastArgument}, which (as the positions of arguments are increasing) contains all the source
+   * that {@link #checkArguments} tokenizes.
+   *
+   * <p>This is a cheap pre-check to avoid looking up symbols and re-tokenizing the arguments of
+   * every call. It ignores comments that start with a unicode escape for {@code /}.
+   */
+  private static boolean mayContainComments(
+      int start, ExpressionTree lastArgument, VisitorState state) {
+    int end = state.getEndPosition(lastArgument);
+    if (end == Position.NOPOS) {
+      return true;
+    }
+    CharSequence source = state.getSourceCode();
+    for (int i = start; i < end; i++) {
+      if (source.charAt(i) == '/') {
+        return true;
+      }
+    }
+    return false;
   }
 
   /** Returns the source span for a tree, or empty if the position information is not available. */
