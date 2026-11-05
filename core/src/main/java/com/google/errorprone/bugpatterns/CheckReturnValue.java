@@ -16,7 +16,6 @@
 
 package com.google.errorprone.bugpatterns;
 
-import static com.google.common.collect.ImmutableList.toImmutableList;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.bugpatterns.CheckReturnValue.MessageTrailerStyle.NONE;
 import static com.google.errorprone.bugpatterns.checkreturnvalue.AutoValueRules.autoBuilders;
@@ -309,9 +308,14 @@ public class CheckReturnValue extends AbstractReturnValueIgnored
   }
 
   private static ImmutableList<String> presentCrvRelevantAnnotations(Symbol symbol) {
-    return MUTUALLY_EXCLUSIVE_ANNOTATIONS.stream()
-        .filter(a -> hasDirectAnnotationWithSimpleName(symbol, a))
-        .collect(toImmutableList());
+    // This is called for every method and class, so avoid the overhead of a stream.
+    ImmutableList.Builder<String> present = ImmutableList.builder();
+    for (String annotation : MUTUALLY_EXCLUSIVE_ANNOTATIONS) {
+      if (hasDirectAnnotationWithSimpleName(symbol, annotation)) {
+        present.add(annotation);
+      }
+    }
+    return present.build();
   }
 
   /**
