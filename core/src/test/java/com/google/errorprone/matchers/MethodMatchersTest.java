@@ -20,6 +20,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
+import static com.google.errorprone.matchers.method.MethodMatchers.anyMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 
 import com.google.errorprone.BugPattern;
@@ -31,6 +32,7 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.method.MethodMatchers;
 import com.google.errorprone.matchers.method.MethodMatchers.MethodNameMatcher;
+import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -269,6 +271,102 @@ public class MethodMatchersTest {
                 // These ones are ok
                 this.anotherMethod();
                 Test.yetAnother();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /**
+   * BugChecker verifying that cheap constraints (staticness, exact name, arity) are checked before
+   * evaluating the class predicate.
+   */
+  @BugPattern(summary = "", severity = ERROR)
+  public static class ConstraintOrderChecker extends BugChecker
+      implements MethodInvocationTreeMatcher {
+    private static final Matcher<ExpressionTree> MATCHER =
+        instanceMethod()
+            .onClass(
+                (type, state) -> {
+                  if (!type.tsym.getSimpleName().contentEquals("TargetOwner")) {
+                    throw new AssertionError("Unexpected class check on " + type);
+                  }
+                  return true;
+                })
+            .named("target")
+            .withParameters("java.lang.String");
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      return MATCHER.matches(tree, state) ? describeMatch(tree) : NO_MATCH;
+    }
+  }
+
+  @Test
+  public void constraintEvaluationOrder() {
+    CompilationTestHelper.newInstance(ConstraintOrderChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            class OtherOwner {
+              void unrelated(String s) {}
+
+              void target() {}
+
+              void target(String a, String b) {}
+
+              static void target(String s) {}
+            }
+
+            class TargetOwner {
+              void target(String s) {}
+
+              void test(OtherOwner other) {
+                other.unrelated("a");
+                other.target();
+                other.target("a", "b");
+                OtherOwner.target("a");
+                // BUG: Diagnostic contains:
+                this.target("a");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  /** BugChecker verifying that method matchers return false for a null tree. */
+  @BugPattern(summary = "", severity = ERROR)
+  public static class NullReceiverChecker extends BugChecker
+      implements MethodInvocationTreeMatcher {
+    private static final Matcher<ExpressionTree> MATCHER =
+        Matchers.anyOf(
+            instanceMethod().anyClass().named("f"),
+            staticMethod().anyClass().named("f"),
+            anyMethod().anyClass().named("f"),
+            constructor().forClass("Test"));
+
+    @Override
+    public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {
+      // getReceiver returns null for unqualified method invocations
+      return MATCHER.matches(ASTHelpers.getReceiver(tree), state) ? describeMatch(tree) : NO_MATCH;
+    }
+  }
+
+  @Test
+  public void nullTree() {
+    CompilationTestHelper.newInstance(NullReceiverChecker.class, getClass())
+        .addSourceLines(
+            "Test.java",
+            """
+            class Test {
+              Test f() {
+                return this;
+              }
+
+              void test() {
+                f();
+                // BUG: Diagnostic contains:
+                f().f();
               }
             }
             """)
