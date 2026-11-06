@@ -16,6 +16,8 @@
 
 package com.google.errorprone.bugpatterns.argumentselectiondefects;
 
+import static javax.lang.model.SourceVersion.isIdentifier;
+
 import com.google.common.base.CharMatcher;
 import com.google.common.collect.Streams;
 import com.google.errorprone.util.Commented;
@@ -54,15 +56,7 @@ public final class NamedParameterComment {
     if (varargs) {
       s = s.substring(0, s.length() - 3);
     }
-    return isJavaIdentifier(s)
-        ? Optional.of(new ParsedParameterComment(s, varargs))
-        : Optional.empty();
-  }
-
-  private static boolean isJavaIdentifier(String s) {
-    return !s.isEmpty()
-        && Character.isJavaIdentifierStart(s.codePointAt(0))
-        && s.codePoints().skip(1).allMatch(Character::isJavaIdentifierPart);
+    return isIdentifier(s) ? Optional.of(new ParsedParameterComment(s, varargs)) : Optional.empty();
   }
 
   private static final String PARAMETER_COMMENT_MARKER = "=";

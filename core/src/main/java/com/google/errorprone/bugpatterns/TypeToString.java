@@ -24,8 +24,8 @@ import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
+import static javax.lang.model.SourceVersion.isName;
 
-import com.google.common.base.Splitter;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
@@ -143,25 +143,11 @@ public class TypeToString extends AbstractToString {
     return Optional.empty();
   }
 
-  private static final Splitter DOT_SPLITTER = Splitter.on('.');
-
-  private static boolean isJavaClassName(String s) {
-    return DOT_SPLITTER.splitToStream(s).allMatch(TypeToString::isJavaIdentifier);
-  }
-
-  private static boolean isJavaIdentifier(String s) {
-    return !s.isEmpty()
-        && Character.isJavaIdentifierStart(s.codePointAt(0))
-        && s.codePoints().skip(1).allMatch(Character::isJavaIdentifierPart);
-  }
-
   static Optional<String> constantTypeNameFix(
       SuggestedFix.Builder fix, String lhs, Tree rhsTree, boolean negate, VisitorState state) {
     String prefix = negate ? "!" : "";
     String rhs = ASTHelpers.constValue(rhsTree, String.class);
-    if (rhs == null || !isJavaClassName(rhs)) {
-      // Only fix compile-time constant strings that look like class or primitive types, to avoid
-      // incorrect fixes for generics
+    if (rhs == null) {
       return Optional.empty();
     }
     return primitiveOrVoidKind(rhs)
@@ -177,6 +163,11 @@ public class TypeToString extends AbstractToString {
                         kind)))
         .orElseGet(
             () -> {
+              if (!isName(rhs)) {
+                // Only fix compile-time constant strings that look like class names, to avoid
+                // incorrect fixes for generics
+                return Optional.empty();
+              }
               // type.toString().equals("java.lang.Object") ->
               //    java.util.Objects.equals(type, elements.getTypeElement("java.lang.Object")
               var typesExprOpt = ProcessingEnvUtils.getTypesExpr(state);

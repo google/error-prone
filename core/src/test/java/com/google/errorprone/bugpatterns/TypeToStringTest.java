@@ -316,9 +316,9 @@ public class TypeToStringTest {
                 if (type.toString().equals("a.b.$Foo._Bar$1")) {}
                 if (type.toString().equals("com.example.λ.α_1")) {}
                 if (type.toString().equals("com.example.𝒰.a𝟎")) {}
+                if (type.toString().equals("com.example.record.var")) {}
                 if (type.toString().equals("int")) {}
                 if (type.toString().equals("boolean")) {}
-                if (type.toString().equals("default")) {}
               }
 
               void invalid(TypeMirror type, Types types, Elements elements) {
@@ -331,6 +331,9 @@ public class TypeToStringTest {
                 if (type.toString().equals("a.1b")) {}
                 if (type.toString().equals("𝟎")) {}
                 if (type.toString().equals("a.𝟎")) {}
+                if (type.toString().equals("default")) {}
+                if (type.toString().equals("a.default.b")) {}
+                if (type.toString().equals("_")) {}
                 if (type.toString().equals("java.util.List<String>")) {}
                 if (type.toString().equals("java.lang.String[]")) {}
                 if (type.toString().equals(" java.lang.String")) {}
@@ -353,9 +356,9 @@ public class TypeToStringTest {
                 if (Objects.equals(types.asElement(type), elements.getTypeElement("a.b.$Foo._Bar$1"))) {}
                 if (Objects.equals(types.asElement(type), elements.getTypeElement("com.example.λ.α_1"))) {}
                 if (Objects.equals(types.asElement(type), elements.getTypeElement("com.example.𝒰.a𝟎"))) {}
+                if (Objects.equals(types.asElement(type), elements.getTypeElement("com.example.record.var"))) {}
                 if (type.getKind() == TypeKind.INT) {}
                 if (type.getKind() == TypeKind.BOOLEAN) {}
-                if (Objects.equals(types.asElement(type), elements.getTypeElement("default"))) {}
               }
 
               void invalid(TypeMirror type, Types types, Elements elements) {
@@ -368,6 +371,9 @@ public class TypeToStringTest {
                 if (type.toString().equals("a.1b")) {}
                 if (type.toString().equals("𝟎")) {}
                 if (type.toString().equals("a.𝟎")) {}
+                if (type.toString().equals("default")) {}
+                if (type.toString().equals("a.default.b")) {}
+                if (type.toString().equals("_")) {}
                 if (type.toString().equals("java.util.List<String>")) {}
                 if (type.toString().equals("java.lang.String[]")) {}
                 if (type.toString().equals(" java.lang.String")) {}
