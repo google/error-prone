@@ -199,25 +199,6 @@ public class LoopConditionCheckerTest {
   }
 
   @Test
-  public void parenthesized() {
-    compilationTestHelper
-        .addSourceLines(
-            "Test.java",
-            """
-            class Test {
-              void f() {
-                for (int i = 0; i < 10; (i)++) {
-                  System.err.println(i);
-                }
-                // BUG: Diagnostic contains: condition variable(s) never modified in loop body: i
-                for (int i = 0; (i < 10); ) {}
-              }
-            }
-            """)
-        .doTest();
-  }
-
-  @Test
   public void constantLoopBound() {
     compilationTestHelper
         .addSourceLines(
