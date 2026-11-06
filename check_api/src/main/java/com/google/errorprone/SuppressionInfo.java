@@ -16,22 +16,25 @@
 
 package com.google.errorprone;
 
+import static com.google.common.collect.Sets.difference;
+import static com.google.errorprone.VisitorState.memoize;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.annotations.CheckReturnValue;
 import com.google.errorprone.annotations.Immutable;
 import com.google.errorprone.matchers.Suppressible;
+import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.MoreAnnotations;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
 import com.sun.source.util.SimpleTreeVisitor;
+import com.sun.tools.javac.code.Attribute.Compound;
 import com.sun.tools.javac.code.Symbol;
 import com.sun.tools.javac.code.Symbol.TypeSymbol;
 import com.sun.tools.javac.util.Name;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import javax.lang.model.element.AnnotationMirror;
 
@@ -48,11 +51,23 @@ import javax.lang.model.element.AnnotationMirror;
 @CheckReturnValue
 public final class SuppressionInfo {
   public static final SuppressionInfo EMPTY =
-      new SuppressionInfo(ImmutableSet.of(), ImmutableSet.of(), false);
+      new SuppressionInfo(
+          /* suppressWarningsStrings= */ ImmutableSet.of(),
+          /* hasSuppressWarningsAll= */ false,
+          /* customSuppressions= */ ImmutableSet.of(),
+          /* inGeneratedCode= */ false);
 
   private static final ClassName ANDROID_SUPPRESS_LINT =
       ClassName.of("android.annotation.SuppressLint");
+  private static final Supplier<Name> GENERATED = memoize(state -> state.getName("Generated"));
+
+  /**
+   * Strings present in {@code @SuppressWarnings} or {@code @SuppressLint}, except {@code "all"}
+   * (which sets {@link #hasSuppressWarningsAll} instead).
+   */
   private final ImmutableSet<String> suppressWarningsStrings;
+
+  private final boolean hasSuppressWarningsAll;
 
   @SuppressWarnings("Immutable") /* Name is javac's interned version of a string. */
   private final ImmutableSet<Name> customSuppressions;
@@ -60,14 +75,28 @@ public final class SuppressionInfo {
   private final boolean inGeneratedCode;
 
   private SuppressionInfo(
-      Set<String> suppressWarningsStrings, Set<Name> customSuppressions, boolean inGeneratedCode) {
-    this.suppressWarningsStrings = ImmutableSet.copyOf(suppressWarningsStrings);
+      ImmutableSet<String> suppressWarningsStrings,
+      boolean hasSuppressWarningsAll,
+      Set<Name> customSuppressions,
+      boolean inGeneratedCode) {
+    this.suppressWarningsStrings = suppressWarningsStrings;
+    this.hasSuppressWarningsAll = hasSuppressWarningsAll;
     this.customSuppressions = ImmutableSet.copyOf(customSuppressions);
     this.inGeneratedCode = inGeneratedCode;
   }
 
-  private static boolean isGenerated(Symbol sym) {
-    return !ASTHelpers.getGeneratedBy(sym).isEmpty();
+  private static boolean isGenerated(Symbol sym, VisitorState state) {
+    var attributes = sym.getRawAttributes();
+    if (attributes.isEmpty()) {
+      return false;
+    }
+    Name generated = GENERATED.get(state);
+    for (Compound attribute : attributes) {
+      if (attribute.type.tsym.getSimpleName().equals(generated)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -83,8 +112,9 @@ public final class SuppressionInfo {
       return SuppressedState.SUPPRESSED;
     }
     if (suppressible.supportsSuppressWarnings()
-        && (suppressWarningsStrings.contains("all")
-            || !Collections.disjoint(suppressible.allNames(), suppressWarningsStrings))) {
+        && (hasSuppressWarningsAll
+            || (!suppressWarningsStrings.isEmpty()
+                && !Collections.disjoint(suppressible.allNames(), suppressWarningsStrings)))) {
       return SuppressedState.SUPPRESSED;
     }
     if (suppressible.suppressedByAnyOf(customSuppressions, state)) {
@@ -99,7 +129,6 @@ public final class SuppressionInfo {
    * {@code isGenerated} is determined by inspecting the annotations of the outermost class so that
    * matchers on {@link CompilationUnitTree} will also be suppressed.
    */
-  // TODO(cpovirk): Remove this unused `state` parameter?
   public SuppressionInfo forCompilationUnit(CompilationUnitTree tree, VisitorState state) {
     var visitor =
         new SimpleTreeVisitor<Void, Void>() {
@@ -107,12 +136,13 @@ public final class SuppressionInfo {
 
           @Override
           public Void visitClass(ClassTree node, Void unused) {
-            generated |= isGenerated(getSymbol(node));
+            generated = generated || isGenerated(getSymbol(node), state);
             return null;
           }
         };
     visitor.visit(tree.getTypeDecls(), null);
-    return new SuppressionInfo(suppressWarningsStrings, customSuppressions, visitor.generated);
+    return new SuppressionInfo(
+        suppressWarningsStrings, hasSuppressWarningsAll, customSuppressions, visitor.generated);
   }
 
   /**
@@ -132,12 +162,17 @@ public final class SuppressionInfo {
    */
   public SuppressionInfo withExtendedSuppressions(
       Symbol sym, VisitorState state, Set<? extends Name> customSuppressionAnnosToLookFor) {
-    boolean newInGeneratedCode = inGeneratedCode || isGenerated(sym);
+    boolean newInGeneratedCode = inGeneratedCode || isGenerated(sym, state);
     boolean anyModification = newInGeneratedCode != inGeneratedCode;
 
     /* Handle custom suppression annotations. */
-    Set<Name> lookingFor = new HashSet<>(customSuppressionAnnosToLookFor);
-    lookingFor.removeAll(customSuppressions);
+    Set<? extends Name> lookingFor =
+        difference(customSuppressionAnnosToLookFor, customSuppressions);
+    /*
+     * TODO(cpovirk): Inline annotationsAmong logic here (but it handles @Inherited!), and change
+     * this logic to look more like the SuppressWarnings+SuppressLint handling below, including
+     * avoiding constructing even the lookingFor view?
+     */
     Set<Name> newlyPresent = ASTHelpers.annotationsAmong(sym, lookingFor, state);
     Set<Name> newCustomSuppressions;
     if (!newlyPresent.isEmpty()) {
@@ -150,17 +185,25 @@ public final class SuppressionInfo {
 
     /* Handle {@code @SuppressWarnings} and {@code @SuppressLint}. */
     Name suppressLint = ANDROID_SUPPRESS_LINT.binaryName(state);
-    Set<String> newSuppressions = null;
+    boolean newHasSuppressWarningsAll = hasSuppressWarningsAll;
+    ImmutableSet.Builder<String> newSuppressions = null;
     // Iterate over annotations on this symbol, looking for SuppressWarnings
     for (AnnotationMirror attr : sym.getAnnotationMirrors()) {
       TypeSymbol tsym = MoreAnnotations.asElement(attr);
       if (tsym.equals(state.getSymtab().suppressWarningsType.tsym)
           || tsym.flatName().equals(suppressLint)) {
         for (String suppressedWarning : MoreAnnotations.getStrings(attr, "value")) {
-          if (!suppressWarningsStrings.contains(suppressedWarning)) {
+          if (suppressedWarning.equals("all")) {
+            if (!newHasSuppressWarningsAll) {
+              newHasSuppressWarningsAll = true;
+              anyModification = true;
+            }
+          } else if (!suppressWarningsStrings.contains(suppressedWarning)) {
             anyModification = true;
             if (newSuppressions == null) {
-              newSuppressions = new HashSet<>(suppressWarningsStrings);
+              newSuppressions =
+                  ImmutableSet.builderWithExpectedSize(suppressWarningsStrings.size() + 1);
+              newSuppressions.addAll(suppressWarningsStrings);
             }
             newSuppressions.add(suppressedWarning);
           }
@@ -174,10 +217,11 @@ public final class SuppressionInfo {
       return this;
     }
 
-    if (newSuppressions == null) {
-      newSuppressions = suppressWarningsStrings;
-    }
-    return new SuppressionInfo(newSuppressions, newCustomSuppressions, newInGeneratedCode);
+    return new SuppressionInfo(
+        newSuppressions == null ? suppressWarningsStrings : newSuppressions.build(),
+        newHasSuppressWarningsAll,
+        newCustomSuppressions,
+        newInGeneratedCode);
   }
 
   public enum SuppressedState {
