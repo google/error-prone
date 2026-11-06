@@ -129,6 +129,15 @@ public final class UnnecessaryQualifier extends BugChecker
         if (INJECTION_METHODS.stream().anyMatch(ip -> hasAnnotation(method, ip, state))) {
           return NO_MATCH;
         }
+        // CDI observer methods use qualifiers on both the event and additional injected parameters.
+        if (method.getParameters().stream()
+            .anyMatch(
+                parameter ->
+                    hasAnnotation(parameter, "javax.enterprise.event.Observes", state)
+                        || hasAnnotation(
+                            parameter, "javax.enterprise.event.ObservesAsync", state))) {
+          return NO_MATCH;
+        }
         if (method.getModifiers().getAnnotations().stream()
             .anyMatch(
                 anno -> getSymbol(anno).getSimpleName().toString().startsWith(PROVIDES_PREFIX))) {
