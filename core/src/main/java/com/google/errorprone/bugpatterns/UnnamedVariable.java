@@ -20,6 +20,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
+import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -32,16 +34,23 @@ import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.BlockTree;
 import com.sun.source.tree.CompilationUnitTree;
+import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.EnhancedForLoopTree;
+import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.ForLoopTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.LambdaExpressionTree;
+import com.sun.source.tree.MemberReferenceTree;
+import com.sun.source.tree.NewArrayTree;
+import com.sun.source.tree.SwitchExpressionTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TryTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.tools.javac.code.Symbol;
+import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.TypeTag;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +151,8 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
    *
    * <ul>
    *   <li>A local or resource variable.
-   *   <li>Part of an enhanced for loop or has a non-null initializer.
+   *   <li>Part of an enhanced for loop or has an initializer whose type can be inferred for {@code
+   *       var} (JLS 14.4.1).
    *   <li>Not part of a compound declaration (e.g., {@code int a, b;}).
    * </ul>
    */
@@ -154,11 +164,43 @@ public final class UnnamedVariable extends BugChecker implements CompilationUnit
         };
     boolean isForEachOrHasInitializer =
         path.getParentPath().getLeaf() instanceof EnhancedForLoopTree
-            || (tree.getInitializer() != null
-                && tree.getInitializer().getKind() != Tree.Kind.NULL_LITERAL);
+            || hasValidVarInitializer(tree.getInitializer());
     boolean isNotCompound = !isPartOfCompoundDeclaration(tree, path);
 
     return isLocalOrResource && isForEachOrHasInitializer && isNotCompound;
+  }
+
+  private static boolean hasValidVarInitializer(ExpressionTree initializer) {
+    if (initializer == null) {
+      return false;
+    }
+    Type type = getType(initializer);
+    if (type == null || type.getTag() == TypeTag.BOT || type.getTag() == TypeTag.VOID) {
+      return false;
+    }
+    if (initializer instanceof NewArrayTree newArray && newArray.getType() == null) {
+      return false;
+    }
+    return hasStandaloneType(initializer);
+  }
+
+  private static boolean hasStandaloneType(ExpressionTree tree) {
+    ExpressionTree stripped = stripParentheses(tree);
+    if (stripped instanceof LambdaExpressionTree || stripped instanceof MemberReferenceTree) {
+      return false;
+    }
+    if (stripped instanceof ConditionalExpressionTree conditional) {
+      return hasStandaloneType(conditional.getTrueExpression())
+          && hasStandaloneType(conditional.getFalseExpression());
+    }
+    if (stripped instanceof SwitchExpressionTree switchExpr) {
+      return switchExpr.getCases().stream()
+          .allMatch(
+              caseTree ->
+                  !(caseTree.getBody() instanceof ExpressionTree bodyExpr)
+                      || hasStandaloneType(bodyExpr));
+    }
+    return true;
   }
 
   /**
