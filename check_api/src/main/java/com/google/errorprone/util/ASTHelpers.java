@@ -1001,7 +1001,7 @@ public final class ASTHelpers {
         .get(
             annotationName,
             name -> {
-              if (name.equals(NULL_MARKED.binaryName(state))) {
+              if (name.equals(NULL_MARKED_ANNOTATION.binaryName(state))) {
                 /*
                  * We avoid searching for @Inherited on NullMarked not just because we already know
                  * the answer but also because the search would cause issues under --release 8 on
@@ -2448,8 +2448,6 @@ public final class ASTHelpers {
         // DEFAULT_CASE_LABEL is in Java 21, so we're stuck stringifying for now.
         || labels.stream().anyMatch(label -> label.getKind().name().equals("DEFAULT_CASE_LABEL"));
   }
-
-  private static final ClassName NULL_MARKED = ClassName.of(NULL_MARKED_ANNOTATION);
 
   private ASTHelpers() {}
 }

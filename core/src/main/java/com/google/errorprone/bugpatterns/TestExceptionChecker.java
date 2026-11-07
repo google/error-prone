@@ -20,7 +20,6 @@ import static com.google.common.collect.Iterables.getLast;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getStartPosition;
 
 import com.google.errorprone.BugPattern;
@@ -29,7 +28,6 @@ import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.JUnitMatchers;
-import com.google.errorprone.suppliers.Supplier;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
@@ -117,7 +115,7 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
    */
   private static @Nullable JCExpression deleteExpectedException(
       SuggestedFix.Builder fix, List<JCAnnotation> annotations, VisitorState state) {
-    Type testAnnotation = ORG_JUNIT_TEST.get(state);
+    Type testAnnotation = JUnitMatchers.JUNIT4_TEST_ANNOTATION.type(state);
     for (JCAnnotation annotationTree : annotations) {
       if (!ASTHelpers.isSameType(testAnnotation, annotationTree.type, state)) {
         continue;
@@ -154,7 +152,4 @@ public class TestExceptionChecker extends BugChecker implements MethodTreeMatche
       fix.replace(getStartPosition(tree), getStartPosition(arguments.get(idx + 1)), "");
     }
   }
-
-  private static final Supplier<Type> ORG_JUNIT_TEST =
-      typeFromString(JUnitMatchers.JUNIT4_TEST_ANNOTATION);
 }

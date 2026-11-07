@@ -31,7 +31,6 @@ import static java.util.stream.Collectors.joining;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.TryTreeMatcher;
 import com.google.errorprone.fixes.Fix;
@@ -217,7 +216,7 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
 
   /** Returns true if the given method symbol has a {@code @Test(expected=...)} annotation. */
   private static boolean isExpectedExceptionTest(MethodSymbol sym, VisitorState state) {
-    Compound attribute = sym.attribute(ORG_JUNIT_TEST.symbol(state));
+    Compound attribute = sym.attribute(JUnitMatchers.JUNIT4_TEST_ANNOTATION.symbol(state));
     if (attribute == null) {
       return false;
     }
@@ -244,7 +243,4 @@ public class CatchFail extends BugChecker implements TryTreeMatcher {
 
   private static final Supplier<Name> EXPECTED =
       VisitorState.memoize(state -> state.getName("expected"));
-
-  private static final ClassName ORG_JUNIT_TEST =
-      ClassName.of(JUnitMatchers.JUNIT4_TEST_ANNOTATION);
 }

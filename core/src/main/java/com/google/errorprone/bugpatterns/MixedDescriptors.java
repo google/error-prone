@@ -18,9 +18,8 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
-import static com.google.errorprone.matchers.ProtobufMatchers.DESCRIPTOR_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.DESCRIPTOR;
 import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_CLASS;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.enclosingPackage;
@@ -57,10 +56,10 @@ import java.util.Optional;
 public final class MixedDescriptors extends BugChecker implements MethodInvocationTreeMatcher {
 
   private static final Matcher<ExpressionTree> GET_DESCRIPTOR =
-      staticMethod().onDescendantOf(MESSAGE_CLASS).named("getDescriptor");
+      staticMethod().onDescendantOf(MESSAGE).named("getDescriptor");
 
   private static final Matcher<ExpressionTree> FIND_FIELD =
-      instanceMethod().onDescendantOf(DESCRIPTOR_CLASS).named("findFieldByNumber");
+      instanceMethod().onDescendantOf(DESCRIPTOR).named("findFieldByNumber");
 
   @Override
   public Description matchMethodInvocation(MethodInvocationTree tree, VisitorState state) {

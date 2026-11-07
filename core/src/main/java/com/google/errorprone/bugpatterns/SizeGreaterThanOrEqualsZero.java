@@ -21,7 +21,8 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_OR_BUILDER_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_OR_BUILDER;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static java.util.stream.Collectors.joining;
@@ -132,12 +133,12 @@ public class SizeGreaterThanOrEqualsZero extends BugChecker implements BinaryTre
   private static final Pattern PROTO_COUNT_METHOD_PATTERN = Pattern.compile("get(.+)Count");
   private static final Matcher<ExpressionTree> PROTO_REPEATED_COUNT =
       instanceMethod()
-          .onDescendantOf(MESSAGE_LITE_OR_BUILDER_CLASS)
+          .onDescendantOf(MESSAGE_LITE_OR_BUILDER)
           .withNameMatching(PROTO_COUNT_METHOD_PATTERN)
           .withNoParameters();
   private static final Matcher<ExpressionTree> PROTO_METHOD_NAMED_GET_COUNT =
       instanceMethod()
-          .onDescendantOf("com.google.protobuf.GeneratedMessage")
+          .onDescendantOf(GENERATED_MESSAGE)
           .withNameMatching(PROTO_COUNT_METHOD_PATTERN)
           .withNoParameters();
   private static final Matcher<ExpressionTree> SIZE_OR_LENGTH_STATIC_METHOD =

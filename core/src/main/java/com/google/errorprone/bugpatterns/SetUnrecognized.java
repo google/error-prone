@@ -21,7 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.ProtobufMatchers.ENUM_LITE;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_BUILDER_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_BUILDER;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.isSubtype;
 
@@ -71,6 +71,6 @@ public final class SetUnrecognized extends BugChecker implements MethodInvocatio
 
   private static final Matcher<ExpressionTree> IS_PROTO_SETTER =
       instanceMethod()
-          .onDescendantOf(MESSAGE_LITE_BUILDER_CLASS)
+          .onDescendantOf(MESSAGE_LITE_BUILDER)
           .withNameMatching(Pattern.compile("(add|set).*"));
 }

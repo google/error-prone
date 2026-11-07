@@ -22,6 +22,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.errorprone.ClassName;
 import com.sun.tools.javac.util.Position;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -79,6 +80,17 @@ public class AppliedFixTest {
             endPositions,
             SuggestedFix.builder().addImport("foo.bar.Baz").build());
     assertThat(fix).isNull();
+  }
+
+  @Test
+  public void addAndRemoveImportWithClassName() {
+    SuggestedFix fix =
+        SuggestedFix.builder()
+            .addImport(ClassName.of("foo.bar.Outer$Inner"))
+            .removeImport(ClassName.of("foo.bar.Old$Nested"))
+            .build();
+    assertThat(fix.getImportsToAdd()).containsExactly("import foo.bar.Outer.Inner");
+    assertThat(fix.getImportsToRemove()).containsExactly("import foo.bar.Old.Nested");
   }
 
   @Test

@@ -18,9 +18,9 @@ package com.google.errorprone.bugpatterns;
 
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.ProtobufMatchers.PROTOCOL_STRING_LIST_CLASS;
-import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_DURATION_CLASS;
-import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIMESTAMP_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTOCOL_STRING_LIST;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_DURATION;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIMESTAMP;
 import static com.google.errorprone.predicates.TypePredicates.anyOf;
 import static com.google.errorprone.predicates.TypePredicates.anything;
 import static com.google.errorprone.predicates.TypePredicates.isDescendantOf;
@@ -172,11 +172,11 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
 
           // ProtoTime
           withPublicVisibility(
-              isExactType(PROTO_DURATION_CLASS),
+              isExactType(PROTO_DURATION),
               "Prefer a java.time.Duration instead. " + PROTO_TIME_SERIALIZATION_LINK,
               ApiElementType.ANY),
           withPublicVisibility(
-              isExactType(PROTO_TIMESTAMP_CLASS),
+              isExactType(PROTO_TIMESTAMP),
               "Prefer a java.time.Instant instead. " + PROTO_TIME_SERIALIZATION_LINK,
               ApiElementType.ANY),
           withPublicVisibility(
@@ -208,7 +208,7 @@ public final class NonApiType extends BugChecker implements MethodTreeMatcher {
           // ProtocolStringList subtypes (see b/408025632)
           // Ideally, we also would flag local variables, but NonApiType is a method-level check.
           withAnyVisibility(
-              anyOf(isDescendantOf(PROTOCOL_STRING_LIST_CLASS)),
+              anyOf(isDescendantOf(PROTOCOL_STRING_LIST)),
               "Unless you need methods declared on the subtypes, prefer a java.util.List<String>"
                   + " instead. "
                   + INTERFACES_NOT_IMPLS_LINK,

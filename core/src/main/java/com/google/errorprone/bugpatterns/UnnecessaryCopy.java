@@ -21,7 +21,7 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE;
 import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
@@ -65,7 +65,7 @@ public final class UnnecessaryCopy extends BugChecker implements CompilationUnit
 
   /** Methods that we know return an immutable collection (just not Immutable). */
   private static final Matcher<ExpressionTree> PROTO_GETTER =
-      instanceMethod().onDescendantOf(MESSAGE_LITE_CLASS);
+      instanceMethod().onDescendantOf(MESSAGE_LITE);
 
   private static final Supplier<Type> MAP_TYPE = typeFromString("java.util.Map");
 

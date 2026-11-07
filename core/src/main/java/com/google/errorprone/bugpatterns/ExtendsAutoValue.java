@@ -47,16 +47,17 @@ public final class ExtendsAutoValue extends BugChecker implements ClassTreeMatch
   private static final Supplier<ImmutableSet<Name>> AUTOS =
       VisitorState.memoize(
           s ->
-              ImmutableSet.of(s.getName(AUTO_ONE_OF_ANNOTATION), s.getName(AUTO_VALUE_ANNOTATION)));
+              ImmutableSet.of(
+                  AUTO_ONE_OF_ANNOTATION.binaryName(s), AUTO_VALUE_ANNOTATION.binaryName(s)));
 
   private static final Supplier<ImmutableSet<Name>> AUTOS_AND_BUILDERS =
       VisitorState.memoize(
           s ->
               ImmutableSet.of(
-                  s.getName(AUTO_BUILDER_ANNOTATION),
-                  s.getName(AUTO_ONE_OF_ANNOTATION),
-                  s.getName(AUTO_VALUE_ANNOTATION),
-                  s.binaryNameFromClassname(AUTO_VALUE_BUILDER_ANNOTATION)));
+                  AUTO_BUILDER_ANNOTATION.binaryName(s),
+                  AUTO_ONE_OF_ANNOTATION.binaryName(s),
+                  AUTO_VALUE_ANNOTATION.binaryName(s),
+                  AUTO_VALUE_BUILDER_ANNOTATION.binaryName(s)));
 
   private final boolean testBuilders;
   private final Supplier<ImmutableSet<Name>> autos;

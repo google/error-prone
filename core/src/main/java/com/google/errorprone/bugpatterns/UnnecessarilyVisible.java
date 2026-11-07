@@ -62,11 +62,13 @@ public final class UnnecessarilyVisible extends BugChecker implements MethodTree
       VisitorState.memoize(
           s ->
               Streams.concat(
-                      InjectMatchers.INJECT_ANNOTATIONS.stream(),
-                      InjectMatchers.PROVIDES_ANNOTATIONS.stream(),
-                      InjectMatchers.MULTIBINDINGS_ANNOTATIONS.stream(),
-                      Stream.of(AFTER_TEMPLATE_ANNOTATION, BEFORE_TEMPLATE_ANNOTATION))
-                  .map(s::getName)
+                      Streams.concat(
+                              InjectMatchers.INJECT_ANNOTATIONS.stream(),
+                              InjectMatchers.PROVIDES_ANNOTATIONS.stream(),
+                              InjectMatchers.MULTIBINDINGS_ANNOTATIONS.stream())
+                          .map(s::getName),
+                      Stream.of(AFTER_TEMPLATE_ANNOTATION, BEFORE_TEMPLATE_ANNOTATION)
+                          .map(c -> c.binaryName(s)))
                   .collect(toImmutableSet()));
 
   private static final Supplier<ImmutableSet<Name>> INJECT_ANNOTATIONS =

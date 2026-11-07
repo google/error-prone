@@ -26,7 +26,6 @@ import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
 import static com.google.errorprone.matchers.Matchers.methodReturns;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
 import static com.google.errorprone.util.ASTHelpers.isGeneratedConstructor;
@@ -41,7 +40,6 @@ import com.google.errorprone.fixes.SuggestedFix;
 import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
@@ -52,7 +50,6 @@ import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
 import com.sun.tools.javac.code.Symbol.MethodSymbol;
-import com.sun.tools.javac.code.Type;
 import javax.inject.Inject;
 
 /** A {@link BugChecker}; see the associated {@link BugPattern} annotation for details. */
@@ -163,7 +160,7 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
       } else {
         SuggestedFix.Builder builder = SuggestedFix.builder();
         String suggestedFixName =
-            SuggestedFixes.qualifyType(state, builder, MUST_BE_CLOSED_TYPE.get(state));
+            SuggestedFixes.qualifyType(state, builder, MUST_BE_CLOSED_ANNOTATION);
         SuggestedFix fix = builder.prefixWith(methodTree, "@" + suggestedFixName + " ").build();
 
         state.reportMatch(
@@ -195,7 +192,4 @@ public class MustBeClosedChecker extends AbstractMustBeClosedChecker
     }
     return false;
   }
-
-  private static final Supplier<Type> MUST_BE_CLOSED_TYPE =
-      typeFromString(MUST_BE_CLOSED_ANNOTATION);
 }

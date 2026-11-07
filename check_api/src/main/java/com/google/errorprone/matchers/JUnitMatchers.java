@@ -66,17 +66,20 @@ import javax.lang.model.element.Modifier;
  * @author eaftan@google.com (Eddie Aftandilian)
  */
 public final class JUnitMatchers {
-  public static final String JUNIT4_TEST_ANNOTATION = "org.junit.Test";
-  public static final String JUNIT4_THEORY_ANNOTATION = "org.junit.experimental.theories.Theory";
-  public static final String JUNIT_BEFORE_ANNOTATION = "org.junit.Before";
-  public static final String JUNIT_AFTER_ANNOTATION = "org.junit.After";
-  public static final String JUNIT_BEFORE_CLASS_ANNOTATION = "org.junit.BeforeClass";
-  public static final String JUNIT_AFTER_CLASS_ANNOTATION = "org.junit.AfterClass";
-  public static final String JUNIT4_RUN_WITH_ANNOTATION = "org.junit.runner.RunWith";
+  public static final ClassName JUNIT4_TEST_ANNOTATION = ClassName.of("org.junit.Test");
+  public static final ClassName JUNIT4_THEORY_ANNOTATION =
+      ClassName.of("org.junit.experimental.theories.Theory");
+  public static final ClassName JUNIT_BEFORE_ANNOTATION = ClassName.of("org.junit.Before");
+  public static final ClassName JUNIT_AFTER_ANNOTATION = ClassName.of("org.junit.After");
+  public static final ClassName JUNIT_BEFORE_CLASS_ANNOTATION =
+      ClassName.of("org.junit.BeforeClass");
+  public static final ClassName JUNIT_AFTER_CLASS_ANNOTATION = ClassName.of("org.junit.AfterClass");
+  public static final ClassName JUNIT4_RUN_WITH_ANNOTATION =
+      ClassName.of("org.junit.runner.RunWith");
   public static final String JUNIT4_ASSERT_CLASS = "org.junit.Assert";
   public static final String JUNIT3_TEST_CASE_CLASS = "junit.framework.TestCase";
-  public static final String JUNIT4_IGNORE_ANNOTATION = "org.junit.Ignore";
-  public static final String JUNIT4_RUNNER_CLASS = "org.junit.runners.JUnit4";
+  public static final ClassName JUNIT4_IGNORE_ANNOTATION = ClassName.of("org.junit.Ignore");
+  public static final ClassName JUNIT4_RUNNER_CLASS = ClassName.of("org.junit.runners.JUnit4");
   public static final String JUNIT3_ASSERT_CLASS = "junit.framework.Assert";
 
   /**
@@ -99,13 +102,13 @@ public final class JUnitMatchers {
 
   public static final Matcher<MethodTree> hasJUnit4BeforeAnnotations =
       anyOf(
-          hasAnnotationOnAnyOverriddenMethod(ClassName.of(JUNIT_BEFORE_ANNOTATION)),
-          hasAnnotation(ClassName.of(JUNIT_BEFORE_CLASS_ANNOTATION)));
+          hasAnnotationOnAnyOverriddenMethod(JUNIT_BEFORE_ANNOTATION),
+          hasAnnotation(JUNIT_BEFORE_CLASS_ANNOTATION));
 
   public static final Matcher<MethodTree> hasJUnit4AfterAnnotations =
       anyOf(
-          hasAnnotationOnAnyOverriddenMethod(ClassName.of(JUNIT_AFTER_ANNOTATION)),
-          hasAnnotation(ClassName.of(JUNIT_AFTER_CLASS_ANNOTATION)));
+          hasAnnotationOnAnyOverriddenMethod(JUNIT_AFTER_ANNOTATION),
+          hasAnnotation(JUNIT_AFTER_CLASS_ANNOTATION));
 
   /** Matches a class that inherits from TestCase. */
   public static final Matcher<ClassTree> isTestCaseDescendant =
@@ -124,13 +127,13 @@ public final class JUnitMatchers {
    */
   public static final Matcher<ClassTree> isConcreteClassWithoutRunWith =
       allOf(
-          not(hasAnnotation(ClassName.of(JUNIT4_RUN_WITH_ANNOTATION))),
+          not(hasAnnotation(JUNIT4_RUN_WITH_ANNOTATION)),
           not(Matchers.<ClassTree>hasModifier(Modifier.ABSTRACT)),
           nestingKind(TOP_LEVEL));
 
   /** Match a class which has one or more methods with a JUnit 4 @Test annotation. */
   public static final Matcher<ClassTree> hasJUnit4TestCases =
-      hasMethod(hasAnnotationOnAnyOverriddenMethod(ClassName.of(JUNIT4_TEST_ANNOTATION)));
+      hasMethod(hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION));
 
   /**
    * Match a class which appears to be a JUnit 3 test class.
@@ -241,15 +244,15 @@ public final class JUnitMatchers {
   /** Matches a method annotated with @Test but not @Ignore. */
   public static final Matcher<MethodTree> wouldRunInJUnit4 =
       allOf(
-          hasAnnotationOnAnyOverriddenMethod(ClassName.of(JUNIT4_TEST_ANNOTATION)),
-          not(hasAnnotationOnAnyOverriddenMethod(ClassName.of(JUNIT4_IGNORE_ANNOTATION))));
+          hasAnnotationOnAnyOverriddenMethod(JUNIT4_TEST_ANNOTATION),
+          not(hasAnnotationOnAnyOverriddenMethod(JUNIT4_IGNORE_ANNOTATION)));
 
   /** Matches a JUnit 3 or 4 test case. */
   public static final Matcher<MethodTree> TEST_CASE =
       anyOf(
           isJunit3TestCase,
-          hasAnnotation(ClassName.of(JUNIT4_TEST_ANNOTATION)),
-          hasAnnotation(ClassName.of(JUNIT4_THEORY_ANNOTATION)));
+          hasAnnotation(JUNIT4_TEST_ANNOTATION),
+          hasAnnotation(JUNIT4_THEORY_ANNOTATION));
 
   /** Matches a JUnit 5 (Jupiter) test method. */
   public static final Matcher<MethodTree> JUNIT5_TEST_METHOD =

@@ -22,6 +22,7 @@ import static com.google.errorprone.util.AnnotationNames.TARGET_ANNOTATION;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.annotations.InlineMe;
 import com.sun.tools.javac.code.Attribute;
 import com.sun.tools.javac.code.Attribute.Compound;
@@ -72,6 +73,19 @@ public final class MoreAnnotations {
     }
     for (Attribute.Compound a : symbol.getRawAttributes()) {
       if (a.type.tsym.getQualifiedName().equals(qualifiedName)) {
+        return Optional.of(a);
+      }
+    }
+    return Optional.empty();
+  }
+
+  /** Returns the annotation on the given element with the specified class name. */
+  public static Optional<Attribute.Compound> getAnnotation(Element sym, ClassName annotationName) {
+    if (!(sym instanceof Symbol symbol)) {
+      return Optional.empty();
+    }
+    for (Attribute.Compound a : symbol.getRawAttributes()) {
+      if (a.type.tsym.flatName().contentEquals(annotationName.toString())) {
         return Optional.of(a);
       }
     }
@@ -135,6 +149,11 @@ public final class MoreAnnotations {
     return getAnnotation(sym, annotationName).flatMap(a -> getStringValue(a, "value"));
   }
 
+  /** Shorthand for extracting the "value" string of a named annotation on an element. */
+  public static Optional<String> getStringValue(Element sym, ClassName annotationName) {
+    return getAnnotation(sym, annotationName).flatMap(a -> getStringValue(a, "value"));
+  }
+
   /** Shorthand for extracting a boolean value of a named element from an annotation mirror. */
   public static Optional<Boolean> getBooleanValue(AnnotationMirror attribute, String name) {
     return getValue(attribute, name).flatMap(MoreAnnotations::asBooleanValue);
@@ -142,6 +161,11 @@ public final class MoreAnnotations {
 
   /** Shorthand for extracting the "value" boolean of a named annotation on an element. */
   public static Optional<Boolean> getBooleanValue(Element sym, String annotationName) {
+    return getAnnotation(sym, annotationName).flatMap(a -> getBooleanValue(a, "value"));
+  }
+
+  /** Shorthand for extracting the "value" boolean of a named annotation on an element. */
+  public static Optional<Boolean> getBooleanValue(Element sym, ClassName annotationName) {
     return getAnnotation(sym, annotationName).flatMap(a -> getBooleanValue(a, "value"));
   }
 
@@ -155,6 +179,11 @@ public final class MoreAnnotations {
     return getAnnotation(sym, annotationName).flatMap(a -> getEnumValue(a, "value"));
   }
 
+  /** Shorthand for extracting the "value" enum of a named annotation on an element. */
+  public static Optional<VarSymbol> getEnumValue(Element sym, ClassName annotationName) {
+    return getAnnotation(sym, annotationName).flatMap(a -> getEnumValue(a, "value"));
+  }
+
   /** Shorthand for extracting enum values of a named element from an annotation mirror. */
   public static ImmutableList<VarSymbol> getEnumValues(AnnotationMirror attribute, String name) {
     return getValue(attribute, name)
@@ -164,6 +193,13 @@ public final class MoreAnnotations {
 
   /** Shorthand for extracting the "value" enum values of a named annotation on an element. */
   public static ImmutableList<VarSymbol> getEnumValues(Element sym, String annotationName) {
+    return getAnnotation(sym, annotationName)
+        .map(a -> getEnumValues(a, "value"))
+        .orElseGet(ImmutableList::of);
+  }
+
+  /** Shorthand for extracting the "value" enum values of a named annotation on an element. */
+  public static ImmutableList<VarSymbol> getEnumValues(Element sym, ClassName annotationName) {
     return getAnnotation(sym, annotationName)
         .map(a -> getEnumValues(a, "value"))
         .orElseGet(ImmutableList::of);
@@ -188,6 +224,16 @@ public final class MoreAnnotations {
         .orElseGet(ImmutableList::of);
   }
 
+  /**
+   * Shorthand for extracting a list of strings from the "value" element of a named annotation on an
+   * element.
+   */
+  public static ImmutableList<String> getStrings(Element sym, ClassName annotationName) {
+    return getAnnotation(sym, annotationName)
+        .map(a -> getStrings(a, "value"))
+        .orElseGet(ImmutableList::of);
+  }
+
   /** Shorthand for extracting a list of types for a named element (e.g. Class[] or Class). */
   public static ImmutableList<TypeMirror> getTypes(AnnotationMirror attribute, String name) {
     return getValue(attribute, name)
@@ -205,6 +251,16 @@ public final class MoreAnnotations {
         .orElseGet(ImmutableList::of);
   }
 
+  /**
+   * Shorthand for extracting a list of types from the "value" element of a named annotation on an
+   * element.
+   */
+  public static ImmutableList<TypeMirror> getTypes(Element sym, ClassName annotationName) {
+    return getAnnotation(sym, annotationName)
+        .map(a -> getTypes(a, "value"))
+        .orElseGet(ImmutableList::of);
+  }
+
   /** Shorthand for extracting a type value of a named element from an annotation mirror. */
   public static Optional<TypeMirror> getTypeValue(AnnotationMirror attribute, String name) {
     return getValue(attribute, name).flatMap(MoreAnnotations::asTypeValue);
@@ -212,6 +268,11 @@ public final class MoreAnnotations {
 
   /** Shorthand for extracting the "value" type of a named annotation on an element. */
   public static Optional<TypeMirror> getTypeValue(Element sym, String annotationName) {
+    return getAnnotation(sym, annotationName).flatMap(a -> getTypeValue(a, "value"));
+  }
+
+  /** Shorthand for extracting the "value" type of a named annotation on an element. */
+  public static Optional<TypeMirror> getTypeValue(Element sym, ClassName annotationName) {
     return getAnnotation(sym, annotationName).flatMap(a -> getTypeValue(a, "value"));
   }
 

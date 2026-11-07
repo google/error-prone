@@ -16,70 +16,86 @@
 
 package com.google.errorprone.util;
 
+import com.google.errorprone.ClassName;
+
 /** Fully qualified names of common annotations used in ErrorProne checks. */
 public final class AnnotationNames {
 
   // keep-sorted start
 
-  public static final String AFTER_TEMPLATE_ANNOTATION =
-      "com.google.errorprone.refaster.annotation.AfterTemplate";
-  public static final String AUTO_BUILDER_ANNOTATION = "com.google.auto.value.AutoBuilder";
-  public static final String AUTO_FACTORY_ANNOTATION = "com.google.auto.factory.AutoFactory";
-  public static final String AUTO_ONE_OF_ANNOTATION = "com.google.auto.value.AutoOneOf";
-  public static final String AUTO_VALUE_ANNOTATION = "com.google.auto.value.AutoValue";
-  public static final String AUTO_VALUE_BUILDER_ANNOTATION =
-      "com.google.auto.value.AutoValue.Builder";
-  public static final String BEFORE_TEMPLATE_ANNOTATION =
-      "com.google.errorprone.refaster.annotation.BeforeTemplate";
-  public static final String BUG_PATTERN_ANNOTATION = "com.google.errorprone.BugPattern";
-  public static final String CAN_IGNORE_RETURN_VALUE_ANNOTATION =
-      "com.google.errorprone.annotations.CanIgnoreReturnValue";
-  public static final String CHECK_RETURN_VALUE_ANNOTATION =
-      "com.google.errorprone.annotations.CheckReturnValue";
-  public static final String COMPATIBLE_WITH_ANNOTATION =
-      "com.google.errorprone.annotations.CompatibleWith";
-  public static final String DEPRECATED_ANNOTATION = "java.lang.Deprecated";
-  public static final String DO_NOT_CALL_ANNOTATION = "com.google.errorprone.annotations.DoNotCall";
-  public static final String FORMAT_METHOD_ANNOTATION =
-      "com.google.errorprone.annotations.FormatMethod";
-  public static final String FORMAT_STRING_ANNOTATION =
-      "com.google.errorprone.annotations.FormatString";
-  public static final String IMMUTABLE_ANNOTATION = "com.google.errorprone.annotations.Immutable";
-  public static final String INCOMPATIBLE_MODIFIERS_ANNOTATION =
-      "com.google.errorprone.annotations.IncompatibleModifiers";
-  public static final String INLINE_ME_ANNOTATION = "com.google.errorprone.annotations.InlineMe";
-  public static final String INLINE_ME_VALIDATION_DISABLED_ANNOTATION =
-      "com.google.errorprone.annotations.InlineMeValidationDisabled";
-  public static final String LAZY_INIT_ANNOTATION =
-      "com.google.errorprone.annotations.concurrent.LazyInit";
-  public static final String LENIENT_FORMAT_STRING_ANNOTATION =
-      "com.google.errorprone.annotations.LenientFormatString";
-  public static final String MATCHES_ANNOTATION =
-      "com.google.errorprone.refaster.annotation.Matches";
-  public static final String MUST_BE_CLOSED_ANNOTATION =
-      "com.google.errorprone.annotations.MustBeClosed";
-  public static final String NOT_MATCHES_ANNOTATION =
-      "com.google.errorprone.refaster.annotation.NotMatches";
-  public static final String NULL_MARKED_ANNOTATION = "org.jspecify.annotations.NullMarked";
-  public static final String NULL_UNMARKED_ANNOTATION = "org.jspecify.annotations.NullUnmarked";
-  public static final String OF_KIND_ANNOTATION =
-      "com.google.errorprone.refaster.annotation.OfKind";
-  public static final String OVERRIDE_ANNOTATION = "java.lang.Override";
-  public static final String PLACEHOLDER_ANNOTATION =
-      "com.google.errorprone.refaster.annotation.Placeholder";
-  public static final String REPEATABLE_ANNOTATION = "java.lang.annotation.Repeatable";
-  public static final String REPEATED_ANNOTATION =
-      "com.google.errorprone.refaster.annotation.Repeated";
-  public static final String REQUIRED_MODIFIERS_ANNOTATION =
-      "com.google.errorprone.annotations.RequiredModifiers";
-  public static final String RESTRICTED_API_ANNOTATION =
-      "com.google.errorprone.annotations.RestrictedApi";
-  public static final String RETENTION_ANNOTATION = "java.lang.annotation.Retention";
-  public static final String SUPPRESS_WARNINGS_ANNOTATION = "java.lang.SuppressWarnings";
-  public static final String TARGET_ANNOTATION = "java.lang.annotation.Target";
-  public static final String THREAD_SAFE_ANNOTATION =
-      "com.google.errorprone.annotations.ThreadSafe";
-  public static final String VAR_ANNOTATION = "com.google.errorprone.annotations.Var";
+  public static final ClassName AFTER_TEMPLATE_ANNOTATION =
+      ClassName.of("com.google.errorprone.refaster.annotation.AfterTemplate");
+  public static final ClassName AUTO_BUILDER_ANNOTATION =
+      ClassName.of("com.google.auto.value.AutoBuilder");
+  public static final ClassName AUTO_FACTORY_ANNOTATION =
+      ClassName.of("com.google.auto.factory.AutoFactory");
+  public static final ClassName AUTO_ONE_OF_ANNOTATION =
+      ClassName.of("com.google.auto.value.AutoOneOf");
+  public static final ClassName AUTO_VALUE_ANNOTATION =
+      ClassName.of("com.google.auto.value.AutoValue");
+  public static final ClassName AUTO_VALUE_BUILDER_ANNOTATION =
+      ClassName.of("com.google.auto.value.AutoValue.Builder");
+  public static final ClassName BEFORE_TEMPLATE_ANNOTATION =
+      ClassName.of("com.google.errorprone.refaster.annotation.BeforeTemplate");
+  public static final ClassName BUG_PATTERN_ANNOTATION =
+      ClassName.of("com.google.errorprone.BugPattern");
+  public static final ClassName CAN_IGNORE_RETURN_VALUE_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.CanIgnoreReturnValue");
+  public static final ClassName CHECK_RETURN_VALUE_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.CheckReturnValue");
+  public static final ClassName COMPATIBLE_WITH_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.CompatibleWith");
+  public static final ClassName DEPRECATED_ANNOTATION = ClassName.of("java.lang.Deprecated");
+  public static final ClassName DO_NOT_CALL_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.DoNotCall");
+  public static final ClassName FORMAT_METHOD_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.FormatMethod");
+  public static final ClassName FORMAT_STRING_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.FormatString");
+  public static final ClassName IMMUTABLE_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.Immutable");
+  public static final ClassName INCOMPATIBLE_MODIFIERS_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.IncompatibleModifiers");
+  public static final ClassName INLINE_ME_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.InlineMe");
+  public static final ClassName INLINE_ME_VALIDATION_DISABLED_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.InlineMeValidationDisabled");
+  public static final ClassName LAZY_INIT_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.concurrent.LazyInit");
+  public static final ClassName LENIENT_FORMAT_STRING_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.LenientFormatString");
+  public static final ClassName MATCHES_ANNOTATION =
+      ClassName.of("com.google.errorprone.refaster.annotation.Matches");
+  public static final ClassName MUST_BE_CLOSED_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.MustBeClosed");
+  public static final ClassName NOT_MATCHES_ANNOTATION =
+      ClassName.of("com.google.errorprone.refaster.annotation.NotMatches");
+  public static final ClassName NULL_MARKED_ANNOTATION =
+      ClassName.of("org.jspecify.annotations.NullMarked");
+  public static final ClassName NULL_UNMARKED_ANNOTATION =
+      ClassName.of("org.jspecify.annotations.NullUnmarked");
+  public static final ClassName OF_KIND_ANNOTATION =
+      ClassName.of("com.google.errorprone.refaster.annotation.OfKind");
+  public static final ClassName OVERRIDE_ANNOTATION = ClassName.of("java.lang.Override");
+  public static final ClassName PLACEHOLDER_ANNOTATION =
+      ClassName.of("com.google.errorprone.refaster.annotation.Placeholder");
+  public static final ClassName REPEATABLE_ANNOTATION =
+      ClassName.of("java.lang.annotation.Repeatable");
+  public static final ClassName REPEATED_ANNOTATION =
+      ClassName.of("com.google.errorprone.refaster.annotation.Repeated");
+  public static final ClassName REQUIRED_MODIFIERS_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.RequiredModifiers");
+  public static final ClassName RESTRICTED_API_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.RestrictedApi");
+  public static final ClassName RETENTION_ANNOTATION =
+      ClassName.of("java.lang.annotation.Retention");
+  public static final ClassName SUPPRESS_WARNINGS_ANNOTATION =
+      ClassName.of("java.lang.SuppressWarnings");
+  public static final ClassName TARGET_ANNOTATION = ClassName.of("java.lang.annotation.Target");
+  public static final ClassName THREAD_SAFE_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.ThreadSafe");
+  public static final ClassName VAR_ANNOTATION =
+      ClassName.of("com.google.errorprone.annotations.Var");
 
   // keep-sorted end
 

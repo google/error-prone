@@ -33,6 +33,7 @@ import static com.google.errorprone.util.AnnotationNames.OVERRIDE_ANNOTATION;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
@@ -55,7 +56,7 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
 
   static final String TOO_MANY_PARAMETERS_FLAG_NAME = "TooManyParameters:ParameterLimit";
 
-  private static final ImmutableSet<String> METHOD_ANNOTATIONS_TO_IGNORE =
+  private static final ImmutableSet<ClassName> METHOD_ANNOTATIONS_TO_IGNORE =
       ImmutableSet.of(
           DEPRECATED_ANNOTATION,
           OVERRIDE_ANNOTATION,
@@ -71,7 +72,7 @@ public class TooManyParameters extends BugChecker implements MethodTreeMatcher {
           // AutoFactory can be put on a constructor.
           AUTO_FACTORY_ANNOTATION);
 
-  private static final ImmutableSet<String> CLASS_ANNOTATIONS_TO_IGNORE =
+  private static final ImmutableSet<ClassName> CLASS_ANNOTATIONS_TO_IGNORE =
       ImmutableSet.of(AUTO_FACTORY_ANNOTATION);
 
   private final int limit;

@@ -19,8 +19,8 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
-import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_DURATIONS_UTIL_CLASS;
-import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIMESTAMPS_UTIL_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_DURATIONS_UTIL;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIMESTAMPS_UTIL;
 import static com.sun.source.tree.Tree.Kind.CLASS;
 import static javax.lang.model.element.Modifier.STATIC;
 
@@ -67,9 +67,9 @@ public class SelfAssignment extends BugChecker
               .onClass("com.google.common.time.Durations")
               .namedAnyOf("checkNotNegative", "checkPositive"),
           staticMethod()
-              .onClass(PROTO_DURATIONS_UTIL_CLASS)
+              .onClass(PROTO_DURATIONS_UTIL)
               .namedAnyOf("checkNotNegative", "checkPositive", "checkValid"),
-          staticMethod().onClass(PROTO_TIMESTAMPS_UTIL_CLASS).named("checkValid"));
+          staticMethod().onClass(PROTO_TIMESTAMPS_UTIL).named("checkValid"));
 
   @Override
   public Description matchAssignment(AssignmentTree tree, VisitorState state) {

@@ -33,7 +33,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -60,9 +59,6 @@ import java.util.stream.Stream;
     severity = ERROR)
 public class MissingRuntimeRetention extends BugChecker implements ClassTreeMatcher {
 
-  private static final ClassName JAVA_LANG_ANNOTATION_RETENTION =
-      ClassName.of(RETENTION_ANNOTATION);
-
   private static final Supplier<ImmutableSet<Name>> INJECT_ANNOTATIONS =
       VisitorState.memoize(
           state ->
@@ -70,7 +66,7 @@ public class MissingRuntimeRetention extends BugChecker implements ClassTreeMatc
                       SCOPE_ANNOTATIONS.stream(),
                       QUALIFIER_ANNOTATIONS.stream(),
                       Stream.of(GUICE_MAP_KEY_ANNOTATION, DAGGER_MAP_KEY_ANNOTATION))
-                  .map(state::binaryNameFromClassname)
+                  .map(c -> c.binaryName(state))
                   .collect(toImmutableSet()));
 
   private static final Supplier<ImmutableSet<Name>> ANNOTATIONS =
@@ -101,9 +97,7 @@ public class MissingRuntimeRetention extends BugChecker implements ClassTreeMatc
       return NO_MATCH;
     }
     return describe(
-        classTree,
-        state,
-        ASTHelpers.hasAnnotation(classTree, JAVA_LANG_ANNOTATION_RETENTION, state));
+        classTree, state, ASTHelpers.hasAnnotation(classTree, RETENTION_ANNOTATION, state));
   }
 
   private static boolean exemptInjectAnnotation(VisitorState state, ClassSymbol classSymbol) {
@@ -138,7 +132,7 @@ public class MissingRuntimeRetention extends BugChecker implements ClassTreeMatc
     }
     AnnotationTree retentionNode = null;
     for (AnnotationTree annotation : classTree.getModifiers().getAnnotations()) {
-      if (ASTHelpers.getSymbol(annotation).equals(JAVA_LANG_ANNOTATION_RETENTION.symbol(state))) {
+      if (ASTHelpers.getSymbol(annotation).equals(RETENTION_ANNOTATION.symbol(state))) {
         retentionNode = annotation;
       }
     }

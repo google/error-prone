@@ -23,7 +23,6 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 import static com.google.errorprone.matchers.Matchers.methodHasParameters;
 import static com.google.errorprone.matchers.Matchers.methodIsConstructor;
-import static com.google.errorprone.util.MoreAnnotations.asElement;
 import static com.google.errorprone.util.MoreAnnotations.getStringValue;
 
 import com.google.common.base.Joiner;
@@ -53,7 +52,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import javax.lang.model.element.AnnotationMirror;
 
 /**
  * @author sgoldfeder@google.com (Steven Goldfeder)
@@ -125,13 +123,7 @@ public class AssistedParameters extends BugChecker implements MethodTreeMatcher 
   }
 
   private static String valueFromAssistedAnnotation(VariableTree variableTree) {
-    for (AnnotationMirror c : ASTHelpers.getSymbol(variableTree).getAnnotationMirrors()) {
-      if (asElement(c).getQualifiedName().contentEquals(ASSISTED_ANNOTATION)) {
-        // Assisted only has 'value', and value can only contain 1 element.
-        return getStringValue(c, "value").orElse("");
-      }
-    }
-    return "";
+    return getStringValue(ASTHelpers.getSymbol(variableTree), ASSISTED_ANNOTATION).orElse("");
   }
 
   private static String buildErrorMessage(List<ConflictResult> conflicts) {

@@ -78,8 +78,6 @@ public final class NullArgumentForNonNullParameter extends BugChecker
   private static final Supplier<Name> FOR_CLASS_NAME = memoize(state -> state.getName("forClass"));
   private static final ClassName PROTO_NONNULL_API_NAME =
       ClassName.of("com.google.protobuf.Internal$ProtoNonnullApi");
-  private static final ClassName NULL_MARKED_NAME = ClassName.of(NULL_MARKED_ANNOTATION);
-  private static final ClassName NULL_UNMARKED_NAME = ClassName.of(NULL_UNMARKED_ANNOTATION);
   private static final Supplier<ImmutableSet<Name>> NULL_MARKED_PACKAGES_WE_TRUST =
       memoize(
           state ->
@@ -310,8 +308,8 @@ public final class NullArgumentForNonNullParameter extends BugChecker
       }
       // https://jspecify.dev/docs/spec/#null-marked-scope
       // TODO(cpovirk): Including handling of @kotlin.Metadata.
-      boolean marked = hasDirectAnnotation(sym, NULL_MARKED_NAME, state);
-      boolean unmarked = hasDirectAnnotation(sym, NULL_UNMARKED_NAME, state);
+      boolean marked = hasDirectAnnotation(sym, NULL_MARKED_ANNOTATION, state);
+      boolean unmarked = hasDirectAnnotation(sym, NULL_UNMARKED_ANNOTATION, state);
       if (marked && !unmarked && weTrustNullMarkedOn(sym, state)) {
         return true;
       }

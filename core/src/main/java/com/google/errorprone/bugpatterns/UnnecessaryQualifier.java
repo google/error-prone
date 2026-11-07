@@ -23,9 +23,12 @@ import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
 import static com.google.errorprone.matchers.ChildMultiMatcher.MatchType.AT_LEAST_ONE;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.ASSISTED_INJECT_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PRODUCES_ANNOTATION;
 import static com.google.errorprone.matchers.InjectMatchers.DAGGER_PROVIDES_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.GUICE_BINDING_ANNOTATION;
+import static com.google.errorprone.matchers.InjectMatchers.JAVAX_QUALIFIER_ANNOTATION;
 import static com.google.errorprone.matchers.JUnitMatchers.TEST_CASE;
 import static com.google.errorprone.matchers.JUnitMatchers.isJUnit4TestRunnerOfType;
 import static com.google.errorprone.matchers.Matchers.annotations;
@@ -194,12 +197,13 @@ public final class UnnecessaryQualifier extends BugChecker
         .filter(
             anno ->
                 QUALIFIERS.stream().anyMatch(q -> hasAnnotation(getSymbol(anno), q, state))
-                    && !IGNORED_ANNOTATIONS.contains(getSymbol(anno).getQualifiedName().toString()))
+                    && IGNORED_ANNOTATIONS.stream()
+                        .noneMatch(a -> getSymbol(anno).equals(a.symbol(state))))
         .collect(toImmutableList());
   }
 
-  private static final ImmutableSet<String> QUALIFIERS =
-      ImmutableSet.of("com.google.inject.BindingAnnotation", "javax.inject.Qualifier");
+  private static final ImmutableSet<ClassName> QUALIFIERS =
+      ImmutableSet.of(GUICE_BINDING_ANNOTATION, JAVAX_QUALIFIER_ANNOTATION);
 
   private static final ImmutableSet<ClassName> SUPERTYPES_DENOTING_INJECTION_POINTS =
       ImmutableSet.of(ClassName.of("com.google.apps.framework.producers.GraphWrapper"));
@@ -208,14 +212,14 @@ public final class UnnecessaryQualifier extends BugChecker
    * Method annotations denoting that the method provides bindings, so qualifiers on the return type
    * are OK.
    */
-  private static final ImmutableSet<String> PROVIDER_METHODS =
+  private static final ImmutableSet<ClassName> PROVIDER_METHODS =
       ImmutableSet.of(
           // keep-sorted start
-          "com.google.inject.throwingproviders.CheckedProvides",
-          "dagger.Binds",
-          "dagger.BindsInstance",
-          "dagger.BindsOptionalOf",
-          "dagger.multibindings.Multibinds",
+          ClassName.of("com.google.inject.throwingproviders.CheckedProvides"),
+          ClassName.of("dagger.Binds"),
+          ClassName.of("dagger.BindsInstance"),
+          ClassName.of("dagger.BindsOptionalOf"),
+          ClassName.of("dagger.multibindings.Multibinds"),
           DAGGER_PRODUCES_ANNOTATION,
           DAGGER_PROVIDES_ANNOTATION
           // keep-sorted end
@@ -224,56 +228,50 @@ public final class UnnecessaryQualifier extends BugChecker
   private static final String PROVIDES_PREFIX = "Provides";
 
   /** Annotations for methods which have parameters injected into them. */
-  private static final ImmutableSet<String> INJECTION_METHODS =
+  private static final ImmutableSet<ClassName> INJECTION_METHODS =
       concat(
-              InjectMatchers.INJECT_ANNOTATIONS.stream(),
+              concat(InjectMatchers.INJECT_ANNOTATIONS.stream()).map(ClassName::of),
               Stream.of(
                   // keep-sorted start
-                  "com.google.common.inject.components.OtherRequiredBindings",
-                  "dagger.assisted.AssistedInject",
                   ASSISTED_INJECT_ANNOTATION,
-                  AUTO_FACTORY_ANNOTATION
+                  AUTO_FACTORY_ANNOTATION,
+                  ClassName.of("com.google.common.inject.components.OtherRequiredBindings"),
+                  ClassName.of("dagger.assisted.AssistedInject")
                   // keep-sorted end
                   ),
               PROVIDER_METHODS.stream())
           .collect(toImmutableSet());
 
   /** Annotations for fields which can have qualifiers. */
-  private static final ImmutableSet<String> INJECTION_FIELDS =
-      ImmutableSet.of(
-          // keep-sorted start
-          // FlagSpec is obviously not an injecty annotation, but it's commonly used with
-          // FlagBinder, at which point qualifiers on the field are relevant.
-          // keep-sorted end
-          );
+  private static final ImmutableSet<ClassName> INJECTION_FIELDS = ImmutableSet.of();
 
   /** Prefixes for annotations on variables which can have qualifiers. */
   private static final ImmutableSet<String> INJECTION_PREFIXES = ImmutableSet.of("Bind", "Inject");
 
-  private static final ImmutableSet<String> CLASS_ANNOTATIONS_EXEMPTING_METHODS =
+  private static final ImmutableSet<ClassName> CLASS_ANNOTATIONS_EXEMPTING_METHODS =
       ImmutableSet.of(
           // keep-sorted start
-          "dagger.Component",
-          "dagger.Component.Builder",
-          "dagger.Component.Factory",
-          "dagger.Subcomponent",
-          "dagger.Subcomponent.Builder",
-          "dagger.Subcomponent.Factory",
-          "dagger.hilt.EntryPoint",
-          "dagger.producers.ProductionComponent",
-          "dagger.producers.ProductionComponent.Builder",
-          "dagger.producers.ProductionComponent.Factory",
-          "dagger.producers.ProductionSubcomponent",
-          "dagger.producers.ProductionSubcomponent.Builder",
-          "dagger.producers.ProductionSubcomponent.Factory",
-          AUTO_FACTORY_ANNOTATION
+          AUTO_FACTORY_ANNOTATION,
+          ClassName.of("dagger.Component"),
+          ClassName.of("dagger.Component.Builder"),
+          ClassName.of("dagger.Component.Factory"),
+          ClassName.of("dagger.Subcomponent"),
+          ClassName.of("dagger.Subcomponent.Builder"),
+          ClassName.of("dagger.Subcomponent.Factory"),
+          ClassName.of("dagger.hilt.EntryPoint"),
+          ClassName.of("dagger.producers.ProductionComponent"),
+          ClassName.of("dagger.producers.ProductionComponent.Builder"),
+          ClassName.of("dagger.producers.ProductionComponent.Factory"),
+          ClassName.of("dagger.producers.ProductionSubcomponent"),
+          ClassName.of("dagger.producers.ProductionSubcomponent.Builder"),
+          ClassName.of("dagger.producers.ProductionSubcomponent.Factory")
           // keep-sorted end
           );
 
-  private static final ImmutableSet<String> IGNORED_ANNOTATIONS =
+  private static final ImmutableSet<ClassName> IGNORED_ANNOTATIONS =
       ImmutableSet.of(
           // keep-sorted start
-          "com.google.inject.assistedinject.Assisted"
+          ASSISTED_ANNOTATION
           // keep-sorted end
           );
 }

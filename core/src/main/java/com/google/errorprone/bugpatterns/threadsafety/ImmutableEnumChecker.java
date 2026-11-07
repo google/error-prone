@@ -26,6 +26,7 @@ import static com.google.errorprone.util.AnnotationNames.IMMUTABLE_ANNOTATION;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
@@ -85,7 +86,7 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
 
     Violation info =
         immutableAnalysisFactory
-            .create(this::isSuppressed, state, ImmutableSet.of(IMMUTABLE_ANNOTATION))
+            .create(this::isSuppressed, state, ImmutableSet.of(IMMUTABLE_ANNOTATION.toString()))
             .checkForImmutability(
                 Optional.of(tree), ImmutableSet.of(), getType(tree), this::describe);
 
@@ -106,7 +107,7 @@ public class ImmutableEnumChecker extends BugChecker implements ClassTreeMatcher
         .anyMatch(supertype -> hasExemptAnnotation(supertype.tsym, state));
   }
 
-  private static final ImmutableSet<String> EXEMPT_ANNOTATIONS =
+  private static final ImmutableSet<ClassName> EXEMPT_ANNOTATIONS =
       ImmutableSet.of(IMMUTABLE_ANNOTATION);
 
   private static boolean hasExemptAnnotation(Symbol symbol, VisitorState state) {

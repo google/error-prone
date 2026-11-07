@@ -18,11 +18,15 @@ package com.google.errorprone.bugpatterns.threadsafety;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.errorprone.matchers.ProtobufMatchers.ENUM_LITE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MUTABLE_MESSAGE_LITE;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.primitives.Primitives;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.annotations.Immutable;
@@ -374,21 +378,18 @@ public final class WellKnownMutability implements ThreadSafetyKnownTypes {
         .build();
   }
 
-  // ProtocolSupport matches Message (not MessageLite) for legacy reasons
-  private static final Supplier<Type> MESSAGE_TYPE =
-      Suppliers.typeFromString("com.google.protobuf.MessageLite");
+  private static final ClassName PROTOCOL_MESSAGE_TYPE =
+      ClassName.of("com.google.io.protocol.ProtocolMessage");
 
-  private static final Supplier<Type> MUTABLE_MESSAGE_TYPE =
-      Suppliers.typeFromString("com.google.protobuf.MutableMessageLite");
-
-  private static final Supplier<Type> PROTOCOL_MESSAGE_TYPE =
-      Suppliers.typeFromString("com.google.io.protocol.ProtocolMessage");
-
-  private static final Supplier<Type> PROTOCOL_MESSAGE_ENUM =
-      Suppliers.typeFromString("com.google.protobuf.Internal.EnumLite");
+  private static boolean isAssignableTo(Type type, ClassName className, VisitorState state) {
+    return isAssignableTo(type, className.type(state), state);
+  }
 
   private static boolean isAssignableTo(Type type, Supplier<Type> supplier, VisitorState state) {
-    Type to = supplier.get(state);
+    return isAssignableTo(type, supplier.get(state), state);
+  }
+
+  private static boolean isAssignableTo(Type type, Type to, VisitorState state) {
     if (to == null) {
       // the type couldn't be loaded
       return false;
@@ -402,7 +403,7 @@ public final class WellKnownMutability implements ThreadSafetyKnownTypes {
    */
   public static boolean isProto2MessageClass(VisitorState state, Type type) {
     checkNotNull(type);
-    return isAssignableTo(type, MESSAGE_TYPE, state)
+    return isAssignableTo(type, MESSAGE_LITE, state)
         && !isAssignableTo(type, PROTOCOL_MESSAGE_TYPE, state);
   }
 
@@ -412,13 +413,13 @@ public final class WellKnownMutability implements ThreadSafetyKnownTypes {
    */
   public static boolean isProto2MutableMessageClass(VisitorState state, Type type) {
     checkNotNull(type);
-    return isAssignableTo(type, MUTABLE_MESSAGE_TYPE, state)
+    return isAssignableTo(type, MUTABLE_MESSAGE_LITE, state)
         && !isAssignableTo(type, PROTOCOL_MESSAGE_TYPE, state);
   }
 
   public static boolean isProtoEnum(VisitorState state, Type type) {
     checkNotNull(type);
-    return isAssignableTo(type, PROTOCOL_MESSAGE_ENUM, state);
+    return isAssignableTo(type, ENUM_LITE, state);
   }
 
   /** Returns true if the type is an annotation. */

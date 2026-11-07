@@ -19,8 +19,8 @@ package com.google.errorprone.bugpatterns;
 import static com.google.errorprone.BugPattern.SeverityLevel.ERROR;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.anyOf;
-import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_DURATIONS_UTIL_CLASS;
-import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIMESTAMPS_UTIL_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_DURATIONS_UTIL;
+import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIMESTAMPS_UTIL;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
 import static com.google.errorprone.util.ASTHelpers.constValue;
@@ -31,6 +31,7 @@ import static com.google.errorprone.util.ASTHelpers.stripParentheses;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodInvocationTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -111,28 +112,28 @@ public final class CompareToZero extends BugChecker implements MethodInvocationT
       anyOf(
           staticMethod()
               .onClassAny(
-                  "com.google.common.primitives.Booleans",
-                  "com.google.common.primitives.Chars",
-                  "com.google.common.primitives.Doubles",
-                  "com.google.common.primitives.Floats",
-                  "com.google.common.primitives.Ints",
-                  "com.google.common.primitives.Longs",
-                  "com.google.common.primitives.Shorts",
-                  "com.google.common.primitives.SignedBytes",
-                  "com.google.common.primitives.UnsignedBytes",
-                  "com.google.common.primitives.UnsignedInts",
-                  "com.google.common.primitives.UnsignedLongs",
-                  PROTO_DURATIONS_UTIL_CLASS,
-                  PROTO_TIMESTAMPS_UTIL_CLASS,
-                  "java.lang.Boolean",
-                  "java.lang.Byte",
-                  "java.lang.Character",
-                  "java.lang.Double",
-                  "java.lang.Float",
-                  "java.lang.Integer",
-                  "java.lang.Long",
-                  "java.lang.Short",
-                  "java.util.Objects")
+                  ClassName.of("com.google.common.primitives.Booleans"),
+                  ClassName.of("com.google.common.primitives.Chars"),
+                  ClassName.of("com.google.common.primitives.Doubles"),
+                  ClassName.of("com.google.common.primitives.Floats"),
+                  ClassName.of("com.google.common.primitives.Ints"),
+                  ClassName.of("com.google.common.primitives.Longs"),
+                  ClassName.of("com.google.common.primitives.Shorts"),
+                  ClassName.of("com.google.common.primitives.SignedBytes"),
+                  ClassName.of("com.google.common.primitives.UnsignedBytes"),
+                  ClassName.of("com.google.common.primitives.UnsignedInts"),
+                  ClassName.of("com.google.common.primitives.UnsignedLongs"),
+                  PROTO_DURATIONS_UTIL,
+                  PROTO_TIMESTAMPS_UTIL,
+                  ClassName.of("java.lang.Boolean"),
+                  ClassName.of("java.lang.Byte"),
+                  ClassName.of("java.lang.Character"),
+                  ClassName.of("java.lang.Double"),
+                  ClassName.of("java.lang.Float"),
+                  ClassName.of("java.lang.Integer"),
+                  ClassName.of("java.lang.Long"),
+                  ClassName.of("java.lang.Short"),
+                  ClassName.of("java.util.Objects"))
               .named("compare"),
           instanceMethod().onDescendantOf("java.lang.Comparable").named("compareTo"),
           instanceMethod().onDescendantOf("java.util.Comparator").named("compare"));

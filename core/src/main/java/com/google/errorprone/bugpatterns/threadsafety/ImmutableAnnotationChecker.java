@@ -91,7 +91,7 @@ public class ImmutableAnnotationChecker extends BugChecker implements ClassTreeM
 
     Violation info =
         immutableAnalysisFactory
-            .create(this::isSuppressed, state, ImmutableSet.of(IMMUTABLE_ANNOTATION))
+            .create(this::isSuppressed, state, ImmutableSet.of(IMMUTABLE_ANNOTATION.toString()))
             .checkForImmutability(
                 Optional.of(tree), ImmutableSet.of(), getType(tree), this::describeClass);
 

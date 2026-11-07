@@ -21,6 +21,7 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.TYPE_USE;
 
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.CompilerBasedAbstractTest;
 import com.google.errorprone.scanner.Scanner;
@@ -93,8 +94,9 @@ public class MoreAnnotationsTest extends CompilerBasedAbstractTest {
           public Void visitClass(ClassTree tree, VisitorState state) {
             ClassSymbol sym = ASTHelpers.getSymbol(tree);
             if (sym.getSimpleName().contentEquals("TestAnno")) {
+              ClassName myAnno = ClassName.of("MyAnno");
               Optional<? extends AnnotationMirror> anno =
-                  MoreAnnotations.getAnnotation(sym, "MyAnno");
+                  MoreAnnotations.getAnnotation(sym, myAnno);
               assertThat(anno).isPresent();
               AnnotationMirror compound = anno.get();
 
@@ -102,7 +104,13 @@ public class MoreAnnotationsTest extends CompilerBasedAbstractTest {
               assertThat(MoreAnnotations.getBooleanValue(compound, "boolVal")).hasValue(true);
               Optional<VarSymbol> enumVal = MoreAnnotations.getEnumValue(compound, "enumVal");
               assertThat(enumVal.map(c -> c.getSimpleName().toString())).hasValue("CLASS");
-              assertThat(MoreAnnotations.getEnumValue(sym, "MyAnno")).isEmpty();
+              assertThat(MoreAnnotations.getEnumValue(sym, myAnno)).isEmpty();
+              assertThat(MoreAnnotations.getStringValue(sym, myAnno)).isEmpty();
+              assertThat(MoreAnnotations.getBooleanValue(sym, myAnno)).isEmpty();
+              assertThat(MoreAnnotations.getEnumValues(sym, myAnno)).isEmpty();
+              assertThat(MoreAnnotations.getStrings(sym, myAnno)).isEmpty();
+              assertThat(MoreAnnotations.getTypes(sym, myAnno)).isEmpty();
+              assertThat(MoreAnnotations.getTypeValue(sym, myAnno)).isEmpty();
               List<VarSymbol> enumArr = MoreAnnotations.getEnumValues(compound, "enumArr");
               assertThat(enumArr.stream().map(c -> c.getSimpleName().toString()))
                   .containsExactly("RUNTIME");

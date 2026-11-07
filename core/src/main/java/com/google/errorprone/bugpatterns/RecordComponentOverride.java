@@ -48,7 +48,7 @@ public class RecordComponentOverride extends BugChecker implements BugChecker.Cl
     for (Symbol.RecordComponent rc : sym.getRecordComponents()) {
       for (JCAnnotation annotation : rc.getOriginalAnnos()) {
         TypeSymbol annotationElement = getType(annotation).tsym;
-        if (annotationElement.getQualifiedName().contentEquals(OVERRIDE_ANNOTATION)) {
+        if (annotationElement.equals(OVERRIDE_ANNOTATION.symbol(state))) {
           Description.Builder description = buildDescription(rc.declarationFor());
           int pos = getStartPosition(annotation);
           // The annotation doesn't have an end position, see also JDK-8383786

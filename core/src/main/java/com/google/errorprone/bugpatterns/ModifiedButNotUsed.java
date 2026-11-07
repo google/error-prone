@@ -25,7 +25,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.kindIs;
 import static com.google.errorprone.matchers.Matchers.staticMethod;
 import static com.google.errorprone.matchers.Matchers.typePredicateMatcher;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_BUILDER_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_BUILDER;
 import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_BUILDER_MUTATOR;
 import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_BUILD_METHOD;
 import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_GETTER;
@@ -143,7 +143,7 @@ public class ModifiedButNotUsed extends BugChecker
       typePredicateMatcher(isDescendantOfAny(COLLECTIONS));
 
   private static final Matcher<Tree> PROTO_TYPE =
-      typePredicateMatcher(isDescendantOf(MESSAGE_LITE_BUILDER_CLASS));
+      typePredicateMatcher(isDescendantOf(MESSAGE_LITE_BUILDER));
 
   private static final Matcher<ExpressionTree> FLUENT_CONSTRUCTOR =
       anyOf(
@@ -159,8 +159,7 @@ public class ModifiedButNotUsed extends BugChecker
               .onDescendantOfAny(GUAVA_IMMUTABLES)
               .namedAnyOf("builder", "builderWithExpectedSize"),
           allOf(
-              kindIs(Kind.NEW_CLASS),
-              constructor().forClass(isDescendantOf(MESSAGE_LITE_BUILDER_CLASS))),
+              kindIs(Kind.NEW_CLASS), constructor().forClass(isDescendantOf(MESSAGE_LITE_BUILDER))),
           PROTO_NEW_BUILDER_METHOD,
           PROTO_TO_BUILDER_METHOD);
 

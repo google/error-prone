@@ -15,6 +15,7 @@
  */
 package com.google.errorprone.bugpatterns;
 
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
@@ -26,6 +27,7 @@ import static com.google.errorprone.util.MoreAnnotations.asElement;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFixes;
@@ -78,26 +80,29 @@ public class FieldCanBeFinal extends BugChecker implements CompilationUnitTreeMa
 
   /** Annotations that imply a field is non-constant. */
   // TODO(cushon): consider supporting @Var as a meta-annotation
-  private static final ImmutableSet<String> IMPLICIT_VAR_ANNOTATIONS =
-      ImmutableSet.<String>builder()
-          .addAll(InjectMatchers.INJECT_ANNOTATIONS)
+  private static final ImmutableSet<ClassName> IMPLICIT_VAR_ANNOTATIONS =
+      ImmutableSet.<ClassName>builder()
+          .addAll(
+              InjectMatchers.INJECT_ANNOTATIONS.stream()
+                  .map(ClassName::of)
+                  .collect(toImmutableSet()))
           .add(
               // keep-sorted start
-              "com.beust.jcommander.Parameter",
-              "com.google.common.annotations.NonFinalForGwt",
-              "com.google.gwt.uibinder.client.UiField",
-              "com.google.inject.testing.fieldbinder.Bind",
-              "com.google.testing.junit.testparameterinjector.TestParameter",
-              "jakarta.jdo.annotations.Persistent",
-              "jakarta.persistence.Id",
-              "jakarta.xml.bind.annotation.XmlAttribute",
-              "javax.jdo.annotations.Persistent",
-              "javax.persistence.Id",
-              "javax.xml.bind.annotation.XmlAttribute",
-              "org.kohsuke.args4j.Argument",
-              "org.kohsuke.args4j.Option",
-              "org.mockito.Spy",
-              "picocli.CommandLine.Option",
+              ClassName.of("com.beust.jcommander.Parameter"),
+              ClassName.of("com.google.common.annotations.NonFinalForGwt"),
+              ClassName.of("com.google.gwt.uibinder.client.UiField"),
+              ClassName.of("com.google.inject.testing.fieldbinder.Bind"),
+              ClassName.of("com.google.testing.junit.testparameterinjector.TestParameter"),
+              ClassName.of("jakarta.jdo.annotations.Persistent"),
+              ClassName.of("jakarta.persistence.Id"),
+              ClassName.of("jakarta.xml.bind.annotation.XmlAttribute"),
+              ClassName.of("javax.jdo.annotations.Persistent"),
+              ClassName.of("javax.persistence.Id"),
+              ClassName.of("javax.xml.bind.annotation.XmlAttribute"),
+              ClassName.of("org.kohsuke.args4j.Argument"),
+              ClassName.of("org.kohsuke.args4j.Option"),
+              ClassName.of("org.mockito.Spy"),
+              ClassName.of("picocli.CommandLine.Option"),
               VAR_ANNOTATION
               // keep-sorted end
               )

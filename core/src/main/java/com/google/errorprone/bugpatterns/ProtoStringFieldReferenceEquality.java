@@ -21,9 +21,9 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.Matchers.allOf;
 import static com.google.errorprone.matchers.Matchers.instanceMethod;
 import static com.google.errorprone.matchers.Matchers.isSameType;
-import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE_CLASS;
-import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE_LITE_CLASS;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_OR_BUILDER_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE;
+import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE_LITE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_OR_BUILDER;
 
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.ErrorProneFlags;
@@ -57,16 +57,14 @@ public class ProtoStringFieldReferenceEquality extends BugChecker implements Bin
 
   private static final Matcher<ExpressionTree> PROTO_STRING_METHOD_LEGACY =
       allOf(
-          instanceMethod().onDescendantOfAny(GENERATED_MESSAGE_CLASS, GENERATED_MESSAGE_LITE_CLASS),
+          instanceMethod().onDescendantOfAny(GENERATED_MESSAGE, GENERATED_MESSAGE_LITE),
           isSameType(Suppliers.STRING_TYPE));
 
   private static final Matcher<ExpressionTree> PROTO_STRING_METHOD_OR_BUILDER =
       allOf(
           instanceMethod()
               .onDescendantOfAny(
-                  MESSAGE_LITE_OR_BUILDER_CLASS,
-                  GENERATED_MESSAGE_CLASS,
-                  GENERATED_MESSAGE_LITE_CLASS),
+                  MESSAGE_LITE_OR_BUILDER, GENERATED_MESSAGE, GENERATED_MESSAGE_LITE),
           isSameType(Suppliers.STRING_TYPE));
 
   @Override

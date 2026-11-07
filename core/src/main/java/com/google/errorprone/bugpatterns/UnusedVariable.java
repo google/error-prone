@@ -20,14 +20,15 @@ import static com.google.common.base.MoreObjects.firstNonNull;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.ImmutableList.toImmutableList;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getLast;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_TEST_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.SERIALIZATION_METHODS;
 import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.matchers.method.MethodMatchers.staticMethod;
-import static com.google.errorprone.suppliers.Suppliers.typeFromString;
 import static com.google.errorprone.util.ASTHelpers.canBeRemoved;
 import static com.google.errorprone.util.ASTHelpers.constValue;
 import static com.google.errorprone.util.ASTHelpers.findSuperMethods;
@@ -63,6 +64,7 @@ import com.google.common.collect.RangeSet;
 import com.google.common.collect.Streams;
 import com.google.common.collect.TreeRangeSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.CompilationUnitTreeMatcher;
@@ -71,8 +73,6 @@ import com.google.errorprone.fixes.SuggestedFixes;
 import com.google.errorprone.matchers.Description;
 import com.google.errorprone.matchers.InjectMatchers;
 import com.google.errorprone.matchers.Matcher;
-import com.google.errorprone.suppliers.Supplier;
-import com.google.errorprone.suppliers.Suppliers;
 import com.google.errorprone.util.ASTHelpers;
 import com.google.errorprone.util.SourceVersion;
 import com.sun.source.tree.ArrayAccessTree;
@@ -118,9 +118,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -141,27 +143,29 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
   private final ImmutableSet<String> exemptNames;
 
   // TODO(ghm): Find a sensible place to dedupe this with UnnecessarilyVisible.
-  private static final ImmutableSet<String> ANNOTATIONS_INDICATING_PARAMETERS_SHOULD_BE_CHECKED =
-      ImmutableSet.<String>builder()
-          .addAll(InjectMatchers.INJECT_ANNOTATIONS)
-          .addAll(InjectMatchers.PROVIDES_ANNOTATIONS)
-          .addAll(InjectMatchers.MULTIBINDINGS_ANNOTATIONS)
-          .add(
-              AFTER_TEMPLATE_ANNOTATION,
-              BEFORE_TEMPLATE_ANNOTATION,
-              // Parameters on test methods imply the test is parameterised, and those parameters
-              // should be used or removed.
-              "org.junit.Test")
-          .build();
+  private static final ImmutableSet<ClassName> ANNOTATIONS_INDICATING_PARAMETERS_SHOULD_BE_CHECKED =
+      Streams.concat(
+              Streams.concat(
+                      InjectMatchers.INJECT_ANNOTATIONS.stream(),
+                      InjectMatchers.PROVIDES_ANNOTATIONS.stream(),
+                      InjectMatchers.MULTIBINDINGS_ANNOTATIONS.stream())
+                  .map(ClassName::of),
+              Stream.of(
+                  AFTER_TEMPLATE_ANNOTATION,
+                  BEFORE_TEMPLATE_ANNOTATION,
+                  // Parameters on test methods imply the test is parameterised, and those
+                  // parameters should be used or removed.
+                  JUNIT4_TEST_ANNOTATION))
+          .collect(toImmutableSet());
 
   private final ImmutableSet<String> methodAnnotationsExemptingParameters;
 
   /** The set of types exempting a type that is extending or implementing them. */
-  private static final ImmutableSet<String> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
+  private static final ImmutableSet<ClassName> EXEMPTING_SUPER_TYPES = ImmutableSet.of();
 
   /** The set of types exempting a field of type extending them. */
-  private static final ImmutableSet<String> EXEMPTING_FIELD_SUPER_TYPES =
-      ImmutableSet.of("org.junit.rules.TestRule");
+  private static final ImmutableSet<ClassName> EXEMPTING_FIELD_SUPER_TYPES =
+      ImmutableSet.of(ClassName.of("org.junit.rules.TestRule"));
 
   private static final ImmutableSet<String> SPECIAL_FIELDS =
       ImmutableSet.of(
@@ -169,8 +173,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           // TAG fields are used by convention in Android apps.
           "TAG");
 
-  private static final ImmutableSet<String> FUNCTIONAL_INTERFACE_TYPES_TO_CHECK =
-      ImmutableSet.of("java.util.Comparator");
+  private static final ImmutableSet<ClassName> FUNCTIONAL_INTERFACE_TYPES_TO_CHECK =
+      ImmutableSet.of(ClassName.of("java.util.Comparator"));
 
   private final boolean reportInjectedFields;
 
@@ -692,7 +696,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       var parent = getCurrentPath().getParentPath().getLeaf();
       if (parent instanceof LambdaExpressionTree) {
         if (FUNCTIONAL_INTERFACE_TYPES_TO_CHECK.stream()
-            .anyMatch(t -> isSubtype(getType(parent), state.getTypeFromString(t), state))) {
+            .anyMatch(t -> isSubtype(getType(parent), t, state))) {
           unusedElements.put(symbol, getCurrentPath());
           usageSites.put(symbol, getCurrentPath());
         }
@@ -700,7 +704,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       }
       if (symbol.getKind() == ElementKind.FIELD
           && symbol.getSimpleName().contentEquals("CREATOR")
-          && isSubtype(symbol.type, PARCELABLE_CREATOR.get(state), state)) {
+          && isSubtype(symbol.type, PARCELABLE_CREATOR, state)) {
         return;
       }
       if (symbol.getKind() == ElementKind.FIELD
@@ -771,8 +775,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     }
 
     private boolean exemptedFieldBySuperType(Type type, VisitorState state) {
-      return EXEMPTING_FIELD_SUPER_TYPES.stream()
-          .anyMatch(t -> isSubtype(type, state.getTypeFromString(t), state));
+      return EXEMPTING_FIELD_SUPER_TYPES.stream().anyMatch(t -> isSubtype(type, t, state));
     }
 
     private boolean isFieldEligibleForChecking(VariableTree variableTree, VarSymbol symbol) {
@@ -817,7 +820,8 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (enclosingMethod.owner instanceof ClassSymbol
           && !isAbstract(methodSymbol)
           && FUNCTIONAL_INTERFACE_TYPES_TO_CHECK.stream()
-              .map(state::getTypeFromString)
+              .map(t -> t.type(state))
+              .filter(Objects::nonNull)
               .anyMatch(
                   t ->
                       isSubtype(enclosingMethod.owner.type, t, state)
@@ -851,8 +855,7 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       if (isSuppressed(tree, state)) {
         return null;
       }
-      if (EXEMPTING_SUPER_TYPES.stream()
-          .anyMatch(t -> isSubtype(getType(tree), Suppliers.typeFromString(t).get(state), state))) {
+      if (EXEMPTING_SUPER_TYPES.stream().anyMatch(t -> isSubtype(getType(tree), t, state))) {
         return null;
       }
       return super.visitClass(tree, null);
@@ -1225,6 +1228,5 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
     }
   }
 
-  private static final Supplier<Type> PARCELABLE_CREATOR =
-      typeFromString("android.os.Parcelable.Creator");
+  private static final ClassName PARCELABLE_CREATOR = ClassName.of("android.os.Parcelable.Creator");
 }

@@ -17,6 +17,7 @@
 package com.google.errorprone.bugpatterns.checkreturnvalue;
 
 import static com.google.common.base.MoreObjects.firstNonNull;
+import static com.google.common.collect.ImmutableSet.toImmutableSet;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.fixes.SuggestedFixes.qualifyType;
@@ -40,8 +41,9 @@ import static com.google.errorprone.util.AnnotationNames.CAN_IGNORE_RETURN_VALUE
 import static com.google.errorprone.util.AnnotationNames.IMMUTABLE_ANNOTATION;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Sets;
+import com.google.common.collect.Streams;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.ErrorProneFlags;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker;
@@ -85,35 +87,38 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
   private static final String CRV_SIMPLE_NAME = "CheckReturnValue";
   private static final String CIRV_SIMPLE_NAME = "CanIgnoreReturnValue";
-  private static final ImmutableSet<String> EXEMPTING_METHOD_ANNOTATIONS =
+  private static final ImmutableSet<ClassName> EXEMPTING_METHOD_ANNOTATIONS =
       ImmutableSet.of(AFTER_TEMPLATE_ANNOTATION);
 
-  private static final ImmutableSet<String> EXEMPTING_CLASS_ANNOTATIONS =
+  private static final ImmutableSet<ClassName> EXEMPTING_CLASS_ANNOTATIONS =
       ImmutableSet.of(
           // keep-sorted start
-          "dagger.Component.Builder",
-          "dagger.Subcomponent.Builder",
-          "dagger.producers.ProductionComponent.Builder",
-          "dagger.producers.ProductionSubcomponent.Builder",
           AUTO_BUILDER_ANNOTATION,
-          AUTO_VALUE_BUILDER_ANNOTATION
+          AUTO_VALUE_BUILDER_ANNOTATION,
+          ClassName.of("dagger.Component.Builder"),
+          ClassName.of("dagger.Subcomponent.Builder"),
+          ClassName.of("dagger.producers.ProductionComponent.Builder"),
+          ClassName.of("dagger.producers.ProductionSubcomponent.Builder")
           // keep-sorted end
           );
 
   private static final ImmutableSet<String> BANNED_METHOD_PREFIXES =
       ImmutableSet.of("get", "is", "has", "new", "clone", "copy");
 
-  private final ImmutableSet<String> exemptingMethodAnnotations;
+  private final ImmutableSet<ClassName> exemptingMethodAnnotations;
 
   private final WellKnownKeep wellKnownKeep;
 
   @Inject
   CanIgnoreReturnValueSuggester(ErrorProneFlags errorProneFlags, WellKnownKeep wellKnownKeep) {
     this.exemptingMethodAnnotations =
-        Sets.union(
-                EXEMPTING_METHOD_ANNOTATIONS,
-                errorProneFlags.getSetOrEmpty("CanIgnoreReturnValue:ExemptingMethodAnnotations"))
-            .immutableCopy();
+        Streams.concat(
+                EXEMPTING_METHOD_ANNOTATIONS.stream(),
+                errorProneFlags
+                    .getSetOrEmpty("CanIgnoreReturnValue:ExemptingMethodAnnotations")
+                    .stream()
+                    .map(ClassName::of))
+            .collect(toImmutableSet());
     this.wellKnownKeep = wellKnownKeep;
   }
 
@@ -228,7 +233,7 @@ public final class CanIgnoreReturnValueSuggester extends BugChecker implements M
 
     // TODO(kak): use ResultEvaluator instead of duplicating logic
     if (isAbstract(methodSymbol)) {
-      for (String annotation : EXEMPTING_CLASS_ANNOTATIONS) {
+      for (ClassName annotation : EXEMPTING_CLASS_ANNOTATIONS) {
         if (hasAnnotation(methodSymbol.owner, annotation, state)) {
           return true;
         }

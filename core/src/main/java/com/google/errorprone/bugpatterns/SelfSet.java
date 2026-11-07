@@ -19,7 +19,7 @@ package com.google.errorprone.bugpatterns;
 import static com.google.common.collect.Iterables.getOnlyElement;
 import static com.google.errorprone.BugPattern.SeverityLevel.WARNING;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_BUILDER_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_BUILDER;
 import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_GETTER;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
 import static com.google.errorprone.util.ASTHelpers.getReceiver;
@@ -76,6 +76,6 @@ public final class SelfSet extends BugChecker implements MethodInvocationTreeMat
 
   private static final Matcher<ExpressionTree> PROTO_SETTER =
       instanceMethod()
-          .onDescendantOf(MESSAGE_LITE_BUILDER_CLASS)
+          .onDescendantOf(MESSAGE_LITE_BUILDER)
           .withNameMatching(Pattern.compile("set.*"));
 }

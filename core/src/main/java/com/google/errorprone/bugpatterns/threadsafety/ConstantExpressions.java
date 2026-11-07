@@ -23,8 +23,8 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.instanceEqualsInvocation;
 import static com.google.errorprone.matchers.Matchers.not;
 import static com.google.errorprone.matchers.Matchers.staticEqualsInvocation;
-import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE_CLASS;
-import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE_CLASS;
+import static com.google.errorprone.matchers.ProtobufMatchers.GENERATED_MESSAGE;
+import static com.google.errorprone.matchers.ProtobufMatchers.MESSAGE_LITE;
 import static com.google.errorprone.matchers.ProtobufMatchers.PROTO_TIME_STATIC_FACTORIES;
 import static com.google.errorprone.matchers.method.MethodMatchers.constructor;
 import static com.google.errorprone.matchers.method.MethodMatchers.instanceMethod;
@@ -380,7 +380,7 @@ public final class ConstantExpressions {
                   "com.google.common.collect.ImmutableSortedSet",
                   "com.google.common.collect.ImmutableTable",
                   "com.google.common.collect.Range"),
-          staticMethod().onClass(GENERATED_MESSAGE_CLASS),
+          staticMethod().onClass(GENERATED_MESSAGE),
           staticMethod()
               .onClass("java.time.Duration")
               .namedAnyOf("ofNanos", "ofMillis", "ofSeconds", "ofMinutes", "ofHours", "ofDays")
@@ -442,7 +442,7 @@ public final class ConstantExpressions {
             return hasAnnotation(symbol.owner, AUTO_VALUE_ANNOTATION, state)
                 && symbol.getModifiers().contains(ABSTRACT);
           },
-          staticMethod().onDescendantOf(MESSAGE_LITE_CLASS).named("getDefaultInstance"),
+          staticMethod().onDescendantOf(MESSAGE_LITE).named("getDefaultInstance"),
           allOf(
               instanceEqualsInvocation(),
               (t, s) -> {

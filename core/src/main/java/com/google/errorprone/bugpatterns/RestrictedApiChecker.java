@@ -29,7 +29,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
-import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AnnotationTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.MemberReferenceTreeMatcher;
@@ -79,7 +78,7 @@ public class RestrictedApiChecker extends BugChecker
   @Override
   public Description matchAnnotation(AnnotationTree tree, VisitorState state) {
     // TODO(bangert): Validate all the fields
-    if (!getSymbol(tree).getQualifiedName().contentEquals(RESTRICTED_API_ANNOTATION)) {
+    if (!getSymbol(tree).equals(RESTRICTED_API_ANNOTATION.symbol(state))) {
       return NO_MATCH;
     }
     // TODO(bangert): make a more elegant API to get the annotation within an annotation tree.
@@ -203,7 +202,7 @@ public class RestrictedApiChecker extends BugChecker
     if (sym == null) {
       return null;
     }
-    return sym.attribute(RESTRICTED_API_TYPE.symbol(state));
+    return sym.attribute(RESTRICTED_API_ANNOTATION.symbol(state));
   }
 
   private Description checkRestriction(
@@ -258,6 +257,4 @@ public class RestrictedApiChecker extends BugChecker
     }
     return Matchers.hasAnyAnnotation(allowlistWithWarningAnnotations);
   }
-
-  private static final ClassName RESTRICTED_API_TYPE = ClassName.of(RESTRICTED_API_ANNOTATION);
 }

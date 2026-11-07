@@ -29,6 +29,7 @@ import static com.google.errorprone.matchers.Matchers.anyOf;
 import static com.google.errorprone.matchers.Matchers.not;
 
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.matchers.Matcher;
 import com.sun.source.tree.MethodTree;
 import java.util.Arrays;
@@ -51,7 +52,7 @@ public class JUnit4TearDownNotRun extends AbstractJUnit4InitMethodNotRun {
   }
 
   @Override
-  protected String correctAnnotation() {
+  protected ClassName correctAnnotation() {
     return JUNIT_AFTER_ANNOTATION;
   }
 

@@ -34,6 +34,7 @@ import static com.google.errorprone.util.AnnotationNames.OVERRIDE_ANNOTATION;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.MethodTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -67,7 +68,7 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
           // common substrings in the names of exception factory methods
           "throw", "fail", "exception", "propagate");
 
-  private static final ImmutableSet<String> ANNOTATIONS_TO_IGNORE =
+  private static final ImmutableSet<ClassName> ANNOTATIONS_TO_IGNORE =
       ImmutableSet.of(
           // ignore methods that are already annotated w/ @DoNotCall
           DO_NOT_CALL_ANNOTATION,
@@ -79,17 +80,17 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
           DAGGER_PROVIDES_ANNOTATION,
           DAGGER_PRODUCES_ANNOTATION,
           // starlark API boundary
-          "net.starlark.java.annot.StarlarkMethod");
+          ClassName.of("net.starlark.java.annot.StarlarkMethod"));
 
-  private static final ImmutableSet<String> PARENT_CLASS_TO_IGNORE =
+  private static final ImmutableSet<ClassName> PARENT_CLASS_TO_IGNORE =
       ImmutableSet.of(
           // a Guice module w/ bindings
-          "com.google.inject.AbstractModule");
+          ClassName.of("com.google.inject.AbstractModule"));
 
-  private static final ImmutableSet<String> RETURNED_SUPER_TYPES_TO_IGNORE =
+  private static final ImmutableSet<ClassName> RETURNED_SUPER_TYPES_TO_IGNORE =
       ImmutableSet.of(
           // a throwable
-          "java.lang.Throwable");
+          ClassName.of("java.lang.Throwable"));
 
   @Override
   public Description matchMethod(MethodTree tree, VisitorState state) {
@@ -119,9 +120,8 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
     // if the enclosing class extends from a known frameworks class, exit
     ClassSymbol enclosingClass = enclosingClass(symbol);
     Type enclosingType = getType(findClass(enclosingClass, state));
-    for (String parentClass : PARENT_CLASS_TO_IGNORE) {
-      Type parentClassType = state.getTypeFromString(parentClass);
-      if (isSubtype(enclosingType, parentClassType, state)) {
+    for (ClassName parentClass : PARENT_CLASS_TO_IGNORE) {
+      if (isSubtype(enclosingType, parentClass, state)) {
         return NO_MATCH;
       }
     }
@@ -147,7 +147,7 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
     }
 
     // if the method is annotated with a banned annotation, exit
-    for (String annotationToIgnore : ANNOTATIONS_TO_IGNORE) {
+    for (ClassName annotationToIgnore : ANNOTATIONS_TO_IGNORE) {
       if (hasAnnotation(tree, annotationToIgnore, state)) {
         return NO_MATCH;
       }
@@ -155,9 +155,8 @@ public class DoNotCallSuggester extends BugChecker implements MethodTreeMatcher 
 
     // if the method returns a banned type, exit
     Type returnType = getType(tree.getReturnType());
-    for (String returnedSuperType : RETURNED_SUPER_TYPES_TO_IGNORE) {
-      Type throwableType = state.getTypeFromString(returnedSuperType);
-      if (isSubtype(returnType, throwableType, state)) {
+    for (ClassName returnedSuperType : RETURNED_SUPER_TYPES_TO_IGNORE) {
+      if (isSubtype(returnType, returnedSuperType, state)) {
         return NO_MATCH;
       }
     }

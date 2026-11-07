@@ -20,6 +20,7 @@ import static com.google.common.collect.Streams.stream;
 import static com.google.errorprone.BugPattern.SeverityLevel.SUGGESTION;
 import static com.google.errorprone.fixes.SuggestedFixes.addMembers;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
+import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_RUN_WITH_ANNOTATION;
 import static com.google.errorprone.util.ASTHelpers.createPrivateConstructor;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.hasAnnotation;
@@ -32,6 +33,7 @@ import static javax.lang.model.element.Modifier.STATIC;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.BugPattern;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.ClassTreeMatcher;
 import com.google.errorprone.fixes.SuggestedFix;
@@ -57,10 +59,10 @@ import javax.lang.model.element.Modifier;
 public final class PrivateConstructorForUtilityClass extends BugChecker
     implements ClassTreeMatcher {
 
-  private static final ImmutableSet<String> ANNOTATIONS_TO_IGNORE =
+  private static final ImmutableSet<ClassName> ANNOTATIONS_TO_IGNORE =
       ImmutableSet.of(
-          "org.junit.runner.RunWith",
-          "org.robolectric.annotation.Implements",
+          JUNIT4_RUN_WITH_ANNOTATION,
+          ClassName.of("org.robolectric.annotation.Implements"),
           AUTO_VALUE_ANNOTATION);
 
   @Override
@@ -73,7 +75,7 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
       return NO_MATCH;
     }
     ClassSymbol sym = getSymbol(classTree);
-    for (String annotation : ANNOTATIONS_TO_IGNORE) {
+    for (ClassName annotation : ANNOTATIONS_TO_IGNORE) {
       if (hasAnnotation(sym, annotation, state)) {
         return NO_MATCH;
       }

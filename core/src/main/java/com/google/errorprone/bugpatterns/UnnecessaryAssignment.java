@@ -40,7 +40,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.errorprone.BugPattern;
-import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.bugpatterns.BugChecker.AssignmentTreeMatcher;
 import com.google.errorprone.bugpatterns.BugChecker.VariableTreeMatcher;
@@ -103,15 +102,12 @@ public final class UnnecessaryAssignment extends BugChecker
   /** Returns true if the tree is annotated with @com.google.inject.Inject(optional = true). */
   private static boolean isOptionalInject(Tree tree, VisitorState state) {
     var symbol = getSymbol(tree);
-    var compound = symbol.attribute(GUICE_INJECT.symbol(state));
+    var compound = symbol.attribute(InjectMatchers.GUICE_INJECT_ANNOTATION.symbol(state));
     if (compound == null) {
       return false;
     }
     return getBooleanValue(compound, "optional").orElse(false);
   }
-
-  private static final ClassName GUICE_INJECT =
-      ClassName.of(InjectMatchers.GUICE_INJECT_ANNOTATION);
 
   private static final Matcher<ExpressionTree> MOCK_FACTORY =
       staticMethod().onClass("org.mockito.Mockito").named("mock");

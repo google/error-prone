@@ -35,6 +35,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
+import com.google.errorprone.ClassName;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
@@ -641,7 +642,7 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
   }
 
   static @Nullable Class<? extends Matcher<? super ExpressionTree>> getMatcherClass(
-      Symbol symbol, String annotationName) {
+      Symbol symbol, ClassName annotationName) {
     return MoreAnnotations.getAnnotation(symbol, annotationName)
         .map(UTemplater::getMatcherClass)
         .orElse(null);
