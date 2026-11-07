@@ -60,23 +60,31 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#getAnnotation(javax.lang.model.element.Element,java.lang.String)" tabindex="0">getAnnotation(Element, String)</a></li>
 <li><a href="#getAnnotation(javax.lang.model.element.Element,javax.lang.model.element.Name)" tabindex="0">getAnnotation(Element, Name)</a></li>
+<li><a href="#getAnnotation(javax.lang.model.element.Element,com.google.errorprone.ClassName)" tabindex="0">getAnnotation(Element, ClassName)</a></li>
 <li><a href="#getAnnotationWithSimpleName(javax.lang.model.element.Element,java.lang.String)" tabindex="0">getAnnotationWithSimpleName(Element, String)</a></li>
 <li><a href="#getValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" tabindex="0">getValue(AnnotationMirror, String)</a></li>
 <li><a href="#getValue(com.sun.tools.javac.code.Attribute.Compound,java.lang.String)" tabindex="0">getValue(Attribute.Compound, String)</a></li>
 <li><a href="#getStringValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" tabindex="0">getStringValue(AnnotationMirror, String)</a></li>
 <li><a href="#getStringValue(javax.lang.model.element.Element,java.lang.String)" tabindex="0">getStringValue(Element, String)</a></li>
+<li><a href="#getStringValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" tabindex="0">getStringValue(Element, ClassName)</a></li>
 <li><a href="#getBooleanValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" tabindex="0">getBooleanValue(AnnotationMirror, String)</a></li>
 <li><a href="#getBooleanValue(javax.lang.model.element.Element,java.lang.String)" tabindex="0">getBooleanValue(Element, String)</a></li>
+<li><a href="#getBooleanValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" tabindex="0">getBooleanValue(Element, ClassName)</a></li>
 <li><a href="#getEnumValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" tabindex="0">getEnumValue(AnnotationMirror, String)</a></li>
 <li><a href="#getEnumValue(javax.lang.model.element.Element,java.lang.String)" tabindex="0">getEnumValue(Element, String)</a></li>
+<li><a href="#getEnumValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" tabindex="0">getEnumValue(Element, ClassName)</a></li>
 <li><a href="#getEnumValues(javax.lang.model.element.AnnotationMirror,java.lang.String)" tabindex="0">getEnumValues(AnnotationMirror, String)</a></li>
 <li><a href="#getEnumValues(javax.lang.model.element.Element,java.lang.String)" tabindex="0">getEnumValues(Element, String)</a></li>
+<li><a href="#getEnumValues(javax.lang.model.element.Element,com.google.errorprone.ClassName)" tabindex="0">getEnumValues(Element, ClassName)</a></li>
 <li><a href="#getStrings(javax.lang.model.element.AnnotationMirror,java.lang.String)" tabindex="0">getStrings(AnnotationMirror, String)</a></li>
 <li><a href="#getStrings(javax.lang.model.element.Element,java.lang.String)" tabindex="0">getStrings(Element, String)</a></li>
+<li><a href="#getStrings(javax.lang.model.element.Element,com.google.errorprone.ClassName)" tabindex="0">getStrings(Element, ClassName)</a></li>
 <li><a href="#getTypes(javax.lang.model.element.AnnotationMirror,java.lang.String)" tabindex="0">getTypes(AnnotationMirror, String)</a></li>
 <li><a href="#getTypes(javax.lang.model.element.Element,java.lang.String)" tabindex="0">getTypes(Element, String)</a></li>
+<li><a href="#getTypes(javax.lang.model.element.Element,com.google.errorprone.ClassName)" tabindex="0">getTypes(Element, ClassName)</a></li>
 <li><a href="#getTypeValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" tabindex="0">getTypeValue(AnnotationMirror, String)</a></li>
 <li><a href="#getTypeValue(javax.lang.model.element.Element,java.lang.String)" tabindex="0">getTypeValue(Element, String)</a></li>
+<li><a href="#getTypeValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" tabindex="0">getTypeValue(Element, ClassName)</a></li>
 <li><a href="#asBooleanValue(javax.lang.model.element.AnnotationValue)" tabindex="0">asBooleanValue(AnnotationValue)</a></li>
 <li><a href="#asIntegerValue(javax.lang.model.element.AnnotationValue)" tabindex="0">asIntegerValue(AnnotationValue)</a></li>
 <li><a href="#asStringValue(javax.lang.model.element.AnnotationValue)" tabindex="0">asStringValue(AnnotationValue)</a></li>
@@ -201,45 +209,57 @@ loadScripts(document, 'script');</script>
 <div class="block">Converts the given attribute to a type.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Attribute.Compound&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAnnotation(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedName)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAnnotation(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the annotation on the given element with the specified class name.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Attribute.Compound&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAnnotation(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;qualifiedName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the annotation on the given element with the specified qualified binary or canonical
 name.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Attribute.Compound&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAnnotation(javax.lang.model.element.Element,javax.lang.model.element.Name)" class="member-name-link">getAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Attribute.Compound&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAnnotation(javax.lang.model.element.Element,javax.lang.model.element.Name)" class="member-name-link">getAnnotation</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Name.html" title="class or interface in javax.lang.model.element" class="external-link">Name</a>&nbsp;qualifiedName)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the annotation on the given element with the specified qualified name.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationValue.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationValue</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#getAnnotationValue(com.sun.tools.javac.code.Attribute.Compound,java.lang.String)" class="member-name-link">getAnnotationValue</a><wbr>(com.sun.tools.javac.code.Attribute.Compound&nbsp;attribute,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationValue.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationValue</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#getAnnotationValue(com.sun.tools.javac.code.Attribute.Compound,java.lang.String)" class="member-name-link">getAnnotationValue</a><wbr>(com.sun.tools.javac.code.Attribute.Compound&nbsp;attribute,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">Prefer <a href="#getValue(javax.lang.model.element.AnnotationMirror,java.lang.String)"><code>getValue(AnnotationMirror, String)</code></a>.</div>
 </div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationValue.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationValue</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#getAnnotationValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getAnnotationValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationMirror</a>&nbsp;annotationMirror,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationValue.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationValue</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#getAnnotationValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getAnnotationValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationMirror</a>&nbsp;annotationMirror,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">Use <a href="#getValue(javax.lang.model.element.AnnotationMirror,java.lang.String)"><code>getValue(AnnotationMirror, String)</code></a> instead.</div>
 </div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Attribute.Compound&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAnnotationWithSimpleName(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getAnnotationWithSimpleName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Attribute.Compound&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAnnotationWithSimpleName(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getAnnotationWithSimpleName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;simpleName)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the annotation on the given element with the specified simple name.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBooleanValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getBooleanValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationMirror</a>&nbsp;attribute,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBooleanValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getBooleanValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationMirror</a>&nbsp;attribute,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Shorthand for extracting a boolean value of a named element from an annotation mirror.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBooleanValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getBooleanValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Shorthand for extracting the "value" boolean of a named annotation on an element.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getBooleanValue(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getBooleanValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
@@ -254,16 +274,28 @@ name.</div>
 <div class="block">Shorthand for extracting an enum value of a named element from an annotation mirror.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEnumValue(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getEnumValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEnumValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getEnumValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Shorthand for extracting the "value" enum of a named annotation on an element.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEnumValues(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getEnumValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationMirror</a>&nbsp;attribute,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEnumValue(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getEnumValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Shorthand for extracting the "value" enum of a named annotation on an element.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEnumValues(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getEnumValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationMirror</a>&nbsp;attribute,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Shorthand for extracting enum values of a named element from an annotation mirror.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEnumValues(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getEnumValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Shorthand for extracting the "value" enum values of a named annotation on an element.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEnumValues(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getEnumValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
@@ -283,17 +315,30 @@ name.</div>
 <div class="block">Shorthand for extracting a list of strings for a named element (e.g. array or single string).</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStrings(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getStrings</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStrings(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getStrings</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Shorthand for extracting a list of strings from the "value" element of a named annotation on an
 element.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStringValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getStringValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationMirror</a>&nbsp;attribute,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStrings(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getStrings</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Shorthand for extracting a list of strings from the "value" element of a named annotation on an
+element.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStringValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getStringValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationMirror</a>&nbsp;attribute,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Shorthand for extracting a string value of a named element from an annotation mirror.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStringValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getStringValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Shorthand for extracting the "value" string of a named annotation on an element.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getStringValue(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getStringValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
@@ -314,17 +359,30 @@ meta-annotation, or <code>null</code> if no <code>@Target</code> meta-annotation
 <div class="block">Shorthand for extracting a list of types for a named element (e.g.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTypes(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getTypes</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTypes(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getTypes</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Shorthand for extracting a list of types from the "value" element of a named annotation on an
 element.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTypeValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getTypeValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationMirror</a>&nbsp;attribute,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static com.google.common.collect.ImmutableList<wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTypes(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getTypes</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Shorthand for extracting a list of types from the "value" element of a named annotation on an
+element.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTypeValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getTypeValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/AnnotationMirror.html" title="class or interface in javax.lang.model.element" class="external-link">AnnotationMirror</a>&nbsp;attribute,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Shorthand for extracting a type value of a named element from an annotation mirror.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTypeValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getTypeValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Shorthand for extracting the "value" type of a named annotation on an element.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTypeValue(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getTypeValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
@@ -397,6 +455,16 @@ name.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="getAnnotation(javax.lang.model.element.Element,com.google.errorprone.ClassName)">
+<h3>getAnnotation</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Attribute.Compound&gt;</span>&nbsp;<span class="element-name">getAnnotation</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</span></div>
+<div class="block">Returns the annotation on the given element with the specified class name.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getAnnotationWithSimpleName(javax.lang.model.element.Element,java.lang.String)">
 <h3>getAnnotationWithSimpleName</h3>
 <div class="horizontal-scroll">
@@ -455,6 +523,16 @@ set.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="getStringValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)">
+<h3>getStringValue</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getStringValue</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</span></div>
+<div class="block">Shorthand for extracting the "value" string of a named annotation on an element.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getBooleanValue(javax.lang.model.element.AnnotationMirror,java.lang.String)">
 <h3>getBooleanValue</h3>
 <div class="horizontal-scroll">
@@ -470,6 +548,16 @@ set.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</span>&nbsp;<span class="element-name">getBooleanValue</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</span></div>
+<div class="block">Shorthand for extracting the "value" boolean of a named annotation on an element.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getBooleanValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)">
+<h3>getBooleanValue</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</span>&nbsp;<span class="element-name">getBooleanValue</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</span></div>
 <div class="block">Shorthand for extracting the "value" boolean of a named annotation on an element.</div>
 </div>
 </section>
@@ -495,6 +583,16 @@ set.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="getEnumValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)">
+<h3>getEnumValue</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</span>&nbsp;<span class="element-name">getEnumValue</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</span></div>
+<div class="block">Shorthand for extracting the "value" enum of a named annotation on an element.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getEnumValues(javax.lang.model.element.AnnotationMirror,java.lang.String)">
 <h3>getEnumValues</h3>
 <div class="horizontal-scroll">
@@ -515,6 +613,16 @@ set.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="getEnumValues(javax.lang.model.element.Element,com.google.errorprone.ClassName)">
+<h3>getEnumValues</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;com.sun.tools.javac.code.Symbol.VarSymbol&gt;</span>&nbsp;<span class="element-name">getEnumValues</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</span></div>
+<div class="block">Shorthand for extracting the "value" enum values of a named annotation on an element.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getStrings(javax.lang.model.element.AnnotationMirror,java.lang.String)">
 <h3>getStrings</h3>
 <div class="horizontal-scroll">
@@ -530,6 +638,17 @@ set.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getStrings</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</span></div>
+<div class="block">Shorthand for extracting a list of strings from the "value" element of a named annotation on an
+element.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getStrings(javax.lang.model.element.Element,com.google.errorprone.ClassName)">
+<h3>getStrings</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getStrings</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</span></div>
 <div class="block">Shorthand for extracting a list of strings from the "value" element of a named annotation on an
 element.</div>
 </div>
@@ -557,6 +676,17 @@ element.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="getTypes(javax.lang.model.element.Element,com.google.errorprone.ClassName)">
+<h3>getTypes</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">com.google.common.collect.ImmutableList&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</span>&nbsp;<span class="element-name">getTypes</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</span></div>
+<div class="block">Shorthand for extracting a list of types from the "value" element of a named annotation on an
+element.</div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getTypeValue(javax.lang.model.element.AnnotationMirror,java.lang.String)">
 <h3>getTypeValue</h3>
 <div class="horizontal-scroll">
@@ -572,6 +702,16 @@ element.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</span>&nbsp;<span class="element-name">getTypeValue</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;annotationName)</span></div>
+<div class="block">Shorthand for extracting the "value" type of a named annotation on an element.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getTypeValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)">
+<h3>getTypeValue</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/type/TypeMirror.html" title="class or interface in javax.lang.model.type" class="external-link">TypeMirror</a>&gt;</span>&nbsp;<span class="element-name">getTypeValue</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.compiler/javax/lang/model/element/Element.html" title="class or interface in javax.lang.model.element" class="external-link">Element</a>&nbsp;sym,
+ <a href="../ClassName.html" title="class in com.google.errorprone">ClassName</a>&nbsp;annotationName)</span></div>
 <div class="block">Shorthand for extracting the "value" type of a named annotation on an element.</div>
 </div>
 </section>

@@ -5065,6 +5065,10 @@ based on its context.</div>
     meta-syntactically inspect the annotation.</div>
 </div>
 </dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getAnnotation(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getAnnotation(Element, ClassName)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Returns the annotation on the given element with the specified class name.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getAnnotation(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getAnnotation(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
 <div class="block">Returns the annotation on the given element with the specified qualified binary or canonical
@@ -5137,6 +5141,10 @@ empty if the flag is unset.</div>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getBooleanValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getBooleanValue(AnnotationMirror, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
 <div class="block">Shorthand for extracting a boolean value of a named element from an annotation mirror.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getBooleanValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getBooleanValue(Element, ClassName)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting the "value" boolean of a named annotation on an element.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getBooleanValue(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getBooleanValue(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
@@ -5477,6 +5485,10 @@ empty if the flag is unset.</div>
 <dd>
 <div class="block">Shorthand for extracting an enum value of a named element from an annotation mirror.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getEnumValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getEnumValue(Element, ClassName)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting the "value" enum of a named annotation on an element.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getEnumValue(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getEnumValue(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
 <div class="block">Shorthand for extracting the "value" enum of a named annotation on an element.</div>
@@ -5484,6 +5496,10 @@ empty if the flag is unset.</div>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getEnumValues(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getEnumValues(AnnotationMirror, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
 <div class="block">Shorthand for extracting enum values of a named element from an annotation mirror.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getEnumValues(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getEnumValues(Element, ClassName)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting the "value" enum values of a named annotation on an element.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getEnumValues(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getEnumValues(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
@@ -6128,6 +6144,11 @@ normalizing away workspace roots (e.g.</div>
 <dd>
 <div class="block">Shorthand for extracting a list of strings for a named element (e.g. array or single string).</div>
 </dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getStrings(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getStrings(Element, ClassName)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting a list of strings from the "value" element of a named annotation on an
+element.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getStrings(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getStrings(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
 <div class="block">Shorthand for extracting a list of strings from the "value" element of a named annotation on an
@@ -6136,6 +6157,10 @@ element.</div>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getStringValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getStringValue(AnnotationMirror, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
 <div class="block">Shorthand for extracting a string value of a named element from an annotation mirror.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getStringValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getStringValue(Element, ClassName)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting the "value" string of a named annotation on an element.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getStringValue(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getStringValue(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
@@ -6279,6 +6304,11 @@ determined.</div>
 <dd>
 <div class="block">Shorthand for extracting a list of types for a named element (e.g.</div>
 </dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getTypes(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getTypes(Element, ClassName)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting a list of types from the "value" element of a named annotation on an
+element.</div>
+</dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getTypes(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getTypes(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
 <div class="block">Shorthand for extracting a list of types from the "value" element of a named annotation on an
@@ -6291,6 +6321,10 @@ element.</div>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getTypeValue(javax.lang.model.element.AnnotationMirror,java.lang.String)" class="member-name-link">getTypeValue(AnnotationMirror, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
 <div class="block">Shorthand for extracting a type value of a named element from an annotation mirror.</div>
+</dd>
+<dt><a href="com/google/errorprone/util/MoreAnnotations.html#getTypeValue(javax.lang.model.element.Element,com.google.errorprone.ClassName)" class="member-name-link">getTypeValue(Element, ClassName)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
+<dd>
+<div class="block">Shorthand for extracting the "value" type of a named annotation on an element.</div>
 </dd>
 <dt><a href="com/google/errorprone/util/MoreAnnotations.html#getTypeValue(javax.lang.model.element.Element,java.lang.String)" class="member-name-link">getTypeValue(Element, String)</a> - Static method in class com.google.errorprone.util.<a href="com/google/errorprone/util/MoreAnnotations.html" title="class in com.google.errorprone.util">MoreAnnotations</a></dt>
 <dd>
