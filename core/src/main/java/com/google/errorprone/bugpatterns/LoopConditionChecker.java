@@ -94,7 +94,7 @@ public class LoopConditionChecker extends BugChecker
         .build();
   }
 
-  /** Scan for loop conditions that are determined entirely by the state of local variables. */
+  /** Scan for loop conditions determined entirely by local variables and compile-time constants. */
   private static class LoopConditionVisitor extends SimpleTreeVisitor<Boolean, Void> {
 
     static ImmutableSet<Symbol.VarSymbol> scan(Tree tree) {
@@ -113,6 +113,9 @@ public class LoopConditionChecker extends BugChecker
 
     @Override
     public Boolean visitIdentifier(IdentifierTree tree, Void unused) {
+      if (ASTHelpers.constValue(tree) != null) {
+        return true;
+      }
       Symbol sym = ASTHelpers.getSymbol(tree);
       if (sym instanceof Symbol.VarSymbol varSymbol) {
         switch (sym.getKind()) {
@@ -134,6 +137,11 @@ public class LoopConditionChecker extends BugChecker
     @Override
     public Boolean visitLiteral(LiteralTree tree, Void unused) {
       return true;
+    }
+
+    @Override
+    protected Boolean defaultAction(Tree node, Void unused) {
+      return ASTHelpers.constValue(node) != null;
     }
 
     @Override
