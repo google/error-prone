@@ -292,6 +292,76 @@ public final class UnnecessarilyFullyQualifiedTest {
   }
 
   @Test
+  public void packageInfo_notExempted() {
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
+            """
+            package a;
+
+            public @interface A {}
+            """)
+        .addSourceLines(
+            "b/package-info.java",
+            """
+            // BUG: Diagnostic contains: qualified name 'a.A' is unambiguous
+            @a.A
+            package b;
+            """)
+        .setArgs("-XepOpt:UnnecessarilyFullyQualified:ExemptPackageInfo=false")
+        .doTest();
+  }
+
+  @Test
+  public void packageInfo_notExempted_refactoring() {
+    helper
+        .addInputLines(
+            "a/A.java",
+            """
+            package a;
+
+            public @interface A {}
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "b/package-info.java",
+            """
+            @a.A
+            package b;
+            """)
+        .addOutputLines(
+            "b/package-info.java",
+            """
+            @A
+            package b;
+
+            import a.A;
+            """)
+        .setArgs("-XepOpt:UnnecessarilyFullyQualified:ExemptPackageInfo=false")
+        .doTest();
+  }
+
+  @Test
+  public void moduleInfo() {
+    compilationHelper
+        .addSourceLines(
+            "a/A.java",
+            """
+            package a;
+
+            public @interface A {}
+            """)
+        .addSourceLines(
+            "module-info.java",
+            """
+            // BUG: Diagnostic contains: qualified name 'a.A' is unambiguous
+            @a.A
+            module foo {}
+            """)
+        .doTest();
+  }
+
+  @Test
   public void staticNestedClass() {
     helper
         .addInputLines(
