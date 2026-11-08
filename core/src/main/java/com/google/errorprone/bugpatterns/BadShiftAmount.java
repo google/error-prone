@@ -31,11 +31,11 @@ import com.google.errorprone.matchers.Matcher;
 import com.google.errorprone.util.ASTHelpers;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.LiteralTree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.tools.javac.code.Symtab;
 import com.sun.tools.javac.code.Type;
 import com.sun.tools.javac.code.Types;
+import java.util.OptionalInt;
 
 /**
  * @author bill.pugh@gmail.com (Bill Pugh)
@@ -45,8 +45,8 @@ import com.sun.tools.javac.code.Types;
 public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
 
   /**
-   * Matches if the left operand is an int, byte, short, or char, and the right operand is a literal
-   * that is not in the range 0-31 inclusive.
+   * Matches if the left operand is an int, byte, short, or char, and the right operand is a
+   * compile-time constant that is not in the range 0-31 inclusive.
    *
    * <p>In a shift expression, byte, short, and char undergo unary numeric promotion and are
    * promoted to int. See JLS 5.6.1.
@@ -63,17 +63,17 @@ public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
           return false;
         }
 
-        ExpressionTree rightOperand = tree.getRightOperand();
-        if (rightOperand instanceof LiteralTree literalTree) {
-          Object rightValue = literalTree.getValue();
-          if (rightValue instanceof Number number) {
-            int intValue = number.intValue();
-            return intValue < 0 || intValue > 31;
-          }
-        }
-
-        return false;
+        OptionalInt shiftAmount = shiftAmount(tree.getRightOperand());
+        return shiftAmount.isPresent()
+            && (shiftAmount.getAsInt() < 0 || shiftAmount.getAsInt() > 31);
       };
+
+  /** Returns the shift amount if the right operand is a compile-time constant, or empty. */
+  private static OptionalInt shiftAmount(ExpressionTree rightOperand) {
+    return ASTHelpers.constValue(rightOperand) instanceof Number number
+        ? OptionalInt.of(number.intValue())
+        : OptionalInt.empty();
+  }
 
   public static final Matcher<BinaryTree> BINARY_TREE_MATCHER =
       allOf(
@@ -91,7 +91,7 @@ public class BadShiftAmount extends BugChecker implements BinaryTreeMatcher {
      * For shift amounts in [32, 63], cast the left operand to long.  Otherwise change the shift
      * amount to whatever would actually be used.
      */
-    int intValue = ((Number) ((LiteralTree) tree.getRightOperand()).getValue()).intValue();
+    int intValue = shiftAmount(tree.getRightOperand()).getAsInt();
 
     Fix fix;
     if (intValue >= 32 && intValue <= 63) {
