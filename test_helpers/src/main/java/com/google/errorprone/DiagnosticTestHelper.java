@@ -232,15 +232,18 @@ public class DiagnosticTestHelper {
   /**
    * Returns one message for each line of {@code source} that fails, in source order, naming the
    * first expectation the line fails: a marker whose key has no expected message, a marked line
-   * without a matching diagnostic, or an unmarked line with a diagnostic.
+   * without a matching diagnostic, or an unmarked line with a diagnostic. The message for a marked
+   * line without a matching diagnostic is followed by the text of that line, indented, since the
+   * list of all errors prints the source line only for a line that has a diagnostic.
    */
   ImmutableList<String> findMismatchedLines(
       JavaFileObject source, LookForCheckNameInDiagnostic lookForCheckNameInDiagnostic)
       throws IOException {
     List<Diagnostic<? extends JavaFileObject>> diagnostics = getDiagnostics();
     ImmutableList.Builder<String> mismatches = ImmutableList.builder();
-    LineNumberReader reader =
-        new LineNumberReader(CharSource.wrap(source.getCharContent(false)).openStream());
+    CharSequence content = source.getCharContent(false);
+    List<String> sourceLines = content.toString().lines().toList();
+    LineNumberReader reader = new LineNumberReader(CharSource.wrap(content).openStream());
     do {
       String line = reader.readLine();
       if (line == null) {
@@ -283,7 +286,8 @@ public class DiagnosticTestHelper {
           if (mismatch == null && !patternMatcher.matches(diagnostics)) {
             mismatch =
                 String.format(
-                    "Did not see an error on line %s matching %s.", lineNumber, predicate);
+                    "Did not see an error on line %s matching %s.\n    %s",
+                    lineNumber, predicate, sourceLines.get(lineNumber - 1).trim());
           }
         }
 
@@ -298,7 +302,8 @@ public class DiagnosticTestHelper {
           if (!checkNameMatcher.matches(diagnostics)) {
             mismatch =
                 String.format(
-                    "Did not see an error on line %s containing [%s].", lineNumber, checkName);
+                    "Did not see an error on line %s containing [%s].\n    %s",
+                    lineNumber, checkName, sourceLines.get(lineNumber - 1).trim());
           }
         }
 
