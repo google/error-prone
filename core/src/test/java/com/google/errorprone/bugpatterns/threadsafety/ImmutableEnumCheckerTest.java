@@ -276,4 +276,60 @@ enum Test {
 """)
         .doTest();
   }
+
+  @Test
+  public void gsonTypeToken() {
+    compilationHelper
+        .addSourceLines(
+            "TypeToken.java",
+            """
+            package com.google.gson.reflect;
+
+            public class TypeToken<T> {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.gson.reflect.TypeToken;
+
+            enum Test {
+              STRING(new TypeToken<String>() {});
+
+              final TypeToken<?> typeToken;
+
+              Test(TypeToken<?> typeToken) {
+                this.typeToken = typeToken;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void guavaTypeToken() {
+    compilationHelper
+        .addSourceLines(
+            "TypeToken.java",
+            """
+            package com.google.common.reflect;
+
+            public abstract class TypeToken<T> {}
+            """)
+        .addSourceLines(
+            "Test.java",
+            """
+            import com.google.common.reflect.TypeToken;
+
+            enum Test {
+              STRING(new TypeToken<String>() {});
+
+              final TypeToken<?> typeToken;
+
+              Test(TypeToken<?> typeToken) {
+                this.typeToken = typeToken;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
