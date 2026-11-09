@@ -22,6 +22,7 @@ import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.matchers.JUnitMatchers.JUNIT4_TEST_ANNOTATION;
 import static com.google.errorprone.matchers.Matchers.hasAnnotation;
 
+import com.google.common.base.CharMatcher;
 import com.google.errorprone.BugPattern;
 import com.google.errorprone.BugPattern.SeverityLevel;
 import com.google.errorprone.VisitorState;
@@ -54,10 +55,14 @@ public final class UnnecessaryTestMethodPrefix extends BugChecker
           return super.visitMethod(tree, null);
         }
         String name = tree.getName().toString();
-        if (!name.startsWith("test") || name.equals("test")) {
+        if (!name.startsWith("test")) {
           return super.visitMethod(tree, null);
         }
-        var newName = toLowerCase(name.charAt(4)) + name.substring(5);
+        String trimmed = CharMatcher.is('_').trimLeadingFrom(name.substring(4));
+        if (trimmed.isEmpty()) {
+          return super.visitMethod(tree, null);
+        }
+        var newName = toLowerCase(trimmed.charAt(0)) + trimmed.substring(1);
         fixBuilder.merge(renameMethod(tree, newName, state));
         sites.add(tree);
         return super.visitMethod(tree, null);

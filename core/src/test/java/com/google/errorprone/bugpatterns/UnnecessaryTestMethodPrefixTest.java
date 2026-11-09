@@ -37,6 +37,12 @@ public final class UnnecessaryTestMethodPrefixTest {
             class T {
               @Test
               public void testFoo() {}
+
+              @Test
+              public void test_bar() {}
+
+              @Test
+              public void test_Baz() {}
             }
             """)
         .addOutputLines(
@@ -47,6 +53,12 @@ public final class UnnecessaryTestMethodPrefixTest {
             class T {
               @Test
               public void foo() {}
+
+              @Test
+              public void bar() {}
+
+              @Test
+              public void baz() {}
             }
             """)
         .doTest();
@@ -89,6 +101,9 @@ public final class UnnecessaryTestMethodPrefixTest {
             class T {
               @Test
               public void test() {}
+
+              @Test
+              public void test_() {}
             }
             """)
         .expectUnchanged()
