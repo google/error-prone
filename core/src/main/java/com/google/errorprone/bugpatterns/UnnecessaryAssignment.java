@@ -197,12 +197,10 @@ public final class UnnecessaryAssignment extends BugChecker
       }
       AnnotationTree annotationToRemove =
           tree.getModifiers().getAnnotations().stream()
-              .filter(
-                  anno ->
-                      FRAMEWORK_ANNOTATIONS.stream()
-                          .anyMatch(
-                              fanno ->
-                                  isSubtype(getType(anno), state.getTypeFromString(fanno), state)))
+              .filter(anno ->
+                  FRAMEWORK_ANNOTATIONS.stream()
+                      .anyMatch(
+                          fanno -> isSubtype(getType(anno), state.getTypeFromString(fanno), state)))
               .findFirst()
               .get();
       return description

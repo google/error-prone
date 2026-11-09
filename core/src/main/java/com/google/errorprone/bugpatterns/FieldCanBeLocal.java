@@ -245,10 +245,9 @@ public final class FieldCanBeLocal extends BugChecker implements CompilationUnit
       // Don't emit findings if the _only_ uses of the field are assignments: we'll be overlapping
       // with UnusedVariable.
       if (uses.get(varSymbol).stream()
-          .allMatch(
-              tp ->
-                  tp.getParentPath().getLeaf() instanceof AssignmentTree parent
-                      && parent.getVariable() == tp.getLeaf())) {
+          .allMatch(tp ->
+              tp.getParentPath().getLeaf() instanceof AssignmentTree parent
+                  && parent.getVariable() == tp.getLeaf())) {
         continue;
       }
       SuggestedFix.Builder fix = SuggestedFix.builder();

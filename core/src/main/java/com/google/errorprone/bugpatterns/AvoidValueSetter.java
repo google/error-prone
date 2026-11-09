@@ -70,10 +70,9 @@ public final class AvoidValueSetter extends BugChecker implements MethodInvocati
     String fieldNumberConstantIfMisnamed = toUpperCase(fieldName) + "_FIELD_NUMBER";
     if (protoType != null
         && getEnclosedElements(protoType.tsym).stream()
-            .anyMatch(
-                member ->
-                    member.getSimpleName().contentEquals(fieldNumberConstant)
-                        || member.getSimpleName().contentEquals(fieldNumberConstantIfMisnamed))) {
+            .anyMatch(member ->
+                member.getSimpleName().contentEquals(fieldNumberConstant)
+                    || member.getSimpleName().contentEquals(fieldNumberConstantIfMisnamed))) {
       return NO_MATCH;
     }
 
@@ -120,25 +119,23 @@ public final class AvoidValueSetter extends BugChecker implements MethodInvocati
       Type enumType,
       String enumSetterName) {
     return findEnumConstant(enumType, numericValue)
-        .map(
-            enumConst -> {
-              SuggestedFix.Builder fixBuilder =
-                  SuggestedFix.builder().merge(renameMethodInvocation(tree, enumSetterName, state));
-              fixBuilder.replace(
-                  arg, format("%s.%s", qualifyType(state, fixBuilder, enumType.tsym), enumConst));
-              return describeMatch(tree, fixBuilder.build());
-            })
+        .map(enumConst -> {
+          SuggestedFix.Builder fixBuilder =
+              SuggestedFix.builder().merge(renameMethodInvocation(tree, enumSetterName, state));
+          fixBuilder.replace(
+              arg, format("%s.%s", qualifyType(state, fixBuilder, enumType.tsym), enumConst));
+          return describeMatch(tree, fixBuilder.build());
+        })
         .orElse(NO_MATCH);
   }
 
   private static Optional<String> findEnumConstant(Type enumType, int numericValue) {
     return getEnclosedElements(enumType.tsym).stream()
-        .filter(
-            symbol ->
-                symbol instanceof VarSymbol vs
-                    && vs.getConstantValue() instanceof Integer i
-                    && i == numericValue
-                    && symbol.getSimpleName().toString().endsWith("_VALUE"))
+        .filter(symbol ->
+            symbol instanceof VarSymbol vs
+                && vs.getConstantValue() instanceof Integer i
+                && i == numericValue
+                && symbol.getSimpleName().toString().endsWith("_VALUE"))
         .map(symbol -> symbol.getSimpleName().toString().replaceAll("_VALUE$", ""))
         .findFirst();
   }

@@ -54,11 +54,10 @@ abstract class UBlock extends USimpleStatement implements BlockTree {
     for (UStatement statement : statements) {
       choice = choice.flatMap(statement);
     }
-    return choice.mapIfPresent(
-        (UnifierWithUnconsumedStatements state) ->
-            state.unconsumedStatements().isEmpty()
-                ? Optional.of(state.unifier())
-                : Optional.<Unifier>empty());
+    return choice.mapIfPresent((UnifierWithUnconsumedStatements state) ->
+        state.unconsumedStatements().isEmpty()
+            ? Optional.of(state.unifier())
+            : Optional.<Unifier>empty());
   }
 
   static com.sun.tools.javac.util.List<JCStatement> inlineStatementList(

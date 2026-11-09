@@ -151,13 +151,12 @@ public class CommentsTest {
     @SuppressWarnings("TreeToString") // explicitly want to strip comments in tree.
     private static String commentsToString(ImmutableList<Commented> comments) {
       return comments.stream()
-          .map(
-              c ->
-                  Stream.of(
-                          String.valueOf(getTextFromCommentList(c.beforeComments())),
-                          String.valueOf(c.tree()),
-                          String.valueOf(getTextFromCommentList(c.afterComments())))
-                      .collect(Collectors.joining(" ")))
+          .map(c ->
+              Stream.of(
+                      String.valueOf(getTextFromCommentList(c.beforeComments())),
+                      String.valueOf(c.tree()),
+                      String.valueOf(getTextFromCommentList(c.afterComments())))
+                  .collect(Collectors.joining(" ")))
           .collect(toImmutableList())
           .toString();
     }
@@ -558,13 +557,12 @@ public class CommentsTest {
 
     private static String commentsToString(ImmutableList<Commented> comments, VisitorState state) {
       return comments.stream()
-          .map(
-              c ->
-                  Stream.of(
-                          String.valueOf(getSourceAtComment(c.beforeComments(), state)),
-                          state.getSourceForNode(c.tree()),
-                          String.valueOf(getSourceAtComment(c.afterComments(), state)))
-                      .collect(Collectors.joining(" ")))
+          .map(c ->
+              Stream.of(
+                      String.valueOf(getSourceAtComment(c.beforeComments(), state)),
+                      state.getSourceForNode(c.tree()),
+                      String.valueOf(getSourceAtComment(c.afterComments(), state)))
+                  .collect(Collectors.joining(" ")))
           .collect(toImmutableList())
           .toString();
     }
@@ -572,12 +570,11 @@ public class CommentsTest {
     private static ImmutableList<String> getSourceAtComment(
         ImmutableList<ErrorProneComment> comments, VisitorState state) {
       return comments.stream()
-          .map(
-              c ->
-                  state
-                      .getSourceCode()
-                      .subSequence(c.getSourcePos(0), c.getSourcePos(0) + c.getText().length())
-                      .toString())
+          .map(c ->
+              state
+                  .getSourceCode()
+                  .subSequence(c.getSourcePos(0), c.getSourcePos(0) + c.getText().length())
+                  .toString())
           .collect(toImmutableList());
     }
   }

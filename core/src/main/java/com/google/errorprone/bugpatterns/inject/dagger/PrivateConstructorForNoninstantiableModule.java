@@ -60,9 +60,8 @@ public class PrivateConstructorForNoninstantiableModule extends BugChecker
 
     ImmutableList<Tree> nonSyntheticMembers =
         classTree.getMembers().stream()
-            .filter(
-                tree ->
-                    !(tree instanceof MethodTree methodTree && isGeneratedConstructor(methodTree)))
+            .filter(tree ->
+                !(tree instanceof MethodTree methodTree && isGeneratedConstructor(methodTree)))
             .collect(toImmutableList());
 
     // ignore empty modules

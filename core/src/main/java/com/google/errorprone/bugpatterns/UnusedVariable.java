@@ -359,14 +359,11 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
         specs.stream()
             .map(UnusedSpec::terminatingAssignment)
             .flatMap(Streams::stream)
-            .filter(
-                a ->
-                    allUsageSites.stream()
-                        .noneMatch(
-                            tp ->
-                                tp.getLeaf()
-                                        instanceof ExpressionStatementTree expressionStatementTree
-                                    && expressionStatementTree.getExpression().equals(a)))
+            .filter(a ->
+                allUsageSites.stream()
+                    .noneMatch(tp ->
+                        tp.getLeaf() instanceof ExpressionStatementTree expressionStatementTree
+                            && expressionStatementTree.getExpression().equals(a)))
             .findFirst();
     if (removedVariableTree.isPresent() && reassignment.isPresent()) {
       return SuggestedFix.prefixWith( // not needed if top-level statement
@@ -822,10 +819,9 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
           && FUNCTIONAL_INTERFACE_TYPES_TO_CHECK.stream()
               .map(t -> t.type(state))
               .filter(Objects::nonNull)
-              .anyMatch(
-                  t ->
-                      isSubtype(enclosingMethod.owner.type, t, state)
-                          && isFunctionalInterfaceMethod(t, enclosingMethod, state))) {
+              .anyMatch(t ->
+                  isSubtype(enclosingMethod.owner.type, t, state)
+                      && isFunctionalInterfaceMethod(t, enclosingMethod, state))) {
         return true;
       }
 
@@ -1193,11 +1189,10 @@ public final class UnusedVariable extends BugChecker implements CompilationUnitT
       String finalFieldName = fieldName;
       unusedElements
           .keySet()
-          .removeIf(
-              symbol ->
-                  symbol.getKind() == ElementKind.FIELD
-                      && symbol.owner.equals(owner)
-                      && symbol.getSimpleName().contentEquals(finalFieldName));
+          .removeIf(symbol ->
+              symbol.getKind() == ElementKind.FIELD
+                  && symbol.owner.equals(owner)
+                  && symbol.getSimpleName().contentEquals(finalFieldName));
     }
   }
 

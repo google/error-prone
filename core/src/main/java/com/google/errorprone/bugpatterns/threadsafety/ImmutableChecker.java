@@ -287,10 +287,9 @@ public class ImmutableChecker extends BugChecker
     }
     ImmutableSet<String> immutableAndContainer =
         typarams.entrySet().stream()
-            .filter(
-                e ->
-                    annotation.containerOf().contains(e.getKey())
-                        && analysis.hasThreadSafeTypeParameterAnnotation(e.getValue()))
+            .filter(e ->
+                annotation.containerOf().contains(e.getKey())
+                    && analysis.hasThreadSafeTypeParameterAnnotation(e.getValue()))
             .map(Map.Entry::getKey)
             .collect(toImmutableSet());
     if (!immutableAndContainer.isEmpty()) {

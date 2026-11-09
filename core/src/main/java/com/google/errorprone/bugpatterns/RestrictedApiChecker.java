@@ -162,12 +162,11 @@ public class RestrictedApiChecker extends BugChecker
         getOnlyElement(
             superclass
                 .members()
-                .getSymbols(
-                    member ->
-                        member.isConstructor()
-                            && types.hasSameArgs(
-                                member.asMemberOf(anonymousClassType, types).asType(),
-                                matchingConstructorType)));
+                .getSymbols(member ->
+                    member.isConstructor()
+                        && types.hasSameArgs(
+                            member.asMemberOf(anonymousClassType, types).asType(),
+                            matchingConstructorType)));
   }
 
   @Override
@@ -188,12 +187,11 @@ public class RestrictedApiChecker extends BugChecker
 
     // Try each super method for @RestrictedApi
     return streamSuperMethods(method, state.getTypes())
-        .filter((t) -> hasAnnotation(t, RESTRICTED_API_ANNOTATION, state))
+        .filter(t -> hasAnnotation(t, RESTRICTED_API_ANNOTATION, state))
         .findFirst()
-        .map(
-            superWithRestrictedApi ->
-                checkRestriction(
-                    getRestrictedApiAnnotation(superWithRestrictedApi, state), where, state))
+        .map(superWithRestrictedApi ->
+            checkRestriction(
+                getRestrictedApiAnnotation(superWithRestrictedApi, state), where, state))
         .orElse(NO_MATCH);
   }
 

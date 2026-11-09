@@ -219,11 +219,10 @@ public final class InvalidInlineTag extends BugChecker
         SuggestedFix.Builder fix = SuggestedFix.builder().replace(beforeAt, beforeAt + 1, "{");
 
         Optional<Integer> found = findClosingBrace(body, matcher.start(1));
-        found.ifPresent(
-            pos -> {
-              int closing = comment.getSourcePos(((DCText) node).pos + pos);
-              fix.replace(closing, closing + 1, "}");
-            });
+        found.ifPresent(pos -> {
+          int closing = comment.getSourcePos(((DCText) node).pos + pos);
+          fix.replace(closing, closing + 1, "}");
+        });
 
         state.reportMatch(
             buildDescription(
@@ -373,12 +372,11 @@ public final class InvalidInlineTag extends BugChecker
       String message = String.format("Tag name `%s` is unknown.", tag.name());
       state.reportMatch(
           bestMatch
-              .map(
-                  bm ->
-                      buildDescription(diagnosticPosition(getCurrentPath(), state))
-                          .setMessage(message + String.format(" Did you mean tag `%s`?", bm))
-                          .addFix(SuggestedFix.replace(pos, pos + tag.name().length(), bm))
-                          .build())
+              .map(bm ->
+                  buildDescription(diagnosticPosition(getCurrentPath(), state))
+                      .setMessage(message + String.format(" Did you mean tag `%s`?", bm))
+                      .addFix(SuggestedFix.replace(pos, pos + tag.name().length(), bm))
+                      .build())
               .orElse(
                   buildDescription(diagnosticPosition(getCurrentPath(), state))
                       .setMessage(

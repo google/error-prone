@@ -59,13 +59,12 @@ public final class BugPatternNaming extends BugChecker implements ClassTreeMatch
     return getValue(attribute, "name")
         .flatMap(MoreAnnotations::asStringValue)
         .filter(name -> !name.isEmpty())
-        .flatMap(
-            name -> {
-              if (!classSymbol.name.contentEquals(name)) {
-                return Optional.of(describeMatch(tree));
-              }
-              return removeName(tree, state);
-            })
+        .flatMap(name -> {
+          if (!classSymbol.name.contentEquals(name)) {
+            return Optional.of(describeMatch(tree));
+          }
+          return removeName(tree, state);
+        })
         .orElse(NO_MATCH);
   }
 
@@ -73,24 +72,20 @@ public final class BugPatternNaming extends BugChecker implements ClassTreeMatch
     return tree.getModifiers().getAnnotations().stream()
         .filter(anno -> isSameType(getType(anno.getAnnotationType()), BUG_PATTERN, state))
         .findFirst()
-        .flatMap(
-            anno ->
-                anno.getArguments().stream()
-                    .filter(
-                        t ->
-                            t instanceof AssignmentTree assignmentTree
-                                && ((IdentifierTree) assignmentTree.getVariable())
-                                    .getName()
-                                    .contentEquals("name"))
-                    .findFirst()
-                    .map(
-                        ele ->
-                            buildDescription(anno)
-                                .setMessage(
-                                    "Setting @BugPattern.name to the class name of the check is"
-                                        + " redundant")
-                                .addFix(
-                                    SuggestedFixes.removeElement(ele, anno.getArguments(), state))
-                                .build()));
+        .flatMap(anno ->
+            anno.getArguments().stream()
+                .filter(t ->
+                    t instanceof AssignmentTree assignmentTree
+                        && ((IdentifierTree) assignmentTree.getVariable())
+                            .getName()
+                            .contentEquals("name"))
+                .findFirst()
+                .map(ele ->
+                    buildDescription(anno)
+                        .setMessage(
+                            "Setting @BugPattern.name to the class name of the check is"
+                                + " redundant")
+                        .addFix(SuggestedFixes.removeElement(ele, anno.getArguments(), state))
+                        .build()));
   }
 }

@@ -358,11 +358,8 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         ImmutableList<ErrorProneComment> orphanedComments =
             allComments.stream()
                 // Within this case's source code
-                .filter(
-                    comment ->
-                        caseIr
-                            .caseSourceCodeRange()
-                            .encloses(buildCommentRange(comment, ifTreeStart)))
+                .filter(comment ->
+                    caseIr.caseSourceCodeRange().encloses(buildCommentRange(comment, ifTreeStart)))
                 // But outside the printed range for the RHS
                 .filter(
                     comment -> !buildCommentRange(comment, ifTreeStart).isConnected(printedRange))
@@ -600,20 +597,19 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
         // Upgrade existing `default` to `case null, default`.
         cases =
             cases.stream()
-                .map(
-                    caseIr -> {
-                      if (caseIr.hasDefault()) {
-                        return new CaseIr(
-                            /* hasCaseNull= */ true,
-                            /* hasDefault= */ true,
-                            /* instanceOfOptional= */ caseIr.instanceOfOptional(),
-                            /* guardOptional= */ caseIr.guardOptional(),
-                            /* expressionsOptional= */ caseIr.expressionsOptional(),
-                            /* arrowRhsOptional= */ caseIr.arrowRhsOptional(),
-                            /* caseSourceCodeRange= */ caseIr.caseSourceCodeRange());
-                      }
-                      return caseIr;
-                    })
+                .map(caseIr -> {
+                  if (caseIr.hasDefault()) {
+                    return new CaseIr(
+                        /* hasCaseNull= */ true,
+                        /* hasDefault= */ true,
+                        /* instanceOfOptional= */ caseIr.instanceOfOptional(),
+                        /* guardOptional= */ caseIr.guardOptional(),
+                        /* expressionsOptional= */ caseIr.expressionsOptional(),
+                        /* arrowRhsOptional= */ caseIr.arrowRhsOptional(),
+                        /* caseSourceCodeRange= */ caseIr.caseSourceCodeRange());
+                  }
+                  return caseIr;
+                })
                 .collect(toImmutableList());
         recheckDominanceNeeded = true;
       } else {
@@ -638,10 +634,9 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
           cases.stream().filter(caseIr -> caseIr.arrowRhsOptional().isEmpty()).count();
       long canCompleteNormallyBlockCount =
           cases.stream()
-              .filter(
-                  caseIr ->
-                      caseIr.arrowRhsOptional().isPresent()
-                          && Reachability.canCompleteNormally(caseIr.arrowRhsOptional().get()))
+              .filter(caseIr ->
+                  caseIr.arrowRhsOptional().isPresent()
+                      && Reachability.canCompleteNormally(caseIr.arrowRhsOptional().get()))
               .count();
 
       // javac treats a switch as exhaustive only if it has a `default` or is enhanced (JLS 21
@@ -650,11 +645,10 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       // not exhaustive to javac, even though this check "knows" it is
       boolean javacSeesSwitchAsExhaustive =
           cases.stream()
-              .anyMatch(
-                  caseIr ->
-                      caseIr.hasDefault()
-                          || caseIr.hasCaseNull()
-                          || caseIr.instanceOfOptional().isPresent());
+              .anyMatch(caseIr ->
+                  caseIr.hasDefault()
+                      || caseIr.hasCaseNull()
+                      || caseIr.instanceOfOptional().isPresent());
 
       // If javac sees the switch as exhaustive, no case can complete normally, and no `break`
       // exits the switch (chains with such a `break` are rejected earlier), then javac also sees
@@ -1681,14 +1675,13 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     SuggestedFix.Builder suggestedFixBuilderWithPullupEnabled = SuggestedFix.builder();
     Optional<List<CaseIr>> casesWithPullupMaybeApplied =
         Optional.of(cases)
-            .flatMap(
-                caseList ->
-                    maybePullUp(
-                        caseList,
-                        state,
-                        finalIfChainAnalysisState,
-                        Optional.of(suggestedFixBuilderWithPullupEnabled),
-                        ifTreeSourceRange));
+            .flatMap(caseList ->
+                maybePullUp(
+                    caseList,
+                    state,
+                    finalIfChainAnalysisState,
+                    Optional.of(suggestedFixBuilderWithPullupEnabled),
+                    ifTreeSourceRange));
 
     int numberPulledUp =
         casesWithPullupMaybeApplied.isEmpty()
@@ -1699,21 +1692,19 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     Optional<List<CaseIr>> fixedCasesOptional =
         casesWithPullupMaybeApplied
             .flatMap(caseList -> maybeDetectDuplicateConstants(caseList))
-            .flatMap(
-                caseList ->
-                    maybeFixDominance(caseList, state, subject, /* canReorderCases= */ !enableSafe))
-            .flatMap(
-                x ->
-                    maybeFixDefaultNullAndUnconditional(
-                        x,
-                        subject,
-                        ifTree,
-                        state,
-                        Optional.of(suggestedFixBuilderWithPullupEnabled),
-                        numberPulledUp,
-                        finalIfChainAnalysisState.handledEnumValues(),
-                        switchType,
-                        ifTreeSourceRange));
+            .flatMap(caseList ->
+                maybeFixDominance(caseList, state, subject, /* canReorderCases= */ !enableSafe))
+            .flatMap(x ->
+                maybeFixDefaultNullAndUnconditional(
+                    x,
+                    subject,
+                    ifTree,
+                    state,
+                    Optional.of(suggestedFixBuilderWithPullupEnabled),
+                    numberPulledUp,
+                    finalIfChainAnalysisState.handledEnumValues(),
+                    switchType,
+                    ifTreeSourceRange));
 
     SuggestedFix.Builder suggestedFixBuilderWithoutPullup = SuggestedFix.builder();
     boolean pullupDisabled = false;
@@ -1723,27 +1714,22 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
       fixedCasesOptional =
           Optional.of(cases)
               .flatMap(caseList -> maybeDetectDuplicateConstants(caseList))
-              .flatMap(
-                  caseList ->
-                      maybeFixDominance(
-                          caseList, state, subject, /* canReorderCases= */ !enableSafe))
-              .flatMap(
-                  caseList ->
-                      maybeFixDefaultNullAndUnconditional(
-                          caseList,
-                          subject,
-                          ifTree,
-                          state,
-                          Optional.of(suggestedFixBuilderWithoutPullup),
-                          /* numberPulledUp= */ 0,
-                          finalIfChainAnalysisState.handledEnumValues(),
-                          switchType,
-                          ifTreeSourceRange))
+              .flatMap(caseList ->
+                  maybeFixDominance(caseList, state, subject, /* canReorderCases= */ !enableSafe))
+              .flatMap(caseList ->
+                  maybeFixDefaultNullAndUnconditional(
+                      caseList,
+                      subject,
+                      ifTree,
+                      state,
+                      Optional.of(suggestedFixBuilderWithoutPullup),
+                      /* numberPulledUp= */ 0,
+                      finalIfChainAnalysisState.handledEnumValues(),
+                      switchType,
+                      ifTreeSourceRange))
               // Changing default/null can affect dominance
-              .flatMap(
-                  caseList ->
-                      maybeFixDominance(
-                          caseList, state, subject, /* canReorderCases= */ !enableSafe));
+              .flatMap(caseList ->
+                  maybeFixDominance(caseList, state, subject, /* canReorderCases= */ !enableSafe));
     }
 
     List<SuggestedFix> suggestedFixes = new ArrayList<>();
@@ -1856,16 +1842,15 @@ public final class IfChainToSwitch extends BugChecker implements IfTreeMatcher {
     // `case Integer _` and `case Long _`.
     ImmutableList<CaseIr> syntheticCases =
         caseIr.instanceOfOptional().get().stream()
-            .map(
-                instanceOfIr ->
-                    new CaseIr(
-                        /* hasCaseNull= */ false,
-                        /* hasDefault= */ false,
-                        /* instanceOfOptional= */ Optional.of(ImmutableList.of(instanceOfIr)),
-                        /* guardOptional= */ Optional.empty(),
-                        /* expressionsOptional= */ Optional.empty(),
-                        /* arrowRhsOptional= */ Optional.empty(),
-                        /* caseSourceCodeRange= */ caseIr.caseSourceCodeRange()))
+            .map(instanceOfIr ->
+                new CaseIr(
+                    /* hasCaseNull= */ false,
+                    /* hasDefault= */ false,
+                    /* instanceOfOptional= */ Optional.of(ImmutableList.of(instanceOfIr)),
+                    /* guardOptional= */ Optional.empty(),
+                    /* expressionsOptional= */ Optional.empty(),
+                    /* arrowRhsOptional= */ Optional.empty(),
+                    /* caseSourceCodeRange= */ caseIr.caseSourceCodeRange()))
             .collect(toImmutableList());
 
     // Attempt to fix any dominance violations in the synthetic cases.

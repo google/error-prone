@@ -73,14 +73,13 @@ public class ErrorProneOptionsTest {
             "-Xep:", // no check name
             "-Xep:Foo:FJDKFJSD"); // nonexistent severity level
 
-    badArgs.forEach(
-        arg -> {
-          InvalidCommandLineOptionException expected =
-              assertThrows(
-                  InvalidCommandLineOptionException.class,
-                  () -> ErrorProneOptions.processArgs(Arrays.asList(arg)));
-          assertThat(expected).hasMessageThat().contains("invalid flag");
-        });
+    badArgs.forEach(arg -> {
+      InvalidCommandLineOptionException expected =
+          assertThrows(
+              InvalidCommandLineOptionException.class,
+              () -> ErrorProneOptions.processArgs(Arrays.asList(arg)));
+      assertThat(expected).hasMessageThat().contains("invalid flag");
+    });
   }
 
   @Test

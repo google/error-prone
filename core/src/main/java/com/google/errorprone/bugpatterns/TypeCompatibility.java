@@ -75,11 +75,10 @@ public final class TypeCompatibility {
         flags.getBoolean("TypeCompatibility:TreatBuildersAsIncomparable").orElse(true);
     var extraTypes = flags.getSetOrEmpty("TypeCompatibility:ClassesWithNonInheritedEquals");
     this.classesWithNonInheritedEquals =
-        memoize(
-            state ->
-                concat(CLASSES_WITH_NON_INHERITED_EQUALS.stream(), extraTypes.stream())
-                    .map(state::getName)
-                    .collect(toImmutableSet()));
+        memoize(state ->
+            concat(CLASSES_WITH_NON_INHERITED_EQUALS.stream(), extraTypes.stream())
+                .map(state::getName)
+                .collect(toImmutableSet()));
   }
 
   public TypeCompatibilityReport compatibilityOfTypes(
@@ -337,23 +336,21 @@ public final class TypeCompatibility {
         // interface Super<A extends Super<A, B>, B>
         // class Foo extends Super<Foo, String>
         // class Bar extends Super<Bar, Integer>
-        .filter(
-            tp ->
-                !(previousLeftTypes.contains(tp.left)
-                    || isSameType(tp.left, leftType, state)
-                    || previousRightTypes.contains(tp.right)
-                    || isSameType(tp.right, rightType, state)))
-        .map(
-            types -> {
-              Set<Type> nextLeftTypes = typeSet(state);
-              nextLeftTypes.addAll(previousLeftTypes);
-              nextLeftTypes.add(leftType);
-              Set<Type> nextRightTypes = typeSet(state);
-              nextRightTypes.addAll(previousRightTypes);
-              nextRightTypes.add(rightType);
-              return compatibilityOfTypes(
-                  types.left, types.right, nextLeftTypes, nextRightTypes, state);
-            })
+        .filter(tp ->
+            !(previousLeftTypes.contains(tp.left)
+                || isSameType(tp.left, leftType, state)
+                || previousRightTypes.contains(tp.right)
+                || isSameType(tp.right, rightType, state)))
+        .map(types -> {
+          Set<Type> nextLeftTypes = typeSet(state);
+          nextLeftTypes.addAll(previousLeftTypes);
+          nextLeftTypes.add(leftType);
+          Set<Type> nextRightTypes = typeSet(state);
+          nextRightTypes.addAll(previousRightTypes);
+          nextRightTypes.add(rightType);
+          return compatibilityOfTypes(
+              types.left, types.right, nextLeftTypes, nextRightTypes, state);
+        })
         .filter(tcr -> !tcr.isCompatible())
         .findFirst()
         .orElse(TypeCompatibilityReport.compatible());
@@ -369,9 +366,8 @@ public final class TypeCompatibility {
   }
 
   private static TreeSet<Type> typeSet(VisitorState state) {
-    return new TreeSet<>(
-        (t1, t2) ->
-            state.getTypes().isSameType(t1, t2) ? 0 : t1.toString().compareTo(t2.toString()));
+    return new TreeSet<>((t1, t2) ->
+        state.getTypes().isSameType(t1, t2) ? 0 : t1.toString().compareTo(t2.toString()));
   }
 
   /**

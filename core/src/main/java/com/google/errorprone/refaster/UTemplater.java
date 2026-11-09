@@ -656,10 +656,9 @@ public class UTemplater extends SimpleTreeVisitor<Tree, Void> {
       AnnotationMirror compound) {
     TypeMirror type =
         MoreAnnotations.getTypeValue(compound, "value")
-            .orElseThrow(
-                () ->
-                    new IllegalArgumentException(
-                        "No value in " + AnnotationMirrors.toString(compound)));
+            .orElseThrow(() ->
+                new IllegalArgumentException(
+                    "No value in " + AnnotationMirrors.toString(compound)));
     String name = ((Type) type).asElement().getQualifiedName().toString();
     try {
       return asSubclass(Class.forName(name), new TypeToken<Matcher<? super ExpressionTree>>() {});

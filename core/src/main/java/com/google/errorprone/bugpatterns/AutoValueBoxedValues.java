@@ -105,11 +105,10 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     return classTree.getMembers().stream()
         .filter(MethodTree.class::isInstance)
         .map(memberTree -> (MethodTree) memberTree)
-        .filter(
-            methodTree ->
-                ABSTRACT_MATCHER.matches(methodTree, state)
-                    && methodTree.getParameters().isEmpty()
-                    && !isToBuilderMethod(methodTree, state, builderClass))
+        .filter(methodTree ->
+            ABSTRACT_MATCHER.matches(methodTree, state)
+                && methodTree.getParameters().isEmpty()
+                && !isToBuilderMethod(methodTree, state, builderClass))
         .map(methodTree -> maybeFixGetter(methodTree, state))
         .collect(toImmutableList());
   }
@@ -142,19 +141,17 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     classTree.getMembers().stream()
         .filter(MethodTree.class::isInstance)
         .map(memberTree -> (MethodTree) memberTree)
-        .filter(
-            methodTree ->
-                ABSTRACT_MATCHER.matches(methodTree, state)
-                    && methodTree.getParameters().size() == 1
-                    && isSameType(getType(methodTree.getReturnType()), getType(classTree), state))
+        .filter(methodTree ->
+            ABSTRACT_MATCHER.matches(methodTree, state)
+                && methodTree.getParameters().size() == 1
+                && isSameType(getType(methodTree.getReturnType()), getType(classTree), state))
         .forEach(methodTree -> maybeFixSetter(methodTree, state, getters));
     // Identify and try to fix the getters.
     classTree.getMembers().stream()
         .filter(MethodTree.class::isInstance)
         .map(memberTree -> (MethodTree) memberTree)
-        .filter(
-            methodTree ->
-                ABSTRACT_MATCHER.matches(methodTree, state) && methodTree.getParameters().isEmpty())
+        .filter(methodTree ->
+            ABSTRACT_MATCHER.matches(methodTree, state) && methodTree.getParameters().isEmpty())
         .forEach(methodTree -> maybeFixGetterInBuilder(methodTree, state, getters));
   }
 
@@ -166,10 +163,9 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
     boolean allGettersPrefixed = allGettersPrefixed(getters);
     Optional<Getter> fixedGetter =
         getters.stream()
-            .filter(
-                getter ->
-                    !getter.fix().isEmpty()
-                        && matchGetterAndSetter(getter.method(), methodTree, allGettersPrefixed))
+            .filter(getter ->
+                !getter.fix().isEmpty()
+                    && matchGetterAndSetter(getter.method(), methodTree, allGettersPrefixed))
             .findAny();
     if (fixedGetter.isPresent()) {
       var parameter = methodTree.getParameters().getFirst();
@@ -188,14 +184,13 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
       MethodTree methodTree, VisitorState state, List<Getter> getters) {
     Optional<Getter> fixedGetter =
         getters.stream()
-            .filter(
-                getter ->
-                    !getter.fix().isEmpty()
-                        && getter.method().getName().contentEquals(methodTree.getName().toString())
-                        && isSameType(
-                            getType(getter.method().getReturnType()),
-                            getType(methodTree.getReturnType()),
-                            state))
+            .filter(getter ->
+                !getter.fix().isEmpty()
+                    && getter.method().getName().contentEquals(methodTree.getName().toString())
+                    && isSameType(
+                        getType(getter.method().getReturnType()),
+                        getType(methodTree.getReturnType()),
+                        state))
             .findAny();
     if (fixedGetter.isPresent()) {
       Type type = getType(methodTree.getReturnType());
@@ -220,12 +215,10 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
         classTree.getMembers().stream()
             .filter(MethodTree.class::isInstance)
             .map(memberTree -> (MethodTree) memberTree)
-            .filter(
-                methodTree ->
-                    STATIC_MATCHER.matches(methodTree, state)
-                        && isSameType(
-                            getType(methodTree.getReturnType()), getType(classTree), state)
-                        && isTrivialFactoryMethod(methodTree, getters.size()))
+            .filter(methodTree ->
+                STATIC_MATCHER.matches(methodTree, state)
+                    && isSameType(getType(methodTree.getReturnType()), getType(classTree), state)
+                    && isTrivialFactoryMethod(methodTree, getters.size()))
             .findAny();
     if (trivialFactoryMethod.isEmpty()) {
       return;
@@ -254,10 +247,9 @@ public class AutoValueBoxedValues extends BugChecker implements ClassTreeMatcher
 
   private static Optional<ClassTree> findBuilderClass(ClassTree tree, VisitorState state) {
     return tree.getMembers().stream()
-        .filter(
-            memberTree ->
-                memberTree instanceof ClassTree
-                    && hasAnnotation(memberTree, AutoValue.Builder.class.getName(), state))
+        .filter(memberTree ->
+            memberTree instanceof ClassTree
+                && hasAnnotation(memberTree, AutoValue.Builder.class.getName(), state))
         .map(memberTree -> (ClassTree) memberTree)
         .findAny();
   }

@@ -82,9 +82,8 @@ public final class FileManagers {
     }
     stream(StandardLocation.values())
         .filter(StandardLocation::isOutputLocation)
-        .forEach(
-            outputLocation ->
-                setLocation(fileManager, ImmutableList.of(tempDirectory), outputLocation));
+        .forEach(outputLocation ->
+            setLocation(fileManager, ImmutableList.of(tempDirectory), outputLocation));
 
     return fileManager;
   }

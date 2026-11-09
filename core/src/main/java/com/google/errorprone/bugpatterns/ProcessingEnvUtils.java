@@ -49,10 +49,9 @@ final class ProcessingEnvUtils {
                 .map(methodtree -> methodtree.getParameters().stream())
                 .orElse(Stream.empty()),
             Optional.ofNullable(ASTHelpers.findEnclosingNode(state.getPath(), ClassTree.class))
-                .map(
-                    classTree ->
-                        classTree.getMembers().stream()
-                            .filter(member -> member instanceof VariableTree))
+                .map(classTree ->
+                    classTree.getMembers().stream()
+                        .filter(member -> member instanceof VariableTree))
                 .orElse(Stream.empty()))
         .filter(tree -> ASTHelpers.isSubtype(ASTHelpers.getType(tree), type, state))
         .findFirst()
@@ -61,18 +60,16 @@ final class ProcessingEnvUtils {
 
   static Optional<String> getElementsExpr(VisitorState state) {
     return findVariableInScope(state, ELEMENTS_TYPE.get(state))
-        .or(
-            () ->
-                findVariableInScope(state, PROCESSING_ENV_TYPE.get(state))
-                    .map(processingEnvVar -> processingEnvVar + ".getElementUtils()"));
+        .or(() ->
+            findVariableInScope(state, PROCESSING_ENV_TYPE.get(state))
+                .map(processingEnvVar -> processingEnvVar + ".getElementUtils()"));
   }
 
   static Optional<String> getTypesExpr(VisitorState state) {
     return findVariableInScope(state, TYPES_TYPE.get(state))
-        .or(
-            () ->
-                findVariableInScope(state, PROCESSING_ENV_TYPE.get(state))
-                    .map(processingEnvVar -> processingEnvVar + ".getTypeUtils()"));
+        .or(() ->
+            findVariableInScope(state, PROCESSING_ENV_TYPE.get(state))
+                .map(processingEnvVar -> processingEnvVar + ".getTypeUtils()"));
   }
 
   private ProcessingEnvUtils() {}

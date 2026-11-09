@@ -33,10 +33,9 @@ public abstract class Match {
     match
         .getUnifier()
         .getBindings()
-        .forEach(
-            (key, value) -> {
-              builder.put(key.getIdentifier(), value.toString());
-            });
+        .forEach((key, value) -> {
+          builder.put(key.getIdentifier(), value.toString());
+        });
     return create(builder.buildOrThrow());
   }
 

@@ -178,12 +178,11 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
                 .buildOrThrow()
                 .entrySet()
                 .stream()
-                .map(
-                    e ->
-                        staticMethod()
-                            .onClass(e.getKey().getName())
-                            .named("toString")
-                            .withParametersOfType(e.getValue()))
+                .map(e ->
+                    staticMethod()
+                        .onClass(e.getKey().getName())
+                        .named("toString")
+                        .withParametersOfType(e.getValue()))
                 .collect(toImmutableList()))) {
 
       @Override
@@ -207,12 +206,11 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
                 .buildOrThrow()
                 .entrySet()
                 .stream()
-                .map(
-                    e ->
-                        staticMethod()
-                            .onClass(e.getKey().getName())
-                            .named("valueOf")
-                            .withParametersOfType(e.getValue()))
+                .map(e ->
+                    staticMethod()
+                        .onClass(e.getKey().getName())
+                        .named("valueOf")
+                        .withParametersOfType(e.getValue()))
                 .collect(toImmutableList()))) {
 
       @Override
@@ -233,12 +231,11 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
     ASCII_TO_UPPER_CASE(
         anyOf(
             Stream.of("java.lang.String", "java.lang.CharSequence")
-                .map(
-                    param ->
-                        staticMethod()
-                            .onClass("com.google.common.base.Ascii")
-                            .named("toUpperCase")
-                            .withParameters(param))
+                .map(param ->
+                    staticMethod()
+                        .onClass("com.google.common.base.Ascii")
+                        .named("toUpperCase")
+                        .withParameters(param))
                 .collect(toImmutableList()))) {
 
       @Override
@@ -254,12 +251,11 @@ public class FloggerArgumentToString extends BugChecker implements MethodInvocat
                 .buildOrThrow()
                 .entrySet()
                 .stream()
-                .map(
-                    e ->
-                        staticMethod()
-                            .onClass(e.getKey().getName())
-                            .named("toHexString")
-                            .withParametersOfType(e.getValue()))
+                .map(e ->
+                    staticMethod()
+                        .onClass(e.getKey().getName())
+                        .named("toHexString")
+                        .withParametersOfType(e.getValue()))
                 .collect(toImmutableList()))) {
 
       @Override

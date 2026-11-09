@@ -256,10 +256,9 @@ public final class ImpossibleNullComparison extends BugChecker
             .findFirst()
             // We're not using the fixer, just using it to see if there's a problem.
             .filter(unused -> getFixer(withoutParens, subState).isPresent())
-            .ifPresent(
-                e ->
-                    // NOTE: This fix is possibly too big: you can write `case null, default ->`.
-                    state.reportMatch(describeMatch(caseTree, SuggestedFix.delete(caseTree))));
+            .ifPresent(e ->
+                // NOTE: This fix is possibly too big: you can write `case null, default ->`.
+                state.reportMatch(describeMatch(caseTree, SuggestedFix.delete(caseTree))));
       }
     }
 
@@ -673,15 +672,12 @@ public final class ImpossibleNullComparison extends BugChecker
       SuggestedFix fix(Fixer fixer, ExpressionTree tree, VisitorState state) {
         return fixer
             .getReplacement(/* negated= */ false, state)
-            .map(
-                r -> {
-                  MethodInvocationTree receiver = (MethodInvocationTree) getReceiver(tree);
-                  return SuggestedFix.replace(
-                      tree,
-                      format(
-                          "%s(%s).isTrue()",
-                          state.getSourceForNode(receiver.getMethodSelect()), r));
-                })
+            .map(r -> {
+              MethodInvocationTree receiver = (MethodInvocationTree) getReceiver(tree);
+              return SuggestedFix.replace(
+                  tree,
+                  format("%s(%s).isTrue()", state.getSourceForNode(receiver.getMethodSelect()), r));
+            })
             .orElse(SuggestedFix.emptyFix());
       }
     },
@@ -692,14 +688,13 @@ public final class ImpossibleNullComparison extends BugChecker
         MethodInvocationTree methodInvocationTree = (MethodInvocationTree) tree;
         return fixer
             .getReplacement(/* negated= */ false, state)
-            .map(
-                r -> {
-                  int startPos = getStartPosition(methodInvocationTree);
-                  return SuggestedFix.builder()
-                      .replace(getLast(methodInvocationTree.getArguments()), r)
-                      .replace(startPos, startPos + "assertNotNull".length(), "assertTrue")
-                      .build();
-                })
+            .map(r -> {
+              int startPos = getStartPosition(methodInvocationTree);
+              return SuggestedFix.builder()
+                  .replace(getLast(methodInvocationTree.getArguments()), r)
+                  .replace(startPos, startPos + "assertNotNull".length(), "assertTrue")
+                  .build();
+            })
             .orElse(SuggestedFix.emptyFix());
       }
     },

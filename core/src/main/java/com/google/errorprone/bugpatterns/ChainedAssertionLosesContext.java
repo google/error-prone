@@ -208,10 +208,9 @@ public final class ChainedAssertionLosesContext extends BugChecker
                 getEnclosedElements(assertThatSymbol.getReturnType().asElement()).stream())
             .filter(s -> s instanceof MethodSymbol)
             .map(s -> (MethodSymbol) s)
-            .filter(
-                s ->
-                    returns(s, SUBJECT_FACTORY_CLASS, state)
-                        || returns(s, CUSTOM_SUBJECT_BUILDER_FACTORY_CLASS, state))
+            .filter(s ->
+                returns(s, SUBJECT_FACTORY_CLASS, state)
+                    || returns(s, CUSTOM_SUBJECT_BUILDER_FACTORY_CLASS, state))
             .collect(toImmutableSet());
     return factories.size() == 1 ? FactoryMethodName.tryCreate(getOnlyElement(factories)) : null;
     // TODO(cpovirk): If multiple factories exist, try filtering to visible ones only.

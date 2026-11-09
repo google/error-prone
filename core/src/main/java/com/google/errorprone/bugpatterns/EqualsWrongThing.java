@@ -123,14 +123,13 @@ public final class EqualsWrongThing extends BugChecker implements MethodTreeMatc
         suspiciousComparisons.stream().map(ComparisonSite::pair).collect(toImmutableSet());
     suspiciousComparisons.stream()
         .filter(p -> !suspiciousPairs.contains(p.pair().reversed()))
-        .map(
-            c ->
-                buildDescription(c.tree())
-                    .setMessage(
-                        String.format(
-                            "Suspicious comparison between `%s` and `%s`",
-                            c.pair().lhs(), c.pair().rhs()))
-                    .build())
+        .map(c ->
+            buildDescription(c.tree())
+                .setMessage(
+                    String.format(
+                        "Suspicious comparison between `%s` and `%s`",
+                        c.pair().lhs(), c.pair().rhs()))
+                .build())
         .forEach(state::reportMatch);
     return NO_MATCH;
   }

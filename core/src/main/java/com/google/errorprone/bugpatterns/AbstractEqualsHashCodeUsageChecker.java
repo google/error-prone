@@ -140,12 +140,11 @@ public abstract class AbstractEqualsHashCodeUsageChecker extends BugChecker
     }
     return findProblem(getType(receiver), usage, state)
         .or(() -> findProblem(getType(argument), usage, state))
-        .map(
-            message ->
-                buildDescription(tree)
-                    .setMessage(message)
-                    .addFix(equalityFix(tree, receiver, argument, state).orElse(emptyFix()))
-                    .build())
+        .map(message ->
+            buildDescription(tree)
+                .setMessage(message)
+                .addFix(equalityFix(tree, receiver, argument, state).orElse(emptyFix()))
+                .build())
         .orElse(NO_MATCH);
   }
 

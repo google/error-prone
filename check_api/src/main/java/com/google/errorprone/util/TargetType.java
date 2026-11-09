@@ -557,11 +557,10 @@ public record TargetType(Type type, TreePath path) {
       var invocationTarget = targetType(state.withPath(parent.getParentPath()));
       return findLast(
               superMethods.stream()
-                  .filter(
-                      sms ->
-                          invocationTarget == null
-                              || ASTHelpers.isSubtype(
-                                  sms.getReturnType(), invocationTarget.type(), state)))
+                  .filter(sms ->
+                      invocationTarget == null
+                          || ASTHelpers.isSubtype(
+                              sms.getReturnType(), invocationTarget.type(), state)))
           .map(m -> m.owner.type)
           .orElse(getType(node.getExpression()));
     }

@@ -51,10 +51,9 @@ public class TemplateIntegrationTest extends CompilerBasedTest {
     ClassTree classTree =
         Iterables.getOnlyElement(
             FluentIterable.from(compilationUnits)
-                .transformAndConcat(
-                    (CompilationUnitTree input) -> {
-                      return input.getTypeDecls();
-                    })
+                .transformAndConcat((CompilationUnitTree input) -> {
+                  return input.getTypeDecls();
+                })
                 .filter(ClassTree.class));
     return Iterables.getOnlyElement(RefasterRuleBuilderScanner.extractRules(classTree, context));
   }

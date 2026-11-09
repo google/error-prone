@@ -100,13 +100,12 @@ public final class ConstantPatternCompile extends BugChecker implements ClassTre
         @Override
         public Void visitMethodInvocation(MethodInvocationTree tree, Void unused) {
           tryFix(tree, state.withPath(getCurrentPath()), nameUniquifier)
-              .ifPresent(
-                  other -> {
-                    fixBuilder.merge(other);
-                    if (firstHit[0] == null) {
-                      firstHit[0] = tree;
-                    }
-                  });
+              .ifPresent(other -> {
+                fixBuilder.merge(other);
+                if (firstHit[0] == null) {
+                  firstHit[0] = tree;
+                }
+              });
           return super.visitMethodInvocation(tree, null);
         }
 

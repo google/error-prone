@@ -53,14 +53,13 @@ public final class TheoryButNoTheories extends BugChecker implements ClassTreeMa
   private static final String THEORIES = "org.junit.experimental.theories.Theories";
 
   private static final Supplier<ImmutableSet<Name>> TYPES =
-      VisitorState.memoize(
-          s ->
-              Stream.of(
-                      "org.junit.experimental.theories.Theory",
-                      "org.junit.experimental.theories.DataPoint",
-                      "org.junit.experimental.theories.DataPoints")
-                  .map(s::getName)
-                  .collect(toImmutableSet()));
+      VisitorState.memoize(s ->
+          Stream.of(
+                  "org.junit.experimental.theories.Theory",
+                  "org.junit.experimental.theories.DataPoint",
+                  "org.junit.experimental.theories.DataPoints")
+              .map(s::getName)
+              .collect(toImmutableSet()));
 
   private static final MultiMatcher<Tree, AnnotationTree> USING_THEORIES_RUNNER =
       annotations(

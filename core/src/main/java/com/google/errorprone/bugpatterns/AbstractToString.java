@@ -116,23 +116,21 @@ public abstract class AbstractToString extends BugChecker
   private static final Supplier<Name> TO_STRING_NAME = memoize(state -> state.getName("toString"));
 
   private static final Supplier<Symbol> STRING_VALUE_OF_OBJECT =
-      memoize(
-          state -> {
-            var stringSymbol = state.getSymtab().stringType.tsym;
-            for (Symbol sym : stringSymbol.members().getSymbolsByName(state.getName("valueOf"))) {
-              if (sym instanceof MethodSymbol methodSym
-                  && methodSym.isStatic()
-                  && methodSym.getParameters().size() == 1
-                  && state
-                      .getTypes()
-                      .isSameType(
-                          methodSym.getParameters().get(0).asType(),
-                          state.getSymtab().objectType)) {
-                return methodSym;
-              }
-            }
-            return null;
-          });
+      memoize(state -> {
+        var stringSymbol = state.getSymtab().stringType.tsym;
+        for (Symbol sym : stringSymbol.members().getSymbolsByName(state.getName("valueOf"))) {
+          if (sym instanceof MethodSymbol methodSym
+              && methodSym.isStatic()
+              && methodSym.getParameters().size() == 1
+              && state
+                  .getTypes()
+                  .isSameType(
+                      methodSym.getParameters().get(0).asType(), state.getSymtab().objectType)) {
+            return methodSym;
+          }
+        }
+        return null;
+      });
 
   private static final Matcher<ExpressionTree> TO_STRING =
       instanceMethod().anyClass().named("toString").withNoParameters();

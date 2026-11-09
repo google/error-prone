@@ -293,10 +293,9 @@ public final class FindIdentifiers {
                           ASTHelpers.getType(memberSelectTree.getExpression()),
                           /* skipInterface= */ false);
               for (Symbol var :
-                  scope.getSymbols(
-                      sym ->
-                          sym instanceof VarSymbol
-                              && sym.getSimpleName().equals(memberSelectTree.getIdentifier()))) {
+                  scope.getSymbols(sym ->
+                      sym instanceof VarSymbol
+                          && sym.getSimpleName().equals(memberSelectTree.getIdentifier()))) {
                 result.add((VarSymbol) var);
               }
             }
@@ -406,22 +405,21 @@ public final class FindIdentifiers {
   /** Finds all the visible fields declared or inherited in the target class */
   public static ImmutableList<VarSymbol> findAllFields(Type classType, VisitorState state) {
     return state.getTypes().closure(classType).stream()
-        .flatMap(
-            type -> {
-              TypeSymbol tsym = type.tsym;
-              if (tsym == null) {
-                return ImmutableList.<VarSymbol>of().stream();
-              }
-              WriteableScope scope = tsym.members();
-              if (scope == null) {
-                return ImmutableList.<VarSymbol>of().stream();
-              }
-              return ImmutableList.copyOf(scope.getSymbols(VarSymbol.class::isInstance))
-                  .reverse()
-                  .stream()
-                  .map(v -> (VarSymbol) v)
-                  .filter(v -> isVisible(v, state.getPath()));
-            })
+        .flatMap(type -> {
+          TypeSymbol tsym = type.tsym;
+          if (tsym == null) {
+            return ImmutableList.<VarSymbol>of().stream();
+          }
+          WriteableScope scope = tsym.members();
+          if (scope == null) {
+            return ImmutableList.<VarSymbol>of().stream();
+          }
+          return ImmutableList.copyOf(scope.getSymbols(VarSymbol.class::isInstance))
+              .reverse()
+              .stream()
+              .map(v -> (VarSymbol) v)
+              .filter(v -> isVisible(v, state.getPath()));
+        })
         .collect(toImmutableList());
   }
 

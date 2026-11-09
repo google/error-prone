@@ -79,14 +79,13 @@ public final class NullArgumentForNonNullParameter extends BugChecker
   private static final ClassName PROTO_NONNULL_API_NAME =
       ClassName.of("com.google.protobuf.Internal$ProtoNonnullApi");
   private static final Supplier<ImmutableSet<Name>> NULL_MARKED_PACKAGES_WE_TRUST =
-      memoize(
-          state ->
-              stream(
-                      new String[] {
-                        "com.google.common",
-                      })
-                  .map(state::getName)
-                  .collect(toImmutableSet()));
+      memoize(state ->
+          stream(
+                  new String[] {
+                    "com.google.common",
+                  })
+              .map(state::getName)
+              .collect(toImmutableSet()));
 
   private final boolean beingConservative;
 

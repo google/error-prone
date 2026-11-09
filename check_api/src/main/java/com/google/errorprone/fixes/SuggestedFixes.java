@@ -192,15 +192,14 @@ public final class SuggestedFixes {
       }
       // walk the map of all modifiers, and accumulate a list of new modifiers to insert
       // beside an existing modifier
-      modifierPositions.forEach(
-          (mod, p) -> {
-            if (p == -1) {
-              modifiersToWrite.add(mod);
-            } else if (!modifiersToWrite.isEmpty()) {
-              fix.replace(p, p, Joiner.on(' ').join(modifiersToWrite) + " ");
-              modifiersToWrite.clear();
-            }
-          });
+      modifierPositions.forEach((mod, p) -> {
+        if (p == -1) {
+          modifiersToWrite.add(mod);
+        } else if (!modifiersToWrite.isEmpty()) {
+          fix.replace(p, p, Joiner.on(' ').join(modifiersToWrite) + " ");
+          modifiersToWrite.clear();
+        }
+      });
     } else {
       modifiersToWrite.addAll(toAdd);
     }
@@ -541,23 +540,20 @@ public final class SuggestedFixes {
         .filter(ClassTree.class::isInstance)
         .map(ClassTree.class::cast)
         .map(ASTHelpers::getSymbol)
-        .flatMap(
-            enclosingClass ->
-                stream(
-                    state
-                        .getTypes()
-                        .membersClosure(enclosingClass.type, /* skipInterface= */ false)
-                        .getSymbolsByName(identifierName)))
-        .forEach(
-            sym -> {
-              var identifierQualifiedName =
-                  sym.owner.getQualifiedName() + "." + sym.getSimpleName();
-              if (qualifiedName.equals(identifierQualifiedName)) {
-                alreadyInScope.set(true);
-              } else {
-                foundConflict.set(true);
-              }
-            });
+        .flatMap(enclosingClass ->
+            stream(
+                state
+                    .getTypes()
+                    .membersClosure(enclosingClass.type, /* skipInterface= */ false)
+                    .getSymbolsByName(identifierName)))
+        .forEach(sym -> {
+          var identifierQualifiedName = sym.owner.getQualifiedName() + "." + sym.getSimpleName();
+          if (qualifiedName.equals(identifierQualifiedName)) {
+            alreadyInScope.set(true);
+          } else {
+            foundConflict.set(true);
+          }
+        });
     new TreeScanner<Void, Void>() {
       @Override
       public Void visitMethod(MethodTree method, Void unused) {
@@ -797,14 +793,13 @@ public final class SuggestedFixes {
     int searchOffset = typeEndPos == -1 ? 0 : (typeEndPos - startPos);
     SuggestedFix.Builder fix = SuggestedFix.builder();
     state.getOffsetTokens(startPos + searchOffset, state.getEndPosition(tree)).stream()
-        .filter(
-            token ->
-                switch (token.kind()) {
-                  // VariableTree#getName is empty for unnamed _ variables
-                  case UNDERSCORE -> name.isEmpty();
-                  case IDENTIFIER -> token.name().contentEquals(name);
-                  default -> false;
-                })
+        .filter(token ->
+            switch (token.kind()) {
+              // VariableTree#getName is empty for unnamed _ variables
+              case UNDERSCORE -> name.isEmpty();
+              case IDENTIFIER -> token.name().contentEquals(name);
+              default -> false;
+            })
         .findFirst()
         .ifPresent(token -> fix.replace(token.pos(), token.endPos(), replacement));
     fix.merge(renameVariableUsages(tree, replacement, state));
@@ -1234,15 +1229,13 @@ public final class SuggestedFixes {
 
   private static @Nullable Tree suppressibleNode(TreePath path, VisitorState state) {
     return StreamSupport.stream(path.spliterator(), false)
-        .filter(
-            tree ->
-                tree instanceof MethodTree
-                    // Anonymous classes can't be suppressed
-                    || (tree instanceof ClassTree classTree
-                        && classTree.getSimpleName().length() != 0)
-                    // Lambda parameters can't be suppressed unless they have Type decls
-                    || (tree instanceof VariableTree variableTree
-                        && !hasImplicitType(variableTree, state)))
+        .filter(tree ->
+            tree instanceof MethodTree
+                // Anonymous classes can't be suppressed
+                || (tree instanceof ClassTree classTree && classTree.getSimpleName().length() != 0)
+                // Lambda parameters can't be suppressed unless they have Type decls
+                || (tree instanceof VariableTree variableTree
+                    && !hasImplicitType(variableTree, state)))
         .findFirst()
         .orElse(null);
   }
@@ -1592,25 +1585,24 @@ public final class SuggestedFixes {
       IntStream.range(0, fileObjects.size())
           .filter(i -> fileObjects.get(i).toUri().equals(modifiedFileUri))
           .findFirst()
-          .ifPresent(
-              i -> {
-                DescriptionBasedDiff diff =
-                    DescriptionBasedDiff.create(
-                        compilationUnit, ImportOrganizer.STATIC_FIRST_ORGANIZER);
-                diff.handleFix(fix);
-                SourceFile fixSource = new SourceFile(modifiedFile.getName(), modifiedFileContent);
-                diff.applyDifferences(fixSource);
-                JavaFileObject originalFile = fileObjects.get(i);
-                SimpleJavaFileObject speculativeFile =
-                    new SimpleJavaFileObject(sourceURI(modifiedFile.toUri()), Kind.SOURCE) {
-                      @Override
-                      public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-                        return fixSource.getAsSequence();
-                      }
-                    };
-                fileObjects.set(i, speculativeFile);
-                speculativeFiles.put(speculativeFile.toUri(), originalFile);
-              });
+          .ifPresent(i -> {
+            DescriptionBasedDiff diff =
+                DescriptionBasedDiff.create(
+                    compilationUnit, ImportOrganizer.STATIC_FIRST_ORGANIZER);
+            diff.handleFix(fix);
+            SourceFile fixSource = new SourceFile(modifiedFile.getName(), modifiedFileContent);
+            diff.applyDifferences(fixSource);
+            JavaFileObject originalFile = fileObjects.get(i);
+            SimpleJavaFileObject speculativeFile =
+                new SimpleJavaFileObject(sourceURI(modifiedFile.toUri()), Kind.SOURCE) {
+                  @Override
+                  public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+                    return fixSource.getAsSequence();
+                  }
+                };
+            fileObjects.set(i, speculativeFile);
+            speculativeFiles.put(speculativeFile.toUri(), originalFile);
+          });
     }
 
     /** The result of the compilation. */
@@ -1731,11 +1723,10 @@ public final class SuggestedFixes {
     }
     Optional<Tree> exemptingAnnotationLocation =
         stream(where)
-            .filter(
-                tree ->
-                    supportedExemptingAnnotationLocationTypes.stream()
-                            .anyMatch(clazz -> clazz.isInstance(tree))
-                        && !isAnonymousClassTree(tree))
+            .filter(tree ->
+                supportedExemptingAnnotationLocationTypes.stream()
+                        .anyMatch(clazz -> clazz.isInstance(tree))
+                    && !isAnonymousClassTree(tree))
             .findFirst();
 
     return exemptingAnnotationLocation.map(
@@ -1770,13 +1761,12 @@ public final class SuggestedFixes {
       return TREE_TYPE_UNKNOWN_ANNOTATION;
     }
     return targetElementTypes.stream()
-        .<Class<? extends Tree>>flatMap(
-            t ->
-                switch (t) {
-                  case TYPE -> Stream.of(ClassTree.class);
-                  case METHOD -> Stream.of(MethodTree.class);
-                  default -> Stream.empty();
-                })
+        .<Class<? extends Tree>>flatMap(t ->
+            switch (t) {
+              case TYPE -> Stream.of(ClassTree.class);
+              case METHOD -> Stream.of(MethodTree.class);
+              default -> Stream.empty();
+            })
         .collect(toImmutableSet());
   }
 
@@ -1906,9 +1896,8 @@ public final class SuggestedFixes {
             : state.getEndPosition(tree);
     ImmutableList<ErrorProneToken> tokens =
         ErrorProneTokens.getTokens(state.getSourceCode(pos, end).toString(), state.context).stream()
-            .filter(
-                token ->
-                    token.kind().equals(TokenKind.IDENTIFIER) && token.name().contentEquals("var"))
+            .filter(token ->
+                token.kind().equals(TokenKind.IDENTIFIER) && token.name().contentEquals("var"))
             .collect(toImmutableList());
     if (tokens.size() != 1) {
       return Optional.empty();

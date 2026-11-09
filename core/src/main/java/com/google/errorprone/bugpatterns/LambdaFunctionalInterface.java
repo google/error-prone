@@ -154,10 +154,9 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
     ImmutableList<Tree> params =
         tree.getParameters().stream()
             .filter(param -> hasFunctionAsArg(param, state))
-            .filter(
-                param ->
-                    isFunctionArgSubtypeOf(param, 0, JAVA_LANG_NUMBER.get(state), state)
-                        || isFunctionArgSubtypeOf(param, 1, JAVA_LANG_NUMBER.get(state), state))
+            .filter(param ->
+                isFunctionArgSubtypeOf(param, 0, JAVA_LANG_NUMBER.get(state), state)
+                    || isFunctionArgSubtypeOf(param, 1, JAVA_LANG_NUMBER.get(state), state))
             .collect(toImmutableList());
 
     // preconditions (2) and (3)
@@ -168,14 +167,12 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
     for (Tree param : params) {
       getMappingForFunctionFromTree(param)
-          .ifPresent(
-              mappedFunction -> {
-                fixBuilder.addImport(getImportName(mappedFunction));
-                fixBuilder.replace(
-                    param,
-                    getFunctionName(mappedFunction) + " " + ASTHelpers.getSymbol(param).name);
-                refactorInternalApplyMethods(tree, fixBuilder, param, mappedFunction);
-              });
+          .ifPresent(mappedFunction -> {
+            fixBuilder.addImport(getImportName(mappedFunction));
+            fixBuilder.replace(
+                param, getFunctionName(mappedFunction) + " " + ASTHelpers.getSymbol(param).name);
+            refactorInternalApplyMethods(tree, fixBuilder, param, mappedFunction);
+          });
     }
 
     return describeMatch(tree, fixBuilder.build());
@@ -184,25 +181,23 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
   private void refactorInternalApplyMethods(
       MethodTree tree, SuggestedFix.Builder fixBuilder, Tree param, String mappedFunction) {
     getMappingForApply(mappedFunction)
-        .ifPresent(
-            apply -> {
-              tree.accept(
-                  new TreeScanner<Void, Void>() {
-                    @Override
-                    public Void visitMethodInvocation(MethodInvocationTree callTree, Void unused) {
-                      if (getSymbol(callTree).name.contentEquals("apply")) {
-                        Symbol receiverSym = getSymbol(getReceiver(callTree));
-                        if (receiverSym != null
-                            && receiverSym.equals(ASTHelpers.getSymbol(param))) {
-                          fixBuilder.replace(
-                              callTree.getMethodSelect(), receiverSym.name + "." + apply);
-                        }
-                      }
-                      return super.visitMethodInvocation(callTree, null);
+        .ifPresent(apply -> {
+          tree.accept(
+              new TreeScanner<Void, Void>() {
+                @Override
+                public Void visitMethodInvocation(MethodInvocationTree callTree, Void unused) {
+                  if (getSymbol(callTree).name.contentEquals("apply")) {
+                    Symbol receiverSym = getSymbol(getReceiver(callTree));
+                    if (receiverSym != null && receiverSym.equals(ASTHelpers.getSymbol(param))) {
+                      fixBuilder.replace(
+                          callTree.getMethodSelect(), receiverSym.name + "." + apply);
                     }
-                  },
-                  null);
-            });
+                  }
+                  return super.visitMethodInvocation(callTree, null);
+                }
+              },
+              null);
+        });
   }
 
   private boolean methodCallsMeetConditions(Symbol sym, VisitorState state) {
@@ -218,10 +213,9 @@ public class LambdaFunctionalInterface extends BugChecker implements MethodTreeM
       if (methodInvocationTree.getArguments().stream()
           .filter(a -> a instanceof LambdaExpressionTree)
           .filter(a -> hasFunctionAsArg(a, state))
-          .noneMatch(
-              a ->
-                  isFunctionArgSubtypeOf(a, 0, JAVA_LANG_NUMBER.get(state), state)
-                      || isFunctionArgSubtypeOf(a, 1, JAVA_LANG_NUMBER.get(state), state))) {
+          .noneMatch(a ->
+              isFunctionArgSubtypeOf(a, 0, JAVA_LANG_NUMBER.get(state), state)
+                  || isFunctionArgSubtypeOf(a, 1, JAVA_LANG_NUMBER.get(state), state))) {
         return false;
       }
     }

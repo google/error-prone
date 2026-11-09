@@ -46,16 +46,15 @@ public final class EmptyTopLevelDeclaration extends BugChecker
       return NO_MATCH;
     }
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
-    toDelete.forEach(
-        x -> {
-          int start = getStartPosition(x);
-          int end = state.getEndPosition(x);
-          if (end <= start) {
-            // work around https://bugs.openjdk.org/browse/JDK-8324736
-            end = start + 1;
-          }
-          fixBuilder.replace(start, end, "");
-        });
+    toDelete.forEach(x -> {
+      int start = getStartPosition(x);
+      int end = state.getEndPosition(x);
+      if (end <= start) {
+        // work around https://bugs.openjdk.org/browse/JDK-8324736
+        end = start + 1;
+      }
+      fixBuilder.replace(start, end, "");
+    });
     return describeMatch(toDelete.getFirst(), fixBuilder.build());
   }
 }

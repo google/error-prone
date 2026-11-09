@@ -389,22 +389,21 @@ public class NoAllocationChecker extends BugChecker
     return streamSuperMethods(symbol, state.getTypes())
         .filter(s -> ASTHelpers.hasAnnotation(s, NoAllocation.class.getName(), state))
         .findAny()
-        .map(
-            s -> {
-              String message =
-                  String.format(
-                      "Method overrides %s in %s which is annotated @NoAllocation,"
-                          + " it should also be annotated.",
-                      s.getSimpleName(), s.owner.getSimpleName());
-              return buildDescription(tree)
-                  .setMessage(message)
-                  .addFix(
-                      SuggestedFix.builder()
-                          .addImport(NoAllocation.class.getName())
-                          .prefixWith(tree, "@NoAllocation ")
-                          .build())
-                  .build();
-            })
+        .map(s -> {
+          String message =
+              String.format(
+                  "Method overrides %s in %s which is annotated @NoAllocation,"
+                      + " it should also be annotated.",
+                  s.getSimpleName(), s.owner.getSimpleName());
+          return buildDescription(tree)
+              .setMessage(message)
+              .addFix(
+                  SuggestedFix.builder()
+                      .addImport(NoAllocation.class.getName())
+                      .prefixWith(tree, "@NoAllocation ")
+                      .build())
+              .build();
+        })
         .orElse(NO_MATCH);
   }
 

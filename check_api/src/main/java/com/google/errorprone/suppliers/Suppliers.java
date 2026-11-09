@@ -176,11 +176,10 @@ public final class Suppliers {
    */
   public static Supplier<@Nullable Type> arrayOf(ClassName elementType) {
     requireNonNull(elementType);
-    return VisitorState.memoize(
-        state -> {
-          Type elem = elementType.type(state);
-          return elem == null ? null : state.arrayTypeForType(elem);
-        });
+    return VisitorState.memoize(state -> {
+      Type elem = elementType.type(state);
+      return elem == null ? null : state.arrayTypeForType(elem);
+    });
   }
 
   public static final Supplier<Type> OBJECT_TYPE_ARRAY =

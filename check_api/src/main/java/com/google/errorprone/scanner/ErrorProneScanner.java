@@ -219,14 +219,13 @@ public class ErrorProneScanner extends Scanner {
     }
     ImmutableSet<Class<? extends Annotation>> annotationClasses = annotationClassesBuilder.build();
     this.customSuppressionAnnotations =
-        VisitorState.memoize(
-            state -> {
-              ImmutableSet.Builder<Name> builder = ImmutableSet.builder();
-              for (Class<? extends Annotation> annotation : annotationClasses) {
-                builder.add(state.getName(annotation.getName()));
-              }
-              return builder.build();
-            });
+        VisitorState.memoize(state -> {
+          ImmutableSet.Builder<Name> builder = ImmutableSet.builder();
+          for (Class<? extends Annotation> annotation : annotationClasses) {
+            builder.add(state.getName(annotation.getName()));
+          }
+          return builder.build();
+        });
   }
 
   private static ImmutableMap<String, BugPattern.SeverityLevel> defaultSeverities(

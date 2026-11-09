@@ -131,9 +131,8 @@ public final class NearbyCallers {
 
             // build up a list of method invocations for both invocations
             return buildProtoGetterChain(primaryMethod, state)
-                .flatMap(
-                    primaryChain ->
-                        buildProtoGetterChain(secondaryMethod, state).map(primaryChain::equals))
+                .flatMap(primaryChain ->
+                    buildProtoGetterChain(secondaryMethod, state).map(primaryChain::equals))
                 .orElse(false);
           }
         };

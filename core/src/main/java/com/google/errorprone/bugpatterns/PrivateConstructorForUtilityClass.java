@@ -83,9 +83,8 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
 
     ImmutableList<Tree> nonSyntheticMembers =
         classTree.getMembers().stream()
-            .filter(
-                tree ->
-                    !(tree instanceof MethodTree methodTree && isGeneratedConstructor(methodTree)))
+            .filter(tree ->
+                !(tree instanceof MethodTree methodTree && isGeneratedConstructor(methodTree)))
             .collect(toImmutableList());
     if (nonSyntheticMembers.isEmpty()
         || nonSyntheticMembers.stream().anyMatch(PrivateConstructorForUtilityClass::isInstance)) {
@@ -99,11 +98,10 @@ public final class PrivateConstructorForUtilityClass extends BugChecker
 
   private static boolean isInPrivateScope(VisitorState state) {
     return stream(state.getPath())
-        .anyMatch(
-            currentLeaf ->
-                // Checking instanceof rather than Kind given (e.g.) enums are ClassTrees.
-                currentLeaf instanceof ClassTree classTree
-                    && classTree.getModifiers().getFlags().contains(PRIVATE));
+        .anyMatch(currentLeaf ->
+            // Checking instanceof rather than Kind given (e.g.) enums are ClassTrees.
+            currentLeaf instanceof ClassTree classTree
+                && classTree.getModifiers().getFlags().contains(PRIVATE));
   }
 
   private static boolean isInstance(Tree tree) {

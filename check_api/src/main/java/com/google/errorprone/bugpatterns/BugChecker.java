@@ -146,12 +146,11 @@ public abstract class BugChecker implements Suppressible, Serializable {
       }
       default -> {
         Supplier<Set<? extends Name>> self =
-            VisitorState.memoize(
-                state ->
-                    suppressionClasses.stream()
-                        .map(Class::getName)
-                        .map(state::getName)
-                        .collect(toImmutableSet()));
+            VisitorState.memoize(state ->
+                suppressionClasses.stream()
+                    .map(Class::getName)
+                    .map(state::getName)
+                    .collect(toImmutableSet()));
         yield (annos, state) -> !Collections.disjoint(self.get(state), annos);
       }
     };
@@ -324,11 +323,10 @@ public abstract class BugChecker implements Suppressible, Serializable {
   }
 
   private final Supplier<? extends Set<? extends Name>> customSuppressionAnnotationNames =
-      VisitorState.memoize(
-          state ->
-              customSuppressionAnnotations().stream()
-                  .map(a -> state.getName(a.getName()))
-                  .collect(toImmutableSet()));
+      VisitorState.memoize(state ->
+          customSuppressionAnnotations().stream()
+              .map(a -> state.getName(a.getName()))
+              .collect(toImmutableSet()));
 
   /** Computes a RangeSet of code regions which are suppressed by this bug checker. */
   public ImmutableRangeSet<Integer> suppressedRegions(VisitorState state) {

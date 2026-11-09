@@ -196,24 +196,23 @@ public final class Unifier {
         if (index + 1 != toUnify.size()) {
           return Choice.none();
         }
-        return choice.mapIfPresent(
-            u -> {
-              List<JCExpression> expressions = new ArrayList<>();
-              for (int j = startIndex; j < targets.size(); j++) {
-                Optional<Unifier> forked =
-                    repeated.unify((JCTree) targets.get(j), u.fork()).findFirst();
-                if (forked.isEmpty()) {
-                  return Optional.empty();
-                }
-                JCExpression boundExpr = repeated.getUnderlyingBinding(forked.get());
-                if (boundExpr == null) {
-                  return Optional.empty();
-                }
-                expressions.add(boundExpr);
-              }
-              u.putBinding(repeated.key(), expressions);
-              return Optional.of(u);
-            });
+        return choice.mapIfPresent(u -> {
+          List<JCExpression> expressions = new ArrayList<>();
+          for (int j = startIndex; j < targets.size(); j++) {
+            Optional<Unifier> forked =
+                repeated.unify((JCTree) targets.get(j), u.fork()).findFirst();
+            if (forked.isEmpty()) {
+              return Optional.empty();
+            }
+            JCExpression boundExpr = repeated.getUnderlyingBinding(forked.get());
+            if (boundExpr == null) {
+              return Optional.empty();
+            }
+            expressions.add(boundExpr);
+          }
+          u.putBinding(repeated.key(), expressions);
+          return Optional.of(u);
+        });
       }
       if (index >= targets.size()) {
         return Choice.none();

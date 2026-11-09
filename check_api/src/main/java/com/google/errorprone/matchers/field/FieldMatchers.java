@@ -97,11 +97,10 @@ public final class FieldMatchers {
 
   private static final InstanceFieldMatcher INSTANCE_FIELD_MATCHER =
       className ->
-          fieldClassMatcher(
-              (sym, state) ->
-                  !sym.isStatic()
-                      && sym.owner instanceof ClassSymbol owner
-                      && owner.flatName().equals(className.binaryName(state)));
+          fieldClassMatcher((sym, state) ->
+              !sym.isStatic()
+                  && sym.owner instanceof ClassSymbol owner
+                  && owner.flatName().equals(className.binaryName(state)));
 
   public static InstanceFieldMatcher instanceField() {
     return INSTANCE_FIELD_MATCHER;
@@ -109,11 +108,10 @@ public final class FieldMatchers {
 
   private static final StaticFieldMatcher STATIC_FIELD_MATCHER =
       className ->
-          fieldClassMatcher(
-              (sym, state) ->
-                  sym.isStatic()
-                      && sym.owner instanceof ClassSymbol owner
-                      && owner.flatName().equals(className.binaryName(state)));
+          fieldClassMatcher((sym, state) ->
+              sym.isStatic()
+                  && sym.owner instanceof ClassSymbol owner
+                  && owner.flatName().equals(className.binaryName(state)));
 
   public static StaticFieldMatcher staticField() {
     return STATIC_FIELD_MATCHER;

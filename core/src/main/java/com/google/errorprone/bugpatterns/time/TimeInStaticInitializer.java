@@ -104,11 +104,10 @@ public final class TimeInStaticInitializer extends BugChecker
   private static final Matcher<ExpressionTree> TIME_ACCESSORS =
       anyOf(
           staticMethod()
-              .onClass(
-                  (t, s) ->
-                      enclosingPackage(t.tsym)
-                          .map(p -> p.getQualifiedName().contentEquals("java.time"))
-                          .orElse(false))
+              .onClass((t, s) ->
+                  enclosingPackage(t.tsym)
+                      .map(p -> p.getQualifiedName().contentEquals("java.time"))
+                      .orElse(false))
               .named("now"),
           instanceMethod().onDescendantOf("java.time.InstantSource").named("instant"),
           instanceMethod().onDescendantOf("com.google.common.time.TimeSource").named("instant"));

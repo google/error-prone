@@ -183,14 +183,13 @@ public class UnnecessaryStringBuilder extends BugChecker implements NewClassTree
       return "\"\"";
     }
     return parts.stream()
-        .map(
-            x -> {
-              String source = state.getSourceForNode(x);
-              if (requiresParentheses(x, state)) {
-                source = String.format("(%s)", source);
-              }
-              return source;
-            })
+        .map(x -> {
+          String source = state.getSourceForNode(x);
+          if (requiresParentheses(x, state)) {
+            source = String.format("(%s)", source);
+          }
+          return source;
+        })
         .collect(joining(" + "));
   }
 

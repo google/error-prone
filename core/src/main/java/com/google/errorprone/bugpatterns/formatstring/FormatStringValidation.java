@@ -126,15 +126,14 @@ public final class FormatStringValidation {
 
     Object[] instances =
         args.stream()
-            .map(
-                (ExpressionTree input) -> {
-                  try {
-                    return getInstance(input, state);
-                  } catch (RuntimeException t) {
-                    // ignore symbol completion failures
-                    return null;
-                  }
-                })
+            .map((ExpressionTree input) -> {
+              try {
+                return getInstance(input, state);
+              } catch (RuntimeException t) {
+                // ignore symbol completion failures
+                return null;
+              }
+            })
             .toArray();
 
     return formatStrings

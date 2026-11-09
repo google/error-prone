@@ -79,10 +79,8 @@ public class ProtectedMembersInFinalClass extends BugChecker implements ClassTre
         tree.getMembers().stream()
             .filter(m -> (m instanceof MethodTree || m instanceof VariableTree))
             .filter(m -> HAS_PROTECTED.matches(m, state))
-            .filter(
-                m ->
-                    !(m instanceof MethodTree methodTree)
-                        || methodHasNoParentMethod(methodTree, state))
+            .filter(m ->
+                !(m instanceof MethodTree methodTree) || methodHasNoParentMethod(methodTree, state))
             .filter(m -> !isConstructorOfProtectedRecord(m, state))
             .filter(m -> !isSuppressed(m, state))
             .collect(toImmutableList());
@@ -99,13 +97,12 @@ public class ProtectedMembersInFinalClass extends BugChecker implements ClassTre
         String.format(
             "Make members of final classes package-private: %s",
             relevantMembers.stream()
-                .map(
-                    m -> {
-                      Symbol symbol = ASTHelpers.getSymbol(m);
-                      return symbol.isConstructor()
-                          ? symbol.owner.name.toString()
-                          : symbol.name.toString();
-                    })
+                .map(m -> {
+                  Symbol symbol = ASTHelpers.getSymbol(m);
+                  return symbol.isConstructor()
+                      ? symbol.owner.name.toString()
+                      : symbol.name.toString();
+                })
                 .collect(joining(", ")));
     return buildDescription(relevantMembers.getFirst())
         .setMessage(message)

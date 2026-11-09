@@ -376,16 +376,15 @@ public final class CompilationTestHelper {
           .isTrue();
     }
 
-    expectedResult.ifPresent(
-        expected ->
-            assertWithMessage(
-                    "Expected compilation result %s, but was %s\n%s\n%s",
-                    expected,
-                    result,
-                    Joiner.on('\n').join(diagnosticHelper.getDiagnostics()),
-                    outputStream)
-                .that(result)
-                .isEqualTo(expected));
+    expectedResult.ifPresent(expected ->
+        assertWithMessage(
+                "Expected compilation result %s, but was %s\n%s\n%s",
+                expected,
+                result,
+                Joiner.on('\n').join(diagnosticHelper.getDiagnostics()),
+                outputStream)
+            .that(result)
+            .isEqualTo(expected));
   }
 
   private Result compile() {

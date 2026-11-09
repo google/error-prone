@@ -73,13 +73,12 @@ public final class ErrorProneInjector {
     path.add(clazz);
     Constructor<T> constructor =
         findConstructor(clazz)
-            .orElseThrow(
-                () ->
-                    new ProvisionException(
-                        "Failed to find an injectable constructor for "
-                            + clazz.getCanonicalName()
-                            + " requested by "
-                            + printPath(path)));
+            .orElseThrow(() ->
+                new ProvisionException(
+                    "Failed to find an injectable constructor for "
+                        + clazz.getCanonicalName()
+                        + " requested by "
+                        + printPath(path)));
 
     constructor.setAccessible(true);
 
@@ -101,14 +100,13 @@ public final class ErrorProneInjector {
             c ->
                 stream(c.getAnnotations())
                     .anyMatch(a -> a.annotationType().getSimpleName().equals("Inject")))
-        .or(
-            () ->
-                findConstructorMatching(
-                    clazz,
-                    c ->
-                        c.getParameters().length != 0
-                            && stream(c.getParameters())
-                                .allMatch(p -> p.getType().equals(ErrorProneFlags.class))))
+        .or(() ->
+            findConstructorMatching(
+                clazz,
+                c ->
+                    c.getParameters().length != 0
+                        && stream(c.getParameters())
+                            .allMatch(p -> p.getType().equals(ErrorProneFlags.class))))
         .or(() -> findConstructorMatching(clazz, c -> c.getParameters().length == 0));
   }
 

@@ -750,13 +750,10 @@ public final class ThreadSafety {
       if (!containerOfAnnotation.isEmpty() && containerElements.isEmpty()) {
         containerElements =
             sym.getTypeParameters().stream()
-                .filter(
-                    p ->
-                        p.getAnnotationMirrors().stream()
-                            .anyMatch(
-                                a ->
-                                    containerOfAnnotation.contains(
-                                        asElement(a).flatName().toString())))
+                .filter(p ->
+                    p.getAnnotationMirrors().stream()
+                        .anyMatch(a ->
+                            containerOfAnnotation.contains(asElement(a).flatName().toString())))
                 .map(p -> p.getSimpleName().toString())
                 .collect(toImmutableList());
       }

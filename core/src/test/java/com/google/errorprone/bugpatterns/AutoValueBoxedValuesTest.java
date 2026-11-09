@@ -36,7 +36,6 @@ public class AutoValueBoxedValuesTest {
   private final CompilationTestHelper compilationHelper =
       CompilationTestHelper.newInstance(AutoValueBoxedValues.class, getClass())
           .setArgs(ImmutableList.of("-processor", AutoValueProcessor.class.getName()));
-  ;
   private final BugCheckerRefactoringTestHelper refactoringHelper =
       BugCheckerRefactoringTestHelper.newInstance(AutoValueBoxedValues.class, getClass())
           .setArgs(ImmutableList.of("-processor", AutoValueProcessor.class.getName()));

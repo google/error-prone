@@ -193,9 +193,8 @@ public final class NullnessAnnotations {
         result =
             ((Parameterizable) genericElt)
                 .getTypeParameters().stream()
-                    .filter(
-                        typeParam ->
-                            typeParam.getSimpleName().equals(typeVar.asElement().getSimpleName()))
+                    .filter(typeParam ->
+                        typeParam.getSimpleName().equals(typeVar.asElement().getSimpleName()))
                     .findFirst()
                     // Annotations at class/interface/method type variable declaration
                     .flatMap(decl -> fromAnnotationStream(decl.getAnnotationMirrors().stream()));

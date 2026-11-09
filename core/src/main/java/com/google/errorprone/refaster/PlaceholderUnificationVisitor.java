@@ -154,9 +154,8 @@ abstract class PlaceholderUnificationVisitor
    */
   Choice<State<PlaceholderParamIdent>> tryBindArguments(ExpressionTree node, State<?> state) {
     return Choice.from(arguments().entrySet())
-        .flatMap(
-            (Map.Entry<UVariableDecl, UExpression> entry) ->
-                unifyParam(entry.getKey(), entry.getValue(), node, state.fork()));
+        .flatMap((Map.Entry<UVariableDecl, UExpression> entry) ->
+            unifyParam(entry.getKey(), entry.getValue(), node, state.fork()));
   }
 
   private Choice<State<PlaceholderParamIdent>> unifyParam(
@@ -166,12 +165,11 @@ abstract class PlaceholderUnificationVisitor
       State<?> state) {
     return placeholderArg
         .unify(toUnify, state.unifier())
-        .map(
-            (Unifier unifier) ->
-                State.create(
-                    state.seenParameters().prepend(placeholderParam),
-                    unifier,
-                    new PlaceholderParamIdent(placeholderParam, unifier.getContext())));
+        .map((Unifier unifier) ->
+            State.create(
+                state.seenParameters().prepend(placeholderParam),
+                unifier,
+                new PlaceholderParamIdent(placeholderParam, unifier.getContext())));
   }
 
   public Choice<? extends State<? extends JCTree>> unify(@Nullable Tree node, State<?> state) {
@@ -192,12 +190,9 @@ abstract class PlaceholderUnificationVisitor
     Choice<State<List<JCTree>>> choice = Choice.of(state.withResult(List.<JCTree>nil()));
     for (Tree node : nodes) {
       choice =
-          choice.flatMap(
-              (State<List<JCTree>> s) ->
-                  unify(node, s)
-                      .map(
-                          treeState ->
-                              treeState.withResult(s.result().prepend(treeState.result()))));
+          choice.flatMap((State<List<JCTree>> s) ->
+              unify(node, s)
+                  .map(treeState -> treeState.withResult(s.result().prepend(treeState.result()))));
     }
     return choice.map(s -> s.withResult(s.result().reverse()));
   }
@@ -300,11 +295,8 @@ abstract class PlaceholderUnificationVisitor
       BiFunction<T1, T2, R> finalizer) {
     return choice1
         .apply(state)
-        .flatMap(
-            s1 ->
-                choice2
-                    .apply(s1)
-                    .map(s2 -> s2.withResult(finalizer.apply(s1.result(), s2.result()))));
+        .flatMap(s1 ->
+            choice2.apply(s1).map(s2 -> s2.withResult(finalizer.apply(s1.result(), s2.result()))));
   }
 
   @FunctionalInterface
@@ -320,19 +312,15 @@ abstract class PlaceholderUnificationVisitor
       TriFunction<T1, T2, T3, R> finalizer) {
     return choice1
         .apply(state)
-        .flatMap(
-            s1 ->
-                choice2
-                    .apply(s1)
-                    .flatMap(
-                        s2 ->
-                            choice3
-                                .apply(s2)
-                                .map(
-                                    s3 ->
-                                        s3.withResult(
-                                            finalizer.apply(
-                                                s1.result(), s2.result(), s3.result())))));
+        .flatMap(s1 ->
+            choice2
+                .apply(s1)
+                .flatMap(s2 ->
+                    choice3
+                        .apply(s2)
+                        .map(s3 ->
+                            s3.withResult(
+                                finalizer.apply(s1.result(), s2.result(), s3.result())))));
   }
 
   @FunctionalInterface
@@ -349,26 +337,22 @@ abstract class PlaceholderUnificationVisitor
       QuadFunction<T1, T2, T3, T4, R> finalizer) {
     return choice1
         .apply(state)
-        .flatMap(
-            s1 ->
-                choice2
-                    .apply(s1)
-                    .flatMap(
-                        s2 ->
-                            choice3
-                                .apply(s2)
-                                .flatMap(
-                                    s3 ->
-                                        choice4
-                                            .apply(s3)
-                                            .map(
-                                                s4 ->
-                                                    s4.withResult(
-                                                        finalizer.apply(
-                                                            s1.result(),
-                                                            s2.result(),
-                                                            s3.result(),
-                                                            s4.result()))))));
+        .flatMap(s1 ->
+            choice2
+                .apply(s1)
+                .flatMap(s2 ->
+                    choice3
+                        .apply(s2)
+                        .flatMap(s3 ->
+                            choice4
+                                .apply(s3)
+                                .map(s4 ->
+                                    s4.withResult(
+                                        finalizer.apply(
+                                            s1.result(),
+                                            s2.result(),
+                                            s3.result(),
+                                            s4.result()))))));
   }
 
   @Override
@@ -421,10 +405,9 @@ abstract class PlaceholderUnificationVisitor
     Tag tag = ((JCUnary) node).getTag();
     return chooseSubtrees(
             state, s -> unifyExpression(node.getExpression(), s), expr -> maker().Unary(tag, expr))
-        .filter(
-            s ->
-                !MUTATING_UNARY_TAGS.contains(tag)
-                    || !(s.result().getExpression() instanceof PlaceholderParamIdent));
+        .filter(s ->
+            !MUTATING_UNARY_TAGS.contains(tag)
+                || !(s.result().getExpression() instanceof PlaceholderParamIdent));
   }
 
   @Override

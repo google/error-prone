@@ -113,13 +113,12 @@ public final class MockNotUsedInProduction extends BugChecker
         }
       }
     }.scan(state.getPath(), null);
-    mocks.forEach(
-        (sym, mockTree) -> {
-          if (usedMocks.contains(sym)) {
-            return;
-          }
-          state.reportMatch(describeMatch(mockTree, generateFix(sym, state)));
-        });
+    mocks.forEach((sym, mockTree) -> {
+      if (usedMocks.contains(sym)) {
+        return;
+      }
+      state.reportMatch(describeMatch(mockTree, generateFix(sym, state)));
+    });
     return NO_MATCH;
   }
 

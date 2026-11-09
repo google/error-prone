@@ -157,11 +157,8 @@ public class JUnitParameterMethodNotFound extends BugChecker implements MethodTr
   private static Optional<? extends AssignmentTree> getParamAssignmentTree(
       ImmutableList<? extends AssignmentTree> annotationsArguments, String parameterName) {
     return annotationsArguments.stream()
-        .filter(
-            assignmentTree ->
-                ((IdentifierTree) assignmentTree.getVariable())
-                    .getName()
-                    .contentEquals(parameterName))
+        .filter(assignmentTree ->
+            ((IdentifierTree) assignmentTree.getVariable()).getName().contentEquals(parameterName))
         .findFirst();
   }
 

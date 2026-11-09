@@ -124,21 +124,19 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
   // whether the return value is expected to be used before checking whether the context allows the
   // value to be ignored, since the latter is relatively expensive and rarely relevant.
   private final Supplier<Matcher<ExpressionTree>> matcher =
-      memoize(
-          () ->
-              allOf(
-                  UnusedReturnValueMatcher::isReturnValueUnused,
-                  this::isCheckReturnValue,
-                  not(unusedReturnValueMatcher.get()::isAllowed)));
+      memoize(() ->
+          allOf(
+              UnusedReturnValueMatcher::isReturnValueUnused,
+              this::isCheckReturnValue,
+              not(unusedReturnValueMatcher.get()::isAllowed)));
 
   private final Supplier<Matcher<MemberReferenceTree>> lostReferenceTreeMatcher =
-      memoize(
-          () ->
-              allOf(
-                  (t, s) -> isObjectReturningMethodReferenceExpression(t, s),
-                  not((t, s) -> isExemptedInterfaceType(getType(t), s)),
-                  not((t, s) -> isThrowingFunctionalInterface(getType(t), s)),
-                  specializedMatcher()));
+      memoize(() ->
+          allOf(
+              (t, s) -> isObjectReturningMethodReferenceExpression(t, s),
+              not((t, s) -> isExemptedInterfaceType(getType(t), s)),
+              not((t, s) -> isThrowingFunctionalInterface(getType(t), s)),
+              specializedMatcher()));
 
   private final ConstantExpressions constantExpressions;
 
@@ -357,11 +355,10 @@ public abstract class AbstractReturnValueIgnored extends BugChecker
             // scope.
             .filter(n -> !identifiersInScope.contains(n))
             .findFirst()
-            .ifPresent(
-                n ->
-                    fixes.put(
-                        "Suppress error by assigning to a variable",
-                        prefixWith(parent, format("var %s = ", n))));
+            .ifPresent(n ->
+                fixes.put(
+                    "Suppress error by assigning to a variable",
+                    prefixWith(parent, format("var %s = ", n))));
       }
     }
     if (parent instanceof ExpressionStatementTree && considerBlanketFixes) {

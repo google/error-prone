@@ -62,10 +62,9 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
     assertCompiles(
         methodHasIdentifierMatching(
             /* shouldMatch= */ true,
-            hasIdentifier(
-                (IdentifierTree tree, VisitorState state) -> {
-                  return tree.getName().contentEquals("this");
-                })));
+            hasIdentifier((IdentifierTree tree, VisitorState state) -> {
+              return tree.getName().contentEquals("this");
+            })));
   }
 
   @Test
@@ -83,10 +82,9 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
     assertCompiles(
         methodHasIdentifierMatching(
             /* shouldMatch= */ true,
-            hasIdentifier(
-                (IdentifierTree tree, VisitorState state) -> {
-                  return tree.getName().contentEquals("foo");
-                })));
+            hasIdentifier((IdentifierTree tree, VisitorState state) -> {
+              return tree.getName().contentEquals("foo");
+            })));
   }
 
   @Test
@@ -103,10 +101,9 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
     assertCompiles(
         methodHasIdentifierMatching(
             /* shouldMatch= */ true,
-            hasIdentifier(
-                (IdentifierTree tree, VisitorState state) -> {
-                  return tree.getName().contentEquals("foo");
-                })));
+            hasIdentifier((IdentifierTree tree, VisitorState state) -> {
+              return tree.getName().contentEquals("foo");
+            })));
   }
 
   @Test
@@ -123,10 +120,9 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
     assertCompiles(
         methodHasIdentifierMatching(
             /* shouldMatch= */ false,
-            hasIdentifier(
-                (IdentifierTree tree, VisitorState state) -> {
-                  return tree.getName().contentEquals("foo");
-                })));
+            hasIdentifier((IdentifierTree tree, VisitorState state) -> {
+              return tree.getName().contentEquals("foo");
+            })));
   }
 
   /**
@@ -147,10 +143,9 @@ public class HasIdentifierTest extends CompilerBasedAbstractTest {
     assertCompiles(
         literalHasIdentifierMatching(
             /* shouldMatch= */ false,
-            hasIdentifier(
-                (IdentifierTree tree, VisitorState state) -> {
-                  return tree.getName().contentEquals("somethingElse");
-                })));
+            hasIdentifier((IdentifierTree tree, VisitorState state) -> {
+              return tree.getName().contentEquals("somethingElse");
+            })));
   }
 
   private abstract static class ScannerTest extends Scanner {

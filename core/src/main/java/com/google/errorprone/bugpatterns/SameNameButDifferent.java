@@ -168,12 +168,11 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
           for (TreePath treePath : cell.getValue()) {
             TypeSymbol typeSymbol = cell.getKey();
             getBetterImport(typeSymbol, simpleName)
-                .ifPresent(
-                    imp -> {
-                      String qualifiedName = qualifyType(state.withPath(treePath), fixBuilder, imp);
-                      String newSimpleName = qualifiedName + "." + simpleName;
-                      fixBuilder.replace(treePath.getLeaf(), newSimpleName);
-                    });
+                .ifPresent(imp -> {
+                  String qualifiedName = qualifyType(state.withPath(treePath), fixBuilder, imp);
+                  String newSimpleName = qualifiedName + "." + simpleName;
+                  fixBuilder.replace(treePath.getLeaf(), newSimpleName);
+                });
           }
         }
         String message =
@@ -188,13 +187,9 @@ public final class SameNameButDifferent extends BugChecker implements Compilatio
         trimmedTable.row(simpleName).values().stream()
             .flatMap(List::stream)
             .limit(batchFindings ? 1 : Long.MAX_VALUE)
-            .forEach(
-                treePath ->
-                    state.reportMatch(
-                        buildDescription(treePath.getLeaf())
-                            .setMessage(message)
-                            .addFix(fix)
-                            .build()));
+            .forEach(treePath ->
+                state.reportMatch(
+                    buildDescription(treePath.getLeaf()).setMessage(message).addFix(fix).build()));
       }
     }
     return NO_MATCH;

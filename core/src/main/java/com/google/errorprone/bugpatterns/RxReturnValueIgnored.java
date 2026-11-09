@@ -71,10 +71,9 @@ public final class RxReturnValueIgnored extends AbstractReturnValueIgnored {
     // superclass was annotated with @CanIgnoreReturnValue but the parent did not intend to
     // return an Rx type
     return streamSuperMethods(sym, state.getTypes())
-        .anyMatch(
-            superSym ->
-                hasAnnotation(superSym, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)
-                    && superSym.getReturnType().tsym.equals(sym.getReturnType().tsym));
+        .anyMatch(superSym ->
+            hasAnnotation(superSym, CAN_IGNORE_RETURN_VALUE_ANNOTATION, state)
+                && superSym.getReturnType().tsym.equals(sym.getReturnType().tsym));
   }
 
   private static boolean isExemptedMethod(ExpressionTree tree, VisitorState state) {

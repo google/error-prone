@@ -76,13 +76,12 @@ public final class NullnessQualifierInference extends TreeScanner<Void, Void> {
   private static final LoadingCache<Tree, InferredNullability> inferenceCache =
       Caffeine.newBuilder()
           .maximumSize(1)
-          .build(
-              (Tree methodOrInitializer) -> {
-                NullnessQualifierInference inferenceEngine =
-                    new NullnessQualifierInference(methodOrInitializer);
-                inferenceEngine.scan(methodOrInitializer, null);
-                return new InferredNullability(inferenceEngine.qualifierConstraints);
-              });
+          .build((Tree methodOrInitializer) -> {
+            NullnessQualifierInference inferenceEngine =
+                new NullnessQualifierInference(methodOrInitializer);
+            inferenceEngine.scan(methodOrInitializer, null);
+            return new InferredNullability(inferenceEngine.qualifierConstraints);
+          });
 
   public static InferredNullability getInferredNullability(Tree methodOrInitializerOrLambda) {
     checkArgument(
@@ -171,13 +170,12 @@ public final class NullnessQualifierInference extends TreeScanner<Void, Void> {
     // Use equality constraints even for top-level type, since we want to "trust" the annotation
     fromAnnotations
         .map(ProperInferenceVar::create)
-        .ifPresent(
-            annot -> {
-              InferenceVariable var =
-                  TypeArgInferenceVar.create(ImmutableList.copyOf(argSelector), sourceTree);
-              qualifierConstraints.putEdge(var, annot);
-              qualifierConstraints.putEdge(annot, var);
-            });
+        .ifPresent(annot -> {
+          InferenceVariable var =
+              TypeArgInferenceVar.create(ImmutableList.copyOf(argSelector), sourceTree);
+          qualifierConstraints.putEdge(var, annot);
+          qualifierConstraints.putEdge(annot, var);
+        });
   }
 
   @Override
@@ -266,19 +264,16 @@ public final class NullnessQualifierInference extends TreeScanner<Void, Void> {
             findUnannotatedTypeVarRefs(tvs, rcvrtype, /* decl= */ null, fieldAccess.selected);
         Type restype = fieldAccess.sym.type.asMethodType().restype;
         findUnannotatedTypeVarRefs(tvs, restype, fieldAccess.sym, node)
-            .forEach(
-                resRef ->
-                    rcvrReferences.forEach(
-                        rcvrRef -> qualifierConstraints.putEdge(resRef, rcvrRef)));
+            .forEach(resRef ->
+                rcvrReferences.forEach(rcvrRef -> qualifierConstraints.putEdge(resRef, rcvrRef)));
         Streams.forEachPair(
             formalParameters.stream(),
             node.getArguments().stream(),
             (formal, actual) ->
                 findUnannotatedTypeVarRefs(tvs, formal.type(), formal.symbol(), actual)
-                    .forEach(
-                        argRef ->
-                            rcvrReferences.forEach(
-                                rcvrRef -> qualifierConstraints.putEdge(argRef, rcvrRef))));
+                    .forEach(argRef ->
+                        rcvrReferences.forEach(
+                            rcvrRef -> qualifierConstraints.putEdge(argRef, rcvrRef))));
       }
     }
 
@@ -494,14 +489,13 @@ public final class NullnessQualifierInference extends TreeScanner<Void, Void> {
     boolean oneSided = isBound || argSelector.isEmpty();
     fromAnnotations
         .map(ProperInferenceVar::create)
-        .ifPresent(
-            annot -> {
-              InferenceVariable var = TypeArgInferenceVar.create(argSelectorList, rVal);
-              qualifierConstraints.putEdge(var, annot);
-              if (!oneSided) {
-                qualifierConstraints.putEdge(annot, var);
-              }
-            });
+        .ifPresent(annot -> {
+          InferenceVariable var = TypeArgInferenceVar.create(argSelectorList, rVal);
+          qualifierConstraints.putEdge(var, annot);
+          if (!oneSided) {
+            qualifierConstraints.putEdge(annot, var);
+          }
+        });
 
     if (lVal != null) {
       // Constrain this type or type argument on the rVal to be <= its lVal counterpart
