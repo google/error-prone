@@ -544,4 +544,52 @@ public class UnnamedVariableTest {
             """)
         .doTest();
   }
+
+  @Test
+  public void localVariable_polyAndArrayInitializers() {
+    refactoringHelper
+        .addInputLines(
+            "Test.java",
+            """
+            import java.util.function.Consumer;
+
+            class Test {
+              void bar() {}
+
+              void f(boolean flag, Runnable fallback) {
+                Runnable unused = this::bar;
+                Runnable unused2 = (this::bar);
+                Runnable unused3 = () -> {};
+                Consumer<String> unused4 = x -> System.out.println(x);
+                int[] unused5 = {1, 2};
+                int[] unused6 = new int[] {1, 2};
+                Runnable unused7 = flag ? this::bar : () -> {};
+                Runnable unused8 = flag ? null : fallback;
+                Object unused9 = flag ? null : null;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            import java.util.function.Consumer;
+
+            class Test {
+              void bar() {}
+
+              void f(boolean flag, Runnable fallback) {
+                Runnable _ = this::bar;
+                Runnable _ = (this::bar);
+                Runnable _ = () -> {};
+                Consumer<String> _ = x -> System.out.println(x);
+                int[] _ = {1, 2};
+                var _ = new int[] {1, 2};
+                Runnable _ = flag ? this::bar : () -> {};
+                var _ = flag ? null : fallback;
+                Object _ = flag ? null : null;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
