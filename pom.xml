@@ -45,7 +45,7 @@
     <protobuf.version>4.36.2</protobuf.version>
     <grpc.version>1.43.3</grpc.version>
     <jspecify.version>1.0.1</jspecify.version>
-    <google-java-format.version>1.37.0</google-java-format.version>
+    <google-java-format.version>2.0.0</google-java-format.version>
     <snakeyaml.version>2.7</snakeyaml.version>
   </properties>
 
@@ -119,7 +119,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.6.3</version>
+        <version>3.7.0</version>
         <executions>
           <execution>
             <id>enforce-maven</id>
