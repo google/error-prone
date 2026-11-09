@@ -2198,4 +2198,202 @@ public final class Caller {
             """)
         .doTest();
   }
+
+  // b/583393601
+  @Test
+  public void lambdaParameterCollision_declinesToInline() {
+    refactoringTestHelper
+        .addInputLines(
+            "ExtensionLayout.java",
+            """
+            package p;
+
+            import com.google.errorprone.annotations.InlineMe;
+            import java.util.List;
+            import java.util.function.Function;
+
+            public final class ExtensionLayout {
+              @InlineMe(
+                  replacement = "ExtensionLayout.of(csms, csm -> csm.trim())",
+                  imports = "p.ExtensionLayout")
+              @Deprecated
+              public static String create(List<String> csms) {
+                return of(csms, csm -> csm.trim());
+              }
+
+              public static String of(List<String> csms, Function<String, String> fn) {
+                return csms.isEmpty() ? "" : fn.apply(csms.get(0));
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            package p;
+
+            import java.util.List;
+            import java.util.function.Function;
+
+            public final class Caller {
+              public String collidesWithMethodParam(List<String> csms, String csm) {
+                return ExtensionLayout.create(csms) + csm;
+              }
+
+              public String collidesWithOwnInitializer(List<String> csms) {
+                String csm = ExtensionLayout.create(csms);
+                return csm;
+              }
+
+              public Function<String, String> collidesWithEnclosingLambda(List<String> csms) {
+                return csm -> ExtensionLayout.create(csms) + csm;
+              }
+
+              public String collidesWithSwitchPattern(List<String> csms, Object obj) {
+                return switch (obj) {
+                  case String csm -> ExtensionLayout.create(csms) + csm;
+                  default -> "";
+                };
+              }
+
+              public static final class FieldCaller {
+                private final List<String> csm = List.of("field");
+
+                public String collidesWithCallerField() {
+                  return ExtensionLayout.create(csm);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  // b/583393601
+  @Test
+  public void lambdaParameterWithoutCollision_inlined() {
+    refactoringTestHelper
+        .addInputLines(
+            "ExtensionLayout.java",
+            """
+            package p;
+
+            import com.google.errorprone.annotations.InlineMe;
+            import com.google.errorprone.annotations.InlineMeValidationDisabled;
+            import java.util.List;
+            import java.util.function.Function;
+
+            public final class ExtensionLayout {
+              @InlineMe(
+                  replacement = "ExtensionLayout.of(csms, csm -> csm.trim())",
+                  imports = "p.ExtensionLayout")
+              @Deprecated
+              public static String create(List<String> csms) {
+                return of(csms, csm -> csm.trim());
+              }
+
+              @InlineMeValidationDisabled("testing implicit unnamed lambda parameter")
+              @InlineMe(
+                  replacement = "ExtensionLayout.of(csms, _ -> \\"ok\\")",
+                  imports = "p.ExtensionLayout")
+              @Deprecated
+              public static String createUnnamed(List<String> csms) {
+                return of(csms, _ -> "ok");
+              }
+
+              public static String of(List<String> csms, Function<String, String> fn) {
+                return csms.isEmpty() ? "" : fn.apply(csms.get(0));
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            package p;
+
+            import java.util.List;
+            import java.util.function.Function;
+
+            public final class Caller {
+              public String noCollision(List<String> csms) {
+                Function<String, String> fn =
+                    new Function<String, String>() {
+                      @Override
+                      public String apply(String csm) {
+                        return csm;
+                      }
+                    };
+                return ExtensionLayout.create(csms) + fn.apply("x");
+              }
+
+              public Function<String, String> unnamedLambda(List<String> csms) {
+                return _ -> ExtensionLayout.createUnnamed(csms);
+              }
+            }
+            """)
+        .addOutputLines(
+            "Caller.java",
+            """
+            package p;
+
+            import java.util.List;
+            import java.util.function.Function;
+
+            public final class Caller {
+              public String noCollision(List<String> csms) {
+                Function<String, String> fn =
+                    new Function<String, String>() {
+                      @Override
+                      public String apply(String csm) {
+                        return csm;
+                      }
+                    };
+                return ExtensionLayout.of(csms, csm -> csm.trim()) + fn.apply("x");
+              }
+
+              public Function<String, String> unnamedLambda(List<String> csms) {
+                return _ -> ExtensionLayout.of(csms, _ -> "ok");
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  // b/583393601
+  @Test
+  public void unvalidatedPatternVariable_declinesToInline() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            package p;
+
+            import com.google.errorprone.annotations.InlineMe;
+            import com.google.errorprone.annotations.InlineMeValidationDisabled;
+
+            public final class Client {
+              @InlineMeValidationDisabled("testing unvalidated pattern variable")
+              @InlineMe(replacement = "!(obj instanceof String s && s.isEmpty())")
+              @Deprecated
+              public static boolean isNotEmptyString(Object obj) {
+                return !(obj instanceof String s && s.isEmpty());
+              }
+            }
+            """)
+        .expectUnchanged()
+        .addInputLines(
+            "Caller.java",
+            """
+            package p;
+
+            public final class Caller {
+              public boolean call(Object x) {
+                return Client.isNotEmptyString(x);
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
 }

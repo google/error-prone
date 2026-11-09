@@ -60,9 +60,11 @@ import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IdentifierTree;
+import com.sun.source.tree.LambdaExpressionTree;
 import com.sun.source.tree.MemberReferenceTree;
 import com.sun.source.tree.MemberSelectTree;
 import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
 import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
@@ -257,6 +259,11 @@ public final class Inliner extends BugChecker
 
     JavacParser parser = newParser(replacement, state);
     ExpressionTree replacementExpression = parser.parseExpression();
+    if (InlinabilityResult.hasPatternVariables(replacementExpression)
+        || hasLambdaParameterCollision(replacementExpression, state)) {
+      return Description.NO_MATCH;
+    }
+
     SuggestedFix.Builder replacementFixes = SuggestedFix.builder();
 
     SuggestedFix.Builder fixBuilder = SuggestedFix.builder();
@@ -386,6 +393,38 @@ public final class Inliner extends BugChecker
         /* keepDocComments= */ true,
         /* keepEndPos= */ true,
         /* keepLineMap= */ true);
+  }
+
+  private static boolean hasLambdaParameterCollision(
+      ExpressionTree replacementExpression, VisitorState state) {
+    ImmutableSet<String> names = declaredLambdaParameters(replacementExpression);
+    if (names.isEmpty()) {
+      return false;
+    }
+    // Pass the enclosing method as extraScope so VariableNamer also checks local variable
+    // self-initializers (`String x = Foo.inlineMe()`) and `switch` pattern variables.
+    MethodTree enclosingMethod = state.findEnclosing(MethodTree.class);
+    SuggestedFixes.VariableNamer namer =
+        SuggestedFixes.variableNamer(
+            state,
+            enclosingMethod != null ? ImmutableList.of(enclosingMethod) : ImmutableList.of());
+    return names.stream().anyMatch(name -> !namer.avoidShadowing(name).equals(name));
+  }
+
+  private static ImmutableSet<String> declaredLambdaParameters(ExpressionTree expression) {
+    ImmutableSet.Builder<String> names = ImmutableSet.builder();
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitLambdaExpression(LambdaExpressionTree node, Void unused) {
+        for (VariableTree param : node.getParameters()) {
+          if (InlinabilityResult.isNamedVariable(param)) {
+            names.add(param.getName().toString());
+          }
+        }
+        return super.visitLambdaExpression(node, null);
+      }
+    }.scan(expression, null);
+    return names.build();
   }
 
   private static List<? extends ExpressionTree> getArguments(Tree tree) {

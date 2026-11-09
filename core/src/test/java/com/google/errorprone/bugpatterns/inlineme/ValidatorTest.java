@@ -1084,4 +1084,90 @@ public class ValidatorTest {
             """)
         .doTest();
   }
+
+  // b/583393601
+  @Test
+  public void patternVariableInInstanceOf_disallowed() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(replacement = "obj instanceof String s && !s.isEmpty()")
+              @Deprecated
+              // BUG: Diagnostic contains: pattern variables
+              public static boolean isNonEmptyString(Object obj) {
+                return obj instanceof String s && !s.isEmpty();
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  // b/583393601
+  @Test
+  public void recordDeconstructionPatternVariable_disallowed() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              public record Pair(String a, String b) {}
+
+              @InlineMe(replacement = "obj instanceof Pair(String a, String b)", imports = "Client.Pair")
+              @Deprecated
+              // BUG: Diagnostic contains: pattern variables
+              public static boolean isPair(Object obj) {
+                return obj instanceof Pair(String a, String b);
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  // b/583393601
+  @Test
+  public void plainInstanceOfWithoutPatternVariable_allowed() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(replacement = "obj instanceof String")
+              @Deprecated
+              public static boolean isString(Object obj) {
+                return obj instanceof String;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  // b/583393601
+  @Test
+  public void unnamedPatternVariable_allowed() {
+    helper
+        .addSourceLines(
+            "Client.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              public record Pair(String a, String b) {}
+
+              @InlineMe(replacement = "obj instanceof Pair(String _, String _)", imports = "Client.Pair")
+              @Deprecated
+              public static boolean isStringPair(Object obj) {
+                return obj instanceof Pair(String _, String _);
+              }
+            }
+            """)
+        .doTest();
+  }
 }

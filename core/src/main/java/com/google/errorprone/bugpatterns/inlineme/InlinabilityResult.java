@@ -27,6 +27,7 @@ import static com.google.errorprone.util.AnnotationNames.DEPRECATED_ANNOTATION;
 import com.google.common.collect.ImmutableSet;
 import com.google.errorprone.VisitorState;
 import com.google.errorprone.util.ASTHelpers;
+import com.sun.source.tree.BindingPatternTree;
 import com.sun.source.tree.ConditionalExpressionTree;
 import com.sun.source.tree.ExpressionStatementTree;
 import com.sun.source.tree.ExpressionTree;
@@ -39,6 +40,7 @@ import com.sun.source.tree.NewClassTree;
 import com.sun.source.tree.ReturnTree;
 import com.sun.source.tree.StatementTree;
 import com.sun.source.tree.Tree;
+import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
@@ -52,6 +54,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.Name;
 import org.jspecify.annotations.Nullable;
 
 /** Whether an API can have {@code @InlineMe} applied to it or not. */
@@ -123,7 +126,8 @@ record InlinabilityResult(
     EMPTY_VOID("InlineMe cannot yet be applied to no-op void methods"),
     REUSE_OF_ARGUMENTS("Implementations cannot use an argument more than once:"),
     PARAM_NAMES_ARE_NAMED_ARGN("Method parameter names cannot match `arg[0-9]+`."),
-    NO_SUPER_CALLS("super(...) calls cannot be inlined.");
+    NO_SUPER_CALLS("super(...) calls cannot be inlined."),
+    NO_PATTERN_VARIABLES("InlineMe cannot inline expressions that introduce pattern variables.");
 
     private final @Nullable String errorMessage;
 
@@ -198,6 +202,10 @@ record InlinabilityResult(
       return fromError(InlineValidationErrorReason.COMPLEX_STATEMENT, body);
     }
 
+    if (hasPatternVariables(body)) {
+      return fromError(InlineValidationErrorReason.NO_PATTERN_VARIABLES, body);
+    }
+
     Symbol usedMultipleTimes = usesVariablesMultipleTimes(body, methodSym.params(), state);
     if (usedMultipleTimes != null) {
       return fromError(
@@ -228,6 +236,27 @@ record InlinabilityResult(
     }
 
     return inlinable(body);
+  }
+
+  static boolean hasPatternVariables(ExpressionTree body) {
+    AtomicBoolean found = new AtomicBoolean(false);
+    new TreeScanner<Void, Void>() {
+      @Override
+      public Void visitBindingPattern(BindingPatternTree node, Void unused) {
+        if (isNamedVariable(node.getVariable())) {
+          found.set(true);
+        }
+        return null;
+      }
+    }.scan(body, null);
+    return found.get();
+  }
+
+  // javac uses Names.empty for unnamed `_` variables in attributed ASTs, while unattributed
+  // parsed replacement expressions retain "_".
+  static boolean isNamedVariable(VariableTree variable) {
+    Name name = variable.getName();
+    return !name.isEmpty() && !name.contentEquals("_");
   }
 
   private static Symbol usesVariablesMultipleTimes(

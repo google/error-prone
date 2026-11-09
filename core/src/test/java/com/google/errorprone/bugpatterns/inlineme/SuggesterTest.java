@@ -1392,4 +1392,52 @@ public class Client {
             """)
         .doTest();
   }
+
+  // b/583393601
+  @Test
+  public void patternVariable_noSuggestion() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            public final class Client {
+              @Deprecated
+              public static boolean isNonEmptyString(Object obj) {
+                return obj instanceof String s && !s.isEmpty();
+              }
+            }
+            """)
+        .expectUnchanged()
+        .doTest();
+  }
+
+  // b/583393601
+  @Test
+  public void plainInstanceOf_suggestsInlineMe() {
+    refactoringTestHelper
+        .addInputLines(
+            "Client.java",
+            """
+            public final class Client {
+              @Deprecated
+              public static boolean isString(Object obj) {
+                return obj instanceof String;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Client.java",
+            """
+            import com.google.errorprone.annotations.InlineMe;
+
+            public final class Client {
+              @InlineMe(replacement = "obj instanceof String")
+              @Deprecated
+              public static boolean isString(Object obj) {
+                return obj instanceof String;
+              }
+            }
+            """)
+        .doTest();
+  }
 }
