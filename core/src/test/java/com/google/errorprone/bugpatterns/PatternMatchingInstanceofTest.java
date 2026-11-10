@@ -739,7 +739,7 @@ public final class PatternMatchingInstanceofTest {
   }
 
   @Test
-  public void generics_includeWildcards() {
+  public void generics_rawType_addsWildcard() {
     helper
         .addInputLines(
             "Test.java",
@@ -763,6 +763,56 @@ public final class PatternMatchingInstanceofTest {
               }
             }
             """)
+        .doTest();
+  }
+
+  @Test
+  public void generics_wildcardType_putsWildcardInInstanceOf() {
+    helper
+        .addInputLines(
+            "Test.java",
+            """
+            class Test<T> {
+              private String val;
+
+              public String stringify(Object o) {
+                return !(o instanceof Test) ? "not a test" : ((Test<?>) o).val;
+              }
+            }
+            """)
+        .addOutputLines(
+            "Test.java",
+            """
+            class Test<T> {
+              private String val;
+
+              public String stringify(Object o) {
+                return !(o instanceof Test<?> test) ? "not a test" : test.val;
+              }
+            }
+            """)
+        .doTest();
+  }
+
+  @Test
+  public void generics_innerClassOfGenericOuter_parameterizedCast_noFinding() {
+    helper
+        .addInputLines(
+            "Outer.java",
+            """
+            class Outer<T> {
+              class Inner {}
+
+              void test(Object o) {
+                if (o instanceof Outer.Inner) {
+                  @SuppressWarnings("unchecked")
+                  Outer<String>.Inner inner = (Outer<String>.Inner) o;
+                  System.err.println(inner);
+                }
+              }
+            }
+            """)
+        .expectUnchanged()
         .doTest();
   }
 

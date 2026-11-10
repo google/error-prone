@@ -23,8 +23,10 @@ import static com.google.errorprone.fixes.SuggestedFix.mergeFixes;
 import static com.google.errorprone.matchers.Description.NO_MATCH;
 import static com.google.errorprone.util.ASTHelpers.getSymbol;
 import static com.google.errorprone.util.ASTHelpers.getType;
+import static com.google.errorprone.util.ASTHelpers.isSameType;
 import static com.google.errorprone.util.SourceVersion.supportsPatternMatchingInstanceof;
 import static com.google.errorprone.util.TargetType.targetType;
+import static com.sun.tools.javac.code.BoundKind.UNBOUND;
 import static java.util.Collections.nCopies;
 import static java.util.stream.Collectors.joining;
 
@@ -64,6 +66,7 @@ import com.sun.source.util.TreePathScanner;
 import com.sun.source.util.TreeScanner;
 import com.sun.tools.javac.code.Symbol.VarSymbol;
 import com.sun.tools.javac.code.Type;
+import com.sun.tools.javac.code.Type.WildcardType;
 import com.sun.tools.javac.code.TypeTag;
 import java.util.HashSet;
 import java.util.List;
@@ -127,13 +130,20 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
               .collect(mergeFixes()));
     }
     int typeArgCount = getType(instanceOfTree.getType()).tsym.getTypeParameters().size();
-    // If the target type is generic, pattern matching instanceof only supports unbounded wildcards
-    // (e.g. Foo<?>). If any cast uses specific type arguments (e.g. Foo<String>), we cannot safely
-    // refactor to a pattern variable without losing type specificity or causing unchecked warnings.
+    // If the type named in a cast expression is a raw type, then the replacement we propose for
+    // that cast—The replacement is, as usual, a usage of the new pattern variable—will have a
+    // different type: Because Java doesn't allow raw types in pattern variables, we have to propose
+    // a variable type of `Foo<?>` instead of raw `Foo`. Such a change could fail to compile if the
+    // _target type_ for the expression is something like `Foo<String>`: While Java allows a raw
+    // `Foo` to serve as a `Foo<String>` (via unchecked conversion), it does not allow a `Foo<?>` to
+    // do the same. Thus, if we encounter that case, we avoid suggesting a change at all.
     if (typeArgCount != 0
         && allCasts.stream()
+            .filter(c -> getType(c.getLeaf()).isRaw())
             .flatMap(c -> Stream.ofNullable(targetType(state.withPath(c))))
-            .anyMatch(t -> !t.type().isRaw())) {
+            .anyMatch(t ->
+                !t.type().getTypeArguments().stream()
+                    .allMatch(PatternMatchingInstanceof::isUnboundedWildcard))) {
       return NO_MATCH;
     }
 
@@ -209,11 +219,11 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
     if (!(parent instanceof VariableTree variableTree)) {
       return null;
     }
-    // Check that the type is exactly the same (not a subtypes), since refactoring cases where the
-    // instanceof type is a supertype of the cast type could affect overload resolution.
-    if (!state
-        .getTypes()
-        .isSameType(getType(instanceOfTree.getType()), getType(variableTree.getType()))) {
+    // Check that the type is the same (or the unbounded-wildcard parameterization of a raw
+    // instanceof type), not a subtype, since refactoring cases where the instanceof type is a
+    // supertype of the cast type could affect overload resolution.
+    if (!isSameOrWildcardParameterized(
+        getType(variableTree.getType()), getType(instanceOfTree.getType()), state)) {
       return null;
     }
     return variableTree;
@@ -361,7 +371,7 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
             var castee = constantExpressions.constantExpression(node.getExpression(), state);
             if (castee.isPresent()
                 && castee.get().equals(symbol)
-                && state.getTypes().isSameType(getType(node.getType()), targetType)) {
+                && isSameOrWildcardParameterized(getType(node.getType()), targetType, state)) {
               usages.add(getUsage(getCurrentPath()));
             }
             return super.visitTypeCast(node, null);
@@ -371,6 +381,24 @@ public final class PatternMatchingInstanceof extends BugChecker implements Insta
       scanner.scan(new TreePath(state.getPath(), tree), null);
     }
     return usages.build();
+  }
+
+  private static boolean isSameOrWildcardParameterized(
+      Type type, Type targetType, VisitorState state) {
+    if (state.getTypes().isSameType(type, targetType)) {
+      return true;
+    }
+    if (targetType.isRaw()
+        && isSameType(type, targetType, state)
+        && state.getTypes().isSameType(type.getEnclosingType(), targetType.getEnclosingType())) {
+      return type.getTypeArguments().stream()
+          .allMatch(PatternMatchingInstanceof::isUnboundedWildcard);
+    }
+    return false;
+  }
+
+  private static boolean isUnboundedWildcard(Type type) {
+    return type instanceof WildcardType wt && wt.kind == UNBOUND;
   }
 
   /**
