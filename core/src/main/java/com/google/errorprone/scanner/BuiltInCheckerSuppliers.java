@@ -63,6 +63,7 @@ import com.google.errorprone.bugpatterns.BigDecimalEquals;
 import com.google.errorprone.bugpatterns.BigDecimalLiteralDouble;
 import com.google.errorprone.bugpatterns.BooleanLiteral;
 import com.google.errorprone.bugpatterns.BooleanParameter;
+import com.google.errorprone.bugpatterns.BootclasspathShadowing;
 import com.google.errorprone.bugpatterns.BoxedPrimitiveConstructor;
 import com.google.errorprone.bugpatterns.BoxedPrimitiveEquality;
 import com.google.errorprone.bugpatterns.BoxingComparator;
@@ -1253,6 +1254,7 @@ public final class BuiltInCheckerSuppliers {
           BinderIdentityRestoredDangerously.class, // TODO: enable this by default.
           BindingToUnqualifiedCommonType.class,
           BooleanParameter.class,
+          BootclasspathShadowing.class,
           BuilderReturnThis.class,
           CanIgnoreReturnValueSuggester.class,
           CannotMockFinalClass.class,
